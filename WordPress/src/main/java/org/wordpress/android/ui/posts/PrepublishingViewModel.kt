@@ -6,11 +6,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -27,6 +32,15 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
+
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(this)
+    }
 
     fun start(
         site: SiteModel,
@@ -82,6 +96,14 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
      */
     private fun fetchTags() {
         dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.isError) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+        }
     }
 }
 
