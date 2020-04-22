@@ -456,6 +456,48 @@ object TestContent {
   </div>
 </div>
 """
+    const val oldCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="color:black;background-image:url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="color:black;background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldCoverBlockStyleOrderWithSpace = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image: url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockStyleOrderWithoutSpace = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
 
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock

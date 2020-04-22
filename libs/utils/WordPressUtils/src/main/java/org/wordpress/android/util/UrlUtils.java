@@ -18,6 +18,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.wordpress.android.util.PhotonUtils.ATOMIC_MEDIA_PROXY_URL_PREFIX;
+import static org.wordpress.android.util.PhotonUtils.ATOMIC_MEDIA_PROXY_URL_SUFFIX;
+
 public class UrlUtils {
     public static String urlEncode(final String text) {
         try {
@@ -246,8 +249,16 @@ public class UrlUtils {
 
         String cleanedUrl = removeQuery(url.toLowerCase(Locale.ROOT));
 
+        if (isAtomicImageProxyUrl(cleanedUrl)) {
+            return true;
+        }
+
         return cleanedUrl.endsWith("jpg") || cleanedUrl.endsWith("jpeg")
                || cleanedUrl.endsWith("gif") || cleanedUrl.endsWith("png");
+    }
+
+    private static boolean isAtomicImageProxyUrl(String urlString) {
+        return urlString.startsWith(ATOMIC_MEDIA_PROXY_URL_PREFIX) && urlString.endsWith(ATOMIC_MEDIA_PROXY_URL_SUFFIX);
     }
 
     public static String appendUrlParameter(String url, String paramName, String paramValue) {

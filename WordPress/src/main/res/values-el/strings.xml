@@ -1151,7 +1151,6 @@ Language: el_GR
     <string name="content_required">Απαιτείται σχόλιο</string>
     <string name="sure_to_cancel_edit_comment">Ακύρωση επεξεργασίας αυτού του σχολίου;</string>
     <string name="saving_changes">Αποθήκευση αλλαγών</string>
-    <string name="hint_comment_content">Σχόλιο</string>
     <string name="trash">Διαγραφή</string>
     <string name="dlg_confirm_trash_comments">Αποστολή στα σκουπίδια;</string>
     <string name="dlg_trashing_comments">Αποστολή στα διαγραμμένα</string>
@@ -1253,7 +1252,6 @@ Language: el_GR
     <string name="pages">Σελίδες</string>
     <string name="no_network_title">Το διαδίκτυο δεν είναι διαθέσιμο</string>
     <string name="ok">ΟΚ</string>
-    <string name="blogusername">όνομα χρήστη ιστολογίου</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress για Android</string>
     <string name="tos">Όροι Χρήσης</string>
@@ -1266,7 +1264,6 @@ Language: el_GR
     <string name="quickpress_add_alert_title">Θέστε συντομευμένο όνομα</string>
     <string name="settings">Ρυθμίσεις</string>
     <string name="quickpress_add_error">Το όνομα της συντόμευσης δεν επιτρέπεται να είναι κενό</string>
-    <string name="quickpress_window_title">Επιλέξτε ιστότοπο για τη συντόμευση του QuickPress</string>
     <string name="pages_private">Ιδιωτικό</string>
     <string name="categories">Κατηγορίες</string>
     <string name="tags_separate_with_commas">Διαχωρίστε τις ετικέτες με κόμματα</string>

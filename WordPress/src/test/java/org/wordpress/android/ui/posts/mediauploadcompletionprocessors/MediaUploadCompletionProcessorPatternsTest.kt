@@ -29,13 +29,13 @@ $blockClosingComment
 """
 
 class MediaUploadCompletionProcessorPatternsTest {
-   @Test
-   fun `PATTERN_BLOCK_CAPTURES captures the block type`() {
-       val matcher = PATTERN_BLOCK_CAPTURES.matcher(rawBlock)
-       val outcome = matcher.find()
-       Assertions.assertThat(outcome).isEqualTo(true)
-       Assertions.assertThat(matcher.group(1)).isEqualTo(blockType)
-   }
+    @Test
+    fun `PATTERN_BLOCK_CAPTURES captures the block type`() {
+        val matcher = PATTERN_BLOCK_CAPTURES.matcher(rawBlock)
+        val outcome = matcher.find()
+        Assertions.assertThat(outcome).isEqualTo(true)
+        Assertions.assertThat(matcher.group(1)).isEqualTo(blockType)
+    }
     @Test
     fun `PATTERN_BLOCK_CAPTURES captures the block header json`() {
         val matcher = PATTERN_BLOCK_CAPTURES.matcher(rawBlock)
@@ -49,4 +49,3 @@ class MediaUploadCompletionProcessorPatternsTest {
         Assertions.assertThat(matcher.group(3)).isEqualTo(blockHTML + "\n")
     }
 }
-

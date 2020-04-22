@@ -1,5 +1,0 @@
-14.5:
-Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
-Page Templates: Added a block-based templates for quicker page creation.
-Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
-Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.

@@ -450,10 +450,12 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         @Override
         protected Boolean doInBackground(Void... params) {
             // images
-            addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
+            if (mBrowserType.isImagePicker()) {
+                addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
+            }
 
             // videos
-            if (!mBrowserType.isSingleImagePicker()) {
+            if (mBrowserType.isVideoPicker()) {
                 addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
             }
 
