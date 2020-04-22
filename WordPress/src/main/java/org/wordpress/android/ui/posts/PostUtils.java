@@ -426,7 +426,7 @@ public class PostUtils {
                     .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
             MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
                     siteUrl);
-            postContent = processor.processPost(postContent);
+            postContent = processor.processContent(postContent);
         }
         return postContent;
     }
