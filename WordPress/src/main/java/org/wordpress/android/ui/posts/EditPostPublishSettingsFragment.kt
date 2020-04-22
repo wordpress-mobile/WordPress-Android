@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.WordPress
 
-class EditPostPublishSettingsFragment: PublishSettingsFragment() {
+class EditPostPublishSettingsFragment : PublishSettingsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)

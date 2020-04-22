@@ -25,7 +25,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 
 abstract class PublishSettingsViewModel
- constructor(
+constructor(
     private val resourceProvider: ResourceProvider,
     private val postSettingsUtils: PostSettingsUtils,
     private val localeManagerWrapper: LocaleManagerWrapper,
