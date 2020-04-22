@@ -14,11 +14,6 @@ import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
 
-data class PrepublishingNavigationTarget(
-    val site: SiteModel,
-    val targetScreen: PrepublishingScreen
-)
-
 class PrepublishingViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -87,3 +82,8 @@ enum class PrepublishingScreen : Parcelable {
     VISIBILITY,
     TAGS
 }
+
+data class PrepublishingNavigationTarget(
+    val site: SiteModel,
+    val targetScreen: PrepublishingScreen
+)
