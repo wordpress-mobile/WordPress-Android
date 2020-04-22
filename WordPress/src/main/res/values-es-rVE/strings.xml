@@ -2237,8 +2237,4 @@ Language: es_VE
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="notification_settings">Ajustes de avisos</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

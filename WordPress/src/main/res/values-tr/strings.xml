@@ -2237,8 +2237,4 @@ Language: tr
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="error">Hata</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>
