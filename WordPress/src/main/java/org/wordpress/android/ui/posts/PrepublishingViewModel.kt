@@ -16,7 +16,6 @@ import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
 
-class PrepublishingViewModel @Inject constructor() : ViewModel() {
 class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -41,10 +40,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 
         currentScreen?.let { screen ->
             navigateToScreen(screen)
-        fetchTags()
         } ?: run {
             navigateToScreen(HOME)
         }
+        fetchTags()
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
@@ -77,6 +76,13 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         currentScreen = screen
         navigateToScreen(screen)
     }
+
+    /**
+     * Fetches the tags so that they will be available when the Tags action is clicked
+     */
+    private fun fetchTags() {
+        dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
+    }
 }
 
 @Parcelize
@@ -85,12 +91,6 @@ enum class PrepublishingScreen : Parcelable {
     PUBLISH,
     VISIBILITY,
     TAGS
-    /**
-     * Fetches the tags so that they will be available when the Tags action is clicked
-     */
-        dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
-    private fun fetchTags() {
-    }
 }
 
 data class PrepublishingNavigationTarget(
