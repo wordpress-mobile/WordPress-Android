@@ -1796,8 +1796,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showPrepublishingNudgeBottomSheet() {
-        PrepublishingBottomSheetFragment prepublishingFragment = PrepublishingBottomSheetFragment.newInstance();
-        prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                PrepublishingBottomSheetFragment.TAG);
+        if (fragment == null) {
+            PrepublishingBottomSheetFragment prepublishingFragment = PrepublishingBottomSheetFragment.newInstance();
+            prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+        }
     }
 
     private void uploadPost(final boolean publishPost) {
