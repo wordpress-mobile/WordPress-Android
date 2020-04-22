@@ -40,7 +40,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -94,6 +93,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -1684,7 +1684,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
 
         AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
-        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(1);
+        inputData.add(new EditImageData.InputData(
+                imageUrl,
+                StringUtils.notNullStr(resizedImageUrl),
+                outputFileExtension
+        ));
+        ActivityLauncher.openImageEditor(this, inputData);
     }
 
     @Override
@@ -2286,15 +2292,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                        if (imageUri != null) {
-                            Map<String, String> properties = new HashMap<>();
-                            properties.put("actions", "crop");
-                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
-
-                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
-                        }
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResultAndTrackEvent(data);
+                    for (Uri item : uris) {
+                        mEditorMedia.addNewMediaToEditorAsync(item, true);
                     }
                     break;
             }

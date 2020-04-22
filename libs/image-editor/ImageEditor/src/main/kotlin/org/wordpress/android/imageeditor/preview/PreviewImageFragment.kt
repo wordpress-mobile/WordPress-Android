@@ -1,10 +1,12 @@
 package org.wordpress.android.imageeditor.preview
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,14 +26,17 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
+import org.wordpress.android.imageeditor.R.string
 import org.wordpress.android.imageeditor.crop.CropFragment
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -42,75 +47,24 @@ class PreviewImageFragment : Fragment() {
     private lateinit var pageChangeCallback: OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
-
-    private val imageDataList = listOf(
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/10/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/10/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/20/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/20/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/30/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/30/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/40/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/40/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/50/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/50/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/60/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/60/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/70/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/70/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/80/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/80/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/90/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/90/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/100/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/100/400/400.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/110/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/110/1000/1000.jpg",
-            outputFileExtension = "jpg"
-        ),
-        ImageData(
-            lowResImageUrl = "https://i.picsum.photos/id/120/200/200.jpg",
-            highResImageUrl = "https://i.picsum.photos/id/120/400/400.jpg",
-            outputFileExtension = "jpg"
-        )
-    )
+    // TODO We might want to move this into the VM
+    private var numberOfImages = 0
 
     companion object {
-        const val ARG_LOW_RES_IMAGE_URL = "arg_low_res_image_url"
-        const val ARG_HIGH_RES_IMAGE_URL = "arg_high_res_image_url"
-        const val ARG_OUTPUT_FILE_EXTENSION = "arg_output_file_extension"
+        const val ARG_EDIT_IMAGE_DATA = "arg_edit_image_data"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
+
+        sealed class EditImageData : Parcelable {
+            @Parcelize
+            data class InputData(
+                val highResImgUrl: String,
+                val lowResImgUrl: String,
+                val outputFileExtension: String
+            ) : EditImageData()
+
+            @Parcelize
+            data class OutputData(val outputFilePath: String) : EditImageData()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -134,6 +88,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun initializeViews() {
         initializeViewPager()
+        initializeInsertButton()
     }
 
     private fun initializeViewPager() {
@@ -160,8 +115,7 @@ class PreviewImageFragment : Fragment() {
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
-            val imageData = previewImageAdapter.currentList[position].data
-            loadIntoImageView(imageData.lowResImageUrl, imageView)
+            loadIntoImageView(viewModel.getThumbnailImageUrl(position), imageView)
         }
 
         tabLayoutMediator = TabLayoutMediator(
@@ -186,26 +140,27 @@ class PreviewImageFragment : Fragment() {
 
         // Set adapter data before the ViewPager2.restorePendingState gets called
         // to avoid manual handling of the ViewPager2 state restoration.
-        viewModel.uiState.value?.let {
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(it.viewPagerItemsStates)
-            cropActionMenu?.isEnabled = it.editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, it.thumbnailsTabLayoutVisible)
+        viewModel.uiState.value?.let { updateUiState(it) }
+    }
+
+    private fun initializeInsertButton() {
+        insertButton.text = getString(string.insert_label_with_count, numberOfImages)
+        insertButton.setOnClickListener {
+            viewModel.onInsertClicked()
         }
     }
 
     private fun initializeViewModels(nonNullIntent: Intent) {
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
-        // TODO: replace dummy list
-        viewModel.onCreateView(imageDataList)
+        val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
+        numberOfImages = inputData.size
+
+        viewModel.onCreateView(inputData)
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { state ->
-            (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
-            cropActionMenu?.isEnabled = state.editActionsEnabled
-            UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
-        })
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { state -> updateUiState(state) })
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
@@ -234,6 +189,21 @@ class PreviewImageFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
+                requireActivity().setResult(RESULT_OK, intent)
+                requireActivity().finish()
+            }
+        })
+    }
+
+    private fun updateUiState(state: UiState) {
+        (previewImageViewPager.adapter as PreviewImageAdapter).submitList(state.viewPagerItemsStates)
+        cropActionMenu?.isEnabled = state.editActionsEnabled
+        UiHelpers.updateVisibility(thumbnailsTabLayout, state.thumbnailsTabLayoutVisible)
+        UiHelpers.updateVisibility(insertButton, state.thumbnailsTabLayoutVisible)
     }
 
     private fun loadIntoImageView(url: String, imageView: ImageView) {

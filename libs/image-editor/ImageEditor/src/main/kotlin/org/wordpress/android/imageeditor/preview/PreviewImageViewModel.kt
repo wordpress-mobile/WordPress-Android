@@ -1,8 +1,11 @@
 package org.wordpress.android.imageeditor.preview
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
@@ -26,17 +29,33 @@ class PreviewImageViewModel : ViewModel() {
     val navigateToCropScreenWithFileInfo: LiveData<Event<Triple<String, String?, Boolean>>> =
             _navigateToCropScreenWithFileInfo
 
+    private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
+    val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
+
     private var selectedPosition: Int = 0
 
-    fun onCreateView(imageDataList: List<ImageData>) {
+    fun onCreateView(imageDataList: List<InputData>) {
         if (uiState.value == null) {
-            val newImageUiStates = createViewPagerItemsInitialUiStates(imageDataList)
+            val newImageUiStates = createViewPagerItemsInitialUiStates(
+                    convertInputDataToImageData(imageDataList)
+            )
             val currentUiState = UiState(
                 newImageUiStates,
                 thumbnailsTabLayoutVisible = !newImageUiStates.hasSingleElement()
             )
             updateUiState(currentUiState)
         }
+    }
+
+    private fun convertInputDataToImageData(imageDataList: List<InputData>): List<ImageData> {
+        return imageDataList
+                .map { (highRes, lowRes, extension) ->
+                    ImageData(
+                            highResImageUrl = highRes,
+                            lowResImageUrl = lowRes,
+                            outputFileExtension = extension
+                    )
+                }
     }
 
     fun onLoadIntoImageViewSuccess(imageUrlAtPosition: String, position: Int) {
@@ -233,6 +252,21 @@ class PreviewImageViewModel : ViewModel() {
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
 
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
+
+    fun onInsertClicked() {
+        val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
+                ?: emptyList()
+        _finishAction.value = Event(outputData)
+    }
+
+    fun getThumbnailImageUrl(position: Int): String {
+        return uiState.value?.viewPagerItemsStates?.get(position)?.data?.let { imageData ->
+            return if (TextUtils.isEmpty(imageData.lowResImageUrl))
+                imageData.highResImageUrl
+            else
+                imageData.lowResImageUrl
+        } ?: ""
+    }
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
