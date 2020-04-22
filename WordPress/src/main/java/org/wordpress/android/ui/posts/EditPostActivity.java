@@ -543,7 +543,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
             trackEditorCreatedPost(action, getIntent());
         }
 
