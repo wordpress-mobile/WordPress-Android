@@ -55,16 +55,19 @@ public class LoginGoogleFragment extends GoogleFragment {
         if (args != null) {
             mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
         }
+    }
 
+    @Override public void onStart() {
+        super.onStart();
         if (mIsSignupFromLoginEnabled) {
             mProgressDialog = ProgressDialog.show(
                     getActivity(), null, getString(R.string.signin_with_google_progress), true, false, null);
         }
     }
 
-    @Override public void onDestroy() {
+    @Override public void onStop() {
         dismissProgressDialog();
-        super.onDestroy();
+        super.onStop();
     }
 
     @Override
