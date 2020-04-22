@@ -91,7 +91,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             }
         })
 
-        viewModel.updateToolbarTitle.observe(this, Observer { uiString ->
+        viewModel.toolbarTitleUiState.observe(this, Observer { uiString ->
             toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 

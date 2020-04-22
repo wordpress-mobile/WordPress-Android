@@ -33,19 +33,19 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
 
-    private val _updateToolbarTitle = MutableLiveData<UiString>()
-    val updateToolbarTitle: LiveData<UiString> = _updateToolbarTitle
+    private val _toolbarTitleUiState = MutableLiveData<UiString>()
+    val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
 
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
         isStarted = true
 
         this.editPostRepository = editPostRepository
-        setToolbarTitle()
+        setToolbarTitleUiState()
     }
 
-    private fun setToolbarTitle() {
-        _updateToolbarTitle.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_tags))
+    private fun setToolbarTitleUiState() {
+        _toolbarTitleUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_tags))
     }
 
     fun onTagsSelected(selectedTags: String) {
