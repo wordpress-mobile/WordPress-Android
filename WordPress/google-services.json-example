@@ -62,7 +62,7 @@
               "client_id": "",
               "client_type": 1,
               "android_info": {
-                "package_name": "org.wordpress.android.jalapeno",
+                "package_name": "org.wordpress.android.prealpha",
                 "certificate_hash": ""
               }
             }
