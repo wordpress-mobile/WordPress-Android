@@ -219,7 +219,9 @@ public class SitePickerActivity extends LocaleAwareActivity
 
 
         if (mSitePickerMode.isReblogMode()) {
-            mMenuContinue.getIcon().mutate().setAlpha(mSitePickerMode == SitePickerMode.REBLOG_SELECT_MODE ? (int) (mDisabledOpacity * 255) : 255);
+            mMenuContinue.getIcon().mutate().setAlpha(
+                    mSitePickerMode == SitePickerMode.REBLOG_SELECT_MODE ? (int) (mDisabledOpacity * 255) : 255
+            );
         }
 
         // no point showing search if there aren't multiple blogs
