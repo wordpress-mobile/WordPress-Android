@@ -1360,17 +1360,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         MenuItem trashMenuItem = morePopupMenu.getMenu().findItem(R.id.action_trash);
         MenuItem copyLinkAddress = morePopupMenu.getMenu().findItem(R.id.action_copy_link_address);
         if (canTrash()) {
-            trashMenuItem.setVisible(true);
-            copyLinkAddress.setVisible(false);
             CommentStatus commentStatus = CommentStatus.fromString(mComment.getStatus());
             if (commentStatus == CommentStatus.TRASH) {
+                copyLinkAddress.setVisible(false);
                 trashMenuItem.setTitle(R.string.mnu_comment_delete_permanently);
             } else {
+                copyLinkAddress.setVisible(true);
                 trashMenuItem.setTitle(R.string.mnu_comment_trash);
             }
         } else {
             trashMenuItem.setVisible(false);
-            copyLinkAddress.setVisible(true);
+            copyLinkAddress.setVisible(false);
         }
 
         MenuItem editMenuItem = morePopupMenu.getMenu().findItem(R.id.action_edit);
