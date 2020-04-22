@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
@@ -12,6 +13,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.junit.MockitoJUnitRunner
@@ -292,6 +294,59 @@ class FeaturedImageHelperTest {
         val result = featuredImageHelper.createCurrentFeaturedImageState(createSiteModel(), post)
         // Assert
         assertThat(result).matches { it.uiState == FeaturedImageState.REMOTE_IMAGE_LOADING }
+    }
+
+    @Test
+    fun `createCurrent-State uses media url when thumbnailUrl is empty`() {
+        // Arrange
+        val post: PostImmutableModel = mock()
+        whenever(post.hasFeaturedImage()).thenReturn(true)
+
+        val media: MediaModel = mock()
+        whenever(media.thumbnailUrl).thenReturn(null)
+        whenever(media.url).thenReturn("https://testing.com/url.jpg")
+        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
+
+        val site = createSiteModel().apply {
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+
+        // Act
+        featuredImageHelper.createCurrentFeaturedImageState(site, post)
+        // Assert
+        verify(readerUtilsWrapper).getResizedImageUrl(
+                eq("https://testing.com/url.jpg"),
+                anyInt(),
+                anyInt(),
+                anyBoolean(),
+                anyBoolean()
+        )
+    }
+
+    @Test
+    fun `createCurrent-State uses thumbnailUrl if it is not empty`() {
+        // Arrange
+        val post: PostImmutableModel = mock()
+        whenever(post.hasFeaturedImage()).thenReturn(true)
+
+        val media: MediaModel = mock()
+        whenever(media.thumbnailUrl).thenReturn("https://testing.com/thumbnail.jpg")
+        whenever(mediaStore.getSiteMediaWithId(anyOrNull(), anyLong())).thenReturn(media)
+
+        val site = createSiteModel().apply {
+            origin = SiteModel.ORIGIN_WPCOM_REST
+        }
+
+        // Act
+        featuredImageHelper.createCurrentFeaturedImageState(site, post)
+        // Assert
+        verify(readerUtilsWrapper).getResizedImageUrl(eq(
+                "https://testing.com/thumbnail.jpg"),
+                anyInt(),
+                anyInt(),
+                anyBoolean(),
+                anyBoolean()
+        )
     }
 
     companion object Fixtures {

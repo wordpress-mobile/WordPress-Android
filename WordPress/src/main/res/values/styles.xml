@@ -254,17 +254,8 @@
         <item name="android:textColor">@color/neutral_40</item>
     </style>
 
-    <style name="WordPress.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">?attr/colorOnPrimarySurface</item>
-    </style>
-
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
-    </style>
-
-    <style name="WordPress.Button.Grey" parent="Widget.AppCompat.Button.Colored">
-        <item name="colorButtonNormal">@color/neutral_0</item>
-        <item name="android:textColor">@color/primary_50</item>
     </style>
 
     <!-- NUX Styles -->
