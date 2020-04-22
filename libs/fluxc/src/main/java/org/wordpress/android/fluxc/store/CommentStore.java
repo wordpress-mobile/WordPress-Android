@@ -286,6 +286,7 @@ public class CommentStore extends Store {
         comment.setAuthorName("");
         comment.setAuthorEmail("");
         comment.setAuthorUrl("");
+        comment.setUrl("");
         // Insert in the DB
         comment = CommentSqlUtils.insertCommentForResult(comment);
 
