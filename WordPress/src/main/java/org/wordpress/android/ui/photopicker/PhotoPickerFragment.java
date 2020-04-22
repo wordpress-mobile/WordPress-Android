@@ -212,7 +212,7 @@ public class PhotoPickerFragment extends Fragment {
         if (canShowInsertPreviewBottomBar()) {
             mInsertPreviewBottomBar.findViewById(R.id.text_preview).setOnClickListener(v -> {
                 ArrayList<EditImageData.InputData> inputData =
-                        createListOfEditImageInputData(getAdapter().getSelectedURIs());
+                        WPMediaUtils.createListOfEditImageInputData(requireContext(), getAdapter().getSelectedURIs());
                 ActivityLauncher.openImageEditor(getActivity(), inputData);
             });
 
@@ -683,16 +683,5 @@ public class PhotoPickerFragment extends Fragment {
         Map<String, Object> properties = new HashMap<>();
         properties.put("is_video", isVideo);
         AnalyticsTracker.track(stat, properties);
-    }
-
-    private ArrayList<EditImageData.InputData> createListOfEditImageInputData(List<Uri> uris) {
-        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
-        for (Uri uri : uris) {
-            String stringUri = uri.toString();
-            String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(stringUri);
-            // TODO Add support for nullable lowResImgUrl
-            inputData.add(new EditImageData.InputData(stringUri, "", outputFileExtension));
-        }
-        return inputData;
     }
 }

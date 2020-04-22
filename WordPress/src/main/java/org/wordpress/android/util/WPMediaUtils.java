@@ -2,6 +2,7 @@ package org.wordpress.android.util;
 
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -523,5 +525,27 @@ public class WPMediaUtils {
             uriList.add(data.getData());
         }
         return uriList;
+    }
+
+    public static ArrayList<EditImageData.InputData> createListOfEditImageInputData(Context ctx, List<Uri> uris) {
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
+        for (Uri uri : uris) {
+            String outputFileExtension = getFileExtension(ctx, uri);
+            // TODO Add support for nullable lowResImgUrl
+            inputData.add(new EditImageData.InputData(uri.toString(), "", outputFileExtension));
+        }
+        return inputData;
+    }
+
+    public static String getFileExtension(Context ctx, Uri uri) {
+        String fileExtension;
+        if (uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = ctx.getContentResolver();
+            String mimeType = cr.getType(uri);
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        } else {
+            fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+        }
+        return fileExtension;
     }
 }
