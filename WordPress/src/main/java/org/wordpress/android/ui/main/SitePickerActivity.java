@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,6 +97,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private SitePickerMode mSitePickerMode;
     private Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
+    private float mDisabledOpacity;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -121,6 +123,10 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         if (mSitePickerMode.isReblogMode()) {
+            TypedValue disabledAlpha = new TypedValue();
+            this.getResources().getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true);
+            mDisabledOpacity = disabledAlpha.getFloat();
+
             mViewModel.getOnReblogActionTriggered().observe(
                     this,
                     unitEvent -> unitEvent.applyIfNotHandled(reblogAction -> {
@@ -210,6 +216,11 @@ public class SitePickerActivity extends LocaleAwareActivity
 
         mMenuContinue.setVisible(mSitePickerMode.isReblogMode() && !getAdapter().getIsInSearchMode());
         mMenuContinue.setEnabled(mViewModel.isReblogSiteSelected());
+
+
+        if (mSitePickerMode.isReblogMode()) {
+            mMenuContinue.getIcon().mutate().setAlpha(mSitePickerMode == SitePickerMode.REBLOG_SELECT_MODE ? (int) (mDisabledOpacity * 255) : 255);
+        }
 
         // no point showing search if there aren't multiple blogs
         mMenuSearch.setVisible(mSiteStore.getSitesCount() > 1);
