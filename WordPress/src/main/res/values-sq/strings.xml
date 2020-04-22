@@ -2237,8 +2237,4 @@ Language: sq_AL
     <string name="yes">Po</string>
     <string name="no">Jo</string>
     <string name="notification_settings">Rregullime Njoftimesh</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

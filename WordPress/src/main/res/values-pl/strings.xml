@@ -2233,8 +2233,4 @@ Language: pl
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
     <string name="error">Błąd</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

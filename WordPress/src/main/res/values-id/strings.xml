@@ -2194,8 +2194,4 @@ Language: id
     <string name="save">Simpan</string>
     <string name="cancel">Batal</string>
     <string name="error">Galat</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

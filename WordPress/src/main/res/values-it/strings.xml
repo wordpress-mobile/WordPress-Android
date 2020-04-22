@@ -2218,8 +2218,4 @@ Language: it
     <string name="save">Salva</string>
     <string name="cancel">Annulla</string>
     <string name="error">Errore</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

@@ -2239,8 +2239,4 @@ Language: ro
     <string name="save">Salvare</string>
     <string name="cancel">Anulare</string>
     <string name="error">Eroare</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

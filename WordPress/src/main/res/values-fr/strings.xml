@@ -2239,8 +2239,4 @@ Language: fr
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
     <string name="error">Erreur</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>
