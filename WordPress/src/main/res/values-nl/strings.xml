@@ -2121,8 +2121,4 @@ Language: nl
     <string name="save">Bewaar</string>
     <string name="cancel">Annuleer </string>
     <string name="error">Fout</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

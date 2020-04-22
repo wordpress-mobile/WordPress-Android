@@ -2229,8 +2229,4 @@ Language: he_IL
     <string name="save">שמור</string>
     <string name="cancel">בטל</string>
     <string name="error">שגיאה</string>
-    <string-array name="app_theme_entries">
-        <item>‎@string/app_theme_light</item>
-        <item>‎@string/app_theme_dark</item>
-    </string-array>
 </resources>

@@ -2210,8 +2210,4 @@ Language: zh_TW
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
     <string name="error">錯誤</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

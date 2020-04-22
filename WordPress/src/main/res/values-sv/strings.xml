@@ -2234,8 +2234,4 @@ Language: sv_SE
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
     <string name="error">Fel</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>
