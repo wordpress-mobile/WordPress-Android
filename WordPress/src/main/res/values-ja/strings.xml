@@ -648,11 +648,6 @@ Language: ja_JP
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">ネットワークエラーにより一部のメディアが読み込めませんでした。</string>
-    <string name="giphy_picker_empty_search_list">検索と一致するメディアがありません</string>
-    <string name="giphy_picker_initial_empty_text">GIF を検索して、メディアライブラリに追加してください。</string>
-    <string name="giphy_picker_search_hint">Giphy を検索する</string>
     <string name="stats_author_views_label">表示回数</string>
     <string name="stats_author_label">投稿者</string>
     <string name="stats_authors">投稿者</string>
@@ -2237,8 +2232,4 @@ Language: ja_JP
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>
     <string name="error">エラー</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

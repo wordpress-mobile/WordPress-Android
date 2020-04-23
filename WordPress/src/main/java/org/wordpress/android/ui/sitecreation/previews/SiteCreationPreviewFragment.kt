@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.sitecreation.previews
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
@@ -37,6 +39,8 @@ import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SiteP
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewWebErrorUiState
 import org.wordpress.android.ui.sitecreation.services.SiteCreationService
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AutoForeground.ServiceEventConnection
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener
 import org.wordpress.android.util.URLFilteredWebViewClient
@@ -63,6 +67,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
+    private lateinit var loadingTextLayout: ViewGroup
+    private lateinit var loadingTextView: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
@@ -108,6 +114,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
+        loadingTextView = fullscreenProgressLayout.findViewById(R.id.progress_text)
+        loadingTextLayout = fullscreenProgressLayout.findViewById(R.id.progress_text_layout)
         initViewModel()
         initRetryButton()
         initOkButton()
@@ -214,7 +222,33 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
         progressUiState.apply {
-            uiHelpers.setTextOrHide(fullscreenProgressLayout.findViewById(R.id.progress_text), loadingTextResId)
+            val newText = uiHelpers.getTextOfUiString(loadingTextView.context, loadingTextResId)
+            AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
+            if (animate) {
+                updateLoadingTextWithFadeAnimation(newText)
+            } else {
+                loadingTextView.text = newText
+            }
+        }
+    }
+
+    private fun updateLoadingTextWithFadeAnimation(newText: String) {
+        val animationDuration = AniUtils.Duration.SHORT
+        val fadeOut = AniUtils.getFadeOutAnim(loadingTextLayout, animationDuration, View.VISIBLE)
+        val fadeIn = AniUtils.getFadeInAnim(loadingTextLayout, animationDuration)
+
+        // update the text when the view isn't visible
+        fadeIn.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator) {
+                loadingTextView.text = newText
+            }
+        })
+        // Start the fadein animation right after the view fades out
+        fadeIn.startDelay = animationDuration.toMillis(loadingTextLayout.context)
+
+        AnimatorSet().apply {
+            playSequentially(fadeOut, fadeIn)
+            start()
         }
     }
 

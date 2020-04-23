@@ -38,6 +38,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity;
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose;
+import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
@@ -170,6 +171,16 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(StockMediaPickerActivity.KEY_REQUEST_CODE, requestCode);
 
+        activity.startActivityForResult(intent, requestCode);
+    }
+
+    public static void showGifPickerForResult(Activity activity, @NonNull SiteModel site, int requestCode) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("from", activity.getClass().getSimpleName());
+        AnalyticsTracker.track(Stat.GIF_PICKER_ACCESSED, properties);
+
+        Intent intent = new Intent(activity, GifPickerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -505,7 +516,7 @@ public class ActivityLauncher {
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl, true);
+                WPWebViewActivity.openURL(context, siteUrl, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
             }
         }
     }
@@ -678,7 +689,8 @@ public class ActivityLauncher {
                             shareSubject,
                             site.getFrameNonce(),
                             true,
-                            startPreviewForResult);
+                            startPreviewForResult,
+                            site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"

@@ -650,11 +650,6 @@ Language: sv_SE
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
-    <string name="giphy_powered_by_giphy">Drivs med hjälp av GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Vissa mediefiler kunde inte laddas på grund av nätverksproblem.</string>
-    <string name="giphy_picker_empty_search_list">Inga media matchar din sökning</string>
-    <string name="giphy_picker_initial_empty_text">Leta efter GIF-filer du kan lägga till i ditt mediebibliotek!</string>
-    <string name="giphy_picker_search_hint">Sök i Giphy</string>
     <string name="stats_author_views_label">Visningar</string>
     <string name="stats_author_label">Författare</string>
     <string name="stats_authors">Författare</string>
@@ -2239,8 +2234,4 @@ Language: sv_SE
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
     <string name="error">Fel</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

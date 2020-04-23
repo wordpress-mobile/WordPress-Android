@@ -648,11 +648,6 @@ Language: es_MX
     <string name="stats_no_data_for_period">No hay datos en este periodo</string>
     <string name="preference_strip_image_location">Eliminar la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor inténtalo de nuevo más tarde</string>
-    <string name="giphy_powered_by_giphy">Desarrollado por GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Algunos medios no se pudieron cargar debido a un error de red.</string>
-    <string name="giphy_picker_empty_search_list">No hay medios que coincidan con tu búsqueda.</string>
-    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para agregar a tu biblioteca de medios!</string>
-    <string name="giphy_picker_search_hint">Buscar en Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -2237,8 +2232,4 @@ Language: es_MX
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
     <string name="error">Error</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

@@ -648,11 +648,6 @@ Language: ar
     <string name="stats_no_data_for_period">لا توجد بيانات لهذه الفترة</string>
     <string name="preference_strip_image_location">إزالة موقع من الوسائط</string>
     <string name="stats_cannot_be_started">يتعذر علينا فتح الإحصاءات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
-    <string name="giphy_powered_by_giphy">مدعون من GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">فشل تحميل بعض الوسائط بسبب وجود خطأ في الشبكة.</string>
-    <string name="giphy_picker_empty_search_list">لا توجد وسائط مطابقة لبحثك</string>
-    <string name="giphy_picker_initial_empty_text">ابحث للعثور على صور بتنسيق GIF لإضافتها إلى مكتبة الوسائط الخاصة بك!</string>
-    <string name="giphy_picker_search_hint">البحث في Giphy</string>
     <string name="stats_author_views_label">مشاهدات</string>
     <string name="stats_author_label">الكاتب</string>
     <string name="stats_authors">الكُتّاب</string>
@@ -2237,8 +2232,4 @@ Language: ar
     <string name="save">حفظ </string>
     <string name="cancel">إلغاء</string>
     <string name="error">خطأ </string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

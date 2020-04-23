@@ -648,11 +648,6 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
-    <string name="giphy_powered_by_giphy">GIPHY tarafından sağlanır</string>
-    <string name="giphy_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
-    <string name="giphy_picker_empty_search_list">Aramanızla eşleşen bir ortam yok</string>
-    <string name="giphy_picker_initial_empty_text">Ortam kütüphanenize GIF bulup eklemek için arayın!</string>
-    <string name="giphy_picker_search_hint">Giphy\'de ara</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
     <string name="stats_author_label">Yazar</string>
     <string name="stats_authors">Yazarlar</string>
@@ -2237,8 +2232,4 @@ Language: tr
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="error">Hata</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

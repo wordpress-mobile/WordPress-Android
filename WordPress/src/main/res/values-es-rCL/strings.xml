@@ -141,11 +141,6 @@ Language: es_CL
     <string name="stats_no_data_for_period">No hay datos para este período</string>
     <string name="preference_strip_image_location">Quita la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor inténtalo de nuevo más tarde</string>
-    <string name="giphy_powered_by_giphy">Desarrollado por GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Algunos medios no pudieron cargarse debido a un error de red.</string>
-    <string name="giphy_picker_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
-    <string name="giphy_picker_initial_empty_text">¡Busca para encontrar GIFs para añadirlos a tu Biblioteca de Medios!</string>
-    <string name="giphy_picker_search_hint">Buscar en Giphy</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
