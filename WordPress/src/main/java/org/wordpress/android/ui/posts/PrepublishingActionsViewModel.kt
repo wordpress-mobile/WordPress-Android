@@ -34,7 +34,7 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
     private fun loadActionsUiState() {
         val prepublishingActionsUiStateList = listOf(
-                PrepublishingHomeHeaderUiState(UiStringText("WPTest"), "WP Site Image Url"),
+                PrepublishingHomeHeaderUiState(UiStringText("WP Test Site Name"), "WP Site Image Url"),
                 PrepublishingActionUiState(
                         actionType = PUBLISH,
                         actionResult = UiStringText("Immediately"),
@@ -47,10 +47,10 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
                 ),
                 PrepublishingActionUiState(
                         actionType = TAGS,
-                        actionResult = UiStringText("WPNot Set"),
+                        actionResult = UiStringText("WP Not Set"),
                         onActionClicked = ::onActionClicked
                 ),
-                PrepublishingButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button))
+                PrepublishingButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button), {})
         )
 
         _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
