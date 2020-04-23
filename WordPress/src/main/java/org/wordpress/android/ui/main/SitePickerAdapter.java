@@ -516,6 +516,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
+    void clearReblogSelection() {
+        mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
+        notifyDataSetChanged();
+    }
+
     private SiteList getSelectedSites() {
         SiteList sites = new SiteList();
         if (!mIsMultiSelectEnabled) {

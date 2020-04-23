@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,7 +57,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.Debouncer;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.viewmodel.main.SitePickerViewModel;
-import org.wordpress.android.viewmodel.main.SitePickerViewModel.ReblogAction.ContinueReblogTo;
+import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.ContinueReblogTo;
+import org.wordpress.android.viewmodel.main.SitePickerViewModel.Action.NavigateToState;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import java.util.ArrayList;
@@ -88,16 +88,15 @@ public class SitePickerActivity extends LocaleAwareActivity
     private EmptyViewRecyclerView mRecycleView;
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private ActionMode mActionMode;
+    private ActionMode mReblogActionMode;
     private MenuItem mMenuEdit;
     private MenuItem mMenuAdd;
     private MenuItem mMenuSearch;
-    private MenuItem mMenuContinue;
     private SearchView mSearchView;
     private int mCurrentLocalId;
     private SitePickerMode mSitePickerMode;
     private Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
-    private float mDisabledOpacity;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -123,24 +122,37 @@ public class SitePickerActivity extends LocaleAwareActivity
         }
 
         if (mSitePickerMode.isReblogMode()) {
-            TypedValue disabledAlpha = new TypedValue();
-            this.getResources().getValue(R.dimen.material_emphasis_disabled, disabledAlpha, true);
-            mDisabledOpacity = disabledAlpha.getFloat();
-
-            mViewModel.getOnReblogActionTriggered().observe(
+            mViewModel.getOnActionTriggered().observe(
                     this,
-                    unitEvent -> unitEvent.applyIfNotHandled(reblogAction -> {
-                switch (reblogAction.getActionType()) {
-                    case UPDATE_MENU_STATE:
-                        if (getAdapter().getIsInSearchMode()) {
-                            disableSearchMode();
-                        } else {
-                            invalidateOptionsMenu();
+                    unitEvent -> unitEvent.applyIfNotHandled(action -> {
+                switch (action.getActionType()) {
+                    case NAVIGATE_TO_STATE:
+                        switch (((NavigateToState) action).getNavigateState()) {
+                            case TO_SITE_SELECTED:
+                                mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
+                                if (getAdapter().getIsInSearchMode()) {
+                                    disableSearchMode();
+                                }
+
+                                if (mReblogActionMode == null) {
+                                    startSupportActionMode(new ReblogActionModeCallback());
+                                }
+
+                                SiteRecord site = ((NavigateToState) action).getSiteForReblog();
+                                if (site != null) {
+                                    mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
+                                }
+
+                                break;
+                            case TO_NO_SITE_SELECTED:
+                                mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
+                                getAdapter().clearReblogSelection();
+                                break;
                         }
 
                         break;
-                    case CONTINUE_REBLOG_FLOW:
-                        SiteRecord siteToReblog = ((ContinueReblogTo) reblogAction).getSiteForReblog();
+                    case CONTINUE_REBLOG_TO:
+                        SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
                         selectSiteAndFinish(siteToReblog);
 
                         break;
@@ -187,7 +199,6 @@ public class SitePickerActivity extends LocaleAwareActivity
         mMenuSearch = menu.findItem(R.id.menu_search);
         mMenuEdit = menu.findItem(R.id.menu_edit);
         mMenuAdd = menu.findItem(R.id.menu_add);
-        mMenuContinue = menu.findItem(R.id.continue_flow);
         return true;
     }
 
@@ -200,8 +211,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     }
 
     private void updateMenuItemVisibility() {
-        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null
-            || mMenuContinue == null || mViewModel == null) {
+        if (mMenuAdd == null || mMenuEdit == null || mMenuSearch == null) {
             return;
         }
 
@@ -212,16 +222,6 @@ public class SitePickerActivity extends LocaleAwareActivity
             // don't allow editing visibility unless there are multiple wp.com and jetpack sites
             mMenuEdit.setVisible(mSiteStore.getSitesAccessedViaWPComRestCount() > 1);
             mMenuAdd.setVisible(true);
-        }
-
-        mMenuContinue.setVisible(mSitePickerMode.isReblogMode() && !getAdapter().getIsInSearchMode());
-        mMenuContinue.setEnabled(mViewModel.isReblogSiteSelected());
-
-
-        if (mSitePickerMode.isReblogMode()) {
-            mMenuContinue.getIcon().mutate().setAlpha(
-                    mSitePickerMode == SitePickerMode.REBLOG_SELECT_MODE ? (int) (mDisabledOpacity * 255) : 255
-            );
         }
 
         // no point showing search if there aren't multiple blogs
@@ -381,6 +381,10 @@ public class SitePickerActivity extends LocaleAwareActivity
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.site_picker_title);
+
+            if (mSitePickerMode == SitePickerMode.REBLOG_CONTINUE_MODE && mReblogActionMode == null) {
+                mViewModel.onRefreshReblogActionMode();
+            }
         }
     }
 
@@ -513,7 +517,6 @@ public class SitePickerActivity extends LocaleAwareActivity
                     enableSearchMode();
                     mMenuEdit.setVisible(false);
                     mMenuAdd.setVisible(false);
-                    mMenuContinue.setVisible(false);
 
                     mSearchView.setOnQueryTextListener(SitePickerActivity.this);
                 }
@@ -586,10 +589,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     @Override
     public void onSiteClick(SiteRecord siteRecord) {
         if (mSitePickerMode.isReblogMode()) {
-            if (siteRecord != null) {
-                mCurrentLocalId = siteRecord.getLocalId();
-                mSitePickerMode = SitePickerMode.REBLOG_CONTINUE_MODE;
-            }
+            mCurrentLocalId = siteRecord.getLocalId();
             mViewModel.onSiteForReblogSelected(siteRecord);
         } else if (mActionMode == null) {
             selectSiteAndFinish(siteRecord);
@@ -625,6 +625,37 @@ public class SitePickerActivity extends LocaleAwareActivity
             saveSiteVisibility(siteRecord);
         }
         finish();
+    }
+
+    private final class ReblogActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mReblogActionMode = mode;
+            mode.getMenuInflater().inflate(R.menu.site_picker_reblog_action_mode, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.continue_flow) {
+                mViewModel.onContinueFlowSelected();
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mViewModel.onReblogActionBackSelected();
+            mReblogActionMode = null;
+        }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

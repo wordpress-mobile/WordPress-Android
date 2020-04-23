@@ -10,12 +10,6 @@
         app:showAsAction="collapseActionView|ifRoom" />
 
     <item
-        android:id="@+id/continue_flow"
-        android:icon="@drawable/ic_checkmark_white_24dp"
-        android:title="@string/sitepicker_continue_flow"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/menu_add"
         android:icon="@drawable/ic_plus_white_24dp"
         android:title="@string/site_picker_add_site"
