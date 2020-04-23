@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>testing_parameter</key>
-        <value>Z XML</value>
+        <key>tenor_available</key>
+        <value>false</value>
+    </entry>
+    <entry>
+        <key>experiment_value</key>
+        <value>not_in_experiment</value>
     </entry>
 </defaultsMap>

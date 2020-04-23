@@ -14,7 +14,7 @@ import javax.inject.Inject
  */
 class RemoteConfig
 @Inject constructor() {
-    fun init() {
+    fun refresh() {
         val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = Builder()
                 .setMinimumFetchIntervalInSeconds(BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL)
@@ -38,4 +38,5 @@ class RemoteConfig
     }
 
     fun isEnabled(field: String): Boolean = FirebaseRemoteConfig.getInstance().getBoolean(field)
+    fun getString(field: String): String = FirebaseRemoteConfig.getInstance().getString(field)
 }

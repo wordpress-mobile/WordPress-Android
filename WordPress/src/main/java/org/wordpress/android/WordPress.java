@@ -791,6 +791,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
+        mAppConfig.init();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
