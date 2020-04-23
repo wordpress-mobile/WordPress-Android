@@ -11,6 +11,12 @@ sealed class PrepublishingActionItemUiState {
         val onActionClicked: (actionType: ActionType) -> Unit
     ) : PrepublishingActionItemUiState()
 
+    data class PrepublishingHomeHeaderUiState(val siteName: String, val siteIconUrl: String) :
+            PrepublishingActionItemUiState()
+
+    data class PrepublishingButtonUiState(val buttonText: String) :
+            PrepublishingActionItemUiState()
+
     enum class ActionType(val textRes: UiStringRes) {
         PUBLISH(UiStringRes(R.string.prepublishing_nudges_publish_action)),
         VISIBILITY(UiStringRes(R.string.prepublishing_nudges_visibility_action)),
