@@ -1365,8 +1365,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 copyLinkAddress.setVisible(false);
                 trashMenuItem.setTitle(R.string.mnu_comment_delete_permanently);
             } else {
-                copyLinkAddress.setVisible(true);
                 trashMenuItem.setTitle(R.string.mnu_comment_trash);
+                if (commentStatus == CommentStatus.SPAM) {
+                    copyLinkAddress.setVisible(false);
+                } else {
+                    copyLinkAddress.setVisible(true);
+                }
             }
         } else {
             trashMenuItem.setVisible(false);
