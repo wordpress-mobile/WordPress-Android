@@ -24,7 +24,12 @@ class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<Prepu
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingActionsListItemViewHolder {
-        return PrepublishingActionsListItemViewHolder(parent, uiHelpers)
+        return when (viewType) {
+            headerViewType -> TODO()
+            actionItemViewType -> PrepublishingActionsListItemViewHolder(parent, uiHelpers)
+            publishButtonViewType -> TODO()
+            else -> throw NotImplementedError("Unknown ViewType")
+        }
     }
 
     fun update(newItems: List<PrepublishingActionItemUiState>) {
