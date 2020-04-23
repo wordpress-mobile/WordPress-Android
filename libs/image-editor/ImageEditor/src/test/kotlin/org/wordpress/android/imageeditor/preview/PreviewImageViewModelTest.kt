@@ -18,6 +18,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInHighResLoadSuccessUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
+import java.net.URI
 
 private const val TEST_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image.png"
 private const val TEST_HIGH_RES_IMAGE_URL = "https://wordpress.com/image.png"
@@ -27,7 +28,7 @@ private const val TEST_INPUT_FILE_PATH_TO_CROP = "/file/path/to/crop"
 private const val TEST2_LOW_RES_IMAGE_URL = "https://wordpress.com/low_res_image2.jpg"
 private const val TEST2_HIGH_RES_IMAGE_URL = "https://wordpress.com/image2.jpg"
 private const val TEST2_OUTPUT_FILE_EXTENSION = ".jpg"
-private const val TEST2_OUTPUT_FILE_PATH_FROM_CROP = "/file/path/from/crop/2"
+private const val TEST2_OUTPUT_FILE_PATH_FROM_CROP = "file://path/from/crop/2"
 private const val FIRST_ITEM_POSITION = 0
 private const val SECOND_ITEM_POSITION = 1
 
@@ -385,36 +386,40 @@ class PreviewImageViewModelTest {
     }
 
     @Test
-    fun `high res image file loading started when crop action triggered and given url is not a file url`() {
-        initViewModel()
+    fun `high res image file loading started when crop action triggered and high res url is not a file url`() {
+        initViewModel(testInputDataList)
 
         val selectedPosition = SECOND_ITEM_POSITION
         viewModel.onPageSelected(selectedPosition)
 
-        viewModel.onCropMenuClicked(
-            isFileUrl = false,
-            url = viewModel.getHighResImageUrl(selectedPosition)
-        )
+        viewModel.onCropMenuClicked()
 
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
-            ImageStartLoadingToFileState(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
+            ImageStartLoadingToFileState(testInputDataList.get(selectedPosition).highResImgUrl, selectedPosition)
         )
     }
 
     @Test
-    fun `high res image file loading started when crop action triggered and given url is a file url`() {
-        initViewModel()
-
-        val selectedPosition = SECOND_ITEM_POSITION
-        viewModel.onPageSelected(selectedPosition)
-
-        viewModel.onCropMenuClicked(
-                isFileUrl = true,
-                url = viewModel.getHighResImageUrl(selectedPosition)
+    fun `high res image file loading skipped when crop action triggered and high res url is a file url`() {
+        initViewModel(
+            listOf(
+                InputData(
+                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
+                    TEST2_OUTPUT_FILE_PATH_FROM_CROP,
+                    TEST2_OUTPUT_FILE_EXTENSION
+                )
+            )
         )
 
+        val selectedPosition = FIRST_ITEM_POSITION
+        viewModel.onPageSelected(selectedPosition)
+
+        viewModel.onCropMenuClicked()
+
+        assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent())
+            .isNotInstanceOf(ImageStartLoadingToFileState::class.java)
         assertThat(requireNotNull(viewModel.loadIntoFile.value).peekContent()).isEqualTo(
-            ImageLoadToFileSuccessState(viewModel.getHighResImageUrl(selectedPosition), selectedPosition)
+            ImageLoadToFileSuccessState(URI(TEST2_OUTPUT_FILE_PATH_FROM_CROP).path, selectedPosition)
         )
     }
 
