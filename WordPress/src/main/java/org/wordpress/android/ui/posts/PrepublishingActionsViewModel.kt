@@ -34,11 +34,17 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
                         actionType = PUBLISH,
                         actionResult = UiStringText("Immediately"),
                         onActionClicked = ::onActionClicked
-                ), PrepublishingActionUiState(
-                actionType = VISIBILITY,
-                actionResult = UiStringText("Public"),
-                onActionClicked = ::onActionClicked
-        ), PrepublishingActionUiState(actionType = TAGS, onActionClicked = ::onActionClicked)
+                ),
+                PrepublishingActionUiState(
+                        actionType = VISIBILITY,
+                        actionResult = UiStringText("Public"),
+                        onActionClicked = ::onActionClicked
+                ),
+                PrepublishingActionUiState(
+                        actionType = TAGS,
+                        actionResult = UiStringText("WPNot Set"),
+                        onActionClicked = ::onActionClicked
+                )
         )
 
         _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
