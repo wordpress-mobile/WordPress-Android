@@ -56,6 +56,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
             uiState as PrepublishingHomeHeaderUiState
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
+            TODO("re-enable site image loading when merged with latest changes")
             /*imageManager.loadWithRoundedCorners(
                     siteIcon,
                     BLAVATAR,
