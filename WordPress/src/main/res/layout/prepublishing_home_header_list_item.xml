@@ -27,14 +27,13 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:text="PUBLISHING TO"
+        android:text="@string/prepublishing_nudges_home_header_publishing_to"
         android:textAlignment="viewStart"
         android:textAppearance="?attr/textAppearanceCaption"
         app:layout_constraintBottom_toTopOf="@id/site_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/site_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/site_name"
