@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
@@ -16,6 +17,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
+import java.net.URI
 import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
@@ -27,17 +29,23 @@ class PreviewImageViewModel : ViewModel() {
 
     private val _navigateToCropScreenWithFileInfo = MutableLiveData<Event<Triple<String, String?, Boolean>>>()
     val navigateToCropScreenWithFileInfo: LiveData<Event<Triple<String, String?, Boolean>>> =
-            _navigateToCropScreenWithFileInfo
+        _navigateToCropScreenWithFileInfo
 
     private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
     val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
 
-    private var selectedPosition: Int = 0
+    var selectedPosition: Int = 0
+        private set
+
+    var numberOfImages = 0
+        private set
 
     fun onCreateView(imageDataList: List<InputData>) {
+        this.numberOfImages = imageDataList.size
+
         if (uiState.value == null) {
             val newImageUiStates = createViewPagerItemsInitialUiStates(
-                    convertInputDataToImageData(imageDataList)
+                convertInputDataToImageData(imageDataList)
             )
             val currentUiState = UiState(
                 newImageUiStates,
@@ -49,13 +57,13 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun convertInputDataToImageData(imageDataList: List<InputData>): List<ImageData> {
         return imageDataList
-                .map { (highRes, lowRes, extension) ->
-                    ImageData(
-                            highResImageUrl = highRes,
-                            lowResImageUrl = lowRes,
-                            outputFileExtension = extension
-                    )
-                }
+            .map { (highRes, lowRes, extension) ->
+                ImageData(
+                    highResImageUrl = highRes,
+                    lowResImageUrl = lowRes,
+                    outputFileExtension = extension
+                )
+            }
     }
 
     fun onLoadIntoImageViewSuccess(imageUrlAtPosition: String, position: Int) {
@@ -80,7 +88,8 @@ class PreviewImageViewModel : ViewModel() {
             currentUiState.editActionsEnabled
         }
 
-        updateUiState(currentUiState.copy(
+        updateUiState(
+            currentUiState.copy(
                 viewPagerItemsStates = newImageUiStates,
                 editActionsEnabled = enableEditActions
             )
@@ -111,19 +120,31 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onLoadIntoFileFailed() {
-        // TODO: Do we need to display any error message to the user?
-        updateLoadIntoFileState(ImageLoadToFileFailedState)
-    }
-
-    fun onCropMenuClicked(selectedPosition: Int) {
-        val selectedImageState = (uiState.value as UiState).viewPagerItemsStates[selectedPosition]
+    fun onLoadIntoFileFailed(exception: Exception?) {
         updateLoadIntoFileState(
-            ImageStartLoadingToFileState(
-                imageUrlAtPosition = selectedImageState.data.highResImageUrl,
-                position = selectedPosition
+            ImageLoadToFileFailedState(
+                exception?.message,
+                R.string.error_failed_to_load_into_file
             )
         )
+    }
+
+    fun onCropMenuClicked() {
+        val highResImageUrl = getHighResImageUrl(selectedPosition)
+
+        if (isFileUrl(highResImageUrl)) {
+            onLoadIntoFileSuccess(
+                inputFilePathAtPosition = URI(highResImageUrl).path as String,
+                position = selectedPosition
+            )
+        } else {
+            updateLoadIntoFileState(
+                ImageStartLoadingToFileState(
+                    imageUrlAtPosition = highResImageUrl,
+                    position = selectedPosition
+                )
+            )
+        }
     }
 
     fun onPageSelected(selectedPosition: Int) {
@@ -131,7 +152,8 @@ class PreviewImageViewModel : ViewModel() {
         val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[selectedPosition]
 
-        updateUiState(currentUiState.copy(
+        updateUiState(
+            currentUiState.copy(
                 editActionsEnabled = shouldEnableEditActionsForImageState(imageStateAtPosition)
             )
         )
@@ -189,9 +211,9 @@ class PreviewImageViewModel : ViewModel() {
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[position]
         val imageDataAtPosition = imageStateAtPosition.data
         return when {
-            loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageDataAtPosition, imageStateAtPosition)
+            loadSuccess -> createImageLoadSuccessUiState(imageUrlAtPosition, imageStateAtPosition)
             retry -> createImageLoadStartUiState(imageDataAtPosition)
-            else -> createImageLoadFailedUiState(imageUrlAtPosition, imageDataAtPosition, position)
+            else -> createImageLoadFailedUiState(imageUrlAtPosition, imageStateAtPosition, position)
         }
     }
 
@@ -203,10 +225,10 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun createImageLoadSuccessUiState(
         imageUrl: String,
-        imageData: ImageData,
         imageState: ImageUiState
     ): ImageUiState {
-        return if (imageUrl == imageData.lowResImageUrl) {
+        val imageData = imageState.data
+        return if (imageData.hasValidLowResImageUrlEqualTo(imageUrl)) {
             val isHighResImageAlreadyLoaded = imageState is ImageInHighResLoadSuccessUiState
             if (!isHighResImageAlreadyLoaded) {
                 val isRetryShown = imageState is ImageInHighResLoadFailedUiState
@@ -221,11 +243,13 @@ class PreviewImageViewModel : ViewModel() {
 
     private fun createImageLoadFailedUiState(
         imageUrlAtPosition: String,
-        imageDataAtPosition: ImageData,
+        imageStateAtPosition: ImageUiState,
         position: Int
     ): ImageUiState {
-        val imageUiState = if (imageUrlAtPosition == imageDataAtPosition.lowResImageUrl) {
-            ImageInLowResLoadFailedUiState(imageDataAtPosition)
+        val imageDataAtPosition = imageStateAtPosition.data
+        val imageUiState = if (imageDataAtPosition.hasValidLowResImageUrlEqualTo(imageUrlAtPosition)) {
+            val isRetryShown = imageStateAtPosition is ImageInHighResLoadFailedUiState
+            ImageInLowResLoadFailedUiState(imageDataAtPosition, isRetryShown)
         } else {
             ImageInHighResLoadFailedUiState(imageDataAtPosition)
         }
@@ -246,7 +270,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     private fun shouldEnableEditActionsForImageState(imageState: ImageUiState) =
-            imageState is ImageInHighResLoadSuccessUiState
+        imageState is ImageInHighResLoadSuccessUiState
 
     // TODO: revisit
     private fun canLoadToFile(imageState: ImageUiState) = imageState is ImageInHighResLoadSuccessUiState
@@ -255,7 +279,7 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onInsertClicked() {
         val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
-                ?: emptyList()
+            ?: emptyList()
         _finishAction.value = Event(outputData)
     }
 
@@ -264,16 +288,29 @@ class PreviewImageViewModel : ViewModel() {
             return if (TextUtils.isEmpty(imageData.lowResImageUrl))
                 imageData.highResImageUrl
             else
-                imageData.lowResImageUrl
+                imageData.lowResImageUrl as String
         } ?: ""
     }
 
+    private fun getHighResImageUrl(position: Int): String =
+        uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
+
+    private fun isFileUrl(url: String): Boolean = url.toLowerCase().startsWith(FILE_BASE)
+
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
-        val lowResImageUrl: String,
+        val lowResImageUrl: String?,
         val highResImageUrl: String,
         val outputFileExtension: String
-    )
+    ) {
+        fun hasValidLowResImageUrlEqualTo(imageUrl: String): Boolean {
+            val hasValidLowResImageUrl = this.lowResImageUrl?.isNotEmpty() == true &&
+                this.lowResImageUrl != this.highResImageUrl
+            val isGivenUrlEqualToLowResImageUrl = imageUrl == this.lowResImageUrl
+
+            return hasValidLowResImageUrl && isGivenUrlEqualToLowResImageUrl
+        }
+    }
 
     data class UiState(
         val viewPagerItemsStates: List<ImageUiState>,
@@ -287,28 +324,34 @@ class PreviewImageViewModel : ViewModel() {
         val retryLayoutVisible: Boolean
     ) {
         var onItemTapped: (() -> Unit)? = null
+
         data class ImageDataStartLoadingUiState(val imageData: ImageData) : ImageUiState(
             data = imageData,
             progressBarVisible = true,
             retryLayoutVisible = false
         )
+
         // Continue displaying progress bar on low res image load success
-        data class ImageInLowResLoadSuccessUiState(val imageData: ImageData, val isRetryShown: Boolean = false)
-            : ImageUiState(
-            data = imageData,
-            progressBarVisible = !isRetryShown,
-            retryLayoutVisible = isRetryShown
-        )
-        data class ImageInLowResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
-            data = imageData,
-            progressBarVisible = true,
-            retryLayoutVisible = false
-        )
+        data class ImageInLowResLoadSuccessUiState(val imageData: ImageData, val isRetryShown: Boolean = false) :
+            ImageUiState(
+                data = imageData,
+                progressBarVisible = !isRetryShown,
+                retryLayoutVisible = isRetryShown
+            )
+
+        data class ImageInLowResLoadFailedUiState(val imageData: ImageData, val isRetryShown: Boolean = false) :
+            ImageUiState(
+                data = imageData,
+                progressBarVisible = true,
+                retryLayoutVisible = false
+            )
+
         data class ImageInHighResLoadSuccessUiState(val imageData: ImageData) : ImageUiState(
             data = imageData,
             progressBarVisible = false,
             retryLayoutVisible = false
         )
+
         // Display retry only when high res image load failed
         data class ImageInHighResLoadFailedUiState(val imageData: ImageData) : ImageUiState(
             data = imageData,
@@ -320,9 +363,16 @@ class PreviewImageViewModel : ViewModel() {
     sealed class ImageLoadToFileState {
         object ImageLoadToFileIdleState : ImageLoadToFileState()
         data class ImageStartLoadingToFileState(val imageUrlAtPosition: String, val position: Int) :
-                ImageLoadToFileState()
+            ImageLoadToFileState()
+
         data class ImageLoadToFileSuccessState(val filePathAtPosition: String, val position: Int) :
-                ImageLoadToFileState()
-        object ImageLoadToFileFailedState : ImageLoadToFileState()
+            ImageLoadToFileState()
+
+        data class ImageLoadToFileFailedState(val errorMsg: String?, val errorResId: Int) :
+            ImageLoadToFileState()
+    }
+
+    companion object {
+        private const val FILE_BASE = "file:"
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -35,8 +36,13 @@ import org.wordpress.android.imageeditor.R.string
 import org.wordpress.android.imageeditor.crop.CropFragment
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
+import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileSuccessState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageStartLoadingToFileState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.UiState
+import org.wordpress.android.imageeditor.utils.ToastUtils
+import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 import org.wordpress.android.imageeditor.utils.UiHelpers
 import java.io.File
 
@@ -47,10 +53,9 @@ class PreviewImageFragment : Fragment() {
     private lateinit var pageChangeCallback: OnPageChangeCallback
 
     private var cropActionMenu: MenuItem? = null
-    // TODO We might want to move this into the VM
-    private var numberOfImages = 0
 
     companion object {
+        private val TAG = PreviewImageFragment::class.java.simpleName
         const val ARG_EDIT_IMAGE_DATA = "arg_edit_image_data"
         const val PREVIEW_IMAGE_REDUCED_SIZE_FACTOR = 0.1
 
@@ -58,7 +63,7 @@ class PreviewImageFragment : Fragment() {
             @Parcelize
             data class InputData(
                 val highResImgUrl: String,
-                val lowResImgUrl: String,
+                val lowResImgUrl: String?,
                 val outputFileExtension: String
             ) : EditImageData()
 
@@ -111,7 +116,7 @@ class PreviewImageFragment : Fragment() {
         val tabConfigurationStrategy = TabLayoutMediator.TabConfigurationStrategy { tab, position ->
             if (tab.customView == null) {
                 val customView = LayoutInflater.from(context)
-                        .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
+                    .inflate(R.layout.preview_image_thumbnail, thumbnailsTabLayout, false)
                 tab.customView = customView
             }
             val imageView = (tab.customView as FrameLayout).findViewById<ImageView>(R.id.thumbnailImageView)
@@ -144,7 +149,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeInsertButton() {
-        insertButton.text = getString(string.insert_label_with_count, numberOfImages)
+        insertButton.text = getString(string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
             viewModel.onInsertClicked()
         }
@@ -154,7 +159,6 @@ class PreviewImageFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
-        numberOfImages = inputData.size
 
         viewModel.onCreateView(inputData)
     }
@@ -164,8 +168,17 @@ class PreviewImageFragment : Fragment() {
 
         viewModel.loadIntoFile.observe(viewLifecycleOwner, Observer { fileStateEvent ->
             fileStateEvent?.getContentIfNotHandled()?.let { fileState ->
-                if (fileState is ImageStartLoadingToFileState) {
-                    loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
+                when (fileState) {
+                    is ImageLoadToFileIdleState -> { // Do nothing
+                    }
+                    is ImageStartLoadingToFileState -> {
+                        loadIntoFile(fileState.imageUrlAtPosition, fileState.position)
+                    }
+                    is ImageLoadToFileFailedState -> {
+                        showFileLoadError(fileState.errorMsg, fileState.errorResId)
+                    }
+                    is ImageLoadToFileSuccessState -> { // Do nothing
+                    }
                 }
             }
         })
@@ -176,15 +189,20 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        findNavController().currentBackStackEntry?.savedStateHandle
-                ?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
-                viewLifecycleOwner, Observer { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent = result.data
-                if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                    val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
-                    imageUri?.let {
-                        viewModel.onCropResult(it.toString())
+        val saveStateHandle = findNavController().currentBackStackEntry?.savedStateHandle
+        saveStateHandle?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
+            viewLifecycleOwner, Observer { result ->
+            result?.let {
+                if (it.resultCode == Activity.RESULT_OK) {
+                    val data: Intent = it.data
+                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
+                        val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
+                        imageUri?.let { uri ->
+                            viewModel.onCropResult(uri.toString())
+                            // As the result is scoped to the NavBackStackEntry and lives as long as that destination
+                            // is on the back stack, clear the result to handle it only once
+                            saveStateHandle.remove<CropResult>(CropFragment.CROP_RESULT)
+                        }
                     }
                 }
             }
@@ -230,17 +248,22 @@ class PreviewImageFragment : Fragment() {
 
     private fun loadIntoFile(url: String, position: Int) {
         ImageEditor.instance.loadIntoFileWithResultListener(
-            url,
+            Uri.parse(url),
             object : RequestListener<File> {
                 override fun onResourceReady(resource: File, url: String) {
                     viewModel.onLoadIntoFileSuccess(resource.path, position)
                 }
 
                 override fun onLoadFailed(e: Exception?, url: String) {
-                    viewModel.onLoadIntoFileFailed()
+                    viewModel.onLoadIntoFileFailed(e)
                 }
             }
         )
+    }
+
+    private fun showFileLoadError(errorMsg: String?, errorResId: Int) {
+        Log.e(TAG, "Failed to load into file: $errorMsg")
+        ToastUtils.showToast(context, getString(errorResId), Duration.LONG)
     }
 
     private fun navigateToCropScreenWithFileInfo(fileInfo: Triple<String, String?, Boolean>) {
@@ -275,7 +298,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
-        viewModel.onCropMenuClicked(previewImageViewPager.currentItem)
+        viewModel.onCropMenuClicked()
         true
     } else {
         super.onOptionsItemSelected(item)

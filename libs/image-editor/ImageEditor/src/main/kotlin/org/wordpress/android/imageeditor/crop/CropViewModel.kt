@@ -31,7 +31,7 @@ class CropViewModel : ViewModel() {
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
 
-    private lateinit var cacheDir: File
+    private lateinit var mediaEditingDirectory: File
     private lateinit var inputFilePath: String
     private lateinit var outputFileExtension: String
     private var isStarted = false
@@ -62,7 +62,7 @@ class CropViewModel : ViewModel() {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
 
                 putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
-                        File(cacheDir,
+                        File(mediaEditingDirectory,
                                 "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
                         )))
                 putAll(cropOptions.optionBundle)
@@ -74,7 +74,6 @@ class CropViewModel : ViewModel() {
         if (isStarted) {
             return
         }
-        this.cacheDir = cacheDir
         initMediaEditingDirectory(cacheDir)
         this.inputFilePath = inputFilePath
         this.outputFileExtension = outputFileExtension ?: DEFAULT_FILE_EXTENSION
@@ -84,8 +83,8 @@ class CropViewModel : ViewModel() {
     }
 
     private fun initMediaEditingDirectory(cacheDir: File) {
-        val directory = File(cacheDir, MEDIA_EDITING)
-        if (directory.mkdir()) {
+        mediaEditingDirectory = File(cacheDir, MEDIA_EDITING)
+        if (mediaEditingDirectory.mkdir()) {
             Log.d(TAG, "Cache directory created for media editing")
         }
     }
