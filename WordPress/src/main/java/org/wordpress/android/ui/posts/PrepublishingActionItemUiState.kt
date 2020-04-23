@@ -3,6 +3,7 @@ package org.wordpress.android.ui.posts
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 
 sealed class PrepublishingActionItemUiState {
     data class PrepublishingActionUiState(
@@ -11,7 +12,7 @@ sealed class PrepublishingActionItemUiState {
         val onActionClicked: (actionType: ActionType) -> Unit
     ) : PrepublishingActionItemUiState()
 
-    data class PrepublishingHomeHeaderUiState(val siteName: String, val siteIconUrl: String) :
+    data class PrepublishingHomeHeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
             PrepublishingActionItemUiState()
 
     data class PrepublishingButtonUiState(val buttonText: String) :
