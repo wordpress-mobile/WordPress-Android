@@ -9,10 +9,9 @@
         android:id="@+id/prepublishing_content_fragment"
         android:name="org.wordpress.android.ui.posts.PrepublishingActionsFragment"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_min="@dimen/prepublishing_bottom_sheet_min_height"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle" />
 
