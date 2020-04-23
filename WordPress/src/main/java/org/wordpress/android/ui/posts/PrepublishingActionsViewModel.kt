@@ -3,12 +3,15 @@ package org.wordpress.android.ui.posts
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingHomeHeaderUiState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -46,7 +49,8 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
                         actionType = TAGS,
                         actionResult = UiStringText("WPNot Set"),
                         onActionClicked = ::onActionClicked
-                )
+                ),
+                PrepublishingButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button))
         )
 
         _prepublishingActionsUiState.postValue(prepublishingActionsUiStateList)
