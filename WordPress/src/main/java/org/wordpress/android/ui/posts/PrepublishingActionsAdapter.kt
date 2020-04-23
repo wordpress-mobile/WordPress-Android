@@ -10,6 +10,7 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.Prepublishi
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingHomeHeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
+import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomePublishButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -31,7 +32,7 @@ class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<Prepu
         return when (viewType) {
             headerViewType -> PrepublishingHeaderListItemViewHolder(parent, uiHelpers, imageManager)
             actionItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
-            publishButtonViewType -> TODO()
+            publishButtonViewType -> PrepublishingHomePublishButtonViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
