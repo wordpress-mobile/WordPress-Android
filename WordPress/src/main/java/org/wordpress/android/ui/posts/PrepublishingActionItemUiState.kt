@@ -15,7 +15,7 @@ sealed class PrepublishingActionItemUiState {
     data class PrepublishingHomeHeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
             PrepublishingActionItemUiState()
 
-    data class PrepublishingButtonUiState(val buttonText: String) :
+    data class PrepublishingButtonUiState(val buttonText: UiStringRes) :
             PrepublishingActionItemUiState()
 
     enum class ActionType(val textRes: UiStringRes) {
