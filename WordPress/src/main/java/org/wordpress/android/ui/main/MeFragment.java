@@ -67,7 +67,7 @@ import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
-public class MeFragment extends Fragment implements MainToolbarFragment, WPMainActivity.OnScrollToTopListener {
+public class MeFragment extends Fragment implements WPMainActivity.OnScrollToTopListener {
     private static final String IS_DISCONNECTING = "IS_DISCONNECTING";
     private static final String IS_UPDATING_GRAVATAR = "IS_UPDATING_GRAVATAR";
 
@@ -191,14 +191,6 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
         super.onStart();
         EventBus.getDefault().register(this);
         mDispatcher.register(this);
-    }
-
-    @Override
-    public void setTitle(@NotNull String title) {
-        mToolbarTitle = title;
-        if (mToolbar != null) {
-            mToolbar.setTitle(title);
-        }
     }
 
     @Override
