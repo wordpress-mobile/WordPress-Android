@@ -17,6 +17,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadFailedUiState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
+import java.net.URI
 import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
@@ -128,16 +129,18 @@ class PreviewImageViewModel : ViewModel() {
         )
     }
 
-    fun onCropMenuClicked(isFileUrl: Boolean, url: String) {
-        if (isFileUrl) {
+    fun onCropMenuClicked() {
+        val highResImageUrl = getHighResImageUrl(selectedPosition)
+
+        if (isFileUrl(highResImageUrl)) {
             onLoadIntoFileSuccess(
-                inputFilePathAtPosition = url,
+                inputFilePathAtPosition = URI(highResImageUrl).path as String,
                 position = selectedPosition
             )
         } else {
             updateLoadIntoFileState(
                 ImageStartLoadingToFileState(
-                    imageUrlAtPosition = url,
+                    imageUrlAtPosition = highResImageUrl,
                     position = selectedPosition
                 )
             )
@@ -289,8 +292,10 @@ class PreviewImageViewModel : ViewModel() {
         } ?: ""
     }
 
-    fun getHighResImageUrl(position: Int): String =
+    private fun getHighResImageUrl(position: Int): String =
         uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
+
+    private fun isFileUrl(url: String): Boolean = url.toLowerCase().startsWith(FILE_BASE)
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
@@ -365,5 +370,9 @@ class PreviewImageViewModel : ViewModel() {
 
         data class ImageLoadToFileFailedState(val errorMsg: String?, val errorResId: Int) :
             ImageLoadToFileState()
+    }
+
+    companion object {
+        private const val FILE_BASE = "file:"
     }
 }
