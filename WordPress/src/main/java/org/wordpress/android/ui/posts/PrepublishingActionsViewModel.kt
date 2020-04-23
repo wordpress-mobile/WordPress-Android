@@ -8,6 +8,7 @@ import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingHomeHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class PrepublishingActionsViewModel @Inject constructor() : ViewModel() {
     // TODO remove hardcoded Immediately & Public with live data from the EditPostRepository / user changes.
     private fun loadActionsUiState() {
         val prepublishingActionsUiStateList = listOf(
+                PrepublishingHomeHeaderUiState(UiStringText("WPTest"), "WP Site Image Url"),
                 PrepublishingActionUiState(
                         actionType = PUBLISH,
                         actionResult = UiStringText("Immediately"),
