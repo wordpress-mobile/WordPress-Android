@@ -2,12 +2,14 @@ package org.wordpress.android.ui.posts
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
+import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingHomeHeaderUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -56,13 +58,26 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
             uiState as PrepublishingHomeHeaderUiState
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
-            TODO("re-enable site image loading when merged with latest changes")
+            // TODO("re-enable site image loading when merged with latest changes")
             /*imageManager.loadWithRoundedCorners(
                     siteIcon,
                     BLAVATAR,
                     uiState.siteIconUrl,
                     DisplayUtils.dpToPx(itemView.context, ROUNDING_RADIUS_DP)
             )*/
+        }
+    }
+
+    class PrepublishingHomePublishButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
+            PrepublishingHomeViewHolder(
+                    parentView, R.layout.prepublishing_home_publish_button_list_item
+            ) {
+        private val button: Button = itemView.findViewById(R.id.publish_button)
+
+        override fun onBind(uiState: PrepublishingActionItemUiState) {
+            uiState as PrepublishingButtonUiState
+
+            button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
         }
     }
 }
