@@ -23,8 +23,8 @@
     <org.wordpress.android.widgets.SuggestionAutoCompleteText
         android:id="@+id/autocompleteText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/margin_extra_large"
+        android:layout_height="44dp"
+        android:paddingHorizontal="@dimen/margin_extra_large"
         android:dropDownWidth="match_parent"
         android:imeOptions="actionDone"
         android:inputType="text"
