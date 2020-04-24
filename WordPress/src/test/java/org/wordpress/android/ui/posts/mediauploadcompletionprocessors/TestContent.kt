@@ -5,18 +5,21 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors
 object TestContent {
     const val siteUrl = "https://wordpress.org"
     private const val localImageUrl = "file://Screenshot-1-1.png"
+    private const val localImageUrl2 = "file://Screenshot-1-2.png"
     const val remoteImageUrl = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"
+    const val remoteImageUrl2 = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"
     private const val remoteImageUrlBlogLink = "http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/"
     private const val remoteImageUrlWithSize = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024"
-    private const val remoteImageUrl2 = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"
     private const val remoteImageUrl2BlogLink = "http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369"
     private const val remoteImageUrl2WithSize = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg?w=768"
     private const val localVideoUrl = "file://local-video.mov"
     const val remoteVideoUrl = "https://videos.files.wordpress.com/qeJFeNa2/macintosh-plus-floral-shoppe-02-e383aae382b5e38395e383a9e383b3e382af420-e78fbee4bba3e381aee382b3e383b3e38394e383a5e383bc-1_hd.mp4"
     const val localMediaId = "112"
+    const val localMediaId2 = "113"
     private const val collidingPrefixMediaId = "${localMediaId}42"
     private const val collidingSuffixMediaId = "42${localMediaId}"
     const val remoteMediaId = "97629"
+    const val remoteMediaId2 = "97630"
     const val attachmentPageUrl = "https://wordpress.org?p=${remoteMediaId}"
 
     const val oldImageBlock = """<!-- wp:image {"id":${localMediaId},"align":"full"} -->
@@ -359,6 +362,143 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
+    const val oldCoverBlock = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlock = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldCoverBlockWithNestedImageBlock = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+  $newImageBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val newCoverBlockWithNestedImageBlock = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+  $newImageBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldCoverBlockWithNestedCoverBlockOuter = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
+  <div class="wp-block-cover__inner-container">
+  $oldCoverBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val newCoverBlockWithNestedCoverBlockOuter = """<!-- wp:cover {"url":"$remoteImageUrl2","id":$remoteMediaId2} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl2)">
+  <div class="wp-block-cover__inner-container">
+  $oldCoverBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldCoverBlockWithNestedCoverBlockInner = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
+  <div class="wp-block-cover__inner-container">
+  $oldCoverBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val newCoverBlockWithNestedCoverBlockInner = """<!-- wp:cover {"url":"$localImageUrl2","id":$localMediaId2} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl2)">
+  <div class="wp-block-cover__inner-container">
+  $newCoverBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldImageBlockNestedInCoverBlock = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+  $oldImageBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val newImageBlockNestedInCoverBlock = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+  $newImageBlock
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val malformedCoverBlock = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+"""
+    const val oldCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="color:black;background-image:url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockDifferentStyleOrder = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="color:black;background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+    const val oldCoverBlockStyleOrderWithSpace = """<!-- wp:cover {"url":"$localImageUrl","id":$localMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image: url($localImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockStyleOrderWithoutSpace = """<!-- wp:cover {"url":"$remoteImageUrl","id":$remoteMediaId,"someOtherAttribute":5} -->
+<div class="wp-block-cover has-background-dim" style="background-image:url($remoteImageUrl)">
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
@@ -367,4 +507,6 @@ object TestContent {
     const val newPostMediaText = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + oldGalleryBlock
     const val newPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
+    const val oldPostCover = paragraphBlock + newImageBlock + oldCoverBlock + newMediaTextBlock + oldGalleryBlock
+    const val newPostCover = paragraphBlock + newImageBlock + newCoverBlock + newMediaTextBlock + newGalleryBlock
 }

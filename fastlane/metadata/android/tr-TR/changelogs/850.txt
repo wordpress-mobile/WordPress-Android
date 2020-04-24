@@ -1,0 +1,6 @@
+14.6:
+Blok düzenleyici geliştirmeleri: Kapak bloğu eklendi. Yazılardaki görseller için kırpma, yakınlaştırma ve döndürme etkinleştirildi. "Fotoğraf Çek" den ayırt etmek için "Video Çek" simgesinde düzeltme yapıldı. Seçili olmayan bloklar üzerindeki karartma efekti kaldırıldı. Başlık, Paragraf, Resim ve MediaText bloklarındaki hizalama seçenekleri için araç çubuğu eklendi.
+
+Düzeltmeler: Bir tarayıcıdaki “wordpress://” bağlantılarının uygulamayı açmadığı, sayfa açmanın boş bir düzenleyici açtığı sorun.
+
+Genel geliştirmeler: Koyu tema desteği.

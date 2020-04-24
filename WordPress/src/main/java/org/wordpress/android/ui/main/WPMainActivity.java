@@ -761,7 +761,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onPageChanged(int position) {
         PageType pageType = WPMainNavigationView.getPageType(position);
-        updateTitle(pageType);
         trackLastVisiblePage(pageType, true);
         if (getMySiteFragment() != null) {
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
@@ -806,11 +805,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
-    }
-
-    private void updateTitle(PageType pageType) {
-        ((MainToolbarFragment) mBottomNav.getActiveFragment())
-                .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
     }
 
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {

@@ -56,11 +56,16 @@ public class SuggestionTable {
         // we want to delete the current suggestions, so that removed users will not show up as a suggestion
         deleteSuggestionsForSite(siteId);
 
+        // Including the insertion of all suggestions in a single transaction dramatically improves insertion
+        // performance when there are a lot of suggestions
+        getWritableDb().beginTransaction();
         if (suggestions != null) {
             for (Suggestion suggestion : suggestions) {
                 addSuggestion(suggestion);
             }
         }
+        getWritableDb().setTransactionSuccessful();
+        getWritableDb().endTransaction();
     }
 
     public static void addSuggestion(final Suggestion suggestion) {

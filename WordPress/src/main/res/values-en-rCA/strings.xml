@@ -112,8 +112,6 @@ Language: en_CA
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -1921,7 +1919,6 @@ Language: en_CA
     <string name="content_required">Comment is required</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="hint_comment_content">Comment</string>
     <string name="trash">Trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
@@ -2023,7 +2020,6 @@ Language: en_CA
     <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Terms of Service</string>
@@ -2036,7 +2032,6 @@ Language: en_CA
     <string name="quickpress_add_alert_title">Set shortcut name</string>
     <string name="settings">Settings</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
-    <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
     <string name="pages_private">Private</string>
     <string name="categories">Categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>
