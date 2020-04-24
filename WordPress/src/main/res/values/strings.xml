@@ -2738,6 +2738,7 @@
     <string name="description_expand">Expand</string>
 
     <string name="preview_image_description">Preview Image</string>
+    <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
     <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
     <string name="done">done</string>
     <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
