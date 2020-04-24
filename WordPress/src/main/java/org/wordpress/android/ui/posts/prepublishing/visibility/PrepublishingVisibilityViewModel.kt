@@ -1,14 +1,15 @@
-package org.wordpress.android.ui.posts.prepublishing
+package org.wordpress.android.ui.posts.prepublishing.visibility
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingVisibilityItemUiState.Visibility
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
-import org.wordpress.android.ui.posts.prepublishing.PrepublishingVisibilityItemUiState.VisibilityUiState
+import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 class PrepublishingVisibilityViewModel : ViewModel() {
@@ -17,7 +18,7 @@ class PrepublishingVisibilityViewModel : ViewModel() {
     private val _uiState = MutableLiveData<List<VisibilityUiState>>()
     val uiState: LiveData<List<VisibilityUiState>> = _uiState
 
-    fun start() {
+    fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
         isStarted = true
         createVisibilityUiStates(PUBLIC)
