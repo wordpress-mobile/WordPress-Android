@@ -6,15 +6,22 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 const val KEY_SCREEN_STATE = "key_screen_state"
 
-class PrepublishingViewModel @Inject constructor() : ViewModel() {
+class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatcher) : ViewModel() {
     private var isStarted = false
     private lateinit var site: SiteModel
 
@@ -25,6 +32,15 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
 
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
+
+    init {
+        dispatcher.register(this)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        dispatcher.unregister(this)
+    }
 
     fun start(
         site: SiteModel,
@@ -41,6 +57,7 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         } ?: run {
             navigateToScreen(HOME)
         }
+        fetchTags()
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
@@ -72,6 +89,21 @@ class PrepublishingViewModel @Inject constructor() : ViewModel() {
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
         navigateToScreen(screen)
+    }
+
+    /**
+     * Fetches the tags so that they will be available when the Tags action is clicked
+     */
+    private fun fetchTags() {
+        dispatcher.dispatch(TaxonomyActionBuilder.newFetchTagsAction(site))
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onTaxonomyChanged(event: OnTaxonomyChanged) {
+        if (event.isError) {
+            AppLog.e(T.POSTS, "An error occurred while updating taxonomy with type: " + event.error.type)
+        }
     }
 }
 
