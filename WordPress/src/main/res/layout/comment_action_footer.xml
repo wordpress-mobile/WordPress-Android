@@ -72,36 +72,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/btn_trash"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingStart="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_medium"
-            android:paddingEnd="@dimen/margin_small"
-            android:paddingBottom="@dimen/margin_medium"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <ImageView
-                android:id="@+id/btn_trash_icon"
-                style="@style/CommentActionIcon"
-                android:contentDescription="@null"
-                android:src="@drawable/ic_trash_white_24dp" />
-
-            <org.wordpress.android.util.widgets.AutoResizeTextView
-                android:id="@+id/btn_trash_text"
-                style="@style/CommentActionLabel"
-                android:text="@string/mnu_comment_trash" />
-
-        </LinearLayout>
-
         <!-- like and moderate buttons don't use a compound drawable so the icon can be animated when tapped -->
         <LinearLayout
             android:id="@+id/btn_like"
@@ -132,7 +102,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/btn_edit"
+            android:id="@+id/btn_more"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -145,19 +115,19 @@
             android:paddingTop="@dimen/margin_medium"
             android:paddingEnd="@dimen/margin_small"
             android:paddingBottom="@dimen/margin_medium"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible">
 
             <ImageView
                 android:id="@+id/btn_edit_icon"
                 style="@style/CommentActionIcon"
                 android:contentDescription="@null"
-                android:src="@drawable/ic_pencil_white_24dp" />
+                android:src="@drawable/ic_more_horiz_white_24dp" />
 
             <org.wordpress.android.util.widgets.AutoResizeTextView
-                android:id="@+id/btn_edit_text"
+                android:id="@+id/btn_more_text"
                 style="@style/CommentActionLabel"
-                android:text="@string/edit" />
+                android:text="@string/more" />
 
         </LinearLayout>
 
