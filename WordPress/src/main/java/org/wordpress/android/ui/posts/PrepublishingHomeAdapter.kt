@@ -8,21 +8,21 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<PrepublishingActionsListItemViewHolder>() {
-    private var items: List<PrepublishingActionItemUiState> = listOf()
+class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeListItemViewHolder>() {
+    private var items: List<PrepublishingHomeItemUiState> = listOf()
     @Inject lateinit var uiHelpers: UiHelpers
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingActionsListItemViewHolder {
-        return PrepublishingActionsListItemViewHolder(parent, uiHelpers)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeListItemViewHolder {
+        return PrepublishingHomeListItemViewHolder(parent, uiHelpers)
     }
 
-    fun update(newItems: List<PrepublishingActionItemUiState>) {
+    fun update(newItems: List<PrepublishingHomeItemUiState>) {
         val diffResult = DiffUtil.calculateDiff(
-                PrepublishingActionsDiffCallback(
+                PrepublishingHomeDiffCallback(
                         this.items,
                         newItems
                 )
@@ -33,7 +33,7 @@ class PrepublishingActionsAdapter(context: Context) : RecyclerView.Adapter<Prepu
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: PrepublishingActionsListItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PrepublishingHomeListItemViewHolder, position: Int) {
         val item = items[position]
         holder.bind(item)
     }

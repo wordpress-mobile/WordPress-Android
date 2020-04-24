@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/prepublishing_toolbar"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_medium_large"
+        android:text="@string/prepublishing_tags_description"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?wpColorOnSurfaceMedium" />
+
+    <include layout="@layout/fragment_post_settings_tags" />
+</LinearLayout>
