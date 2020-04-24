@@ -1800,7 +1800,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
-            PrepublishingBottomSheetFragment prepublishingFragment = PrepublishingBottomSheetFragment.newInstance();
+            PrepublishingBottomSheetFragment prepublishingFragment =
+                    PrepublishingBottomSheetFragment.newInstance(getSite());
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }
