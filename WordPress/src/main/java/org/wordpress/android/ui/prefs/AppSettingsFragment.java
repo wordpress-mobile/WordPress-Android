@@ -167,9 +167,9 @@ public class AppSettingsFragment extends PreferenceFragment
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
         if (BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE) {
-            mWhatsNew.setTitle(getString(R.string.whats_new_in_version, WordPress.versionName));
+            mWhatsNew.setSummary(getString(R.string.whats_new_in_version_summary, WordPress.versionName));
         } else {
-           removeWhatsNewPreference();
+            removeWhatsNewPreference();
         }
 
         if (!BuildConfig.OFFER_GUTENBERG) {

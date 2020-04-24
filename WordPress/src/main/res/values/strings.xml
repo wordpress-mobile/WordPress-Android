@@ -813,7 +813,8 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
-    <string name="whats_new_in_version">What\'s New Version %s</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
+    <string name="whats_new_in_version_summary">Version %s</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="preference_crash_reports">Crash reports</string>

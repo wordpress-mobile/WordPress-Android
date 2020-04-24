@@ -135,7 +135,7 @@
 
         <Preference
             android:key="@string/pref_key_whats_new"
-            android:title="@string/whats_new_in_version" />
+            android:title="@string/whats_new_in_version_title" />
 
     </PreferenceCategory>
 </PreferenceScreen>
