@@ -154,7 +154,7 @@ public class EditPostSettingsFragment extends Fragment {
     private EditPostPublishSettingsViewModel mPublishedViewModel;
 
 
-    interface EditPostActivityHook {
+    public interface EditPostActivityHook {
         EditPostRepository getEditPostRepository();
 
         SiteModel getSite();
