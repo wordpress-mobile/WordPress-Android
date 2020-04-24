@@ -38,7 +38,7 @@
         tools:ignore="RtlSymmetry" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/visibility"
+        android:id="@+id/visibility_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_extra_large"
