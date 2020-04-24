@@ -1263,15 +1263,35 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // WPMainActivity invokes show(). This condition makes sure, the WPMainActivity invokes show() only when
         // it's visible. For more info see https://github.com/wordpress-mobile/WordPress-Android/issues/9604
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
-            SiteModel site = getSelectedSite();
-            if (site != null && event.post != null) {
+            SiteModel selectedSite = getSelectedSite();
+
+            if (selectedSite != null && event.post != null) {
+                SiteModel targetSite;
+
+                if (event.post.getLocalSiteId() == selectedSite.getId()) {
+                    targetSite = selectedSite;
+                } else {
+                    SiteModel postSite = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
+
+                    if (postSite != null) {
+                        targetSite = postSite;
+                    } else {
+                        AppLog.d(
+                                T.MAIN,
+                                "WPMainActivity >  onPostUploaded: got an event from a not found site ["
+                                + event.post.getLocalSiteId() + "]."
+                        );
+                        return;
+                    }
+                }
+
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
                         event.post,
                         null,
-                        site);
+                        targetSite);
             }
         }
     }

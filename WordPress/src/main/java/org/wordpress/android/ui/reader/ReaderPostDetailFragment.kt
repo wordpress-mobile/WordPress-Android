@@ -183,7 +183,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
-    @Inject internal lateinit var mSiteStore: SiteStore    
+    @Inject internal lateinit var mSiteStore: SiteStore
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
