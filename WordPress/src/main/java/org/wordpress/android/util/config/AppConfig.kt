@@ -19,7 +19,7 @@ class AppConfig
     /**
      * This method initialized the config and triggers refresh of remote configuration.
      */
-    fun init() {
+    fun refresh() {
         remoteConfig.refresh()
     }
 
@@ -37,6 +37,10 @@ class AppConfig
         }
     }
 
+    /**
+     * Get the currently selected variant for a given experiment. This function returns null if there is no variant
+     * for the current user (and the user is in the control group).
+     */
     fun getCurrentVariant(experiment: ExperimentConfig): Variant? {
         val value = experimentValues.getOrPut(experiment) {
             val remoteValue = remoteConfig.getString(experiment.remoteField)

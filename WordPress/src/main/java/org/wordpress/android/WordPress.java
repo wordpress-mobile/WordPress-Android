@@ -239,7 +239,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         component().inject(this);
         mDispatcher.register(this);
 
-        mAppConfig.init();
+        mAppConfig.refresh();
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
@@ -791,7 +791,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
-        mAppConfig.init();
+        mAppConfig.refresh();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

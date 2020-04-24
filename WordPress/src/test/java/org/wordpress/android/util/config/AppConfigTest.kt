@@ -18,7 +18,7 @@ class AppConfigTest {
     @Mock lateinit var analyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var featureConfig: FeatureConfig
     @Mock lateinit var experimentConfig: ExperimentConfig
-    lateinit var appConfig: AppConfig
+    private lateinit var appConfig: AppConfig
     private val remoteField = "remote_field"
     private val experimentVariantA = "variantA"
     private val experimentVariantB = "variantB"
@@ -26,6 +26,13 @@ class AppConfigTest {
     @Before
     fun setUp() {
         appConfig = AppConfig(remoteConfig, analyticsTracker)
+    }
+
+    @Test
+    fun `refresh passes the call to remote config`() {
+        appConfig.refresh()
+
+        verify(remoteConfig).refresh()
     }
 
     @Test
