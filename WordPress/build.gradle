@@ -68,6 +68,7 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
+        buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -100,6 +101,7 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "true"
         }
     }
 
