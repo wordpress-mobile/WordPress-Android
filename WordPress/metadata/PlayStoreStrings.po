@@ -11,6 +11,16 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_147"
+msgid ""
+"14.7:\n"
+"Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.\n"
+"\n"
+"Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.\n"
+"\n"
+"UI improvements: Added your Gravatar to the Me menu in My Site.\n"
+msgstr ""
+
 msgctxt "release_note_146"
 msgid ""
 "14.6:\n"
@@ -19,15 +29,6 @@ msgid ""
 "Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.\n"
 "\n"
 "General improvements: Dark Theme support.\n"
-msgstr ""
-
-msgctxt "release_note_145"
-msgid ""
-"14.5:\n"
-"Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images\n"
-"Page Templates: Added a block-based templates for quicker page creation.\n"
-"Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.\n"
-"Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
