@@ -70,7 +70,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
     localize_gutenberg(skip_module_update: true)
     localize_libs()
     ensure_git_status_clean()
-    android_tag_build()
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
