@@ -531,8 +531,7 @@ public class WPMediaUtils {
         ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
         for (Uri uri : uris) {
             String outputFileExtension = getFileExtension(ctx, uri);
-            // TODO Add support for nullable lowResImgUrl
-            inputData.add(new EditImageData.InputData(uri.toString(), "", outputFileExtension));
+            inputData.add(new EditImageData.InputData(uri.toString(), null, outputFileExtension));
         }
         return inputData;
     }
