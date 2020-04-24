@@ -8,9 +8,11 @@ import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
-import org.wordpress.android.ui.posts.PrepublishingActionsViewModel;
+import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
+import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -285,8 +287,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(PrepublishingActionsViewModel.class)
-    abstract ViewModel prepublishingOptionsViewModel(PrepublishingActionsViewModel viewModel);
+    @ViewModelKey(PrepublishingHomeViewModel.class)
+    abstract ViewModel prepublishingOptionsViewModel(PrepublishingHomeViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingTagsViewModel.class)
+    abstract ViewModel prepublishingTagsViewModel(PrepublishingTagsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingPublishSettingsViewModel.class)
+    abstract ViewModel prepublishingPublishSettingsViewModel(PrepublishingPublishSettingsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

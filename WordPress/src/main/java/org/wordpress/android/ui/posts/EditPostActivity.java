@@ -1796,7 +1796,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showPrepublishingNudgeBottomSheet() {
-        PrepublishingBottomSheetFragment prepublishingFragment = PrepublishingBottomSheetFragment.newInstance();
+        ActivityUtils.hideKeyboard(this);
+        PrepublishingBottomSheetFragment prepublishingFragment =
+                PrepublishingBottomSheetFragment.newInstance(getSite());
         prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
     }
 

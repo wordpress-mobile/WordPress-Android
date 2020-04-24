@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/PostSettingsCardViewInnerLayout">
+    <include layout="@layout/prepublishing_toolbar" />
+
+    <LinearLayout
+        android:id="@+id/publish_time_and_date_container"
+        style="@style/PostSettingsContainer">
+
+        <TextView
+            style="@style/PostSettingsTitle"
+            android:text="@string/post_settings_time_and_date" />
+
+        <TextView
+            android:id="@+id/publish_time_and_date"
+            style="@style/PostSettingsSubtitle"
+            android:hint="@string/immediately" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/publish_notification_container"
+        style="@style/PostSettingsContainer">
+
+        <TextView
+            android:id="@+id/publish_notification_title"
+            style="@style/PostSettingsTitle"
+            android:enabled="false"
+            android:text="@string/post_settings_notification" />
+
+        <TextView
+            android:id="@+id/publish_notification"
+            style="@style/PostSettingsSubtitle"
+            android:enabled="false"
+            android:hint="@string/post_notification_off" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/post_add_to_calendar_container"
+        style="@style/PostSettingsContainer">
+
+        <TextView
+            android:id="@+id/post_add_to_calendar"
+            style="@style/PostSettingsTitle"
+            android:enabled="false"
+            android:text="@string/post_settings_add_to_calendar" />
+    </LinearLayout>
+</LinearLayout>
+

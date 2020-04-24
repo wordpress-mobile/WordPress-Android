@@ -50,13 +50,14 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
     protected abstract @LayoutRes int getContentLayout();
 
+    protected abstract String getTagsFromEditPostRepositoryOrArguments();
+
     @Override public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((WordPress) requireActivity().getApplication()).component().inject(this);
 
         if (getArguments() != null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-            mTags = requireActivity().getIntent().getStringExtra(KEY_TAGS);
+            mTags = getArguments().getString(KEY_TAGS);
 
             if (mSite == null) {
                 throw new IllegalStateException("Required argument mSite is missing.");
@@ -89,7 +90,10 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
         mTagsEditText = (EditText) view.findViewById(R.id.tags_edit_text);
         mTagsEditText.setOnKeyListener(this);
-        mTagsEditText.addTextChangedListener(this);
+        mTagsEditText.post(() -> mTagsEditText.addTextChangedListener(TagsFragment.this));
+
+        loadTags();
+
         if (!TextUtils.isEmpty(mTags)) {
             // add a , at the end so the user can start typing a new tag
             mTags += ",";
@@ -97,6 +101,11 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
             mTagsEditText.setText(mTags);
             mTagsEditText.setSelection(mTagsEditText.length());
         }
+        filterListForCurrentText();
+    }
+
+    private void loadTags() {
+        mTags = getTagsFromEditPostRepositoryOrArguments();
     }
 
     @Override
