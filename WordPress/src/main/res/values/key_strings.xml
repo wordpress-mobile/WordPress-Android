@@ -22,6 +22,7 @@
     <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_whats_new" translatable="false">wp_pref_whats_new</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_blogs_followed" translatable="false">pref_notification_blogs_followed</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
