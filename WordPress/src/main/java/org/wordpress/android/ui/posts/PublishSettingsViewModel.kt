@@ -64,7 +64,7 @@ constructor(
     private val _onAddToCalendar = MutableLiveData<Event<CalendarEvent>>()
     val onAddToCalendar: LiveData<Event<CalendarEvent>> = _onAddToCalendar
 
-    fun start(postRepository: EditPostRepository?) {
+    open fun start(postRepository: EditPostRepository?) {
         val startCalendar = postRepository?.let { getCurrentPublishDateAsCalendar(it) }
                 ?: localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(startCalendar)

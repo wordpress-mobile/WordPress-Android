@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context.ALARM_SERVICE
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.CalendarContract
 import android.provider.CalendarContract.Events
 import android.view.Gravity
@@ -13,10 +14,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.LayoutRes
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
@@ -27,10 +30,19 @@ import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var viewModel: EditPostPublishSettingsViewModel
+    lateinit var viewModel: PublishSettingsViewModel
+
+    @LayoutRes protected abstract fun getContentLayout(): Int
+
+    protected abstract fun getPublishSettingsFragmentType(): PublishSettingsFragmentType
+
+    protected abstract fun setupContent(
+        rootView: ViewGroup,
+        viewModel: PublishSettingsViewModel
+    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.edit_post_published_settings_fragment, container, false) as ViewGroup
+        val rootView = inflater.inflate(getContentLayout(), container, false) as ViewGroup
         val dateAndTime = rootView.findViewById<TextView>(R.id.publish_time_and_date)
         val dateAndTimeContainer = rootView.findViewById<LinearLayout>(R.id.publish_time_and_date_container)
         val publishNotification = rootView.findViewById<TextView>(R.id.publish_notification)
@@ -43,6 +55,8 @@ abstract class PublishSettingsFragment : Fragment() {
         AccessibilityUtils.disableHintAnnouncement(publishNotification)
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
+
+        setupContent(rootView, viewModel)
 
         viewModel.onDatePicked.observe(this, Observer {
             it?.applyIfNotHandled {
@@ -146,8 +160,8 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostDatePickerDialogFragment.newInstance()
-        fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
+        val fragment = PostDatePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
+        fragment.show(activity!!.supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
     private fun showPostTimeSelectionDialog() {
@@ -155,8 +169,8 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostTimePickerDialogFragment.newInstance()
-        fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
+        val fragment = PostTimePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
+        fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
     private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
@@ -164,8 +178,11 @@ abstract class PublishSettingsFragment : Fragment() {
             return
         }
 
-        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
-        fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
+        val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(
+                schedulingReminderPeriod,
+                getPublishSettingsFragmentType()
+        )
+        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPostRepository(): EditPostRepository? {
@@ -181,4 +198,10 @@ abstract class PublishSettingsFragment : Fragment() {
             throw RuntimeException("$activity must implement EditPostActivityHook")
         }
     }
+}
+
+@Parcelize
+enum class PublishSettingsFragmentType : Parcelable {
+    EDIT_POST,
+    PREPUBLISHING_NUDGES
 }
