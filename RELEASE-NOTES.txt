@@ -1,5 +1,7 @@
 14.8
 -----
+* Block editor: Add alignment options for heading block on Android
+* Block editor: Update quote block to visually reflect selected alignment
  
 14.7
 -----
