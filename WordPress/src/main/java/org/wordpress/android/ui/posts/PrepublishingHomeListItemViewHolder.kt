@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
@@ -8,9 +9,9 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingActionUiState
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingActionItemUiState.PrepublishingHomeHeaderUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeHeaderUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -24,7 +25,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
                         false
                 )
         ) {
-    abstract fun onBind(uiState: PrepublishingActionItemUiState)
+    abstract fun onBind(uiState: PrepublishingHomeItemUiState)
 
     class PrepublishingHomeListItemViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
             PrepublishingHomeViewHolder(
@@ -32,13 +33,17 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
             ) {
         private val actionType: TextView = itemView.findViewById(R.id.action_type)
         private val actionResult: TextView = itemView.findViewById(R.id.action_result)
+        private val actionLayout: View = itemView.findViewById(R.id.action_layout)
 
-        override fun onBind(uiState: PrepublishingActionItemUiState) {
-            uiState as PrepublishingActionUiState
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
+            uiState as PrepublishingHomeUiState
 
             actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.actionType.textRes)
             uiState.actionResult?.let { resultText ->
                 actionResult.text = uiHelpers.getTextOfUiString(itemView.context, resultText)
+            }
+            actionLayout.setOnClickListener {
+                uiState.onActionClicked.invoke(uiState.actionType)
             }
         }
     }
@@ -54,7 +59,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
         private val siteName: TextView = itemView.findViewById(R.id.site_name)
         private val siteIcon: ImageView = itemView.findViewById(R.id.site_icon)
 
-        override fun onBind(uiState: PrepublishingActionItemUiState) {
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
             uiState as PrepublishingHomeHeaderUiState
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
@@ -74,7 +79,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
             ) {
         private val button: Button = itemView.findViewById(R.id.publish_button)
 
-        override fun onBind(uiState: PrepublishingActionItemUiState) {
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
             uiState as PrepublishingButtonUiState
 
             button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)

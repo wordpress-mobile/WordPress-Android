@@ -5,19 +5,36 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeHeaderUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
+import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
+import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomePublishButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeListItemViewHolder>() {
+private const val headerViewType: Int = 1
+private const val actionItemViewType: Int = 2
+private const val publishButtonViewType: Int = 3
+
+class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeListItemViewHolder {
-        return PrepublishingHomeListItemViewHolder(parent, uiHelpers)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeViewHolder {
+        return when (viewType) {
+            headerViewType -> PrepublishingHeaderListItemViewHolder(parent, uiHelpers, imageManager)
+            actionItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
+            publishButtonViewType -> PrepublishingHomePublishButtonViewHolder(parent, uiHelpers)
+            else -> throw NotImplementedError("Unknown ViewType")
+        }
     }
 
     fun update(newItems: List<PrepublishingHomeItemUiState>) {
@@ -31,10 +48,18 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
         diffResult.dispatchUpdatesTo(this)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position]) {
+            is PrepublishingHomeHeaderUiState -> headerViewType
+            is PrepublishingHomeUiState -> actionItemViewType
+            is PrepublishingButtonUiState -> publishButtonViewType
+        }
+    }
+
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: PrepublishingHomeListItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PrepublishingHomeViewHolder, position: Int) {
         val item = items[position]
-        holder.bind(item)
+        holder.onBind(item)
     }
 }
