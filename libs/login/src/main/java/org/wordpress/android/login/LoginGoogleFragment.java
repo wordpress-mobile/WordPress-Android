@@ -48,7 +48,8 @@ public class LoginGoogleFragment extends GoogleFragment {
         super.onAttach(context);
     }
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
@@ -57,7 +58,8 @@ public class LoginGoogleFragment extends GoogleFragment {
         }
     }
 
-    @Override public void onStart() {
+    @Override
+    public void onStart() {
         super.onStart();
         if (mIsSignupFromLoginEnabled) {
             mProgressDialog = ProgressDialog.show(
@@ -65,7 +67,8 @@ public class LoginGoogleFragment extends GoogleFragment {
         }
     }
 
-    @Override public void onStop() {
+    @Override
+    public void onStop() {
         dismissProgressDialog();
         super.onStop();
     }
