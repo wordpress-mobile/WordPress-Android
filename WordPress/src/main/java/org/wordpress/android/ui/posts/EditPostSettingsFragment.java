@@ -63,7 +63,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;

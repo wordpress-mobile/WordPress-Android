@@ -12,6 +12,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
@@ -293,6 +294,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingTagsViewModel.class)
     abstract ViewModel prepublishingTagsViewModel(PrepublishingTagsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PrepublishingPublishSettingsViewModel.class)
+    abstract ViewModel prepublishingPublishSettingsViewModel(PrepublishingPublishSettingsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

@@ -501,7 +501,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PostSettingsTagsFragment object);
 
-    void inject(PrepublishingVisibilityFragment object);
+    void inject(PrepublishingPublishSettingsFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

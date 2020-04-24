@@ -17,8 +17,8 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.OFF
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.CalendarEvent
-import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
+import org.wordpress.android.ui.posts.PublishSettingsViewModel.CalendarEvent
+import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -27,7 +27,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
+class PublishSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var localeManagerWrapper: LocaleManagerWrapper
