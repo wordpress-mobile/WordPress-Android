@@ -111,6 +111,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private boolean mIsJetpackConnect;
 
     private boolean mIsSignupFromLoginEnabled;
+    private boolean mIsSmartLockTriggeredFromPrologue;
 
     private LoginMode mLoginMode;
 
@@ -140,6 +141,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     mIsSignupFromLoginEnabled = true;
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                        mIsSmartLockTriggeredFromPrologue = true;
                         initSmartLockIfNotFinished(true);
                     }
                     break;
@@ -174,6 +176,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         super.onSaveInstanceState(outState);
 
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
+        outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
     }
 
@@ -738,9 +741,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onCredentialsUnavailable() {
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
-        if (!BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            startLogin();
+        if (mIsSmartLockTriggeredFromPrologue) {
+            return;
         }
+        startLogin();
     }
 
     @Override
