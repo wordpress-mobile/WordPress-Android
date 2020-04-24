@@ -69,7 +69,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
-    private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
+    private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -104,7 +104,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
-                                                      boolean supportStockPhotos) {
+                                                      boolean isSiteUsingWpComRestApi) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -112,7 +112,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
-        args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
+        args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         fragment.setArguments(args);
         return fragment;
     }
@@ -212,6 +212,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String postType = getArguments().getString(ARG_POST_TYPE);
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
+            boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -220,7 +221,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             isNewPost,
                             localeSlug,
                             getTranslations(),
-                            isDarkMode());
+                            isDarkMode(),
+                            isSiteUsingWpComRestApi);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -402,7 +404,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         FragmentActivity activity = getActivity();
 
         Bundle arguments = getArguments();
-        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
+        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         if (activity != null) {
             if (supportStockPhotos) {
                 String packageName = activity.getApplication().getPackageName();
