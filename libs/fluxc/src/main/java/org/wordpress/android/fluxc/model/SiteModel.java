@@ -45,6 +45,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mName;
     @Column private String mDescription;
     @Column private boolean mIsWPCom;
+    @Column private boolean mIsWPComAtomic;
     @Column private boolean mIsFeaturedImageSupported;
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
@@ -81,6 +82,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // WPCom specifics
     @Column private boolean mIsVisible = true;
     @Column private boolean mIsPrivate;
+    @Column private boolean mIsComingSoon;
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
     @Column private String mPlanShortName;
@@ -646,5 +648,25 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean hasDiskSpaceQuotaInformation() {
         return mSpaceAllowed > 0;
+    }
+
+    public boolean isWPComAtomic() {
+        return mIsWPComAtomic;
+    }
+
+    public void setIsWPComAtomic(boolean isWPComAtomic) {
+        mIsWPComAtomic = isWPComAtomic;
+    }
+
+    public boolean isComingSoon() {
+        return mIsComingSoon;
+    }
+
+    public void setIsComingSoon(boolean isComingSoon) {
+        mIsComingSoon = isComingSoon;
+    }
+
+    public boolean isPrivateWPComAtomic() {
+        return isWPComAtomic() && (isPrivate() || isComingSoon());
     }
 }
