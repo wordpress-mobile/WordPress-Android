@@ -26,7 +26,7 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
-    private lateinit var linearLayoutManager: LinearLayoutManager
+
     private lateinit var viewModel: SiteCreationSegmentsViewModel
 
     @Inject internal lateinit var imageManager: ImageManager
@@ -60,9 +60,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        linearLayoutManager = layoutManager
-        recycler_view.layoutManager = linearLayoutManager
+        recycler_view.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
