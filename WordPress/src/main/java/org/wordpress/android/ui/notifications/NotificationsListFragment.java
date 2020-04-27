@@ -78,7 +78,6 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
 
     private static final String KEY_LAST_TAB_POSITION = "lastTabPosition";
 
-    private String mToolbarTitle;
     private TabLayout mTabLayout;
     private ViewGroup mConnectJetpackView;
     private boolean mShouldRefreshNotifications;
@@ -116,7 +115,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
 
         mToolbar = view.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.notifications_screen_title);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         mTabLayout = view.findViewById(R.id.tab_layout);
@@ -214,11 +213,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
 
     @Override
     public void setTitle(@NonNull String title) {
-        mToolbarTitle = title;
-
-        if (mToolbar != null) {
-            mToolbar.setTitle(mToolbarTitle);
-        }
+        // Do nothing since the title is static
     }
 
     private void clearToolbarScrollFlags() {
