@@ -68,6 +68,7 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
+        buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using

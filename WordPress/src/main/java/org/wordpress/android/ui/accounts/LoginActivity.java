@@ -19,6 +19,7 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -110,6 +111,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private boolean mIsJetpackConnect;
 
     private boolean mIsSignupFromLoginEnabled;
+    private boolean mIsSmartLockTriggeredFromPrologue;
 
     private LoginMode mLoginMode;
 
@@ -138,6 +140,10 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case WPCOM_LOGIN_ONLY:
                     mIsSignupFromLoginEnabled = true;
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                        mIsSmartLockTriggeredFromPrologue = true;
+                        initSmartLockIfNotFinished(true);
+                    }
                     break;
                 case SELFHOSTED_ONLY:
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
@@ -734,7 +740,9 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onCredentialsUnavailable() {
         mSmartLockHelperState = SmartLockHelperState.FINISHED;
-
+        if (mIsSmartLockTriggeredFromPrologue) {
+            return;
+        }
         startLogin();
     }
 
