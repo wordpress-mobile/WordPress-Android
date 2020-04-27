@@ -177,7 +177,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
-        outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
     }
 
     private void showFragment(Fragment fragment, String tag) {
