@@ -85,16 +85,26 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
             // Insure the text always starts with an "@"
             addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                var singleAtChar: Boolean? = null
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    singleAtChar = s?.let { "@".contentEquals(it) }
+                }
                 override fun afterTextChanged(s: Editable?) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s?.startsWith("@") == false) {
+                    if (s?.isEmpty() == true && singleAtChar == true) {
+                        // Tapping delete when only @ is shown in the input should exit the @-mention UI
+                        finish()
+                    } else if (s?.startsWith("@") == false) {
+                        // Re-insert initial @ if it was deleted
                         autocompleteText.setText(resources.getString(R.string.at_username, s))
                         autocompleteText.setSelection(1)
                         showDropDown()
                     }
+                    singleAtChar = null
                 }
             })
+
             if (text.isEmpty()) {
                 setText("@")
                 setSelection(1)
