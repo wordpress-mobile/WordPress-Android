@@ -37,6 +37,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
@@ -57,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -930,6 +933,42 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchAccessCookie(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).atomic_auth_proxy.read_access_cookies.getUrl();
+        final WPComGsonRequest<PrivateAtomicCookieResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PrivateAtomicCookieResponse.class,
+                new Listener<PrivateAtomicCookieResponse>() {
+                    @Override
+                    public void onResponse(PrivateAtomicCookieResponse response) {
+                        if (response != null) {
+                            mDispatcher.dispatch(SiteActionBuilder
+                                    .newFetchedPrivateAtomicCookieAction(
+                                            new FetchedPrivateAtomicCookiePayload(site, response)));
+                        } else {
+                            AppLog.e(T.API, "Failed to fetch private atomic cookie for " + site.getUrl());
+                            FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(
+                                    site, null);
+                            payload.error = new PrivateAtomicCookieError(
+                                    AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                                AccessCookieErrorType.GENERIC_ERROR, error.message);
+                        FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(site, null);
+                        payload.error = cookieError;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+                    }
+                }
+                                                                                                      );
+        add(request);
+    }
+
     // Utils
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
@@ -942,6 +981,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
+        site.setIsComingSoon(from.is_coming_soon);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
@@ -956,6 +996,7 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setUnmappedUrl(from.options.unmapped_url);
             site.setJetpackVersion(from.options.jetpack_version);
             site.setSoftwareVersion(from.options.software_version);
+            site.setIsWPComAtomic(from.options.is_wpcom_atomic);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));

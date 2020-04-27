@@ -7,6 +7,8 @@
 
 /sites/$site/gutenberg
 
+/sites/$site/atomic-auth-proxy/read-access-cookies
+
 /sites/$site/stats/orders/
 /sites/$site/stats/top-earners
 
