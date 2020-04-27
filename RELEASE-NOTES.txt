@@ -1,8 +1,5 @@
 14.8
 -----
-
-14.7.1
------
 * Block editor: Fix titles in the media picker
 
 14.7
