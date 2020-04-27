@@ -45,7 +45,7 @@
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
-    
+
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
@@ -817,6 +817,8 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
+    <string name="whats_new_in_version_summary">Version %s</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="preference_crash_reports">Crash reports</string>
