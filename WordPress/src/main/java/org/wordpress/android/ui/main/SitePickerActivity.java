@@ -142,19 +142,16 @@ public class SitePickerActivity extends LocaleAwareActivity
                                 if (site != null) {
                                     mReblogActionMode.setTitle(site.getBlogNameOrHomeURL());
                                 }
-
                                 break;
                             case TO_NO_SITE_SELECTED:
                                 mSitePickerMode = SitePickerMode.REBLOG_SELECT_MODE;
                                 getAdapter().clearReblogSelection();
                                 break;
                         }
-
                         break;
                     case CONTINUE_REBLOG_TO:
                         SiteRecord siteToReblog = ((ContinueReblogTo) action).getSiteForReblog();
                         selectSiteAndFinish(siteToReblog);
-
                         break;
                     case ASK_FOR_SITE_SELECTION:
                         if (BuildConfig.DEBUG) {
@@ -168,7 +165,6 @@ public class SitePickerActivity extends LocaleAwareActivity
                             );
                             ToastUtils.showToast(this, R.string.site_picker_ask_site_select);
                         }
-
                         break;
                 }
                 return null;
