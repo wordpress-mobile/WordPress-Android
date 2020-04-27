@@ -406,6 +406,8 @@
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
     <string name="comment_title">%s on %s</string>
     <string name="comment_read_source_post">Read the source post</string>
+    <string name="comment_toast_err_share_intent">Unable to share</string>
+    <string name="comment_share_link_via">Share via</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -432,6 +434,7 @@
     <string name="trash">Trash</string>
     <string name="like">Like</string>
     <string name="approve">Approve</string>
+    <string name="copy_link_address">Copy link address</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="comment_liked">Comment liked</string>
     <string name="comment_q_action_done_generic">Action done!</string>
@@ -439,6 +442,7 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+    <string name="comment_q_action_copied_url">Link address copied</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
