@@ -148,8 +148,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              OnDataLoadedListener dataLoadedListener,
                              SitePickerMode sitePickerMode
     ) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener, null,
-                null, sitePickerMode);
+        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
+                null, null, sitePickerMode);
     }
 
     public SitePickerAdapter(Context context,
@@ -161,8 +161,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              HeaderHandler headerHandler,
                              ArrayList<Integer> ignoreSitesIds
     ) {
-        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener, null,
-                null, SitePickerMode.DEFAULT_MODE);
+        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
+                headerHandler, ignoreSitesIds, SitePickerMode.DEFAULT_MODE);
     }
 
     public SitePickerAdapter(Context context,
