@@ -19,6 +19,7 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
@@ -105,6 +106,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
         viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner, Observer { cropResult ->
             navigateBackWithCropResult(cropResult)
+        })
+
+        viewModel.editorAction.observe(viewLifecycleOwner, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                ImageEditor.instance.onEditorAction(it)
+            }
         })
     }
 

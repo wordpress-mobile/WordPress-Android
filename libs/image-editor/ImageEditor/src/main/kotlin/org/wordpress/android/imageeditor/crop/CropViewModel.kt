@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.viewmodel.Event
 import java.io.File
 import org.wordpress.android.imageeditor.R
@@ -30,6 +31,9 @@ class CropViewModel : ViewModel() {
 
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
+
+    private val _editorAction = MutableLiveData<Event<EditorAction>>()
+    val editorAction: LiveData<Event<EditorAction>> = _editorAction
 
     private lateinit var mediaEditingDirectory: File
     private lateinit var inputFilePath: String

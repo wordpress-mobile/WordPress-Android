@@ -4,6 +4,7 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
@@ -33,6 +34,9 @@ class PreviewImageViewModel : ViewModel() {
 
     private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
     val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
+
+    private val _editorAction = MutableLiveData<Event<EditorAction>>()
+    val editorAction: LiveData<Event<EditorAction>> = _editorAction
 
     var selectedPosition: Int = 0
         private set
