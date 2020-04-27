@@ -31,7 +31,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
     @Inject lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateView(
         inflater: LayoutInflater,

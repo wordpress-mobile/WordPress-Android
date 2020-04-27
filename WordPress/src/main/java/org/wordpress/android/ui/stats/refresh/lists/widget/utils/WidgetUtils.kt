@@ -9,12 +9,14 @@ import android.view.View
 import android.widget.ImageView.ScaleType.FIT_START
 import android.widget.RemoteViews
 import com.bumptech.glide.request.target.AppWidgetTarget
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.stats.StatsTimeframe
 import org.wordpress.android.ui.stats.refresh.StatsActivity
 import org.wordpress.android.ui.stats.refresh.StatsActivity.StatsLaunchedFrom
@@ -30,14 +32,18 @@ import org.wordpress.android.util.image.ImageType.ICON
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.random.Random
 
 private const val MIN_WIDTH = 250
 private const val ICON_MAX_DIMENSION = 100
 
 class WidgetUtils
-@Inject constructor(val imageManager: ImageManager) {
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+@Inject constructor(
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
+    val imageManager: ImageManager
+) {
+    private val coroutineScope = CoroutineScope(defaultDispatcher)
     fun isWidgetWiderThanLimit(
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,

@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.view.View
 import android.widget.RemoteViews
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.stats.StatsTimeframe.INSIGHTS
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater
@@ -33,9 +35,11 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import javax.inject.Named
 
 class MinifiedWidgetUpdater
 @Inject constructor(
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val siteStore: SiteStore,
     private val accountStore: AccountStore,
@@ -46,7 +50,7 @@ class MinifiedWidgetUpdater
     private val widgetUtils: WidgetUtils,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : WidgetUpdater {
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(defaultDispatcher)
     override fun updateAppWidget(
         context: Context,
         appWidgetId: Int,

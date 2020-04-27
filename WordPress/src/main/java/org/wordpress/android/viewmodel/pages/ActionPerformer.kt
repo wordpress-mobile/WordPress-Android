@@ -9,7 +9,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
-import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.coroutines.suspendCoroutineWithTimeout
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType
 import org.wordpress.android.viewmodel.pages.ActionPerformer.PageAction.EventType.DELETE
@@ -23,9 +23,9 @@ import kotlin.coroutines.resume
 class ActionPerformer
 @Inject constructor(
     private val dispatcher: Dispatcher,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) {
-    private val coroutineScope = CoroutineScope(mainDispatcher)
+    private val coroutineScope = CoroutineScope(defaultDispatcher)
     private var continuations: MutableMap<Pair<Long, EventType>, Continuation<Pair<Boolean, Long>>> = mutableMapOf()
 
     companion object {
