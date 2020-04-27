@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import java.io.File
 
 class ImageEditor private constructor(
@@ -60,6 +61,7 @@ class ImageEditor private constructor(
     sealed class EditorAction {
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
+        data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
     }
 
     companion object {

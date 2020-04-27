@@ -12,14 +12,16 @@ import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
-import org.wordpress.android.imageeditor.viewmodel.Event
-import java.io.File
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
-import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
+import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
+import org.wordpress.android.imageeditor.viewmodel.Event
+import java.io.File
 import java.io.Serializable
 
 class CropViewModel : ViewModel() {
@@ -100,6 +102,14 @@ class CropViewModel : ViewModel() {
     }
 
     fun onDoneMenuClicked() {
+        _editorAction.value = Event(
+            CropDoneMenuClicked(
+                OutputData(
+                    outputFilePath = cropOptionsBundleWithFilesInfo
+                        .getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
+                )
+            )
+        )
         updateImageCropAndSaveState(ImageCropAndSaveStartState)
     }
 
