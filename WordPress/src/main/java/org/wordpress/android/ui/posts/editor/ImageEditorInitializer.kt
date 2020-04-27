@@ -11,6 +11,8 @@ import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -86,14 +88,20 @@ class ImageEditorInitializer {
 
         private fun trackEditorAction(action: EditorAction) {
             when (action) {
-                is CropDoneMenuClicked -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "crop"))
-                }
                 is EditorShown -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN, mapOf(NUMBER_OF_IMAGES to action.numOfImages))
                 }
                 is EditorCancelled -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
+                }
+                is CropDoneMenuClicked -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "crop"))
+                }
+                is PreviewImageSelected -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "preview_image_selected"))
+                }
+                is PreviewInsertImagesClicked -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "preview_insert_images_clicked"))
                 }
             }
         }
