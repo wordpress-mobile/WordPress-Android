@@ -9,6 +9,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -82,6 +83,9 @@ class ImageEditorInitializer {
 
         private fun trackEditorAction(action: EditorAction) {
             when (action) {
+                is EditorShown -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN, mapOf("number_of_images" to action.numOfImages))
+                }
                 is EditorCancelled -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
                 }

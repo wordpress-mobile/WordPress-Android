@@ -58,6 +58,7 @@ class ImageEditor private constructor(
     }
 
     sealed class EditorAction {
+        data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
     }
 

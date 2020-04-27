@@ -1683,7 +1683,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
 
-        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
         ArrayList<EditImageData.InputData> inputData = new ArrayList<>(1);
         inputData.add(new EditImageData.InputData(
                 imageUrl,
