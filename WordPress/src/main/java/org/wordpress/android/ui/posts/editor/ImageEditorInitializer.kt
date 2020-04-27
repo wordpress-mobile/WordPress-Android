@@ -5,6 +5,7 @@ import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -18,7 +19,8 @@ class ImageEditorInitializer {
             ImageEditor.init(
                 loadIntoImageViewWithResultListener(imageManager),
                 loadIntoFileWithResultListener(imageManager),
-                loadIntoImageView(imageManager)
+                loadIntoImageView(imageManager),
+                onEditorAction()
             )
         }
 
@@ -70,5 +72,8 @@ class ImageEditorInitializer {
             } else {
                 throw(IllegalArgumentException(IMAGE_STRING_URL_MSG))
             }
+
+        private fun onEditorAction(): (EditorAction) -> Unit = { action ->
+        }
     }
 }
