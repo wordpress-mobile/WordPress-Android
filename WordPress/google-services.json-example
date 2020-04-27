@@ -47,46 +47,46 @@
       }
     },
     {
-          "client_info": {
-            "mobilesdk_app_id": "1:123:android:abc",
-            "android_client_info": {
-              "package_name": "org.wordpress.android.jalapeno"
-            }
-          },
-          "oauth_client": [
-            {
-              "client_id": "123-abc.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "",
-              "client_type": 1,
-              "android_info": {
-                "package_name": "org.wordpress.android.jalapeno",
-                "certificate_hash": ""
-              }
-            }
-          ],
-          "api_key": [
-            {
-              "current_key": ""
-            }
-          ],
-          "services": {
-            "analytics_service": {
-              "status": 2,
-              "analytics_property": {
-                "tracking_id": ""
-              }
-            },
-            "appinvite_service": {
-              "status": 1,
-              "other_platform_oauth_client": []
-            },
-            "ads_service": {
-              "status": 1
-            }
+      "client_info": {
+        "mobilesdk_app_id": "1:123:android:abc",
+        "android_client_info": {
+          "package_name": "org.wordpress.android.prealpha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123-abc.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.wordpress.android.prealpha",
+            "certificate_hash": ""
           }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": ""
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": ""
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
     },
     {
       "client_info": {
