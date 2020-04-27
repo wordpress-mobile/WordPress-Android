@@ -62,6 +62,8 @@ class ImageEditor private constructor(
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
         data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
+        data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()
+        data class PreviewInsertImagesClicked(val outputDataList: List<OutputData>) : EditorAction()
     }
 
     companion object {

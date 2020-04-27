@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
@@ -156,6 +158,8 @@ class PreviewImageViewModel : ViewModel() {
         val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[selectedPosition]
 
+        _editorAction.value = Event(PreviewImageSelected(imageStateAtPosition.data.highResImageUrl, selectedPosition))
+
         updateUiState(
             currentUiState.copy(
                 editActionsEnabled = shouldEnableEditActionsForImageState(imageStateAtPosition)
@@ -285,6 +289,7 @@ class PreviewImageViewModel : ViewModel() {
         val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
             ?: emptyList()
         _finishAction.value = Event(outputData)
+        _editorAction.value = Event(PreviewInsertImagesClicked(outputData))
     }
 
     fun getThumbnailImageUrl(position: Int): String {
