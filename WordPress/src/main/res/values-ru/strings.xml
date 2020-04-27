@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 17:00:52+0000
+Translation-Revision-Date: 2020-04-20 06:29:12+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Ошибка обрезки и сохранения изображения, попробуйте снова.</string>
+    <string name="failed_to_insert_image_tap_to_retry">Невозможно вставить изображение.\nНажмите для выбора вариантов.</string>
+    <string name="preview_image_description">Предварительный просмотр изображения</string>
+    <string name="error_unknown_page_type">Неизвестный формат страницы</string>
+    <string name="error_page_not_submitted">Невозможно завершить это действие и отправить страницу на одобрение.</string>
+    <string name="error_page_not_scheduled">Невозможно завершить это действие и запланировать страницу к публикации.</string>
+    <string name="error_page_not_published_private">Невозможно завершить это действие и опубликовать личную страницу.</string>
+    <string name="error_page_not_published">Действие не было завершено, страница не была опубликована.</string>
+    <string name="error_page_not_submitted_retrying">Невозможно отправить страницу на одобрение, но мы попробуем ещё раз позже.</string>
+    <string name="error_page_not_scheduled_retrying">Невозможно запланировать публикацию страницы, но мы попробуем ещё раз позже.</string>
+    <string name="error_page_not_published_retrying_private">Невозможно опубликовать эту личную страницу, но мы попробуем ещё раз позже.</string>
+    <string name="error_page_not_published_retrying">Невозможно опубликовать страницу, но мы попробуем ещё раз позже.</string>
+    <string name="error_media_recover_page_not_submitted">Невозможно загрузить этот медиафайл и отправить страницу на одобрение.</string>
+    <string name="error_media_recover_page_not_scheduled">Невозможно загрузить этот медиафайл и запланировать страницу к публикации.</string>
+    <string name="error_media_recover_page_not_published_private">Невозможно загрузить этот медиафайл и опубликовать личную страницу.</string>
+    <string name="error_media_recover_page_not_published">Невозможно загрузить этот медиафайл и опубликовать страницу.</string>
+    <string name="page_waiting_for_connection_draft">Черновик будет сохранён, когда на вашем устройстве будет доступ к сети.</string>
+    <string name="page_waiting_for_connection_private">Личная запись будет опубликована, когда на вашем устройстве будет доступ к сети.</string>
+    <string name="page_waiting_for_connection_scheduled">Публикация страницы будет запланирована при появлении подключения к сети.</string>
+    <string name="page_waiting_for_connection_pending">Страница будет отправлена на одобрение, когда на вашем устройстве будет доступ к сети.</string>
+    <string name="page_waiting_for_connection_publish">Страница будет опубликована при появлении подключения к сети.</string>
+    <string name="page_queued">Страница в очереди</string>
+    <string name="page_uploading">Загрузка страницы</string>
+    <string name="error_publish_page_no_network">Нет доступа к сети. Страница сохранена локально.</string>
+    <string name="local_page_autosave_revision_available">Вы внесли, но не сохранили изменения на этой странице.</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Выполняется загрузка страница</string>
+    <string name="editor_page_saved_locally_failed_media">Эта страница сохранена локально: она содержит медиафайлы, загрузка которых не удалась.</string>
+    <string name="editor_page_saved_locally">Страница сохранена на устройстве</string>
+    <string name="editor_page_saved_online">Страница сохранена в Интернете.</string>
+    <string name="quickpress_shortcut_activity_label">Выберите блог для ярлыка QuickPress</string>
+    <string name="app_theme_default">В зависимости от заряда аккумулятора</string>
+    <string name="app_theme_dark">Тёмная</string>
+    <string name="app_theme_light">Светлая</string>
+    <string name="app_theme">Внешний вид</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Вы недавно внесли изменения в эту страницу, но не сохранили их. Выберите версию для загрузки:\n\n</string>
     <string name="gutenberg_native_what_people_say">Люди говорят</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Мы предлагаем спектр услуг для достижения ваших результатов. Пока  не знаете что именно вам нужно и чего это будет стоить? Мы можем проконсультировать вас! Свяжитесь с нами ниже.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Мы небольшая команда талантливых профессионалов с широким спектром навыков и опытом. Мы страстно любим свое дело. Мы стремимся начать работать с вами.</string>
@@ -2063,7 +2099,6 @@ Language: ru
     <string name="content_required">Требуется комментарий</string>
     <string name="sure_to_cancel_edit_comment">Отменить редактирование комментария?</string>
     <string name="saving_changes">Сохранить изменения</string>
-    <string name="hint_comment_content">Комментировать</string>
     <string name="trash">Удалённые</string>
     <string name="dlg_confirm_trash_comments">Удалить?</string>
     <string name="dlg_trashing_comments">Удалить</string>
@@ -2165,7 +2200,7 @@ Language: ru
     <string name="pages">Страницы</string>
     <string name="no_network_title">Сеть недоступна</string>
     <string name="ok">OK</string>
-    <string name="blogusername">имя пользователя</string>
+    <string name="done">Готово</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress для Android</string>
     <string name="tos">Условия сервиса</string>
@@ -2178,7 +2213,6 @@ Language: ru
     <string name="quickpress_add_alert_title">Установить короткое имя</string>
     <string name="settings">Настройки</string>
     <string name="quickpress_add_error">Ярлык не может быть пустым</string>
-    <string name="quickpress_window_title">Выберите блог для QuickPress</string>
     <string name="pages_private">Личные</string>
     <string name="categories">Рубрики</string>
     <string name="tags_separate_with_commas">Метки (разделяйте запятыми)</string>

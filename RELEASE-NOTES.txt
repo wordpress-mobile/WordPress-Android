@@ -1,6 +1,18 @@
+14.8
+-----
+* Block editor: Add alignment options for heading block on Android
+* Block editor: Update quote block to visually reflect selected alignment
+ 
 14.7
 -----
+* Block editor: Disable ripple effect for Slider control
+* Block editor: New block: Columns
+* Block editor: New starter page template: Blog
+* Block editor: Make Starter Page Template picker buttons visible only when the screen height is enough
+* Block editor: Fix a bug which caused to show URL settings modal randomly when changing the device orientation multiple times during the time Starter Page Template Preview is open
+* Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
 * Added user Gravatar to the Me menu in My Site.
+* Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area. 
 
 14.6
 -----

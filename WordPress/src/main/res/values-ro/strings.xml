@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-05 07:19:21+0000
+Translation-Revision-Date: 2020-04-20 06:26:22+0000
 Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Decuparea și salvarea imaginii a eșuat, te rog reîncearcă.</string>
+    <string name="failed_to_insert_image_tap_to_retry">Inserarea imaginii a eșuat.\nTe rog atinge pentru a reîncerca.</string>
+    <string name="preview_image_description">Previzualizează imaginea</string>
+    <string name="error_unknown_page_type">Format de pagină necunoscut</string>
+    <string name="error_page_not_submitted">Nu am putut finaliza această acțiune și nu am trimis această pagină pentru verificare.</string>
+    <string name="error_page_not_scheduled">Nu am putut finaliza această acțiune și nu am programat această pagină.</string>
+    <string name="error_page_not_published_private">Nu am putut finaliza această acțiune și nu am publicat această pagină privată.</string>
+    <string name="error_page_not_published">Nu am putut finaliza această acțiune și nu am publicat această pagină.</string>
+    <string name="error_page_not_submitted_retrying">Nu am putut trimite această pagină pentru verificare, dar vom încerca din nou mai târziu.</string>
+    <string name="error_page_not_scheduled_retrying">Nu am putut programa această pagină, dar vom încerca din nou mai târziu.</string>
+    <string name="error_page_not_published_retrying_private">Nu am putut publica această pagină privată, dar vom încerca din nou mai târziu.</string>
+    <string name="error_page_not_published_retrying">Nu am putut publica această pagină, dar vom încerca din nou mai târziu.</string>
+    <string name="error_media_recover_page_not_submitted">Nu am putut încărca acest element media și nu am trimis această pagină pentru verificare.</string>
+    <string name="error_media_recover_page_not_scheduled">Nu am putut încărca acest element media și nu am programat această pagină.</string>
+    <string name="error_media_recover_page_not_published_private">Nu am putut încărca acest element media și nu am publicat această pagină privată.</string>
+    <string name="error_media_recover_page_not_published">Nu am putut încărca acest element media și nu am publicat pagina.</string>
+    <string name="page_waiting_for_connection_draft">Vom salva ciorna când dispozitivul tău va fi din nou online.</string>
+    <string name="page_waiting_for_connection_private">Îți vom publica pagina privată când dispozitivul tău va fi din nou online.</string>
+    <string name="page_waiting_for_connection_scheduled">Îți vom programa pagina când dispozitivul tău va fi din nou online.</string>
+    <string name="page_waiting_for_connection_pending">Îți vom trimite pagina pentru verificare când dispozitivul tău va fi din nou online.</string>
+    <string name="page_waiting_for_connection_publish">Vom publica pagina când dispozitivul tău va fi din nou online.</string>
+    <string name="page_queued">Pagina este în coada de așteptare</string>
+    <string name="page_uploading">Încarc pagina</string>
+    <string name="error_publish_page_no_network">Dispozitivul este offline. Pagina a fost salvată local.</string>
+    <string name="local_page_autosave_revision_available">Ai modificări nesalvate în această pagină</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Pagina ta se încarcă</string>
+    <string name="editor_page_saved_locally_failed_media">Pagina a eșuat la încărcările media și a fost salvată local</string>
+    <string name="editor_page_saved_locally">Pagini salvate pe dispozitiv</string>
+    <string name="editor_page_saved_online">Pagini salvate online</string>
+    <string name="quickpress_shortcut_activity_label">Selectează blogul pentru scurtătura QuickPress</string>
+    <string name="app_theme_default">Setat de Battery Saver</string>
+    <string name="app_theme_dark">Întunecată</string>
+    <string name="app_theme_light">Luminoasă</string>
+    <string name="app_theme">Aspect</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Ai făcut recent modificări în această pagină, dar nu le-ai salvat. Alege o versiune pentru a o încărca:\n\n</string>
     <string name="gutenberg_native_what_people_say">Ce spune lumea</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Oferim o serie de servicii care te ajută să obții rezultatele pe care le cauți. Nu știi sigur de ce ai nevoie sau cât costă? Îți putem explica care servicii sunt potrivite pentru tine și îți spunem mai multe despre costurile care le implică.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Suntem o mică echipă de profesioniști talentați, cu calificare și experiență. Ne place ceea ce facem și o facem cu pasiune. Abia așteptăm să lucrăm cu tine.</string>
@@ -59,7 +95,7 @@ Language: ro
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">O biografie scurtă, ca un istoric personal, realizări importante sau fapte interesante.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@exemplu.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">O descriere a proiectului și a lucrărilor prezentate.</string>
-    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Creează un articol</string>
     <string name="post_list_tab_trashed_posts">Aruncate la gunoi</string>
@@ -288,7 +324,7 @@ Language: ro
     <string name="post_waiting_for_connection_scheduled_cancel">Nu vom programa aceste modificări.</string>
     <string name="post_waiting_for_connection_pending_cancel">Nu vom trimite aceste modificări pentru verificare.</string>
     <string name="post_waiting_for_connection_publish_cancel">Nu vom publica aceste modificări.</string>
-    <string name="post_waiting_for_connection_draft">Îți vom salva ciorna când dispozitivul tău va fi din nou online.</string>
+    <string name="post_waiting_for_connection_draft">Vom salva ciorna când dispozitivul tău va fi din nou online.</string>
     <string name="post_waiting_for_connection_private">Îți vom publica articolul privat când dispozitivul tău va fi din nou online.</string>
     <string name="post_waiting_for_connection_scheduled">Îți vom programa articolul când dispozitivul tău va fi din nou online.</string>
     <string name="post_waiting_for_connection_pending">Îți vom trimite articolul pentru verificare când dispozitivul tău va fi din nou online.</string>
@@ -1294,7 +1330,7 @@ Language: ro
     <string name="page_scheduled">Pagină programată</string>
     <string name="post_scheduled">Articol programat</string>
     <string name="button_retry">Reîncearcă</string>
-    <string name="post_queued">Articol în coada de așteptare</string>
+    <string name="post_queued">Articolul este în coada de așteptare</string>
     <string name="uploading_post">Încarc „%s”</string>
     <string name="connection_to_server_lost">Conexiunea cu serverul s-a pierdut</string>
     <string name="login_epilogue_mysites_other">Siturile mele</string>
@@ -2063,7 +2099,6 @@ Language: ro
     <string name="content_required">Comentariul e necesar</string>
     <string name="sure_to_cancel_edit_comment">Anulezi editarea acestui comentariu?</string>
     <string name="saving_changes">Salvează schimbările</string>
-    <string name="hint_comment_content">Comentariu</string>
     <string name="trash">Coș de gunoi</string>
     <string name="dlg_confirm_trash_comments">Trimit la coșul de gunoi?</string>
     <string name="dlg_trashing_comments">Trimis la coșul de gunoi</string>
@@ -2165,7 +2200,7 @@ Language: ro
     <string name="pages">Pagini</string>
     <string name="no_network_title">Nu e disponibilă nicio rețea.</string>
     <string name="ok">OK</string>
-    <string name="blogusername">nume utilizator blog</string>
+    <string name="done">gata</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress pentru Android</string>
     <string name="tos">Termenii de funcționare a serviciului</string>
@@ -2178,7 +2213,6 @@ Language: ro
     <string name="quickpress_add_alert_title">Setare nume scurtătură</string>
     <string name="settings">Setări</string>
     <string name="quickpress_add_error">Numele scurtăturii nu poate fi gol</string>
-    <string name="quickpress_window_title">Selecție blog pentru scurtătură QuickPress</string>
     <string name="pages_private">Private</string>
     <string name="categories">Categorii</string>
     <string name="tags_separate_with_commas">Separă etichetele cu virgulă</string>

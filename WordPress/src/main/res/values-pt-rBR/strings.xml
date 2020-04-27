@@ -197,8 +197,6 @@ Language: pt_BR
     <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
     <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
     <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
-    <string name="dialog_gutenberg_informative_description_page">Agora você está usando o editor de blocos para novas páginas u2014  ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Agora você está usando o editor de blocos para novos posts u2014  ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
@@ -2008,7 +2006,6 @@ Language: pt_BR
     <string name="content_required">Comentário obrigatório</string>
     <string name="sure_to_cancel_edit_comment">Cancelar edição do comentário?</string>
     <string name="saving_changes">Salvando alterações</string>
-    <string name="hint_comment_content">Comentário</string>
     <string name="trash">Lixeira</string>
     <string name="dlg_confirm_trash_comments">Enviar para a lixeira?</string>
     <string name="dlg_trashing_comments">Enviando para a lixeira</string>
@@ -2110,7 +2107,6 @@ Language: pt_BR
     <string name="pages">Páginas</string>
     <string name="no_network_title">Não há rede disponível </string>
     <string name="ok">OK</string>
-    <string name="blogusername">usrenamedoblog</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de Serviço</string>
@@ -2123,7 +2119,6 @@ Language: pt_BR
     <string name="quickpress_add_alert_title">Definir o nome do atalho</string>
     <string name="settings">Configurações</string>
     <string name="quickpress_add_error">Nome do atalho não pode ser vazio</string>
-    <string name="quickpress_window_title">Selecione blog para atalho QuickPress</string>
     <string name="pages_private">Privado</string>
     <string name="categories">Categorias</string>
     <string name="tags_separate_with_commas">Separe tags com vírgulas</string>

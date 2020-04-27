@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -157,6 +158,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
     @Inject ImageManager mImageManager;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -622,6 +624,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Cancel QuickStart reminders
         QuickStartUtils.cancelQuickStartReminder(context);
+        
+        // Remove private Atomic cookie
+        mPrivateAtomicCookie.clearCookie();
     }
 
     private static String mDefaultUserAgent;

@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-02 00:54:11+0000
+Translation-Revision-Date: 2020-04-14 00:54:48+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_what_people_say">추천의 말</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">회원님이 원하는 결과를 얻을 수 있도록 다양한 서비스를 제공합니다. 필요한 서비스가 무엇인지, 아니면 비용이 얼마인지 잘 모르시겠나요? 어떤 서비스가 적합한지 설명하고 비용에 대해 자세히 알려드릴 수 있습니다. 아래로 문의하세요.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">다양한 기술과 경험을 갖춘 재능 있는 전문가로 이루어진 소규모 팀입니다. 일을 사랑하며 열정적으로 일합니다. 회원님을 기다리고 있겠습니다.</string>
+    <string name="gutenberg_native_warning_message">경고 메시지</string>
+    <string name="gutenberg_native_want_to_work_with_us">함께 하고 싶으신가요?</string>
+    <string name="gutenberg_native_walt_disney">월트 디즈니</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">방문자는 페이지를 만든 사람에 관해 알고 싶어 합니다. 이 공간에 회원님 자신이나 회원님의 사이트, 비즈니스에 관한 소개나 원하는 내용을 기록하세요. 아래의 추천 글을 사용하여 같은 내용을 자신만의 언어로 이야기하는 다른 사람의 글을 인용하세요.</string>
+    <string name="gutenberg_native_usa">미국</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">다음은 샘플 콘텐츠이며, 기능을 설명하는 템플릿도 포함되어 있습니다. 이 콘텐츠를 제거하거나 자신만의 언어와 미디어로 바꾸세요.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">시작하려면 말을 그치고 행동으로 옮겨야 한다.</string>
+    <string name="gutenberg_native_team">팀</string>
+    <string name="gutenberg_native_success_message">성공 메시지</string>
+    <string name="gutenberg_native_strategy">전략</string>
+    <string name="gutenberg_native_show_post_content">글 콘텐츠 보기</string>
+    <string name="gutenberg_native_services">서비스</string>
+    <string name="gutenberg_native_samuel_the_dog">강아지 사무엘</string>
+    <string name="gutenberg_native_sally_smith">샐리 스미스</string>
+    <string name="gutenberg_native_project_name">프로젝트 이름</string>
+    <string name="gutenberg_native_position_or_job_title">직위 또는 직급</string>
+    <string name="gutenberg_native_portfolio">포트폴리오</string>
+    <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">최소 높이(픽셀)</string>
+    <string name="gutenberg_native_link_to">링크</string>
+    <string name="gutenberg_native_link_settings">링크 설정</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">함께 만들어 보세요.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">함께 만들어 보세요.</string>
+    <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요.</string>
+    <string name="gutenberg_native_juan_p_rez">후안 페레스</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. 롤링</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">해리야, 우리가 진짜 누군지 보여주는 건 우리 능력들보다는 우리의 선택이야.</string>
+    <string name="gutenberg_native_inspiration">영감</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">연락주세요!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">연락주세요!</string>
+    <string name="gutenberg_native_get_in_touch">문의하기</string>
+    <string name="gutenberg_native_excerpt_length_words">요약문 길이(단어)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">이메일: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">커버 미디어 편집</string>
+    <string name="gutenberg_native_dr_seuss">닥터 수스</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">끝났다고 울지 말고, 지나간 추억을 떠올리며 미소지어라.</string>
+    <string name="gutenberg_native_customize">사용자 정의</string>
+    <string name="gutenberg_native_city_10100">City, 10100</string>
+    <string name="gutenberg_native_button_link_url">버튼 링크 URL</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">조만간 버튼 색상 설정을 이용할 수 있습니다.</string>
+    <string name="gutenberg_native_border_settings">경계선 설정</string>
+    <string name="gutenberg_native_border_radius">경계선 반경</string>
+    <string name="gutenberg_native_background_opacity">배경 불투명도</string>
+    <string name="gutenberg_native_add_paragraph_block">단락 블록 추가</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">제공하는 서비스에 대한 간단한 설명입니다.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">개인사, 주요 성취, 흥미로운 점을 담은 간단한 소개입니다.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">프로젝트와 작품에 대한 설명이 표시됩니다.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
@@ -192,8 +247,6 @@ Language: ko_KR
     <string name="notifications_tab_dialog_master_hint_on">이 사이트의 알림 탭에서 알림 표시 사용 안 함</string>
     <string name="notifications_tab_dialog_master_status_off">이 사이트의 알림</string>
     <string name="notifications_tab_dialog_master_status_on">이 사이트의 알림</string>
-    <string name="dialog_gutenberg_informative_description_page">이제 새 페이지의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
-    <string name="dialog_gutenberg_informative_description_post">이제 새 글의 블록 편집기를 사용하고 있습니다. \u2014 잘하셨습니다! 구 버전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
     <string name="pick_media">이미지 또는 비디오 추가</string>
     <string name="error_post_not_submitted_retrying">리뷰를 위해 이 글을 제출하지 못했지만 나중에 다시 시도하겠습니다. </string>
     <string name="error_post_not_scheduled_retrying">이 글을 예약하지 못했지만 나중에 다시 시도하겠습니다.</string>
@@ -2002,7 +2055,6 @@ Language: ko_KR
     <string name="content_required">댓글 본문은 필수 항목입니다.</string>
     <string name="sure_to_cancel_edit_comment">이 코멘트 수정을 취소하시겠습니까?</string>
     <string name="saving_changes">변경 사항을 저장 중</string>
-    <string name="hint_comment_content">코멘트</string>
     <string name="trash">휴지통</string>
     <string name="dlg_confirm_trash_comments">휴지통에 보내겠습니까?</string>
     <string name="dlg_trashing_comments">휴지통으로 이동</string>
@@ -2104,7 +2156,7 @@ Language: ko_KR
     <string name="pages">페이지</string>
     <string name="no_network_title">사용 가능한 네트워크가 없습니다</string>
     <string name="ok">확인</string>
-    <string name="blogusername">blogusername</string>
+    <string name="done">완료</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">이용 약관</string>
@@ -2117,7 +2169,6 @@ Language: ko_KR
     <string name="quickpress_add_alert_title">바로 가기 이름을 설정</string>
     <string name="settings">설정</string>
     <string name="quickpress_add_error">바로가기 이름을 입력하세요</string>
-    <string name="quickpress_window_title">QuickPress 바로가기에 대한 블로그를 선택</string>
     <string name="pages_private">비공개</string>
     <string name="categories">카테고리</string>
     <string name="tags_separate_with_commas">태그(쉼표로 구분)</string>
