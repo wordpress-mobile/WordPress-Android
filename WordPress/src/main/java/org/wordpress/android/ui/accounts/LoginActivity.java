@@ -616,7 +616,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         LoginGoogleFragment loginGoogleFragment;
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        loginGoogleFragment = new LoginGoogleFragment();
+        loginGoogleFragment = LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled);
         loginGoogleFragment.setRetainInstance(true);
         fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
         fragmentTransaction.commit();

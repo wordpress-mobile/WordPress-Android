@@ -1,7 +1,9 @@
 package org.wordpress.android.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,21 +20,57 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginGoogleFragment extends GoogleFragment {
+    private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
     private static final int REQUEST_LOGIN = 1001;
     private boolean mLoginRequested = false;
+    private boolean mIsSignupFromLoginEnabled;
+    private ProgressDialog mProgressDialog;
 
     public static final String TAG = "login_google_fragment_tag";
+
+    public static LoginGoogleFragment newInstance(boolean isSignupFromLoginEnabled) {
+        LoginGoogleFragment fragment = new LoginGoogleFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mIsSignupFromLoginEnabled) {
+            mProgressDialog = ProgressDialog.show(
+                    getActivity(), null, getString(R.string.signin_with_google_progress), true, false, null);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        dismissProgressDialog();
+        super.onStop();
     }
 
     @Override
@@ -64,9 +102,12 @@ public class LoginGoogleFragment extends GoogleFragment {
                             GoogleSignInAccount account = loginResult.getSignInAccount();
 
                             if (account != null) {
+                                mDisplayName = account.getDisplayName() != null ? account.getDisplayName() : "";
                                 mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
                                 mGoogleListener.onGoogleEmailSelected(mGoogleEmail);
                                 mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
+                                mPhotoUrl = removeScaleFromGooglePhotoUrl(
+                                        account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
                             }
 
                             AppLog.d(T.MAIN,
@@ -155,6 +196,12 @@ public class LoginGoogleFragment extends GoogleFragment {
                     event.error.type.toString(), event.error.message);
 
             showError(getString(R.string.login_error_generic));
+        } else if (event.createdAccount) {
+            AppLog.d(T.MAIN,
+                    "GOOGLE LOGIN: onAuthenticationChanged - new wordpress account created");
+            mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
+            mAnalyticsListener.trackAnalyticsSignIn(true);
+            mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
         } else {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onAuthenticationChanged - success");
             AppLog.i(T.NUX, "LoginGoogleFragment.onAuthenticationChanged: " + event.toString());
@@ -184,12 +231,21 @@ public class LoginGoogleFragment extends GoogleFragment {
                     AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount exists but not connected");
                     mAnalyticsListener.trackSocialAccountsNeedConnecting();
                     mLoginListener.loginViaSocialAccount(mGoogleEmail, mIdToken, SERVICE_TYPE_GOOGLE, true);
+                    finishFlow();
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
-                    AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount doesn't exist");
-                    mAnalyticsListener.trackSocialErrorUnknownUser();
-                    showError(getString(R.string.login_error_email_not_found_v2));
+                    if (mIsSignupFromLoginEnabled) {
+                        PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
+                        AppLog.d(T.MAIN,
+                                "GOOGLE LOGIN: onSocialChanged - wordpress account doesn't exist - dispatching "
+                                + "SocialSignupAction");
+                        mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
+                    } else {
+                        AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress account doesn't exist");
+                        mAnalyticsListener.trackSocialErrorUnknownUser();
+                        showError(getString(R.string.login_error_email_not_found_v2));
+                    }
                     break;
                 // Too many attempts on sending SMS verification code. The user has to wait before they try again
                 case SMS_CODE_THROTTLED:
@@ -209,10 +265,17 @@ public class LoginGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - needs 2fa");
             mLoginListener.needs2faSocial(mGoogleEmail, event.userId, event.nonceAuthenticator, event.nonceBackup,
                     event.nonceSms);
+            finishFlow();
         } else {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - success");
             mGoogleListener.onGoogleLoginFinished();
+            finishFlow();
         }
-        finishFlow();
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
     }
 }

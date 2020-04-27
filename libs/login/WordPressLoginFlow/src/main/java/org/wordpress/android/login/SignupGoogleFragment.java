@@ -23,13 +23,11 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import dagger.android.support.AndroidSupportInjection;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class SignupGoogleFragment extends GoogleFragment {
     private static final String OLD_SITES_IDS = "old_sites_ids";
@@ -181,15 +179,6 @@ public class SignupGoogleFragment extends GoogleFragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-    }
-
-    // Remove scale from photo URL path string. Current URL matches /s96-c, which returns a 96 x 96
-    // pixel image. Removing /s96-c from the string returns a 512 x 512 pixel image. Using regular
-    // expressions may help if the photo URL scale value in the returned path changes.
-    private String removeScaleFromGooglePhotoUrl(String photoUrl) {
-        Pattern pattern = Pattern.compile("(/s[0-9]+-c)");
-        Matcher matcher = pattern.matcher(photoUrl);
-        return matcher.find() ? photoUrl.replace(matcher.group(1), "") : photoUrl;
     }
 
     @SuppressWarnings("unused")

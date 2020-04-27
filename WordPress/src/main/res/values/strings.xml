@@ -2402,6 +2402,7 @@
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google…</string>
+    <string name="signin_with_google_progress">Signing in with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
     <string name="signup_email_screen_title">Email signup</string>
