@@ -209,10 +209,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         return context.getString(idRes)
     }
 
-    fun getTitleForPageType(pageType: PageType): CharSequence {
-        return getTitleForPosition(getPosition(pageType))
-    }
-
     private fun getContentDescriptionForPosition(position: Int): CharSequence {
         @StringRes val idRes: Int = when (pages().getOrNull(position)) {
             MY_SITE -> R.string.tabbar_accessibility_label_my_site
