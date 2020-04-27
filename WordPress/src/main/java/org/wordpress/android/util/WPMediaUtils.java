@@ -493,11 +493,8 @@ public class WPMediaUtils {
         }
     }
 
-    public static List<Uri> retrieveImageEditorResultAndTrackEvent(Intent data) {
+    public static List<Uri> retrieveImageEditorResult(Intent data) {
         if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
-            Map<String, String> properties = new HashMap<>();
-            properties.put("actions", "crop");
-            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
             return convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
                     PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
         } else {

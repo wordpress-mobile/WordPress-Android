@@ -2291,7 +2291,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResultAndTrackEvent(data);
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
                     for (Uri item : uris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, true);
                     }

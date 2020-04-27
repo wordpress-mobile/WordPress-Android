@@ -8,6 +8,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
 import org.wordpress.android.util.image.ImageManager
@@ -18,6 +19,8 @@ import java.io.File
 class ImageEditorInitializer {
     companion object {
         private const val IMAGE_STRING_URL_MSG = "ImageEditor requires a not-null string image url."
+        private const val ACTIONS = "actions"
+        private const val NUMBER_OF_IMAGES = "number_of_images"
 
         fun init(imageManager: ImageManager) {
             ImageEditor.init(
@@ -83,8 +86,11 @@ class ImageEditorInitializer {
 
         private fun trackEditorAction(action: EditorAction) {
             when (action) {
+                is CropDoneMenuClicked -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "crop"))
+                }
                 is EditorShown -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN, mapOf("number_of_images" to action.numOfImages))
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN, mapOf(NUMBER_OF_IMAGES to action.numOfImages))
                 }
                 is EditorCancelled -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
