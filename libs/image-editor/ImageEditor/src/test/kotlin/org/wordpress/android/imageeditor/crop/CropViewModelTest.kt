@@ -62,6 +62,7 @@ class CropViewModelTest {
 
     @Test
     fun `crop and save image start action triggered on done menu click`() {
+        initViewModel()
         viewModel.onDoneMenuClicked()
         assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
                 .isInstanceOf(ImageCropAndSaveStartState::class.java)
