@@ -57,7 +57,9 @@ class ImageEditor private constructor(
         onEditorAction.invoke(action)
     }
 
-    sealed class EditorAction
+    sealed class EditorAction {
+        object EditorCancelled : EditorAction()
+    }
 
     companion object {
         private lateinit var INSTANCE: ImageEditor

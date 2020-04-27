@@ -8,6 +8,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.navigateUp
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 
 class EditImageActivity : AppCompatActivity() {
     private lateinit var hostFragment: NavHostFragment
@@ -54,5 +55,10 @@ class EditImageActivity : AppCompatActivity() {
         } else {
             navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        ImageEditor.instance.onEditorAction(EditorCancelled)
     }
 }
