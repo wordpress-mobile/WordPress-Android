@@ -4,8 +4,11 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.IMAGE
@@ -74,6 +77,15 @@ class ImageEditorInitializer {
             }
 
         private fun onEditorAction(): (EditorAction) -> Unit = { action ->
+            trackEditorAction(action)
+        }
+
+        private fun trackEditorAction(action: EditorAction) {
+            when (action) {
+                is EditorCancelled -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
+                }
+            }
         }
     }
 }

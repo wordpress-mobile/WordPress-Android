@@ -1719,6 +1719,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_shown";
             case MEDIA_EDITOR_USED:
                 return "media_editor_used";
+            case MEDIA_EDITOR_CANCELLED:
+                return "media_editor_cancelled";
         }
         return null;
     }
