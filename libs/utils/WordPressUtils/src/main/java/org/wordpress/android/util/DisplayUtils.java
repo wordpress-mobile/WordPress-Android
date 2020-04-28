@@ -56,7 +56,7 @@ public class DisplayUtils {
         return (int) ((px / displayMetrics.density) + 0.5);
     }
 
-    public static boolean isXLarge(Context context) {
+    public static boolean isXLargeTablet(Context context) {
         if ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
             == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
             return true;
@@ -67,7 +67,7 @@ public class DisplayUtils {
     public static boolean isTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK)
-               >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+               == Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     /**
