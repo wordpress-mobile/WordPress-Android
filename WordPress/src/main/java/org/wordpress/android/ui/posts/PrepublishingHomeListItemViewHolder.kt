@@ -13,9 +13,11 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.Prepublishing
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeHeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType.BLAVATAR
 
-private const val ROUNDING_RADIUS_DP = 10
+private const val ROUNDING_RADIUS_DP = 6
 
 sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(
@@ -63,13 +65,13 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
             uiState as PrepublishingHomeHeaderUiState
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
-            // TODO("re-enable site image loading when merged with latest changes")
-            /*imageManager.loadWithRoundedCorners(
+
+            imageManager.loadWithRoundedCorners(
                     siteIcon,
                     BLAVATAR,
                     uiState.siteIconUrl,
                     DisplayUtils.dpToPx(itemView.context, ROUNDING_RADIUS_DP)
-            )*/
+            )
         }
     }
 

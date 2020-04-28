@@ -155,7 +155,6 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
      * Loads an image from the "imgUrl" into the ImageView and applies circle transformation. Adds placeholder and
      * error placeholder depending on the ImageType.
      */
-    @JvmOverloads
     fun loadWithRoundedCorners(
         imageView: ImageView,
         imageType: ImageType,
