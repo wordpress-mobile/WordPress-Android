@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.VisibleForTesting
 import kotlinx.android.synthetic.main.suggest_users_activity.*
@@ -111,6 +112,12 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             }
 
             post { requestFocus() }
+
+            setOnTouchListener { _, _ ->
+                // Prevent touching the view from dismissing the suggestion list
+                showDropDown()
+                false
+            }
         }
     }
 
