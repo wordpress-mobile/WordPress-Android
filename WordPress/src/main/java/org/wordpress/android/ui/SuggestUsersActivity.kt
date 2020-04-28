@@ -115,8 +115,10 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             post { requestFocus() }
 
             setOnTouchListener { _, _ ->
-                // Prevent touching the view from dismissing the suggestion list
-                showDropDown()
+                // Prevent touching the view from dismissing the suggestion list if it's not empty
+                if (adapter.count > 0) {
+                    showDropDown()
+                }
                 false
             }
         }
