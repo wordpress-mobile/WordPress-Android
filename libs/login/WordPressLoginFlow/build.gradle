@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath 'com.android.tools.build:gradle:3.5.1'
     }
 }
 
@@ -42,7 +42,7 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
 
-    api 'com.google.android.gms:play-services-auth:18.0.0'
+    api 'com.google.android.gms:play-services-auth:15.0.1'
 
     // Share FluxC version from host project if defined, otherwise fallback to default
     if (project.hasProperty("fluxCVersion")) {
