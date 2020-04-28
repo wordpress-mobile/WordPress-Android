@@ -70,7 +70,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.main.SitePickerActivity
-import org.wordpress.android.ui.main.SitePickerActivity.SitePickerMode.REBLOG
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -893,7 +893,7 @@ class ReaderPostDetailFragment : Fragment(),
                     else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()
                         val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                        ActivityLauncher.showSitePickerForResult(this, site, REBLOG)
+                        ActivityLauncher.showSitePickerForResult(this, site, REBLOG_SELECT_MODE)
                     }
                 }
             }
