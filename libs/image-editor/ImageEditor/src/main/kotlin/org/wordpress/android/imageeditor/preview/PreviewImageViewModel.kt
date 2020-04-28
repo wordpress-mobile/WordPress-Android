@@ -32,6 +32,9 @@ class PreviewImageViewModel : ViewModel() {
     val navigateToCropScreenWithFileInfo: LiveData<Event<Triple<String, String?, Boolean>>> =
         _navigateToCropScreenWithFileInfo
 
+    private val _startAction = MutableLiveData<Event<Int>>()
+    val startAction: LiveData<Event<Int>> = _startAction
+
     private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
     val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
 
@@ -53,6 +56,7 @@ class PreviewImageViewModel : ViewModel() {
                 thumbnailsTabLayoutVisible = !newImageUiStates.hasSingleElement()
             )
             updateUiState(currentUiState)
+            _startAction.value = Event(numberOfImages)
         }
     }
 

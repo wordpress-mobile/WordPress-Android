@@ -137,11 +137,11 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
-        ImageEditor.instance.onEditorAction(CropOpened)
         var thirdPartyCropFragment = childFragmentManager
                 .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
+            ImageEditor.instance.onEditorAction(CropOpened)
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)

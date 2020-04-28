@@ -31,6 +31,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
@@ -213,6 +214,12 @@ class PreviewImageFragment : Fragment() {
                         }
                     }
                 }
+            }
+        })
+
+        viewModel.startAction.observe(viewLifecycleOwner, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                ImageEditor.instance.onEditorAction(EditorShown(it))
             }
         })
 
