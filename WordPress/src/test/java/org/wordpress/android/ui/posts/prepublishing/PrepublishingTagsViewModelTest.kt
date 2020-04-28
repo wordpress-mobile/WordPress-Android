@@ -32,7 +32,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     @Test
     fun `when viewModel is started updateToolbarTitle is called with the tags title`() {
         var title: UiStringRes? = null
-        viewModel.updateToolbarTitle.observeForever {
+        viewModel.toolbarTitleUiState.observeForever {
             title = it as UiStringRes
         }
 
