@@ -522,7 +522,6 @@
 
         <activity
             android:name=".ui.photopicker.PhotoPickerActivity"
-            android:label="@string/photo_picker_title"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stockmedia.StockMediaPickerActivity"

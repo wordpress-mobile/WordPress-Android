@@ -1,25 +1,14 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonObject;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class ImageBlockProcessor extends BlockProcessor {
-    /**
-     * Template pattern used to match and splice image blocks
-     */
-    private static final String PATTERN_TEMPLATE_IMAGE = "(<!-- wp:image \\{[^\\}]*\"id\":)" // block
-                                                         + "(%1$s)" // local id must match to be replaced
-                                                         + "([,\\}][^>]*-->\n?)" // rest of header
-                                                         + "(.*)" // block contents
-                                                         + "(<!-- /wp:image -->\n?)"; // closing comment
-
     public ImageBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-    }
-
-    @Override String getBlockPatternTemplate() {
-        return PATTERN_TEMPLATE_IMAGE;
     }
 
     @Override boolean processBlockContentDocument(Document document) {
@@ -35,6 +24,15 @@ public class ImageBlockProcessor extends BlockProcessor {
             targetImg.removeClass("wp-image-" + mLocalId);
             targetImg.addClass("wp-image-" + mRemoteId);
 
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+        if (jsonAttributes.get("id").getAsString().equals(mLocalId)) {
+            jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId));
             return true;
         }
 

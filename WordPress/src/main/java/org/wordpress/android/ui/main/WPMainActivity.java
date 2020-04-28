@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticationErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -190,6 +191,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject GCMMessageHandler mGCMMessageHandler;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -759,7 +761,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onPageChanged(int position) {
         PageType pageType = WPMainNavigationView.getPageType(position);
-        updateTitle(pageType);
         trackLastVisiblePage(pageType, true);
         if (getMySiteFragment() != null) {
             QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
@@ -804,19 +805,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
-    }
-
-    private void updateTitle() {
-        updateTitle(mBottomNav.getCurrentSelectedPage());
-    }
-
-    private void updateTitle(PageType pageType) {
-        if (pageType == PageType.MY_SITE && mSelectedSite != null) {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment()).setTitle(mSelectedSite.getName());
-        } else {
-            ((MainToolbarFragment) mBottomNav.getActiveFragment())
-                    .setTitle(mBottomNav.getTitleForPageType(pageType).toString());
-        }
     }
 
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
@@ -917,6 +905,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
                 setSite(data);
                 showQuickStartDialog();
+                mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -944,6 +933,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        mPrivateAtomicCookie.clearCookie();
                     }
 
                     setSite(data);
@@ -1188,8 +1178,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // Make selected site visible
         selectedSite.setIsVisible(true);
         AppPrefs.setSelectedSite(selectedSite.getId());
-
-        updateTitle();
     }
 
     /**
@@ -1205,7 +1193,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             mSelectedSite = mSiteStore.getSiteByLocalId(siteLocalId);
             // If saved site exist, then return, else (site has been removed?) try to select another site
             if (mSelectedSite != null) {
-                updateTitle();
                 return;
             }
         }

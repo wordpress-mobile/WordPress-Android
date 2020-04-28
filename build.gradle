@@ -106,7 +106,7 @@ ext {
     targetSdkVersion = 28
 
     daggerVersion = '2.22.1'
-    fluxCVersion = '1.6.10-beta-1'
+    fluxCVersion = '1.6.11-beta-1'
 
     appCompatVersion = '1.0.2'
     constraintLayoutVersion = '1.1.3'
