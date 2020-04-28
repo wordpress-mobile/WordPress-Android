@@ -19,7 +19,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        viewModel = PrepublishingViewModel()
+        viewModel = PrepublishingViewModel(mock())
     }
 
     @Test

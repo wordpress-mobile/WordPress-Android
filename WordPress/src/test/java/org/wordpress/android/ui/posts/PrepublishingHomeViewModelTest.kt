@@ -38,7 +38,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 3
 
         // act
-        viewModel.start(mock())
+        viewModel.start(mock(), mock())
 
         // assert
         assertThat(viewModel.uiState.value?.size).isEqualTo(expectedActionsAmount)
@@ -50,7 +50,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = PUBLISH
 
         // act
-        viewModel.start(mock())
+        viewModel.start(mock(), mock())
         val publishAction = getHomeUiState(expectedActionType)
         publishAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -64,7 +64,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = VISIBILITY
 
         // act
-        viewModel.start(mock())
+        viewModel.start(mock(), mock())
         val visibilityAction = getHomeUiState(expectedActionType)
         visibilityAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -78,7 +78,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = VISIBILITY
 
         // act
-        viewModel.start(mock())
+        viewModel.start(mock(), mock())
         val tagsAction = getHomeUiState(expectedActionType)
         tagsAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -93,7 +93,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(expectedLabel)
 
         // act
-        viewModel.start(editPostRepository)
+        viewModel.start(editPostRepository, mock())
         val publishAction = getHomeUiState(PUBLISH)
 
         // assert
@@ -107,7 +107,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(getPostTagsUseCase.getTags(editPostRepository)).thenReturn(expectedTags)
 
         // act
-        viewModel.start(editPostRepository)
+        viewModel.start(editPostRepository, mock())
         val tagsAction = getHomeUiState(TAGS)
 
         // assert
