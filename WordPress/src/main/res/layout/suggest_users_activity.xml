@@ -14,11 +14,17 @@
         android:padding="@dimen/margin_medium"
         android:gravity="center"
         android:background="?attr/colorBackgroundFloating"
-        android:elevation="4dp"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
         android:text="@string/suggestion_no_matching_users"
         />
+
+    <View
+        android:id="@+id/divider"
+        android:background="@color/gray_5"
+        android:layout_height="1dp"
+        android:layout_width="match_parent" >
+    </View>
 
     <org.wordpress.android.widgets.SuggestionAutoCompleteText
         android:id="@+id/autocompleteText"
@@ -31,8 +37,7 @@
         android:background="?attr/colorBackgroundFloating"
         android:textAppearance="?attr/textAppearanceBody1"
         android:dropDownVerticalOffset="0dp"
+        android:dropDownAnchor="@+id/divider"
         />
-    <!--Setting a 0dp dropDownVerticalOffset avoids a small (~15px) gap between the top of the
-        SuggestionAutoCompleteText and the dropdown-->
 
 </LinearLayout>
