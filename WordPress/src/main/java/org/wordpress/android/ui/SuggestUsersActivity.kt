@@ -7,7 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.inputmethod.EditorInfo
-import androidx.annotation.VisibleForTesting
 import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,16 +61,18 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    val filteredSuggestions = suggestionAdapter?.filteredSuggestions
-                    val onlySuggestion = getOnlyElement(filteredSuggestions)
-                    if (onlySuggestion != null) {
-                        finishWithId(onlySuggestion.userLogin)
+                    val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
+                        suggestionAdapter?.getItem(0)?.userLogin
+                    } else {
+                        null
+                    }
+                    if (onlySuggestedUser != null) {
+                        finishWithId(onlySuggestedUser)
                     } else {
                         // If there is not exactly 1 suggestion, notify that entered text is not a valid user
                         val message = getString(R.string.suggestion_invalid_user, text)
                         ToastUtils.showToast(this@SuggestUsersActivity, message)
                     }
-
                     true
                 } else {
                     false
@@ -167,20 +168,5 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     companion object {
         const val SELECTED_USER_ID = "SELECTED_USER_ID"
-
-        /**
-         * @return If [list] has one element, returns that element. Otherwise returns null.
-         */
-        @VisibleForTesting
-        internal fun <T> getOnlyElement(list: List<T>?): T? =
-                if (list?.size == 1) {
-                    // Using firstOrNull() instead of first() because all lists are mutable and it is possible for
-                    // the list's single element to be removed from another thread between the size check and the
-                    // retrieval of the first element. Admittedly, that is unlikely, but we're being cautious to
-                    // avoid any risk of first() throwing a NoSuchElementException.
-                    list.firstOrNull()
-                } else {
-                    null
-                }
     }
 }
