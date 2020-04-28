@@ -122,11 +122,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
-        ImageEditor.instance.onEditorAction(
-            CropDoneMenuClicked(OutputData(
-                viewModel.cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: "")
-            )
-        )
+        ImageEditor.instance.onEditorAction(CropDoneMenuClicked(OutputData(viewModel.getOutputPath())))
         viewModel.onDoneMenuClicked()
         true
     } else if (item.itemId == android.R.id.home) {

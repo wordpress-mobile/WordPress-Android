@@ -56,7 +56,7 @@ class CropViewModel : ViewModel() {
         }
     }
 
-    val cropOptionsBundleWithFilesInfo by lazy {
+    private val cropOptionsBundleWithFilesInfo by lazy {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
@@ -128,6 +128,9 @@ class CropViewModel : ViewModel() {
     private fun createCropResult(cropResultCode: Int, cropData: Intent) = CropResult(cropResultCode, cropData)
 
     private fun getCropError(resultData: Intent): String? = UCrop.getError(resultData)?.message
+
+    fun getOutputPath(): String =
+            cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
 
     data class CropResult(val resultCode: Int, val data: Intent) : Serializable
 
