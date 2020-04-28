@@ -11,14 +11,14 @@
         android:layout_height="@dimen/min_touch_target_sz"
         android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
         android:importantForAccessibility="no"
         android:src="@drawable/background_block_editor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle"
         tools:srcCompat="@tools:sample/avatars" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -51,4 +51,15 @@
         app:layout_constraintStart_toEndOf="@id/site_icon"
         app:layout_constraintTop_toBottomOf="@id/publishing_to"
         tools:text="ABC Business" />
+
+    <include
+        android:id="@+id/bottom_sheet_handle"
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_small"
+        app:layout_constraintBottom_toTopOf="@id/site_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
