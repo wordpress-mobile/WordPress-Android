@@ -21,6 +21,8 @@ import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
@@ -101,7 +103,8 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     is ImageCropAndSaveFailedState -> {
                         showCropError(state.errorMsg, state.errorResId)
                     }
-                    is ImageCropAndSaveSuccessState -> { // Do nothing
+                    is ImageCropAndSaveSuccessState -> {
+                        ImageEditor.instance.onEditorAction(CropSuccessful(state.cropResult))
                     }
                 }
             }
@@ -138,6 +141,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
+        ImageEditor.instance.onEditorAction(CropOpened)
         var thirdPartyCropFragment = childFragmentManager
                 .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
@@ -182,7 +186,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 arrayListOf()
             }
 
-            ImageEditor.instance.onEditorAction(EditorFinishedEditing)
+            ImageEditor.instance.onEditorAction(EditorFinishedEditing(resultData))
 
             activity?.let {
                 it.setResult(

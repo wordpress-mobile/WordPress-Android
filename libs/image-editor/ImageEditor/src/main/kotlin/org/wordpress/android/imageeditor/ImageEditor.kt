@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import java.io.File
 
@@ -59,12 +60,20 @@ class ImageEditor private constructor(
     }
 
     sealed class EditorAction {
+        // General actions
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
-        object EditorFinishedEditing : EditorAction()
-        data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
+        data class EditorFinishedEditing(val outputDataList: List<OutputData>) : EditorAction()
+
+        // Preview screen actions
         data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()
         data class PreviewInsertImagesClicked(val outputDataList: List<OutputData>) : EditorAction()
+        object PreviewCropMenuClicked : EditorAction()
+
+        // Crop screen actions
+        object CropOpened : EditorAction()
+        data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
+        data class CropSuccessful(val cropResult: CropResult) : EditorAction()
     }
 
     companion object {

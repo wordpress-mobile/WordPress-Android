@@ -9,9 +9,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.util.image.ImageManager
@@ -88,25 +91,22 @@ class ImageEditorInitializer {
         }
 
         private fun trackEditorAction(action: EditorAction) {
-            when (action) {
-                is EditorShown -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN, mapOf(NUMBER_OF_IMAGES to action.numOfImages))
-                }
-                is EditorCancelled -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
-                }
-                is EditorFinishedEditing -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_FINISHED_EDITING)
-                }
-                is CropDoneMenuClicked -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "crop"))
-                }
-                is PreviewImageSelected -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED)
-                }
-                is PreviewInsertImagesClicked -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED)
-                }
+            val stat = when (action) {
+                is EditorShown -> Stat.MEDIA_EDITOR_SHOWN
+                is EditorCancelled -> Stat.MEDIA_EDITOR_CANCELLED
+                is EditorFinishedEditing -> Stat.MEDIA_EDITOR_FINISHED_EDITING
+                is PreviewImageSelected -> Stat.MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED
+                is PreviewInsertImagesClicked -> Stat.MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED
+                is PreviewCropMenuClicked -> Stat.MEDIA_EDITOR_PREVIEW_CROP_MENU_CLICKED
+                is CropOpened -> Stat.MEDIA_EDITOR_CROP_OPENED
+                is CropDoneMenuClicked -> Stat.MEDIA_EDITOR_CROP_DONE_MENU_CLICKED
+                is CropSuccessful -> Stat.MEDIA_EDITOR_CROP_SUCCESSFUL
+            }
+
+            if (action is EditorShown) {
+                AnalyticsTracker.track(stat, mapOf(NUMBER_OF_IMAGES to action.numOfImages))
+            } else {
+                AnalyticsTracker.track(stat)
             }
         }
     }

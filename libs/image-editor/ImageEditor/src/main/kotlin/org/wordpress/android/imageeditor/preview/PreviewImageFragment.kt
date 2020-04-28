@@ -31,6 +31,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
@@ -218,7 +219,7 @@ class PreviewImageFragment : Fragment() {
         viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 val outputData = ArrayList(it)
-                ImageEditor.instance.onEditorAction(EditorFinishedEditing)
+                ImageEditor.instance.onEditorAction(EditorFinishedEditing(outputData))
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, outputData) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()
@@ -307,6 +308,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
+        ImageEditor.instance.onEditorAction(PreviewCropMenuClicked)
         viewModel.onCropMenuClicked()
         true
     } else {

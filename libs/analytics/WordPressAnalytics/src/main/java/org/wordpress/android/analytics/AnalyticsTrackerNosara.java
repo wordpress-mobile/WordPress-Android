@@ -1727,6 +1727,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_preview_image_selected";
             case MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED:
                 return "media_editor_preview_insert_images_clicked";
+            case MEDIA_EDITOR_PREVIEW_CROP_MENU_CLICKED:
+                return "media_editor_preview_crop_menu_clicked";
+            case MEDIA_EDITOR_CROP_OPENED:
+                return "media_editor_crop_opened";
+            case MEDIA_EDITOR_CROP_DONE_MENU_CLICKED:
+                return "media_editor_crop_done_menu_clicked";
+            case MEDIA_EDITOR_CROP_SUCCESSFUL:
+                return "media_editor_crop_successful";
         }
         return null;
     }
