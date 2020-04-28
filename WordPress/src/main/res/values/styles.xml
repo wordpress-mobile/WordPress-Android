@@ -1096,4 +1096,15 @@
         <item name="contentPadding">@dimen/unelevated_card_stroke_width</item>
     </style>
 
+    <style name="FullScreenDialogFragmentAnimation" parent="@android:style/Theme.Panel">
+        <item name="android:windowEnterAnimation">@anim/full_screen_dialog_fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/full_screen_dialog_fragment_slide_down</item>
+    </style>
+
+    <style name="FeatureAnnouncementDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
+    </style>
+
 </resources>
