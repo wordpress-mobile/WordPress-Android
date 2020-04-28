@@ -56,7 +56,7 @@ class CropViewModel : ViewModel() {
         }
     }
 
-    private val cropOptionsBundleWithFilesInfo by lazy {
+    val cropOptionsBundleWithFilesInfo by lazy {
         Bundle().also {
             with(it) {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))

@@ -19,6 +19,8 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
@@ -28,6 +30,7 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.ARG_EDIT_IMAGE_DATA
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 
@@ -115,6 +118,11 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
+        ImageEditor.instance.onEditorAction(
+            CropDoneMenuClicked(OutputData(
+                viewModel.cropOptionsBundleWithFilesInfo.getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: "")
+            )
+        )
         viewModel.onDoneMenuClicked()
         true
     } else if (item.itemId == android.R.id.home) {

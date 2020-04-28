@@ -292,7 +292,7 @@ class PreviewImageViewModel : ViewModel() {
         } ?: ""
     }
 
-    private fun getHighResImageUrl(position: Int): String =
+    fun getHighResImageUrl(position: Int): String =
         uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
 
     private fun isFileUrl(url: String): Boolean = url.toLowerCase().startsWith(FILE_BASE)
