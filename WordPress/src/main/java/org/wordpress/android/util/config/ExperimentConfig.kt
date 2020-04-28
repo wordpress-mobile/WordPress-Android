@@ -38,4 +38,3 @@ abstract class ExperimentConfig(
         return getVariant() == variant
     }
 }
-

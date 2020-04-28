@@ -13,4 +13,3 @@ open class FeatureConfig(private val appConfig: AppConfig, val buildConfigValue:
         return appConfig.isEnabled(this)
     }
 }
-

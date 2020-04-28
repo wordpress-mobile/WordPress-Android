@@ -32,5 +32,5 @@ class FeatureConfigTest {
         assertThat(featureConfig.isEnabled()).isFalse()
     }
 
-    private class TestFeatureConfig(appConfig: AppConfig) : FeatureConfig(appConfig, true, "remote_field") {}
+    private class TestFeatureConfig(appConfig: AppConfig) : FeatureConfig(appConfig, true, "remote_field")
 }

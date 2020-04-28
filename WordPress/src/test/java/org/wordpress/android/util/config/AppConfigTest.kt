@@ -91,7 +91,10 @@ class AppConfigTest {
         setupExperimentConfig(experimentVariantA, listOf(variant))
 
         assertThat(appConfig.getCurrentVariant(experimentConfig)).isEqualTo(variant)
-        verify(analyticsTracker).track(Stat.EXPERIMENT_VARIANT_SET, mapOf(experimentConfig.remoteField to experimentVariantA))
+        verify(analyticsTracker).track(
+                Stat.EXPERIMENT_VARIANT_SET,
+                mapOf(experimentConfig.remoteField to experimentVariantA)
+        )
     }
 
     @Test
@@ -100,7 +103,10 @@ class AppConfigTest {
         setupExperimentConfig(experimentVariantA, listOf(variant))
 
         assertThat(appConfig.getCurrentVariant(experimentConfig)).isNull()
-        verify(analyticsTracker).track(Stat.EXPERIMENT_VARIANT_SET, mapOf(experimentConfig.remoteField to experimentVariantA))
+        verify(analyticsTracker).track(
+                Stat.EXPERIMENT_VARIANT_SET,
+                mapOf(experimentConfig.remoteField to experimentVariantA)
+        )
     }
 
     @Test
@@ -115,7 +121,10 @@ class AppConfigTest {
 
         assertThat(appConfig.getCurrentVariant(experimentConfig)).isEqualTo(variantA)
 
-        verify(analyticsTracker).track(Stat.EXPERIMENT_VARIANT_SET, mapOf(experimentConfig.remoteField to experimentVariantA))
+        verify(analyticsTracker).track(
+                Stat.EXPERIMENT_VARIANT_SET,
+                mapOf(experimentConfig.remoteField to experimentVariantA)
+        )
     }
 
     private fun setupFeatureConfig(buildConfigValue: Boolean, remoteConfigValue: Boolean) {
