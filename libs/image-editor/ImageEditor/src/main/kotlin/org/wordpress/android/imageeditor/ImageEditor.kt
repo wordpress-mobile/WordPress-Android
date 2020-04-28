@@ -63,7 +63,8 @@ class ImageEditor private constructor(
         // General actions
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
-        data class EditorFinishedEditing(val outputDataList: List<OutputData>) : EditorAction()
+        data class EditorFinishedEditing(val outputDataList: List<OutputData>, val actions: List<Action>) :
+                EditorAction()
 
         // Preview screen actions
         data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()
@@ -76,10 +77,17 @@ class ImageEditor private constructor(
         data class CropSuccessful(val cropResult: CropResult) : EditorAction()
     }
 
+    sealed class Action(val label: String) {
+        object Crop : Action("crop")
+    }
+
     companion object {
         private lateinit var INSTANCE: ImageEditor
 
         val instance: ImageEditor get() = INSTANCE
+
+        // The actions that were made in this session.
+        val actions = arrayListOf<Action>()
 
         fun init(
             loadIntoImageViewWithResultListener: (

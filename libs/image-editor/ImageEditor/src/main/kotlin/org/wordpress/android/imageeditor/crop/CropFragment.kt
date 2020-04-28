@@ -20,6 +20,7 @@ import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.Action
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
@@ -122,6 +123,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
+        ImageEditor.actions.add(Action.Crop)
         ImageEditor.instance.onEditorAction(CropDoneMenuClicked(OutputData(viewModel.getOutputPath())))
         viewModel.onDoneMenuClicked()
         true
@@ -182,7 +184,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 arrayListOf()
             }
 
-            ImageEditor.instance.onEditorAction(EditorFinishedEditing(resultData))
+            ImageEditor.instance.onEditorAction(EditorFinishedEditing(resultData, ImageEditor.actions))
 
             activity?.let {
                 it.setResult(
