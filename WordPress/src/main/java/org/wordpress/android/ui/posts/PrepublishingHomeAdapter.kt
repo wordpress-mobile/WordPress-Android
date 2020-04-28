@@ -16,7 +16,7 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 private const val headerViewType: Int = 1
-private const val actionItemViewType: Int = 2
+private const val homeItemViewType: Int = 2
 private const val publishButtonViewType: Int = 3
 
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
@@ -31,7 +31,7 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeViewHolder {
         return when (viewType) {
             headerViewType -> PrepublishingHeaderListItemViewHolder(parent, uiHelpers, imageManager)
-            actionItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
+            homeItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
             publishButtonViewType -> PrepublishingHomePublishButtonViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
@@ -51,7 +51,7 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is HeaderUiState -> headerViewType
-            is HomeUiState -> actionItemViewType
+            is HomeUiState -> homeItemViewType
             is PublishButtonUiState -> publishButtonViewType
         }
     }
