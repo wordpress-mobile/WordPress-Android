@@ -12,8 +12,8 @@ import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuCl
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
@@ -94,7 +94,7 @@ class ImageEditorInitializer {
             val stat = when (action) {
                 is EditorShown -> Stat.MEDIA_EDITOR_SHOWN
                 is EditorCancelled -> Stat.MEDIA_EDITOR_CANCELLED
-                is EditorFinishedEditing -> Stat.MEDIA_EDITOR_FINISHED_EDITING
+                is EditorFinishedEditing -> Stat.MEDIA_EDITOR_USED
                 is PreviewImageSelected -> Stat.MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED
                 is PreviewInsertImagesClicked -> Stat.MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED
                 is PreviewCropMenuClicked -> Stat.MEDIA_EDITOR_PREVIEW_CROP_MENU_CLICKED
@@ -103,10 +103,31 @@ class ImageEditorInitializer {
                 is CropSuccessful -> Stat.MEDIA_EDITOR_CROP_SUCCESSFUL
             }
 
-            if (action is EditorShown) {
-                AnalyticsTracker.track(stat, mapOf(NUMBER_OF_IMAGES to action.numOfImages))
-            } else {
+            val properties = when (action) {
+                is EditorShown -> mapOf(NUMBER_OF_IMAGES to action.numOfImages)
+                is EditorFinishedEditing -> if (action.actions.isNotEmpty()) {
+                    mapOf(ACTIONS to action.actions.map { it.label })
+                } else {
+                    null
+                }
+                is EditorCancelled,
+                is PreviewImageSelected,
+                is PreviewInsertImagesClicked,
+                is PreviewCropMenuClicked,
+                is CropOpened,
+                is CropDoneMenuClicked,
+                is CropSuccessful -> null
+            }
+
+            val noEditActionPerformed = stat == Stat.MEDIA_EDITOR_USED && properties == null
+            if (noEditActionPerformed) {
+                return
+            }
+
+            if (properties == null) {
                 AnalyticsTracker.track(stat)
+            } else {
+                AnalyticsTracker.track(stat, properties)
             }
         }
     }
