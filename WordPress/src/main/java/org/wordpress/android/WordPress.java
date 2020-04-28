@@ -239,8 +239,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         component().inject(this);
         mDispatcher.register(this);
 
-        mAppConfig.refresh();
-
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
