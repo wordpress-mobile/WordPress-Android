@@ -32,11 +32,13 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -540,5 +542,27 @@ public class WPMediaUtils {
             fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
         }
         return fileExtension;
+    }
+
+    public static void trackAddRecentMediaEvent(Context context, List<Uri> uriList) {
+        if (uriList == null) {
+            AppLog.e(AppLog.T.MEDIA, "Cannot track new media events if uriList is null!!");
+            return;
+        }
+
+        boolean isMultiselection = uriList.size() > 1;
+
+        for (Uri mediaUri : uriList) {
+            if (mediaUri != null) {
+                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
+                Map<String, Object> properties =
+                        AnalyticsUtils.getMediaProperties(context, isVideo, mediaUri, null);
+                properties.put("is_part_of_multiselection", isMultiselection);
+                if (isMultiselection) {
+                    properties.put("number_of_media_selected", uriList.size());
+                }
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties);
+            }
+        }
     }
 }

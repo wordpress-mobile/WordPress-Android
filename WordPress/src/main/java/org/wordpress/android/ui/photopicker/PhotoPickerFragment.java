@@ -539,7 +539,7 @@ public class PhotoPickerFragment extends Fragment {
     private void performInsertAction() {
         ArrayList<Uri> uriList = getAdapter().getSelectedURIs();
         mListener.onPhotoPickerMediaChosen(uriList);
-        trackAddRecentMediaEvent(uriList);
+        WPMediaUtils.trackAddRecentMediaEvent(requireContext(), uriList);
     }
 
     private boolean hasStoragePermission() {
@@ -652,28 +652,6 @@ public class PhotoPickerFragment extends Fragment {
             AniUtils.fadeOut(mSoftAskView, AniUtils.Duration.MEDIUM);
             if (canShowMediaSourceBottomBar()) {
                 showBottomBar(mMediaSourceBottomBar);
-            }
-        }
-    }
-
-    private void trackAddRecentMediaEvent(List<Uri> uriList) {
-        if (uriList == null) {
-            AppLog.e(AppLog.T.MEDIA, "Cannot track new media events if uriList is null!!");
-            return;
-        }
-
-        boolean isMultiselection = uriList.size() > 1;
-
-        for (Uri mediaUri : uriList) {
-            if (mediaUri != null) {
-                boolean isVideo = MediaUtils.isVideo(mediaUri.toString());
-                Map<String, Object> properties =
-                        AnalyticsUtils.getMediaProperties(getActivity(), isVideo, mediaUri, null);
-                properties.put("is_part_of_multiselection", isMultiselection);
-                if (isMultiselection) {
-                    properties.put("number_of_media_selected", uriList.size());
-                }
-                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties);
             }
         }
     }
