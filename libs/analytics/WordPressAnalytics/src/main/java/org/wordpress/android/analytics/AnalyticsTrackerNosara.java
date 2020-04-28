@@ -1721,6 +1721,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_used";
             case MEDIA_EDITOR_CANCELLED:
                 return "media_editor_cancelled";
+            case MEDIA_EDITOR_FINISHED_EDITING:
+                return "media_editor_finished_editing";
+            case MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED:
+                return "media_editor_preview_image_selected";
+            case MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED:
+                return "media_editor_preview_insert_images_clicked";
         }
         return null;
     }

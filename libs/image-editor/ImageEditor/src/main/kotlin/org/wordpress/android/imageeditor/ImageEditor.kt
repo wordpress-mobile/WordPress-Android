@@ -61,6 +61,7 @@ class ImageEditor private constructor(
     sealed class EditorAction {
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
+        object EditorFinishedEditing : EditorAction()
         data class CropDoneMenuClicked(val outputData: OutputData) : EditorAction()
         data class PreviewImageSelected(val highResImageUrl: String, val selectedPosition: Int) : EditorAction()
         data class PreviewInsertImagesClicked(val outputDataList: List<OutputData>) : EditorAction()

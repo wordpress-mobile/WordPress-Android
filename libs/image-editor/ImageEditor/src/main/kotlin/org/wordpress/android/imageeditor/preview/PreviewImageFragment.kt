@@ -30,6 +30,7 @@ import com.yalantis.ucrop.UCrop
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
@@ -156,6 +157,7 @@ class PreviewImageFragment : Fragment() {
     private fun initializeInsertButton() {
         insertButton.text = getString(string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
+            ImageEditor.instance.onEditorAction(PreviewInsertImagesClicked(viewModel.getOutputData()))
             viewModel.onInsertClicked()
         }
     }
@@ -216,7 +218,7 @@ class PreviewImageFragment : Fragment() {
         viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 val outputData = ArrayList(it)
-                ImageEditor.instance.onEditorAction(PreviewInsertImagesClicked(outputData))
+                ImageEditor.instance.onEditorAction(EditorFinishedEditing)
                 val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, outputData) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()

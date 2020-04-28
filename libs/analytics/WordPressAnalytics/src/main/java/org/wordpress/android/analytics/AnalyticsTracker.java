@@ -610,7 +610,10 @@ public final class AnalyticsTracker {
         FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS,
         MEDIA_EDITOR_SHOWN,
         MEDIA_EDITOR_USED,
-        MEDIA_EDITOR_CANCELLED
+        MEDIA_EDITOR_CANCELLED,
+        MEDIA_EDITOR_FINISHED_EDITING,
+        MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED,
+        MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

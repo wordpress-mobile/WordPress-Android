@@ -10,6 +10,7 @@ import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
@@ -94,14 +95,17 @@ class ImageEditorInitializer {
                 is EditorCancelled -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_CANCELLED)
                 }
+                is EditorFinishedEditing -> {
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_FINISHED_EDITING)
+                }
                 is CropDoneMenuClicked -> {
                     AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "crop"))
                 }
                 is PreviewImageSelected -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "preview_image_selected"))
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED)
                 }
                 is PreviewInsertImagesClicked -> {
-                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, mapOf(ACTIONS to "preview_insert_images_clicked"))
+                    AnalyticsTracker.track(Stat.MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED)
                 }
             }
         }

@@ -18,6 +18,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
 import java.net.URI
+import java.util.Locale
 import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
@@ -278,9 +279,7 @@ class PreviewImageViewModel : ViewModel() {
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
     fun onInsertClicked() {
-        val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
-            ?: emptyList()
-        _finishAction.value = Event(outputData)
+        _finishAction.value = Event(getOutputData())
     }
 
     fun getThumbnailImageUrl(position: Int): String {
@@ -295,7 +294,10 @@ class PreviewImageViewModel : ViewModel() {
     fun getHighResImageUrl(position: Int): String =
         uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
 
-    private fun isFileUrl(url: String): Boolean = url.toLowerCase().startsWith(FILE_BASE)
+    fun getOutputData() = (uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
+        ?: emptyList())
+
+    private fun isFileUrl(url: String): Boolean = url.toLowerCase(Locale.ROOT).startsWith(FILE_BASE)
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),
