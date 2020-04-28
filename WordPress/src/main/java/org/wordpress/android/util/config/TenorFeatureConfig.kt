@@ -7,7 +7,7 @@ import javax.inject.Inject
  * An example implementation of a feature configuration.
  */
 @SuppressWarnings("Unused")
-class ExampleFeatureConfig
+class TenorFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
         BuildConfig.TENOR_AVAILABLE,

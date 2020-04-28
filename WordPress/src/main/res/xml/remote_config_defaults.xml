@@ -5,7 +5,7 @@
         <value>false</value>
     </entry>
     <entry>
-        <key>experiment_value</key>
-        <value>not_in_experiment</value>
+        <key>testing_experiment</key>
+        <value>control_group</value>
     </entry>
 </defaultsMap>
