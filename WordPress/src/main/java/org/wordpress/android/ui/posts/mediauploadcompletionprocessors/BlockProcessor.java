@@ -1,5 +1,8 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Document.OutputSettings;
@@ -7,7 +10,8 @@ import org.wordpress.android.editor.Utils;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_CAPTURES;
 
 /**
  * Abstract class to be extended for each enumerated {@link MediaBlockType}.
@@ -27,10 +31,11 @@ abstract class BlockProcessor {
     String mRemoteId;
     String mRemoteUrl;
 
-    private Pattern mBlockPattern;
-    private String mHeaderComment;
-    private String mBlockContent;
+    private String mBlockName;
+    private JsonObject mJsonAttributes;
+    private Document mBlockContentDocument;
     private String mClosingComment;
+
 
     /**
      * @param localId The local media id that needs replacement
@@ -40,51 +45,38 @@ abstract class BlockProcessor {
         mLocalId = localId;
         mRemoteId = mediaFile.getMediaId();
         mRemoteUrl = org.wordpress.android.util.StringUtils.notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-        mBlockPattern = Pattern.compile(String.format(getBlockPatternTemplate(), localId), Pattern.DOTALL);
     }
 
-    // TODO: consider processing block header JSON in a more robust way (current processing uses RexEx)
-    /**
-     * @param block The raw block contents of the block to be matched
-     * @return A {@link Matcher} to extract block contents and splice the header with a remote id. The matcher has the
-     * following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The localId (to be replaced)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     */
-    Matcher getMatcherForBlock(String block) {
-        return mBlockPattern.matcher(block);
+    private JsonObject parseJson(String blockJson) {
+        JsonParser parser = new JsonParser();
+        return parser.parse(blockJson).getAsJsonObject();
     }
 
-    boolean matchAndSpliceBlockHeader(String block) {
-        Matcher matcher = getMatcherForBlock(block);
+    private Document parseHTML(String blockContent) {
+        // create document from block content
+        Document document = Jsoup.parse(blockContent);
+        document.outputSettings(OUTPUT_SETTINGS);
+        return document;
+    }
 
-        boolean matchFound = matcher.find();
+    private boolean splitBlock(String block) {
+        Matcher captures = PATTERN_BLOCK_CAPTURES.matcher(block);
 
-        if (matchFound) {
-            mHeaderComment = new StringBuilder()
-                    .append(matcher.group(1))
-                    .append(mRemoteId) // here we substitute remote id in place of the local id
-                    .append(matcher.group(3))
-                    .toString();
-            mBlockContent = matcher.group(4);
-            mClosingComment = matcher.group(5);
+        boolean capturesFound = captures.find();
+
+        if (capturesFound) {
+            mBlockName = captures.group(1);
+            mJsonAttributes = parseJson(captures.group(2));
+            mBlockContentDocument = parseHTML(captures.group(3));
+            mClosingComment = captures.group(4);
+            return true;
         } else {
-            mHeaderComment = null;
-            mBlockContent = null;
+            mBlockName = null;
+            mJsonAttributes = null;
+            mBlockContentDocument = null;
             mClosingComment = null;
+            return false;
         }
-
-        return matchFound;
-    }
-
-    String getHeaderComment() {
-        return mHeaderComment;
     }
 
     /**
@@ -94,46 +86,28 @@ abstract class BlockProcessor {
      * @param block The raw block contents
      * @return A string containing content with ids and urls replaced
      */
-     String processBlock(String block) {
-         if (matchAndSpliceBlockHeader(block)) {
-             // create document from block content
-             Document document = Jsoup.parse(mBlockContent);
-             document.outputSettings(OUTPUT_SETTINGS);
-
-             if (processBlockContentDocument(document)) {
-                 // return injected block
-                 return new StringBuilder()
-                         .append(getHeaderComment())
-                         .append(document.body().html()) // parser output
-                         .append(mClosingComment)
-                         .toString();
-             }
-         }
-
-         // leave block unchanged
-         return block;
-     }
-
-    /**
-     * All concrete implementations must implement this method to return a regex pattern template for the particular
-     * block type.<br>
-     * <br>
-     * The pattern template should contain a format specifier for the local id that needs to be matched and
-     * replaced in the block header, and the format specifier should be within its own capture group, e.g. `(%1$s)`.<br>
-     * <br>
-     * The pattern template should result in a matcher with the following capture groups:
-     *
-     * <ol>
-     * <li>Block header before id</li>
-     * <li>The format specifier for the local id (to be replaced by the local id when generating the pattern)</li>
-     * <li>Block header after id</li>
-     * <li>Block contents</li>
-     * <li>Block closing comment and any following characters</li>
-     * </ol>
-     *
-     * @return String with the regex pattern template
-     */
-    abstract String getBlockPatternTemplate();
+    String processBlock(String block) {
+        if (splitBlock(block)) {
+            if (processBlockJsonAttributes(mJsonAttributes)) {
+                if (processBlockContentDocument(mBlockContentDocument)) {
+                    // return injected block
+                    return new StringBuilder()
+                            .append("<!-- wp:")
+                            .append(mBlockName)
+                            .append(" ")
+                            .append(mJsonAttributes) // json parser output
+                            .append(" -->\n")
+                            .append(mBlockContentDocument.body().html()) // HTML parser output
+                            .append(mClosingComment)
+                            .toString();
+                }
+            } else {
+                return processInnerBlock(block); // delegate to inner blocks if needed
+            }
+        }
+        // leave block unchanged
+        return block;
+    }
 
     /**
      * All concrete implementations must implement this method for the particular block type. The document represents
@@ -146,4 +120,33 @@ abstract class BlockProcessor {
      * @return A boolean value indicating whether or not the block contents should be replaced
      */
     abstract boolean processBlockContentDocument(Document document);
+
+    /**
+     * All concrete implementations must implement this method for the particular block type. The jsonAttributes object
+     * is a {@link JsonObject} parsed from the block header attributes. This object can be used to check for a match,
+     * and can be directly mutated if necessary.<br>
+     * <br>
+     * This method should return true to indicate success. Returning false will result in the block contents being
+     * unmodified.
+     *
+     * @param jsonAttributes the attributes object used to check for a match with the local id, and mutated if necessary
+     * @return
+     */
+    abstract boolean processBlockJsonAttributes(JsonObject jsonAttributes);
+
+    /**
+     * This method can be optionally overriden by concrete implementations to delegate further processing via recursion
+     * when {@link BlockProcessor#processBlockJsonAttributes(JsonObject)} returns false (i.e. the block did not match
+     * the local id being replaced). This is useful for implementing mutual recursion with
+     * {@link MediaUploadCompletionProcessor#processContent(String)} for block types that have media-containing blocks
+     * within their inner content.<br>
+     * <br>
+     * The default implementation provided is a NOOP that leaves the content of the block unchanged.
+     *
+     * @param block The raw block contents
+     * @return A string containing content with ids and urls replaced
+     */
+    String processInnerBlock(String block) {
+        return block;
+    }
 }

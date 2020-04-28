@@ -1,5 +1,0 @@
-14.5:
-Editor de blocos: Adição do bloco "Posts recentes" e correção de travamentos ao colar conteúdo HTML com imagens.
-Modelos de página: Adição de modelos baseados em blocos para agilizar a criação de páginas.
-Criação de site: Remoção de alguns passos para tornar o processo mais rápido. Selecione o tipo de site, adicione um nome de domínio e pronto.
-Correção de erros: Correção de um erro que tentava reenviar posts diversas vezes.
