@@ -4,7 +4,7 @@ import org.wordpress.android.BuildConfig
 import javax.inject.Inject
 
 /**
- * An example implementation of a feature configuration.
+ * Configuration of the Tenor gif selection.
  */
 @SuppressWarnings("Unused")
 class TenorFeatureConfig

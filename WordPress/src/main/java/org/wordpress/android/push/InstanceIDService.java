@@ -14,7 +14,8 @@ public class InstanceIDService extends FirebaseMessagingService {
      * you retrieve the token.
      */
     // [START refresh_token]
-    @Override public void onNewToken(@NonNull String s) {
+    @Override
+    public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
         GCMRegistrationIntentService.enqueueWork(this,
                 new Intent(this, GCMRegistrationIntentService.class));
