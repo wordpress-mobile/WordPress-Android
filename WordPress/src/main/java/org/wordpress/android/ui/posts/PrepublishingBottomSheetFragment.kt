@@ -14,11 +14,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -26,7 +26,7 @@ import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 import kotlin.math.roundToInt
 
-class PrepublishingBottomSheetFragment : BottomSheetDialogFragment(),
+class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
