@@ -9,9 +9,9 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeHeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
@@ -38,7 +38,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
         private val actionLayout: View = itemView.findViewById(R.id.action_layout)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as PrepublishingHomeUiState
+            uiState as HomeUiState
 
             actionType.text = uiHelpers.getTextOfUiString(itemView.context, uiState.actionType.textRes)
             uiState.actionResult?.let { resultText ->
@@ -62,7 +62,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
         private val siteIcon: ImageView = itemView.findViewById(R.id.site_icon)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as PrepublishingHomeHeaderUiState
+            uiState as HeaderUiState
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
 
@@ -82,7 +82,7 @@ sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @Layout
         private val button: Button = itemView.findViewById(R.id.publish_button)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as PrepublishingButtonUiState
+            uiState as PublishButtonUiState
 
             button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
         }

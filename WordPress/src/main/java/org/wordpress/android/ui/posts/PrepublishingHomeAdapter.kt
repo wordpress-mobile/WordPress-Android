@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeHeaderUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomePublishButtonViewHolder
@@ -50,9 +50,9 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is PrepublishingHomeHeaderUiState -> headerViewType
-            is PrepublishingHomeUiState -> actionItemViewType
-            is PrepublishingButtonUiState -> publishButtonViewType
+            is HeaderUiState -> headerViewType
+            is HomeUiState -> actionItemViewType
+            is PublishButtonUiState -> publishButtonViewType
         }
     }
 

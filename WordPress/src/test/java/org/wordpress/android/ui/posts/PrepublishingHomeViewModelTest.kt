@@ -15,7 +15,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
@@ -114,9 +114,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         assertThat((tagsAction?.actionResult as? UiStringText)?.text).isEqualTo(expectedTags)
     }
 
-    private fun getHomeUiState(actionType: ActionType): PrepublishingHomeUiState? {
+    private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
-                ?.filterIsInstance(PrepublishingHomeUiState::class.java)
+                ?.filterIsInstance(HomeUiState::class.java)
         return actions?.find { it.actionType == actionType }
     }
 }

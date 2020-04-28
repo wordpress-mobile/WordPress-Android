@@ -6,16 +6,16 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 sealed class PrepublishingHomeItemUiState {
-    data class PrepublishingHomeUiState(
+    data class HomeUiState(
         val actionType: ActionType,
         var actionResult: UiString? = null,
         val onActionClicked: (actionType: ActionType) -> Unit
     ) : PrepublishingHomeItemUiState()
 
-    data class PrepublishingHomeHeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
+    data class HeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
             PrepublishingHomeItemUiState()
 
-    data class PrepublishingButtonUiState(val buttonText: UiStringRes, val onButtonClicked: () -> Unit) :
+    data class PublishButtonUiState(val buttonText: UiStringRes, val onButtonClicked: () -> Unit) :
             PrepublishingHomeItemUiState()
 
     enum class ActionType(val textRes: UiStringRes) {
