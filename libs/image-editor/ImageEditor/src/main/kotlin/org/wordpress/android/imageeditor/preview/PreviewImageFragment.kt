@@ -215,12 +215,6 @@ class PreviewImageFragment : Fragment() {
                 requireActivity().finish()
             }
         })
-
-        viewModel.editorAction.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                ImageEditor.instance.onEditorAction(it)
-            }
-        })
     }
 
     private fun updateUiState(state: UiState) {

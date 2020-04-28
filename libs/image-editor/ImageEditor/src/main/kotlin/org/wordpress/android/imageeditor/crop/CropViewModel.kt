@@ -11,17 +11,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
+import org.wordpress.android.imageeditor.viewmodel.Event
+import java.io.File
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
-import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
-import org.wordpress.android.imageeditor.viewmodel.Event
-import java.io.File
+import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import java.io.Serializable
 
 class CropViewModel : ViewModel() {
@@ -33,9 +30,6 @@ class CropViewModel : ViewModel() {
 
     private val _navigateBackWithCropResult = MutableLiveData<CropResult>()
     val navigateBackWithCropResult: LiveData<CropResult> = _navigateBackWithCropResult
-
-    private val _editorAction = MutableLiveData<Event<EditorAction>>()
-    val editorAction: LiveData<Event<EditorAction>> = _editorAction
 
     private lateinit var mediaEditingDirectory: File
     private lateinit var inputFilePath: String
@@ -68,9 +62,9 @@ class CropViewModel : ViewModel() {
                 putParcelable(UCrop.EXTRA_INPUT_URI, Uri.fromFile(File(inputFilePath)))
 
                 putParcelable(UCrop.EXTRA_OUTPUT_URI, Uri.fromFile(
-                        File(mediaEditingDirectory,
-                                "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
-                        )))
+                    File(mediaEditingDirectory,
+                        "$IMAGE_EDITOR_OUTPUT_IMAGE_FILE_NAME${inputFilePath.hashCode()}.$outputFileExtension"
+                    )))
                 putAll(cropOptions.optionBundle)
             }
         }
@@ -102,14 +96,6 @@ class CropViewModel : ViewModel() {
     }
 
     fun onDoneMenuClicked() {
-        _editorAction.value = Event(
-            CropDoneMenuClicked(
-                OutputData(
-                    outputFilePath = cropOptionsBundleWithFilesInfo
-                        .getParcelable<Uri?>(UCrop.EXTRA_OUTPUT_URI)?.path ?: ""
-                )
-            )
-        )
         updateImageCropAndSaveState(ImageCropAndSaveStartState)
     }
 
