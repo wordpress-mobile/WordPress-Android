@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
@@ -165,6 +164,10 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         if (siteId != 0L && siteId == event.mRemoteBlogId) {
             val suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
             suggestionAdapter?.setSuggestionList(suggestions)
+
+            // Calling forceFiltering is the only way I was able to force the suggestions list to immediately refresh
+            // with the new data
+            autocompleteText.forceFiltering(autocompleteText.text)
         }
     }
 
