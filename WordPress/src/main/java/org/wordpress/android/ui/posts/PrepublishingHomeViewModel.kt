@@ -55,10 +55,11 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ),
                 PrepublishingHomeUiState(
                         actionType = TAGS,
-                        actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) },
+                        actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
+                                ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
                 ),
-                PrepublishingButtonUiState(UiStringRes(string.prepublishing_nudges_home_publish_button), {})
+                PrepublishingButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button), {})
         )
 
         _uiState.postValue(prepublishingHomeUiStateList)
