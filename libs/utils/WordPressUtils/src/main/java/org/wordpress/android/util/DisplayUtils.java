@@ -64,6 +64,12 @@ public class DisplayUtils {
         return false;
     }
 
+    public static boolean isTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+               >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
     /**
      * returns the height of the ActionBar if one is enabled - supports both the native ActionBar
      * and ActionBarSherlock - http://stackoverflow.com/a/15476793/1673548
