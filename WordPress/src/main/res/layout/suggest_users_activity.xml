@@ -9,6 +9,7 @@
 
     <!-- If the SuggestionAutoCompleteText shows any Suggestions, they will cover this View -->
     <TextView
+        android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_medium"
@@ -17,6 +18,7 @@
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
         android:text="@string/suggestion_no_matching_users"
+        android:visibility="gone"
         />
 
     <View

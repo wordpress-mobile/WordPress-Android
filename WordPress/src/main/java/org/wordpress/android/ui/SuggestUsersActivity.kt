@@ -2,10 +2,12 @@ package org.wordpress.android.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.database.DataSetObserver
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.suggest_users_activity.*
 import org.greenrobot.eventbus.EventBus
@@ -139,10 +141,26 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         } else {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
             val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
+            adapter?.registerDataSetObserver(object : DataSetObserver() {
+                override fun onChanged() {
+                    updateEmptyViewVisibility(adapter.isEmpty)
+                }
+                override fun onInvalidated() {
+                    updateEmptyViewVisibility(true)
+                }
+            })
             autocompleteText.setAdapter(adapter)
 
             suggestionServiceConnectionManager = connectionManager
             suggestionAdapter = adapter
+        }
+    }
+
+    private fun updateEmptyViewVisibility(isVisible: Boolean) {
+        empty_view.visibility = if (isVisible) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
     }
 
