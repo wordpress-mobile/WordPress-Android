@@ -114,8 +114,7 @@ class PrepublishingBottomSheetFragment : BottomSheetDialogFragment(),
             }
         }
 
-        val height = (metrics.heightPixels * ratio).roundToInt()
-        prepublishing_content_fragment.layoutParams.height = height
+        prepublishing_content_fragment.layoutParams.height = (metrics.heightPixels * ratio).roundToInt()
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
