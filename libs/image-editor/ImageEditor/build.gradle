@@ -91,6 +91,7 @@ dependencies {
     }
 
     // Testing
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
