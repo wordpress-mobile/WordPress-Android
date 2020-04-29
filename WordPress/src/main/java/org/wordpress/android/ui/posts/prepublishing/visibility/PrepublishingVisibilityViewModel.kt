@@ -11,8 +11,10 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import javax.inject.Inject
 
-class PrepublishingVisibilityViewModel : ViewModel() {
+class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVisibilityUseCase: GetPostVisibilityUseCase) :
+        ViewModel() {
     private var isStarted = false
 
     private val _uiState = MutableLiveData<List<VisibilityUiState>>()
@@ -21,10 +23,10 @@ class PrepublishingVisibilityViewModel : ViewModel() {
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
         isStarted = true
-        createVisibilityUiStates(PUBLIC)
+        updateVisibilityUiStates(getPostVisibilityUseCase.getVisibility(editPostRepository))
     }
 
-    private fun createVisibilityUiStates(currentVisibility: Visibility) {
+    private fun updateVisibilityUiStates(currentVisibility: Visibility) {
         val items = listOf(
                 VisibilityUiState(
                         visibility = PUBLIC,
@@ -47,7 +49,7 @@ class PrepublishingVisibilityViewModel : ViewModel() {
     }
 
     private fun onVisibilityItemTapped(visibility: Visibility) {
-
+        updateVisibilityUiStates(visibility)
     }
 }
 
