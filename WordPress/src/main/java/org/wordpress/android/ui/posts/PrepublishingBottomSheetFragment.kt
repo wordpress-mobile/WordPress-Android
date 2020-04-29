@@ -21,6 +21,7 @@ import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
@@ -110,7 +111,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
             )
-            PrepublishingScreen.VISIBILITY -> TODO()
+            PrepublishingScreen.VISIBILITY -> Pair(
+                    PrepublishingVisibilityFragment.newInstance(),
+                    PrepublishingVisibilityFragment.TAG
+            )
             PrepublishingScreen.TAGS -> Pair(
                     PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
             )
