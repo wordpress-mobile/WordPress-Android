@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/margin_extra_extra_medium_large">
@@ -39,7 +40,8 @@
             android:id="@+id/feature_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_medium_large" />
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            tools:listitem="@layout/feature_announcement_list_item" />
 
     </LinearLayout>
 
@@ -49,7 +51,8 @@
         android:layout_height="0dp"
         android:background="?android:colorBackground"
         app:layout_constraintBottom_toTopOf="@+id/close_feature_announcement_button_container"
-        app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label">
+        app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label"
+        tools:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"

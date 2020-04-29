@@ -14,9 +14,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.isDarkTheme
 import javax.inject.Inject
@@ -60,6 +63,11 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         val closeButton = view.findViewById<View>(R.id.close_feature_announcement_button)
         closeButton.setOnClickListener { viewModel.onCloseDialogButtonPressed() }
 
+        val recyclerView = view.findViewById<RecyclerView>(R.id.feature_list)
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        val featureAdapter = FeatureAnnouncementListAdapter(requireActivity())
+        recyclerView.adapter = featureAdapter
+
         viewModel.uiModel.observe(this, Observer {
             it?.let { uiModel ->
                 progressIndicator.visibility = if (uiModel.isProgressVisible) View.VISIBLE else View.GONE
@@ -71,7 +79,15 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
             dismiss()
         })
 
-        viewModel.start()
+        viewModel.onAnnouncementDetailsRequested.observe(this, Observer { detailsUrl ->
+            WPWebViewActivity.openURL(context, detailsUrl)
+        })
+
+        viewModel.features.observe(this, Observer { featureList ->
+            featureAdapter.updateList(featureList)
+        })
+
+        viewModel.start(FeatureAnnouncementProvider())
         return view
     }
 
