@@ -11,7 +11,7 @@ class PrepublishingVisibilityDiffCallback(
         val newItem = newList[newItemPosition]
         val oldItem = oldList[oldItemPosition]
 
-        return (oldItem == newItem)
+        return (oldItem.visibility == newItem.visibility)
     }
 
     override fun getOldListSize(): Int = oldList.size
