@@ -2408,6 +2408,9 @@
     <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_magic_link_title">Magic link sent</string>
 
+    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="enter_your_site_address">Enter your site address</string>
+
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
     <string name="username_changer_dismiss_message">Discard changing username?</string>

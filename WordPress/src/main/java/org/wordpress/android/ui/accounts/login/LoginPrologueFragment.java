@@ -10,8 +10,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.widgets.WPViewPager;
@@ -25,19 +27,25 @@ public class LoginPrologueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_signup_screen, container, false);
 
-        view.findViewById(R.id.login_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginPrologueListener != null) {
-                    mLoginPrologueListener.showEmailLoginScreen();
-                }
+        MaterialButton primaryButton = view.findViewById(R.id.login_button);
+        MaterialButton secondaryButton = view.findViewById(R.id.create_site_button);
+
+        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            primaryButton.setText(R.string.continue_with_wpcom);
+            secondaryButton.setText(R.string.enter_your_site_address);
+        }
+
+        primaryButton.setOnClickListener(v -> {
+            if (mLoginPrologueListener != null) {
+                mLoginPrologueListener.showEmailLoginScreen();
             }
         });
 
-        view.findViewById(R.id.create_site_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginPrologueListener != null) {
+        secondaryButton.setOnClickListener(v -> {
+            if (mLoginPrologueListener != null) {
+                if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                    mLoginPrologueListener.loginViaSiteAddress();
+                } else {
                     mLoginPrologueListener.doStartSignup();
                 }
             }
