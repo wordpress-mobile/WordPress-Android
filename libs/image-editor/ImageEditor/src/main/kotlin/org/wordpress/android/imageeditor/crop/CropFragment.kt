@@ -1,7 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,16 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
 import org.wordpress.android.imageeditor.ImageEditor
-import org.wordpress.android.imageeditor.ImageEditor.Action
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
@@ -33,8 +26,6 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.ARG_EDIT_IMAGE_DATA
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 
@@ -73,7 +64,9 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         viewModel.start(
             navArgs.inputFilePath,
             navArgs.outputFileExtension,
-            requireContext().cacheDir
+            navArgs.shouldReturnToPreviewScreen,
+            requireContext().cacheDir,
+            ImageEditor.instance
         )
     }
 
@@ -104,8 +97,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                     is ImageCropAndSaveFailedState -> {
                         showCropError(state.errorMsg, state.errorResId)
                     }
-                    is ImageCropAndSaveSuccessState -> {
-                        ImageEditor.instance.onEditorAction(CropSuccessful(state.cropResult))
+                    is ImageCropAndSaveSuccessState -> { // Do nothing
                     }
                 }
             }
@@ -123,8 +115,6 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
-        ImageEditor.actions.add(Action.Crop)
-        ImageEditor.instance.onEditorAction(CropDoneMenuClicked(OutputData(viewModel.getOutputPath())))
         viewModel.onDoneMenuClicked()
         true
     } else if (item.itemId == android.R.id.home) {
@@ -143,7 +133,6 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
-            ImageEditor.instance.onEditorAction(CropOpened)
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
@@ -176,15 +165,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
             navController.popBackStack()
         } else {
-            val imageUri: Uri? = cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI)
-
-            val resultData = if (imageUri != null) {
-                arrayListOf(EditImageData.OutputData(imageUri.toString()))
-            } else {
-                arrayListOf()
-            }
-
-            ImageEditor.instance.onEditorAction(EditorFinishedEditing(resultData, ImageEditor.actions))
+            val resultData = viewModel.getOutputData(cropResult)
 
             activity?.let {
                 it.setResult(

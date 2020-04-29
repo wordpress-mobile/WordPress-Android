@@ -30,11 +30,6 @@ import com.yalantis.ucrop.UCrop
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
 import org.wordpress.android.imageeditor.ImageEditor
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.string
@@ -113,9 +108,6 @@ class PreviewImageFragment : Fragment() {
         pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                ImageEditor.instance.onEditorAction(
-                    PreviewImageSelected(viewModel.getHighResImageUrl(position), position)
-                )
                 viewModel.onPageSelected(position)
             }
         }
@@ -159,7 +151,6 @@ class PreviewImageFragment : Fragment() {
     private fun initializeInsertButton() {
         insertButton.text = getString(string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
-            ImageEditor.instance.onEditorAction(PreviewInsertImagesClicked(viewModel.getOutputData()))
             viewModel.onInsertClicked()
         }
     }
@@ -169,7 +160,7 @@ class PreviewImageFragment : Fragment() {
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
 
-        viewModel.onCreateView(inputData)
+        viewModel.onCreateView(inputData, ImageEditor.instance)
     }
 
     private fun setupObservers() {
@@ -217,17 +208,9 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        viewModel.startAction.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                ImageEditor.instance.onEditorAction(EditorShown(it))
-            }
-        })
-
         viewModel.finishAction.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
-                val outputData = ArrayList(it)
-                ImageEditor.instance.onEditorAction(EditorFinishedEditing(outputData, ImageEditor.actions))
-                val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, outputData) }
+                val intent = Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, ArrayList(it)) }
                 requireActivity().setResult(RESULT_OK, intent)
                 requireActivity().finish()
             }
@@ -315,7 +298,6 @@ class PreviewImageFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_crop) {
-        ImageEditor.instance.onEditorAction(PreviewCropMenuClicked)
         viewModel.onCropMenuClicked()
         true
     } else {
