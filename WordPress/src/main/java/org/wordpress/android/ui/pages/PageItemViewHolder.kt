@@ -46,6 +46,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
         private val isSitePhotonCapable: Boolean = false,
+        private val isPrivateAtSite: Boolean = false,
         private val uiHelper: UiHelpers
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
@@ -148,7 +149,9 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 imageManager?.cancelRequestAndClearImageView(featuredImage)
             } else if (imageUrl.startsWith("http")) {
                 featuredImage.visibility = View.VISIBLE
-                val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable)
+                val photonUrl = ReaderUtils.getResizedImageUrl(
+                        imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite
+                )
                 imageManager?.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
             } else {
                 val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)

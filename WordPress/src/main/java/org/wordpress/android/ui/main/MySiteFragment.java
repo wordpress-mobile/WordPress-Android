@@ -113,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
+        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface,
         OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
@@ -169,7 +169,6 @@ public class MySiteFragment extends Fragment implements
 
     @Nullable
     private Toolbar mToolbar = null;
-    private String mToolbarTitle;
 
     private int mBlavatarSz;
     private boolean mIsDomainCreditAvailable = false;
@@ -377,7 +376,7 @@ public class MySiteFragment extends Fragment implements
         setupClickListeners(rootView);
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.my_site_section_screen_title);
 
         mToolbar.inflateMenu(R.menu.my_site_menu);
 
@@ -955,9 +954,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickActionButtonsContainer.setWeightSum(75f);
         }
-
-        // Refresh the title
-        setTitle(site.getName());
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
@@ -1005,17 +1001,6 @@ public class MySiteFragment extends Fragment implements
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void setTitle(@NonNull final String title) {
-        if (isAdded()) {
-            mToolbarTitle = (title.isEmpty()) ? getString(R.string.wordpress) : title;
-
-            if (mToolbar != null) {
-                mToolbar.setTitle(mToolbarTitle);
-            }
-        }
     }
 
     /**
@@ -1067,7 +1052,8 @@ public class MySiteFragment extends Fragment implements
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
                     mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
-                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH,
+                                    site.isPrivateWPComAtomic()));
                     updateSiteIconMediaId((int) media.getMediaId());
                 } else {
                     AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");

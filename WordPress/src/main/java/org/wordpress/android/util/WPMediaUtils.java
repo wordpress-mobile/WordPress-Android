@@ -376,7 +376,7 @@ public class WPMediaUtils {
         } else if (MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
         } else {
-            return 0;
+            return R.drawable.ic_image_multiple_white_24dp;
         }
     }
 

@@ -79,7 +79,8 @@ public class ReaderPostTable {
             + "has_gap_marker," // 43
             + "card_type," // 44
             + "use_excerpt," // 45
-            + "is_bookmarked"; // 46
+            + "is_bookmarked," // 46
+            + "is_private_atomic"; // 47
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -127,7 +128,8 @@ public class ReaderPostTable {
             + "has_gap_marker," // 42
             + "card_type," // 43
             + "use_excerpt," // 44
-            + "is_bookmarked"; // 45
+            + "is_bookmarked," // 45
+            + "is_private_atomic"; // 46
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -177,6 +179,7 @@ public class ReaderPostTable {
                    + " card_type TEXT,"
                    + " use_excerpt INTEGER DEFAULT 0,"
                    + " is_bookmarked INTEGER DEFAULT 0,"
+                   + " is_private_atomic INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -794,7 +797,7 @@ public class ReaderPostTable {
                 "INSERT OR REPLACE INTO tbl_posts ("
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
-                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46)");
+                + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47)");
 
         db.beginTransaction();
         try {
@@ -853,6 +856,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(44, ReaderCardType.toString(post.getCardType()));
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
+                stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
                 stmtPosts.execute();
             }
 
@@ -1061,6 +1065,7 @@ public class ReaderPostTable {
         post.isCommentsOpen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_comments_open")));
         post.isExternal = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_external")));
         post.isPrivate = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private")));
+        post.isPrivateAtomic = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_private_atomic")));
         post.isVideoPress = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_videopress")));
         post.isJetpack = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_jetpack")));
         post.isBookmarked = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_bookmarked")));

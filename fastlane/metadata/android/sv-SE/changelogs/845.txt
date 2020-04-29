@@ -1,5 +1,0 @@
-14.5:
-Blockredigeraren: Nytt block för senaste inläggen, rättat krasch vid inklistring av HTML-innehåll med inbäddade bilder
-Sidmallar: Nya blockbaserade mallar för att kunna skapa sidor snabbare.
-Skapa webbplats: Tagit bort några steg för att snabbare process – Välj typ av webbplats, ange domännamnet, klart!.
-Felrättelse: Löst ett problem som kunde försöka göra om misslyckade uppladdningar av inlägg i evighet.
