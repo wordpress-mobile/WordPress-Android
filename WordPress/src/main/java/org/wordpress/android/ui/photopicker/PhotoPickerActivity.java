@@ -216,9 +216,8 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
                 if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
-                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
-                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
-                    WPMediaUtils.trackAddRecentMediaEvent(this, uris);
+                    doMediaUrisSelected(WPMediaUtils.retrieveImageEditorResult(data),
+                            PhotoPickerMediaSource.APP_PICKER);
                 }
                 break;
         }

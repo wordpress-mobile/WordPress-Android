@@ -2295,7 +2295,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     for (Uri item : uris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, true);
                     }
-                    WPMediaUtils.trackAddRecentMediaEvent(this, uris);
                     break;
             }
         }
