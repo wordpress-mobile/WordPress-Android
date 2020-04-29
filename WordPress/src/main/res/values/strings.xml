@@ -2750,7 +2750,6 @@
     <string name="done">done</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
 
-
     <!-- Feature Announcement -->
     <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
 
