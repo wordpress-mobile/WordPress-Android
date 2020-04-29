@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,6 +36,7 @@ class PrepublishingVisibilityFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         visibility_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
+        visibility_recycler_view.adapter = PrepublishingVisibilityAdapter(requireActivity())
 
         initViewModel()
     }
@@ -43,12 +45,18 @@ class PrepublishingVisibilityFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingVisibilityViewModel::class.java)
 
+        viewModel.uiState.observe(this, Observer { uiState ->
+            (visibility_recycler_view.adapter as PrepublishingVisibilityAdapter).update(uiState)
+        })
+
         viewModel.start(getEditPostRepository())
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
-                "called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "This is possibly null because it's " +
+                    "called during config changes."
+        }
 
         return editPostActivityHook.editPostRepository
     }
