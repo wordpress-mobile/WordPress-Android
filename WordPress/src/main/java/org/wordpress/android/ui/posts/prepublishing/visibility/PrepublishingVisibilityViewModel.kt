@@ -14,9 +14,13 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVisibilityUseCase: GetPostVisibilityUseCase) :
-        ViewModel() {
+class PrepublishingVisibilityViewModel @Inject constructor(
+    private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
+    private val updatePostPasswordUseCase: UpdatePostPasswordUseCase,
+    private val updatePostStatusUseCase: UpdatePostStatusUseCase
+) : ViewModel() {
     private var isStarted = false
+    private lateinit var editPostRepository: EditPostRepository
 
     private val _uiState = MutableLiveData<List<VisibilityUiState>>()
     val uiState: LiveData<List<VisibilityUiState>> = _uiState
@@ -27,10 +31,13 @@ class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVi
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
         isStarted = true
-        updateVisibilityUiStates(getPostVisibilityUseCase.getVisibility(editPostRepository))
+
+        this.editPostRepository = editPostRepository
+        updateUiState()
     }
 
-    private fun updateVisibilityUiStates(currentVisibility: Visibility) {
+    private fun updateUiState() {
+        val currentVisibility = getPostVisibilityUseCase.getVisibility(editPostRepository)
         val items = listOf(
                 VisibilityUiState(
                         visibility = PUBLIC,
@@ -53,14 +60,25 @@ class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVi
     }
 
     private fun onVisibilityItemTapped(visibility: Visibility) {
-        when (visibility) {
-            PASSWORD_PROTECTED -> _showPasswordDialog.postValue(Event(Unit))
-            else -> updateVisibilityUiStates(visibility)
+        when {
+            visibility == PASSWORD_PROTECTED -> _showPasswordDialog.postValue(Event(Unit))
+
+            editPostRepository.password.isNotEmpty() -> {
+                updatePostPasswordUseCase.updatePassword("", editPostRepository) {
+                    updatePostStatus(visibility)
+                }
+            }
+
+            else -> updatePostStatus(visibility)
         }
     }
 
-    fun onPostPasswordChanged(password: String) {
+    private fun updatePostStatus(visibility: Visibility) {
+        updatePostStatusUseCase.updatePostStatus(visibility, editPostRepository, ::updateUiState)
+    }
 
+    fun onPostPasswordChanged(password: String) {
+        updatePostPasswordUseCase.updatePassword(password, editPostRepository, ::updateUiState)
     }
 }
 
