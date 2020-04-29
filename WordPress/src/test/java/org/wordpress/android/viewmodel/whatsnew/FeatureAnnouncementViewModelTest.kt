@@ -50,7 +50,6 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
         whenever(featureAnnouncementProvider.getAnnouncementDetailsUrl()).thenReturn("https://wordpress.org/")
         whenever(featureAnnouncementProvider.getAnnouncementFeatures()).thenReturn(testFeatures)
 
-
         viewModel = FeatureAnnouncementViewModel(NoDelayCoroutineDispatcher())
         viewModel.uiModel.observeForever { if (it != null) uiModelResults.add(it) }
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
