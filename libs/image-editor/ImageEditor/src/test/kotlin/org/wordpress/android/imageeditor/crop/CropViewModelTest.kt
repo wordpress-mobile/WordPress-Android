@@ -3,12 +3,13 @@ package org.wordpress.android.imageeditor.crop
 import android.app.Activity
 import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.mock
 import com.yalantis.ucrop.UCrop
-import org.junit.Before
-import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertNull
+import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
@@ -65,14 +66,15 @@ class CropViewModelTest {
         initViewModel()
         viewModel.onDoneMenuClicked()
         assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
-                .isInstanceOf(ImageCropAndSaveStartState::class.java)
+            .isInstanceOf(ImageCropAndSaveStartState::class.java)
     }
 
     @Test
     fun `navigate back action triggered with success result code on crop success`() {
+        initViewModel()
         viewModel.onCropFinish(cropSuccessResultCode, cropResultData)
         assertThat(requireNotNull(viewModel.navigateBackWithCropResult.value).resultCode)
-                .isEqualTo(cropSuccessResultCode)
+            .isEqualTo(cropSuccessResultCode)
     }
 
     @Test
@@ -83,17 +85,22 @@ class CropViewModelTest {
 
     @Test
     fun `crop and save image success action triggered on crop success`() {
+        initViewModel()
         viewModel.onCropFinish(cropSuccessResultCode, cropResultData)
         assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
-                .isInstanceOf(ImageCropAndSaveSuccessState::class.java)
+            .isInstanceOf(ImageCropAndSaveSuccessState::class.java)
     }
 
     @Test
     fun `crop and save image failure action triggered on crop failure`() {
+        initViewModel()
         viewModel.onCropFinish(cropFailedResultCode, cropResultData)
         assertThat(requireNotNull(viewModel.cropAndSaveImageStateEvent.value).peekContent())
-                .isInstanceOf(ImageCropAndSaveFailedState::class.java)
+            .isInstanceOf(ImageCropAndSaveFailedState::class.java)
     }
 
-    private fun initViewModel() = viewModel.start(TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION, cacheDir)
+    private fun initViewModel() = viewModel.start(
+        TEST_INPUT_IMAGE_PATH, TEST_OUTPUT_FILE_EXTENSION, false, cacheDir,
+        mock()
+    )
 }
