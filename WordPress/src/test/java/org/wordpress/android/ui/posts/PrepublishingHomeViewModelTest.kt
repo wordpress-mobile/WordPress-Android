@@ -16,6 +16,8 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PU
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.prepublishing.visibility.GetPostVisibilityUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @RunWith(MockitoJUnitRunner::class)
@@ -24,12 +26,14 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, postSettingsUtils)
+        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, getPostVisibilityUseCase, postSettingsUtils)
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(PUBLIC)
     }
 
     @Test
