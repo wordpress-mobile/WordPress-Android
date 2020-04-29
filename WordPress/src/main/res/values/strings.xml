@@ -2748,6 +2748,7 @@
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
+    <string name="prepublishing_nudges_toolbar_title_visibility">Visibility</string>
 
     <string name="prepublishing_nudges_visibility_public">Public</string>
     <string name="prepublishing_nudges_visibility_password">Password Protected</string>

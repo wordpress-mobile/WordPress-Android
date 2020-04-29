@@ -10,6 +10,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -27,13 +28,26 @@ class PrepublishingVisibilityViewModel @Inject constructor(
 
     private val _showPasswordDialog = MutableLiveData<Event<Unit>>()
     val showPasswordDialog: LiveData<Event<Unit>> = _showPasswordDialog
+    private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
+    val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
+
+    private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
+    val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
+
+    private val _updateToolbarUiState = MutableLiveData<UiString>()
+    val updateToolbarUiState: LiveData<UiString> = _updateToolbarUiState
 
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
         isStarted = true
 
         this.editPostRepository = editPostRepository
+        setToolbarUiState()
         updateUiState()
+    }
+
+    private fun setToolbarUiState() {
+        _updateToolbarUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_visibility))
     }
 
     private fun updateUiState() {
@@ -80,6 +94,10 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     fun onPostPasswordChanged(password: String) {
         updatePostPasswordUseCase.updatePassword(password, editPostRepository, ::updateUiState)
     }
+
+    fun onCloseButtonClicked() = _dismissBottomSheet.postValue(Event(Unit))
+
+    fun onBackButtonClicked() = _navigateToHomeScreen.postValue(Event(Unit))
 }
 
 sealed class PrepublishingVisibilityItemUiState {
