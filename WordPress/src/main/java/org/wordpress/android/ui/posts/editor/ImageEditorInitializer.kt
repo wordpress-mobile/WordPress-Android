@@ -93,14 +93,14 @@ class ImageEditorInitializer {
         private fun trackEditorAction(action: EditorAction) {
             val stat = when (action) {
                 is EditorShown -> Stat.MEDIA_EDITOR_SHOWN
-                is EditorCancelled -> Stat.MEDIA_EDITOR_CANCELLED
                 is EditorFinishedEditing -> Stat.MEDIA_EDITOR_USED
-                is PreviewImageSelected -> Stat.MEDIA_EDITOR_PREVIEW_IMAGE_SELECTED
-                is PreviewInsertImagesClicked -> Stat.MEDIA_EDITOR_PREVIEW_INSERT_IMAGES_CLICKED
-                is PreviewCropMenuClicked -> Stat.MEDIA_EDITOR_PREVIEW_CROP_MENU_CLICKED
-                is CropOpened -> Stat.MEDIA_EDITOR_CROP_OPENED
-                is CropDoneMenuClicked -> Stat.MEDIA_EDITOR_CROP_DONE_MENU_CLICKED
-                is CropSuccessful -> Stat.MEDIA_EDITOR_CROP_SUCCESSFUL
+                is EditorCancelled,
+                is PreviewImageSelected,
+                is PreviewInsertImagesClicked,
+                is PreviewCropMenuClicked,
+                is CropOpened,
+                is CropDoneMenuClicked,
+                is CropSuccessful -> null
             }
 
             val properties = when (action) {
@@ -123,7 +123,7 @@ class ImageEditorInitializer {
             }
 
             val noEditActionPerformed = stat == Stat.MEDIA_EDITOR_USED && properties == null
-            if (noEditActionPerformed) {
+            if (stat == null || noEditActionPerformed) {
                 return
             }
 
