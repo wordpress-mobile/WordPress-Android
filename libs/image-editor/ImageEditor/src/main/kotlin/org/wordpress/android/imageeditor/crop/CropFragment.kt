@@ -94,7 +94,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 when (state) {
                     is ImageCropAndSaveStartState -> {
                         val thirdPartyCropFragment = childFragmentManager
-                                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
                         if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
                             thirdPartyCropFragment.cropAndSaveImage()
                         } else {
@@ -140,15 +140,15 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
         var thirdPartyCropFragment = childFragmentManager
-                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
             ImageEditor.instance.onEditorAction(CropOpened)
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-                    .disallowAddToBackStack()
-                    .commit()
+                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                .disallowAddToBackStack()
+                .commit()
         }
     }
 
@@ -188,8 +188,8 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
             activity?.let {
                 it.setResult(
-                        cropResult.resultCode,
-                        Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, resultData) })
+                    cropResult.resultCode,
+                    Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, resultData) })
                 it.finish()
             }
         }
