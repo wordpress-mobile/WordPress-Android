@@ -8,12 +8,14 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PU
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
+import org.wordpress.android.ui.posts.prepublishing.visibility.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
+    private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils
 ) : ViewModel() {
     private var isStarted = false
@@ -31,7 +33,6 @@ class PrepublishingHomeViewModel @Inject constructor(
         setupHomeUiState(editPostRepository)
     }
 
-    // TODO remove hardcoded Public with live data from the EditPostRepository / user changes.
     private fun setupHomeUiState(editPostRepository: EditPostRepository) {
         val prepublishingHomeUiStateList = listOf(
                 PrepublishingHomeUiState(
@@ -45,7 +46,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 ),
                 PrepublishingHomeUiState(
                         actionType = VISIBILITY,
-                        actionResult = UiStringText("Public"),
+                        actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
                         onActionClicked = ::onActionClicked
                 ),
                 PrepublishingHomeUiState(
