@@ -130,11 +130,7 @@ class ImageEditorInitializer {
                 return
             }
 
-            if (properties == null) {
-                AnalyticsTracker.track(stat)
-            } else {
-                AnalyticsTracker.track(stat, properties)
-            }
+            AnalyticsTracker.track(stat, properties)
 
             // Also track "media_editor" source with media properties
             if (action is EditorFinishedEditing) {
