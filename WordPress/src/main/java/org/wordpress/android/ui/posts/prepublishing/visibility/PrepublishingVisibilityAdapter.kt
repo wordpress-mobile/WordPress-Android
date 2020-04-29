@@ -2,15 +2,16 @@ package org.wordpress.android.ui.posts.prepublishing.visibility
 
 import android.content.Context
 import android.view.ViewGroup
+import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-class PrepublishingVisibilityAdapter(context: Context) : RecyclerView.Adapter<PrepublishingVisibilityListItemViewHolder>() {
-    private var items: List<VisibilityUiState> = listOf()
+class PrepublishingVisibilityAdapter(context: Context) : Adapter<PrepublishingVisibilityListItemViewHolder>() {
+    private var items = mutableListOf<VisibilityUiState>()
     @Inject lateinit var uiHelpers: UiHelpers
 
     init {
@@ -21,14 +22,16 @@ class PrepublishingVisibilityAdapter(context: Context) : RecyclerView.Adapter<Pr
         return PrepublishingVisibilityListItemViewHolder(parent, uiHelpers)
     }
 
+    @MainThread
     fun update(newItems: List<VisibilityUiState>) {
         val diffResult = DiffUtil.calculateDiff(
                 PrepublishingVisibilityDiffCallback(
-                        this.items,
+                        items.toList(),
                         newItems
                 )
         )
-        this.items = newItems
+        items.clear()
+        items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
 
