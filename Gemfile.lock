@@ -28,6 +28,22 @@ GEM
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     atomos (0.1.3)
+    aws-eventstream (1.1.0)
+    aws-partitions (1.305.0)
+    aws-sdk-core (3.94.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.30.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.63.0)
+      aws-sdk-core (~> 3, >= 3.83.0)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.1.3)
+      aws-eventstream (~> 1.0, >= 1.0.2)
     babosa (1.0.3)
     chroma (0.2.0)
     claide (1.0.3)
@@ -53,9 +69,10 @@ GEM
     faraday_middleware (0.13.1)
       faraday (>= 0.7.4, < 1.0)
     fastimage (2.1.7)
-    fastlane (2.142.0)
+    fastlane (2.146.1)
       CFPropertyList (>= 2.3, < 4.0.0)
       addressable (>= 2.3, < 3.0.0)
+      aws-sdk-s3 (~> 1.0)
       babosa (>= 1.0.2, < 2.0.0)
       bundler (>= 1.12.0, < 3.0.0)
       colored
@@ -91,7 +108,11 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     gh_inspector (1.1.3)
+<<<<<<< HEAD
     git (1.6.0)
+=======
+    git (1.7.0)
+>>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       rchardet (~> 1.8)
     google-api-client (0.36.4)
       addressable (~> 2.5, >= 2.5.1)
@@ -114,19 +135,24 @@ GEM
       google-cloud-core (~> 1.2)
       googleauth (~> 0.9)
       mini_mime (~> 1.0)
+<<<<<<< HEAD
     googleauth (0.11.0)
+=======
+    googleauth (0.12.0)
+>>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.4, < 3.0)
       memoist (~> 0.16)
       multi_json (~> 1.11)
       os (>= 0.9, < 2.0)
-      signet (~> 0.12)
+      signet (~> 0.14)
     highline (1.7.10)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     httpclient (2.8.3)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
+    jmespath (1.4.0)
     json (2.3.0)
     jsonlint (0.3.0)
       oj (~> 3)
@@ -148,7 +174,11 @@ GEM
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     oj (3.10.6)
+<<<<<<< HEAD
     optimist (3.0.0)
+=======
+    optimist (3.0.1)
+>>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
     options (2.3.2)
     os (1.1.0)
     parallel (1.19.1)
@@ -198,7 +228,11 @@ GEM
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
     word_wrap (1.0.0)
+<<<<<<< HEAD
     xcodeproj (1.15.0)
+=======
+    xcodeproj (1.16.0)
+>>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       CFPropertyList (>= 2.3.3, < 4.0)
       atomos (~> 0.1.3)
       claide (>= 1.0.2, < 2.0)
@@ -213,7 +247,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+<<<<<<< HEAD
   fastlane (= 2.142.0)!
+=======
+  fastlane (= 2.146.1)!
+>>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
   fastlane-plugin-wpmreleasetoolkit!
   nokogiri!
   rmagick (~> 3.2.0)
