@@ -141,17 +141,17 @@ class ImageEditorInitializer {
                 is CropSuccessful -> null
             }
 
+            // Track "media_editor" source with media properties
+            if (action is EditorFinishedEditing) {
+                trackAddMediaFromMediaEditor(action.outputDataList)
+            }
+
             val noEditActionPerformed = stat == Stat.MEDIA_EDITOR_USED && properties == null
             if (stat == null || noEditActionPerformed) {
                 return
             }
 
             AnalyticsTracker.track(stat, properties)
-
-            // Also track "media_editor" source with media properties
-            if (action is EditorFinishedEditing) {
-                trackAddMediaFromMediaEditor(action.outputDataList)
-            }
         }
 
         private fun trackAddMediaFromMediaEditor(outputDataList: List<OutputData>) {
