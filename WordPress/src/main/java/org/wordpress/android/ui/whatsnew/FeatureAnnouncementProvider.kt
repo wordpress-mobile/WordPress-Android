@@ -29,4 +29,3 @@ class FeatureAnnouncementProvider {
         return "https://wordpress.com/blog/2020/04/20/earth-day-live/"
     }
 }
-
