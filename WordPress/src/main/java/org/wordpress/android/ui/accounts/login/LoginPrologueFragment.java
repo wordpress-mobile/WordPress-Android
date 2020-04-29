@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 
 import org.wordpress.android.BuildConfig;
@@ -26,6 +27,13 @@ public class LoginPrologueFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_signup_screen, container, false);
+
+        MaterialCardView bottomButtonsCard = view.findViewById(R.id.bottom_buttons);
+
+        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            bottomButtonsCard.removeAllViews();
+            inflater.inflate(R.layout.login_prologue_bottom_buttons_container_unified, bottomButtonsCard);
+        }
 
         MaterialButton primaryButton = view.findViewById(R.id.login_button);
         MaterialButton secondaryButton = view.findViewById(R.id.create_site_button);
