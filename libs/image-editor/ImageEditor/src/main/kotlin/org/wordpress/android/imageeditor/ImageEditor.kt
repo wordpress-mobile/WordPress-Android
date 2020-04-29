@@ -4,8 +4,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
-import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import java.io.File
@@ -59,16 +57,13 @@ class ImageEditor private constructor(
 
     fun onEditorAction(action: EditorAction) {
         onEditorAction.invoke(action)
-        if (action is EditorCancelled || action is EditorFinishedEditing) {
-            actions.clear()
-        }
     }
 
     sealed class EditorAction {
         // General actions
         data class EditorShown(val numOfImages: Int) : EditorAction()
         object EditorCancelled : EditorAction()
-        data class EditorFinishedEditing(val outputDataList: List<OutputData>, val actions: List<Action>) :
+        data class EditorFinishedEditing(val outputDataList: List<OutputData>) :
                 EditorAction()
 
         // Preview screen actions
@@ -82,17 +77,10 @@ class ImageEditor private constructor(
         data class CropSuccessful(val cropResult: CropResult) : EditorAction()
     }
 
-    sealed class Action(val label: String) {
-        object Crop : Action("crop")
-    }
-
     companion object {
         private lateinit var INSTANCE: ImageEditor
 
         val instance: ImageEditor get() = INSTANCE
-
-        // The actions that were made in this session.
-        val actions = arrayListOf<Action>()
 
         fun init(
             loadIntoImageViewWithResultListener: (

@@ -294,7 +294,7 @@ class PreviewImageViewModel : ViewModel() {
     fun onInsertClicked() {
         with(imageEditor) {
             onEditorAction(PreviewInsertImagesClicked(getOutputData()))
-            onEditorAction(EditorFinishedEditing(getOutputData(), ImageEditor.actions))
+            onEditorAction(EditorFinishedEditing(getOutputData()))
         }
         _finishAction.value = Event(getOutputData())
     }

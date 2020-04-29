@@ -31,6 +31,13 @@ class ImageEditorInitializer {
         private const val ACTIONS = "actions"
         private const val NUMBER_OF_IMAGES = "number_of_images"
 
+        // The actions made in a session.
+        val actions = arrayListOf<Action>()
+
+        sealed class Action(val label: String) {
+            object Crop : Action("crop")
+        }
+
         fun init(imageManager: ImageManager) {
             ImageEditor.init(
                 loadIntoImageViewWithResultListener(imageManager),
@@ -90,7 +97,16 @@ class ImageEditorInitializer {
             }
 
         private fun onEditorAction(): (EditorAction) -> Unit = { action ->
+            if (action is CropSuccessful) {
+                actions.add(Action.Crop)
+            }
+
             trackEditorAction(action)
+
+            val isSessionEnded = action is EditorCancelled || action is EditorFinishedEditing
+            if (isSessionEnded) {
+                actions.clear()
+            }
         }
 
         private fun trackEditorAction(action: EditorAction) {
@@ -109,9 +125,9 @@ class ImageEditorInitializer {
             val properties = when (action) {
                 is EditorShown -> mapOf(NUMBER_OF_IMAGES to action.numOfImages)
                 is EditorFinishedEditing -> {
-                    val distinctActions = action.actions.distinct()
+                    val distinctActions = actions.distinct()
                     if (distinctActions.isNotEmpty()) {
-                        mapOf(ACTIONS to distinctActions.map { it.label })
+                        mapOf(ACTIONS to actions.distinct().map { it.label })
                     } else {
                         null
                     }

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import org.wordpress.android.imageeditor.ImageEditor
-import org.wordpress.android.imageeditor.ImageEditor.Action
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropDoneMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropOpened
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.CropSuccessful
@@ -116,7 +115,6 @@ class CropViewModel : ViewModel() {
     }
 
     fun onDoneMenuClicked() {
-        ImageEditor.actions.add(Action.Crop)
         imageEditor.onEditorAction(CropDoneMenuClicked(OutputData(getOutputPath())))
 
         updateImageCropAndSaveState(ImageCropAndSaveStartState)
@@ -136,7 +134,7 @@ class CropViewModel : ViewModel() {
         with(imageEditor) {
             onEditorAction(CropSuccessful(cropResult))
             if (!shouldReturnToPreviewScreen) {
-                onEditorAction(EditorFinishedEditing(getOutputData(cropResult), ImageEditor.actions))
+                onEditorAction(EditorFinishedEditing(getOutputData(cropResult)))
             }
         }
 
