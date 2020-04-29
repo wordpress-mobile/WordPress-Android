@@ -146,7 +146,7 @@ class ImageEditorInitializer {
                     Uri.parse(outputData.outputFilePath),
                     null
                 )
-                properties["via"] = AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR, properties)
+                AnalyticsTracker.track(Stat.EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR, properties)
             }
         }
     }
