@@ -28,6 +28,7 @@ class PrepublishingVisibilityViewModel @Inject constructor(
 
     private val _showPasswordDialog = MutableLiveData<Event<Unit>>()
     val showPasswordDialog: LiveData<Event<Unit>> = _showPasswordDialog
+
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
 
