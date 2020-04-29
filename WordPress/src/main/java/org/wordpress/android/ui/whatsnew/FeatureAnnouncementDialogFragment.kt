@@ -30,9 +30,6 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
-
-
-        viewModel.start()
         return super.onCreateDialog(savedInstanceState)
     }
 
@@ -56,6 +53,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
             dismiss()
         })
 
+        viewModel.start()
         return view
     }
 
