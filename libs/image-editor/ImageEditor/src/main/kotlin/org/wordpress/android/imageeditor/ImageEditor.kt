@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import java.io.File
@@ -57,6 +59,9 @@ class ImageEditor private constructor(
 
     fun onEditorAction(action: EditorAction) {
         onEditorAction.invoke(action)
+        if (action is EditorCancelled || action is EditorFinishedEditing) {
+            actions.clear()
+        }
     }
 
     sealed class EditorAction {

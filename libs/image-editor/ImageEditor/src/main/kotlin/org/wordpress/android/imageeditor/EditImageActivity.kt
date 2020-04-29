@@ -59,6 +59,8 @@ class EditImageActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        ImageEditor.instance.onEditorAction(EditorCancelled)
+        if (hostFragment.childFragmentManager.backStackEntryCount == 0) {
+            ImageEditor.instance.onEditorAction(EditorCancelled)
+        }
     }
 }

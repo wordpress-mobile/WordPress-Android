@@ -105,10 +105,13 @@ class ImageEditorInitializer {
 
             val properties = when (action) {
                 is EditorShown -> mapOf(NUMBER_OF_IMAGES to action.numOfImages)
-                is EditorFinishedEditing -> if (action.actions.isNotEmpty()) {
-                    mapOf(ACTIONS to action.actions.map { it.label })
-                } else {
-                    null
+                is EditorFinishedEditing -> {
+                    val distinctActions = action.actions.distinct()
+                    if (distinctActions.isNotEmpty()) {
+                        mapOf(ACTIONS to distinctActions.map { it.label })
+                    } else {
+                        null
+                    }
                 }
                 is EditorCancelled,
                 is PreviewImageSelected,
