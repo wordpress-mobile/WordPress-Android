@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel.FeatureAnnouncementUiModel
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
@@ -20,6 +21,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
+        WordPress.versionName = "1.0"
         uiModelResults.clear()
 
         viewModel = FeatureAnnouncementViewModel(NoDelayCoroutineDispatcher())
