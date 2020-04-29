@@ -9,6 +9,7 @@
         android:id="@+id/feature_announcement_dialog_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
         android:fontFamily="serif"
         android:paddingStart="@dimen/feature_announcement_content_margin"
         android:paddingEnd="@dimen/feature_announcement_content_margin"
@@ -20,7 +21,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
         android:orientation="vertical"
         android:paddingStart="@dimen/feature_announcement_content_margin"
         android:paddingEnd="@dimen/feature_announcement_content_margin"
@@ -62,8 +62,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:elevation="0dp"
         app:cardCornerRadius="0dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
