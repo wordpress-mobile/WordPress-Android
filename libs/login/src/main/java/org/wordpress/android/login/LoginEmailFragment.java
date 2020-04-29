@@ -71,6 +71,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
     private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
+    private static final String ARG_SITE_LOGIN_ENABLED = "ARG_SITE_LOGIN_ENABLED";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -82,6 +83,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private boolean mIsSocialLogin;
     private Integer mCurrentEmailErrorRes = null;
     private boolean mIsSignupFromLoginEnabled;
+    private boolean mIsSiteLoginEnabled;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -96,10 +98,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -221,6 +224,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case FULL:
             case WPCOM_LOGIN_ONLY:
             case SHARE_INTENT:
+                siteLoginButton.setVisibility(mIsSiteLoginEnabled ? View.VISIBLE : View.GONE);
                 siteLoginButtonIcon.setImageResource(R.drawable.ic_domains_grey_24dp);
                 siteLoginButtonText.setText(R.string.enter_site_address_instead);
                 break;
@@ -296,6 +300,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (args != null) {
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
             mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
+            mIsSiteLoginEnabled = args.getBoolean(ARG_SITE_LOGIN_ENABLED, true);
         }
     }
 
