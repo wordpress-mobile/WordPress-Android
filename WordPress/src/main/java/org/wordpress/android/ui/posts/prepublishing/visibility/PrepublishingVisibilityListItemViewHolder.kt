@@ -16,21 +16,21 @@ class PrepublishingVisibilityListItemViewHolder(internal val parent: ViewGroup, 
                 R.layout.prepublishing_visibility_list_item, parent, false
         )
 ) {
-    private val layout: View = itemView.findViewById(R.id.visibility_layout)
-    private val radioButton: RadioButton = itemView.findViewById(R.id.visibility_radio_button)
+    private val visibilityLayout: View = itemView.findViewById(R.id.visibility_layout)
+    private val visibilityRadioButton: RadioButton = itemView.findViewById(R.id.visibility_radio_button)
     private val visibilityText: TextView = itemView.findViewById(R.id.visibility_text)
 
     init {
-        radioButton.buttonTintList = ContextCompat.getColorStateList(
+        visibilityRadioButton.buttonTintList = ContextCompat.getColorStateList(
                 parent.context,
                 R.color.neutral_10_primary_40_selector
         )
     }
 
     fun bind(uiState: VisibilityUiState) {
-        radioButton.isChecked = uiState.checked
+        visibilityRadioButton.isChecked = uiState.checked
         uiHelpers.setTextOrHide(visibilityText, uiState.visibility.textRes)
-        layout.setOnClickListener {
+        visibilityLayout.setOnClickListener {
             uiState.onItemTapped.invoke(uiState.visibility)
         }
     }
