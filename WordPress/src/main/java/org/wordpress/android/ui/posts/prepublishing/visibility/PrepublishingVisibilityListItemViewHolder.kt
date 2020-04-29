@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
@@ -18,6 +19,13 @@ class PrepublishingVisibilityListItemViewHolder(internal val parent: ViewGroup, 
     private val layout: View = itemView.findViewById(R.id.visibility_layout)
     private val radioButton: RadioButton = itemView.findViewById(R.id.visibility_radio_button)
     private val visibilityText: TextView = itemView.findViewById(R.id.visibility_text)
+
+    init {
+        radioButton.buttonTintList = ContextCompat.getColorStateList(
+                parent.context,
+                R.color.neutral_10_primary_40_selector
+        )
+    }
 
     fun bind(uiState: VisibilityUiState) {
         radioButton.isChecked = uiState.checked
