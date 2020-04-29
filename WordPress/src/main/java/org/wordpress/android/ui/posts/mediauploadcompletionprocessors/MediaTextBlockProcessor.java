@@ -1,25 +1,14 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonObject;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class MediaTextBlockProcessor extends BlockProcessor {
-    /**
-     * Template pattern used to match and splice media-text blocks
-     */
-    private static final String PATTERN_TEMPLATE_MEDIA_TEXT = "(<!-- wp:media-text \\{[^\\}]*\"mediaId\":)" // block
-                                                              + "(%1$s)" // local id must match to be replaced
-                                                              + "([,\\}][^>]*-->\n?)" // rest of header
-                                                              + "(.*)" // block contents
-                                                              + "(<!-- /wp:media-text -->\n?)"; // closing comment
-
     public MediaTextBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-    }
-
-    @Override String getBlockPatternTemplate() {
-        return PATTERN_TEMPLATE_MEDIA_TEXT;
     }
 
     @Override boolean processBlockContentDocument(Document document) {
@@ -49,6 +38,15 @@ public class MediaTextBlockProcessor extends BlockProcessor {
                 // return injected block
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+        if (jsonAttributes.get("mediaId").getAsString().equals(mLocalId)) {
+            jsonAttributes.addProperty("mediaId", Integer.parseInt(mRemoteId));
+            return true;
         }
 
         return false;

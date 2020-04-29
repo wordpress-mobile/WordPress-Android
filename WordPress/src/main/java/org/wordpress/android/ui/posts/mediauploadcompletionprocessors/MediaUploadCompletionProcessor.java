@@ -3,8 +3,10 @@ package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 import org.wordpress.android.util.helpers.MediaFile;
 
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_BLOCK_HEADER;
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessorPatterns.PATTERN_TEMPLATE_BLOCK_BOUNDARY;
 
 public class MediaUploadCompletionProcessor {
     private final BlockProcessorFactory mBlockProcessorFactory;
@@ -18,34 +20,49 @@ public class MediaUploadCompletionProcessor {
      * @param siteUrl The site url - used to generate the attachmentPage url
      */
     public MediaUploadCompletionProcessor(String localId, MediaFile mediaFile, String siteUrl) {
-        mBlockProcessorFactory = new BlockProcessorFactory()
+        mBlockProcessorFactory = new BlockProcessorFactory(this)
                 .init(localId, mediaFile, siteUrl);
     }
 
     /**
-     * Processes a post to replace the local ids and local urls of media with remote ids and remote urls. This matches
-     * media-containing blocks and delegates further processing to {@link #processBlock(String)}
+     * Processes content to replace the local ids and local urls of media with remote ids and remote urls. This method
+     * delineates block boundaries for media-containing blocks and delegates further processing via itself and / or
+     * {@link #processBlock(String)}, via direct and mutual recursion, respectively.
      *
-     * @param postContent The post content to be processed
-     * @return A string containing the processed post, or the original content if no match was found
+     * @param content The content to be processed
+     * @return A string containing the processed content, or the original content if no match was found
      */
-    public String processPost(String postContent) {
-        Matcher matcher = PATTERN_BLOCK.matcher(postContent);
-        StringBuilder result = new StringBuilder();
+    public String processContent(String content) {
+        Matcher headerMatcher = PATTERN_BLOCK_HEADER.matcher(content);
 
-        int position = 0;
+        int positionBlockStart, positionBlockEnd = content.length();
 
-        while (matcher.find()) {
-            result.append(postContent.substring(position, matcher.start()));
-            result.append(processBlock(matcher.group()));
-            position = matcher.end();
+        if (headerMatcher.find()) {
+            positionBlockStart = headerMatcher.start();
+            String blockType = headerMatcher.group(1);
+            Matcher blockBoundaryMatcher = Pattern.compile(String.format(PATTERN_TEMPLATE_BLOCK_BOUNDARY, blockType),
+                    Pattern.DOTALL).matcher(content.substring(headerMatcher.end()));
+
+            int nestLevel = 1;
+
+            while (0 < nestLevel && blockBoundaryMatcher.find()) {
+                if (blockBoundaryMatcher.group(1).equals("/")) {
+                    positionBlockEnd = headerMatcher.end() + blockBoundaryMatcher.end();
+                    nestLevel--;
+                } else {
+                    nestLevel++;
+                }
+            }
+
+            return new StringBuilder()
+                    .append(content.substring(0, positionBlockStart))
+                    .append(processBlock(content.substring(positionBlockStart, positionBlockEnd)))
+                    .append(processContent(content.substring(positionBlockEnd)))
+                    .toString();
+        } else {
+            return content;
         }
-
-        result.append(postContent.substring(position));
-
-        return result.toString();
     }
-
 
     /**
      * Processes a media block returning a raw content replacement string

@@ -1,25 +1,14 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonObject;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
 public class VideoBlockProcessor extends BlockProcessor {
-    /**
-     * Template pattern used to match and splice video blocks
-     */
-    private static final String PATTERN_TEMPLATE_VIDEO = "(<!-- wp:video \\{[^\\}]*\"id\":)" // block
-                                                         + "(%1$s)" // local id must match to be replaced
-                                                         + "([,\\}][^>]*-->\n?)" // rest of header
-                                                         + "(.*)" // block contents
-                                                         + "(<!-- /wp:video -->\n?)"; // closing comment
-
     public VideoBlockProcessor(String localId, MediaFile mediaFile) {
         super(localId, mediaFile);
-    }
-
-    @Override String getBlockPatternTemplate() {
-        return PATTERN_TEMPLATE_VIDEO;
     }
 
     @Override boolean processBlockContentDocument(Document document) {
@@ -32,6 +21,15 @@ public class VideoBlockProcessor extends BlockProcessor {
             targetVideo.attr("src", mRemoteUrl);
 
             // return injected block
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+        if (jsonAttributes.get("id").getAsString().equals(mLocalId)) {
+            jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId));
             return true;
         }
 
