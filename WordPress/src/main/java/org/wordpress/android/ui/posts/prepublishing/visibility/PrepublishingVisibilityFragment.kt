@@ -11,9 +11,11 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.prepublishing_visibility_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PostSettingsInputDialogFragment
 import javax.inject.Inject
 
 class PrepublishingVisibilityFragment : Fragment() {
@@ -49,6 +51,12 @@ class PrepublishingVisibilityFragment : Fragment() {
             (visibility_recycler_view.adapter as PrepublishingVisibilityAdapter).update(uiState)
         })
 
+        viewModel.showPasswordDialog.observe(this, Observer { event ->
+            event?.applyIfNotHandled {
+                showPostPasswordDialog()
+            }
+        })
+
         viewModel.start(getEditPostRepository())
     }
 
@@ -59,6 +67,18 @@ class PrepublishingVisibilityFragment : Fragment() {
         }
 
         return editPostActivityHook.editPostRepository
+    }
+
+    private fun showPostPasswordDialog() {
+        val dialog = PostSettingsInputDialogFragment.newInstance(
+                getEditPostRepository().password, getString(string.password),
+                getString(string.post_settings_password_dialog_hint), false
+        )
+        dialog.setPostSettingsInputDialogListener { input -> viewModel.onPostPasswordChanged(input) }
+
+        fragmentManager?.let {
+            dialog.show(it, null)
+        }
     }
 
     private fun getEditPostActivityHook(): EditPostActivityHook? {

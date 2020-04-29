@@ -11,6 +11,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVisibilityUseCase: GetPostVisibilityUseCase) :
@@ -19,6 +20,9 @@ class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVi
 
     private val _uiState = MutableLiveData<List<VisibilityUiState>>()
     val uiState: LiveData<List<VisibilityUiState>> = _uiState
+
+    private val _showPasswordDialog = MutableLiveData<Event<Unit>>()
+    val showPasswordDialog: LiveData<Event<Unit>> = _showPasswordDialog
 
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
@@ -49,7 +53,14 @@ class PrepublishingVisibilityViewModel @Inject constructor(private val getPostVi
     }
 
     private fun onVisibilityItemTapped(visibility: Visibility) {
-        updateVisibilityUiStates(visibility)
+        when (visibility) {
+            PASSWORD_PROTECTED -> _showPasswordDialog.postValue(Event(Unit))
+            else -> updateVisibilityUiStates(visibility)
+        }
+    }
+
+    fun onPostPasswordChanged(password: String) {
+
     }
 }
 
