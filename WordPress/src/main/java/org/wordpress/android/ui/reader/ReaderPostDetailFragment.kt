@@ -66,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
@@ -889,7 +890,12 @@ class ReaderPostDetailFragment : Fragment(),
                 val sites = mSiteStore.visibleSites
                 when (sites.size) {
                     0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
+                    1 -> ActivityLauncher.openEditorForReblog(
+                            activity,
+                            sites.first(),
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
                     else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()
                         val site = mSiteStore.getSiteByLocalId(siteLocalId)
@@ -972,7 +978,12 @@ class ReaderPostDetailFragment : Fragment(),
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
                     val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                    ActivityLauncher.openEditorForReblog(activity, site, this.post)
+                    ActivityLauncher.openEditorForReblog(
+                            activity,
+                            site,
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
                 }
             }
         }

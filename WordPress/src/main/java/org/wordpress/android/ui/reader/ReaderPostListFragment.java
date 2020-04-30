@@ -87,6 +87,7 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
@@ -2921,7 +2922,12 @@ public class ReaderPostListFragment extends Fragment
                     );
                 } else if (state instanceof PostEditor) {
                     PostEditor peState = (PostEditor) state;
-                    ActivityLauncher.openEditorForReblog(getActivity(), peState.getSite(), peState.getPost());
+                    ActivityLauncher.openEditorForReblog(
+                            getActivity(),
+                            peState.getSite(),
+                            peState.getPost(),
+                            PagePostCreationSourcesDetail.POST_FROM_REBLOG
+                    );
                 } else { // Error
                     ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
                 }
