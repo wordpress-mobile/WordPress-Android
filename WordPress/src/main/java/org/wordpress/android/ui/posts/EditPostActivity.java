@@ -69,6 +69,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
@@ -78,6 +79,7 @@ import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.post.PostStatus;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
@@ -91,6 +93,8 @@ import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
@@ -98,6 +102,8 @@ import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
 import org.wordpress.android.ui.gif.GifPickerActivity;
@@ -218,7 +224,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
-        EditPostSettingsCallback {
+        EditPostSettingsCallback,
+        PrivateAtCookieProgressDialogOnDismissListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -332,6 +339,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
 
     private StorePostViewModel mViewModel;
@@ -552,9 +560,38 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setTitle(SiteUtils.getSiteNameOrHomeURL(mSite));
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
-        setupViewPager();
-
+        // we need to make sure AT cookie is available when trying to edit post on private AT site
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.isCookieRefreshRequired()) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(fragmentManager);
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                    new FetchPrivateAtomicCookiePayload(mSite.getSiteId())));
+        } else {
+            setupViewPager();
+        }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            setupViewPager();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        }
+        if (event.isError()) {
+            AppLog.e(AppLog.T.EDITOR,
+                    "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
+            WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                      .show();
+        }
+    }
+
+    @Override
+    public void onCookieProgressDialogCancelled() {
+        WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                  .show();
+        setupViewPager();
     }
 
     private void setupViewPager() {
@@ -929,7 +966,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         } else {
             WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -1660,7 +1697,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
 
     @Override public void onImagePreviewRequested(String mediaUrl) {
-        MediaPreviewActivity.showPreview(this, null, mediaUrl);
+        MediaPreviewActivity.showPreview(this, mSite, mediaUrl);
     }
 
     @Override public void onMediaEditorRequested(String mediaUrl) {
@@ -1677,10 +1714,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         int reducedSizeWidth = (int) (maxWidth * PREVIEW_IMAGE_REDUCED_SIZE_FACTOR);
         String resizedImageUrl = mReaderUtilsWrapper.getResizedImageUrl(
-            mediaUrl,
-            reducedSizeWidth,
-            0,
-            !SiteUtils.isPhotonCapable(mSite)
+                mediaUrl,
+                reducedSizeWidth,
+                0,
+                !SiteUtils.isPhotonCapable(mSite),
+                mSite.isWPComAtomic()
         );
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
@@ -1809,7 +1847,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             String message = TextUtils.isEmpty(account.getEmail())
                     ? getString(R.string.editor_confirm_email_prompt_message)
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
-                                    account.getEmail());
+                            account.getEmail());
 
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
@@ -1817,7 +1855,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                    .setPositiveButton(android.R.string.ok,
                            (dialog, id) -> {
                                ToastUtils.showToast(EditPostActivity.this,
-                                                    getString(R.string.toast_saving_post_as_draft));
+                                       getString(R.string.toast_saving_post_as_draft));
                                savePostAndOptionallyFinish(true, false);
                            })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
@@ -2267,7 +2305,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
                         mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                                                         Activity.RESULT_OK, data);
+                                Activity.RESULT_OK, data);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
@@ -2453,7 +2491,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onAddMediaClicked() {
         if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
-         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
@@ -2700,6 +2738,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
             && !TextUtils.isEmpty(token)) {
             authHeaders.put(AuthenticationUtils.AUTHORIZATION_HEADER_NAME, "Bearer " + token);
         }
+
+        if (mSite.isPrivateWPComAtomic() && mPrivateAtomicCookie.exists() && WPUrlUtils
+                .safeToAddPrivateAtCookie(url, mPrivateAtomicCookie.getDomain())) {
+            authHeaders.put(AuthenticationUtils.COOKIE_HEADER_NAME, mPrivateAtomicCookie.getCookieContent());
+        }
         return authHeaders;
     }
 
@@ -2844,14 +2887,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean isRemotePreviewingFromEditor() {
         return mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.PREVIEWING
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW
+               || mPostLoadingState == PostLoadingState.PREVIEWING
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
     }
 
     private boolean isUploadingPostForPreview() {
         return mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
     }
 
     private void updateOnSuccessfulUpload() {
@@ -2877,7 +2920,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
                             ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
                             : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                                                       );
+            );
             updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error

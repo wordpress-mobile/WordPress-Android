@@ -68,6 +68,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
+import org.wordpress.aztec.AlignmentRendering;
 import org.wordpress.aztec.Aztec;
 import org.wordpress.aztec.AztecAttributes;
 import org.wordpress.aztec.AztecContentChangeWatcher.AztecTextChangeObserver;
@@ -2331,7 +2332,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         plugins.add(new CaptionShortcodePlugin());
         plugins.add(new VideoShortcodePlugin());
         plugins.add(new AudioShortcodePlugin());
-        return new AztecParser(plugins);
+        return new AztecParser(AlignmentRendering.SPAN_LEVEL, plugins);
     }
 
     private Drawable getLoadingImagePlaceholder() {

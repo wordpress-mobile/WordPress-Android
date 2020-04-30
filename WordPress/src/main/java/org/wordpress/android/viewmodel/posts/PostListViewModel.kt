@@ -386,7 +386,8 @@ class PostListViewModel @Inject constructor(
                     featuredImageUrl,
                     photonWidth,
                     photonHeight,
-                    !SiteUtils.isPhotonCapable(connector.site)
+                    !SiteUtils.isPhotonCapable(connector.site),
+                    connector.site.isPrivateWPComAtomic
             )
 
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {

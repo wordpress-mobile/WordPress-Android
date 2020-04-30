@@ -3,6 +3,7 @@ package org.wordpress.android.imageeditor
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,6 +12,7 @@ import androidx.navigation.ui.navigateUp
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorCancelled
 
 class EditImageActivity : AppCompatActivity() {
+    private lateinit var viewModel: EditImageViewModel
     private lateinit var hostFragment: NavHostFragment
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -20,6 +22,7 @@ class EditImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel = ViewModelProvider(this).get(EditImageViewModel::class.java)
         setContentView(R.layout.activity_edit_image)
 
         hostFragment = supportFragmentManager

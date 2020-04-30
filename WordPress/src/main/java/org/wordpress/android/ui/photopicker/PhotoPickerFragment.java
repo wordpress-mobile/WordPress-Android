@@ -487,12 +487,18 @@ public class PhotoPickerFragment extends Fragment {
             return;
         }
         String title;
-        if (mBrowserType.isSingleImagePicker()) {
-            mActionMode.setTitle(R.string.photo_picker_use_photo);
-        } else {
+        if (mBrowserType.canMultiselect()) {
             int numSelected = getAdapter().getNumSelected();
             title = String.format(getString(R.string.cab_selected), numSelected);
             mActionMode.setTitle(title);
+        } else {
+            if (mBrowserType.isImagePicker() && mBrowserType.isVideoPicker()) {
+                mActionMode.setTitle(R.string.photo_picker_use_media);
+            } else if (mBrowserType.isVideoPicker()) {
+                mActionMode.setTitle(R.string.photo_picker_use_video);
+            } else {
+                mActionMode.setTitle(R.string.photo_picker_use_photo);
+            }
         }
     }
 

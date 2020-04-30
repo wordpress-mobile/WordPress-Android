@@ -1,5 +1,5 @@
-Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Heading, Paragraph, Image, and MediaText blocks.
+Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
 
-Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
+Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
 
-General improvements: Dark Theme support.
+UI improvements: Added your Gravatar to the Me menu in My Site.

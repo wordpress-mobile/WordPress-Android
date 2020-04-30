@@ -128,6 +128,17 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         } else {
             fragment.setPhotoPickerListener(this);
         }
+        updateTitle(mBrowserType, actionBar);
+    }
+
+    private void updateTitle(MediaBrowserType browserType, ActionBar actionBar) {
+        if (browserType.isImagePicker() && browserType.isVideoPicker()) {
+            actionBar.setTitle(R.string.photo_picker_photo_or_video_title);
+        } else if (browserType.isVideoPicker()) {
+            actionBar.setTitle(R.string.photo_picker_video_title);
+        } else {
+            actionBar.setTitle(R.string.photo_picker_title);
+        }
     }
 
     private PhotoPickerFragment getPickerFragment() {

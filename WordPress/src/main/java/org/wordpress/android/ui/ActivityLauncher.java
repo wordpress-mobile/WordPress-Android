@@ -515,7 +515,7 @@ public class ActivityLauncher {
             } else {
                 // Show non-wp.com sites without a password unauthenticated. These would be Jetpack sites that are
                 // connected through REST API.
-                WPWebViewActivity.openURL(context, siteUrl, true);
+                WPWebViewActivity.openURL(context, siteUrl, true, site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
             }
         }
     }
@@ -688,7 +688,8 @@ public class ActivityLauncher {
                             shareSubject,
                             site.getFrameNonce(),
                             true,
-                            startPreviewForResult);
+                            startPreviewForResult,
+                            site.isPrivateWPComAtomic() ? site.getSiteId() : 0);
         } else {
             // Add the original post URL to the list of allowed URLs.
             // This is necessary because links are disabled in the webview, but WP removes "?preview=true"

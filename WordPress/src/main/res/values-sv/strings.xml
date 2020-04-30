@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 17:31:27+0000
+Translation-Revision-Date: 2020-04-20 07:44:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Lyckades inte beskära och spara bilden. Försök igen.</string>
+    <string name="failed_to_insert_image_tap_to_retry">Kunde inte lägga in bilden.\nTryck för att försöka igen.</string>
+    <string name="preview_image_description">Förhandsgranskningsbild</string>
+    <string name="error_unknown_page_type">Okänt sidformat</string>
+    <string name="error_page_not_submitted">Åtgärden gick inte att slutföra och denna sida skickades inte för granskning.</string>
+    <string name="error_page_not_scheduled">Åtgärden gick inte att slutföra och sidan schemalades inte.</string>
+    <string name="error_page_not_published_private">Åtgärden gick inte att slutföra och denna privata sida publicerades inte.</string>
+    <string name="error_page_not_published">Åtgärden gick inte att slutföra och denna sida publicerades inte.</string>
+    <string name="error_page_not_submitted_retrying">Det gick inte att skicka denna sida för granskning, men vi försöker igen senare. </string>
+    <string name="error_page_not_scheduled_retrying">Det gick inte att schemalägga denna sida, men vi försöker igen senare.</string>
+    <string name="error_page_not_published_retrying_private">Det gick inte att publicera denna privata sida, men vi försöker igen senare.</string>
+    <string name="error_page_not_published_retrying">Sidan gick inte att publicera, men vi försöker igen senare.</string>
+    <string name="error_media_recover_page_not_submitted">Det gick inte att ladda upp denna mediafil och sidan skickades inte för granskning. </string>
+    <string name="error_media_recover_page_not_scheduled">Det gick inte att ladda upp denna mediafil och sidan schemalades inte.</string>
+    <string name="error_media_recover_page_not_published_private">Det gick inte att ladda upp denna mediafil och denna privata sida publicerades inte.</string>
+    <string name="error_media_recover_page_not_published">Det gick inte att ladda upp denna mediafil och sidan publicerades inte.</string>
+    <string name="page_waiting_for_connection_draft">Vi kommer att spara ditt utkast när din enhet har uppkoppling till internet igen</string>
+    <string name="page_waiting_for_connection_private">Vi kommer att publicera din privata sida när din enhet har kontakt med internet igen</string>
+    <string name="page_waiting_for_connection_scheduled">Vi kommer att schemalägga sidan när din enhet har kontakt med internet igen.</string>
+    <string name="page_waiting_for_connection_pending">Vi kommer att skicka din sida för granskning när din enhet har kontakt med internet igen.</string>
+    <string name="page_waiting_for_connection_publish">Vi kommer att publicera sidan när din enhet har kontakt med internet igen.</string>
+    <string name="page_queued">Sidan i kö</string>
+    <string name="page_uploading">Laddar upp sidan</string>
+    <string name="error_publish_page_no_network">Enheten är offline. Sidan sparad lokalt.</string>
+    <string name="local_page_autosave_revision_available">Du har gjort ändringar i denna sida som inte är sparade</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Din sida håller på att laddas upp</string>
+    <string name="editor_page_saved_locally_failed_media">Sidan innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
+    <string name="editor_page_saved_locally">Sidan sparad på enheten</string>
+    <string name="editor_page_saved_online">Sidan har sparats on-line</string>
+    <string name="quickpress_shortcut_activity_label">Välj blogg för QuickPress-genväg</string>
+    <string name="app_theme_default">Tilldelat av batterisparfunktionen</string>
+    <string name="app_theme_dark">Mörkt</string>
+    <string name="app_theme_light">Ljust</string>
+    <string name="app_theme">Utseende</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
     <string name="gutenberg_native_what_people_say">Så här säger andra personer</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Vi erbjuder en rad tjänster som hjälper dig att uppnå dina mål. Vet du inte vad du behöver, eller undrar du hur mycket det kostar? Vi förklarar gärna mer om våra tjänster och berättar om våra priser. Hör av dig till oss här nedan.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Vi är ett litet team med proffsiga specialister och täcker många olika områden och erfarenheter. Vi älskar vårt jobb och arbetar därför passionerat. Vi ser fram emot att arbeta även med dig.</string>
@@ -59,7 +95,7 @@ Language: sv_SE
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">En beskrivning av projektet och dess slutresultat.</string>
-    <string name="gutenberg_native_555_555_1234">+1&#8211;(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">+1-(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
     <string name="post_list_tab_trashed_posts">Borttagna</string>
@@ -1254,7 +1290,7 @@ Language: sv_SE
     <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
-    <string name="copy">Kopiera</string>
+    <string name="copy_text">Kopiera</string>
     <string name="connect_site">Anslut webbplats</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinksignal</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrationssignal</string>
@@ -2063,7 +2099,6 @@ Language: sv_SE
     <string name="content_required">Kommentar krävs</string>
     <string name="sure_to_cancel_edit_comment">Avbryt redigeringen av denna kommentar?</string>
     <string name="saving_changes">Spara ändringarna</string>
-    <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Kasta bort</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
     <string name="dlg_trashing_comments">Skicka till papperskorg</string>
@@ -2165,7 +2200,7 @@ Language: sv_SE
     <string name="pages">Sidor</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="ok">OK</string>
-    <string name="blogusername">användarnamn</string>
+    <string name="done">klart</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Allmänna villkor</string>
@@ -2178,7 +2213,6 @@ Language: sv_SE
     <string name="quickpress_add_alert_title">Ange genvägsnamn</string>
     <string name="settings">Inställningar</string>
     <string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
-    <string name="quickpress_window_title">Välj blogg för QuickPress-genväg</string>
     <string name="pages_private">Privat</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Separera etiketter med kommatecken</string>

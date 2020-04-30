@@ -17,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.EditImageViewModel
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
@@ -159,10 +160,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private fun navigateBackWithCropResult(cropResult: CropResult) {
         if (navArgs.shouldReturnToPreviewScreen) {
             val navController = findNavController()
-
-            val saveStateHandle = navController.previousBackStackEntry?.savedStateHandle
-            saveStateHandle?.set(CROP_RESULT, cropResult)
-
+            ViewModelProvider(requireActivity()).get(EditImageViewModel::class.java).setCropResult(cropResult)
             navController.popBackStack()
         } else {
             val resultData = viewModel.getOutputData(cropResult)

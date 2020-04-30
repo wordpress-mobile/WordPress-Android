@@ -66,6 +66,8 @@ public class AppSettingsFragment extends PreferenceFragment
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
 
+    private Preference mWhatsNew;
+
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
@@ -162,6 +164,14 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
+        mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
+
+        if (BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE) {
+            mWhatsNew.setSummary(getString(R.string.whats_new_in_version_summary, WordPress.versionName));
+        } else {
+            removeWhatsNewPreference();
+        }
+
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
@@ -173,6 +183,13 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
+    }
+
+
+    private void removeWhatsNewPreference() {
+        PreferenceCategory aboutTheAppPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        aboutTheAppPreferenceCategory.removePreference(mWhatsNew);
     }
 
     @Override

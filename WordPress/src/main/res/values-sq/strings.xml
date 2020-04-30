@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 19:48:35+0000
+Translation-Revision-Date: 2020-04-07 16:11:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">S’u arrit të qethej dhe ruhej figura, ju lutemi, riprovoni.</string>
+    <string name="failed_to_insert_image_tap_to_retry">S’u arrit të futej figurë.\nJu lutemi, prekeni që të riprovohet.</string>
+    <string name="preview_image_description">Paraparje Figure</string>
+    <string name="error_unknown_page_type">Format faqesh i panjohur</string>
+    <string name="error_page_not_submitted">S’e plotësuam dot këtë veprim dhe s’e parashtruam për shqyrtim këtë faqe.</string>
+    <string name="error_page_not_scheduled">S’e plotësuam dot këtë veprim dhe s’e vumë dot në plan këtë faqe.</string>
+    <string name="error_page_not_published_private">S’e plotësuam dot këtë veprim dhe s’e botuam këtë faqe private.</string>
+    <string name="error_page_not_published">S’e plotësuam dot këtë veprim dhe s’e botuam këtë faqe.</string>
+    <string name="error_page_not_submitted_retrying">S’e parashtruam dot për shqyrtim këtë faqe, por do të riprovojmë më vonë. </string>
+    <string name="error_page_not_scheduled_retrying">S’e vumë dot në plan këtë faqe, por do të riprovojmë më vonë.</string>
+    <string name="error_page_not_published_retrying_private">S’e botuam dot këtë faqe private, por do të riprovojmë më vonë.</string>
+    <string name="error_page_not_published_retrying">S’e botuam dot këtë faqe, por do të riprovojmë më vonë.</string>
+    <string name="error_media_recover_page_not_submitted">S’e ngarkuam dot këtë media dhe s’e parashtruam për shqyrtim këtë faqe. </string>
+    <string name="error_media_recover_page_not_scheduled">S’e ngarkuam dot këtë media dhe s’e vumë në plan këtë faqe.</string>
+    <string name="error_media_recover_page_not_published_private">S’e ngarkuam dot këtë media dhe s’e botuam këtë faqe private.</string>
+    <string name="error_media_recover_page_not_published">S’e ngarkuam dot këtë media dhe s’e botuam faqen.</string>
+    <string name="page_waiting_for_connection_draft">Do ta ruajmë skicën tuaj kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_waiting_for_connection_private">Do ta botojmë faqen tuaj private kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_waiting_for_connection_scheduled">Do ta vëmë në plan faqen tuaj kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_waiting_for_connection_pending">Do ta parashtrojmë për shqyrtim faqen tuaj kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_waiting_for_connection_publish">Do ta botojmë faqen kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_queued">Faqe në radhë</string>
+    <string name="page_uploading">Ngarkim faqeje</string>
+    <string name="error_publish_page_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
+    <string name="local_page_autosave_revision_available">Keni bërë ndryshime të paruajtura në këtë faqe</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Faqja juaj po ngarkohet</string>
+    <string name="editor_page_saved_locally_failed_media">Faqja ka ngarkime të dështuara mediash dhe u ruajt lokalisht</string>
+    <string name="editor_page_saved_locally">Faqja u ruajt në pajisje</string>
+    <string name="editor_page_saved_online">Faqja u ruajt në internet</string>
+    <string name="quickpress_shortcut_activity_label">Përzgjidhni blog për shkurtore QuickPress</string>
+    <string name="app_theme_default">E caktuar nga Kursyes Baterie</string>
+    <string name="app_theme_dark">E errët</string>
+    <string name="app_theme_light">E çelët</string>
+    <string name="app_theme">Dukje</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Së fundi keni bëtë ndryshime te kjo faqe, por nuk i ruajtët. Zgjidhni një version për ngarkim:\n\n</string>
     <string name="gutenberg_native_what_people_say">Ç’thonë Njerëzit</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Ofrojmë një gamë shërbimesh për t’ju ndihmuar të arrini përfundimet që kërkoni. S’jeni i sigurt se ç’ju nevojitet, ose sa kushton? Mund t’ju shpjegojmë cilat shërbime ju bëjnë punë dhe t’ju tregojmë më tepër rreth tarifave tona. Lidhuni me ne, nga më poshtë.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jemi një ekip i vogël profesionistësh me një gamë të gjerë aftësish dhe përvoje. E duam atë që bëjmë dhe e bëjmë me pasion. Presim të punojmë me ju.</string>
@@ -252,8 +288,6 @@ Language: sq_AL
     <string name="notifications_tab_dialog_master_hint_on">Çaktivizoni shfaqje njoftimesh te skedë njoftimesh për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_off">Njoftime për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_on">Njoftime për këtë sajt</string>
-    <string name="dialog_gutenberg_informative_description_page">Për faqe të reja tanimë po përdorni përpunuesin me blloqe u2014 bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
-    <string name="dialog_gutenberg_informative_description_post">Për postime të reja tanimë po përdorni përpunuesin me blloqe u2014 bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
     <string name="pick_media">Shtoni figurë ose video</string>
     <string name="error_post_not_submitted_retrying">S’e parashtruam dot për shqyrtim këtë postim, por do të riprovojmë më vonë. </string>
     <string name="error_post_not_scheduled_retrying">S’e vumë dot në plan këtë postim, por do të riprovojmë më vonë.</string>
@@ -1254,7 +1288,7 @@ Language: sq_AL
     <string name="media_edit_filename_caption">Emër Kartele</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Tekst alternativ</string>
-    <string name="copy">Kopjoje</string>
+    <string name="copy_text">Kopjoje</string>
     <string name="connect_site">Lidhe Sajtin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Xixëllo dritëzë njoftimesh</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Dridhe pajisjen</string>
@@ -2061,7 +2095,6 @@ Language: sq_AL
     <string name="dlg_trashing_comments">Po kalohet te hedhurinat</string>
     <string name="dlg_confirm_trash_comments">Të kalohet te hedhurinat?</string>
     <string name="trash">Hedhurina</string>
-    <string name="hint_comment_content">Koment</string>
     <string name="saving_changes">Po ruhen ndryshimet</string>
     <string name="sure_to_cancel_edit_comment">Të anulohet përpunimi i këtij dokumenti?</string>
     <string name="content_required">Komenti është i domosdoshëm</string>
@@ -2165,7 +2198,7 @@ Language: sq_AL
     <string name="anonymous">I paemër</string>
     <string name="no_network_title">S’ka rrjet gati</string>
     <string name="ok">OK</string>
-    <string name="blogusername">emërpërdoruesiblogu</string>
+    <string name="done">u bë</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Version</string>
     <string name="tos">Kushte Shërbimi</string>
@@ -2177,7 +2210,6 @@ Language: sq_AL
     <string name="immediately">Menjëherë</string>
     <string name="quickpress_add_alert_title">Caktoni emër shkurtoreje</string>
     <string name="settings">Rregullime</string>
-    <string name="quickpress_window_title">Përzgjidhni blog për shkurtore QuickPress</string>
     <string name="quickpress_add_error">Emri i shkurtores s’mund të jetë i zbrazët</string>
     <string name="pages_private">Private</string>
     <string name="title">Titull</string>

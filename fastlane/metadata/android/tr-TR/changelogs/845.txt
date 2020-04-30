@@ -1,5 +1,0 @@
-14.5:
-Blok düzenleyici: Güncel yazılar bloğu eklendi, gömülü görsel içerek HTML içeriğin yapıştırılması sırasındaki çökme düzeltildi
-Sayfa şablonları: Hızlı sayfa oluşturma için blok-tabanlı şablonlar eklendi.
-Site oluşturma: Hızlı kurulum için bir kaç adım kaldırıldı — sitenin tipini seçin, alan adını girin, her şey tamam.
-Hata ayıklama: Başarısız olan yazı yüklemelerinin sonsuz döngüde tekrarlanması problemi giderildi.
