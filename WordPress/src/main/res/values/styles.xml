@@ -505,7 +505,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="QuickStartDivider">
@@ -554,7 +555,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--People Management Styles-->

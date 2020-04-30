@@ -21,7 +21,7 @@
             android:layout_width="@dimen/avatar_sz_small"
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"/>
+            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp"/>
 
         <RelativeLayout
             android:layout_width="0dp"

@@ -15,6 +15,9 @@
     <color name="status_bar">@color/primary</color>
     <color name="status_bar_action_mode">@color/neutral</color>
 
+    <!-- Switch to attribute after dropping support for api 21-23 -->
+    <color name="placeholder">#1A000000</color>
+
     <!-- Stats -->
 
     <color name="stats_activity_very_low">@color/gray_0</color>
