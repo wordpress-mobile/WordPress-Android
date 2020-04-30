@@ -415,6 +415,19 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
     android.buildTypes.release.signingConfig = android.signingConfigs.release
 }
 
+if (project.hasProperty("debugStoreFile")) {
+    def sharedDebugStore = file(project.debugStoreFile.replaceFirst("^~", System.getProperty("user.home")))
+    if (sharedDebugStore.exists()) {
+        android {
+            signingConfigs {
+                debug {
+                    storeFile sharedDebugStore
+                }
+            }
+        }
+    }
+}
+
 def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
 assert !(file(legacyGBBundleFile).exists()) : "Error: Legacy Gutenberg JS bundle file detected. Please delete it: " + file(legacyGBBundleFile).getAbsolutePath()
 
