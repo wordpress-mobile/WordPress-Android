@@ -1,7 +1,7 @@
 buildscript {
-    ext.kotlin_version = '1.3.61'
-    ext.kotlin_coroutines_version = '1.3.3'
-    ext.androidx_work_version = "2.0.1"
+    ext.kotlinVersion = '1.3.61'
+    ext.coroutinesVersion = '1.3.3'
+    ext.androidxWorkVersion = "2.0.1"
     ext.navComponenVersion = '2.2.0'
 
     repositories {
@@ -12,8 +12,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'
         classpath 'com.automattic.android:fetchstyle:1.1'
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponenVersion"
     }
 }
