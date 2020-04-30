@@ -1721,7 +1721,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
 
-        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
         ArrayList<EditImageData.InputData> inputData = new ArrayList<>(1);
         inputData.add(new EditImageData.InputData(
                 imageUrl,
@@ -2330,9 +2329,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResultAndTrackEvent(data);
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
                     for (Uri item : uris) {
-                        mEditorMedia.addNewMediaToEditorAsync(item, true);
+                        mEditorMedia.addNewMediaToEditorAsync(item, false);
                     }
                     break;
             }

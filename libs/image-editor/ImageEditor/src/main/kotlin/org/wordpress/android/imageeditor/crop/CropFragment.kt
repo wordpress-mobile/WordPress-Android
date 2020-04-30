@@ -1,7 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,10 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
@@ -27,7 +26,6 @@ import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveStat
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.ARG_EDIT_IMAGE_DATA
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 
@@ -66,7 +64,9 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         viewModel.start(
             navArgs.inputFilePath,
             navArgs.outputFileExtension,
-            requireContext().cacheDir
+            navArgs.shouldReturnToPreviewScreen,
+            requireContext().cacheDir,
+            ImageEditor.instance
         )
     }
 
@@ -87,7 +87,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
                 when (state) {
                     is ImageCropAndSaveStartState -> {
                         val thirdPartyCropFragment = childFragmentManager
-                                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
                         if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
                             thirdPartyCropFragment.cropAndSaveImage()
                         } else {
@@ -130,14 +130,14 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
         var thirdPartyCropFragment = childFragmentManager
-                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-                    .disallowAddToBackStack()
-                    .commit()
+                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                .disallowAddToBackStack()
+                .commit()
         }
     }
 
@@ -165,18 +165,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
             navController.popBackStack()
         } else {
-            val imageUri: Uri? = cropResult.data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI)
-
-            val resultData = if (imageUri != null) {
-                arrayListOf(EditImageData.OutputData(imageUri.toString()))
-            } else {
-                arrayListOf()
-            }
+            val resultData = viewModel.getOutputData(cropResult)
 
             activity?.let {
                 it.setResult(
-                        cropResult.resultCode,
-                        Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, resultData) })
+                    cropResult.resultCode,
+                    Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, resultData) })
                 it.finish()
             }
         }

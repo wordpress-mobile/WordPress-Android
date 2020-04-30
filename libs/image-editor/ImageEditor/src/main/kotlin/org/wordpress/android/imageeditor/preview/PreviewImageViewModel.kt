@@ -4,6 +4,12 @@ import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorFinishedEditing
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
+import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.InputData
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
@@ -18,6 +24,7 @@ import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiSt
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageUiState.ImageInLowResLoadSuccessUiState
 import org.wordpress.android.imageeditor.viewmodel.Event
 import java.net.URI
+import java.util.Locale
 import java.util.UUID
 
 class PreviewImageViewModel : ViewModel() {
@@ -34,16 +41,20 @@ class PreviewImageViewModel : ViewModel() {
     private val _finishAction = MutableLiveData<Event<List<OutputData>>>()
     val finishAction: LiveData<Event<List<OutputData>>> = _finishAction
 
+    private lateinit var imageEditor: ImageEditor
+
     var selectedPosition: Int = 0
         private set
 
     var numberOfImages = 0
         private set
 
-    fun onCreateView(imageDataList: List<InputData>) {
+    fun onCreateView(imageDataList: List<InputData>, imageEditor: ImageEditor) {
+        this.imageEditor = imageEditor
         this.numberOfImages = imageDataList.size
 
         if (uiState.value == null) {
+            imageEditor.onEditorAction(EditorShown(numberOfImages))
             val newImageUiStates = createViewPagerItemsInitialUiStates(
                 convertInputDataToImageData(imageDataList)
             )
@@ -130,6 +141,7 @@ class PreviewImageViewModel : ViewModel() {
     }
 
     fun onCropMenuClicked() {
+        imageEditor.onEditorAction(PreviewCropMenuClicked)
         val highResImageUrl = getHighResImageUrl(selectedPosition)
 
         if (isFileUrl(highResImageUrl)) {
@@ -149,6 +161,8 @@ class PreviewImageViewModel : ViewModel() {
 
     fun onPageSelected(selectedPosition: Int) {
         this.selectedPosition = selectedPosition
+        imageEditor.onEditorAction(PreviewImageSelected(getHighResImageUrl(selectedPosition), selectedPosition))
+
         val currentUiState = uiState.value as UiState
         val imageStateAtPosition = currentUiState.viewPagerItemsStates[selectedPosition]
 
@@ -278,24 +292,30 @@ class PreviewImageViewModel : ViewModel() {
     private fun List<ImageUiState>.hasSingleElement() = this.size == 1
 
     fun onInsertClicked() {
-        val outputData = uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
-            ?: emptyList()
-        _finishAction.value = Event(outputData)
+        with(imageEditor) {
+            onEditorAction(PreviewInsertImagesClicked(getOutputData()))
+            onEditorAction(EditorFinishedEditing(getOutputData()))
+        }
+        _finishAction.value = Event(getOutputData())
     }
 
     fun getThumbnailImageUrl(position: Int): String {
         return uiState.value?.viewPagerItemsStates?.get(position)?.data?.let { imageData ->
-            return if (TextUtils.isEmpty(imageData.lowResImageUrl))
+            return if (TextUtils.isEmpty(imageData.lowResImageUrl)) {
                 imageData.highResImageUrl
-            else
+            } else {
                 imageData.lowResImageUrl as String
+            }
         } ?: ""
     }
 
-    private fun getHighResImageUrl(position: Int): String =
+    fun getHighResImageUrl(position: Int): String =
         uiState.value?.viewPagerItemsStates?.get(position)?.data?.highResImageUrl ?: ""
 
-    private fun isFileUrl(url: String): Boolean = url.toLowerCase().startsWith(FILE_BASE)
+    private fun getOutputData() = (uiState.value?.viewPagerItemsStates?.map { OutputData(it.data.highResImageUrl) }
+        ?: emptyList())
+
+    private fun isFileUrl(url: String): Boolean = url.toLowerCase(Locale.ROOT).startsWith(FILE_BASE)
 
     data class ImageData(
         val id: Long = UUID.randomUUID().hashCode().toLong(),

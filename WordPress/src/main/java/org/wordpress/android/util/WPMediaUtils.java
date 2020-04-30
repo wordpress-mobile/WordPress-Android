@@ -24,7 +24,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
@@ -37,9 +36,7 @@ import org.wordpress.android.util.AppLog.T;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -493,11 +490,8 @@ public class WPMediaUtils {
         }
     }
 
-    public static List<Uri> retrieveImageEditorResultAndTrackEvent(Intent data) {
+    public static List<Uri> retrieveImageEditorResult(Intent data) {
         if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
-            Map<String, String> properties = new HashMap<>();
-            properties.put("actions", "crop");
-            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
             return convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
                     PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
         } else {

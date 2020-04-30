@@ -160,7 +160,7 @@ class PreviewImageFragment : Fragment() {
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
 
-        viewModel.onCreateView(inputData)
+        viewModel.onCreateView(inputData, ImageEditor.instance)
     }
 
     private fun setupObservers() {
