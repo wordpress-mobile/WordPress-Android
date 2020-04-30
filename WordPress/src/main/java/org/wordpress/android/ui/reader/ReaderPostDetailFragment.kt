@@ -886,19 +886,23 @@ class ReaderPostDetailFragment : Fragment(),
             reblogButton.setCount(0)
             reblogButton.visibility = View.VISIBLE
             reblogButton.setOnClickListener {
-                val sites = siteStore.visibleSites
-                when (sites.size) {
+                val sites = siteStore.visibleSitesAccessedViaWPCom
+                when (sites.count()) {
                     0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    1 -> ActivityLauncher.openEditorForReblog(
-                            activity,
-                            sites.first(),
-                            this.post,
-                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
-                    )
+                    1 -> {
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.openEditorForReblog(
+                                    activity,
+                                    it,
+                                    this.post,
+                                    PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                            )
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
+                    }
                     else -> {
-                        val siteLocalId = AppPrefs.getSelectedSite()
-                        val site = siteStore.getSiteByLocalId(siteLocalId)
-                        ActivityLauncher.showSitePickerForResult(this, site, REBLOG_SELECT_MODE)
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.showSitePickerForResult(this, it, REBLOG_SELECT_MODE)
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
                     }
                 }
             }

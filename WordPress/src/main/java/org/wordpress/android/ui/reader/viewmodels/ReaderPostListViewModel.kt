@@ -268,12 +268,20 @@ class ReaderPostListViewModel @Inject constructor(
      * @param post post to reblog
      */
     fun onReblogButtonClicked(post: ReaderPost) {
-        val selectedSiteId: Int = appPrefsWrapper.getSelectedSite()
-        val selectedSite: SiteModel? = siteStore.getSiteByLocalId(selectedSiteId)
-        _reblogState.value = when (siteStore.visibleSites.size) {
+        val sites = siteStore.visibleSitesAccessedViaWPCom
+
+        _reblogState.value = when (sites.count()) {
             0 -> Event(NoSite)
-            1 -> if (selectedSite != null) Event(PostEditor(selectedSite, post)) else Event(Unknown)
-            else -> if (selectedSite != null) Event(SitePicker(selectedSite, post)) else Event(Unknown)
+            1 -> {
+                sites.firstOrNull()?.let {
+                    Event(PostEditor(it, post))
+                } ?: Event(Unknown)
+            }
+            else -> {
+                sites.firstOrNull()?.let {
+                    Event(SitePicker(it, post))
+                } ?: Event(Unknown)
+            }
         }
     }
 

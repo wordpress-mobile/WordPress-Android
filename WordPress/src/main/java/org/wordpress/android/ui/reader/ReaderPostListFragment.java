@@ -2914,10 +2914,10 @@ public class ReaderPostListFragment extends Fragment
                 if (state instanceof NoSite) {
                     ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                 } else if (state instanceof SitePicker) {
-                    SitePicker spState = (SitePicker) state;
+                    SitePicker sitePickerStateData = (SitePicker) state;
                     ActivityLauncher.showSitePickerForResult(
                             this,
-                            spState.getSite(),
+                            sitePickerStateData.getSite(),
                             SitePickerMode.REBLOG_SELECT_MODE
                     );
                 } else if (state instanceof PostEditor) {
