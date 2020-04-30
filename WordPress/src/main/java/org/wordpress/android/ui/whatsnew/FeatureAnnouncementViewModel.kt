@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.whatsnew
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -14,7 +15,9 @@ import javax.inject.Named
 class FeatureAnnouncementViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiModel = MutableLiveData<FeatureAnnouncementUiModel>()
+    private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement>()
+
+    private val _uiModel = MediatorLiveData<FeatureAnnouncementUiModel>()
     val uiModel: LiveData<FeatureAnnouncementUiModel> = _uiModel
 
     private val _onDialogClosed = SingleLiveEvent<Unit>()
@@ -23,12 +26,22 @@ class FeatureAnnouncementViewModel @Inject constructor(
     private val _onAnnouncementDetailsRequested = SingleLiveEvent<String>()
     val onAnnouncementDetailsRequested: LiveData<String> = _onAnnouncementDetailsRequested
 
-    private val _features = MutableLiveData<List<FeatureAnnouncementItem>>()
-    val features: LiveData<List<FeatureAnnouncementItem>> = _features
+    private val _featureItems = MediatorLiveData<List<FeatureAnnouncementItem>>()
+    val featureItems: LiveData<List<FeatureAnnouncementItem>> = _featureItems
 
     private var isStarted = false
 
     private lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+
+    init {
+        _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
+            _uiModel.value = _uiModel.value?.copy(appVersion = featureAnnouncement.version, isProgressVisible = false)
+        }
+
+        _featureItems.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
+            _featureItems.value = featureAnnouncement.features
+        }
+    }
 
     fun start(featureAnnouncementProvider: FeatureAnnouncementProvider) {
         if (isStarted) return
@@ -44,11 +57,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
     private fun loadFeatures() {
         launch {
             delay(3000)
-            _features.value = featureAnnouncementProvider.getAnnouncementFeatures()
-            _uiModel.value = _uiModel.value?.copy(
-                    appVersion = featureAnnouncementProvider.getAnnouncementAppVersion(),
-                    isProgressVisible = false
-            )
+            _currentFeatureAnnouncement.value = featureAnnouncementProvider.getLatestFeatureAnnouncement()
         }
     }
 
@@ -57,7 +66,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
     }
 
     fun onFindMoreButtonPressedPressed() {
-        _onAnnouncementDetailsRequested.value = featureAnnouncementProvider.getAnnouncementDetailsUrl()
+        _onAnnouncementDetailsRequested.value = _currentFeatureAnnouncement.value?.detailsUrl
     }
 
     data class FeatureAnnouncementUiModel(

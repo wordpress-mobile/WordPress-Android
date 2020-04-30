@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel
@@ -42,19 +43,19 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             )
     )
 
+    private val featureAnnouncement = FeatureAnnouncement("14.7", "https://wordpress.org/", testFeatures)
+
     @Before
     fun setUp() {
         uiModelResults.clear()
 
-        whenever(featureAnnouncementProvider.getAnnouncementAppVersion()).thenReturn("14.7")
-        whenever(featureAnnouncementProvider.getAnnouncementDetailsUrl()).thenReturn("https://wordpress.org/")
-        whenever(featureAnnouncementProvider.getAnnouncementFeatures()).thenReturn(testFeatures)
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(featureAnnouncement)
 
         viewModel = FeatureAnnouncementViewModel(NoDelayCoroutineDispatcher())
         viewModel.uiModel.observeForever { if (it != null) uiModelResults.add(it) }
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
         viewModel.onAnnouncementDetailsRequested.observeForever(onAnnouncementDetailsRequestedObserver)
-        viewModel.features.observeForever(featuresObserver)
+        viewModel.featureItems.observeForever(featuresObserver)
 
         viewModel.start(featureAnnouncementProvider)
     }

@@ -83,8 +83,8 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
             WPWebViewActivity.openURL(context, detailsUrl)
         })
 
-        viewModel.features.observe(this, Observer { featureList ->
-            featureAdapter.updateList(featureList)
+        viewModel.featureItems.observe(this, Observer { featureItems ->
+            featureAdapter.updateList(featureItems)
         })
 
         viewModel.start(FeatureAnnouncementProvider())
