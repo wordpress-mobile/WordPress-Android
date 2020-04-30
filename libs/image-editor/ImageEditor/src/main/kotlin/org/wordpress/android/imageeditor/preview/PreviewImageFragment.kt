@@ -32,7 +32,6 @@ import org.wordpress.android.imageeditor.EditImageViewModel
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
-import org.wordpress.android.imageeditor.R.string
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -148,7 +147,7 @@ class PreviewImageFragment : Fragment() {
     }
 
     private fun initializeInsertButton() {
-        insertButton.text = getString(string.insert_label_with_count, viewModel.numberOfImages)
+        insertButton.text = getString(R.string.insert_label_with_count, viewModel.numberOfImages)
         insertButton.setOnClickListener {
             viewModel.onInsertClicked()
         }

@@ -1293,7 +1293,7 @@ Language: de
     <string name="media_edit_filetype_caption">Dateityp</string>
     <string name="media_edit_filename_caption">Dateiname</string>
     <string name="media_edit_alttext_text">Alternativtext</string>
-    <string name="copy">Kopieren</string>
+    <string name="copy_text">Kopieren</string>
     <string name="connect_site">Website verbinden</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinklicht</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gerät vibrieren lassen</string>

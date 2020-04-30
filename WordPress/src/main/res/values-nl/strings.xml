@@ -1191,7 +1191,7 @@ Language: nl
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt. tekst</string>
-    <string name="copy">Kopieer</string>
+    <string name="copy_text">Kopieer</string>
     <string name="connect_site">Site koppelen</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
