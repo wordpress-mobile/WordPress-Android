@@ -57,7 +57,6 @@ android {
 }
 
 ext {
-    lifecycleVersion = '2.2.0'
     viewpager2Version = '1.0.0'
 }
 
