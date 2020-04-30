@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
@@ -83,13 +81,9 @@ class FeatureAnnouncementListAdapter(
         private val subtitle: TextView = itemView.findViewById(R.id.feature_subtitle)
 
         fun bind(featureAnnouncementItem: FeatureAnnouncementItem) {
-            title.text = featureAnnouncementItem.announcementTitle
-            subtitle.text = featureAnnouncementItem.announcementSubtitle
-
-            imageManager.loadIntoCircle(
-                    featureIcon, ImageType.PLAN,
-                    StringUtils.notNullStr(featureAnnouncementItem.announcementIconUrl)
-            )
+            title.text = featureAnnouncementItem.title
+            subtitle.text = featureAnnouncementItem.subtitle
+            featureIcon.setImageResource(featureAnnouncementItem.iconResId)
         }
     }
 

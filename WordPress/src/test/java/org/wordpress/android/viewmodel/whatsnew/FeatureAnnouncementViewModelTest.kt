@@ -29,17 +29,17 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             FeatureAnnouncementItem(
                     "Test Feature 1",
                     "Test Description 1",
-                    "https://image.url"
+                    1
             ),
             FeatureAnnouncementItem(
                     "Test Feature 2",
                     "Test Description 1",
-                    "https://image2.url"
+                    2
             ),
             FeatureAnnouncementItem(
                     "Test Feature 3",
                     "Test Description 3",
-                    "https://image3.url"
+                    3
             )
     )
 

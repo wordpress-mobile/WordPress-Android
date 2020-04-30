@@ -15,7 +15,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/bg_oval_neutral_30_plans_32dp" />
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        tools:src="@drawable/ic_plans_white_24dp" />
 
     <LinearLayout
         android:id="@+id/feature_description_container"
