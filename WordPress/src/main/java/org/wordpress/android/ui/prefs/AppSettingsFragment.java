@@ -277,15 +277,7 @@ public class AppSettingsFragment extends PreferenceFragment
         } else if (preference == mPrivacySettings) {
             return handlePrivacyClick();
         } else if (preference == mWhatsNew) {
-            if (getActivity() instanceof AppCompatActivity) {
-                new FeatureAnnouncementDialogFragment()
-                        .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
-                                FeatureAnnouncementDialogFragment.TAG);
-            } else {
-                throw new IllegalArgumentException(
-                        "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
-                        + "using support fragment manager from AppCompatActivity.");
-            }
+            return handleFeatureAnnouncementClick();
         }
 
         return false;
@@ -500,5 +492,18 @@ public class AppSettingsFragment extends PreferenceFragment
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
         return true;
+    }
+
+    private boolean handleFeatureAnnouncementClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            new FeatureAnnouncementDialogFragment()
+                    .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            FeatureAnnouncementDialogFragment.TAG);
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
+                    + "using support fragment manager from AppCompatActivity.");
+        }
     }
 }
