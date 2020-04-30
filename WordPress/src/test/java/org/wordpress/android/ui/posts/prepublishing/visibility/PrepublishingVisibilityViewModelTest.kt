@@ -113,9 +113,9 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
         viewModel.showPasswordDialog.observeForever {
             event = it
         }
-        viewModel.start(editPostRepository)
 
         // act
+        viewModel.start(editPostRepository)
         invokeVisibilityOnItemTapped(PASSWORD_PROTECTED)
 
         // assert
@@ -129,9 +129,9 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
         val password = "password"
         post.setPassword(password)
         editPostRepository.set { post }
-        viewModel.start(editPostRepository)
 
         // act
+        viewModel.start(editPostRepository)
         invokeVisibilityOnItemTapped(PRIVATE)
 
         // assert
@@ -141,11 +141,12 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     @Test
     fun `If PRIVATE VISIBILITY is tapped & password is null updatePostStatusUseCase is called`() {
         // arrange
-        val post = PostModel()
+        val emptyPassword = ""
+        val post = PostModel().apply { setPassword(emptyPassword) }
         editPostRepository.set { post }
-        viewModel.start(editPostRepository)
 
         // act
+        viewModel.start(editPostRepository)
         invokeVisibilityOnItemTapped(PRIVATE)
 
         // assert
