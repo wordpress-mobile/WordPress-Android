@@ -79,6 +79,8 @@ class PrepublishingVisibilityViewModel @Inject constructor(
             visibility == PASSWORD_PROTECTED -> _showPasswordDialog.postValue(Event(Unit))
 
             editPostRepository.password.isNotEmpty() -> {
+                // clears the current password so that the PostStatus can be updated and getPostVisibilityUseCase
+                // will utilize the PostStatus to determine the visibility when the uiState is being updated.
                 val emptyPassword = ""
                 updatePostPasswordUseCase.updatePassword(emptyPassword, editPostRepository) {
                     updatePostStatus(visibility)
