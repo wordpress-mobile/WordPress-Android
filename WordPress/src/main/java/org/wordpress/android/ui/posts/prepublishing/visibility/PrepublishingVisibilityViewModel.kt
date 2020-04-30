@@ -35,8 +35,8 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
 
-    private val _updateToolbarUiState = MutableLiveData<UiString>()
-    val updateToolbarUiState: LiveData<UiString> = _updateToolbarUiState
+    private val _toolbarUiState = MutableLiveData<UiString>()
+    val toolbarUiState: LiveData<UiString> = _toolbarUiState
 
     fun start(editPostRepository: EditPostRepository) {
         if (isStarted) return
@@ -48,7 +48,7 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     }
 
     private fun setToolbarUiState() {
-        _updateToolbarUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_visibility))
+        _toolbarUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_visibility))
     }
 
     private fun updateUiState() {

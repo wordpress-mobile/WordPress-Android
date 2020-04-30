@@ -93,7 +93,7 @@ class PrepublishingVisibilityFragment : Fragment() {
             }
         })
 
-        viewModel.updateToolbarUiState.observe(this, Observer { uiString ->
+        viewModel.toolbarUiState.observe(this, Observer { uiString ->
             toolbarTitle.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     uiString
