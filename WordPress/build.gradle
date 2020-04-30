@@ -4,7 +4,7 @@ buildscript {
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.google.gms:google-services:3.2.0'
         classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.16'
@@ -159,7 +159,7 @@ androidExtensions {
 
 dependencies {
     implementation project(path:':libs:image-editor::ImageEditor')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     // Provided by maven central
     implementation 'com.google.code.gson:gson:2.6.2'
@@ -178,16 +178,16 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation "androidx.work:work-runtime:$androidx_work_version"
-    implementation "androidx.work:work-runtime-ktx:$androidx_work_version"
+    implementation "androidx.preference:preference:$materialVersion"
+    implementation "androidx.work:work-runtime:$androidxWorkVersion"
+    implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleExtensionsVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleExtensionsVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'
@@ -228,13 +228,13 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.3'
     testImplementation 'org.robolectric:shadows-multidex:4.3'
     testImplementation 'org.mockito:mockito-core:2.23.0'
-    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1'
     testImplementation 'androidx.test:core:1.2.0'
 
     androidTestImplementation 'org.mockito:mockito-android:2.27.0'
-    androidTestImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     androidTestImplementation 'com.squareup.okhttp:mockwebserver:2.7.5'
     androidTestImplementation 'com.squareup.okio:okio:1.14.0'
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion", {
@@ -263,7 +263,7 @@ dependencies {
     androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
-    androidTestImplementation "androidx.work:work-testing:$androidx_work_version"
+    androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
 
     kaptAndroidTest "com.google.dagger:dagger-compiler:$daggerVersion"
 
@@ -313,7 +313,7 @@ dependencies {
     debugImplementation 'com.facebook.stetho:stetho:1.5.1'
     debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 

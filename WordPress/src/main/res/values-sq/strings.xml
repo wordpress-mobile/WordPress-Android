@@ -1288,7 +1288,7 @@ Language: sq_AL
     <string name="media_edit_filename_caption">Emër Kartele</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Tekst alternativ</string>
-    <string name="copy">Kopjoje</string>
+    <string name="copy_text">Kopjoje</string>
     <string name="connect_site">Lidhe Sajtin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Xixëllo dritëzë njoftimesh</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Dridhe pajisjen</string>

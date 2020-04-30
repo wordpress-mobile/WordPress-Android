@@ -1275,7 +1275,7 @@ Language: zh_TW
     <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
-    <string name="copy">複製</string>
+    <string name="copy_text">複製</string>
     <string name="connect_site">連結網站</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">閃爍燈</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">震動裝置</string>
