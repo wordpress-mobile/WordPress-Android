@@ -1,6 +1,5 @@
 package org.wordpress.android.imageeditor.preview
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -29,12 +28,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.preview_image_fragment.*
+import org.wordpress.android.imageeditor.EditImageViewModel
 import org.wordpress.android.imageeditor.ImageEditor
 import org.wordpress.android.imageeditor.ImageEditor.RequestListener
 import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.R.string
-import org.wordpress.android.imageeditor.crop.CropFragment
-import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageData
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileFailedState
 import org.wordpress.android.imageeditor.preview.PreviewImageViewModel.ImageLoadToFileState.ImageLoadToFileIdleState
@@ -48,6 +46,7 @@ import java.io.File
 
 class PreviewImageFragment : Fragment() {
     private lateinit var viewModel: PreviewImageViewModel
+    private lateinit var parentViewModel: EditImageViewModel
     private lateinit var tabLayoutMediator: TabLayoutMediator
     private var pagerAdapterObserver: PagerAdapterObserver? = null
     private lateinit var pageChangeCallback: OnPageChangeCallback
@@ -157,6 +156,7 @@ class PreviewImageFragment : Fragment() {
 
     private fun initializeViewModels(nonNullIntent: Intent) {
         viewModel = ViewModelProvider(this).get(PreviewImageViewModel::class.java)
+        parentViewModel = ViewModelProvider(requireActivity()).get(EditImageViewModel::class.java)
         setupObservers()
         val inputData = nonNullIntent.getParcelableArrayListExtra<EditImageData.InputData>(ARG_EDIT_IMAGE_DATA)
 
@@ -189,19 +189,14 @@ class PreviewImageFragment : Fragment() {
             }
         })
 
-        val saveStateHandle = findNavController().currentBackStackEntry?.savedStateHandle
-        saveStateHandle?.getLiveData<CropResult>(CropFragment.CROP_RESULT)?.observe(
-            viewLifecycleOwner, Observer { result ->
-            result?.let {
-                if (it.resultCode == Activity.RESULT_OK) {
+        parentViewModel.cropResult.observe(viewLifecycleOwner, Observer { cropResult ->
+            cropResult?.getContentIfNotHandled()?.let {
+                if (it.resultCode == RESULT_OK) {
                     val data: Intent = it.data
                     if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
                         val imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI) as? Uri
                         imageUri?.let { uri ->
                             viewModel.onCropResult(uri.toString())
-                            // As the result is scoped to the NavBackStackEntry and lives as long as that destination
-                            // is on the back stack, clear the result to handle it only once
-                            saveStateHandle.remove<CropResult>(CropFragment.CROP_RESULT)
                         }
                     }
                 }
