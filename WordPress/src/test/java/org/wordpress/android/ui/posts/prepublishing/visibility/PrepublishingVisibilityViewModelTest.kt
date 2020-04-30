@@ -153,25 +153,31 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when onBackClicked is triggered navigateToHomeScreen is called`() {
+        // arrange
         var event: Event<Unit>? = null
         viewModel.navigateToHomeScreen.observeForever {
             event = it
         }
 
+        // act
         viewModel.onBackButtonClicked()
 
+        // assert
         assertThat(event).isNotNull
     }
 
     @Test
     fun `when onCloseClicked is triggered dismissBottomSheet is called`() {
+        // arrange
         var event: Event<Unit>? = null
         viewModel.dismissBottomSheet.observeForever {
             event = it
         }
 
+        // act
         viewModel.onCloseButtonClicked()
 
+        // assert
         assertThat(event).isNotNull
     }
 
