@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,9 +21,7 @@ import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
-import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
@@ -68,7 +65,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFragmentContainerHeightBasedOnDevice()
         initViewModel(savedInstanceState)
         dialog?.setOnShowListener { dialogInterface ->
             val sheetDialog = dialogInterface as? BottomSheetDialog
@@ -82,54 +78,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
-    }
-
-    private fun setupFragmentContainerHeightBasedOnDevice() {
-        val phoneLandscapeRatio = 0.90
-        val phonePortraitRatio = 0.50
-
-        val smallTabletLandScapeRatio = 0.70
-        val smallTabletPortraitRatio = 0.45
-
-        val largeTabletLandScapeRatio = 0.50
-        val largeTabletPortraitRatio = 0.35
-
-        val metrics = resources.displayMetrics
-
-        val ratio = when {
-            DisplayUtils.isLandscape(context) -> {
-                when {
-                    DisplayUtils.isXLargeTablet(context) -> {
-                        largeTabletLandScapeRatio
-                    }
-
-                    DisplayUtils.isTablet(context) -> {
-                        smallTabletLandScapeRatio
-                    }
-
-                    else -> {
-                        phoneLandscapeRatio
-                    }
-                }
-            }
-            else -> {
-                when {
-                    DisplayUtils.isXLargeTablet(context) -> {
-                        largeTabletPortraitRatio
-                    }
-
-                    DisplayUtils.isTablet(context) -> {
-                        smallTabletPortraitRatio
-                    }
-
-                    else -> {
-                        phonePortraitRatio
-                    }
-                }
-            }
-        }
-
-        prepublishing_content_fragment.layoutParams.height = (metrics.heightPixels * ratio).roundToInt()
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
