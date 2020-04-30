@@ -320,16 +320,13 @@ public class ActivityLauncher {
             return;
         }
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("source_post_id", post.postId);
-        properties.put("source_blog_id", post.blogId);
-        properties.put("target_blog_id", site.getSiteId());
-
-        AnalyticsTracker.track(
+        AnalyticsUtils.trackWithReblogDetails(
             reblogSource == PagePostCreationSourcesDetail.POST_FROM_REBLOG
                     ? READER_ARTICLE_REBLOGGED
                     : READER_ARTICLE_DETAIL_REBLOGGED,
-            properties
+            post.blogId,
+            post.postId,
+            site.getSiteId()
         );
 
         Intent editorIntent = new Intent(activity, EditPostActivity.class);
