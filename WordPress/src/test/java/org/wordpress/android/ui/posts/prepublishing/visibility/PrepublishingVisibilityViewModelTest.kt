@@ -48,7 +48,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
             title = it as UiStringRes
         }
 
-        viewModel.start(mock())
+        viewModel.start(editPostRepository)
 
         assertThat(title?.stringRes).isEqualTo(R.string.prepublishing_nudges_toolbar_title_visibility)
     }
