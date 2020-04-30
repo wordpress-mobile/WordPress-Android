@@ -87,7 +87,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
             featureAdapter.updateList(featureItems)
         })
 
-        viewModel.start(FeatureAnnouncementProvider())
+        viewModel.start()
         return view
     }
 

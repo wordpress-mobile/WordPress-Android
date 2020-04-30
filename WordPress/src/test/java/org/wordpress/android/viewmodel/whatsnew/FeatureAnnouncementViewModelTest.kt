@@ -51,13 +51,13 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(featureAnnouncement)
 
-        viewModel = FeatureAnnouncementViewModel(NoDelayCoroutineDispatcher())
+        viewModel = FeatureAnnouncementViewModel(featureAnnouncementProvider, NoDelayCoroutineDispatcher())
         viewModel.uiModel.observeForever { if (it != null) uiModelResults.add(it) }
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
         viewModel.onAnnouncementDetailsRequested.observeForever(onAnnouncementDetailsRequestedObserver)
         viewModel.featureItems.observeForever(featuresObserver)
 
-        viewModel.start(featureAnnouncementProvider)
+        viewModel.start()
     }
 
     @Test

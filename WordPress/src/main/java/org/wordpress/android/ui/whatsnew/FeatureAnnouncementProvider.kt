@@ -1,8 +1,9 @@
 package org.wordpress.android.ui.whatsnew
 
 import org.wordpress.android.R
+import javax.inject.Inject
 
-class FeatureAnnouncementProvider {
+class FeatureAnnouncementProvider @Inject constructor() {
     private val localFeatureAnnouncement = FeatureAnnouncement(
             "14.7", "https://wordpress.com/blog/2020/04/20/earth-day-live/", listOf(
             FeatureAnnouncementItem(

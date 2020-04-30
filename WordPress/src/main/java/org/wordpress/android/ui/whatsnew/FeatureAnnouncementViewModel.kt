@@ -13,6 +13,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class FeatureAnnouncementViewModel @Inject constructor(
+    private val featureAnnouncementProvider: FeatureAnnouncementProvider,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement>()
@@ -31,8 +32,6 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
-
     init {
         _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
             _uiModel.value = _uiModel.value?.copy(appVersion = featureAnnouncement.version, isProgressVisible = false)
@@ -43,11 +42,9 @@ class FeatureAnnouncementViewModel @Inject constructor(
         }
     }
 
-    fun start(featureAnnouncementProvider: FeatureAnnouncementProvider) {
+    fun start() {
         if (isStarted) return
         isStarted = true
-
-        this.featureAnnouncementProvider = featureAnnouncementProvider
 
         _uiModel.value = FeatureAnnouncementUiModel(isProgressVisible = true)
 
