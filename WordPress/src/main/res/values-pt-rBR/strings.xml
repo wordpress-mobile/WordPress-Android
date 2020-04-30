@@ -1197,7 +1197,7 @@ Language: pt_BR
     <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy_text">Copiar</string>
+    <string name="copy">Copiar</string>
     <string name="connect_site">Conectar site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Sinal luminoso</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>

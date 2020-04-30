@@ -141,7 +141,7 @@ public class AppLogViewerActivity extends LocaleAwareActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         // Copy to clipboard button
-        MenuItem item = menu.add(Menu.NONE, ID_COPY_TO_CLIPBOARD, Menu.NONE, R.string.copy_text);
+        MenuItem item = menu.add(Menu.NONE, ID_COPY_TO_CLIPBOARD, Menu.NONE, android.R.string.copy);
         item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         item.setIcon(R.drawable.ic_copy_white_24dp);
         // Share button

@@ -1288,7 +1288,7 @@ Language: ar
     <string name="media_edit_filename_caption">اسم الملف</string>
     <string name="media_edit_url_caption">عنوان URL</string>
     <string name="media_edit_alttext_text">النص البديل</string>
-    <string name="copy_text">نسخ</string>
+    <string name="copy">نسخ</string>
     <string name="connect_site">الاتصال بالموقع</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">ضوء وميض</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">جهاز الاهتزاز</string>

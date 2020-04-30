@@ -1286,7 +1286,7 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="copy_text">העתק</string>
+    <string name="copy">העתק</string>
     <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>

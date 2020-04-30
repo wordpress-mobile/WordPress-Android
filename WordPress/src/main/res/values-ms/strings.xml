@@ -80,7 +80,7 @@ Language: ms
     <string name="media_edit_filetype_caption">Jenis Fail</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="copy_text">Salin</string>
+    <string name="copy">Salin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lampu kelip</string>
     <string name="connect_site">Sambung Laman</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gegarkan peranti</string>

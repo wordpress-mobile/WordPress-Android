@@ -97,7 +97,7 @@
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
-    <string name="copy_text">Copy</string>
+    <string name="copy">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>

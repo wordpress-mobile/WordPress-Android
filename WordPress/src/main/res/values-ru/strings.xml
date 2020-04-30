@@ -1290,7 +1290,7 @@ Language: ru
     <string name="media_edit_filename_caption">Имя файла</string>
     <string name="media_edit_url_caption">URL-адрес</string>
     <string name="media_edit_alttext_text">Атрибут Alt</string>
-    <string name="copy_text">Копировать</string>
+    <string name="copy">Копировать</string>
     <string name="connect_site">Подключить сайт</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Мигание светом</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Вибрация устройства</string>

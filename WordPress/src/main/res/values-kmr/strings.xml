@@ -944,7 +944,7 @@ Language: ku_TR
     <string name="media_edit_filename_caption">Navê Pelgeyê</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
-    <string name="copy_text">Kopî bike</string>
+    <string name="copy">Kopî bike</string>
     <string name="connect_site">Malper Girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Şewqê veke - bigire</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Amûrê biricifîne</string>

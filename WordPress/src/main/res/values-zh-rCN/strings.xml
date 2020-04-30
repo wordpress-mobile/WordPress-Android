@@ -1216,7 +1216,7 @@ Language: zh_CN
     <string name="media_edit_filename_caption">文件名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文本</string>
-    <string name="copy_text">复制</string>
+    <string name="copy">复制</string>
     <string name="connect_site">连接站点</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">让指示灯闪烁</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">让设备振动</string>
