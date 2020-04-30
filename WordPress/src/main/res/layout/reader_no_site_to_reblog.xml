@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include layout="@layout/toolbar_main" />
+
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/noSiteToReblogView"
         android:layout_width="match_parent"

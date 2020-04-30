@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.reader_no_site_to_reblog.noSiteToReblogView
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 
@@ -15,6 +16,8 @@ class NoSiteToReblogActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.reader_no_site_to_reblog)
+
+        setSupportActionBar(toolbar_main)
 
         supportActionBar?.apply {
             setDisplayShowTitleEnabled(false)
