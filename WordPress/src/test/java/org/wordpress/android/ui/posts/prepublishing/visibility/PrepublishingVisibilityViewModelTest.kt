@@ -43,10 +43,15 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when viewModel is started toolbarUiState is called with the visibility title`() {
+        // arrange
+        val expectedStringResource = R.string.prepublishing_nudges_toolbar_title_visibility
+
+        // act
         viewModel.start(editPostRepository)
 
+        // assert
         assertThat((viewModel.toolbarUiState.value as UiStringRes).stringRes)
-                .isEqualTo(R.string.prepublishing_nudges_toolbar_title_visibility)
+                .isEqualTo(expectedStringResource)
     }
 
     @Test
