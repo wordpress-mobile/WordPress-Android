@@ -489,5 +489,6 @@
     <!-- feature announcement-->
     <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
+    <dimen name="feature_announcement_top_margin">64dp</dimen>
 
 </resources>

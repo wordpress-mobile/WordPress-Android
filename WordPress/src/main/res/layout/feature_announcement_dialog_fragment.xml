@@ -3,69 +3,79 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/margin_extra_extra_medium_large">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/feature_announcement_dialog_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-        android:fontFamily="serif"
-        android:paddingStart="@dimen/feature_announcement_content_margin"
-        android:paddingEnd="@dimen/feature_announcement_content_margin"
-        android:text="@string/feature_announcement_dialog_label"
-        android:textAppearance="?attr/textAppearanceHeadline4"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:fillViewport="true"
         android:paddingStart="@dimen/feature_announcement_content_margin"
         android:paddingEnd="@dimen/feature_announcement_content_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@+id/close_feature_announcement_button_container"
-        app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/feature_announcement_version_label"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:text="@string/version_with_name_param"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/wpColorOnSurfaceMedium" />
+            android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/feature_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"
-            tools:listitem="@layout/feature_announcement_list_item" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/feature_announcement_dialog_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/feature_announcement_top_margin"
+                android:fontFamily="serif"
+                android:text="@string/feature_announcement_dialog_label"
+                android:textAppearance="?attr/textAppearanceHeadline4"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label">
 
-    <FrameLayout
-        android:id="@+id/feature_list_progress_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="?android:colorBackground"
-        app:layout_constraintBottom_toTopOf="@+id/close_feature_announcement_button_container"
-        app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label"
-        tools:visibility="gone">
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/feature_announcement_version_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_large"
+                    android:text="@string/version_with_name_param"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textColor="?attr/wpColorOnSurfaceMedium" />
 
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/feature_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_medium_large"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/feature_announcement_list_item" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/feature_list_progress_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="?android:colorBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/feature_announcement_dialog_label"
+                tools:visibility="invisible">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/close_feature_announcement_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         app:cardCornerRadius="0dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -81,5 +91,4 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/continue_label" />
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
