@@ -123,7 +123,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `If PRIVATE VISIBILITY is tapped & password is not null updatePasswordUseCase clears it`() {
+    fun `If PRIVATE VISIBILITY is tapped & password is not empty updatePasswordUseCase clears it`() {
         // arrange
         val post = PostModel()
         val password = "password"
@@ -139,7 +139,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `If PRIVATE VISIBILITY is tapped & password is null updatePostStatusUseCase is called`() {
+    fun `If PRIVATE VISIBILITY is tapped & password is empty updatePostStatusUseCase is called`() {
         // arrange
         val emptyPassword = ""
         val post = PostModel().apply { setPassword(emptyPassword) }
