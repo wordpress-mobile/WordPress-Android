@@ -66,6 +66,7 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.RequestCodes
@@ -183,7 +184,6 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
-    @Inject internal lateinit var mSiteStore: SiteStore
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -886,13 +886,18 @@ class ReaderPostDetailFragment : Fragment(),
             reblogButton.setCount(0)
             reblogButton.visibility = View.VISIBLE
             reblogButton.setOnClickListener {
-                val sites = mSiteStore.visibleSites
+                val sites = siteStore.visibleSites
                 when (sites.size) {
                     0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    1 -> ActivityLauncher.openEditorForReblog(activity, sites.first(), this.post)
+                    1 -> ActivityLauncher.openEditorForReblog(
+                            activity,
+                            sites.first(),
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
                     else -> {
                         val siteLocalId = AppPrefs.getSelectedSite()
-                        val site = mSiteStore.getSiteByLocalId(siteLocalId)
+                        val site = siteStore.getSiteByLocalId(siteLocalId)
                         ActivityLauncher.showSitePickerForResult(this, site, REBLOG_SELECT_MODE)
                     }
                 }
@@ -971,8 +976,13 @@ class ReaderPostDetailFragment : Fragment(),
             RequestCodes.SITE_PICKER -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
-                    val site = mSiteStore.getSiteByLocalId(siteLocalId)
-                    ActivityLauncher.openEditorForReblog(activity, site, this.post)
+                    val site = siteStore.getSiteByLocalId(siteLocalId)
+                    ActivityLauncher.openEditorForReblog(
+                            activity,
+                            site,
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
                 }
             }
         }

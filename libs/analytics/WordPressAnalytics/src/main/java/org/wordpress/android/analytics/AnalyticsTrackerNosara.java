@@ -633,6 +633,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_detail_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
+            case READER_ARTICLE_REBLOGGED:
+                return "reader_article_reblogged";
+            case READER_ARTICLE_DETAIL_REBLOGGED:
+                return "reader_article_detail_reblogged";
             case READER_ARTICLE_OPENED:
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:

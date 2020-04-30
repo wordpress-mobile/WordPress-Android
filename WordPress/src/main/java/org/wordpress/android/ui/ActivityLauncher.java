@@ -95,6 +95,8 @@ import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
@@ -302,11 +304,31 @@ public class ActivityLauncher {
      * @param site     the site on which the post should be reblogged
      * @param post     the post to be reblogged
      */
-    public static void openEditorForReblog(Activity activity, @NonNull SiteModel site, @Nullable ReaderPost post) {
+    public static void openEditorForReblog(
+            Activity activity,
+            @Nullable SiteModel site,
+            @Nullable ReaderPost post,
+            PagePostCreationSourcesDetail reblogSource
+    ) {
         if (post == null) {
             ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        AnalyticsUtils.trackWithReblogDetails(
+            reblogSource == PagePostCreationSourcesDetail.POST_FROM_REBLOG
+                    ? READER_ARTICLE_REBLOGGED
+                    : READER_ARTICLE_DETAIL_REBLOGGED,
+            post.blogId,
+            post.postId,
+            site.getSiteId()
+        );
+
         Intent editorIntent = new Intent(activity, EditPostActivity.class);
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
@@ -314,7 +336,7 @@ public class ActivityLauncher {
         editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
         editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
 
-        addNewPostForResult(editorIntent, activity, site, false, PagePostCreationSourcesDetail.POST_FROM_REBLOG);
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
     }
 
     public static void viewStatsInNewStack(Context context, SiteModel site) {

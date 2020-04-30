@@ -19,6 +19,8 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_NOTIFS_EMPTY_VIEW("post-from-notif-empty-view"),
     // post created from reader reblog action
     POST_FROM_REBLOG("post-from-reader-reblog"),
+    // post created from reader reblog action
+    POST_FROM_DETAIL_REBLOG("post-from-reader-detail-reblog"),
     // all other cases container
     NO_DETAIL("no-detail");
 
