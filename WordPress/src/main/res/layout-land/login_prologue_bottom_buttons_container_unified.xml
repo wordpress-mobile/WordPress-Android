@@ -7,7 +7,7 @@
     android:padding="@dimen/margin_large">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_button"
+        android:id="@+id/first_button"
         style="@style/LoginTheme.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:text="@string/continue_with_wpcom" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_site_button"
+        android:id="@+id/second_button"
         style="@style/LoginTheme.Button.SignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

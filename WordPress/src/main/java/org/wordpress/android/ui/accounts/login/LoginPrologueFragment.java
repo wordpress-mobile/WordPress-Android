@@ -35,21 +35,21 @@ public class LoginPrologueFragment extends Fragment {
             inflater.inflate(R.layout.login_prologue_bottom_buttons_container_unified, bottomButtonsCard);
         }
 
-        MaterialButton primaryButton = view.findViewById(R.id.login_button);
-        MaterialButton secondaryButton = view.findViewById(R.id.create_site_button);
+        MaterialButton firstButton = view.findViewById(R.id.first_button);
+        MaterialButton secondButton = view.findViewById(R.id.second_button);
 
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            primaryButton.setText(R.string.continue_with_wpcom);
-            secondaryButton.setText(R.string.enter_your_site_address);
+            firstButton.setText(R.string.continue_with_wpcom);
+            secondButton.setText(R.string.enter_your_site_address);
         }
 
-        primaryButton.setOnClickListener(v -> {
+        firstButton.setOnClickListener(v -> {
             if (mLoginPrologueListener != null) {
                 mLoginPrologueListener.showEmailLoginScreen();
             }
         });
 
-        secondaryButton.setOnClickListener(v -> {
+        secondButton.setOnClickListener(v -> {
             if (mLoginPrologueListener != null) {
                 if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                     mLoginPrologueListener.loginViaSiteAddress();
