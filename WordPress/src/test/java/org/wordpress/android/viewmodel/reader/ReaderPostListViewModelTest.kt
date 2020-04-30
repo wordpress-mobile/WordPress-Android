@@ -363,15 +363,11 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has no site the no site flow is triggered`() {
-        val siteId = 1
-        val site = SiteModel()
+    fun `when user has no visible WPCOM site the no site flow is triggered`() {
         val post = ReaderPost()
-        val visibleSites = listOf<SiteModel>() // No sites
+        val visibleWPComSites = listOf<SiteModel>() // No sites
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
 
@@ -380,15 +376,12 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has only one site the post editor is triggered`() {
-        val siteId = 1
+    fun `when user has only one visible WPCOM site the post editor is triggered`() {
         val site = SiteModel()
         val post = ReaderPost()
-        val visibleSites = listOf(site) // One site
+        val visibleWPComSites = listOf(site) // One site
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
 
@@ -401,15 +394,12 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has more than one sites the site picker is triggered`() {
-        val siteId = 1
+    fun `when user has more than one visible WPCOM sites the site picker is triggered`() {
         val site = SiteModel()
         val post = ReaderPost()
-        val visibleSites = listOf(site, site) // More sites
+        val visibleWPComSites = listOf(site, site) // More sites
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
 
@@ -422,15 +412,14 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has more than one sites and selects the site to reblog the post editor is triggered`() {
+    fun `when user has more than one visible WPCOM sites and selects the site to reblog the post editor is triggered`() {
         val siteId = 1
         val site = SiteModel()
         val post = ReaderPost()
-        val visibleSites = listOf(site, site) // More sites
+        val visibleWPComSites = listOf(site, site) // More sites
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
         viewModel.onReblogSiteSelected(siteId)
@@ -444,15 +433,11 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has only one site but the selected site is not retrieved an error occurs`() {
-        val siteId = -1
-        val site = SiteModel()
+    fun `when user has only one visible WPCOM site but the selected site is not retrieved an error occurs`() {
         val post = ReaderPost()
-        val visibleSites = listOf(site) // One site
+        val visibleWPComSites = listOf(null) // One site
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null) // failure
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
 
@@ -461,15 +446,11 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has more than one sites but the selected site is not retrieved an error occurs`() {
-        val siteId = -1
-        val site = SiteModel()
+    fun `when user has more than one visible WPCOM sites but the selected site is not retrieved an error occurs`() {
         val post = ReaderPost()
-        val visibleSites = listOf(site, site) // More sites
+        val visibleWPComSites = listOf(null, null) // More sites
 
-        whenever(appPrefsWrapper.getSelectedSite()).thenReturn(siteId)
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(null) // failure
-        whenever(siteStore.visibleSites).thenReturn(visibleSites)
+        whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
         viewModel.onReblogButtonClicked(post)
 
@@ -478,7 +459,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user selects a site and the state is unexpected an error is thrown`() {
+    fun `when user selects a visible WPCOM site and the state is unexpected an error is thrown`() {
         val reblog = { viewModel.onReblogSiteSelected(1) }
         if (BuildConfig.DEBUG) {
             assertThatIllegalStateException().isThrownBy(reblog)
