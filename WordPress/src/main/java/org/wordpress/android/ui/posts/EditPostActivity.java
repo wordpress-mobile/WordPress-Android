@@ -120,6 +120,7 @@ import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.EditorTracker;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -331,6 +332,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject ImageEditorTracker mImageEditorTracker;
 
     private StorePostViewModel mViewModel;
 
@@ -2292,6 +2294,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
                     List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
+                    mImageEditorTracker.trackAddPhoto(uris);
                     for (Uri item : uris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, false);
                     }

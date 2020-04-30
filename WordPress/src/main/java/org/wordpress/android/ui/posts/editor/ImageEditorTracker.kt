@@ -14,7 +14,6 @@ import org.wordpress.android.imageeditor.ImageEditor.EditorAction.EditorShown
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewCropMenuClicked
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewImageSelected
 import org.wordpress.android.imageeditor.ImageEditor.EditorAction.PreviewInsertImagesClicked
-import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData.OutputData
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
@@ -56,11 +55,6 @@ class ImageEditorTracker @Inject constructor(
             is CropSuccessful -> null
         }
 
-        // Track "media_editor" source with media properties
-        if (action is EditorFinishedEditing) {
-            trackAddMediaFromMediaEditor(action.outputDataList)
-        }
-
         val noEditActionPerformed = stat == Stat.MEDIA_EDITOR_USED && properties == null
         if (stat == null || noEditActionPerformed) {
             return
@@ -73,12 +67,12 @@ class ImageEditorTracker @Inject constructor(
         }
     }
 
-    private fun trackAddMediaFromMediaEditor(outputDataList: List<OutputData>) {
-        for (outputData in outputDataList) {
+    fun trackAddPhoto(uris: List<Uri>) {
+        for (uri in uris) {
             val properties = AnalyticsUtils.getMediaProperties(
                 context,
                 false,
-                Uri.parse(outputData.outputFilePath),
+                uri,
                 null
             )
             analyticsTrackerWrapper.track(Stat.EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR, properties)
