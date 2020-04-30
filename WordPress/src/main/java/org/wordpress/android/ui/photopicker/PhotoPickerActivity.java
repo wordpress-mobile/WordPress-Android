@@ -29,6 +29,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -71,6 +72,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ImageEditorTracker mImageEditorTracker;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -227,8 +229,9 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
                 if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
-                    doMediaUrisSelected(WPMediaUtils.retrieveImageEditorResult(data),
-                            PhotoPickerMediaSource.APP_PICKER);
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
+                    mImageEditorTracker.trackAddPhoto(uris);
+                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
                 }
                 break;
         }
