@@ -412,7 +412,7 @@ class ReaderPostListViewModelTest {
     }
 
     @Test
-    fun `when user has more than one visible WPCOM sites and selects the site to reblog the post editor is triggered`() {
+    fun `when having more than one visible WPCOM sites and selecting site to reblog the post editor is triggered`() {
         val siteId = 1
         val site = SiteModel()
         val post = ReaderPost()
