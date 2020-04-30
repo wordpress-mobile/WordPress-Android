@@ -693,7 +693,7 @@ Language: cs_CZ
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="copy">Kopírovat</string>
+    <string name="copy_text">Kopírovat</string>
     <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>

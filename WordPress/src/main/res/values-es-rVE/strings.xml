@@ -1293,7 +1293,7 @@ Language: es_VE
     <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy">Copiar</string>
+    <string name="copy_text">Copiar</string>
     <string name="connect_site">Conectar el sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración del dispositivo</string>
