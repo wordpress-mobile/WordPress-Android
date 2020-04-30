@@ -128,6 +128,11 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         }
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.do_nothing, R.anim.fade_out)
+    }
+
     private fun finishWithId(userId: String?) {
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(SELECTED_USER_ID, userId)
