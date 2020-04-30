@@ -112,7 +112,7 @@ ext {
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.1.0'
     uCropVersion = '2.2.4'
-    lifecycleExtensionsVersion = '2.0.0'
+    lifecycleExtensionsVersion = '2.2.0'
 
     // testing
     jUnitVersion = '4.12'
