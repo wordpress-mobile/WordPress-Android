@@ -117,4 +117,3 @@ sealed class PrepublishingVisibilityItemUiState {
         PRIVATE(UiStringRes(R.string.prepublishing_nudges_visibility_private))
     }
 }
-
