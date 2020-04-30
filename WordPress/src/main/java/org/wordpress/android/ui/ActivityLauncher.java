@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
@@ -94,9 +95,7 @@ import java.util.Map;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_OUTPUT_FILE_EXTENSION;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -944,14 +943,10 @@ public class ActivityLauncher {
 
     public static void openImageEditor(
         Activity activity,
-        String loResImageUrl,
-        String hiResImageUrl,
-        String outputFileExtension
+        ArrayList<EditImageData.InputData> input
     ) {
         Intent intent = new Intent(activity, EditImageActivity.class);
-        intent.putExtra(ARG_LOW_RES_IMAGE_URL, loResImageUrl);
-        intent.putExtra(ARG_HIGH_RES_IMAGE_URL, hiResImageUrl);
-        intent.putExtra(ARG_OUTPUT_FILE_EXTENSION, outputFileExtension);
+        intent.putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, input);
         activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
     }
 }

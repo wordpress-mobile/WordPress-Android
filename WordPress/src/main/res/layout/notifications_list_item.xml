@@ -58,7 +58,7 @@
                 app:badgeIconSize="@dimen/notifications_note_icon_size"
                 app:badgeVerticalOffset="@dimen/notifications_note_icon_vertical_offset"
                 tools:badgeIcon="@drawable/ic_star_white_24dp"
-                tools:src="@drawable/bg_oval_neutral_30_user_32dp" />
+                tools:src="@drawable/bg_oval_placeholder_user_32dp" />
 
             <FrameLayout
                 android:id="@+id/note_subject_container"
