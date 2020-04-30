@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -28,28 +27,19 @@ public class LoginPrologueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_signup_screen, container, false);
 
-        MaterialCardView bottomButtonsCard = view.findViewById(R.id.bottom_buttons);
-
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            MaterialCardView bottomButtonsCard = view.findViewById(R.id.bottom_buttons);
             bottomButtonsCard.removeAllViews();
             inflater.inflate(R.layout.login_prologue_bottom_buttons_container_unified, bottomButtonsCard);
         }
 
-        MaterialButton firstButton = view.findViewById(R.id.first_button);
-        MaterialButton secondButton = view.findViewById(R.id.second_button);
-
-        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            firstButton.setText(R.string.continue_with_wpcom);
-            secondButton.setText(R.string.enter_your_site_address);
-        }
-
-        firstButton.setOnClickListener(v -> {
+        view.findViewById(R.id.first_button).setOnClickListener(v -> {
             if (mLoginPrologueListener != null) {
                 mLoginPrologueListener.showEmailLoginScreen();
             }
         });
 
-        secondButton.setOnClickListener(v -> {
+        view.findViewById(R.id.second_button).setOnClickListener(v -> {
             if (mLoginPrologueListener != null) {
                 if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                     mLoginPrologueListener.loginViaSiteAddress();
