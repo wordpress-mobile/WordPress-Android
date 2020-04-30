@@ -2921,11 +2921,11 @@ public class ReaderPostListFragment extends Fragment
                             SitePickerMode.REBLOG_SELECT_MODE
                     );
                 } else if (state instanceof PostEditor) {
-                    PostEditor peState = (PostEditor) state;
+                    PostEditor postEditorStateData = (PostEditor) state;
                     ActivityLauncher.openEditorForReblog(
                             getActivity(),
-                            peState.getSite(),
-                            peState.getPost(),
+                            postEditorStateData.getSite(),
+                            postEditorStateData.getPost(),
                             PagePostCreationSourcesDetail.POST_FROM_REBLOG
                     );
                 } else { // Error
