@@ -46,9 +46,6 @@
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
 
-    <!-- default strings -->
-    <string name="wordpress" translatable="false">WordPress</string>
-
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
@@ -409,6 +406,8 @@
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
     <string name="comment_title">%s on %s</string>
     <string name="comment_read_source_post">Read the source post</string>
+    <string name="comment_toast_err_share_intent">Unable to share</string>
+    <string name="comment_share_link_via">Share via</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -435,6 +434,7 @@
     <string name="trash">Trash</string>
     <string name="like">Like</string>
     <string name="approve">Approve</string>
+    <string name="copy_link_address">Copy link address</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="comment_liked">Comment liked</string>
     <string name="comment_q_action_done_generic">Action done!</string>
@@ -442,6 +442,7 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+    <string name="comment_q_action_copied_url">Link address copied</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
@@ -816,6 +817,8 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
+    <string name="whats_new_in_version_summary">Version %s</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="preference_crash_reports">Crash reports</string>
@@ -2254,6 +2257,8 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
+    <string name="photo_picker_video_title">Choose video</string>
+    <string name="photo_picker_photo_or_video_title">Choose media</string>
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
@@ -2264,6 +2269,8 @@
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
+    <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_selected">,Selected</string>

@@ -1,126 +1,54 @@
-<ar>
-14.5:
-محرِّر المكوِّنات: تمت إضافة مكوِّن أحدث المقالات، وتم إصلاح العطل الناتج عن لصق محتوى HTML مع الصور المضمَّنة
-قوالب الصفحة: تمت إضافة قوالب مستندة إلى المكوِّنات لإنشاء الصفحات بشكل أسرع.
-إنشاء موقع: تمت إزالة بعض الخطوات للإعداد بشكل أسرع — حدِّد نوع الموقع، وأدخل اسم النطاق، وهذا كل شيء.
-إصلاح الأخطاء: تم إصلاح المشكلة التي تتسبَّب في إعادة محاولة عمليات رفع المقالات الفاشلة إلى أجل غير مسمى.
-</ar>
-<de-DE>
-14.5:
-Block-Editor: „Neueste Beiträge“-Block hinzugefügt
-Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
-Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
-Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
-</de-DE>
 <en-US>
-14.5:
-Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
-Page Templates: Added a block-based templates for quicker page creation.
-Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
-Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
+14.6:
+Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Paragraph, Image, and MediaText blocks.
+
+Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
+
+General improvements: Dark Theme support.
 </en-US>
 <es-ES>
-14.5:
-Editor de bloques: Añadido el bloque «Últimas entradas»
-Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
-Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
-Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.
+14.6:
+Mejoras en el editor de bloques: Añadido el bloque de portada. Activado el recorte, zoom y rotación de imágenes en las entradas. Retocado el icono «Hacer un vídeo» para diferenciarlo de «Hacer una foto». Eliminado el efecto de oscurecimiento en los bloques no seleccionados. Añadida una barra de herramientas para las opciones de alineación en los bloques de párrafo, imagen y medios y texto.
+
+Correcciones: Problema por el que los enlaces «wordpress://» en un navegador no abrían la aplicación, problema por el que al abrir una página se abría un editor vacío.
+
+Mejoras generales: Compatibilidad para el tema oscuro.
 </es-ES>
 <fr-CA>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.6 :
+Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+
+Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
+
+Améliorations générales : Prise en charge du thème sombre.
 </fr-CA>
 <fr-FR>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.6 :
+Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+
+Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
+
+Améliorations générales : Prise en charge du thème sombre.
 </fr-FR>
-<iw-IL>
-14.5:
-עורך הבלוקים: הוספנו בלוק פוסטים אחרונים, תיקנו קריסה שהתרחשה בהדבקה של תוכן HTML בתמונות מוטבעות
-תבניות עמודים: הוספנו תבניות מבוססות-בלוק ליצירת עמודים מהירה יותר.
-יצירת אתר: הסרנו מספר שלבים להגדרה מהירה יותר – ניתן לבחור אתר מכל סוג, להזין את הדומיין וסיימת.
-תיקון באג: תיקנו בעיה שגרמה לניסיונות בלתי פוסקים בהעלאה חוזרת של פוסטים שנכשלו.
-</iw-IL>
-<id>
-14.5:
-Penyunting blok: Menambahkan blok Pos Terbaru, memperbaiki crash yang disebabkan karena konten HTML yang ditempel dengan gambar tersemat
-Template Halaman: Menambahkan template berbasis blok agar proses pembuatan halaman lebih cepat.
-Pembuatan Situs: menghapus beberapa langkah agar proses penyiapan lebih cepat — pilih jenis situs, masukkan nama domain, selesai.
-Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang tanpa batas.
-</id>
-<it-IT>
-14.5:
-Editor a blocchi: aggiunto il blocco Ultimi articoli
-Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
-Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
-Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.
-</it-IT>
-<ja-JP>
-14.5:
-ブロックエディター :最新の投稿ブロックを追加し、画像が埋め込まれた HTML コンテンツを貼り付けることで発生するクラッシュを修正しました。
-ページテンプレート :ブロックベースのテンプレートを追加し、ページをすばやく作成できるようにしました。
-サイト作成 :いくつかの手順を削除し、すばやく設定できるようにしました。サイトの種類を選択し、ドメイン名を入力すると完了します。
-バグ修正 :失敗した投稿のアップロードが繰り返し再試行される問題を修正しました。
-</ja-JP>
-<ko-KR>
-14.5:
-블록 편집기: 최신 글 블록이 추가되었습니다. 이미지가 포함된 HTML 콘텐츠를 붙여넣을 때 발생하는 충돌이 수정되었습니다.
-페이지 템플릿: 보다 빠른 페이지 생성을 위해 블록 기반 템플릿을 추가했습니다.
-사이트 생성: 빠른 설치를 위해 몇 단계를 없앴습니다. 사이트 종류를 선택하고 도메인 네임을 입력하기만 하면 됩니다.
-- 버그 수정: 글 업로드가 실패하여 무한대로 재시도해야 하는 문제를 수정했습니다.
-</ko-KR>
-<nl-NL>
-14.5:
-Blokeditor: Blok Nieuwste berichten toegevoegd, crash veroorzaakt door het plakken van HTML-content met ingesloten afbeeldingen opgelost
-Paginasjablonen: Op blokken gebaseerde sjablonen toegevoegd om pagina's sneller te kunnen aanmaken.
-Site-ontwerp: een aantal stappen verwijderd voor een snellere configuratie: selecteer het soort site, voer de domeinnaam in en klaar is Kees.
-Bugfix: een probleem verholpen dat zorgde dat de mislukte upload van berichten oneindig werd herhaald.
-</nl-NL>
-<pt-BR>
-14.5:
-Editor de blocos: Adição do bloco "Posts recentes" e correção de travamentos ao colar conteúdo HTML com imagens.
-Modelos de página: Adição de modelos baseados em blocos para agilizar a criação de páginas.
-Criação de site: Remoção de alguns passos para tornar o processo mais rápido. Selecione o tipo de site, adicione um nome de domínio e pronto.
-Correção de erros: Correção de um erro que tentava reenviar posts diversas vezes.
-</pt-BR>
 <ru-RU>
-14.5:
-Редактор блоков: добавлен блок последних записей, исправлено падение в обработке HTML с встроенными изображениями.
-Шаблоны страниц: добавлены шаблоны с блоками для быстрого создания.
-Создание сайта: убраны пара шагов, теперь надо просто выбрать тип сайта и ввести домен.
-Исправлена ошибка с загрузкой неудачных записей, больше не откладывается на неопределенное время.
+14.6:
+Улучшения блоков: Добавлен блок обложки, включены инструменты обрезки, увеличения и поворота изображений. Изменен значок для захвата видео, убраны эффекты затемнения на невыбранных блоках. Добавлена панель инструментов для выравнивания блоков заголовка, параграфа, изображения и медиа+текст.
+Исправление:  ссылки “wordpress://”  не открывались в приложении из браузера, открытие пустой страницы в редакторе.
+Добавлена поддержка тёмной темы.
 </ru-RU>
 <sv-SE>
-14.5:
-Blockredigeraren: Nytt block för senaste inläggen, rättat krasch vid inklistring av HTML-innehåll med inbäddade bilder
-Sidmallar: Nya blockbaserade mallar för att kunna skapa sidor snabbare.
-Skapa webbplats: Tagit bort några steg för att snabbare process – Välj typ av webbplats, ange domännamnet, klart!.
-Felrättelse: Löst ett problem som kunde försöka göra om misslyckade uppladdningar av inlägg i evighet.
+14.6:
+Förbättringar i blockredigeraren: Nytt omslagsblock. Bilder i inlägg kan beskäras, zoomas och roteras. Ikonen ”spela in video” har gjorts tydligare för att inte likna ”ta en bild”. Ej valda block tonas inte längre ned. Ny verktygslist för justering i sidled i rubrik-, text- bild- och mediatextblock.
+
+Rättat: Länkar till ”wordpress://” i webbläsaren öppnade inte appen och ett problem där en sida man öppnade ledde till ett tomt redigeringsfönster.
+
+Allmänn förbättring: stöd för mörkt tema.
 </sv-SE>
 <tr-TR>
-14.5:
-Blok düzenleyici: Güncel yazılar bloğu eklendi, gömülü görsel içerek HTML içeriğin yapıştırılması sırasındaki çökme düzeltildi
-Sayfa şablonları: Hızlı sayfa oluşturma için blok-tabanlı şablonlar eklendi.
-Site oluşturma: Hızlı kurulum için bir kaç adım kaldırıldı — sitenin tipini seçin, alan adını girin, her şey tamam.
-Hata ayıklama: Başarısız olan yazı yüklemelerinin sonsuz döngüde tekrarlanması problemi giderildi.
+14.6:
+Blok düzenleyici geliştirmeleri: Kapak bloğu eklendi. Yazılardaki görseller için kırpma, yakınlaştırma ve döndürme etkinleştirildi. "Fotoğraf Çek" den ayırt etmek için "Video Çek" simgesinde düzeltme yapıldı. Seçili olmayan bloklar üzerindeki karartma efekti kaldırıldı. Başlık, Paragraf, Resim ve MediaText bloklarındaki hizalama seçenekleri için araç çubuğu eklendi.
+
+Düzeltmeler: Bir tarayıcıdaki “wordpress://” bağlantılarının uygulamayı açmadığı, sayfa açmanın boş bir düzenleyici açtığı sorun.
+
+Genel geliştirmeler: Koyu tema desteği.
 </tr-TR>
-<zh-CN>
-14.5：
-区块编辑器：添加了“最新文章”区块，修正了粘贴包含嵌入图片的 HTML 内容时所导致的崩溃
-页面模板：添加了基于区块的模板，以提高页面创建速度。
-站点创建：删除了几个步骤，以提高创建速度。您只需选择站点类型，输入域名即可。
-错误修复：修正了导致上传失败，需要多次重试的问题。
-</zh-CN>
-<zh-TW>
-14.5：
-區塊編輯器：新增「最新文章」區塊，修復複製包含內嵌圖片的 HTML 內容會導致當機的問題
-頁面範本︰新增區塊式範本，讓你更快建立頁面。
-網站建立︰移除幾個步驟以加快設定速度︰選取網站類型，輸入網域名稱，即可完成設定。
-錯誤修正：修正導致文章上傳失敗時無限重複的問題。
-</zh-TW>

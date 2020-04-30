@@ -90,7 +90,6 @@ import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
-import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -163,7 +162,6 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
-        MainToolbarFragment,
         ReblogActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
@@ -750,11 +748,6 @@ public class ReaderPostListFragment extends Fragment
         mRecyclerView.setAdapter(null);
         mRecyclerView.setAdapter(getPostAdapter());
         mRecyclerView.setSwipeToRefreshEnabled(isSwipeToRefreshSupported());
-    }
-
-    @Override
-    public void setTitle(@NonNull String title) {
-        // Do nothing - no title for this toolbar
     }
 
     @SuppressWarnings("unused")

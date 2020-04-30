@@ -57,7 +57,6 @@ Language: hu
     <string name="mnu_comment_spam">Spam</string>
     <string name="wordpress_blog">WordPress blog</string>
     <string name="comment_status_spam">Spam</string>
-    <string name="hint_comment_content">Hozzászólás</string>
     <string name="mnu_comment_trash">Lomtár</string>
     <string name="media_error_no_permission">Nincs elég jogosultság a médiatár megtekitéséhez</string>
     <string name="post_settings">Bejegyzés beálitások</string>
@@ -106,7 +105,6 @@ Language: hu
     <string name="anonymous">Névtelen</string>
     <string name="posts">Bejegyzés</string>
     <string name="ok">OK</string>
-    <string name="blogusername">honlap-felhasználó</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Szolgáltatási feltételek</string>
     <string name="version">verzió</string>
@@ -119,7 +117,6 @@ Language: hu
     <string name="quickpress_add_alert_title">Hivatkozás neve</string>
     <string name="settings">Beállítások</string>
     <string name="quickpress_add_error">A hivatkozás neve nem lehet üres</string>
-    <string name="quickpress_window_title">Válasszunk egy honlapot a QuickPress rövidcímhez</string>
     <string name="categories">Kategóriák</string>
     <string name="title">Címsor</string>
     <string name="sdcard_title">SD kártya szükséges</string>

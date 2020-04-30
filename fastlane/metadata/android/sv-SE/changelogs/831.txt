@@ -1,9 +1,0 @@
-14.2:
-Många uppdateringar av blockredigeraren:
-
-* Ny ikon vid långt tryck för att lägga till block före/efter.
-* Appen försöker att visa bilder när förbindelsen återkommer efter ett avbrott.
-* Löst problem med tom redigerare vid försök att skapa ett inlägg med bilder eller länkar från annan app.
-* Lagt till alternativ för bildstorlekar i galleriblocket.
-* Rättat ett fel som inte lät styckeblock kombineras.
-

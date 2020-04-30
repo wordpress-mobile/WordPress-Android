@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
-        <color android:color="@color/neutral_10" />
+        <color android:color="@color/placeholder" />
     </item>
     <item
         android:top="12dp"
