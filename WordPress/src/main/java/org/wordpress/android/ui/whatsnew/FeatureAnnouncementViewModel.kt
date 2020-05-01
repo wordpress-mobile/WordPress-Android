@@ -62,7 +62,7 @@ class FeatureAnnouncementViewModel @Inject constructor(
         _onDialogClosed.call()
     }
 
-    fun onFindMoreButtonPressedPressed() {
+    fun onFindMoreButtonPressed() {
         _onAnnouncementDetailsRequested.value = _currentFeatureAnnouncement.value?.detailsUrl
     }
 

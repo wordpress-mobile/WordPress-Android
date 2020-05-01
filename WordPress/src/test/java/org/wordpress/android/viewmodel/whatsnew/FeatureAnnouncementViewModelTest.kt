@@ -82,7 +82,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
     @Test
     fun `pressing Find Out More triggers request for announcement details with specific URL`() {
-        viewModel.onFindMoreButtonPressedPressed()
+        viewModel.onFindMoreButtonPressed()
         verify(onAnnouncementDetailsRequestedObserver).onChanged("https://wordpress.org/")
     }
 }
