@@ -103,6 +103,11 @@ android {
             dimension "buildType"
             buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "true"
         }
+
+        jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
+            applicationId "org.wordpress.android.prealpha"
+            dimension "buildType"
+        }
     }
 
     buildTypes {
@@ -413,6 +418,19 @@ if (["storeFile", "storePassword", "keyAlias", "keyPassword"].count { !project.h
         }
     }
     android.buildTypes.release.signingConfig = android.signingConfigs.release
+}
+
+if (project.hasProperty("debugStoreFile")) {
+    def sharedDebugStore = file(project.debugStoreFile.replaceFirst("^~", System.getProperty("user.home")))
+    if (sharedDebugStore.exists()) {
+        android {
+            signingConfigs {
+                debug {
+                    storeFile sharedDebugStore
+                }
+            }
+        }
+    }
 }
 
 def legacyGBBundleFile = 'src/main/assets/index.android.bundle'
