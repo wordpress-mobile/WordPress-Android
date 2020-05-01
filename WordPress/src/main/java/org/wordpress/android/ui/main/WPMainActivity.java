@@ -99,7 +99,6 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
@@ -156,6 +155,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_PAGE = "open_page";
+    public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_EDITOR = "show_editor";
@@ -502,6 +502,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
+                case ARG_MY_SITE:
+                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    break;
                 case ARG_NOTIFICATIONS:
                     mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
@@ -841,19 +844,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             AnalyticsUtils.trackWithDefaultInterceptor(AnalyticsTracker.Stat.DEEP_LINK_NOT_DEFAULT_HANDLER,
                     resolveInfo.activityInfo.name);
         }
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(ReaderEvents.SiteManagerTriggered event) {
-        setMySitePageActive();
-    }
-
-    /**
-     * Ste My Site page active
-     */
-    public void setMySitePageActive() {
-        mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
     }
 
     public void setReaderPageActive() {

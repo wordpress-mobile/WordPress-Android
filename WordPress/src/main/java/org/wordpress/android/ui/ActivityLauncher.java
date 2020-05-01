@@ -265,6 +265,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewMySiteInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MY_SITE);
+        context.startActivity(intent);
+    }
+
     public static void viewReader(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);

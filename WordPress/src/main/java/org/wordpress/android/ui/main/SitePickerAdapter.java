@@ -626,12 +626,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         @Override
         protected SiteList[] doInBackground(Void... params) {
-            List<SiteModel> siteModels;
-            if (mIsInSearchMode) {
-                siteModels = mSiteStore.getSites();
-            } else {
-                siteModels = getBlogsForCurrentView();
-            }
+            List<SiteModel> siteModels = getBlogsForCurrentView();
 
             if (mIgnoreSitesIds != null) {
                 List<SiteModel> unignoredSiteModels = new ArrayList<>();
@@ -696,19 +691,26 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         private List<SiteModel> getBlogsForCurrentView() {
-            if (mShowHiddenSites) {
-                if (mShowSelfHostedSites) {
-                    return mSiteStore.getSites();
-                } else {
-                    return mSiteStore.getSitesAccessedViaWPComRest();
-                }
+            if (mSitePickerMode.isReblogMode()) {
+                // If we are reblogging we only want to select or search into the WPCom visible sites.
+                return mSiteStore.getVisibleSitesAccessedViaWPCom();
+            } else if (mIsInSearchMode) {
+                return mSiteStore.getSites();
             } else {
-                if (mShowSelfHostedSites) {
-                    List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
-                    out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
-                    return out;
+                if (mShowHiddenSites) {
+                    if (mShowSelfHostedSites) {
+                        return mSiteStore.getSites();
+                    } else {
+                        return mSiteStore.getSitesAccessedViaWPComRest();
+                    }
                 } else {
-                    return mSiteStore.getVisibleSitesAccessedViaWPCom();
+                    if (mShowSelfHostedSites) {
+                        List<SiteModel> out = mSiteStore.getVisibleSitesAccessedViaWPCom();
+                        out.addAll(mSiteStore.getSitesAccessedViaXMLRPC());
+                        return out;
+                    } else {
+                        return mSiteStore.getVisibleSitesAccessedViaWPCom();
+                    }
                 }
             }
         }
