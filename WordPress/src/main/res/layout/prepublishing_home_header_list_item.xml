@@ -30,6 +30,7 @@
         android:layout_marginTop="@dimen/margin_extra_small"
         android:text="@string/prepublishing_nudges_home_header_publishing_to"
         android:textAlignment="viewStart"
+        android:textAllCaps="true"
         android:textAppearance="?attr/textAppearanceOverline"
         android:textColor="@color/neutral_30"
         app:layout_constraintBottom_toBottomOf="parent"

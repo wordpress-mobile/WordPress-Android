@@ -2745,7 +2745,7 @@
     <string name="prepublishing_nudges_publish_action">Publish</string>
     <string name="prepublishing_nudges_visibility_action">Visibility</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
-    <string name="prepublishing_nudges_home_header_publishing_to">PUBLISHING TO</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button">Publish Now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
