@@ -55,6 +55,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
@@ -77,6 +78,7 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.posts.editor.ImageEditorInitializer;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
@@ -157,6 +159,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject ReaderTracker mReaderTracker;
     @Inject ImageManager mImageManager;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ImageEditorTracker mImageEditorTracker;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -324,7 +328,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
-        ImageEditorInitializer.Companion.init(mImageManager);
+        ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
     }
 
     protected void initWorkManager() {
@@ -622,6 +626,9 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         // Cancel QuickStart reminders
         QuickStartUtils.cancelQuickStartReminder(context);
+
+        // Remove private Atomic cookie
+        mPrivateAtomicCookie.clearCookie();
     }
 
     private static String mDefaultUserAgent;

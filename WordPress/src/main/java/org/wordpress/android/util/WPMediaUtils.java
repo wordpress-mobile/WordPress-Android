@@ -1,6 +1,8 @@
 package org.wordpress.android.util;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.ViewConfiguration;
+import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,12 +27,16 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog.T;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WPMediaUtils {
     public interface LaunchCameraCallback {
@@ -366,7 +373,7 @@ public class WPMediaUtils {
         } else if (MediaUtils.isAudio(url)) {
             return R.drawable.ic_audio_white_24dp;
         } else {
-            return 0;
+            return R.drawable.ic_image_multiple_white_24dp;
         }
     }
 
@@ -481,5 +488,57 @@ public class WPMediaUtils {
                     ToastUtils.Duration.SHORT);
             return false;
         }
+    }
+
+    public static List<Uri> retrieveImageEditorResult(Intent data) {
+        if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+            return convertEditImageOutputToListOfUris(data.getParcelableArrayListExtra(
+                    PreviewImageFragment.ARG_EDIT_IMAGE_DATA));
+        } else {
+            return new ArrayList<Uri>();
+        }
+    }
+
+    private static List<Uri> convertEditImageOutputToListOfUris(List<EditImageData.OutputData> data) {
+        List<Uri> uris = new ArrayList<>(data.size());
+        for (EditImageData.OutputData item : data) {
+            uris.add(Uri.parse(item.getOutputFilePath()));
+        }
+        return uris;
+    }
+
+    public static List<Uri> retrieveMediaUris(Intent data) {
+        ClipData clipData = data.getClipData();
+        ArrayList<Uri> uriList = new ArrayList<>();
+        if (clipData != null) {
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                ClipData.Item item = clipData.getItemAt(i);
+                uriList.add(item.getUri());
+            }
+        } else {
+            uriList.add(data.getData());
+        }
+        return uriList;
+    }
+
+    public static ArrayList<EditImageData.InputData> createListOfEditImageInputData(Context ctx, List<Uri> uris) {
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(uris.size());
+        for (Uri uri : uris) {
+            String outputFileExtension = getFileExtension(ctx, uri);
+            inputData.add(new EditImageData.InputData(uri.toString(), null, outputFileExtension));
+        }
+        return inputData;
+    }
+
+    public static String getFileExtension(Context ctx, Uri uri) {
+        String fileExtension;
+        if (uri.getScheme() != null && uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = ctx.getContentResolver();
+            String mimeType = cr.getType(uri);
+            fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        } else {
+            fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+        }
+        return fileExtension;
     }
 }

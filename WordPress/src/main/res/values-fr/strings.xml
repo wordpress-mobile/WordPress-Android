@@ -1,11 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-06 07:01:06+0000
+Translation-Revision-Date: 2020-04-20 06:34:18+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/2.4.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Échec du cadrage et de l’enregistrement de l’image, veuillez réessayer.</string>
+    <string name="failed_to_insert_image_tap_to_retry">Échec de l’insertion de l’image.\nVeuillez appuyer pour recommencer.</string>
+    <string name="preview_image_description">Afficher l’aperçu de l’image</string>
+    <string name="error_unknown_page_type">Format de page inconnu</string>
+    <string name="error_page_not_submitted">Nous ne pouvons ni terminer cette action ni envoyer cette page à vérifier.</string>
+    <string name="error_page_not_scheduled">Nous ne pouvons ni terminer cette action ni planifier cette page.</string>
+    <string name="error_page_not_published_private">Nous ne pouvons ni terminer cette action ni publier cette page privée.</string>
+    <string name="error_page_not_published">Nous ne pouvons ni terminer cette action ni publier cette page.</string>
+    <string name="error_page_not_submitted_retrying">Nous ne pouvons pas envoyer cette page à vérifier mais nous réessayerons ultérieurement. </string>
+    <string name="error_page_not_scheduled_retrying">Nous ne pouvons pas planifier cette page mais nous réessayerons ultérieurement.</string>
+    <string name="error_page_not_published_retrying_private">Nous ne pouvons pas publier cette page privée mais nous réessayerons ultérieurement.</string>
+    <string name="error_page_not_published_retrying">Nous ne pouvons pas publier cette page mais nous réessayerons ultérieurement.</string>
+    <string name="error_media_recover_page_not_submitted">Nous ne pouvons pas téléverser ce média et nous ne pouvons pas envoyer cette page à vérifier. </string>
+    <string name="error_media_recover_page_not_scheduled">Nous ne pouvons pas téléverser ce média et nous ne pouvons pas planifier cette page.</string>
+    <string name="error_media_recover_page_not_published_private">Nous ne pouvons pas téléverser ce média et nous ne pouvons pas publier cette page privée.</string>
+    <string name="error_media_recover_page_not_published">Nous ne pouvons pas téléverser ce média et nous ne pouvons pas publier cette page.</string>
+    <string name="page_waiting_for_connection_draft">Nous enregistrerons votre brouillon lorsque votre appareil sera de nouveau connecté</string>
+    <string name="page_waiting_for_connection_private">Nous publierons votre page privée lorsque votre appareil sera de nouveau en ligne.</string>
+    <string name="page_waiting_for_connection_scheduled">Nous planifierons votre page lorsque votre appareil sera de nouveau en ligne.</string>
+    <string name="page_waiting_for_connection_pending">Nous enverrons votre page à vérifier lorsque votre appareil sera de nouveau en ligne.</string>
+    <string name="page_waiting_for_connection_publish">Nous publierons votre page lorsque votre appareil sera de nouveau en ligne.</string>
+    <string name="page_queued">Page placée en file d’attente</string>
+    <string name="page_uploading">Téléchargement de la page</string>
+    <string name="error_publish_page_no_network">L’appareil est hors ligne. Page sauvegardée localement.</string>
+    <string name="local_page_autosave_revision_available">Vous avez apporté des modifications non enregistrées à cette page.</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Votre page est en cours de chargement</string>
+    <string name="editor_page_saved_locally_failed_media">Cette page a des fichiers joints dont le téléchargement a échoué. Elle a été enregistrée localement.</string>
+    <string name="editor_page_saved_locally">Page enregistrée sur l’appareil</string>
+    <string name="editor_page_saved_online">Page enregistrée en ligne</string>
+    <string name="quickpress_shortcut_activity_label">Sélectionner le blog pour le raccourci QuickPress</string>
+    <string name="app_theme_default">Défini par Battery Saver</string>
+    <string name="app_theme_dark">Sombre</string>
+    <string name="app_theme_light">Claire</string>
+    <string name="app_theme">Apparence</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Vous avez récemment apporté des modifications à cette page, mais ne les avez pas enregistrées. Choisissez une version à charger :\n\n</string>
     <string name="gutenberg_native_what_people_say">Ce que disent les gens</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Nous offrons une gamme de services pour vous aider à obtenir les résultats que vous recherchez. Vous ne savez pas ce dont vous avez besoin, ou ce que cela coûte ? Nous pouvons vous expliquer quels services sont bons pour vous et vous en dire plus à propos de nos tarifs. Contactez-nous ci-dessous.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Nous sommes une petite équipe de professionnels talentueux avec un large éventail de compétences et d’expérience. Nous aimons ce que nous faisons et nous le faisons avec passion. Nous sommes impatients de travailler avec vous.</string>
@@ -252,8 +288,8 @@ Language: fr
     <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages u2014 − c’est super ! Si vous revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
-    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles u2014  – c’est super ! Si vous revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
+    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez à « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>
@@ -1259,7 +1295,7 @@ Language: fr
     <string name="media_edit_filename_caption">Nom du fichier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texte alternatif</string>
-    <string name="copy">Copier</string>
+    <string name="copy_text">Copier</string>
     <string name="connect_site">Connecter le site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Faire clignoter la lumière</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Faire vibrer l\'appareil</string>
@@ -2068,7 +2104,6 @@ Language: fr
     <string name="content_required">Commentaire requis</string>
     <string name="sure_to_cancel_edit_comment">Annuler l\'édition de ce commentaire ?</string>
     <string name="saving_changes">Enregistrement des modifications</string>
-    <string name="hint_comment_content">Commentaire</string>
     <string name="trash">Corbeille</string>
     <string name="dlg_confirm_trash_comments">Mettre à la corbeille ?</string>
     <string name="dlg_trashing_comments">Envoie à la corbeille</string>
@@ -2170,20 +2205,19 @@ Language: fr
     <string name="pages">Pages</string>
     <string name="no_network_title">Pas de réseau disponible</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
+    <string name="done">Terminé</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress pour Android</string>
     <string name="tos">Conditions d\'utilisation</string>
     <string name="version">Version</string>
     <string name="image_alignment">Alignement</string>
-    <string name="refresh">Rafraichir</string>
+    <string name="refresh">Actualiser</string>
     <string name="untitled">Sans titre</string>
     <string name="edit">Modifier</string>
     <string name="immediately">Immédiatement</string>
     <string name="quickpress_add_alert_title">Choisir le nom du raccourci</string>
     <string name="settings">Paramètres</string>
     <string name="quickpress_add_error">Le nom du raccourci ne peut pas être vide</string>
-    <string name="quickpress_window_title">Sélectionner le blog pour le raccourci QuickPress</string>
     <string name="pages_private">Privé</string>
     <string name="categories">Catégories</string>
     <string name="tags_separate_with_commas">Séparez les étiquettes par des virgules</string>

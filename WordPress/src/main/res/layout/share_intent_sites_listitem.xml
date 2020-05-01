@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/layout_container"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:layout_marginTop="@dimen/margin_medium"
-  android:layout_marginBottom="@dimen/margin_medium"
-  android:layout_marginStart="@dimen/margin_extra_large"
-  android:layout_marginEnd="@dimen/margin_extra_large"
-  android:orientation="horizontal">
-
-  <include
-    tools:ignore="DuplicateIncludedIds"
-    layout="@layout/login_epilogue_sites_listitem"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_toStartOf="@+id/radio_selected"/>
+    android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:orientation="horizontal">
 
-  <RadioButton
-    android:id="@+id/radio_selected"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/margin_small_medium"
-    android:layout_marginEnd="@dimen/margin_small_medium"
-    android:layout_alignParentEnd="true"
-    android:layout_centerVertical="true"
-    android:clickable="false"
-    android:focusableInTouchMode="false" />
+    <include
+        layout="@layout/login_epilogue_sites_listitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/radio_selected"
+        tools:ignore="DuplicateIncludedIds" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radio_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/margin_small_medium"
+        android:layout_marginEnd="@dimen/margin_small_medium"
+        android:clickable="false"
+        android:focusableInTouchMode="false" />
 
 </RelativeLayout>

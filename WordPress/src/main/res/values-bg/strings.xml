@@ -767,7 +767,6 @@ Language: bg
     <string name="dlg_trashing_comments">Изпрати в боклук</string>
     <string name="select_categories">Избери категории</string>
     <string name="comment_status_approved">Одобрено</string>
-    <string name="hint_comment_content">Коментар</string>
     <string name="saving_changes">Промените се запазват</string>
     <string name="new_post">Нова публикация</string>
     <string name="open_source_licenses">Лиценз с отворен код</string>
@@ -881,7 +880,6 @@ Language: bg
     <string name="pages">Страници</string>
     <string name="posts">Публикации</string>
     <string name="anonymous">Анонимен</string>
-    <string name="blogusername">потребителско име</string>
     <string name="ok">ОК</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Версия</string>
@@ -894,7 +892,6 @@ Language: bg
     <string name="immediately">Веднага</string>
     <string name="quickpress_add_alert_title">Задаване на име на пряк път</string>
     <string name="settings">Настройки</string>
-    <string name="quickpress_window_title">Избор на блог за QuickPress препратката</string>
     <string name="quickpress_add_error">Името на препратката не може да бъде празно</string>
     <string name="title">Заглавие</string>
     <string name="categories">Категории</string>

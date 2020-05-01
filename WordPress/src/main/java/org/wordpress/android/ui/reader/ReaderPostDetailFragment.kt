@@ -19,6 +19,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -32,6 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -51,14 +53,20 @@ import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.AccountActionBuilder
 import org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.fluxc.store.AccountStore.OnSubscriptionUpdated
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -121,7 +129,8 @@ class ReaderPostDetailFragment : Fragment(),
         ReaderInterfaces.OnFollowListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface {
+        BasicFragmentDialog.BasicDialogPositiveClickInterface,
+        PrivateAtCookieProgressDialogOnDismissListener {
     private var postId: Long = 0
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
@@ -169,6 +178,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
+    @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1135,6 +1145,49 @@ class ReaderPostDetailFragment : Fragment(),
         ShowPostTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onPrivateAtomicCookieFetched(event: OnPrivateAtomicCookieFetched) {
+        if (!isAdded) {
+            return
+        }
+
+        if (event.isError) {
+            AppLog.e(
+                    READER,
+                    "Failed to load private AT cookie. $event.error.type - $event.error.message"
+            )
+            WPSnackbar.make(
+                    view!!,
+                    string.media_accessing_failed,
+                    Snackbar.LENGTH_LONG
+            ).show()
+        } else {
+            CookieManager.getInstance().setCookie(
+                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+            )
+        }
+
+        PrivateAtCookieRefreshProgressDialog.dismissIfNecessary(fragmentManager)
+        if (renderer != null) {
+            renderer!!.beginRender()
+        }
+    }
+
+    override fun onCookieProgressDialogCancelled() {
+        if (!isAdded) {
+            return
+        }
+
+        WPSnackbar.make(
+                view!!,
+                string.media_accessing_failed,
+                Snackbar.LENGTH_LONG
+        ).show()
+        if (renderer != null) {
+            renderer!!.beginRender()
+        }
+    }
+
     // TODO replace this inner async task with a coroutine
     @SuppressLint("StaticFieldLeak")
     private inner class ShowPostTask : AsyncTask<Void, Void, Boolean>() {
@@ -1248,7 +1301,24 @@ class ReaderPostDetailFragment : Fragment(),
 
             // render the post in the webView
             renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
-            renderer!!.beginRender()
+
+            // if the post is from private atomic site postpone render until we have a special access cookie
+            if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
+                PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
+                dispatcher.dispatch(
+                        SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                                FetchPrivateAtomicCookiePayload(post!!.blogId)
+                        )
+                )
+            } else if (post!!.isPrivateAtomic && privateAtomicCookie.exists()) {
+                // make sure we add cookie to the cookie manager if it exists before starting render
+                CookieManager.getInstance().setCookie(
+                        privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+                )
+                renderer!!.beginRender()
+            } else {
+                renderer!!.beginRender()
+            }
 
             // if we're showing just the excerpt, also show a footer which links to the full post
             if (post!!.shouldShowExcerpt()) {

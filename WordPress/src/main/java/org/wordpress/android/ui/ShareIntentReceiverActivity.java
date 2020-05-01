@@ -75,14 +75,6 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // keep setBackground in the onResume, otherwise the transition between activities is visible to the user when
-        // sharing text with an account with one visible site
-        findViewById(R.id.main_view).setBackgroundResource(R.color.background_default);
-    }
-
     private void refreshContent() {
         if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
             List<SiteModel> visibleSites = mSiteStore.getVisibleSites();

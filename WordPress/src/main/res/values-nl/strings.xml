@@ -1,11 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-02 00:54:11+0000
+Translation-Revision-Date: 2020-04-16 01:55:04+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Afbeelding bijsnijden en opslaan mislukt. Probeer opnieuw.</string>
+    <string name="failed_to_insert_image_tap_to_retry">Invoegen van afbeelding mislukt.\nTik om het opnieuw te proberen.</string>
+    <string name="preview_image_description">Voorbeeldweergave afbeelding</string>
+    <string name="error_unknown_page_type">Onbekende pagina-indeling</string>
+    <string name="error_page_not_submitted">We konden deze handeling niet voltooien en hebben de pagina niet verzonden voor beoordeling.</string>
+    <string name="error_page_not_scheduled">We konden deze handeling niet voltooien en hebben deze pagina niet ingepland.</string>
+    <string name="error_page_not_published_private">We konden deze handeling niet voltooien en hebben deze privépagina niet gepubliceerd.</string>
+    <string name="error_page_not_published">We konden deze handeling niet voltooien en hebben deze pagina niet gepubliceerd.</string>
+    <string name="error_page_not_submitted_retrying">We konden deze pagina niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
+    <string name="error_page_not_scheduled_retrying">We konden deze pagina niet inplannen, maar we proberen het later nog eens.</string>
+    <string name="error_page_not_published_retrying_private">We konden deze privépagina niet publiceren, maar we proberen het later nog eens.</string>
+    <string name="error_page_not_published_retrying">We konden deze pagina niet publiceren, maar we proberen het later nog eens.</string>
+    <string name="error_media_recover_page_not_submitted">We konden deze media niet uploaden en hebben deze pagina niet verzonden voor beoordeling. </string>
+    <string name="error_media_recover_page_not_scheduled">We konden deze media niet uploaden en hebben deze pagina niet ingepland.</string>
+    <string name="error_media_recover_page_not_published_private">We konden deze media niet uploaden en hebben deze privépagina niet gepubliceerd.</string>
+    <string name="error_media_recover_page_not_published">We konden deze media niet uploaden en hebben deze pagina niet gepubliceerd.</string>
+    <string name="page_waiting_for_connection_draft">We slaan je concept op wanneer je apparaat weer online is</string>
+    <string name="page_waiting_for_connection_private">We publiceren je privépagina wanneer je apparaat weer online is.</string>
+    <string name="page_waiting_for_connection_scheduled">We plannen je pagina in wanneer je apparaat weer online is.</string>
+    <string name="page_waiting_for_connection_pending">We verzenden je pagina voor beoordeling wanneer je apparaat weer online is.</string>
+    <string name="page_waiting_for_connection_publish">We publiceren de pagina wanneer je apparaat weer online is.</string>
+    <string name="page_queued">Pagina in de wacht</string>
+    <string name="page_uploading">Pagina wordt geüpload</string>
+    <string name="error_publish_page_no_network">Apparaat is offline. Pagina lokaal opgeslagen.</string>
+    <string name="local_page_autosave_revision_available">Je hebt niet-opgeslagen wijzigingen aan deze pagina aangebracht</string>
+    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">Je pagina wordt geüpload</string>
+    <string name="editor_page_saved_locally_failed_media">De pagina bevat mislukte media-uploads en is lokaal opgeslagen</string>
+    <string name="editor_page_saved_locally">Pagina opgeslagen op apparaat</string>
+    <string name="editor_page_saved_online">Pagina online opgeslagen</string>
+    <string name="quickpress_shortcut_activity_label">Selecteer blog voor snelkoppeling naar QuickPress</string>
+    <string name="app_theme_default">Ingesteld door energiebesparing</string>
+    <string name="app_theme_dark">Donker</string>
+    <string name="app_theme_light">Licht</string>
+    <string name="app_theme">Weergave</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Je hebt onlangs wijzigingen aangebracht aan deze pagina, maar deze niet opgeslagen. Kies een versie om te laden:\n\n</string>
+    <string name="gutenberg_native_what_people_say">Wat mensen zeggen</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">We beschikken over een groot aantal services die je kunnen helpen om de gewenste resultaten te behalen. Geen idee wat je nodig hebt of wat het kost? We kunnen uitleggen welke services perfect bij je passen en je meer informatie geven over onze tarieven. Neem hieronder contact met ons op.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">We hebben een klein team van getalenteerde professionals met veel vaardigheden en ervaring. We houden van wat we doen, en we doen het met passie. We kijken ernaar uit met je samen te werken.</string>
+    <string name="gutenberg_native_warning_message">Waarschuwingsmelding</string>
+    <string name="gutenberg_native_want_to_work_with_us">Wil je bij ons werken?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Bezoekers willen weten wie aan de andere kant van de pagina zit. Gebruik deze ruimte om wat te schrijven over jezelf, je site, je bedrijf of wat je maar wil. Gebruik de onderstaande testimonials om anderen te citeren die het over hetzelfde hebben.</string>
+    <string name="gutenberg_native_usa">Nederland</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Dit is voorbeeldinhoud, meegeleverd bij het sjabloon om alle functies te demonstreren. Verwijder de inhoud of vervang deze door je eigen woorden en media.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">De beste manier om te starten is door te stoppen met praten en aan de slag te gaan.</string>
+    <string name="gutenberg_native_team">Team</string>
+    <string name="gutenberg_native_success_message">Succesmelding</string>
+    <string name="gutenberg_native_strategy">Strategie</string>
+    <string name="gutenberg_native_show_post_content">Berichtcontent weergeven</string>
+    <string name="gutenberg_native_services">Services</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
+    <string name="gutenberg_native_sally_smith">Sally Smith</string>
+    <string name="gutenberg_native_project_name">Projectnaam</string>
+    <string name="gutenberg_native_position_or_job_title">Positie- of functietitel</string>
+    <string name="gutenberg_native_portfolio">Portfolio</string>
+    <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">Minimumhoogte in pixels</string>
+    <string name="gutenberg_native_link_to">Link naar</string>
+    <string name="gutenberg_native_link_settings">Link-instellingen</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Laten we samen wat bouwen.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Laten we samen wat opbouwen</string>
+    <string name="gutenberg_native_let_s_build_something_together">Laten we samen wat opbouwen</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Veel meer dan onze talenten, zijn het onze keuzes die bepalen wie we werkelijk zijn.</string>
+    <string name="gutenberg_native_inspiration">Inspiratie</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">Neem contact op!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">Neem contact op!</string>
+    <string name="gutenberg_native_get_in_touch">Neem contact op</string>
+    <string name="gutenberg_native_excerpt_length_words">Lengte samenvatting (woorden)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Stuur me een e-mail: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">Omslagmedia bewerken</string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Treur niet om wat voorbij is, lach omdat het gebeurd is.</string>
+    <string name="gutenberg_native_customize">AANPASSEN</string>
+    <string name="gutenberg_native_city_10100">Plaats, 1234 AB</string>
+    <string name="gutenberg_native_button_link_url">Knop URL-link</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Kleureninstellingen voor knoppen zijn binnenkort beschikbaar.</string>
+    <string name="gutenberg_native_border_settings">Instellingen rand</string>
+    <string name="gutenberg_native_border_radius">Radius rand</string>
+    <string name="gutenberg_native_background_opacity">Doorzichtigheid van de achtergrond</string>
+    <string name="gutenberg_native_add_paragraph_block">Paragraafblok toevoegen</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Een korte beschrijving van de services die je biedt.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Een beschrijving van het project en het uiteindelijke resultaat.</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">Dorpsstraat 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
     <string name="post_list_tab_scheduled_posts">Gepland</string>
@@ -197,8 +288,6 @@ Language: nl
     <string name="notifications_tab_dialog_master_hint_on">Weergave van meldingen op het meldingentabblad van deze site uitschakelen</string>
     <string name="notifications_tab_dialog_master_status_off">Meldingen voor deze site</string>
     <string name="notifications_tab_dialog_master_status_on">Meldingen voor deze site</string>
-    <string name="dialog_gutenberg_informative_description_page">Je gebruikt nu de blokeditor voor nieuwe pagina\'s. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Je gebruikt nu de blokeditor voor nieuwe berichten. Geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site-instellingen\'.</string>
     <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>
@@ -1102,7 +1191,7 @@ Language: nl
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt. tekst</string>
-    <string name="copy">Kopieer</string>
+    <string name="copy_text">Kopieer</string>
     <string name="connect_site">Site koppelen</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
@@ -1898,7 +1987,6 @@ Language: nl
     <string name="content_required">Reactie is vereist</string>
     <string name="sure_to_cancel_edit_comment">Bewerken van deze reactie annuleren?</string>
     <string name="saving_changes">Wijzigingen aan het opslaan</string>
-    <string name="hint_comment_content">Reactie</string>
     <string name="trash">Prullenbak</string>
     <string name="dlg_confirm_trash_comments">Verplaatsen naar de prullenbak?</string>
     <string name="dlg_trashing_comments">Aan het verplaatsen naar de prullenbak</string>
@@ -2000,7 +2088,6 @@ Language: nl
     <string name="pages">Pagina\'s</string>
     <string name="no_network_title">Geen netwerk beschikbaar</string>
     <string name="ok">Ok</string>
-    <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress voor Android</string>
     <string name="tos">Eindgebruikersovereenkomst</string>
@@ -2013,7 +2100,6 @@ Language: nl
     <string name="quickpress_add_alert_title">Geef een snelkoppelingsnaam</string>
     <string name="settings">Instellingen</string>
     <string name="quickpress_add_error">Snelkoppelingsnaam kan niet leeg zijn.</string>
-    <string name="quickpress_window_title">Selecteer een blog voor de QuickPress snelkoppeling</string>
     <string name="pages_private">Privé</string>
     <string name="categories">Categorieën </string>
     <string name="tags_separate_with_commas">Scheid tags met komma\'s</string>

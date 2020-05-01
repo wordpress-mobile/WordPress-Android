@@ -11,7 +11,7 @@
         tools:visibility="gone" />
 
     <include
-        layout="@layout/progress_layout"
+        layout="@layout/site_creation_progress_creating_site"
         tools:visibility="gone" />
 
     <RelativeLayout

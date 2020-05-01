@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 18:22:30+0000
+Translation-Revision-Date: 2020-04-19 19:40:49+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
@@ -172,8 +172,6 @@ Language: nb_NO
     <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
     <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
     <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
-    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg u2014 flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -1146,7 +1144,7 @@ Language: nb_NO
     <string name="media_edit_filename_caption">Filnavn</string>
     <string name="media_edit_url_caption">Nettadresse</string>
     <string name="media_edit_alttext_text">Alternativ tekst</string>
-    <string name="copy">Kopier</string>
+    <string name="copy_text">Kopier</string>
     <string name="connect_site">Koble til nettsted</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibreringer</string>
@@ -1955,7 +1953,6 @@ Language: nb_NO
     <string name="content_required">Kommentering er påkrevd</string>
     <string name="sure_to_cancel_edit_comment">Vil du avbryte redigeringen av denne kommentaren?</string>
     <string name="saving_changes">Lagrer endringer</string>
-    <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papirkurv</string>
     <string name="dlg_confirm_trash_comments">Send til papirkurv?</string>
     <string name="dlg_trashing_comments">Sender til papirkurven</string>
@@ -2056,7 +2053,7 @@ Language: nb_NO
     <string name="pages">Sider</string>
     <string name="no_network_title">Ingen nettverk tilgjengelige</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Bloggbrukernavn</string>
+    <string name="done">fullført</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Lisens</string>
@@ -2069,7 +2066,6 @@ Language: nb_NO
     <string name="quickpress_add_alert_title">Lag et navn for snarvei</string>
     <string name="settings">Alternativer</string>
     <string name="quickpress_add_error">Snarveien kan ikke være tom</string>
-    <string name="quickpress_window_title">Velg snarvei for Hurtigpublisering</string>
     <string name="pages_private">Privat</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Adskill stikkord med komma</string>

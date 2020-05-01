@@ -665,7 +665,7 @@ Language: sk
     <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
-    <string name="copy">Kopírovať</string>
+    <string name="copy_text">Kopírovať</string>
     <string name="connect_site">Pripojte webovú stránku</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vybračné zariadenie</string>
@@ -1470,7 +1470,6 @@ Language: sk
     <string name="content_required">Vyžaduje sa komentár</string>
     <string name="sure_to_cancel_edit_comment">Zrušiť úpravu tohto komentáru?</string>
     <string name="saving_changes">Ukladajú sa zmeny</string>
-    <string name="hint_comment_content">Komentár</string>
     <string name="trash">Kôš</string>
     <string name="dlg_confirm_trash_comments">Odstrániť?</string>
     <string name="dlg_trashing_comments">Vymazáva sa</string>
@@ -1572,7 +1571,6 @@ Language: sk
     <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="app_title">WordPress pre Android</string>
     <string name="tos">Zmluvné podmienky</string>
@@ -1585,7 +1583,6 @@ Language: sk
     <string name="quickpress_add_alert_title">Nastaviť skrátené meno</string>
     <string name="settings">Nastavenia</string>
     <string name="quickpress_add_error">Názov skratky nemôže byť prázdny</string>
-    <string name="quickpress_window_title">Vyberte blog pre QuickPress skratku</string>
     <string name="pages_private">Súkromné</string>
     <string name="categories">Kategórie</string>
     <string name="tags_separate_with_commas">Oddeľujte značky čiarkami</string>

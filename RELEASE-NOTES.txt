@@ -1,10 +1,33 @@
+14.8
+-----
+* Block editor: Prefill caption for image blocks when available on the Media library
+* Block editor: New block: Buttons. From now you’ll be able to add the individual Button block only inside the Buttons block
+* Block editor: Fix bug where whitespaces at start of text blocks were being removed
+* Block editor: Add support for upload options in Cover block
+* Block editor: Floating toolbar, previously located above nested blocks, is now placed at the top of the screen
+* Block editor: Fix the icons in FloatingToolbar on RTL mode
+* Block editor: Add alignment options for heading block
+* Block editor: Fix titles in the media picker
+* Block editor: Update quote block to visually reflect selected alignment
+* Block editor: Fix bug where buttons in page templates were not rendering correctly on web
+* Block editor: You can now crop, zoom in/out and rotate images from the device that are being inserted in a post.
+ 
 14.7
 -----
- 
+* Block editor: Disable ripple effect for Slider control
+* Block editor: New block: Columns
+* Block editor: New starter page template: Blog
+* Block editor: Make Starter Page Template picker buttons visible only when the screen height is enough
+* Block editor: Fix a bug which caused to show URL settings modal randomly when changing the device orientation multiple times during the time Starter Page Template Preview is open
+* Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
+* Added user Gravatar to the Me menu in My Site.
+* Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area. 
+
 14.6
 -----
 * Block editor: You can now crop, zoom in/out and rotate images that are already inserted in a post.
 * Fix a deeplinking issue that could lead to the app not being open after clicking on some special "wordpress://" URLs.
+* Site Creation: Improved look of the loading screen while the site is being created
 * Block editor: New block: Cover
 * Block editor: Improve icon on the "Take a Video" media option
 * Block editor: Removed the dimming effect on unselected blocks

@@ -67,8 +67,9 @@ ENV["HAS_ALPHA_VERSION"]="true"
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
     
+    localize_gutenberg(skip_module_update: true)
     localize_libs()
-    android_tag_build()
+    ensure_git_status_clean()
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
@@ -319,11 +320,37 @@ ENV["HAS_ALPHA_VERSION"]="true"
     {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
+  private_lane :commit_strings do | options |
+    if (options[:auto_commit]) then
+       sh("cd .. && git add #{main_strings_path}")
+       sh("git commit -m 'Update strings for translation'")
+       sh("git push origin HEAD") 
+    else
+      UI.important("Your #{main_strings_path} has changed.")
+      UI.input("Please, review the changes, commit them and press return to continue.")
+    end
+  end
+
+  
   desc "Merge libraries strings files into the main app one"
   lane :localize_libs do | options |
     if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
-      UI.important("Your #{main_strings_path} has changed.")
-      UI.input("Please, review the changes, commit them and press return to continue.")
+      commit_strings(options)
+    end
+  end
+
+  desc "Import Gutenberg strings"
+  lane :localize_gutenberg do | options |
+    unless options[:skip_module_update] then
+      sh("git submodule init")
+      sh("git submodule update")
+    end
+
+    sh("cd .. && python ./tools/merge_strings_xml.py")
+    
+    is_repo_clean = ("git status --porcelain").empty?
+    unless is_repo_clean then
+      commit_strings(options)
     end
   end
 

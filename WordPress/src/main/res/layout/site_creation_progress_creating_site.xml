@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/progress_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:gravity="center_horizontal"
+        android:text="@string/new_site_creation_creating_site_loading_title"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="@dimen/text_sz_extra_extra_large"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Hooray! Almost done!" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:gravity="center"
+        android:text="@string/new_site_creation_creating_site_loading_subtitle"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
+        android:textSize="@dimen/text_sz_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/img_illustration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="Your site will be ready shortly" />
+
+    <ImageView
+        android:id="@+id/img_illustration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:contentDescription="@null"
+        android:src="@drawable/img_illustration_magician_hat_128"
+        app:layout_constraintBottom_toTopOf="@+id/progress_text_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle" />
+
+    <LinearLayout
+        android:id="@+id/progress_text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/progress"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_illustration"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/checkmark_icon"
+            android:layout_width="@dimen/icon_size_075"
+            android:layout_height="@dimen/icon_size_075"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_checkmark_white_24dp"
+            app:tint="@color/success" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:textSize="@dimen/text_sz_extra_large"
+            tools:text="Setting up theme!" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progress_text_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

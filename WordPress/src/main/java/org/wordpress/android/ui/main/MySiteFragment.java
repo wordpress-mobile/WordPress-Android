@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -111,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
+        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface,
         OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
@@ -167,7 +169,6 @@ public class MySiteFragment extends Fragment implements
 
     @Nullable
     private Toolbar mToolbar = null;
-    private String mToolbarTitle;
 
     private int mBlavatarSz;
     private boolean mIsDomainCreditAvailable = false;
@@ -207,11 +208,11 @@ public class MySiteFragment extends Fragment implements
     }
 
     private void refreshMeGravatar() {
-        String rawGravatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
+        String avatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.getAccount().getAvatarUrl());
 
         mMeGravatarLoader.load(
                 false,
-                rawGravatarUrl,
+                avatarUrl,
                 null,
                 mAvatarImageView,
                 ImageType.USER,
@@ -375,14 +376,17 @@ public class MySiteFragment extends Fragment implements
         setupClickListeners(rootView);
 
         mToolbar = rootView.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.my_site_section_screen_title);
 
         mToolbar.inflateMenu(R.menu.my_site_menu);
-        View actionView = mToolbar.getMenu().findItem(R.id.me_item).getActionView();
+
+        MenuItem meMenu = mToolbar.getMenu().findItem(R.id.me_item);
+        View actionView = meMenu.getActionView();
         mAvatarImageView = actionView.findViewById(R.id.avatar);
-        actionView.setOnClickListener(item -> {
-                ActivityLauncher.viewMeActivityForResult(getActivity());
-        });
+
+        actionView.setOnClickListener(item -> ActivityLauncher.viewMeActivityForResult(getActivity()));
+
+        TooltipCompat.setTooltipText(actionView, meMenu.getTitle());
 
         return rootView;
     }
@@ -725,8 +729,8 @@ public class MySiteFragment extends Fragment implements
                         showSiteIconProgressBar(true);
                         updateSiteIconMediaId(mediaId);
                     } else {
-                        String strMediaUri = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
-                        if (strMediaUri == null) {
+                        String[] mediaUriStringsArray = data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
+                        if (mediaUriStringsArray == null || mediaUriStringsArray.length == 0) {
                             AppLog.e(AppLog.T.UTILS, "Can't resolve picked or captured image");
                             return;
                         }
@@ -740,7 +744,7 @@ public class MySiteFragment extends Fragment implements
                                         : AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED;
                         AnalyticsTracker.track(stat);
 
-                        Uri imageUri = Uri.parse(strMediaUri);
+                        Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
                         if (imageUri != null) {
                             boolean didGoWell = WPMediaUtils.fetchMediaAndDoNext(getActivity(), imageUri,
                                     uri -> {
@@ -950,9 +954,6 @@ public class MySiteFragment extends Fragment implements
         } else {
             mQuickActionButtonsContainer.setWeightSum(75f);
         }
-
-        // Refresh the title
-        setTitle(site.getName());
     }
 
     private void toggleAdminVisibility(@Nullable final SiteModel site) {
@@ -1000,17 +1001,6 @@ public class MySiteFragment extends Fragment implements
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void setTitle(@NonNull final String title) {
-        if (isAdded()) {
-            mToolbarTitle = (title.isEmpty()) ? getString(R.string.wordpress) : title;
-
-            if (mToolbar != null) {
-                mToolbar.setTitle(mToolbarTitle);
-            }
-        }
     }
 
     /**
@@ -1062,7 +1052,8 @@ public class MySiteFragment extends Fragment implements
                 if (event.mediaModelList.size() > 0) {
                     MediaModel media = event.mediaModelList.get(0);
                     mImageManager.load(mBlavatarImageView, ImageType.BLAVATAR, PhotonUtils
-                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH));
+                            .getPhotonImageUrl(media.getUrl(), mBlavatarSz, mBlavatarSz, PhotonUtils.Quality.HIGH,
+                                    site.isPrivateWPComAtomic()));
                     updateSiteIconMediaId((int) media.getMediaId());
                 } else {
                     AppLog.w(T.MAIN, "Site icon upload completed, but mediaList is empty.");

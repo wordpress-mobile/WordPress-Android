@@ -1,11 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-02 00:54:10+0000
+Translation-Revision-Date: 2020-04-17 00:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">פעולת החיתוך והשמירה של התמונה נכשלה, יש לנסות שוב.</string>
+    <string name="failed_to_insert_image_tap_to_retry">ההוספה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
+    <string name="preview_image_description">להציג תצוגה מקדימה של התמונה</string>
+    <string name="error_unknown_page_type">פורמט עמוד לא ידוע</string>
+    <string name="error_page_not_submitted">לא הצלחנו להשלים את הפעולה ולא שלחנו את העמוד לבדיקה.</string>
+    <string name="error_page_not_scheduled">לא הצלחנו להשלים את הפעולה ולא תזמנו את העמוד.</string>
+    <string name="error_page_not_published_private">לא הצלחנו להשלים את הפעולה ולא פרסמנו את העמוד הפרטי הזה.</string>
+    <string name="error_page_not_published">לא הצלחנו להשלים את הפעולה ולא פרסמנו את העמוד.</string>
+    <string name="error_page_not_submitted_retrying">לא הצלחנו לשלוח את העמוד לבדיקה אבל ננסה שוב מאוחר יותר. </string>
+    <string name="error_page_not_scheduled_retrying">לא הצלחנו לתזמן את העמוד אבל ננסה שוב מאוחר יותר.</string>
+    <string name="error_page_not_published_retrying_private">לא הצלחנו לפרסם את העמוד הפרטי אבל ננסה שוב מאוחר יותר.</string>
+    <string name="error_page_not_published_retrying">לא הצלחנו לפרסם את העמוד אבל ננסה שוב מאוחר יותר.</string>
+    <string name="error_media_recover_page_not_submitted">לא הצלחנו להעלות את המדיה ולא שלחנו את העמוד לבדיקה. </string>
+    <string name="error_media_recover_page_not_scheduled">לא הצלחנו להעלות את המדיה ולא תזמנו את העמוד.</string>
+    <string name="error_media_recover_page_not_published_private">לא הצלחנו להעלות את המדיה ולא פרסמנו את העמוד הפרטי הזה.</string>
+    <string name="error_media_recover_page_not_published">לא הצלחנו להעלות את המדיה ולא פרסמנו את העמוד.</string>
+    <string name="page_waiting_for_connection_draft">אנחנו נשמור את הטיוטה כאשר המכשיר שלך יחובר שוב לאינטרנט</string>
+    <string name="page_waiting_for_connection_private">אנחנו נפרסם את העמוד הפרטי כאשר המכשיר שלך יחובר שוב לאינטרנט.</string>
+    <string name="page_waiting_for_connection_scheduled">אנחנו נתזמן את העמוד כאשר המכשיר שלך יחובר שוב לאינטרנט.</string>
+    <string name="page_waiting_for_connection_pending">אנחנו נשלח את העמוד לבדיקה כאשר המכשיר שלך יחובר שוב לאינטרנט.</string>
+    <string name="page_waiting_for_connection_publish">אנחנו נפרסם את העמוד כאשר המכשיר שלך יחובר שוב לאינטרנט.</string>
+    <string name="page_queued">עמוד בהמתנה</string>
+    <string name="page_uploading">מעלה את העמוד</string>
+    <string name="error_publish_page_no_network">המכשיר אינו מחובר. השינויים נשמרו באחסון המקומי.</string>
+    <string name="local_page_autosave_revision_available">ביצעת שינויים שלא נשמרו בעמוד הזה</string>
+    <string name="local_page_is_conflicted">‎@string/local_post_is_conflicted</string>
+    <string name="editor_uploading_page">העמוד שלך מועלה</string>
+    <string name="editor_page_saved_locally_failed_media">בעמוד קיימים פריטי מדיה שהעלאתם נכשלה והם נשמרו במחשב המקומי</string>
+    <string name="editor_page_saved_locally">העמוד נשמר במכשיר</string>
+    <string name="editor_page_saved_online">העמוד נשמר באתר</string>
+    <string name="quickpress_shortcut_activity_label">יש לבחור בלוג או קיצור אל QuickPress</string>
+    <string name="app_theme_default">לקבוע לפי חיסכון בצריכת הסוללה</string>
+    <string name="app_theme_dark">צבעים כהים</string>
+    <string name="app_theme_light">צבעים בהירים</string>
+    <string name="app_theme">מראה</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">לאחרונה ביצעת שינויים בעמוד וטרם שמרת אותם. לבחור גרסה לטעינה:\n\n</string>
+    <string name="gutenberg_native_what_people_say">מה אנשים אומרים</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">יש לנו מגוון שירותים שיעזרו לך לקבל את התוצאות שנדרשות לך. אין לך מושג מה נדרש לך ומה העלות? אנחנו יכולים להסביר לך אילו שירותים רלוונטיים עבורך ומה הם התעריפים שלנו. אפשר ליצור איתנו קשר למטה.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">אנחנו צוות קטן של אנשי מקצוע מוכשרים עם מגוון רחב של כישורים וניסיון מקצועי. אנחנו אוהבים את המקצוע שלנו ואת העבודה שאנחנו עושים. אנו מצפים לעבוד איתך.</string>
+    <string name="gutenberg_native_warning_message">הודעת אזהרה</string>
+    <string name="gutenberg_native_want_to_work_with_us">רוצה לעבוד איתנו?</string>
+    <string name="gutenberg_native_walt_disney">וולט דיסני</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">המבקרים ישמחו לדעת מי עומד מצידו השני של העמוד. כדאי להשתמש בשטח הזה כדי לכתוב על עצמך, האתר והעסק שלך או להוסיף כל מידע אחר כרצונך. אפשר להשתמש בהמלצות למטה כדי לצטט אחרים שמדברים על נושא מסוים – במילים שלהם.</string>
+    <string name="gutenberg_native_usa">ארה\"ב</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">זהו תוכן לדוגמה שכלול בתבנית כדי לשקף את התכונות שלה. אפשר להסיר או להחליף אותו עם טקסט או מדיה משלך.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">הדרך הכי טובה להתחיל היא להפסיק לדבר ולהתחיל לעשות.</string>
+    <string name="gutenberg_native_team">צוות</string>
+    <string name="gutenberg_native_success_message">הודעת הצלחה</string>
+    <string name="gutenberg_native_strategy">אסטרטגיה</string>
+    <string name="gutenberg_native_show_post_content">להציג את תוכן הפוסט</string>
+    <string name="gutenberg_native_services">שירותים</string>
+    <string name="gutenberg_native_samuel_the_dog">סמואל הכלבלב</string>
+    <string name="gutenberg_native_sally_smith">סאלי סמית\'</string>
+    <string name="gutenberg_native_project_name">שם הפרויקט</string>
+    <string name="gutenberg_native_position_or_job_title">כותרת התפקיד או המשרה</string>
+    <string name="gutenberg_native_portfolio">תיק עבודות</string>
+    <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
+    <string name="gutenberg_native_minimum_height_in_pixels">גובה מינימלי בפיקסלים</string>
+    <string name="gutenberg_native_link_to">קישור אל</string>
+    <string name="gutenberg_native_link_settings">הגדרות הקישור</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">נשמח לבנות משהו ביחד.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">נשמח לבנות משהו ביחד</string>
+    <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד</string>
+    <string name="gutenberg_native_juan_p_rez">חואן פרז</string>
+    <string name="gutenberg_native_j_k_rowling">ג\'יי קיי רולינג</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">הבחירות שלנו, הארי, משקפות מי אנחנו באמת הרבה יותר מהיכולות שלנו.</string>
+    <string name="gutenberg_native_inspiration">השראה</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">מצפים לשמוע ממך!</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">מצפים לשמוע ממך!</string>
+    <string name="gutenberg_native_get_in_touch">מצפים לשמוע ממך</string>
+    <string name="gutenberg_native_excerpt_length_words">אורך התקציר (מילים)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">שלחו לי אימייל: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_edit_cover_media">לערוך את תוכן המדיה של הכיסוי</string>
+    <string name="gutenberg_native_dr_seuss">דוקטור סוס</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">חבל לבכות כי החוויה שהסתיימה, כדאי לחייך כי החוויה התרחשה.</string>
+    <string name="gutenberg_native_customize">התאמה אישית</string>
+    <string name="gutenberg_native_city_10100">עיר מגורים, 10100</string>
+    <string name="gutenberg_native_button_link_url">כתובת URL לקישור של הכפתור</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">בקרוב נוסיף הגדרות לצבע הכפתורים.</string>
+    <string name="gutenberg_native_border_settings">הגדרות גבול</string>
+    <string name="gutenberg_native_border_radius">רדיוס הגבולות</string>
+    <string name="gutenberg_native_background_opacity">השקיפות של הרקע</string>
+    <string name="gutenberg_native_add_paragraph_block">להוסיף בלוק פסקה רגילה</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">תיאור קצר של השירותים שמוצעים על ידך.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">ביוגרפיה קצרה שכוללת היסטוריה אישית, הישגים מרכזיים או עובדות מעניינות.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">תיאור של הפרויקט ושל העבודות שהוצגו.</string>
+    <string name="gutenberg_native_555_555_1234">‎(555)555–1234</string>
+    <string name="gutenberg_native_10_street_road">רחוב 10</string>
     <string name="create_post_page_fab_tooltip_contributors">ליצור פוסט</string>
     <string name="post_list_tab_trashed_posts">הועבר לפח</string>
     <string name="post_list_tab_scheduled_posts">מתוזמן לפרסום</string>
@@ -197,8 +288,6 @@ Language: he_IL
     <string name="notifications_tab_dialog_master_hint_on">השבתת הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
     <string name="notifications_tab_dialog_master_status_off">הודעות עבור אתר זה</string>
     <string name="notifications_tab_dialog_master_status_on">הודעות עבור אתר זה</string>
-    <string name="dialog_gutenberg_informative_description_page">התחלת להשתמש בעורך הבלוקים עבור עמודים חדשים u2014 מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">התחלת להשתמש בעורך הבלוקים עבור פוסטים חדשים u2014 מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
     <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>
@@ -1197,7 +1286,7 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="copy">העתק</string>
+    <string name="copy_text">העתק</string>
     <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>
@@ -2005,7 +2094,6 @@ Language: he_IL
     <string name="content_required">נדרשת תגובה</string>
     <string name="sure_to_cancel_edit_comment">לבטל עריכה של תגובה זו?</string>
     <string name="saving_changes">שומר שינויים</string>
-    <string name="hint_comment_content">תגובה</string>
     <string name="trash">אשפה</string>
     <string name="dlg_confirm_trash_comments">לשלוח לאשפה?</string>
     <string name="dlg_trashing_comments">שולח לאשפה</string>
@@ -2107,7 +2195,7 @@ Language: he_IL
     <string name="pages">עמודים</string>
     <string name="no_network_title">הרשת אינה זמינה</string>
     <string name="ok">אוקיי</string>
-    <string name="blogusername">שם משתמש</string>
+    <string name="done">בוצע</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">וורדפרס עבור אנדרואיד</string>
     <string name="tos">תנאי שימוש</string>
@@ -2120,7 +2208,6 @@ Language: he_IL
     <string name="quickpress_add_alert_title">קבע שם מקוצר</string>
     <string name="settings">הגדרות</string>
     <string name="quickpress_add_error">שם קיצור הדרך אינו יכול להיות ריק</string>
-    <string name="quickpress_window_title">בחר אתר לקיצור דרך  קוויקפרס</string>
     <string name="pages_private">פרטי</string>
     <string name="categories">קטגוריות</string>
     <string name="tags_separate_with_commas">יש להפריד תגיות בפסיקים</string>
