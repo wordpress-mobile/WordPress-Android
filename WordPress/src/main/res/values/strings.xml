@@ -1323,7 +1323,7 @@
     <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
-    <string name="publish_date">Publish</string>
+    <string name="publish_date">Publish Date</string>
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
@@ -2742,7 +2742,7 @@
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
 
     <!-- Prepublishing Nudges -->
-    <string name="prepublishing_nudges_publish_action">Publish</string>
+    <string name="prepublishing_nudges_publish_action">Publish Date</string>
     <string name="prepublishing_nudges_visibility_action">Visibility</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_back_button">Back</string>
