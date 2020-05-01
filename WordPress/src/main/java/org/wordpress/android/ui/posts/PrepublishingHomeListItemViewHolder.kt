@@ -9,22 +9,17 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-
-private const val ROUNDING_RADIUS_DP = 6
 
 sealed class PrepublishingHomeViewHolder(
     internal val parent: ViewGroup,
     @LayoutRes layout: Int
-) : RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(layout, parent, false)
-) {
+) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: PrepublishingHomeItemUiState)
 
     class PrepublishingHomeListItemViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
@@ -64,12 +59,7 @@ sealed class PrepublishingHomeViewHolder(
 
             siteName.text = uiHelpers.getTextOfUiString(itemView.context, uiState.siteName)
 
-            imageManager.loadWithRoundedCorners(
-                    siteIcon,
-                    BLAVATAR,
-                    uiState.siteIconUrl,
-                    DisplayUtils.dpToPx(itemView.context, ROUNDING_RADIUS_DP)
-            )
+            imageManager.load(siteIcon, BLAVATAR, uiState.siteIconUrl)
         }
     }
 
