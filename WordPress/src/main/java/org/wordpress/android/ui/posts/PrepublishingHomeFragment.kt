@@ -74,8 +74,7 @@ class PrepublishingHomeFragment : Fragment() {
 
     private fun getSite(): SiteModel {
         val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
-            "This is possibly null because it's " +
-                    "called during config changes."
+            "EditPostActivityHook shouldn't be null."
         }
 
         return editPostActivityHook.site
