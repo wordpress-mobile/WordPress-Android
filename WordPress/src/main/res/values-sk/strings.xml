@@ -685,9 +685,9 @@ Language: sk
     <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
-    <string name="copy">Kopírovať</string>
-    <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
+    <string name="copy_text">Kopírovať</string>
     <string name="connect_site">Pripojte webovú stránku</string>
+    <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vybračné zariadenie</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Vyber zvuk</string>
     <string name="notification_settings_category_sights_and_sounds">Vzhľady a Zvuky</string>

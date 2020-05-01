@@ -1318,7 +1318,7 @@ Language: ja_JP
     <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
-    <string name="copy">コピー</string>
+    <string name="copy_text">コピー</string>
     <string name="connect_site">サイトを連携</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">点滅</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>

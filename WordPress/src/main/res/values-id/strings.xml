@@ -1290,7 +1290,7 @@ Language: id
     <string name="media_edit_filename_caption">Nama File</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="copy">Salin</string>
+    <string name="copy_text">Salin</string>
     <string name="connect_site">Hubungkan Situs</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Kedipkan cahaya</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Getarkan perangkat</string>

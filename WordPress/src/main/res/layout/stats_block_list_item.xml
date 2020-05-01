@@ -77,7 +77,7 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
             android:visibility="gone" />
     </LinearLayout>
 
