@@ -28,6 +28,7 @@ class NoSiteToReblogActivity : AppCompatActivity() {
             ActivityLauncher.viewMySiteInNewStack(this@NoSiteToReblogActivity)
             setResult(RESULT_OK)
             finish()
+            overridePendingTransition(0, 0)
         }
     }
 
