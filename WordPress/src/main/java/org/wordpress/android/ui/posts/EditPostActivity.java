@@ -2246,7 +2246,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (title != null && quote != null) {
             mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
-                postModel.setTitle(title + "\n" + mSite.getDescription());
+                postModel.setTitle(title);
                 String content = mReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
                 postModel.setContent(content);
                 mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
