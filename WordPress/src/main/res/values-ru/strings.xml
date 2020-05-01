@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-20 06:29:12+0000
+Translation-Revision-Date: 2020-04-23 09:07:26+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Подписка</string>
+    <string name="gutenberg_native_number_of_columns">Число столбцов</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Переместить блок вправо из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_move_block_right">Переместить блок вправо</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Переместить блок влево из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_move_block_left">Переместить блок влево</string>
+    <string name="gutenberg_native_latest_blog_posts">Последние записи блога</string>
+    <string name="gutenberg_native_follow_our_blog">Подпишитесь на наш блог</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Нажмите дважды для перемещения блока вправо</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Нажмите дважды для перемещения блока влево</string>
+    <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Настройки цветов будут позже.</string>
+    <string name="gutenberg_native_blog">Блог</string>
+    <string name="new_site_creation_creating_site_loading_4">Создание консоли</string>
+    <string name="new_site_creation_creating_site_loading_3">Настройка темы</string>
+    <string name="new_site_creation_creating_site_loading_2">Добавление функциональности сайта</string>
+    <string name="new_site_creation_creating_site_loading_1">Получение URL сайта</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Ваш сайт вскоре будет готов</string>
+    <string name="new_site_creation_creating_site_loading_title">Ура!\nПочти всё готово</string>
+    <string name="pages_and_posts_cancel_auto_upload">Отменить загрузку</string>
+    <string name="gif_list_search_returned_unknown_error">Возникла проблема с вашим запросом.</string>
+    <string name="gif_powered_by_tenor">GIF с сервиса Tenor</string>
+    <string name="gif_picker_search_hint">Поиск в Tenor</string>
+    <string name="photo_picker_gif">Выберите из Tenor</string>
+    <string name="weekday_saturday">Суббота</string>
+    <string name="weekday_friday">Пятница</string>
+    <string name="weekday_thursday">Четверг</string>
+    <string name="weekday_wednesday">Среда</string>
+    <string name="weekday_tuesday">Вторник</string>
+    <string name="weekday_monday">Понедельник</string>
+    <string name="weekday_sunday">Воскресенье</string>
+    <string name="media_accessing_failed">Доступ к содержимому личного сайта не удался, некоторые медиафайлы могут быть недоступны.</string>
+    <string name="media_accessing_progress">Доступ к содержимому личного сайта</string>
     <string name="error_failed_to_crop_and_save_image">Ошибка обрезки и сохранения изображения, попробуйте снова.</string>
     <string name="failed_to_insert_image_tap_to_retry">Невозможно вставить изображение.\nНажмите для выбора вариантов.</string>
     <string name="preview_image_description">Предварительный просмотр изображения</string>
@@ -31,7 +64,6 @@ Language: ru
     <string name="page_uploading">Загрузка страницы</string>
     <string name="error_publish_page_no_network">Нет доступа к сети. Страница сохранена локально.</string>
     <string name="local_page_autosave_revision_available">Вы внесли, но не сохранили изменения на этой странице.</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Выполняется загрузка страница</string>
     <string name="editor_page_saved_locally_failed_media">Эта страница сохранена локально: она содержит медиафайлы, загрузка которых не удалась.</string>
     <string name="editor_page_saved_locally">Страница сохранена на устройстве</string>
@@ -64,7 +96,6 @@ Language: ru
     <string name="gutenberg_native_portfolio">Портфолио</string>
     <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Мое портфолио демонстрирует различные проекты созданные в течении моей карьеры. Информация для договора представлена ниже, свяжитесь со мной.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Минимальная высота в пикселях</string>
     <string name="gutenberg_native_link_to">Ссылка на</string>
     <string name="gutenberg_native_link_settings">Настройки ссылки</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Давайте общаться 👋 Не стесняйтесь воспользоваться контактной информацией ниже или послать сообщение через форму.</string>
@@ -80,7 +111,6 @@ Language: ru
     <string name="gutenberg_native_get_in_touch">Присоединяйтесь</string>
     <string name="gutenberg_native_excerpt_length_words">Длина отрывка (слов)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Напишите мне: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Редактировать изображение обложки</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_customize">НАСТРОИТЬ</string>
@@ -89,7 +119,6 @@ Language: ru
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Настройки цветов кнопок будут позже.</string>
     <string name="gutenberg_native_border_settings">Настройки границы</string>
     <string name="gutenberg_native_border_radius">Радиус границ</string>
-    <string name="gutenberg_native_background_opacity">Непрозрачность фона</string>
     <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Краткое описание предлагаемых услуг.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Короткая биография, ключевые достижения или интересные факты.</string>
@@ -650,6 +679,9 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
+    <string name="gif_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
+    <string name="gif_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
+    <string name="gif_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
     <string name="stats_author_views_label">Просмотры</string>
     <string name="stats_author_label">Автор</string>
     <string name="stats_authors">Авторы</string>

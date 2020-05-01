@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-19 19:40:49+0000
+Translation-Revision-Date: 2020-04-24 21:54:12+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Abonner</string>
+    <string name="gutenberg_native_number_of_columns">Antall kolonner</string>
+    <string name="gutenberg_native_latest_blog_posts">Siste blogginnlegg</string>
+    <string name="gutenberg_native_follow_our_blog">Følg vår blogg</string>
+    <string name="gutenberg_native_blog">Blogg</string>
+    <string name="weekday_saturday">Lørdag</string>
+    <string name="weekday_friday">Fredag</string>
+    <string name="weekday_thursday">Torsdag</string>
+    <string name="weekday_wednesday">Onsdag</string>
+    <string name="weekday_tuesday">Tirsdag</string>
+    <string name="weekday_monday">Mandag</string>
+    <string name="weekday_sunday">Søndag</string>
+    <string name="preview_image_description">Forhåndsvis bilde</string>
     <string name="gutenberg_native_what_people_say">Hva folk sier</string>
     <string name="gutenberg_native_warning_message">Advarselsmelding</string>
     <string name="gutenberg_native_want_to_work_with_us">Vil du arbeide for oss?</string>
@@ -172,6 +185,8 @@ Language: nb_NO
     <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
     <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
     <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
+    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider, flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg, flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -528,6 +543,9 @@ Language: nb_NO
     <string name="stats_no_data_for_period">Ingen data for denne perioden</string>
     <string name="preference_strip_image_location">Fjern dette stedet fra media</string>
     <string name="stats_cannot_be_started">Vi kan ikke åpne statistikken i øyeblikket. Vennligst prøv igjen senere</string>
+    <string name="gif_picker_endless_scroll_network_error">Noen media kunne ikke lastes på grunn av en nettverksfeil.</string>
+    <string name="gif_picker_empty_search_list">Ingen media passet til ditt søk</string>
+    <string name="gif_picker_initial_empty_text">Søk for å finne GIF-er å legge til i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visninger</string>
     <string name="stats_author_label">Forfatter</string>
     <string name="stats_authors">Forfattere</string>
