@@ -215,6 +215,9 @@ public class AppPrefs {
 
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
+
+        // Store a version of the last shown feature announcement
+        FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
     }
 
     private static SharedPreferences prefs() {
@@ -1090,6 +1093,14 @@ public class AppPrefs {
     private static List<String> getPostWithHWAccelerationOff() {
         String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
         return Arrays.asList(idsAsString.split(","));
+    }
+
+    public static void setFeatureAnnouncementShownVersion(int version) {
+        setInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, version);
+    }
+
+    public static int getFeatureAnnouncementShownVersion() {
+        return getInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, -1);
     }
 
     /*

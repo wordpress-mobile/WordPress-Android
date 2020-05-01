@@ -30,6 +30,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getNewsCardShownVersion()
         set(version) = AppPrefs.setNewsCardShownVersion(version)
 
+    var featureAnnouncementShownVersion: Int
+        get() = AppPrefs.getFeatureAnnouncementShownVersion()
+        set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
+
     var avatarVersion: Int
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
