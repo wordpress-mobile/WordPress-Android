@@ -75,7 +75,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                val metrics = resources.displayMetrics
+                behavior.peekHeight = metrics.heightPixels / 2
             }
         }
     }
