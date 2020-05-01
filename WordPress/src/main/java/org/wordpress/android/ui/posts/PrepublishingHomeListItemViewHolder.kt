@@ -19,14 +19,12 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 
 private const val ROUNDING_RADIUS_DP = 6
 
-sealed class PrepublishingHomeViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
-        RecyclerView.ViewHolder(
-                LayoutInflater.from(parent.context).inflate(
-                        layout,
-                        parent,
-                        false
-                )
-        ) {
+sealed class PrepublishingHomeViewHolder(
+    internal val parent: ViewGroup,
+    @LayoutRes layout: Int
+) : RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(layout, parent, false)
+) {
     abstract fun onBind(uiState: PrepublishingHomeItemUiState)
 
     class PrepublishingHomeListItemViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
