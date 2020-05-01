@@ -14,6 +14,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -39,7 +40,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     // TODO remove hardcoded Public with live data from the EditPostRepository / user changes.
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = listOf(
-                HeaderUiState(UiStringText(site.name), site.iconUrl?.let { it } ?: run { "" }),
+                HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),
                 HomeUiState(
                         actionType = PUBLISH,
                         actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
