@@ -287,7 +287,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SitePickerViewModel.class)
     abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
-	
+
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
 }

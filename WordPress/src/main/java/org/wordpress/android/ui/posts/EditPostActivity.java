@@ -347,7 +347,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
-    @Inject ReblogUtils mReblogUtils;	
+    @Inject ReblogUtils mReblogUtils;
 
     private StorePostViewModel mViewModel;
 
