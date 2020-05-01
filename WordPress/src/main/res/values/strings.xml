@@ -1710,6 +1710,14 @@
 
     <string name="reader_excerpt_link">Visit %s for more</string>
 
+    <!-- reblog -->
+    <string name="reader_view_reblog">Reblog</string>
+    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
+    <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
+    <string name="reader_no_site_to_reblog_action">Manage Sites</string>
+    <string name="reader_reblog_error">Reblog failed</string>
+    <string name="sitepicker_continue_flow">Continue</string>
+
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
     <string name="reader_likes_one">One person likes this</string>
@@ -1877,6 +1885,7 @@
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
+    <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>

@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewMode
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
 import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel;
@@ -281,6 +282,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FeatureAnnouncementViewModel.class)
     abstract ViewModel featureAnnouncementViewModel(FeatureAnnouncementViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SitePickerViewModel.class)
+    abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

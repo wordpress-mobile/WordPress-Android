@@ -155,6 +155,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
     public static final String ARG_OPEN_PAGE = "open_page";
+    public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
     public static final String ARG_READER = "show_reader";
     public static final String ARG_EDITOR = "show_editor";
@@ -501,6 +502,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
         String pagePosition = intent.getStringExtra(ARG_OPEN_PAGE);
         if (!TextUtils.isEmpty(pagePosition)) {
             switch (pagePosition) {
+                case ARG_MY_SITE:
+                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+                    break;
                 case ARG_NOTIFICATIONS:
                     mBottomNav.setCurrentSelectedPage(PageType.NOTIFS);
                     break;
@@ -1232,15 +1236,35 @@ public class WPMainActivity extends LocaleAwareActivity implements
         // WPMainActivity invokes show(). This condition makes sure, the WPMainActivity invokes show() only when
         // it's visible. For more info see https://github.com/wordpress-mobile/WordPress-Android/issues/9604
         if (getLifecycle().getCurrentState().isAtLeast(STARTED)) {
-            SiteModel site = getSelectedSite();
-            if (site != null && event.post != null && event.post.getLocalSiteId() == site.getId()) {
+            SiteModel selectedSite = getSelectedSite();
+
+            if (selectedSite != null && event.post != null) {
+                SiteModel targetSite;
+
+                if (event.post.getLocalSiteId() == selectedSite.getId()) {
+                    targetSite = selectedSite;
+                } else {
+                    SiteModel postSite = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
+
+                    if (postSite != null) {
+                        targetSite = postSite;
+                    } else {
+                        AppLog.d(
+                                T.MAIN,
+                                "WPMainActivity >  onPostUploaded: got an event from a not found site ["
+                                + event.post.getLocalSiteId() + "]."
+                        );
+                        return;
+                    }
+                }
+
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
                         event.post,
                         null,
-                        site);
+                        targetSite);
             }
         }
     }
