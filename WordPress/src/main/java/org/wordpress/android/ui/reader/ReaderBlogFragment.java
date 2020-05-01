@@ -90,7 +90,7 @@ public class ReaderBlogFragment extends Fragment
 
         if (hasBlogAdapter() && getBlogAdapter().isEmpty()) {
             actionableEmptyView.setVisibility(View.VISIBLE);
-            actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+            actionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_162dp);
             actionableEmptyView.subtitle.setText(R.string.reader_empty_followed_blogs_description);
             actionableEmptyView.button.setText(R.string.reader_empty_followed_blogs_button_discover);
             actionableEmptyView.button.setOnClickListener(new OnClickListener() {

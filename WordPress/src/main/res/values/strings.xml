@@ -1768,12 +1768,12 @@
     <string name="reader_empty_followed_tags_subtitle">Add tags here to find posts about your favorite topics</string>
     <string name="reader_empty_followed_tags_title">No followed tags</string>
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
-    <string name="reader_empty_followed_blogs_title">Posts by blogs you follow</string>
+    <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
-    <string name="reader_empty_followed_blogs_description">When you follow blogs, you\'ll see their content here</string>
+    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
-    <string name="reader_empty_followed_blogs_button_discover">Discover blogs</string>
+    <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>

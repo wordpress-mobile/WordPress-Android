@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/toolbar_height"
     android:visibility="gone"
     app:aevButton="@string/reader_empty_followed_blogs_button_discover"
-    app:aevImage="@drawable/img_illustration_empty_results_216dp"
+    app:aevImage="@drawable/img_illustration_empty_results_162dp"
     app:aevSubtitle="@string/reader_empty_followed_blogs_description"
     app:aevTitle="@string/reader_empty_followed_blogs_title"
     tools:visibility="visible" />
