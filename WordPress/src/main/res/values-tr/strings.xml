@@ -1288,7 +1288,7 @@ Language: tr
     <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternatif metin</string>
-    <string name="copy">Kopyala</string>
+    <string name="copy_text">Kopyala</string>
     <string name="connect_site">Site bağla</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>

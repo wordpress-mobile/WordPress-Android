@@ -73,6 +73,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "stock_photos");
                 break;
+            case EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR:
+                predefinedEventProperties.put("via", "media_editor");
+                break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 predefinedEventProperties.put("button", "blockquote");
                 break;
@@ -767,6 +770,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR:
                 return "editor_photo_added";
             case EDITOR_ADDED_VIDEO_NEW:
                 return "editor_video_added";

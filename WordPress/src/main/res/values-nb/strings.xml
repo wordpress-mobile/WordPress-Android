@@ -1144,7 +1144,7 @@ Language: nb_NO
     <string name="media_edit_filename_caption">Filnavn</string>
     <string name="media_edit_url_caption">Nettadresse</string>
     <string name="media_edit_alttext_text">Alternativ tekst</string>
-    <string name="copy">Kopier</string>
+    <string name="copy_text">Kopier</string>
     <string name="connect_site">Koble til nettsted</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lysblink</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibreringer</string>
