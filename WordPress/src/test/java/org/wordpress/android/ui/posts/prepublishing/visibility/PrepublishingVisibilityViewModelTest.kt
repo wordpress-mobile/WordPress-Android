@@ -125,6 +125,8 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     @Test
     fun `If PRIVATE VISIBILITY is tapped & password is not empty updatePasswordUseCase clears it`() {
         // arrange
+        val expectedEmptyPassword = ""
+
         val post = PostModel()
         val password = "password"
         post.setPassword(password)
@@ -135,7 +137,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
         invokeVisibilityOnItemTapped(PRIVATE)
 
         // assert
-        verify(updatePostPasswordUseCase).updatePassword(any(), any(), any())
+        verify(updatePostPasswordUseCase).updatePassword(eq(expectedEmptyPassword), any(), any())
     }
 
     @Test
