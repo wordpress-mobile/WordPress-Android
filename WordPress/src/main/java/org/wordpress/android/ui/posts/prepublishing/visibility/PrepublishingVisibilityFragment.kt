@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import kotlinx.android.synthetic.main.prepublishing_visibility_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -24,9 +23,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 class PrepublishingVisibilityFragment : Fragment() {
-    private lateinit var closeButton: ImageView
-    private lateinit var backButton: ImageView
-    private lateinit var toolbarTitle: TextView
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
 
@@ -55,14 +51,15 @@ class PrepublishingVisibilityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        visibility_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
-        visibility_recycler_view.adapter = PrepublishingVisibilityAdapter(requireActivity())
-        toolbarTitle = view.findViewById(R.id.toolbar_title)
-        closeButton = view.findViewById(R.id.close_button)
-        backButton = view.findViewById(R.id.back_button)
 
+        initRecyclerView()
         initViewModel()
         initViews()
+    }
+
+    private fun initRecyclerView() {
+        visibility_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
+        visibility_recycler_view.adapter = PrepublishingVisibilityAdapter(requireActivity())
     }
 
     private fun initViewModel() {
@@ -92,7 +89,7 @@ class PrepublishingVisibilityFragment : Fragment() {
         })
 
         viewModel.toolbarUiState.observe(this, Observer { uiString ->
-            toolbarTitle.text = uiHelpers.getTextOfUiString(
+            toolbar_title.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     uiString
             )
@@ -102,9 +99,8 @@ class PrepublishingVisibilityFragment : Fragment() {
     }
 
     private fun initViews() {
-        closeButton.setOnClickListener { viewModel.onCloseButtonClicked() }
-        backButton.setOnClickListener { viewModel.onBackButtonClicked() }
-
+        close_button.setOnClickListener { viewModel.onCloseButtonClicked() }
+        back_button.setOnClickListener { viewModel.onBackButtonClicked() }
     }
 
     private fun getEditPostRepository(): EditPostRepository {
