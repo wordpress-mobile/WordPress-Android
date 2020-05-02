@@ -161,13 +161,19 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun checkForFeatureAnnouncements() {
-        if (featureAnnouncementProvider.isFeatureAnnouncementAvailable()
-                && appPrefsWrapper.featureAnnouncementShownVersion < featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!) {
-            appPrefsWrapper.featureAnnouncementShownVersion = featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+        if (canShowFeatureAnnouncement()) {
+            appPrefsWrapper.featureAnnouncementShownVersion =
+                    featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
             _onFeatureAnnouncementRequested.call()
         }
 //        else {
 //            // request feature announcement from endpoint to be used on next app start
 //        }
+    }
+
+    private fun canShowFeatureAnnouncement(): Boolean {
+        return featureAnnouncementProvider.isFeatureAnnouncementAvailable() &&
+                appPrefsWrapper.featureAnnouncementShownVersion <
+                featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
     }
 }

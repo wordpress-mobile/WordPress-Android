@@ -45,6 +45,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
+            850,
             "https://wordpress.org/",
             testFeatures
     )

@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes
 
 data class FeatureAnnouncement(
     val version: String,
-    val versionCode : Int,
+    val versionCode: Int,
     val detailsUrl: String,
     val features: List<FeatureAnnouncementItem>
 )
