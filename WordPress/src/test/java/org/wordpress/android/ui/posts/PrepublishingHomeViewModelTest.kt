@@ -16,7 +16,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PU
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PrepublishingHomeUiState
-import org.wordpress.android.ui.posts.prepublishing.visibility.GetPostVisibilityUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
