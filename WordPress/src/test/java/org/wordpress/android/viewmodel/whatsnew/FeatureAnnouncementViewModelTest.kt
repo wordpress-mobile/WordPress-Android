@@ -43,7 +43,11 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             )
     )
 
-    private val featureAnnouncement = FeatureAnnouncement("14.7", 857, "https://wordpress.org/", testFeatures)
+    private val featureAnnouncement = FeatureAnnouncement(
+            "14.7",
+            "https://wordpress.org/",
+            testFeatures
+    )
 
     @Before
     fun setUp() {

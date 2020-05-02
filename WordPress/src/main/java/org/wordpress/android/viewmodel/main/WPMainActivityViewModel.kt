@@ -13,14 +13,12 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
-import org.wordpress.android.util.VersionCodeProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
-    private val versionCodeProvider: VersionCodeProvider,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private var isStarted = false
@@ -164,13 +162,12 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun checkForFeatureAnnouncements() {
         if (featureAnnouncementProvider.isFeatureAnnouncementAvailable()
-                && featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode == versionCodeProvider.getVersionCode()
                 && appPrefsWrapper.featureAnnouncementShownVersion < featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!) {
-            appPrefsWrapper.featureAnnouncementShownVersion = versionCodeProvider.getVersionCode()
+            appPrefsWrapper.featureAnnouncementShownVersion = featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
             _onFeatureAnnouncementRequested.call()
         }
 //        else {
-//            // request feature announcement from endpoint
+//            // request feature announcement from endpoint to be used on next app start
 //        }
     }
 }
