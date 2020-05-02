@@ -62,6 +62,7 @@ class PrepublishingVisibilityFragment : Fragment() {
         backButton = view.findViewById(R.id.back_button)
 
         initViewModel()
+        initViews()
     }
 
     private fun initViewModel() {
@@ -97,10 +98,13 @@ class PrepublishingVisibilityFragment : Fragment() {
             )
         })
 
+        viewModel.start(getEditPostRepository())
+    }
+
+    private fun initViews() {
         closeButton.setOnClickListener { viewModel.onCloseButtonClicked() }
         backButton.setOnClickListener { viewModel.onBackButtonClicked() }
 
-        viewModel.start(getEditPostRepository())
     }
 
     private fun getEditPostRepository(): EditPostRepository {
