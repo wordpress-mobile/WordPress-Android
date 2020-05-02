@@ -23,9 +23,7 @@ sealed class PrepublishingHomeViewHolder(
     abstract fun onBind(uiState: PrepublishingHomeItemUiState)
 
     class PrepublishingHomeListItemViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-            PrepublishingHomeViewHolder(
-                    parentView, R.layout.prepublishing_action_list_item
-            ) {
+            PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_action_list_item) {
         private val actionType: TextView = itemView.findViewById(R.id.action_type)
         private val actionResult: TextView = itemView.findViewById(R.id.action_result)
         private val actionLayout: View = itemView.findViewById(R.id.action_layout)
@@ -47,10 +45,7 @@ sealed class PrepublishingHomeViewHolder(
         parentView: ViewGroup,
         val uiHelpers: UiHelpers,
         val imageManager: ImageManager
-    ) :
-            PrepublishingHomeViewHolder(
-                    parentView, R.layout.prepublishing_home_header_list_item
-            ) {
+    ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_header_list_item) {
         private val siteName: TextView = itemView.findViewById(R.id.site_name)
         private val siteIcon: ImageView = itemView.findViewById(R.id.site_icon)
 
@@ -64,9 +59,7 @@ sealed class PrepublishingHomeViewHolder(
     }
 
     class PrepublishingHomePublishButtonViewHolder(parentView: ViewGroup, val uiHelpers: UiHelpers) :
-            PrepublishingHomeViewHolder(
-                    parentView, R.layout.prepublishing_home_publish_button_list_item
-            ) {
+            PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_home_publish_button_list_item) {
         private val button: Button = itemView.findViewById(R.id.publish_button)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
