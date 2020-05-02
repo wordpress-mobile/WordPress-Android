@@ -21,8 +21,10 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.ActivityUtils;
 
 public class PostSettingsInputDialogFragment extends DialogFragment implements TextWatcher {
+    public static final String TAG = "post_settings_input_dialog_fragment";
+
     public interface PostSettingsInputDialogListener {
-         void onInputUpdated(String input);
+        void onInputUpdated(String input);
     }
 
     private static final String INPUT_TAG = "input";

@@ -120,7 +120,7 @@ class PrepublishingVisibilityFragment : Fragment() {
         dialog.setPostSettingsInputDialogListener { input -> viewModel.onPostPasswordChanged(input) }
 
         fragmentManager?.let {
-            dialog.show(it, null)
+            dialog.show(it, PostSettingsInputDialogFragment.TAG)
         }
     }
 
