@@ -14,11 +14,11 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 
-@InternalCoroutinesApi
 class GetPostVisibilityUseCaseTest : BaseUnitTest() {
     lateinit var editPostRepository: EditPostRepository
     lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
 
+    @InternalCoroutinesApi
     @Before
     fun setup() {
         getPostVisibilityUseCase = GetPostVisibilityUseCase()
