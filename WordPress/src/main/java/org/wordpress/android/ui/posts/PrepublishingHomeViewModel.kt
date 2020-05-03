@@ -32,6 +32,9 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
+    private val _onPublishButtonClicked = MutableLiveData<Event<Unit>>()
+    val onPublishButtonClicked: LiveData<Event<Unit>> = _onPublishButtonClicked
+
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
         isStarted = true
@@ -62,7 +65,9 @@ class PrepublishingHomeViewModel @Inject constructor(
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
                 ),
-                PublishButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button), {})
+                PublishButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button)) {
+                    _onPublishButtonClicked.postValue(Event(Unit))
+                }
         )
 
         _uiState.postValue(prepublishingHomeUiStateList)
