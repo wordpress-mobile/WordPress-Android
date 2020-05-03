@@ -9,7 +9,13 @@ import javax.inject.Inject
 class GetPostTagsUseCase @Inject constructor() {
     fun getTags(editPostRepository: EditPostRepository): String? {
         val tags = editPostRepository.getPost()?.tagNameList
-        return tags?.let { formatTags(it) }
+        return tags?.let {
+            if (it.isNotEmpty()) {
+                formatTags(it)
+            } else {
+                null
+            }
+        }
     }
 
     private fun formatTags(tags: List<String>): String {

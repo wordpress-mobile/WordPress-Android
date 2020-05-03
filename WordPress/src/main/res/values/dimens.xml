@@ -486,6 +486,8 @@
     <!-- unelevated card -->
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
-    <dimen name="prepublishing_bottom_sheet_min_height">300dp</dimen>
+
+    <!-- prepublishing nudges -->
+    <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
 
 </resources>
