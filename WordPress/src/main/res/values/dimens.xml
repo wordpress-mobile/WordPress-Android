@@ -489,5 +489,6 @@
 
     <!-- prepublishing nudges -->
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
 
 </resources>
