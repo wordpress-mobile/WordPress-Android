@@ -41,7 +41,12 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = listOf(
-                HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),
+                HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),                
+                HomeUiState(
+                        actionType = VISIBILITY,
+                        actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                        onActionClicked = ::onActionClicked
+                ),
                 HomeUiState(
                         actionType = PUBLISH,
                         actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
@@ -49,11 +54,6 @@ class PrepublishingHomeViewModel @Inject constructor(
                                     postSettingsUtils.getPublishDateLabel(postImmutableModel)
                             )
                         },
-                        onActionClicked = ::onActionClicked
-                ),
-                HomeUiState(
-                        actionType = VISIBILITY,
-                        actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
                         onActionClicked = ::onActionClicked
                 ),
                 HomeUiState(
