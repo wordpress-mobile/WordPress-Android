@@ -25,7 +25,6 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePo
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
-@InternalCoroutinesApi
 class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingVisibilityViewModel
 
@@ -34,6 +33,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     @Mock lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
     private lateinit var editPostRepository: EditPostRepository
 
+    @InternalCoroutinesApi
     @Before
     fun setup() {
         viewModel = PrepublishingVisibilityViewModel(
