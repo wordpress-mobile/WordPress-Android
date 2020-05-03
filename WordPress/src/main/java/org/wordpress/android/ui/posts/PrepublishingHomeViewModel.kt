@@ -42,17 +42,17 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = listOf(
                 HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),
                 HomeUiState(
+                        actionType = VISIBILITY,
+                        actionResult = UiStringText("Public"),
+                        onActionClicked = ::onActionClicked
+                ),
+                HomeUiState(
                         actionType = PUBLISH,
                         actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
                             UiStringText(
                                     postSettingsUtils.getPublishDateLabel(postImmutableModel)
                             )
                         },
-                        onActionClicked = ::onActionClicked
-                ),
-                HomeUiState(
-                        actionType = VISIBILITY,
-                        actionResult = UiStringText("Public"),
                         onActionClicked = ::onActionClicked
                 ),
                 HomeUiState(
