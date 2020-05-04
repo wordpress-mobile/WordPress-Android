@@ -234,6 +234,6 @@ class WPMainActivityViewModelTest {
     }
 
     private fun startViewModelWithDefaultParameters() {
-        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+        viewModel.start(isFabVisible = true, hasFullAccessToContent = true, isFeatureAnnouncementAvailable = true)
     }
 }

@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -41,7 +42,12 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
-    fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
+    @JvmOverloads
+    fun start(
+        isFabVisible: Boolean,
+        hasFullAccessToContent: Boolean,
+        isFeatureAnnouncementAvailable: Boolean = BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE
+    ) {
         if (isStarted) return
         isStarted = true
 
@@ -49,7 +55,9 @@ class WPMainActivityViewModel @Inject constructor(
 
         loadMainActions()
 
-        checkForFeatureAnnouncements()
+        if (isFeatureAnnouncementAvailable) {
+            checkForFeatureAnnouncements()
+        }
     }
 
     private fun loadMainActions() {
