@@ -309,8 +309,9 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/row_register_domain"
-                            style="@style/MySiteListRowLayout">
+                            style="@style/MySiteListRowLayout"
+                            android:foreground="@null"
+                            tools:ignore="UnusedAttribute">
 
                             <ImageView
                                 android:id="@+id/my_site_register_domain_icon"
