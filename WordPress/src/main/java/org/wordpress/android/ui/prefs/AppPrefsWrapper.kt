@@ -126,6 +126,8 @@ class AppPrefsWrapper @Inject constructor() {
     fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
     fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
 
+    fun getLastAppVersionCode() = AppPrefs.getLastAppVersionCode()
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1

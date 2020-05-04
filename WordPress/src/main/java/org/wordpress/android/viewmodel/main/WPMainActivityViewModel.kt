@@ -3,7 +3,6 @@ package org.wordpress.android.viewmodel.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -14,12 +13,14 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
+    private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper
 ) : ViewModel() {
     private var isStarted = false
@@ -42,12 +43,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
 
-    @JvmOverloads
-    fun start(
-        isFabVisible: Boolean,
-        hasFullAccessToContent: Boolean,
-        isFeatureAnnouncementAvailable: Boolean = BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE
-    ) {
+    fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
         isStarted = true
 
@@ -55,7 +51,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         loadMainActions()
 
-        if (isFeatureAnnouncementAvailable) {
+        if (buildConfigWrapper.isFeatureAnnouncementEnabled()) {
             checkForFeatureAnnouncements()
         }
     }
@@ -169,14 +165,20 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun checkForFeatureAnnouncements() {
-        if (canShowFeatureAnnouncement()) {
-            appPrefsWrapper.featureAnnouncementShownVersion =
-                    featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
-            _onFeatureAnnouncementRequested.call()
+        val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+        val previousVersionCode = appPrefsWrapper.getLastAppVersionCode()
+
+        // only proceed to feature announcement logic if we are upgrading the app
+        if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+            if (canShowFeatureAnnouncement()) {
+                appPrefsWrapper.featureAnnouncementShownVersion =
+                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+                _onFeatureAnnouncementRequested.call()
+            }
+//          else {
+//              // request feature announcement from endpoint to be used on next app start
+//          }
         }
-//        else {
-//            // request feature announcement from endpoint to be used on next app start
-//        }
     }
 
     private fun canShowFeatureAnnouncement(): Boolean {
