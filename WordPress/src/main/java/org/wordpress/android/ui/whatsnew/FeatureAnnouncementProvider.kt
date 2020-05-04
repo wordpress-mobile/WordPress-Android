@@ -11,7 +11,6 @@ import java.io.FileNotFoundException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 class FeatureAnnouncementProvider @Inject constructor() {
     private val gson: Gson by lazy {
         val builder = GsonBuilder()
