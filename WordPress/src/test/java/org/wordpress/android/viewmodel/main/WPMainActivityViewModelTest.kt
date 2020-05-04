@@ -177,7 +177,7 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `show feature announcement on app upgrade, when it's available and no announcement was not shown before`() {
+    fun `show feature announcement when it's available and no announcement was not shown before`() {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.getLastAppVersionCode()).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
@@ -191,7 +191,7 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `show feature announcement on app upgrade, when it's available and previous announcement targets older build`() {
+    fun `show feature announcement when it's available and previous announcement targets older build`() {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(849)
         whenever(appPrefsWrapper.getLastAppVersionCode()).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
