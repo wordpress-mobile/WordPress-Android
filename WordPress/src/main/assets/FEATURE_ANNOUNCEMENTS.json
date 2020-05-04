@@ -1,0 +1,26 @@
+{
+  "announcements": [
+    {
+      "version": "14.7",
+      "versionCode": 850,
+      "detailsUrl": "http://wordpress.org",
+      "features": [
+        {
+          "title": "Super Publishing",
+          "subtitle": "Publish amazing articles using the power of your mind! Concentrate on what you want to post, and we will do the rest!",
+          "gridiconName": "ic_posts_white_24dp"
+        },
+        {
+          "title": "Great cats and superb dogs are right behind you!",
+          "subtitle": "That's right! They are right in the app! They require pets right now. Are you going to look for them or what?",
+          "gridiconName": "ic_plans_white_24dp"
+        },
+        {
+          "title": "We like long feature announcements that why this one is going to be extra long and span multiple lines",
+          "subtitle": "Here we run out of budget.",
+          "gridiconName": "ic_themes_white_24dp"
+        }
+      ]
+    }
+  ]
+}
