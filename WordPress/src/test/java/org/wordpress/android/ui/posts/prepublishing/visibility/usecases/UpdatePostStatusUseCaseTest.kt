@@ -38,9 +38,9 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with PUBLIC Visibility the PostStatus is PUBLISHED`() {
+    fun `verify that when updatePostStatus is called with PUBLIC Visibility the PostStatus is DRAFT`() {
         // arrange
-        val expectedPostStatus = PostStatus.PUBLISHED
+        val expectedPostStatus = PostStatus.DRAFT
 
         // act
         updatePostStatusUseCase.updatePostStatus(PUBLIC, editPostRepository) {}

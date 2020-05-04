@@ -17,7 +17,7 @@ class UpdatePostStatusUseCase @Inject constructor() {
         val postStatus = if (visibility == PRIVATE) {
             PostStatus.PRIVATE
         } else {
-            PostStatus.PUBLISHED
+            PostStatus.DRAFT
         }
 
         editPostRepository.updateAsync({ postModel: PostModel ->
