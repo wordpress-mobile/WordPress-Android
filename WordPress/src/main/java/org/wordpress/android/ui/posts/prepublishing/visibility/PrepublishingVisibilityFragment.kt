@@ -18,11 +18,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostSettingsInputDialogFragment
+import org.wordpress.android.ui.posts.PostSettingsInputDialogFragment.PostSettingsInputDialogListener
 import org.wordpress.android.ui.posts.PrepublishingScreenClosedListener
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
-class PrepublishingVisibilityFragment : Fragment() {
+class PrepublishingVisibilityFragment : Fragment(), PostSettingsInputDialogListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
 
@@ -42,6 +43,11 @@ class PrepublishingVisibilityFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         closeListener = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        reattachPostPasswordDialogListener()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -117,11 +123,22 @@ class PrepublishingVisibilityFragment : Fragment() {
                 getEditPostRepository().password, getString(string.password),
                 getString(string.post_settings_password_dialog_hint), false
         )
-        dialog.setPostSettingsInputDialogListener { input -> viewModel.onPostPasswordChanged(input) }
+        dialog.setPostSettingsInputDialogListener(this)
 
         fragmentManager?.let {
             dialog.show(it, PostSettingsInputDialogFragment.TAG)
         }
+    }
+
+    private fun reattachPostPasswordDialogListener() {
+        val fragment = fragmentManager?.findFragmentByTag(PostSettingsInputDialogFragment.TAG)
+        fragment?.let {
+            (it as PostSettingsInputDialogFragment).setPostSettingsInputDialogListener(this)
+        }
+    }
+
+    override fun onInputUpdated(input: String) {
+        viewModel.onPostPasswordChanged(input)
     }
 
     private fun getEditPostActivityHook(): EditPostActivityHook? {
