@@ -235,7 +235,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
 
-    private fun getButtonUiState() = viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.first()
+    private fun getButtonUiState(): PublishButtonUiState? {
+        return viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.first()
+    }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
