@@ -328,13 +328,13 @@ public class PostUtils {
         return pubDate == null || !pubDate.after(now);
     }
 
-    static boolean isPublishDateInTheFuture(String dateCreated) {
+    public static boolean isPublishDateInTheFuture(String dateCreated) {
         Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
         Date now = new Date();
         return pubDate != null && pubDate.after(now);
     }
 
-    static boolean isPublishDateInThePast(String dateCreated) {
+    public static boolean isPublishDateInThePast(String dateCreated) {
         Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
 
         // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
@@ -349,7 +349,7 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
+    public static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
         return postStatus == PostStatus.DRAFT;
     }
 
