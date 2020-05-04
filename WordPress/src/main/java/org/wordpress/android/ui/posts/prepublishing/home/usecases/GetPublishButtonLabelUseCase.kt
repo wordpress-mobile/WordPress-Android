@@ -11,19 +11,17 @@ typealias StringResourceId = Int
 
 class GetPublishButtonLabelUseCase @Inject constructor() {
     fun getLabel(editPostRepository: EditPostRepository): StringResourceId {
-        val postModel = editPostRepository.getPost()
-        requireNotNull(postModel) { "PostModel can't be null. " }
-
-        val dateCreated = postModel.dateCreated
-        val status = PostStatus.fromPost(postModel)
-
+        val dateCreated = editPostRepository.dateCreated
+        val status = editPostRepository.status
         return when {
             !TextUtils.isEmpty(dateCreated) -> {
                 when {
                     status == PostStatus.SCHEDULED -> R.string.prepublishing_nudges_home_schedule_button
-                    status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE -> R.string.prepublishing_nudges_home_publish_button
-                    postModel.isLocalDraft -> R.string.prepublishing_nudges_home_publish_button
-                    PostUtils.isPublishDateInTheFuture(postModel.dateCreated) -> R.string.prepublishing_nudges_home_schedule_button
+                    status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE ->
+                        R.string.prepublishing_nudges_home_publish_button
+                    editPostRepository.isLocalDraft -> R.string.prepublishing_nudges_home_publish_button
+                    PostUtils.isPublishDateInTheFuture(editPostRepository.dateCreated) ->
+                        R.string.prepublishing_nudges_home_schedule_button
                     else -> R.string.prepublishing_nudges_home_publish_button
                 }
             }
@@ -31,4 +29,3 @@ class GetPublishButtonLabelUseCase @Inject constructor() {
         }
     }
 }
-
