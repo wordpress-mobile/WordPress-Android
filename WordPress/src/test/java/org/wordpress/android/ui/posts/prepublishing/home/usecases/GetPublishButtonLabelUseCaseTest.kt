@@ -1,16 +1,20 @@
 package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Calendar
 import java.util.Date
@@ -19,13 +23,17 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
     lateinit var editPostRepository: EditPostRepository
     lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
     private lateinit var postModel: PostModel
+    private lateinit var postUtilsWrapper: PostUtilsWrapper
+    @Mock lateinit var dateProvider: DateProvider
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
+    private val dateNow = "2019-05-05T14:30:20+0200"
 
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        getPublishButtonLabelUseCase = GetPublishButtonLabelUseCase()
+        postUtilsWrapper = PostUtilsWrapper(dateProvider)
+        getPublishButtonLabelUseCase = GetPublishButtonLabelUseCase(postUtilsWrapper)
         postModel = PostModel()
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { postModel }
@@ -124,10 +132,8 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
     fun `returns "scheduled now" when post published in future`() {
         // arrange
         val expectedTextResource = R.string.prepublishing_nudges_home_schedule_button
-
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, 100)
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+        whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateFromIso8601(dateNow))
+        postModel.setDateCreated(dateCreated)
 
         // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
