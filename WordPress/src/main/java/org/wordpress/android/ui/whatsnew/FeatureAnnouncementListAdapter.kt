@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.whatsnew
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -74,20 +76,38 @@ class FeatureAnnouncementListAdapter(
         parent: ViewGroup,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.feature_announcement_list_item, parent, false)
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.feature_announcement_list_item, parent, false)
     ) {
         private val featureIcon: ImageView = itemView.findViewById(R.id.feature_item_icon)
+        private val iconContainer: View = itemView.findViewById(R.id.feature_item_icon_container)
         private val title: TextView = itemView.findViewById(R.id.feature_title)
         private val subtitle: TextView = itemView.findViewById(R.id.feature_subtitle)
 
         fun bind(featureAnnouncementItem: FeatureAnnouncementItem) {
             title.text = featureAnnouncementItem.title
             subtitle.text = featureAnnouncementItem.subtitle
-            featureIcon.setImageResource(featureAnnouncementItem.iconResId)
+
+            val drawableResourceId: Int = featureIcon.context.resources
+                    .getIdentifier(
+                            StringUtils.notNullStr(featureAnnouncementItem.gridiconName),
+                            "drawable",
+                            featureIcon.context.packageName
+                    )
+
+            if (drawableResourceId > 0) {
+                featureIcon.setImageResource(drawableResourceId)
+                iconContainer.visibility = View.VISIBLE
+            } else {
+                iconContainer.visibility = View.INVISIBLE
+            }
         }
     }
 
-    class FeatureAnnouncementFooterViewHolder(parent: ViewGroup, val viewModel: FeatureAnnouncementViewModel) :
+    class FeatureAnnouncementFooterViewHolder(
+        parent: ViewGroup,
+        val viewModel: FeatureAnnouncementViewModel
+    ) :
             RecyclerView.ViewHolder(
                     LayoutInflater.from(parent.context)
                             .inflate(R.layout.feature_announcement_list_footer, parent, false)
