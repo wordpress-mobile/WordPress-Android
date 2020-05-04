@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-18 00:54:11+0000
+Translation-Revision-Date: 2020-04-28 10:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">訂閱</string>
+    <string name="gutenberg_native_number_of_columns">欄位數</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_right">向右移動區塊</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_left">向左移動區塊</string>
+    <string name="gutenberg_native_latest_blog_posts">最新網誌文章</string>
+    <string name="gutenberg_native_follow_our_blog">關注我的網誌</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">按兩下將區塊向右移</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">按兩下將區塊向左移</string>
+    <string name="gutenberg_native_columns_settings">欄位設定</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">即將推出顏色設定。</string>
+    <string name="gutenberg_native_blog">網誌</string>
+    <string name="new_site_creation_creating_site_loading_4">建立儀表板</string>
+    <string name="new_site_creation_creating_site_loading_3">設定佈景主題</string>
+    <string name="new_site_creation_creating_site_loading_2">新增網站功能</string>
+    <string name="new_site_creation_creating_site_loading_1">擷取網站網址</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
+    <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
+    <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
+    <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
+    <string name="gif_powered_by_tenor">由 Tenor 支援</string>
+    <string name="gif_picker_search_hint">搜尋 Tenor</string>
+    <string name="photo_picker_gif">從 Tenor 中選擇</string>
+    <string name="weekday_saturday">星期六</string>
+    <string name="weekday_friday">星期五</string>
+    <string name="weekday_thursday">星期四</string>
+    <string name="weekday_wednesday">星期三</string>
+    <string name="weekday_tuesday">星期二</string>
+    <string name="weekday_monday">星期一</string>
+    <string name="weekday_sunday">星期日</string>
+    <string name="media_accessing_failed">無法存取私人網站的內容。部分媒體可能無法使用</string>
+    <string name="media_accessing_progress">正在存取私人網站的內容</string>
     <string name="error_failed_to_crop_and_save_image">無法裁剪和儲存圖片，請再試一次。</string>
     <string name="failed_to_insert_image_tap_to_retry">無法插入圖片。\n請點選以重試。</string>
     <string name="preview_image_description">預覽圖片</string>
@@ -31,7 +64,6 @@ Language: zh_TW
     <string name="page_uploading">正在上傳頁面</string>
     <string name="error_publish_page_no_network">裝置已離線。頁面已儲存在本機。</string>
     <string name="local_page_autosave_revision_available">這個頁面有未儲存的變更</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">你的頁面正在上傳中</string>
     <string name="editor_page_saved_locally_failed_media">此頁面的媒體上傳作業失敗，但已儲存到本機</string>
     <string name="editor_page_saved_locally">頁面已儲存到裝置</string>
@@ -64,7 +96,6 @@ Language: zh_TW
     <string name="gutenberg_native_portfolio">作品集</string>
     <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的個人作品集展示了我在職涯中完成的各項專案。我的聯絡資訊如下，歡迎與我聯繫。</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">最低高度 (像素)</string>
     <string name="gutenberg_native_link_to">連結至</string>
     <string name="gutenberg_native_link_settings">連結設定</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">與我們討論 👋 如有任何疑問，歡迎使用下方資訊與我們聯絡，或使用表單傳送訊息給我們。</string>
@@ -80,7 +111,6 @@ Language: zh_TW
     <string name="gutenberg_native_get_in_touch">與我們聯絡</string>
     <string name="gutenberg_native_excerpt_length_words">摘要長度 (字數)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">透過電子郵件聯絡我：&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">編輯封面媒體</string>
     <string name="gutenberg_native_dr_seuss">蘇斯博士</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">不要因為結束而哭泣，要為曾經發生過而微笑。</string>
     <string name="gutenberg_native_customize">自訂</string>
@@ -89,7 +119,6 @@ Language: zh_TW
     <string name="gutenberg_native_button_color_settings_are_coming_soon">即將推出按鈕顏色設定。</string>
     <string name="gutenberg_native_border_settings">框線設定</string>
     <string name="gutenberg_native_border_radius">框線半徑</string>
-    <string name="gutenberg_native_background_opacity">背景不透明度</string>
     <string name="gutenberg_native_add_paragraph_block">新增段落區塊</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">簡要說明你提供的服務。</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">提供簡短自傳，包括個人經歷、重大成就或趣事。</string>

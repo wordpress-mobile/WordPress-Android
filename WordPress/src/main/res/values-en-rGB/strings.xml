@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-20 07:38:06+0000
+Translation-Revision-Date: 2020-04-23 09:46:19+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Subscribe</string>
+    <string name="gutenberg_native_number_of_columns">Number of columns</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Move block right from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Move block right</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Move block left from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Move block left</string>
+    <string name="gutenberg_native_latest_blog_posts">Latest Blog Posts</string>
+    <string name="gutenberg_native_follow_our_blog">Follow our Blog</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Double tap to move the block to the right</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Double tap to move the block to the left</string>
+    <string name="gutenberg_native_columns_settings">Columns Settings</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Colour settings are coming soon.</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Creating dashboard</string>
+    <string name="new_site_creation_creating_site_loading_3">Setting up theme</string>
+    <string name="new_site_creation_creating_site_loading_2">Adding site features</string>
+    <string name="new_site_creation_creating_site_loading_1">Grabbing site URL</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="new_site_creation_creating_site_loading_title">Hooray!\nAlmost done</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
+    <string name="gif_list_search_returned_unknown_error">There was a problem handling the request</string>
+    <string name="gif_powered_by_tenor">Powered by Tenor</string>
+    <string name="gif_picker_search_hint">Search Tenor</string>
+    <string name="photo_picker_gif">Choose from Tenor</string>
+    <string name="weekday_saturday">Saturday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_sunday">Sunday</string>
+    <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
+    <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
     <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
     <string name="preview_image_description">Preview Image</string>
@@ -31,7 +64,6 @@ Language: en_GB
     <string name="page_uploading">Uploading page</string>
     <string name="error_publish_page_no_network">Device is offline. Page saved locally.</string>
     <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Your page is uploading</string>
     <string name="editor_page_saved_locally_failed_media">The page has failed media uploads and has been saved locally</string>
     <string name="editor_page_saved_locally">Page saved on device</string>
@@ -64,7 +96,6 @@ Language: en_GB
     <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Only show excerpt</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimum height in pixels</string>
     <string name="gutenberg_native_link_to">Link To</string>
     <string name="gutenberg_native_link_settings">Link Settings</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Let\'s talk 👋. Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
@@ -80,7 +111,6 @@ Language: en_GB
     <string name="gutenberg_native_get_in_touch">Get in Touch</string>
     <string name="gutenberg_native_excerpt_length_words">Excerpt length (words)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Email me: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Edit cover media</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_customize">CUSTOMISE</string>
@@ -89,7 +119,6 @@ Language: en_GB
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Button colour settings are coming soon.</string>
     <string name="gutenberg_native_border_settings">Border Settings</string>
     <string name="gutenberg_native_border_radius">Border Radius</string>
-    <string name="gutenberg_native_background_opacity">Background Opacity</string>
     <string name="gutenberg_native_add_paragraph_block">Add Paragraph Block</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">A short description of the services you offer.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">A short bio with personal history, key achievements, or an interesting fact.</string>
@@ -288,8 +317,8 @@ Language: en_GB
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages \u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts \u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages, great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts, great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -650,6 +679,9 @@ Language: en_GB
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
+    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="gif_picker_empty_search_list">No media matching your search</string>
+    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
     <string name="stats_author_views_label">Views</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_authors">Authors</string>

@@ -1,0 +1,6 @@
+14.7:
+Blok düzenleyici: Bloglar için Sütun bloğu ve Başlangıç Sayfası şablonu eklendi. Sayfa içeriğiyle çakışmayı önlemek için Başlangıç Sayfası Şablonu'nun düğmeleri düzeltildi. "Cihazdan medya seç" işlevi, cihazınızın varsayılan seçicisi yerine yerleşik bir WordPress medya seçicisi açar.
+
+Hata düzeltmeleri: Başlangıç Sayfası Şablonlarını önizlerken cihaz yönü değiştirildiğinde URL ayarlarının görünmesine neden olan bir hata.
+
+Kullanıcı arayüzünde yapılan iyileştirmeler: Gravatar'ınız Sitem'deki Ben menüsüne eklendi.
