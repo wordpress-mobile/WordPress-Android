@@ -195,11 +195,15 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else if (mIsAudio || mIsVideo) {
+        } else if (mIsAudio) {
             if (mAutoPlay) {
                 playMedia();
-            } else if (mIsVideo && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
+            }
+        } else if (mIsVideo) {
+            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl);
+            } else {
+                playMedia();
             }
         } else {
             loadImage(mContentUri);
@@ -347,7 +351,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 if (isAdded()) {
                     showProgress(false);
                     mImageView.setVisibility(View.GONE);
-                    mp.start();
+                    if (mAutoPlay) {
+                        mp.start();
+                    }
                     if (position > 0) {
                         mp.seekTo(position);
                     }
