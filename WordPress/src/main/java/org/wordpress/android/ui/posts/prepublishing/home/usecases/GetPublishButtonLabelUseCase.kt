@@ -4,12 +4,12 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.PostUtils
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import javax.inject.Inject
 
 typealias StringResourceId = Int
 
-class GetPublishButtonLabelUseCase @Inject constructor() {
+class GetPublishButtonLabelUseCase @Inject constructor(private val postUtilsWrapper: PostUtilsWrapper) {
     fun getLabel(editPostRepository: EditPostRepository): StringResourceId {
         val dateCreated = editPostRepository.dateCreated
         val status = editPostRepository.status
@@ -20,7 +20,7 @@ class GetPublishButtonLabelUseCase @Inject constructor() {
                     status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE ->
                         R.string.prepublishing_nudges_home_publish_button
                     editPostRepository.isLocalDraft -> R.string.prepublishing_nudges_home_publish_button
-                    PostUtils.isPublishDateInTheFuture(editPostRepository.dateCreated) ->
+                    postUtilsWrapper.isPublishDateInTheFuture(editPostRepository.dateCreated) ->
                         R.string.prepublishing_nudges_home_schedule_button
                     else -> R.string.prepublishing_nudges_home_publish_button
                 }
