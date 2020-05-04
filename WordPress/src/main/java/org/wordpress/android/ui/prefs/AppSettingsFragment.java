@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
@@ -75,6 +76,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
     @Inject ContextProvider mContextProvider;
+    @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -169,8 +171,10 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
-        if (BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE) {
-            mWhatsNew.setSummary(getString(R.string.version_with_name_param, WordPress.versionName));
+        if (BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE && mFeatureAnnouncementProvider
+                .isFeatureAnnouncementAvailable()) {
+            mWhatsNew.setSummary(getString(R.string.version_with_name_param,
+                    mFeatureAnnouncementProvider.getLatestFeatureAnnouncement().getVersion()));
             mWhatsNew.setOnPreferenceClickListener(this);
         } else {
             removeWhatsNewPreference();
