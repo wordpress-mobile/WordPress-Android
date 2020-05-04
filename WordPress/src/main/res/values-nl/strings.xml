@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-16 01:55:04+0000
+Translation-Revision-Date: 2020-04-29 13:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Abonneren</string>
+    <string name="gutenberg_native_number_of_columns">Aantal kolommen</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Blok naar rechts verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_right">Blok naar rechts verplaatsen</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Blok naar links verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_left">Blok naar links verplaatsen</string>
+    <string name="gutenberg_native_latest_blog_posts">Nieuwste blogberichten</string>
+    <string name="gutenberg_native_follow_our_blog">Volg onze blog</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Tik tweemaal om het blok naar rechts te verplaatsen</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Tik tweemaal om het blok naar links te verplaatsen</string>
+    <string name="gutenberg_native_columns_settings">Kolominstellingen</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Kleureninstellingen zijn binnenkort beschikbaar.</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Dashboard aanmaken</string>
+    <string name="new_site_creation_creating_site_loading_3">Thema configureren</string>
+    <string name="new_site_creation_creating_site_loading_2">Sitefuncties toevoegen</string>
+    <string name="new_site_creation_creating_site_loading_1">De URL van je site aanmaken</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Je site is binnen enkele ogenblikken gereed</string>
+    <string name="new_site_creation_creating_site_loading_title">Hoera!\nBijna klaar</string>
+    <string name="pages_and_posts_cancel_auto_upload">Uploaden annuleren</string>
+    <string name="gif_list_search_returned_unknown_error">Er is een probleem opgetreden bij het uitvoeren van de aanvraag</string>
+    <string name="gif_powered_by_tenor">Mogelijk gemaakt door Tenor</string>
+    <string name="gif_picker_search_hint">Tenor doorzoeken</string>
+    <string name="photo_picker_gif">Kiezen uit Tenor</string>
+    <string name="weekday_saturday">Zaterdag</string>
+    <string name="weekday_friday">Vrijdag</string>
+    <string name="weekday_thursday">Donderdag</string>
+    <string name="weekday_wednesday">Woensdag</string>
+    <string name="weekday_tuesday">Dinsdag</string>
+    <string name="weekday_monday">Maandag</string>
+    <string name="weekday_sunday">Zondag</string>
+    <string name="media_accessing_failed">Openen van content van privésite mislukt. Sommige media zijn mogelijk niet beschikbaar</string>
+    <string name="media_accessing_progress">Content van privésite wordt geopend</string>
     <string name="error_failed_to_crop_and_save_image">Afbeelding bijsnijden en opslaan mislukt. Probeer opnieuw.</string>
     <string name="failed_to_insert_image_tap_to_retry">Invoegen van afbeelding mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="preview_image_description">Voorbeeldweergave afbeelding</string>
@@ -31,7 +64,6 @@ Language: nl
     <string name="page_uploading">Pagina wordt geüpload</string>
     <string name="error_publish_page_no_network">Apparaat is offline. Pagina lokaal opgeslagen.</string>
     <string name="local_page_autosave_revision_available">Je hebt niet-opgeslagen wijzigingen aan deze pagina aangebracht</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Je pagina wordt geüpload</string>
     <string name="editor_page_saved_locally_failed_media">De pagina bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="editor_page_saved_locally">Pagina opgeslagen op apparaat</string>
@@ -64,7 +96,6 @@ Language: nl
     <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimumhoogte in pixels</string>
     <string name="gutenberg_native_link_to">Link naar</string>
     <string name="gutenberg_native_link_settings">Link-instellingen</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
@@ -80,7 +111,6 @@ Language: nl
     <string name="gutenberg_native_get_in_touch">Neem contact op</string>
     <string name="gutenberg_native_excerpt_length_words">Lengte samenvatting (woorden)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Stuur me een e-mail: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Omslagmedia bewerken</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Treur niet om wat voorbij is, lach omdat het gebeurd is.</string>
     <string name="gutenberg_native_customize">AANPASSEN</string>
@@ -89,7 +119,6 @@ Language: nl
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Kleureninstellingen voor knoppen zijn binnenkort beschikbaar.</string>
     <string name="gutenberg_native_border_settings">Instellingen rand</string>
     <string name="gutenberg_native_border_radius">Radius rand</string>
-    <string name="gutenberg_native_background_opacity">Doorzichtigheid van de achtergrond</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraafblok toevoegen</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Een korte beschrijving van de services die je biedt.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>

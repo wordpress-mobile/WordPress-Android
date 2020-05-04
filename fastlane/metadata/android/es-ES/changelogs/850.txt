@@ -1,6 +1,0 @@
-14.6:
-Mejoras en el editor de bloques: Añadido el bloque de portada. Activado el recorte, zoom y rotación de imágenes en las entradas. Retocado el icono «Hacer un vídeo» para diferenciarlo de «Hacer una foto». Eliminado el efecto de oscurecimiento en los bloques no seleccionados. Añadida una barra de herramientas para las opciones de alineación en los bloques de párrafo, imagen y medios y texto.
-
-Correcciones: Problema por el que los enlaces «wordpress://» en un navegador no abrían la aplicación, problema por el que al abrir una página se abría un editor vacío.
-
-Mejoras generales: Compatibilidad para el tema oscuro.

@@ -79,8 +79,6 @@ Language: cs_CZ
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_search_hint">Prohledat Giphy</string>
     <string name="stats_author_views_label">Zobrazení</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoři</string>

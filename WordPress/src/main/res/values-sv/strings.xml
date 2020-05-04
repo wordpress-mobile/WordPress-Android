@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-20 07:44:13+0000
+Translation-Revision-Date: 2020-04-23 09:28:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Prenumerera</string>
+    <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Flytta blocket åt höger</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytta blocket åt vänster från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
+    <string name="gutenberg_native_latest_blog_posts">Senaste blogginläggen</string>
+    <string name="gutenberg_native_follow_our_blog">Följ vår blogg</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
+    <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Inställningar för färger kommer att läggas till snart.</string>
+    <string name="gutenberg_native_blog">Blogg</string>
+    <string name="new_site_creation_creating_site_loading_4">Skapar adminpanel</string>
+    <string name="new_site_creation_creating_site_loading_3">Konfigurerar temat</string>
+    <string name="new_site_creation_creating_site_loading_2">Lägger till olika webbplatsfunktioner</string>
+    <string name="new_site_creation_creating_site_loading_1">Hämtar URL för webbplatsen</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Din webbplats är snart klar</string>
+    <string name="new_site_creation_creating_site_loading_title">Hurra!\nNästan klart nu</string>
+    <string name="pages_and_posts_cancel_auto_upload">Avbryt uppladdningen</string>
+    <string name="gif_list_search_returned_unknown_error">Ett problem uppstod när din begäran behandlades</string>
+    <string name="gif_powered_by_tenor">Drivs med Tenor</string>
+    <string name="gif_picker_search_hint">Sök i Tenor</string>
+    <string name="photo_picker_gif">Välj från Tenor</string>
+    <string name="weekday_saturday">Lördag</string>
+    <string name="weekday_friday">Fredag</string>
+    <string name="weekday_thursday">Torsdag</string>
+    <string name="weekday_wednesday">Onsdag</string>
+    <string name="weekday_tuesday">Tisdag</string>
+    <string name="weekday_monday">Måndag</string>
+    <string name="weekday_sunday">Söndag</string>
+    <string name="media_accessing_failed">Lyckades inte hämta innehållet från en privat webbplats. Vissa mediafiler kanske inte är tillgängliga</string>
+    <string name="media_accessing_progress">Hämtning av innehåll från en privat webbplats</string>
     <string name="error_failed_to_crop_and_save_image">Lyckades inte beskära och spara bilden. Försök igen.</string>
     <string name="failed_to_insert_image_tap_to_retry">Kunde inte lägga in bilden.\nTryck för att försöka igen.</string>
     <string name="preview_image_description">Förhandsgranskningsbild</string>
@@ -31,7 +64,6 @@ Language: sv_SE
     <string name="page_uploading">Laddar upp sidan</string>
     <string name="error_publish_page_no_network">Enheten är offline. Sidan sparad lokalt.</string>
     <string name="local_page_autosave_revision_available">Du har gjort ändringar i denna sida som inte är sparade</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Din sida håller på att laddas upp</string>
     <string name="editor_page_saved_locally_failed_media">Sidan innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
     <string name="editor_page_saved_locally">Sidan sparad på enheten</string>
@@ -64,7 +96,6 @@ Language: sv_SE
     <string name="gutenberg_native_portfolio">Portfölj</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minsta höjd i pixlar</string>
     <string name="gutenberg_native_link_to">Länk till</string>
     <string name="gutenberg_native_link_settings">Länkalternativ</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
@@ -80,7 +111,6 @@ Language: sv_SE
     <string name="gutenberg_native_get_in_touch">Hör av dig</string>
     <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Redigera omslagsmedia</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
     <string name="gutenberg_native_customize">ANPASSA</string>
@@ -89,7 +119,6 @@ Language: sv_SE
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Inställningar för knappfärger kommer att läggas till snart.</string>
     <string name="gutenberg_native_border_settings">Kantinställningar</string>
     <string name="gutenberg_native_border_radius">Kantradie</string>
-    <string name="gutenberg_native_background_opacity">Bakgrundens opacitet</string>
     <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
@@ -650,6 +679,9 @@ Language: sv_SE
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
+    <string name="gif_picker_endless_scroll_network_error">Vissa mediefiler kunde inte laddas på grund av nätverksproblem.</string>
+    <string name="gif_picker_empty_search_list">Inga media matchar din sökning</string>
+    <string name="gif_picker_initial_empty_text">Leta efter GIF-filer du kan lägga till i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visningar</string>
     <string name="stats_author_label">Författare</string>
     <string name="stats_authors">Författare</string>
