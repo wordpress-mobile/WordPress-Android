@@ -2,6 +2,8 @@ package org.wordpress.android.ui.whatsnew
 
 import androidx.annotation.DrawableRes
 
+data class FeatureAnnouncements(val announcements: List<FeatureAnnouncement>)
+
 data class FeatureAnnouncement(
     val version: String,
     val versionCode: Int,
@@ -12,5 +14,5 @@ data class FeatureAnnouncement(
 data class FeatureAnnouncementItem(
     val title: String,
     val subtitle: String,
-    @DrawableRes val iconResId: Int
+    val gridiconName: String
 )
