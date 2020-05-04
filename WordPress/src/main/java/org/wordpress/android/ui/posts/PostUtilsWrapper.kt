@@ -37,4 +37,7 @@ class PostUtilsWrapper @Inject constructor() {
 
     fun trackSavePostAnalytics(post: PostImmutableModel?, site: SiteModel) =
             PostUtils.trackSavePostAnalytics(post, site)
+
+    fun isPublishDateInTheFuture(dateCreated: String) =
+            PostUtils.isPublishDateInTheFuture(dateCreated)
 }
