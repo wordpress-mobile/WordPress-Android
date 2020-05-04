@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
@@ -215,7 +216,26 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         assertThat(headerUiState?.siteName?.text).isEqualTo(expectedName)
     }
 
+    @Test
+    fun `verify that tapping publish button will invoke onPublishButtonClicked`() {
+        // arrange
+        var event: Event<Unit>? = null
+        viewModel.onPublishButtonClicked.observeForever {
+            event = it
+        }
+
+        // act
+        viewModel.start(editPostRepository, site)
+        val buttonUiState = getButtonUiState()
+        buttonUiState?.onButtonClicked?.invoke()
+
+        // assert
+        assertThat(event).isNotNull
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
+
+    private fun getButtonUiState() = viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.first()
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
