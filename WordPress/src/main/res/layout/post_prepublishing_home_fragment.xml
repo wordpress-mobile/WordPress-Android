@@ -7,24 +7,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/actions_recycler_view"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:clipToPadding="false"
+        android:layout_height="wrap_content"
+        android:clipToPadding="true"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle" />
-
-    <include
-        android:id="@+id/bottom_sheet_handle"
-        layout="@layout/bottom_sheet_handle_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_small"
-        app:layout_constraintBottom_toTopOf="@id/actions_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

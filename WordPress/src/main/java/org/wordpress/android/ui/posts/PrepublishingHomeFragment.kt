@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_home_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import javax.inject.Inject
 
@@ -68,7 +69,15 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        viewModel.start(getEditPostRepository())
+        viewModel.start(getEditPostRepository(), getSite())
+    }
+
+    private fun getSite(): SiteModel {
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "EditPostActivityHook shouldn't be null."
+        }
+
+        return editPostActivityHook.site
     }
 
     private fun getEditPostRepository(): EditPostRepository {
