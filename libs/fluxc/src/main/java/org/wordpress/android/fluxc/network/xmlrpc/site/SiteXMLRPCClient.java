@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
+import org.wordpress.android.fluxc.utils.SiteUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -303,22 +305,12 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         return oldModel;
     }
 
-    private List<PostFormatModel> responseToPostFormats(Object response, SiteModel site) {
+    private @Nullable List<PostFormatModel> responseToPostFormats(Object response, SiteModel site) {
         if (!(response instanceof Map)) {
             reportParseError(response, site.getXmlRpcUrl(), Map.class);
             return null;
         }
 
-        Map<?, ?> formatsMap = (Map<?, ?>) response;
-        List<PostFormatModel> res = new ArrayList<>();
-        for (Object key : formatsMap.keySet()) {
-            if (!(key instanceof String)) continue;
-            String skey = (String) key;
-            PostFormatModel postFormat = new PostFormatModel();
-            postFormat.setSlug(skey);
-            postFormat.setDisplayName(MapUtils.getMapStr(formatsMap, skey));
-            res.add(postFormat);
-        }
-        return res;
+        return SiteUtils.getValidPostFormatsOrNull((Map) response);
     }
 }
