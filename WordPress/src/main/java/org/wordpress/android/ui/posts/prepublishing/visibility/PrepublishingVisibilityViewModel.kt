@@ -50,6 +50,10 @@ class PrepublishingVisibilityViewModel @Inject constructor(
         updateUiState()
     }
 
+    fun setEditPostRepository(editPostRepository: EditPostRepository) {
+        this.editPostRepository = editPostRepository
+    }
+
     private fun setToolbarUiState() {
         _toolbarUiState.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_visibility))
     }

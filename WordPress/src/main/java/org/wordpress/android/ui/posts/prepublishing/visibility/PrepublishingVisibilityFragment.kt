@@ -47,6 +47,7 @@ class PrepublishingVisibilityFragment : Fragment(), PostSettingsInputDialogListe
 
     override fun onResume() {
         super.onResume()
+        viewModel.setEditPostRepository(getEditPostRepository())
         reattachPostPasswordDialogListener()
     }
 
