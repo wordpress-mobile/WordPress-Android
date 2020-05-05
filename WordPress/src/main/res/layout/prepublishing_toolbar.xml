@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize">
 
@@ -11,7 +12,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/toolbar_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/toolbar_title"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -49,9 +50,9 @@
         android:layout_marginTop="@dimen/bottom_sheet_handle_margin_top"
         android:alpha="@dimen/disabled_alpha"
         android:background="@drawable/bg_bottom_sheet_handle"
+        app:layout_constraintBottom_toTopOf="@id/toolbar_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/toolbar_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -69,10 +70,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center_horizontal"
-        android:paddingTop="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_medium"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/back_button"
         app:layout_constraintRight_toLeftOf="@id/close_button"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle" />
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle"
+        tools:text="Publish" />
 </androidx.constraintlayout.widget.ConstraintLayout>
