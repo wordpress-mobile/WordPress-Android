@@ -50,7 +50,7 @@ class PrepublishingVisibilityViewModel @Inject constructor(
         updateUiState()
     }
 
-    fun setEditPostRepository(editPostRepository: EditPostRepository) {
+    fun setEditPostRepositoryAfterConfigChanges(editPostRepository: EditPostRepository) {
         this.editPostRepository = editPostRepository
     }
 
