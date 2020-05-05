@@ -11,10 +11,9 @@ typealias StringResourceId = Int
 
 class GetPublishButtonLabelUseCase @Inject constructor(private val postUtilsWrapper: PostUtilsWrapper) {
     fun getLabel(editPostRepository: EditPostRepository): StringResourceId {
-        val dateCreated = editPostRepository.dateCreated
         val status = editPostRepository.status
         return when {
-            !TextUtils.isEmpty(dateCreated) -> {
+            !TextUtils.isEmpty(editPostRepository.dateCreated) -> {
                 when {
                     status == PostStatus.SCHEDULED -> R.string.prepublishing_nudges_home_schedule_button
                     status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE ->
