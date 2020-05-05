@@ -2,14 +2,11 @@ package org.wordpress.android.ui.whatsnew
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.editor.EditorImageMetaData
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import java.io.FileNotFoundException
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class FeatureAnnouncementProvider @Inject constructor() {
     private val gson: Gson by lazy {
@@ -18,6 +15,12 @@ class FeatureAnnouncementProvider @Inject constructor() {
     }
 
     fun getLatestFeatureAnnouncement(): FeatureAnnouncement? {
+        return getFeatureAnnouncements().firstOrNull()
+    }
+
+    fun getFeatureAnnouncements(): List<FeatureAnnouncement> {
+        val featureAnnouncements = arrayListOf<FeatureAnnouncement>()
+
         var featureAnnouncementFileContent: String? = null
         try {
             featureAnnouncementFileContent = WordPress.getContext().assets
@@ -25,7 +28,7 @@ class FeatureAnnouncementProvider @Inject constructor() {
                     .bufferedReader().use { it.readText() }
         } catch (fileNotFound: FileNotFoundException) {
             AppLog.e(T.FEATURE_ANNOUNCEMENT, "File with feature announcements is missing")
-            return null
+            return featureAnnouncements
         }
 
         val featureAnnouncement: FeatureAnnouncements = gson.fromJson(
@@ -33,10 +36,12 @@ class FeatureAnnouncementProvider @Inject constructor() {
                 FeatureAnnouncements::class.java
         )
 
-        return featureAnnouncement.announcements.firstOrNull()
+        featureAnnouncements.addAll(featureAnnouncement.announcements)
+
+        return featureAnnouncements
     }
 
     fun isFeatureAnnouncementAvailable(): Boolean {
-        return getLatestFeatureAnnouncement() != null
+        return getFeatureAnnouncements().isNotEmpty()
     }
 }
