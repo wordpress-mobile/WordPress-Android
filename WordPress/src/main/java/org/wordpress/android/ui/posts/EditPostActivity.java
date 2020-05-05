@@ -1366,15 +1366,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void performPrimaryAction() {
         switch (getPrimaryAction()) {
+            case SCHEDULE:
+            case SUBMIT_FOR_REVIEW:
             case UPDATE:
-                showUpdateConfirmationDialogAndUploadPost();
-                return;
             case PUBLISH_NOW:
                 showPrepublishingNudgeBottomSheet();
                 return;
             // In other cases, we'll upload the post without changing its status
-            case SCHEDULE:
-            case SUBMIT_FOR_REVIEW:
             case SAVE:
                 uploadPost(false);
                 break;
