@@ -1245,7 +1245,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
-                showPrepublishingNudgeBottomSheet();
+                if (mEditPostRepository.isPage()) {
+                    showPublishConfirmationDialogAndPublishPost();
+                } else {
+                    showPrepublishingNudgeBottomSheet();
+                }
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
