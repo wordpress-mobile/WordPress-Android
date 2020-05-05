@@ -100,7 +100,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
 
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.DRAFT.toString())
-        postModel.setDateCreated(currentDate)
+        postModel.setDateCreated(dateCreated)
 
         // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
