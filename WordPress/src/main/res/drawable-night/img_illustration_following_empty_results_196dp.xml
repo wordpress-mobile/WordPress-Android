@@ -13,7 +13,7 @@
         android:fillType="evenOdd"/>
     <path
         android:pathData="M59,58h79v79h-79z"
-        android:fillColor="#ffffff"
+        android:fillColor="@android:color/white"
         android:fillAlpha="0.18"/>
   </group>
   <path
