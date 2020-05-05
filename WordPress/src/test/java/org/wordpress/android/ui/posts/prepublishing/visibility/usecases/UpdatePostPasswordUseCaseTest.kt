@@ -11,8 +11,8 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 
 class UpdatePostPasswordUseCaseTest : BaseUnitTest() {
-    lateinit var editPostRepository: EditPostRepository
-    lateinit var updatePostPasswordUseCase: UpdatePostPasswordUseCase
+    private lateinit var editPostRepository: EditPostRepository
+    private lateinit var updatePostPasswordUseCase: UpdatePostPasswordUseCase
 
     @InternalCoroutinesApi
     @Before
