@@ -2,8 +2,8 @@ package org.wordpress.android.ui.posts.prepublishing
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -41,8 +41,8 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
     }
 
     override fun setupContent(rootView: ViewGroup, viewModel: PublishSettingsViewModel) {
-        val closeButton = rootView.findViewById<ImageView>(R.id.close_button)
-        val backButton = rootView.findViewById<ImageView>(R.id.back_button)
+        val closeButton = rootView.findViewById<View>(R.id.close_button)
+        val backButton = rootView.findViewById<View>(R.id.back_button)
         val toolbarTitle = rootView.findViewById<TextView>(R.id.toolbar_title)
 
         (viewModel as PrepublishingPublishSettingsViewModel).let {
