@@ -4,33 +4,43 @@
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize">
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/back_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/prepublishing_nudges_back_button"
-        android:src="@drawable/ic_arrow_left_white_24dp"
-        android:tint="@color/prepublishing_toolbar_icon_color"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/toolbar_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/prepublishing_nudges_back_button"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:tint="@color/prepublishing_toolbar_icon_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/close_button"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/prepublishing_nudges_back_button"
-        android:src="@drawable/ic_close_white_24dp"
-        android:tint="@color/prepublishing_toolbar_icon_color"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/toolbar_title"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/prepublishing_nudges_back_button"
+            android:src="@drawable/ic_close_white_24dp"
+            android:tint="@color/prepublishing_toolbar_icon_color" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/bottom_sheet_handle"
