@@ -16,8 +16,6 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.DateTimeUtils
-import java.util.Calendar
-import java.util.Date
 
 class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
     lateinit var editPostRepository: EditPostRepository
@@ -102,7 +100,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
 
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.DRAFT.toString())
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(Date()))
+        postModel.setDateCreated(dateNow)
 
         // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
