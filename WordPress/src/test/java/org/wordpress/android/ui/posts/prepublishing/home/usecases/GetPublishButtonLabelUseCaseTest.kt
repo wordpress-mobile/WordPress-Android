@@ -117,9 +117,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
         val expectedTextResource = R.string.prepublishing_nudges_home_publish_button
 
         postModel.setIsLocalDraft(true)
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, -5)
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+        postModel.setDateCreated("")
 
         // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
