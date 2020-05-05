@@ -1,126 +1,137 @@
 <ar>
-14.5:
-محرِّر المكوِّنات: تمت إضافة مكوِّن أحدث المقالات، وتم إصلاح العطل الناتج عن لصق محتوى HTML مع الصور المضمَّنة
-قوالب الصفحة: تمت إضافة قوالب مستندة إلى المكوِّنات لإنشاء الصفحات بشكل أسرع.
-إنشاء موقع: تمت إزالة بعض الخطوات للإعداد بشكل أسرع — حدِّد نوع الموقع، وأدخل اسم النطاق، وهذا كل شيء.
-إصلاح الأخطاء: تم إصلاح المشكلة التي تتسبَّب في إعادة محاولة عمليات رفع المقالات الفاشلة إلى أجل غير مسمى.
+14.7:
+محرِّر المكوِّنات: تمت إضافة مكوِّن العمود وقالب صفحة بادئ التشغيل إلى المدونات. تم تعديل أزرار قالب صفحة بادئ التشغيل لتجنب تداخل محتوى الصفحة. سيفتح خيار "اختيار الوسائط من الجهاز" منتقي وسائط ووردبريس المدمج بدلاً من المنتقي الافتراضي للجهاز.
+
+إصلاحات الأخطاء: خطأ يتسبب في ظهور إعدادات عنوان URL عند تغيير اتجاه الجهاز في أثناء معاينة "قوالب صفحة بادئ التشغيل".
+
+تحسينات واجهة المستخدم: تمت إضافة الجرافتار الخاص بك إلى قائمة "أنا" في "موقعي".
 </ar>
 <de-DE>
-14.5:
-Block-Editor: „Neueste Beiträge“-Block hinzugefügt
-Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
-Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
-Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
+14.7:
+Block-Editor: Spaltenblock und Seitenvorlage für Neueinsteiger für Blogs wurden hinzugefügt. Buttons der Seitenvorlage für Neueinsteiger wurden angepasst, um eine Überlappung mit dem Seiteninhalt zu vermeiden. „Medien vom Gerät auswählen“ öffnet eine integrierte WordPress-Medienauswahl, anstelle der Standardauswahl des Geräts.
+
+Fehlerkorrekturen: Ein Fehler, der dazu führte, dass ein Kästchen mit URL-Einstellungen erschien, sobald du während der Vorschau der Seitenvorlage für Neueinsteiger dein Gerät bewegt hast.
+
+Verbesserungen an der Benutzeroberfläche: Dein Gravatar wurde zum Menü unter „Meine Website“ hinzugefügt
 </de-DE>
 <en-US>
-14.5:
-Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
-Page Templates: Added a block-based templates for quicker page creation.
-Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
-Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
+14.7:
+Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
+
+Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
+
+UI improvements: Added your Gravatar to the Me menu in My Site.
 </en-US>
 <es-ES>
-14.5:
-Editor de bloques: Añadido el bloque «Últimas entradas»
-Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
-Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
-Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.
+14.7:
+Editor de bloques: Añadido un bloque de columnas y una plantilla de página de inicio para blogs. Ajustados los botones de la plantilla de página de inicio para evitar la superposición con el contenido de la página. «Elegir el medio desde el dispositivo» abre un selector de medios incorporado de WordPress en lugar del selector por defecto de tu dispositivo.
+
+Corrección de fallos: Un fallo causa que aparezcan los ajustes de la URL al cambiar la orientación del dispositivo mientras se previsualizan las plantillas de página de inicio.
+
+Mejoras en la interfaz de usuario: Añadido tu Gravatar al menú «Yo» en «Mi sitio».
 </es-ES>
 <fr-CA>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.7 :
+Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
+
+Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
+
+Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
 </fr-CA>
 <fr-FR>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.7 :
+Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
+
+Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
+
+Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
 </fr-FR>
 <iw-IL>
-14.5:
-עורך הבלוקים: הוספנו בלוק פוסטים אחרונים, תיקנו קריסה שהתרחשה בהדבקה של תוכן HTML בתמונות מוטבעות
-תבניות עמודים: הוספנו תבניות מבוססות-בלוק ליצירת עמודים מהירה יותר.
-יצירת אתר: הסרנו מספר שלבים להגדרה מהירה יותר – ניתן לבחור אתר מכל סוג, להזין את הדומיין וסיימת.
-תיקון באג: תיקנו בעיה שגרמה לניסיונות בלתי פוסקים בהעלאה חוזרת של פוסטים שנכשלו.
+14.7:
+עורך הבלוקים: הוספנו בלוק טורים בתבנית של עמוד ההתחלה לבלוגים. התאמנו את הכפתורים בתבנית של עמוד ההתחלה כדי להימנע מחפיפה עם התוכן של העמוד. האפשרות 'בחירה במדיה מהמכשיר' פותחת בורר מדיה מובנה של WordPress במקום את בורר המדיה שמוגדר במכשיר שלך כברירת מחדל.
+
+תיקוני באגים: תיקנו באג שגרם להגדרות URL להופיע כאשר משנים את הכיוון של המכשיר בתצוגה המקדימה של תבניות של עמוד התחלה.
+
+שיפורים בממשק המשתמש: הופסנו את ה-Gravatar שלך לתפריט 'אני' ול'האתר שלי'.
 </iw-IL>
 <id>
-14.5:
-Penyunting blok: Menambahkan blok Pos Terbaru, memperbaiki crash yang disebabkan karena konten HTML yang ditempel dengan gambar tersemat
-Template Halaman: Menambahkan template berbasis blok agar proses pembuatan halaman lebih cepat.
-Pembuatan Situs: menghapus beberapa langkah agar proses penyiapan lebih cepat — pilih jenis situs, masukkan nama domain, selesai.
-Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang tanpa batas.
+14.7:
+Penyunting blok: Menambahkan blok Kolom dan template Halaman Starter untuk blog. Menyelaraskan tombol Template Halaman Starter untuk menghindari tumpang tindih dengan konten halaman. “Pilih media dari perangkat” akan membuka pemilih media WordPress bawaan, bukan pemilih default perangkat Anda.
+
+Perbaikan bug: Bug penyebab pengaturan URL muncul saat mengubah orientasi perangkat selagi Anda mempratinjau Template Halaman Starter.
+
+Peningkatan UI: Menambahkan Gravatar ke menu Saya di Situs Saya.
 </id>
 <it-IT>
-14.5:
-Editor a blocchi: aggiunto il blocco Ultimi articoli
-Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
-Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
-Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.
+14.7:
+Editor a blocchi: Aggiunti blocco Colonna e modello pagina di avvio di blog. Modifica di pulsanti per il modello pagina di avvio per evitare sovrapposizioni con il contenuto della stessa. "Scegli contenuti multimediali da dispositivo" apre un selezionatore contenuti multimediali integrato di WordPress.
+
+Bug corretti: Un bug causava la vista di impostazioni URL quando si riorientava il dispositivo durante l'anteprima di modelli pagina di avvio.
+
+Migliore UI: Aggiunta del Gravatar a Io in Il mio sito.
 </it-IT>
 <ja-JP>
-14.5:
-ブロックエディター :最新の投稿ブロックを追加し、画像が埋め込まれた HTML コンテンツを貼り付けることで発生するクラッシュを修正しました。
-ページテンプレート :ブロックベースのテンプレートを追加し、ページをすばやく作成できるようにしました。
-サイト作成 :いくつかの手順を削除し、すばやく設定できるようにしました。サイトの種類を選択し、ドメイン名を入力すると完了します。
-バグ修正 :失敗した投稿のアップロードが繰り返し再試行される問題を修正しました。
+14.7:
+ブロックエディター :ブログにカラムブロックとスターターページテンプレートを追加しました。ページコンテンツと重複しないように、「スターターページテンプレート」ボタンを調整しました。「Choose media from device」は、デバイスのデフォルトのピッカーの代わりに組み込みの WordPress メディアピッカーを開きます。
+
+バグ修正 :スターターページテンプレートのプレビュー中にデバイスの向きを変えると、URL 設定が表示されるバグ。
+
+UI の改善 :「参加サイト」の「自分」メニューに Gravatar を追加しました。
 </ja-JP>
 <ko-KR>
-14.5:
-블록 편집기: 최신 글 블록이 추가되었습니다. 이미지가 포함된 HTML 콘텐츠를 붙여넣을 때 발생하는 충돌이 수정되었습니다.
-페이지 템플릿: 보다 빠른 페이지 생성을 위해 블록 기반 템플릿을 추가했습니다.
-사이트 생성: 빠른 설치를 위해 몇 단계를 없앴습니다. 사이트 종류를 선택하고 도메인 네임을 입력하기만 하면 됩니다.
-- 버그 수정: 글 업로드가 실패하여 무한대로 재시도해야 하는 문제를 수정했습니다.
+14.7:
+블록 편집기: 블로그에 대한 열 블록 및 시작 페이지 템플릿이 추가되었습니다. 페이지 내용과 겹치지 않도록 조정된 시작 페이지 템플릿 단추입니다. “장치에서 미디어 선택”은 장치의 기본 선택기 대신 내장된 워드프레스 미디어 선택기를 엽니다.
+
+버그 수정: 시작 페이지 템플릿을 미리 보는 동안 장치 방향을 변경할 때 URL 설정을 표시하는 버그입니다.
+
+UI 개선: 내 사이트의 내 메뉴에 그라바타를 추가했습니다.
 </ko-KR>
 <nl-NL>
-14.5:
-Blokeditor: Blok Nieuwste berichten toegevoegd, crash veroorzaakt door het plakken van HTML-content met ingesloten afbeeldingen opgelost
-Paginasjablonen: Op blokken gebaseerde sjablonen toegevoegd om pagina's sneller te kunnen aanmaken.
-Site-ontwerp: een aantal stappen verwijderd voor een snellere configuratie: selecteer het soort site, voer de domeinnaam in en klaar is Kees.
-Bugfix: een probleem verholpen dat zorgde dat de mislukte upload van berichten oneindig werd herhaald.
+14.7:
+Blokeditor: Kolommenblok en startpaginasjabloon voor blogs toegevoegd. Knoppen voor startpaginasjablonen aangepast zodat ze geen pagina-content overlappen. Met 'Media kiezen vanuit apparaat' wordt een geïntegreerde WordPress-mediakiezer gebruikt, in plaats van de standaard kiezer van je apparaat.
+
+Bugfixes: Een bug die zorgde dat URL-instellingen werden weergegeven bij het wijzigen van de oriëntatie van een apparaat terwijl startpaginasjablonen werden bekeken.
+
+UI-verbeteringen: Je Gravatar is toegevoegd aan het menu Ik in Mijn site.
 </nl-NL>
-<pt-BR>
-14.5:
-Editor de blocos: Adição do bloco "Posts recentes" e correção de travamentos ao colar conteúdo HTML com imagens.
-Modelos de página: Adição de modelos baseados em blocos para agilizar a criação de páginas.
-Criação de site: Remoção de alguns passos para tornar o processo mais rápido. Selecione o tipo de site, adicione um nome de domínio e pronto.
-Correção de erros: Correção de um erro que tentava reenviar posts diversas vezes.
-</pt-BR>
 <ru-RU>
-14.5:
-Редактор блоков: добавлен блок последних записей, исправлено падение в обработке HTML с встроенными изображениями.
-Шаблоны страниц: добавлены шаблоны с блоками для быстрого создания.
-Создание сайта: убраны пара шагов, теперь надо просто выбрать тип сайта и ввести домен.
-Исправлена ошибка с загрузкой неудачных записей, больше не откладывается на неопределенное время.
+14.7:
+Редактор блоков: добавлены блок столбца, шаблон стартовой страницы блогов. Кнопки шаблонов страниц не будут накладываться на содержимое. Выбор файлов 
+мультимедиа будет использовать встроенный компонент выбора файлов.
+
+Исправления ошибок: исправлена ошибка при изменении ориентации экрана и появлении настроек URL во время просмотра шаблонов стартовой страницы.
+
+Интерфейс: Добавлен ваш граватар в меню Мой профиль.
 </ru-RU>
 <sv-SE>
-14.5:
-Blockredigeraren: Nytt block för senaste inläggen, rättat krasch vid inklistring av HTML-innehåll med inbäddade bilder
-Sidmallar: Nya blockbaserade mallar för att kunna skapa sidor snabbare.
-Skapa webbplats: Tagit bort några steg för att snabbare process – Välj typ av webbplats, ange domännamnet, klart!.
-Felrättelse: Löst ett problem som kunde försöka göra om misslyckade uppladdningar av inlägg i evighet.
+14.7:
+Blockredigeraren: Nytt kolumnblock och mall för bloggstartsida. Justerat startsidans mallknappar så att de inte skymmer innehållet. ”Välj mediafil från enheten” öppnar WordPress egen mediaväljare i stället för enhetens standardverktyg.
+
+Felrättningar: URL-inställningar kunde tidigare visas om man växlade mellan liggande och stående vid förhandsvisning av startsidesmallar.
+
+Förbättrat användargränssnitt: Gravatar tillagt i menyn Jag under Min webbplats.
 </sv-SE>
 <tr-TR>
-14.5:
-Blok düzenleyici: Güncel yazılar bloğu eklendi, gömülü görsel içerek HTML içeriğin yapıştırılması sırasındaki çökme düzeltildi
-Sayfa şablonları: Hızlı sayfa oluşturma için blok-tabanlı şablonlar eklendi.
-Site oluşturma: Hızlı kurulum için bir kaç adım kaldırıldı — sitenin tipini seçin, alan adını girin, her şey tamam.
-Hata ayıklama: Başarısız olan yazı yüklemelerinin sonsuz döngüde tekrarlanması problemi giderildi.
+14.7:
+Blok düzenleyici: Bloglar için Sütun bloğu ve Başlangıç Sayfası şablonu eklendi. Sayfa içeriğiyle çakışmayı önlemek için Başlangıç Sayfası Şablonu'nun düğmeleri düzeltildi. "Cihazdan medya seç" işlevi, cihazınızın varsayılan seçicisi yerine yerleşik bir WordPress medya seçicisi açar.
+
+Hata düzeltmeleri: Başlangıç Sayfası Şablonlarını önizlerken cihaz yönü değiştirildiğinde URL ayarlarının görünmesine neden olan bir hata.
+
+Kullanıcı arayüzünde yapılan iyileştirmeler: Gravatar'ınız Sitem'deki Ben menüsüne eklendi.
 </tr-TR>
 <zh-CN>
-14.5：
-区块编辑器：添加了“最新文章”区块，修正了粘贴包含嵌入图片的 HTML 内容时所导致的崩溃
-页面模板：添加了基于区块的模板，以提高页面创建速度。
-站点创建：删除了几个步骤，以提高创建速度。您只需选择站点类型，输入域名即可。
-错误修复：修正了导致上传失败，需要多次重试的问题。
+14.7：
+区块编辑器：添加了一个“栏目”区块和一个适用于博客的入门页面模板。调整了入门页面模板按钮，从而避免与页面内容重叠。“从设备中选择媒体”会打开内置的 WordPress 媒体选择器，而不是设备默认的选择器。
+
+错误修复：如果在预览入门页面模板时更改设备方向，该错误会导致系统显示 URL 设置。
+
+用户界面改进改进：在“我的站点”的“我”菜单中添加了 Gravatar。
 </zh-CN>
 <zh-TW>
-14.5：
-區塊編輯器：新增「最新文章」區塊，修復複製包含內嵌圖片的 HTML 內容會導致當機的問題
-頁面範本︰新增區塊式範本，讓你更快建立頁面。
-網站建立︰移除幾個步驟以加快設定速度︰選取網站類型，輸入網域名稱，即可完成設定。
-錯誤修正：修正導致文章上傳失敗時無限重複的問題。
+14.7：
+區塊編輯器：我們為網誌新增了「內容欄」區塊和「入門頁面」範本。我們調整了「入門頁面範本」按鈕，避免與頁面內容重疊。選取「從裝置選擇媒體」將開啟 WordPress 內建媒體選擇器，而不是裝置預設的選擇器。
+
+錯誤修正：預覽「入門頁面範本」時如果變更裝置方向，會發生網址設定彈出的問題。
+
+改善 UI：我們在「我的網站」的「我」選單中新增了「Gravatar」。
 </zh-TW>

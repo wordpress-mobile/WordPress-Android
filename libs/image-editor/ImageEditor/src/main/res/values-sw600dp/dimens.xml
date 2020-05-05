@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="preview_image_thumbnail_size">100dp</dimen>
+</resources>

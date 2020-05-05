@@ -1,0 +1,6 @@
+14.7:
+Editor a blocchi: Aggiunti blocco Colonna e modello pagina di avvio di blog. Modifica di pulsanti per il modello pagina di avvio per evitare sovrapposizioni con il contenuto della stessa. "Scegli contenuti multimediali da dispositivo" apre un selezionatore contenuti multimediali integrato di WordPress.
+
+Bug corretti: Un bug causava la vista di impostazioni URL quando si riorientava il dispositivo durante l'anteprima di modelli pagina di avvio.
+
+Migliore UI: Aggiunta del Gravatar a Io in Il mio sito.

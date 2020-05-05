@@ -1,11 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-01 00:54:10+0000
+Translation-Revision-Date: 2020-04-28 10:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">訂閱</string>
+    <string name="gutenberg_native_number_of_columns">欄位數</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_right">向右移動區塊</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_left">向左移動區塊</string>
+    <string name="gutenberg_native_latest_blog_posts">最新網誌文章</string>
+    <string name="gutenberg_native_follow_our_blog">關注我的網誌</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">按兩下將區塊向右移</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">按兩下將區塊向左移</string>
+    <string name="gutenberg_native_columns_settings">欄位設定</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">即將推出顏色設定。</string>
+    <string name="gutenberg_native_blog">網誌</string>
+    <string name="new_site_creation_creating_site_loading_4">建立儀表板</string>
+    <string name="new_site_creation_creating_site_loading_3">設定佈景主題</string>
+    <string name="new_site_creation_creating_site_loading_2">新增網站功能</string>
+    <string name="new_site_creation_creating_site_loading_1">擷取網站網址</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
+    <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
+    <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
+    <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
+    <string name="gif_powered_by_tenor">由 Tenor 支援</string>
+    <string name="gif_picker_search_hint">搜尋 Tenor</string>
+    <string name="photo_picker_gif">從 Tenor 中選擇</string>
+    <string name="weekday_saturday">星期六</string>
+    <string name="weekday_friday">星期五</string>
+    <string name="weekday_thursday">星期四</string>
+    <string name="weekday_wednesday">星期三</string>
+    <string name="weekday_tuesday">星期二</string>
+    <string name="weekday_monday">星期一</string>
+    <string name="weekday_sunday">星期日</string>
+    <string name="media_accessing_failed">無法存取私人網站的內容。部分媒體可能無法使用</string>
+    <string name="media_accessing_progress">正在存取私人網站的內容</string>
+    <string name="error_failed_to_crop_and_save_image">無法裁剪和儲存圖片，請再試一次。</string>
+    <string name="failed_to_insert_image_tap_to_retry">無法插入圖片。\n請點選以重試。</string>
+    <string name="preview_image_description">預覽圖片</string>
+    <string name="error_unknown_page_type">不明的頁面格式</string>
+    <string name="error_page_not_submitted">我們無法完成此動作，因此未將此頁面提交送審。</string>
+    <string name="error_page_not_scheduled">我們無法完成此動作，因此未排程此頁面。</string>
+    <string name="error_page_not_published_private">我們無法完成此動作，因此未發表這篇私密文章。</string>
+    <string name="error_page_not_published">我們無法完成此動作，因此未發表此頁面。</string>
+    <string name="error_page_not_submitted_retrying">我們無法將此頁面提交送審，但稍後會再試一次。</string>
+    <string name="error_page_not_scheduled_retrying">我們無法排程此頁面，但稍後會再試一次。</string>
+    <string name="error_page_not_published_retrying_private">我們無法發表此私密頁面，但稍後會再試一次。</string>
+    <string name="error_page_not_published_retrying">我們無法發表此私密頁面，但稍後會再試一次。</string>
+    <string name="error_media_recover_page_not_submitted">我們無法上傳此媒體，因此未將此頁面提交送審。</string>
+    <string name="error_media_recover_page_not_scheduled">我們無法上傳此媒體，因此未排程此頁面。</string>
+    <string name="error_media_recover_page_not_published_private">我們無法上傳此媒體，因此未發表此私密頁面。</string>
+    <string name="error_media_recover_page_not_published">我們無法上傳此媒體，因此未發表此頁面。</string>
+    <string name="page_waiting_for_connection_draft">我們會在裝置重新上線後儲存你的草稿</string>
+    <string name="page_waiting_for_connection_private">我們會在裝置重新上線後發表你的私密頁面。</string>
+    <string name="page_waiting_for_connection_scheduled">我們會在裝置重新上線後排程你的頁面。</string>
+    <string name="page_waiting_for_connection_pending">我們會在裝置重新上線後將你的頁面提交送審。</string>
+    <string name="page_waiting_for_connection_publish">我們會在裝置重新上線後發表此頁面。</string>
+    <string name="page_queued">已排入佇列的頁面</string>
+    <string name="page_uploading">正在上傳頁面</string>
+    <string name="error_publish_page_no_network">裝置已離線。頁面已儲存在本機。</string>
+    <string name="local_page_autosave_revision_available">這個頁面有未儲存的變更</string>
+    <string name="editor_uploading_page">你的頁面正在上傳中</string>
+    <string name="editor_page_saved_locally_failed_media">此頁面的媒體上傳作業失敗，但已儲存到本機</string>
+    <string name="editor_page_saved_locally">頁面已儲存到裝置</string>
+    <string name="editor_page_saved_online">頁面已儲存到線上</string>
+    <string name="quickpress_shortcut_activity_label">選擇用於 QuickPress 捷徑的網誌</string>
+    <string name="app_theme_default">由省電模式設定</string>
+    <string name="app_theme_dark">深色系</string>
+    <string name="app_theme_light">淡色系</string>
+    <string name="app_theme">外觀</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">你最近變更了這個頁面，但沒有儲存這些變更。選擇要載入的版本：\n\n</string>
+    <string name="gutenberg_native_what_people_say">使用者評價</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">我們提供一系列服務，可協助你達到期望的成果。不確定自己需要什麼，或所需內容的費用嗎？我們可以說明有哪些符合你需求的服務，並提供相關費用的詳細資訊。請於下方與我們聯絡。</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">我們是由一群才華橫溢的專業人士組成的小團隊，具備廣泛的技能和經驗。我們熱愛自己的工作，對旅遊產業充滿熱情。期待能與你合作。</string>
+    <string name="gutenberg_native_warning_message">警告訊息</string>
+    <string name="gutenberg_native_want_to_work_with_us">想加入我們的行列嗎？</string>
+    <string name="gutenberg_native_walt_disney">華特迪士尼</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">訪客會想知道頁面作者是什麼樣的人。利用此空間介紹你本人、你的網站、企業或任何你想說的話。使用下方的證言，即可引用他人針對同一主題發表的言論。</string>
+    <string name="gutenberg_native_usa">美國</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">這是範本內含的範例內容，用以說明其功能。你可以移除或用自己的話和媒體取代該內容。</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">想要有所做為，坐而言不如起而行。</string>
+    <string name="gutenberg_native_team">團隊</string>
+    <string name="gutenberg_native_success_message">成功訊息</string>
+    <string name="gutenberg_native_strategy">策略</string>
+    <string name="gutenberg_native_show_post_content">顯示文章內容</string>
+    <string name="gutenberg_native_services">服務</string>
+    <string name="gutenberg_native_samuel_the_dog">校犬 Samuel</string>
+    <string name="gutenberg_native_sally_smith">莎莉史密斯</string>
+    <string name="gutenberg_native_project_name">專案名稱</string>
+    <string name="gutenberg_native_position_or_job_title">職位或職稱</string>
+    <string name="gutenberg_native_portfolio">作品集</string>
+    <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的個人作品集展示了我在職涯中完成的各項專案。我的聯絡資訊如下，歡迎與我聯繫。</string>
+    <string name="gutenberg_native_link_to">連結至</string>
+    <string name="gutenberg_native_link_settings">連結設定</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">與我們討論 👋 如有任何疑問，歡迎使用下方資訊與我們聯絡，或使用表單傳送訊息給我們。</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">讓我們攜手創造不凡。</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">讓我們攜手創造不凡</string>
+    <string name="gutenberg_native_let_s_build_something_together">讓我們攜手創造不凡</string>
+    <string name="gutenberg_native_juan_p_rez">胡安培瑞茲</string>
+    <string name="gutenberg_native_j_k_rowling">J.K.羅琳</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">哈利，決定我們成為什麼樣的人，並不是我們的能力，而是我們做了什麼選擇。</string>
+    <string name="gutenberg_native_inspiration">旅遊靈感</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">與我們聯絡！</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">與我們聯絡！</string>
+    <string name="gutenberg_native_get_in_touch">與我們聯絡</string>
+    <string name="gutenberg_native_excerpt_length_words">摘要長度 (字數)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">透過電子郵件聯絡我：&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_dr_seuss">蘇斯博士</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">不要因為結束而哭泣，要為曾經發生過而微笑。</string>
+    <string name="gutenberg_native_customize">自訂</string>
+    <string name="gutenberg_native_city_10100">City, 10100</string>
+    <string name="gutenberg_native_button_link_url">按鈕連結網址</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">即將推出按鈕顏色設定。</string>
+    <string name="gutenberg_native_border_settings">框線設定</string>
+    <string name="gutenberg_native_border_radius">框線半徑</string>
+    <string name="gutenberg_native_add_paragraph_block">新增段落區塊</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">簡要說明你提供的服務。</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">提供簡短自傳，包括個人經歷、重大成就或趣事。</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">專案及展示作品的說明。</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">建立文章</string>
     <string name="post_list_tab_trashed_posts">已移至垃圾桶</string>
     <string name="post_list_tab_scheduled_posts">已排程</string>
@@ -195,8 +315,6 @@ Language: zh_TW
     <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
     <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
     <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
-    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器編輯新頁面，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
-    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器編輯新文章，太棒了！若你想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -1186,7 +1304,7 @@ Language: zh_TW
     <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
-    <string name="copy">複製</string>
+    <string name="copy_text">複製</string>
     <string name="connect_site">連結網站</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">閃爍燈</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">震動裝置</string>
@@ -1986,7 +2104,6 @@ Language: zh_TW
     <string name="content_required">必須發表回應</string>
     <string name="sure_to_cancel_edit_comment">取消編輯此回應？</string>
     <string name="saving_changes">正在儲存變更</string>
-    <string name="hint_comment_content">回應</string>
     <string name="trash">垃圾桶</string>
     <string name="dlg_confirm_trash_comments">移至垃圾桶？</string>
     <string name="dlg_trashing_comments">正在移至垃圾桶</string>
@@ -2088,7 +2205,7 @@ Language: zh_TW
     <string name="pages">頁面</string>
     <string name="no_network_title">沒有網路連線</string>
     <string name="ok">OK</string>
-    <string name="blogusername">網誌使用者帳號</string>
+    <string name="done">完成</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">服務條款</string>
@@ -2101,7 +2218,6 @@ Language: zh_TW
     <string name="quickpress_add_alert_title">設定捷徑名稱</string>
     <string name="settings">設定</string>
     <string name="quickpress_add_error">捷徑名稱不能為空</string>
-    <string name="quickpress_window_title">選擇用於 QuickPress 捷徑的網誌</string>
     <string name="pages_private">私人</string>
     <string name="categories">分類</string>
     <string name="tags_separate_with_commas">以逗號分隔標籤</string>

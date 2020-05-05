@@ -21,14 +21,12 @@ class MeGravatarLoader @Inject constructor(
 ) {
     fun load(
         newAvatarUploaded: Boolean,
-        rawAvatarUrl: String,
+        avatarUrl: String,
         injectFilePath: String?,
         imageView: ImageView,
         imageType: ImageType,
         listener: RequestListener<Drawable>? = null
     ) {
-        val avatarUrl = constructGravatarUrl(rawAvatarUrl)
-
         if (newAvatarUploaded) {
             // invalidate the specific gravatar entry from the bitmap cache. It will be updated via the injected
             // request cache.

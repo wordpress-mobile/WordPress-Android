@@ -48,7 +48,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"
-                style="@style/LoginTheme.Button.Primary"
+                style="@style/LoginTheme.Button.SignUp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_extra_small"
@@ -57,7 +57,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/create_site_button"
-                style="@style/LoginTheme.Button.SignUp"
+                style="@style/LoginTheme.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_extra_small"

@@ -8,7 +8,7 @@
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
 
     <dimen name="tab_height">48dp</dimen>
-    <dimen name="menu_width">48dp</dimen>
+    <dimen name="me_menu_width">64dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
@@ -485,5 +485,10 @@
     <!-- unelevated card -->
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
+
+    <!-- feature announcement-->
+    <dimen name="feature_announcement_content_margin">40dp</dimen>
+    <dimen name="feature_announcement_icon_size">48dp</dimen>
+    <dimen name="feature_announcement_top_margin">64dp</dimen>
 
 </resources>

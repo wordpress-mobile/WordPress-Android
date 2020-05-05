@@ -73,10 +73,13 @@ public class ReaderPhotoView extends RelativeLayout {
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
                             boolean isPrivate,
+                            boolean isPrivateAtSite,
                             PhotoViewListener listener) {
         int loResWidth = (int) (hiResWidth * 0.10f);
-        mLoResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, PhotonUtils.Quality.LOW);
-        mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, PhotonUtils.Quality.MEDIUM);
+        mLoResImageUrl = ReaderUtils
+                .getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, isPrivateAtSite, PhotonUtils.Quality.LOW);
+        mHiResImageUrl = ReaderUtils
+                .getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, isPrivateAtSite, PhotonUtils.Quality.MEDIUM);
 
         mPhotoViewListener = listener;
         loadImage();

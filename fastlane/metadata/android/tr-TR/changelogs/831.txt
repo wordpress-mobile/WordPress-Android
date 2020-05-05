@@ -1,8 +1,0 @@
-14.2:
-Blok düzenleyicide birçok güncelleme:
-
-* Önce / sonra blok eklemek için uzun basın simgesi eklendi.
-* Uygulama, bağlantı kesildikten sonra tekrar çevrimiçi olduğunda görüntüleri göstermeye çalışacaktır.
-* Başka bir uygulamadan resimler veya bağlantılar içeren bir yazı oluşturmaya çalışırken boş düzenleyici ile ilgili sorun çözüldü.
-* Galeri bloğuna görüntü boyutu seçenekleri eklendi.
-* Paragraf bloklarının birleştirilmesini engelleyen bir hata düzeltildi.

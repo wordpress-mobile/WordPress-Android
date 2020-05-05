@@ -1,8 +1,0 @@
-14.2:
-Várias melhorias no editor de blocos:
-
-* Adicionado um ícone de toque longo para adição de blocos antes e depois.
-* O aplicativo tentará exibir imagens quando ficar online depois de ser desconectado.
-* Solução do problema que mostrava o editor vazio ao tentar criar um post com imagens ou links de outro aplicativo.
-* Agora há opções de tamanho de imagem no bloco de galeria.
-* Solução de um erro que impedia a junção de blocos de paragrafo.

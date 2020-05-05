@@ -1,11 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 00:54:58+0000
+Translation-Revision-Date: 2020-04-30 08:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/2.4.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">購読</string>
+    <string name="gutenberg_native_number_of_columns">カラム数</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
+    <string name="gutenberg_native_move_block_right">ブロックを右に移動</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に左に移動</string>
+    <string name="gutenberg_native_move_block_left">ブロックを左に移動</string>
+    <string name="gutenberg_native_latest_blog_posts">最新のブログ投稿</string>
+    <string name="gutenberg_native_follow_our_blog">ブログをフォローする</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">ダブルタップしてブロックを右に移動</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">ダブルタップしてブロックを左に移動</string>
+    <string name="gutenberg_native_columns_settings">カラム設定</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">色設定機能がまもなく追加されます。</string>
+    <string name="gutenberg_native_blog">ブログ</string>
+    <string name="new_site_creation_creating_site_loading_4">ダッシュボードの作成</string>
+    <string name="new_site_creation_creating_site_loading_3">テーマを設定する</string>
+    <string name="new_site_creation_creating_site_loading_2">サイト機能の追加</string>
+    <string name="new_site_creation_creating_site_loading_1">サイト URL を取得</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">まもなくサイトの準備が完了します</string>
+    <string name="new_site_creation_creating_site_loading_title">成功しました。\nほぼ終了</string>
+    <string name="pages_and_posts_cancel_auto_upload">アップロードのキャンセル</string>
+    <string name="gif_list_search_returned_unknown_error">リクエストの処理中に問題が発生しました</string>
+    <string name="gif_powered_by_tenor">Powered by Tenor</string>
+    <string name="gif_picker_search_hint">Tenor を検索</string>
+    <string name="photo_picker_gif">Choose から選択</string>
+    <string name="weekday_saturday">土曜日</string>
+    <string name="weekday_friday">金曜日</string>
+    <string name="weekday_thursday">木曜日</string>
+    <string name="weekday_wednesday">水曜日</string>
+    <string name="weekday_tuesday">火曜日</string>
+    <string name="weekday_monday">月曜日</string>
+    <string name="weekday_sunday">日曜日</string>
+    <string name="media_accessing_failed">非公開サイトのコンテンツにアクセスできませんでした。一部のメディアは利用できない場合があります</string>
+    <string name="media_accessing_progress">非公開サイトのコンテンツへのアクセス</string>
+    <string name="error_failed_to_crop_and_save_image">画像の切り抜きと保存に失敗しました。もう一度お試しください。</string>
+    <string name="failed_to_insert_image_tap_to_retry">画像を挿入できませんでした。\nタップして再試行してください。</string>
+    <string name="preview_image_description">画像をプレビュー</string>
+    <string name="error_unknown_page_type">ページのフォーマットが不明です</string>
+    <string name="error_page_not_submitted">この操作を完了できなかったため、この確認用のページは送信されていません。</string>
+    <string name="error_page_not_scheduled">この操作を完了できなかったため、このページのスケジュールは設定されていません。</string>
+    <string name="error_page_not_published_private">この操作を完了できなかったため、この非公開ページは公開されていません。</string>
+    <string name="error_page_not_published">この操作を完了できなかったため、このページは公開されていません。</string>
+    <string name="error_page_not_submitted_retrying">この確認用のページを送信できませんでした。後ほど再実行します。</string>
+    <string name="error_page_not_scheduled_retrying">このページのスケジュールを設定できませんでした。後ほど再実行します。</string>
+    <string name="error_page_not_published_retrying_private">この非公開ページを公開できませんでした。後ほど再実行します。</string>
+    <string name="error_page_not_published_retrying">このページを公開できませんでした。後ほど再実行します。</string>
+    <string name="error_media_recover_page_not_submitted">このメディアをアップロードできなかったため、この確認用のページは送信されていません。</string>
+    <string name="error_media_recover_page_not_scheduled">このメディアをアップロードできなかったため、このページのスケジュールは設定されていません。</string>
+    <string name="error_media_recover_page_not_published_private">このメディアをアップロードできなかったため、この非公開ページは公開されていません。</string>
+    <string name="error_media_recover_page_not_published">このメディアをアップロードできなかったため、ページは公開されていません。</string>
+    <string name="page_waiting_for_connection_draft">デバイスが再びオンラインになると、下書きが保存されます。</string>
+    <string name="page_waiting_for_connection_private">デバイスが再びオンラインになると、非公開のページが公開されます。</string>
+    <string name="page_waiting_for_connection_scheduled">デバイスが再びオンラインになると、ページのスケジュールが設定されます。</string>
+    <string name="page_waiting_for_connection_pending">デバイスが再びオンラインになると、確認用のページが送信されます。</string>
+    <string name="page_waiting_for_connection_publish">デバイスが再びオンラインになると、ページが公開されます。</string>
+    <string name="page_queued">キューに入っているページ</string>
+    <string name="page_uploading">ページをアップロード中</string>
+    <string name="error_publish_page_no_network">デバイスがオフラインです。ページはローカルに保存されました。</string>
+    <string name="local_page_autosave_revision_available">このページに保存されていない変更が加えられました</string>
+    <string name="editor_uploading_page">ページのアップロード中</string>
+    <string name="editor_page_saved_locally_failed_media">ページはメディアアップロードに失敗し、ローカルに保存されました</string>
+    <string name="editor_page_saved_locally">ページはデバイスに保存されました</string>
+    <string name="editor_page_saved_online">ページはオンラインで保存されました</string>
+    <string name="quickpress_shortcut_activity_label">QuickPress ショートカット用のブログを選択</string>
+    <string name="app_theme_default">バッテリーセーバーで設定</string>
+    <string name="app_theme_dark">ダーク</string>
+    <string name="app_theme_light">ライト</string>
+    <string name="app_theme">外観</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">このページに最近変更が加えられましたが、保存されませんでした。読み込むバージョンを選択します。\n\n</string>
+    <string name="gutenberg_native_what_people_say">名言集</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">受講者の目標に合わせて、さまざまなレッスンをご用意しています。必要なサービスや費用がわからない場合は、お客様に適切なサービスや価格についてご説明いたします。以下からお問い合わせください。</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">当社は幅広いスキルと豊かな経験を持つ少数精鋭のプロフェッショナル集団です。愛着と熱意を持って、この仕事に取り組んでいます。ご利用をお待ちしています。</string>
+    <string name="gutenberg_native_warning_message">警告メッセージ</string>
+    <string name="gutenberg_native_want_to_work_with_us">求人情報</string>
+    <string name="gutenberg_native_walt_disney">ウォルト・ディズニー</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">訪問者に安心してこのページをご利用いただけるように、自己紹介をします。このページを使用して、ご自身やサイト、ビジネスなどについて自由に記述、公開できます。以下の「お客様の声」を使って、同じ内容の情報について第三者が自分の言葉で表現した発言を引用します。</string>
+    <string name="gutenberg_native_usa">USA</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">これは各種機能を具体的に紹介するテンプレートに含まれるサンプルコンテンツ例です。削除するか、お客様自身の文章とメディアに置き換えてください。</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">何かを始めるには、しゃべるのをやめて行動を開始することだ。</string>
+    <string name="gutenberg_native_team">チーム</string>
+    <string name="gutenberg_native_success_message">成功メッセージ</string>
+    <string name="gutenberg_native_strategy">戦略</string>
+    <string name="gutenberg_native_show_post_content">投稿の内容を表示</string>
+    <string name="gutenberg_native_services">サービス</string>
+    <string name="gutenberg_native_samuel_the_dog">犬のサミュエル</string>
+    <string name="gutenberg_native_sally_smith">サリー・スミス</string>
+    <string name="gutenberg_native_project_name">プロジェクト名</string>
+    <string name="gutenberg_native_position_or_job_title">職位または肩書</string>
+    <string name="gutenberg_native_portfolio">ポートフォリオ</string>
+    <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">これまでのキャリアで制作してきたプロジェクトを、ポートフォリオにて紹介しています。下記のお問い合わせ先までご連絡ください。</string>
+    <string name="gutenberg_native_link_to">リンク先</string>
+    <string name="gutenberg_native_link_settings">リンク設定</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">詳細はご相談にて。ぜひお気軽に以下の連絡先にお問い合わせください。フォームでのご連絡もお待ちしています。</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">一緒につくりあげましょう。</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">一緒につくりあげましょう</string>
+    <string name="gutenberg_native_let_s_build_something_together">一緒につくりあげましょう</string>
+    <string name="gutenberg_native_juan_p_rez">フアン・ペレス</string>
+    <string name="gutenberg_native_j_k_rowling">J.K.ローリング</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">ハリー、人が本当に何者であるかを示すのは、何ができるかではなく、どのような選択をするかなのだ。</string>
+    <string name="gutenberg_native_inspiration">インスピレーション</string>
+    <string name="gutenberg_native_get_in_touch_dbfe07f2">お問い合わせ</string>
+    <string name="gutenberg_native_get_in_touch_c53e1927">お問い合わせ</string>
+    <string name="gutenberg_native_get_in_touch">お問い合わせ</string>
+    <string name="gutenberg_native_excerpt_length_words">抜粋の長さ (単語数)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">メール :&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_dr_seuss">ドクター・スース</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">終わったと嘆くより、機会に恵まれたと喜ぼう。</string>
+    <string name="gutenberg_native_customize">カスタマイズ</string>
+    <string name="gutenberg_native_city_10100">City, 10100</string>
+    <string name="gutenberg_native_button_link_url">ボタンへのリンク用 URL</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">ボタンの色設定機能がまもなく追加されます。</string>
+    <string name="gutenberg_native_border_settings">境界の設定</string>
+    <string name="gutenberg_native_border_radius">境界の半径</string>
+    <string name="gutenberg_native_add_paragraph_block">段落ブロックを追加</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">サービス内容に関する簡単な説明。</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">個人的経歴、主な業績、興味深い事実を織り込んだ簡単な自己紹介。</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">提示したプロジェクトや作品の説明。</string>
+    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
     <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
     <string name="post_list_tab_scheduled_posts">予約済み</string>
@@ -197,8 +317,6 @@ Language: ja_JP
     <string name="notifications_tab_dialog_master_hint_on">このサイトの通知タブで通知表示を無効にする</string>
     <string name="notifications_tab_dialog_master_status_off">このサイトの通知</string>
     <string name="notifications_tab_dialog_master_status_on">このサイトの通知</string>
-    <string name="dialog_gutenberg_informative_description_page">新しいページにブロックエディターを使用できるようになりました。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動します。</string>
-    <string name="dialog_gutenberg_informative_description_post">新しい投稿にブロックエディターを使用できるようになりました。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動します。</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -391,6 +509,7 @@ Language: ja_JP
     <string name="editor_failed_to_insert_media_tap_to_retry">メディアを挿入できませんでした。\nタップして再試行してください。</string>
     <string name="editor_uploading_draft">下書きをアップロードしています</string>
     <string name="post_uploading_draft">下書きをアップロードしています</string>
+    <string name="post_list_tab_drafts">下書き</string>
     <string name="post_list_author_everyone">すべてのユーザー</string>
     <string name="post_list_author_me">自分</string>
     <string name="error_restoring_post">投稿を復元する際にエラーが発生しました</string>
@@ -558,6 +677,7 @@ Language: ja_JP
     <string name="stats_no_data_for_period">この期間のデータがありません</string>
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
+    <string name="gif_picker_endless_scroll_network_error">ネットワークエラーのため、一部のメディアを読み込めませんでした。</string>
     <string name="stats_author_views_label">表示回数</string>
     <string name="stats_author_label">投稿者</string>
     <string name="stats_authors">投稿者</string>
@@ -1198,7 +1318,7 @@ Language: ja_JP
     <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
-    <string name="copy">コピー</string>
+    <string name="copy_text">コピー</string>
     <string name="connect_site">サイトを連携</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">点滅</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>
@@ -1759,8 +1879,8 @@ Language: ja_JP
     <string name="site_settings_writing_header">投稿設定</string>
     <string name="site_settings_account_header">アカウント</string>
     <string name="site_settings_general_header">一般</string>
-    <string name="newest_first">最新のものを先頭表示</string>
-    <string name="oldest_first">最も古いものを先頭表示</string>
+    <string name="newest_first">新しいものから表示</string>
+    <string name="oldest_first">古いものから表示</string>
     <string name="close_after">特定の日付に終了:</string>
     <string name="comments">コメント</string>
     <string name="related_posts">関連記事</string>
@@ -2007,7 +2127,6 @@ Language: ja_JP
     <string name="content_required">コメント欄は必須項目です</string>
     <string name="sure_to_cancel_edit_comment">このコメントの修正を中止しますか ?</string>
     <string name="saving_changes">変更を保存中</string>
-    <string name="hint_comment_content">コメント</string>
     <string name="trash">ゴミ箱</string>
     <string name="dlg_confirm_trash_comments">ゴミ箱に移動しますか ?</string>
     <string name="dlg_trashing_comments">ゴミ箱に移動中</string>
@@ -2109,7 +2228,7 @@ Language: ja_JP
     <string name="pages">ページ</string>
     <string name="no_network_title">利用可能なネットワークがありません</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
+    <string name="done">完了</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">利用規約</string>
@@ -2122,7 +2241,6 @@ Language: ja_JP
     <string name="quickpress_add_alert_title">ショートカット名を設定する</string>
     <string name="settings">設定</string>
     <string name="quickpress_add_error">ショートカット名を記入してください</string>
-    <string name="quickpress_window_title">QuickPress ショートカット用のブログを選択</string>
     <string name="pages_private">非公開</string>
     <string name="categories">カテゴリー</string>
     <string name="tags_separate_with_commas">タグはコンマで区切ってください</string>

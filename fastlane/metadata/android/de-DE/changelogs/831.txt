@@ -1,9 +1,0 @@
-14.2:
-Zahlreiche Updates am Block-Editor:
-
-* Icon zum längeren Drücken hinzugefügt, um Blöcke davor/dahinter einzufügen.
-* Die App versucht, Bilder anzuzeigen, wenn sie nach einer Verbindungsunterbrechung wieder online ist.
-* Problem mit leerem Editor behoben, wenn versucht wird, einen Beitrag mit Bildern oder Links aus einer anderen App zu erstellen.
-* Optionen für Bildgröße zum Galerieblock hinzugefügt.
-* Fehler behoben, der das Zusammenführen von Absatzblöcken verhinderte.
-

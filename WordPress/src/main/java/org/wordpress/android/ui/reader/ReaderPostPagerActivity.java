@@ -28,6 +28,11 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.store.PostStore;
+import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -36,6 +41,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.posts.BasicFragmentDialog;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -45,6 +51,9 @@ import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType;
+import org.wordpress.android.ui.uploads.UploadActionUseCase;
+import org.wordpress.android.ui.uploads.UploadUtils;
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -126,6 +135,10 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
 
     @Inject SiteStore mSiteStore;
     @Inject ReaderTracker mReaderTracker;
+    @Inject PostStore mPostStore;
+    @Inject Dispatcher mDispatcher;
+    @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject UploadUtilsWrapper mUploadUtilsWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -523,6 +536,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         mReaderTracker.start(ReaderTrackerType.PAGED_POST);
         EventBus.getDefault().register(this);
 
+        // We register the dispatcher in order to receive the OnPostUploaded event and show the snackbar
+        mDispatcher.register(this);
+
         if (!hasPagerAdapter() || mBackFromLogin) {
             if (ActivityUtils.isDeepLinking(getIntent())) {
                 handleDeepLinking();
@@ -541,6 +557,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         AppLog.d(T.READER, "TRACK READER ReaderPostPagerActivity > STOP Count");
         mReaderTracker.stop(ReaderTrackerType.PAGED_POST);
         EventBus.getDefault().unregister(this);
+        mDispatcher.unregister(this);
     }
 
     @Override
@@ -973,8 +990,49 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RequestCodes.DO_LOGIN && resultCode == Activity.RESULT_OK) {
-            mBackFromLogin = true;
+        switch (requestCode) {
+            case RequestCodes.EDIT_POST:
+                if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
+                    return;
+                }
+                int localId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0);
+                final SiteModel site = (SiteModel) data.getSerializableExtra(WordPress.SITE);
+                final PostModel post = mPostStore.getPostByLocalPostId(localId);
+
+                if (EditPostActivity.checkToRestart(data)) {
+                    ActivityLauncher.editPostOrPageForResult(data, ReaderPostPagerActivity.this, site,
+                            data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0));
+
+                    // a restart will happen so, no need to continue here
+                    break;
+                }
+
+                if (site != null && post != null) {
+                    mUploadUtilsWrapper.handleEditPostResultSnackbars(
+                            this,
+                            findViewById(R.id.coordinator),
+                            data,
+                            post,
+                            site,
+                            mUploadActionUseCase.getUploadAction(post),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    UploadUtils.publishPost(ReaderPostPagerActivity.this, post, site, mDispatcher);
+                                }
+                            });
+                }
+                break;
+            case RequestCodes.DO_LOGIN:
+                if (resultCode == Activity.RESULT_OK) {
+                    mBackFromLogin = true;
+                }
+                break;
+            case RequestCodes.NO_REBLOG_SITE:
+                if (resultCode == Activity.RESULT_OK) {
+                    finish(); // Finish activity to make My Site page visible
+                }
+                break;
         }
     }
 
@@ -983,6 +1041,22 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity
         ReaderPostDetailFragment fragment = getActiveDetailFragment();
         if (fragment != null) {
             fragment.onPositiveClicked(instanceTag);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPostUploaded(OnPostUploaded event) {
+        int siteLocalId = AppPrefs.getSelectedSite();
+        SiteModel site = mSiteStore.getSiteByLocalId(siteLocalId);
+        if (site != null && event.post != null) {
+            mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.coordinator),
+                    event.isError(),
+                    event.post,
+                    null,
+                    site);
         }
     }
 }

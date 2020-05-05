@@ -749,7 +749,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
         showProgress(true);
         String imageUrl = mediaUri;
         if (SiteUtils.isPhotonCapable(mSite)) {
-            imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0);
+            imageUrl = PhotonUtils.getPhotonImageUrl(mediaUri, size, 0, mSite.isPrivateWPComAtomic());
         }
         mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, imageUrl, ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {

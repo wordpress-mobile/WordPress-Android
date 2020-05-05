@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-02-14 17:17:41+0000
+Translation-Revision-Date: 2020-04-23 09:34:41+0000
 Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
 Generator: GlotPress/2.4.0-alpha
 Language: hr
@@ -331,7 +331,6 @@ Language: hr
     <string name="add_new_category">Dodaj novu kategoriju</string>
     <string name="category_name">Ime kategorije</string>
     <string name="trash">Smeće</string>
-    <string name="hint_comment_content">Komentar</string>
     <string name="mnu_comment_trash">Smeće</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="reader_title_applog">Aplikacijski zapisnik</string>
@@ -448,7 +447,7 @@ Language: hr
     <string name="pages">Stranice</string>
     <string name="posts">Objave</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
+    <string name="done">Gotovo</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Inačica</string>
     <string name="tos">Uvjeti Korištenja</string>
@@ -460,7 +459,6 @@ Language: hr
     <string name="immediately">Odmah</string>
     <string name="quickpress_add_alert_title">Postavi naziv prečaca</string>
     <string name="settings">Postavke</string>
-    <string name="quickpress_window_title">Odaberi blog za QuickPress prečac</string>
     <string name="quickpress_add_error">Naziv prečaca ne može biti prazan</string>
     <string name="pages_private">Privatno</string>
     <string name="title">Naslov</string>
