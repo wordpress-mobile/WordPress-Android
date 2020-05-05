@@ -1,5 +1,6 @@
 14.9
 -----
+* Fix issue with Preview post not working after switching to classic editor from inside the post
  
 14.8
 -----
