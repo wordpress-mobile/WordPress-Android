@@ -218,6 +218,9 @@ public class AppPrefs {
 
         // Store a version of the last shown feature announcement
         FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
+
+        // version name of the last app version
+        LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
     }
 
     private static SharedPreferences prefs() {
@@ -1101,6 +1104,14 @@ public class AppPrefs {
 
     public static int getFeatureAnnouncementShownVersion() {
         return getInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, -1);
+    }
+
+    public static int getLastFeatureAnnouncementAppVersionCode() {
+        return getInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE);
+    }
+
+    public static void setLastFeatureAnnouncementAppVersionCode(int version) {
+        setInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE, version);
     }
 
     /*
