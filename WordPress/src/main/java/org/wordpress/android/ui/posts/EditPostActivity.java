@@ -485,6 +485,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             }
 
+            if (isRestarting && extras.getBoolean(EXTRA_IS_NEW_POST)) {
+                // editor was on a new post before the switch so, keep that signal.
+                // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
+                mIsNewPost = true;
+            }
+
             // retrieve Editor session data if switched editors
             if (isRestarting && extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) != null) {
                 mPostEditorAnalyticsSession =
@@ -553,7 +559,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
             trackEditorCreatedPost(action, getIntent());
         }
 
