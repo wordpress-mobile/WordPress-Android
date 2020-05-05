@@ -42,16 +42,12 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     val toolbarUiState: LiveData<UiString> = _toolbarUiState
 
     fun start(editPostRepository: EditPostRepository) {
+        this.editPostRepository = editPostRepository
         if (isStarted) return
         isStarted = true
 
-        this.editPostRepository = editPostRepository
         setToolbarUiState()
         updateUiState()
-    }
-
-    fun setEditPostRepositoryAfterConfigChanges(editPostRepository: EditPostRepository) {
-        this.editPostRepository = editPostRepository
     }
 
     private fun setToolbarUiState() {
