@@ -1322,7 +1322,7 @@ Language: fr
     <string name="media_edit_filename_caption">Nom du fichier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texte alternatif</string>
-    <string name="copy">Copier</string>
+    <string name="copy_text">Copier</string>
     <string name="connect_site">Connecter le site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Faire clignoter la lumière</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Faire vibrer l\'appareil</string>

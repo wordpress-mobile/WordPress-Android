@@ -1322,7 +1322,7 @@ Language: ro
     <string name="media_edit_filename_caption">Nume fișier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Text alternativ</string>
-    <string name="copy">Copiază</string>
+    <string name="copy_text">Copiază</string>
     <string name="connect_site">Conectează situl</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luminează intermitent</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrează dispozitivul</string>

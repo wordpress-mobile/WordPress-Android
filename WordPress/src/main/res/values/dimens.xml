@@ -486,4 +486,9 @@
     <dimen name="unelevated_card_elevation">0dp</dimen>
     <dimen name="unelevated_card_stroke_width">1dp</dimen>
 
+    <!-- feature announcement-->
+    <dimen name="feature_announcement_content_margin">40dp</dimen>
+    <dimen name="feature_announcement_icon_size">48dp</dimen>
+    <dimen name="feature_announcement_top_margin">64dp</dimen>
+
 </resources>

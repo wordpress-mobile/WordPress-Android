@@ -32,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
                 android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
             <org.wordpress.android.ui.reader.views.ReaderFollowButton
                 android:id="@+id/follow_button"
@@ -169,7 +169,7 @@
                 android:layout_marginEnd="@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
                 android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
+                android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_discover"
@@ -237,12 +237,23 @@
                 android:layout_height="@dimen/reader_button_minimum_height"
                 android:layout_alignWithParentIfMissing="true"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@id/count_comments"
+                android:layout_toStartOf="@id/reblog"
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/reader_add_bookmark"
                 android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
                 wp:tint="@color/on_surface_primary_selector" />
+
+            <org.wordpress.android.ui.reader.views.ReaderIconCountView
+                android:id="@+id/reblog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:layout_toStartOf="@+id/count_comments"
+                android:contentDescription="@string/reader_view_reblog"
+                wp:readerIcon="reblog" />
 
             <org.wordpress.android.ui.reader.views.ReaderIconCountView
                 android:id="@+id/count_comments"

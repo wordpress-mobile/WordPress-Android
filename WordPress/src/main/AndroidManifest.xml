@@ -461,6 +461,9 @@
             android:theme="@style/WordPress.NoActionBar"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name=".ui.reader.NoSiteToReblogActivity"
+            android:theme="@style/WordPress.NoActionBar" />
+        <activity
             android:name=".ui.AppLogViewerActivity"
             android:label="@string/reader_title_applog"
             android:theme="@style/WordPress.NoActionBar" />
@@ -522,7 +525,6 @@
 
         <activity
             android:name=".ui.photopicker.PhotoPickerActivity"
-            android:label="@string/photo_picker_title"
             android:theme="@style/WordPress.NoActionBar" />
         <activity
             android:name=".ui.stockmedia.StockMediaPickerActivity"

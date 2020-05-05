@@ -1281,7 +1281,7 @@ Language: pl
     <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL </string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
-    <string name="copy">Kopiuj</string>
+    <string name="copy_text">Kopiuj</string>
     <string name="connect_site">Połącz witrynę</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>

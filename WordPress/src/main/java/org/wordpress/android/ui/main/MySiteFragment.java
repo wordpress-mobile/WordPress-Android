@@ -113,7 +113,7 @@ public class MySiteFragment extends Fragment implements
         WPMainActivity.OnScrollToTopListener,
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
-        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface, MainToolbarFragment,
+        BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface, PromoDialogClickInterface,
         OnConfirmListener, OnDismissListener {
     public static final int HIDE_WP_ADMIN_YEAR = 2015;
     public static final int HIDE_WP_ADMIN_MONTH = 9;
@@ -169,7 +169,6 @@ public class MySiteFragment extends Fragment implements
 
     @Nullable
     private Toolbar mToolbar = null;
-    private String mToolbarTitle;
 
     private int mBlavatarSz;
     private boolean mIsDomainCreditAvailable = false;
@@ -1002,14 +1001,6 @@ public class MySiteFragment extends Fragment implements
         super.onStart();
         mDispatcher.register(this);
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void setTitle(@NonNull final String title) {
-        mToolbarTitle = title;
-        if (mToolbar != null) {
-            mToolbar.setTitle(title);
-        }
     }
 
     /**

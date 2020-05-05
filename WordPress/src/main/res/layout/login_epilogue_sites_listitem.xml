@@ -19,7 +19,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:gravity="center_vertical"
         android:background="@drawable/blavatar_border"
-        android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
+        android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
         android:contentDescription="@null"/>
 
     <LinearLayout
