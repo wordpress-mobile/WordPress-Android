@@ -1365,14 +1365,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void performPrimaryAction() {
+        if (mEditPostRepository.isPage()) {
+            performPagePrimaryAction();
+        } else {
+            performPostPrimaryAction();
+        }
+    }
+
+    private void performPostPrimaryAction() {
+        if (getPrimaryAction().equals(PrimaryEditorAction.SAVE)) {
+            uploadPost(false);
+        } else {
+            showPrepublishingNudgeBottomSheet();
+        }
+    }
+
+    private void performPagePrimaryAction() {
         switch (getPrimaryAction()) {
-            case SCHEDULE:
-            case SUBMIT_FOR_REVIEW:
             case UPDATE:
+                showUpdateConfirmationDialogAndUploadPost();
+                return;
             case PUBLISH_NOW:
-                showPrepublishingNudgeBottomSheet();
+                showPublishConfirmationDialogAndPublishPost();
                 return;
             // In other cases, we'll upload the post without changing its status
+            case SCHEDULE:
+            case SUBMIT_FOR_REVIEW:
             case SAVE:
                 uploadPost(false);
                 break;
