@@ -25,7 +25,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
     @Mock lateinit var dateProvider: DateProvider
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
-    private val dateNow = "2019-05-05T14:30:20+0200"
+    private val currentDate = "2019-05-05T14:30:20+0200"
 
     @InternalCoroutinesApi
     @Before
@@ -100,7 +100,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
 
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.DRAFT.toString())
-        postModel.setDateCreated(dateNow)
+        postModel.setDateCreated(currentDate)
 
         // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
@@ -128,7 +128,7 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
     fun `returns "scheduled now" when post published in future`() {
         // arrange
         val expectedTextResource = R.string.prepublishing_nudges_home_schedule_button
-        whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateFromIso8601(dateNow))
+        whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateFromIso8601(currentDate))
         postModel.setDateCreated(dateCreated)
 
         // act
