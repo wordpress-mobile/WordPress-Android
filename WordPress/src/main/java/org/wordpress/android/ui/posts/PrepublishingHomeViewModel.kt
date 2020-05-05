@@ -50,9 +50,12 @@ class PrepublishingHomeViewModel @Inject constructor(
                 HomeUiState(
                         actionType = PUBLISH,
                         actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                            UiStringText(
-                                    postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                            )
+                            val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                            if (label.isNotEmpty()) {
+                                UiStringText(label)
+                            } else {
+                                UiStringRes(R.string.immediately)
+                            }
                         },
                         onActionClicked = ::onActionClicked
                 ),
