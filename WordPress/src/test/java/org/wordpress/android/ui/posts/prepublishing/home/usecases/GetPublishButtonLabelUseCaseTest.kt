@@ -18,8 +18,8 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.DateTimeUtils
 
 class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
-    lateinit var editPostRepository: EditPostRepository
-    lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
+    private lateinit var editPostRepository: EditPostRepository
+    private lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
     private lateinit var postModel: PostModel
     private lateinit var postUtilsWrapper: PostUtilsWrapper
     @Mock lateinit var dateProvider: DateProvider
@@ -59,8 +59,10 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
         postModel.setStatus(PostStatus.PUBLISHED.toString())
         postModel.setDateCreated(dateCreated)
 
+        // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
 
+        // assert
         assertThat(textResource).isEqualTo(expectedTextResource)
     }
 
@@ -72,8 +74,10 @@ class GetPublishButtonLabelUseCaseTest : BaseUnitTest() {
         postModel.setStatus(PostStatus.PRIVATE.toString())
         postModel.setDateCreated(dateCreated)
 
+        // act
         val textResource = getPublishButtonLabelUseCase.getLabel(editPostRepository)
 
+        // assert
         assertThat(textResource).isEqualTo(expectedTextResource)
     }
 
