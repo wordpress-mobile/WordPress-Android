@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.WPTextView
 
 /**
@@ -71,13 +72,19 @@ class ActionableEmptyView : LinearLayout {
                     R.styleable.ActionableEmptyView_aevImage,
                     0
             )
+            val hideImageInLandscape = typedArray.getBoolean(
+                    R.styleable.ActionableEmptyView_aevImageHiddenInLandscape,
+                    false
+            )
             val titleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevTitle)
             val subtitleAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevSubtitle)
             val buttonAttribute = typedArray.getString(R.styleable.ActionableEmptyView_aevButton)
 
             if (imageResource != 0) {
                 image.setImageResource(imageResource)
-                image.visibility = View.VISIBLE
+                if (!hideImageInLandscape || !DisplayUtils.isLandscape(context)) {
+                    image.visibility = View.VISIBLE
+                }
             }
 
             if (!titleAttribute.isNullOrEmpty()) {

@@ -164,6 +164,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -226,6 +227,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
         PrivateAtCookieProgressDialogOnDismissListener {
+    public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -240,6 +242,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
+    public static final String EXTRA_REBLOG_POST_TITLE = "reblogPostTitle";
+    public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
+    public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
+    public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -341,6 +347,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject ReblogUtils mReblogUtils;
 
     private StorePostViewModel mViewModel;
 
@@ -478,6 +485,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             }
 
+            if (isRestarting && extras.getBoolean(EXTRA_IS_NEW_POST)) {
+                // editor was on a new post before the switch so, keep that signal.
+                // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
+                mIsNewPost = true;
+            }
+
             // retrieve Editor session data if switched editors
             if (isRestarting && extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) != null) {
                 mPostEditorAnalyticsSession =
@@ -546,7 +559,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
             trackEditorCreatedPost(action, getIntent());
         }
 
@@ -2127,6 +2140,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (NEW_MEDIA_POST.equals(action)) {
                 mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
                         getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+            } else if (ACTION_REBLOG.equals(action)) {
+                setPostContentFromReblogAction();
             }
         }
 
@@ -2222,6 +2237,33 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void setFeaturedImageId(final long mediaId) {
         if (mEditPostSettingsFragment != null) {
             mEditPostSettingsFragment.updateFeaturedImage(mediaId);
+        }
+    }
+
+    /**
+     * Sets the content of the reblogged post
+     */
+    private void setPostContentFromReblogAction() {
+        Intent intent = getIntent();
+        final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
+        final String quote = intent.getStringExtra(EXTRA_REBLOG_POST_QUOTE);
+        final String citation = intent.getStringExtra(EXTRA_REBLOG_POST_CITATION);
+        final String image = intent.getStringExtra(EXTRA_REBLOG_POST_IMAGE);
+        if (title != null && quote != null) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setTitle(title);
+                String content = mReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
         }
     }
 

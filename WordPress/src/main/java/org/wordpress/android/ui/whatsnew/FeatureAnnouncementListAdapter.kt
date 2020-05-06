@@ -107,7 +107,7 @@ class FeatureAnnouncementListAdapter(
 
         fun bind() {
             findMoreButton.setOnClickListener {
-                viewModel.onFindMoreButtonPressedPressed()
+                viewModel.onFindMoreButtonPressed()
             }
         }
     }

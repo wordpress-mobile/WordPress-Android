@@ -31,7 +31,6 @@ Language: pl
     <string name="page_uploading">Przesyłanie strony</string>
     <string name="error_publish_page_no_network">Urządzenie jest offline. Strona zapisana lokalnie. </string>
     <string name="local_page_autosave_revision_available">Dokonałeś niezapisanych zmian na tej stronie</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Strona wczytuje się</string>
     <string name="editor_page_saved_locally_failed_media">Strona posiada zakończone niepowodzeniem próby przesłania plików mediów i została zapisana lokalnie</string>
     <string name="editor_page_saved_locally">Strona zapisana na urządzeniu</string>
@@ -62,7 +61,6 @@ Language: pl
     <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimalna wysokość w pikselach</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
@@ -85,7 +83,6 @@ Language: pl
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Ustawienia kolorów dla przycisków pojawią się wkrótce</string>
     <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
     <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
-    <string name="gutenberg_native_background_opacity">Przezroczystość tła</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Krótki opis usług które oferujesz.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Krótki życiorys z osobistą historią, kluczowe osiągnięcia lub interesujący fakt.</string>

@@ -11,7 +11,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.modules.BG_THREAD
@@ -23,6 +26,11 @@ import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.reblog.NoSite
+import org.wordpress.android.ui.reader.reblog.PostEditor
+import org.wordpress.android.ui.reader.reblog.Unknown
+import org.wordpress.android.ui.reader.reblog.ReblogState
+import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
@@ -36,6 +44,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -54,7 +63,8 @@ class ReaderPostListViewModel @Inject constructor(
     private val subfilterListItemMapper: SubfilterListItemMapper,
     private val eventBusWrapper: EventBusWrapper,
     private val accountStore: AccountStore,
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val siteStore: SiteStore
 ) : ScopedViewModel(bgDispatcher) {
     private val newsItemSource = newsManager.newsItemSource()
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
@@ -87,6 +97,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private val _updateTagsAndSites = MutableLiveData<Event<EnumSet<UpdateTask>>>()
     val updateTagsAndSites: LiveData<Event<EnumSet<UpdateTask>>> = _updateTagsAndSites
+
+    private val _reblogState = MutableLiveData<Event<ReblogState>>()
+    val reblogState: LiveData<Event<ReblogState>> = _reblogState
 
     /**
      * First tag for which the card was shown.
@@ -247,6 +260,47 @@ class ReaderPostListViewModel @Inject constructor(
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 ))
+    }
+
+    /**
+     * Handles reblog button action
+     *
+     * @param post post to reblog
+     */
+    fun onReblogButtonClicked(post: ReaderPost) {
+        val sites = siteStore.visibleSitesAccessedViaWPCom
+
+        _reblogState.value = when (sites.count()) {
+            0 -> Event(NoSite)
+            1 -> {
+                sites.firstOrNull()?.let {
+                    Event(PostEditor(it, post))
+                } ?: Event(Unknown)
+            }
+            else -> {
+                sites.firstOrNull()?.let {
+                    Event(SitePicker(it, post))
+                } ?: Event(Unknown)
+            }
+        }
+    }
+
+    /**
+     * Handles site selection
+     *
+     * @param site selected site to reblog to
+     */
+    fun onReblogSiteSelected(siteLocalId: Int) {
+        val currentState: ReblogState? = _reblogState.value?.peekContent()
+        if (currentState is SitePicker) {
+            val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
+            _reblogState.value = if (site != null) Event(PostEditor(site, currentState.post)) else Event(Unknown)
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Site Selected without passing the SitePicker state")
+        } else {
+            AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
+            _reblogState.value = Event(Unknown)
+        }
     }
 
     fun onSubFiltersListButtonClicked() {

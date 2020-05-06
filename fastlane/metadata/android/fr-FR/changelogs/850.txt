@@ -1,6 +1,0 @@
-14.6 :
-Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
-
-Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
-
-Améliorations générales : Prise en charge du thème sombre.
