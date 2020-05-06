@@ -38,11 +38,6 @@ commands:
           name: Yarn bundle Android
           working_directory: libs/gutenberg-mobile
           command: yarn bundle:android
-  copy-js-bundle:
-    steps:
-      - run:
-          name: Copy the JS bundle
-          command:
 
 version: 2.1
 jobs:
