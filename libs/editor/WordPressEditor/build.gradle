@@ -28,9 +28,6 @@ apply plugin: 'signing'
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
 
-// import the `waitJitpack()` function
-apply from: 'https://gist.githubusercontent.com/hypest/f526fe0775dedce0ce0133f1400d22a4/raw/0008b271a0d28fc79957fd3c2a027f57e98f796a/wait-jitpack.gradle'
-
 android {
     compileSdkVersion 28
 
@@ -81,20 +78,10 @@ dependencies {
     debugImplementation files("./libs/hermes-debug.aar")
     releaseImplementation files("./libs/hermes-release.aar")
 
-    if (rootProject.ext.has("buildGutenbergFromSource") && rootProject.ext.buildGutenbergFromSource) {
-        implementation (project(':react-native-gutenberg-bridge')) {
-            exclude group: 'com.squareup.okhttp3'
-            exclude group: "com.android.volley"
-            exclude group: 'com.google.code.findbugs'
-        }
-    } else {
-        implementation (waitJitpack('com.github.wordpress-mobile', 'gutenberg-mobile', submoduleGitHash('../../../', 'libs/gutenberg-mobile'))) {
-            // Inheriting RN's okhttp version can interfere with FluxC SSL handling
-            // See https://github.com/wordpress-mobile/WordPress-Android/issues/9032 and https://github.com/wordpress-mobile/WordPress-FluxC-Android/issues/919
-            exclude group: 'com.squareup.okhttp3'
-            exclude group: "com.android.volley"
-            exclude group: 'com.google.code.findbugs'
-        }
+    implementation (project(':react-native-gutenberg-bridge')) {
+        exclude group: 'com.squareup.okhttp3'
+        exclude group: "com.android.volley"
+        exclude group: 'com.google.code.findbugs'
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
