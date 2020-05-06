@@ -11,9 +11,57 @@ commands:
       - run:
           name: Setup gradle.properties
           command: cp gradle.properties-example gradle.properties
+  yarn-install:
+    steps:
+      - restore_cache:
+          name: Restore Yarn Cache
+          keys:
+            - yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}
+      - run:
+          name: Yarn Install
+          command: yarn install --frozen-lockfile --prefer-offline --network-concurrency 1
+      - save_cache:
+          name: Save Yarn Cache
+          key: yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+            - i18n-cache/data
+  checkout-gutenberg:
+    steps:
+      - run:
+          name: Checkout submodules
+          command: git submodule update --init --recursive
+  yarn-bundle-android:
+    steps:
+      - run:
+          name: Yarn bundle Android
+          command: yarn bundle:android
+  copy-js-bundle:
+    steps:
+      - run:
+          name: Copy the JS bundle
+          command:
 
 version: 2.1
 jobs:
+  gutenberg-bundle-build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - git/shallow-checkout
+      - checkout-submodules
+      - yarn-install:
+          working_directory: libs/gutenberg-mobile
+      - yarn-bundle-android:
+          working_directory: libs/gutenberg-mobile
+      - run:
+          name: Rename the JS bundle
+          working_directory: libs/gutenberg-mobile
+          command: mv App.js index.android.bundle
+      - persist_to_workspace:
+          root: bundle/android
+          paths:
+            - index.android.bundle
   test:
     executor: 
       name: android/default
@@ -79,6 +127,11 @@ jobs:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
       - android/restore-gradle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build APK
           command: |
@@ -191,10 +244,13 @@ jobs:
 workflows:
   wordpress_android:
     jobs:
+      - gutenberg-bundle-build
       - strings-check
       - test
       - lint
       - Installable Build:
+          requires:
+            - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
