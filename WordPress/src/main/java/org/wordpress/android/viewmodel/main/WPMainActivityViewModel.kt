@@ -166,18 +166,21 @@ class WPMainActivityViewModel @Inject constructor(
 
     private fun checkForFeatureAnnouncements() {
         val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-        val previousVersionCode = appPrefsWrapper.getLastAppVersionCode()
+        val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
 
         // only proceed to feature announcement logic if we are upgrading the app
         if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
             if (canShowFeatureAnnouncement()) {
                 appPrefsWrapper.featureAnnouncementShownVersion =
                         featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 _onFeatureAnnouncementRequested.call()
             }
 //          else {
 //              // request feature announcement from endpoint to be used on next app start
 //          }
+        } else {
+            appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
         }
     }
 
