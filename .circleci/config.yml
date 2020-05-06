@@ -20,6 +20,9 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -36,6 +39,9 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -64,6 +70,9 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
@@ -104,6 +113,9 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -138,6 +150,9 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -161,6 +176,9 @@ jobs:
       - image: circleci/ruby:2.6.4
     steps:
       - git/shallow-checkout
+      - run:
+          name: Checkout git submodules
+          command: git submodule update --init --recursive
       - run:
           name: Install bundler
           command: gem install bundler --version 2.0.2 
