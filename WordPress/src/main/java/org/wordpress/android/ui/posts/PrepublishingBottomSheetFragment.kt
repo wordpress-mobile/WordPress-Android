@@ -163,11 +163,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
+        const val PUBLISH_POST = "prepublishing_bottom_sheet_publish_post"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
+        fun newInstance(@NonNull site: SiteModel, publishPost: Boolean) = PrepublishingBottomSheetFragment().apply {
             arguments = Bundle().apply {
                 putSerializable(SITE, site)
+                putBoolean(PUBLISH_POST, publishPost)
             }
         }
     }
@@ -186,6 +188,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onPublishButtonClicked() {
         viewModel.onCloseClicked()
-        prepublishingBottomSheetListener?.onPublishButtonClicked()
+        arguments?.getBoolean(PUBLISH_POST)?.let { prepublishingBottomSheetListener?.onPublishButtonClicked(it) }
     }
 }
