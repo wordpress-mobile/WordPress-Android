@@ -216,10 +216,10 @@ public class AppPrefs {
         // used to indicate that we do not need to show the main FAB tooltip
         IS_MAIN_FAB_TOOLTIP_DISABLED,
 
-        // Store a version of the last shown feature announcement
+        // version of the last shown feature announcement
         FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
 
-        // version name of the last app version
+        // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
     }
 
