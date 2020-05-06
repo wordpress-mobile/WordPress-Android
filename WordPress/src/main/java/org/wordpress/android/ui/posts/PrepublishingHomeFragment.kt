@@ -69,6 +69,12 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
+        viewModel.onPublishButtonClicked.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                actionClickedListener?.onPublishButtonClicked()
+            }
+        })
+
         viewModel.start(getEditPostRepository(), getSite())
     }
 

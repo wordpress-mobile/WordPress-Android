@@ -6,9 +6,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
@@ -20,22 +18,33 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VI
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishButtonLabelUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 
-@RunWith(MockitoJUnitRunner::class)
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
+    @Mock lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
     @Mock lateinit var site: SiteModel
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, postSettingsUtils)
+        viewModel = PrepublishingHomeViewModel(
+                getPostTagsUseCase,
+                getPostVisibilityUseCase,
+                postSettingsUtils,
+                getPublishButtonLabelUseCase
+        )
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(PUBLIC)
         whenever(site.name).thenReturn("")
     }
 
@@ -207,7 +216,28 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         assertThat(headerUiState?.siteName?.text).isEqualTo(expectedName)
     }
 
+    @Test
+    fun `verify that tapping publish button will invoke onPublishButtonClicked`() {
+        // arrange
+        var event: Event<Unit>? = null
+        viewModel.onPublishButtonClicked.observeForever {
+            event = it
+        }
+
+        // act
+        viewModel.start(editPostRepository, site)
+        val buttonUiState = getButtonUiState()
+        buttonUiState?.onButtonClicked?.invoke()
+
+        // assert
+        assertThat(event).isNotNull
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
+
+    private fun getButtonUiState(): PublishButtonUiState? {
+        return viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.first()
+    }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
         val actions = viewModel.uiState.value
