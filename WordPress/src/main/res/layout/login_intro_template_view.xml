@@ -1,25 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="?attr/colorPrimary"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/logo_view"
+        android:layout_width="@dimen/prologue_logo_size"
+        android:layout_height="@dimen/prologue_logo_size"
+        android:contentDescription="@string/content_description_logo"
+        app:srcCompat="@drawable/login_toolbar_icon"
+        app:tint="?attr/colorPrimary" />
 
     <org.wordpress.android.widgets.WPTextView
-        style="@style/LoginTheme.PromoText"
-        android:id="@+id/promo_text"
+        android:id="@+id/promo_title"
+        style="@style/LoginTheme.PromoTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:minLines="3"
-        tools:text="@string/login_promo_text_anytime"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        tools:text="@string/login_promo_title_36_percent" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animation_view"
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/promo_text"
+        style="@style/LoginTheme.PromoText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="36dp"
-        android:layout_below="@+id/promo_text"/>
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_medium_large"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        tools:text="@string/login_promo_text_unlock_the_power" />
+
+    <ImageView
+        android:id="@+id/illustration_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_medium_large"
+        android:src="@drawable/img_illustration_promo"
+        tools:ignore="ContentDescription" />
+
+</LinearLayout>

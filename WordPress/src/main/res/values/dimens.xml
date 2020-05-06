@@ -333,7 +333,7 @@
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
-    <dimen name="prologue_view_pager_indicator_margin_top">@dimen/margin_extra_large</dimen>
+    <dimen name="prologue_logo_size">50dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>

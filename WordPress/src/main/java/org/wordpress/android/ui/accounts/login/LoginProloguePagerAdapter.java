@@ -22,12 +22,20 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
             "login_anims/jetpack.json"
     };
 
+    private final @StringRes int[] mPromoTitles = {
+            R.string.login_promo_title_36_percent,
+            R.string.login_promo_title_36_percent,
+            R.string.login_promo_title_36_percent,
+            R.string.login_promo_title_36_percent,
+            R.string.login_promo_title_36_percent
+    };
+
     private final @StringRes int[] mPromoTexts = {
-            R.string.login_promo_text_onthego,
-            R.string.login_promo_text_realtime,
-            R.string.login_promo_text_anytime,
-            R.string.login_promo_text_notifications,
-            R.string.login_promo_text_jetpack
+            R.string.login_promo_text_unlock_the_power,
+            R.string.login_promo_text_unlock_the_power,
+            R.string.login_promo_text_unlock_the_power,
+            R.string.login_promo_text_unlock_the_power,
+            R.string.login_promo_text_unlock_the_power
     };
 
     private static final String[] TAGS = {
@@ -44,7 +52,7 @@ public class LoginProloguePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return LoginPrologueAnimationFragment.newInstance(mAnims[position], mPromoTexts[position], (position % 2) == 0);
+        return LoginPrologueAnimationFragment.newInstance(mAnims[position], mPromoTitles[position], mPromoTexts[position]);
     }
 
     @Override

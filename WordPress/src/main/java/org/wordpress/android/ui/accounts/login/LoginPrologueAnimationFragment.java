@@ -15,22 +15,22 @@ import org.wordpress.android.R;
 
 public class LoginPrologueAnimationFragment extends Fragment {
     private static final String KEY_ANIMATION_FILENAME = "KEY_ANIMATION_FILENAME";
+    private static final String KEY_PROMO_TITLE = "KEY_PROMO_TITLE";
     private static final String KEY_PROMO_TEXT = "KEY_PROMO_TEXT";
-    private static final String KEY_LIGHT_BACKGROUND = "KEY_LIGHT_BACKGROUND";
 
     private LottieAnimationView mLottieAnimationView;
 
     private String mAnimationFilename;
+    private @StringRes int mPromoTitle;
     private @StringRes int mPromoText;
-    private Boolean mLightBackground;
 
-    static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoText,
-                                                      boolean lightBackground) {
+    static LoginPrologueAnimationFragment newInstance(String animationFilename, @StringRes int promoTitle,
+                                                      @StringRes int promoText) {
         LoginPrologueAnimationFragment fragment = new LoginPrologueAnimationFragment();
         Bundle bundle = new Bundle();
         bundle.putString(KEY_ANIMATION_FILENAME, animationFilename);
+        bundle.putInt(KEY_PROMO_TITLE, promoTitle);
         bundle.putInt(KEY_PROMO_TEXT, promoText);
-        bundle.putBoolean(KEY_LIGHT_BACKGROUND, lightBackground);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -40,19 +40,23 @@ public class LoginPrologueAnimationFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mAnimationFilename = getArguments().getString(KEY_ANIMATION_FILENAME);
+        mPromoTitle = getArguments().getInt(KEY_PROMO_TITLE);
         mPromoText = getArguments().getInt(KEY_PROMO_TEXT);
-        mLightBackground = getArguments().getBoolean(KEY_LIGHT_BACKGROUND);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_intro_template_view, container, false);
 
-        TextView promoText = (TextView) rootView.findViewById(R.id.promo_text);
+        TextView promoTitle = rootView.findViewById(R.id.promo_title);
+        promoTitle.setText(mPromoTitle);
+
+        TextView promoText = rootView.findViewById(R.id.promo_text);
         promoText.setText(mPromoText);
 
-        mLottieAnimationView = (LottieAnimationView) rootView.findViewById(R.id.animation_view);
-        mLottieAnimationView.setAnimation(mAnimationFilename);
+//        mLottieAnimationView = rootView.findViewById(R.id.animation_view);
+//        mLottieAnimationView.setAnimation(mAnimationFilename);
+
         return rootView;
     }
 
@@ -63,7 +67,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
         // toggle the animation but only if already resumed.
         // Needed because setUserVisibleHint is called before onCreateView
         if (isResumed()) {
-            toggleAnimation(isVisibleToUser);
+            // toggleAnimation(isVisibleToUser);
         }
     }
 
@@ -72,7 +76,7 @@ public class LoginPrologueAnimationFragment extends Fragment {
         super.onResume();
 
         // need to toggle the animation so the first time the fragment is resumed it starts animating (if visible).
-        toggleAnimation(getUserVisibleHint());
+        // toggleAnimation(getUserVisibleHint());
     }
 
     private void toggleAnimation(boolean isVisibleToUser) {
