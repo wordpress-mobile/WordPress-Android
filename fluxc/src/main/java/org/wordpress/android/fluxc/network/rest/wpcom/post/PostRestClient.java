@@ -52,6 +52,8 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -433,11 +435,15 @@ public class PostRestClient extends BaseWPComRestClient {
                 for (PostMetaData metaData : metaDataList) {
                     String key = metaData.getKey();
                     if (key != null && metaData.getValue() != null) {
-                        if (key.equals("geo_longitude")) {
-                            post.setLongitude(Double.parseDouble(metaData.getValue()));
-                        }
-                        if (key.equals("geo_latitude")) {
-                            post.setLatitude(Double.parseDouble(metaData.getValue()));
+                        try {
+                            if (key.equals("geo_longitude")) {
+                                post.setLongitude(Double.parseDouble(metaData.getValue()));
+                            }
+                            if (key.equals("geo_latitude")) {
+                                post.setLatitude(Double.parseDouble(metaData.getValue()));
+                            }
+                        } catch (NumberFormatException nfe) {
+                            AppLog.w(T.POSTS, "Geo location found in wrong format in the post metadata.");
                         }
                     }
                 }
