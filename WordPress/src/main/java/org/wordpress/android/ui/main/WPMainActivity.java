@@ -1017,6 +1017,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void startWithNewAccount() {
         GCMRegistrationIntentService.enqueueWork(this,
                 new Intent(this, GCMRegistrationIntentService.class));
+        // TODO handle this
         ReaderPostListFragment.resetLastUpdateDate();
     }
 
@@ -1144,6 +1145,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+            // TODO handle this
             // User signed-out or removed the last self-hosted site
             ReaderPostListFragment.resetLastUpdateDate();
             // Reset site selection

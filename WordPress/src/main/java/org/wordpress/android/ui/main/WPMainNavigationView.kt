@@ -27,6 +27,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.reader.ReaderParentPostListFragment
 import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
@@ -286,7 +287,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(position: Int): Fragment? {
             val fragment: Fragment = when (pages().getOrNull(position)) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderPostListFragment.newInstance(true)
+                READER -> ReaderParentPostListFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
                 else -> return null
             }
