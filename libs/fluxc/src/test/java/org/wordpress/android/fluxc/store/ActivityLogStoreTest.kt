@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.yarolegovich.wellsql.SelectQuery
-import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -26,8 +25,11 @@ import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogStoreTest {
@@ -40,7 +42,8 @@ class ActivityLogStoreTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils, Unconfined, dispatcher)
+        activityLogStore = ActivityLogStore(activityLogRestClient, activityLogSqlUtils,
+                initCoroutineEngine(), dispatcher)
     }
 
     @Test
@@ -48,7 +51,17 @@ class ActivityLogStoreTest {
         val number = 10
         val offset = 0
 
-        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel)
+        whenever(activityLogRestClient.fetchActivity(eq(siteModel), any(), any())).thenReturn(
+                FetchedActivityLogPayload(
+                        listOf(),
+                        siteModel,
+                        0,
+                        0,
+                        0
+                )
+        )
+
+        val payload = FetchActivityLogPayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
@@ -59,11 +72,21 @@ class ActivityLogStoreTest {
     fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() = test {
         val number = 10
 
+        whenever(activityLogRestClient.fetchActivity(eq(siteModel), any(), any())).thenReturn(
+                FetchedActivityLogPayload(
+                        listOf(),
+                        siteModel,
+                        0,
+                        0,
+                        0
+                )
+        )
+
         val existingActivities = listOf<ActivityLogModel>(mock())
         whenever(activityLogSqlUtils.getActivitiesForSite(siteModel, SelectQuery.ORDER_ASCENDING))
                 .thenReturn(existingActivities)
 
-        val payload = ActivityLogStore.FetchActivityLogPayload(siteModel, true)
+        val payload = FetchActivityLogPayload(siteModel, true)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
@@ -72,7 +95,13 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchRewindStatusActionCallRestClient() = test {
-        val payload = ActivityLogStore.FetchRewindStatePayload(siteModel)
+        val payload = FetchRewindStatePayload(siteModel)
+        whenever(activityLogRestClient.fetchActivityRewind(siteModel)).thenReturn(
+                FetchedRewindStatePayload(
+                        null,
+                        siteModel
+                )
+        )
         val action = ActivityLogActionBuilder.newFetchRewindStateAction(payload)
         activityLogStore.onAction(action)
 
@@ -81,8 +110,16 @@ class ActivityLogStoreTest {
 
     @Test
     fun onRewindActionCallRestClient() = test {
+        whenever(activityLogRestClient.rewind(eq(siteModel), any())).thenReturn(
+                RewindResultPayload(
+                        "rewindId",
+                        null,
+                        siteModel
+                )
+        )
+
         val rewindId = "rewindId"
-        val payload = ActivityLogStore.RewindPayload(siteModel, rewindId)
+        val payload = RewindPayload(siteModel, rewindId)
         val action = ActivityLogActionBuilder.newRewindAction(payload)
         activityLogStore.onAction(action)
 
@@ -152,7 +189,7 @@ class ActivityLogStoreTest {
     @Test
     fun storeFetchedRewindStatusToDb() = test {
         val rewindStatusModel = mock<RewindStatusModel>()
-        val payload = ActivityLogStore.FetchedRewindStatePayload(rewindStatusModel, siteModel)
+        val payload = FetchedRewindStatePayload(rewindStatusModel, siteModel)
         whenever(activityLogRestClient.fetchActivityRewind(siteModel)).thenReturn(payload)
 
         val fetchAction = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel))

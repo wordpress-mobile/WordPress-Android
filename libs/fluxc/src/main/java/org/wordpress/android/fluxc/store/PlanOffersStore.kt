@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -14,16 +12,16 @@ import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils
 import org.wordpress.android.fluxc.store.PlanOffersStore.PlanOffersErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class PlanOffersStore @Inject constructor(
     private val planOffersRestClient: PlanOffersRestClient,
     private val planOffersSqlUtils: PlanOffersSqlUtils,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -31,7 +29,9 @@ class PlanOffersStore @Inject constructor(
         val actionType = action.type as? PlanOffersAction ?: return
         when (actionType) {
             FETCH_PLAN_OFFERS -> {
-                GlobalScope.launch(coroutineContext) { emitChange(fetchPlanOffers()) }
+                coroutineEngine.launch(AppLog.T.PLANS, this, "FETCH_PLAN_OFFERS") {
+                    emitChange(fetchPlanOffers())
+                }
             }
         }
     }
