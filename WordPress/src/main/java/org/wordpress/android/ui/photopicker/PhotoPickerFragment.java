@@ -214,7 +214,7 @@ public class PhotoPickerFragment extends Fragment {
         }
 
         if (canShowInsertEditBottomBar()) {
-            mInsertEditBottomBar.findViewById(R.id.text_preview).setOnClickListener(v -> {
+            mInsertEditBottomBar.findViewById(R.id.text_edit).setOnClickListener(v -> {
                 ArrayList<EditImageData.InputData> inputData =
                         WPMediaUtils.createListOfEditImageInputData(requireContext(), getAdapter().getSelectedURIs());
                 ActivityLauncher.openImageEditor(getActivity(), inputData);
