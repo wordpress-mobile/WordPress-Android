@@ -83,9 +83,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      */
     public static MediaPreviewFragment newInstance(
             @Nullable SiteModel site,
-            @NonNull String contentUri) {
+            @NonNull String contentUri,
+            boolean autoPlay) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
+        args.putBoolean(ARG_AUTOPLAY, autoPlay);
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
         }
