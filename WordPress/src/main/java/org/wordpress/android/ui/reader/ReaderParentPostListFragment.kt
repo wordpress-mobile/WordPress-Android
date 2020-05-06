@@ -39,16 +39,16 @@ class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_f
 
     private fun startObserving(view: View) {
         viewModel.tabs.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
+            event?.let {
                 initViewPager(it, view)
             }
         })
     }
 
     private fun initViewPager(tags: ReaderTagList, view: View) {
-        val demoCollectionAdapter = DemoCollectionAdapter(this, tags)
+        val adapter = TabsAdapter(this, tags)
         val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
-        viewPager.adapter = demoCollectionAdapter
+        viewPager.adapter = adapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -56,7 +56,7 @@ class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_f
         }.attach()
     }
 
-    class DemoCollectionAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
+    private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
         override fun getItemCount(): Int = tags.size
 
         override fun createFragment(position: Int): Fragment {

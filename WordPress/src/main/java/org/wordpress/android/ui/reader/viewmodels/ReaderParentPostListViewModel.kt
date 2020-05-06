@@ -17,8 +17,8 @@ class ReaderParentPostListViewModel @Inject constructor(
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var started: Boolean = false
-    private val _tabs = MutableLiveData<Event<ReaderTagList>>()
-    val tabs: LiveData<Event<ReaderTagList>> = _tabs
+    private val _tabs = MutableLiveData<ReaderTagList>()
+    val tabs: LiveData<ReaderTagList> = _tabs
 
     fun start() {
         if (started) return
@@ -28,7 +28,7 @@ class ReaderParentPostListViewModel @Inject constructor(
 
     private fun loadTabs() {
         launch {
-            _tabs.value = Event(loadReaderTabsUseCase.loadTabs())
+            _tabs.value = loadReaderTabsUseCase.loadTabs()
         }
     }
 }
