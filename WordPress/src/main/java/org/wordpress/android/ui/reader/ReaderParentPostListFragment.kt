@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 
 class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
@@ -12,6 +14,10 @@ class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_f
         val demoCollectionAdapter = DemoCollectionAdapter(this)
         val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
         viewPager.adapter = demoCollectionAdapter
+        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = "OBJECT ${(position + 1)}"
+        }.attach()
     }
 
     class DemoCollectionAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
