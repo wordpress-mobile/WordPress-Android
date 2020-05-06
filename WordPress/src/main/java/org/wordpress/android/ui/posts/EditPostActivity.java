@@ -1250,7 +1250,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mEditPostRepository.isPage()) {
                     showPublishConfirmationDialogAndPublishPost();
                 } else {
-                    showPrepublishingNudgeBottomSheet();
+                    showPrepublishingNudgeBottomSheet(true);
                 }
                 return true;
             case NONE:
@@ -1379,10 +1379,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void performPostPrimaryAction() {
-        if (getPrimaryAction().equals(PrimaryEditorAction.SAVE)) {
-            uploadPost(false);
-        } else {
-            showPrepublishingNudgeBottomSheet();
+        switch (getPrimaryAction()) {
+            case PUBLISH_NOW:
+                showPrepublishingNudgeBottomSheet(true);
+                return;
+            case UPDATE:
+            case SCHEDULE:
+                showPrepublishingNudgeBottomSheet(false);
+                return;
+            case SAVE:
+            case SUBMIT_FOR_REVIEW:
+                uploadPost(false);
+                break;
         }
     }
 
@@ -1817,19 +1825,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void showPrepublishingNudgeBottomSheet() {
+    private void showPrepublishingNudgeBottomSheet(boolean publishPost) {
         ActivityUtils.hideKeyboard(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
             PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite());
+                    PrepublishingBottomSheetFragment.newInstance(getSite(), publishPost);
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }
 
-    @Override public void onPublishButtonClicked() {
-        uploadPost(true);
+    @Override public void onPublishButtonClicked(boolean publishPost) {
+        uploadPost(publishPost);
     }
 
     private void uploadPost(final boolean publishPost) {
