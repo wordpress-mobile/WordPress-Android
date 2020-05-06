@@ -120,7 +120,6 @@ public class SiteUtils {
     public static @Nullable List<PostFormatModel> getValidPostFormatsOrNull(@Nullable Map<?, ?> formatsMap) {
         if (formatsMap == null) return null;
 
-        //Map<?, ?> formatsMap = (Map<?, ?>) formats;
         List<PostFormatModel> res = new ArrayList<>();
         for (Object key : formatsMap.keySet()) {
             if (!(key instanceof String)) continue;
