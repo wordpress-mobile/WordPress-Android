@@ -10,7 +10,7 @@
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_above="@+id/container_media_source_bar"
         android:fadeScrollbars="true"
         android:scrollbars="vertical" />
 
@@ -18,7 +18,7 @@
         android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar"
+        android:layout_above="@+id/container_media_source_bar"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_media_105dp"
         app:aevTitle="@string/media_empty_list"
@@ -36,7 +36,7 @@
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottom_bar"
+        android:id="@+id/container_media_source_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -83,5 +83,42 @@
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_insert_preview_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorSurface"
+        android:elevation="@dimen/message_bar_elevation"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/text_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:minHeight="@dimen/min_touch_target_sz"
+            android:padding="@dimen/margin_large"
+            android:text="@string/button_edit"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+
+        <TextView
+            android:id="@+id/text_insert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:minHeight="@dimen/min_touch_target_sz"
+            android:padding="@dimen/margin_large"
+            android:text="@string/button_insert"
+            android:textAppearance="?attr/textAppearanceButton"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

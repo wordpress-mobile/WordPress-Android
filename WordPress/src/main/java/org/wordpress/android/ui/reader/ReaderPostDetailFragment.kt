@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -65,8 +66,12 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -875,6 +880,36 @@ class ReaderPostDetailFragment : Fragment(),
 
         val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
         val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
+        val reblogButton = view!!.findViewById<ReaderIconCountView>(R.id.reblog)
+
+        if (canBeReblogged()) {
+            reblogButton.setCount(0)
+            reblogButton.visibility = View.VISIBLE
+            reblogButton.setOnClickListener {
+                val sites = siteStore.visibleSitesAccessedViaWPCom
+                when (sites.count()) {
+                    0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+                    1 -> {
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.openEditorForReblog(
+                                    activity,
+                                    it,
+                                    this.post,
+                                    PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                            )
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
+                    }
+                    else -> {
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.showSitePickerForResult(this, it, REBLOG_SELECT_MODE)
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
+                    }
+                }
+            }
+        } else {
+            reblogButton.visibility = View.GONE
+            reblogButton.setOnClickListener(null)
+        }
 
         if (canShowCommentCount()) {
             countComments.setCount(post.numReplies)
@@ -887,7 +922,7 @@ class ReaderPostDetailFragment : Fragment(),
                 )
             }
         } else {
-            countComments.visibility = View.INVISIBLE
+            countComments.visibility = View.GONE
             countComments.setOnClickListener(null)
         }
 
@@ -913,7 +948,7 @@ class ReaderPostDetailFragment : Fragment(),
                 likingUsersLabel.visibility = View.INVISIBLE
             }
         } else {
-            countLikes.visibility = View.INVISIBLE
+            countLikes.visibility = View.GONE
             countLikes.setOnClickListener(null)
         }
     }
@@ -937,6 +972,24 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         setPostLike(true)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.SITE_PICKER -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val site = siteStore.getSiteByLocalId(siteLocalId)
+                    ActivityLauncher.openEditorForReblog(
+                            activity,
+                            site,
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
+                }
+            }
+        }
     }
 
     /*
@@ -1574,6 +1627,18 @@ class ReaderPostDetailFragment : Fragment(),
      */
     private fun canShowFooter(): Boolean {
         return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
+    }
+
+    /**
+     * Returns true if the blog post can be reblogged
+     */
+    private fun canBeReblogged(): Boolean {
+        this.post?.let {
+            if (!it.isPrivate && accountStore.hasAccessToken()) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun canShowCommentCount(): Boolean {

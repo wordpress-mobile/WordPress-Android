@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-07 16:11:59+0000
+Translation-Revision-Date: 2020-04-30 15:33:57+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/2.4.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Pajtohuni</string>
+    <string name="gutenberg_native_number_of_columns">Numër shtyllash</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Kaloje bllokun djathtas nga pozicioni %1$s sipër në pozicionin %2$s</string>
+    <string name="gutenberg_native_move_block_right">Shpjere bllokun djathtas</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Kaloje bllokun majtas nga pozicioni %1$s në pozicionin %2$s</string>
+    <string name="gutenberg_native_move_block_left">Shpjere bllokun majtas</string>
+    <string name="gutenberg_native_latest_blog_posts">Postimet Më të Reja të Blogut</string>
+    <string name="gutenberg_native_follow_our_blog">Ndiqni Blogun tonë</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Që ta lëvizni bllokun djathtas, prekeni dyfish</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Që ta lëvizni bllokun majtas, prekeni dyfish</string>
+    <string name="gutenberg_native_columns_settings">Rregullime Shtyllash</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Rregullimet për ngjyrë vijnë së shpejti.</string>
+    <string name="new_site_creation_creating_site_loading_4">Po krijohet pulti</string>
+    <string name="new_site_creation_creating_site_loading_3">Po ujdiset tema</string>
+    <string name="new_site_creation_creating_site_loading_2">Po shtohen veçori sajti</string>
+    <string name="new_site_creation_creating_site_loading_1">Po merret URL sajti</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Sajti juaj do të jetë gati pas pak</string>
+    <string name="new_site_creation_creating_site_loading_title">Urra!\nPothuajse mbaruat</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="pages_and_posts_cancel_auto_upload">Anuloje ngarkimin</string>
+    <string name="gif_list_search_returned_unknown_error">Pati një problem me trajtimin e kërkesës</string>
+    <string name="weekday_saturday">E shtunë</string>
+    <string name="weekday_friday">E premte</string>
+    <string name="weekday_thursday">E enjte</string>
+    <string name="weekday_wednesday">E mërkurë</string>
+    <string name="weekday_tuesday">E martë</string>
+    <string name="weekday_monday">E hënë</string>
+    <string name="weekday_sunday">E diel</string>
+    <string name="gif_powered_by_tenor">Bazuar në Tenor</string>
+    <string name="gif_picker_search_hint">Kërkoni në Tenor</string>
+    <string name="photo_picker_gif">Zgjidhni prej Tenor-i</string>
+    <string name="media_accessing_failed">S’u arrit të hyhej te lëndë në një sajt privat. Disa media mund të mos përdoren dot</string>
+    <string name="media_accessing_progress">Po përdoret lëndë e një sajti privat</string>
     <string name="error_failed_to_crop_and_save_image">S’u arrit të qethej dhe ruhej figura, ju lutemi, riprovoni.</string>
     <string name="failed_to_insert_image_tap_to_retry">S’u arrit të futej figurë.\nJu lutemi, prekeni që të riprovohet.</string>
     <string name="preview_image_description">Paraparje Figure</string>
@@ -31,7 +64,6 @@ Language: sq_AL
     <string name="page_uploading">Ngarkim faqeje</string>
     <string name="error_publish_page_no_network">Pajisja është e palidhur në internet. Ndryshimet u ruajtën lokalisht.</string>
     <string name="local_page_autosave_revision_available">Keni bërë ndryshime të paruajtura në këtë faqe</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Faqja juaj po ngarkohet</string>
     <string name="editor_page_saved_locally_failed_media">Faqja ka ngarkime të dështuara mediash dhe u ruajt lokalisht</string>
     <string name="editor_page_saved_locally">Faqja u ruajt në pajisje</string>
@@ -64,7 +96,6 @@ Language: sq_AL
     <string name="gutenberg_native_portfolio">Portofol</string>
     <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoli im paraqet projekte të ndryshme të krijuar përgjatë karrierës time. Shihni të dhëna kontakti më poshtë dhe lidhuni me mua.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Lartësi minimum në piksel</string>
     <string name="gutenberg_native_link_to">Lidhje Te</string>
     <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ta bisedojmë 👋 Mos ngurroni të lidheni me ne përmes të dhënave të kontaktit më poshtë, ose dërgoni një mesazh duke përdorur formularin.</string>
@@ -80,7 +111,6 @@ Language: sq_AL
     <string name="gutenberg_native_get_in_touch">Lidhuni</string>
     <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Dërgomëni email: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Përpunoni media mbulesë</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Mos qa pse mbaroi, qesh pse ndodhi.</string>
     <string name="gutenberg_native_customize">PËRSHTATENI</string>
@@ -89,7 +119,6 @@ Language: sq_AL
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Rregullimet për ngjyrë butoni vijnë së shpejti.</string>
     <string name="gutenberg_native_border_settings">Rregullime Anësh</string>
     <string name="gutenberg_native_border_radius">Rreze Anësh</string>
-    <string name="gutenberg_native_background_opacity">Patejdukshmëri Sfondi</string>
     <string name="gutenberg_native_add_paragraph_block">Shtoni bllok paragraf</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Një përshkrim i shkurtër i shërbimeve që ofroni.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Një jetëshkrim i shkurtër me historik personal, arritjet kryesore, ose një fakt interesant.</string>
@@ -288,6 +317,8 @@ Language: sq_AL
     <string name="notifications_tab_dialog_master_hint_on">Çaktivizoni shfaqje njoftimesh te skedë njoftimesh për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_off">Njoftime për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_on">Njoftime për këtë sajt</string>
+    <string name="dialog_gutenberg_informative_description_page">Për faqe të reja tanimë po përdorni përpunuesin me blloqe, bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
+    <string name="dialog_gutenberg_informative_description_post">Për postime të reja tanimë po përdorni përpunuesin me blloqe, bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
     <string name="pick_media">Shtoni figurë ose video</string>
     <string name="error_post_not_submitted_retrying">S’e parashtruam dot për shqyrtim këtë postim, por do të riprovojmë më vonë. </string>
     <string name="error_post_not_scheduled_retrying">S’e vumë dot në plan këtë postim, por do të riprovojmë më vonë.</string>
@@ -296,7 +327,7 @@ Language: sq_AL
     <string name="error_post_not_submitted">S’e plotësuam dot këtë veprim, dhe s’e parashtruam për shqyrtim këtë postim.</string>
     <string name="error_post_not_scheduled">S’e plotësuam dot këtë veprim, dhe s’e vumë dot në plan këtë postim.</string>
     <string name="error_post_not_published_private">S’e plotësuam dot këtë veprim, dhe s’e botuam dot këtë postim privat.</string>
-    <string name="error_post_not_published">We couldn\'t complete this action, and didn\'t publish this post.</string>
+    <string name="error_post_not_published">S’e plotësuam dot këtë veprim dhe s’e botuam këtë postim.</string>
     <string name="error_media_recover_post_not_submitted">S’e ngarkuam dot këtë media, dhe s’e parashtruam dot për shqyrtim këtë postim. </string>
     <string name="error_media_recover_post_not_scheduled">S’e ngarkuam dot këtë media, dhe s’e vumë dot në plan këtë postim.</string>
     <string name="error_media_recover_post_not_published_private">S’e ngarkuam dot këtë media, dhe s’e botuam këtë postim privat.</string>
@@ -648,6 +679,9 @@ Language: sq_AL
     <string name="stats_no_data_for_period">S’ka të dhëna për këtë periudhë</string>
     <string name="preference_strip_image_location">Hiqe vendndodhjen prej mediash</string>
     <string name="stats_cannot_be_started">S’i hapim dot statistikat tani. Ju lutemi, riprovoni më vonë</string>
+    <string name="gif_picker_endless_scroll_network_error">Dështoi ngarkimi për ca media, për shkak të një gabimi rrjeti.</string>
+    <string name="gif_picker_empty_search_list">S’ka media që përputhet me kërkimin tuaj</string>
+    <string name="gif_picker_initial_empty_text">Kërkoni për të gjetur GIF-e që t’i shtoni te Mediateka juaj!</string>
     <string name="stats_author_views_label">Parje</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorë</string>
@@ -804,14 +838,14 @@ Language: sq_AL
     <string name="install_jetpack_retry">Riprovoni</string>
     <string name="jetpack_installation_problem">Pati një problem</string>
     <string name="jetpack_installed">Jetpack-u u instalua</string>
-    <string name="installing_jetpack">Iinstalim i Jetpack-ut</string>
     <string name="install_jetpack">Instaloni Jetpack-un</string>
     <string name="jetpack">Jetpack</string>
-    <string name="stats_jetpack_connection_faq">FAQ për Jetpack</string>
     <string name="install_jetpack_continue">Ujdise</string>
     <string name="jetpack_installation_problem_message">Jetpack-u s’u instalua dot këtë herë.</string>
     <string name="installing_jetpack_message">Po instalohet Jetpack-u në sajtin tuaj. Kjo mund të dojë ca minuta të plotësohet.</string>
     <string name="install_jetpack_message">Kredencialet e hyrjes në sajtin tuaj nuk do të depozitohen, dhe përdoren vetëm për qëllimin e instalimit të Jetpack-ut.</string>
+    <string name="installing_jetpack">Instalim i Jetpack-ut</string>
+    <string name="stats_jetpack_connection_faq">PBR për Jetpack</string>
     <string name="stats_jetpack_connection_setup_info">Që të përdorni Statistikat te sajti juaj WordPress, do t’ju duhet të instaloni shtojcën Jetpack.</string>
     <string name="themes_empty_list">Kërkimi juaj s’ka përputhje me ndonjë temë</string>
     <string name="reader_label_post_search_explainer">Ç’do të donit të gjenit?</string>
@@ -939,12 +973,12 @@ Language: sq_AL
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Instaloje shtojcën</string>
     <string name="notification_settings_followed_dialog_title">Njoftime</string>
     <string name="notification_settings_followed_dialog_email_comments">Dërgomë komentet e reja me email</string>
-    <string name="notification_settings_followed_dialog_email_posts_weekly">Përjavë</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">Menjëherë</string>
     <string name="notification_settings_followed_dialog_email_posts_daily">Përditë</string>
     <string name="notification_settings_followed_dialog_notification_posts_switch">Postime të reja</string>
     <string name="notification_settings_followed_dialog_notification_posts_description">Merrni njoftime postimesh të reja nga ky sajt</string>
     <string name="notification_settings_followed_dialog_email_posts_switch">Dërgomë postimet e reja me email</string>
+    <string name="notification_settings_followed_dialog_email_posts_weekly">Një herë në javë</string>
     <string name="notification_settings_item_your_sites_all_followed_sites">Krejt Sajtet e Ndjekur Prej Meje</string>
     <string name="notification_settings_category_followed_sites">Sajte të Ndjekur</string>
     <string name="content_description_person_reading_device_notification">Person që lexon pajisje me njoftime</string>
@@ -991,9 +1025,8 @@ Language: sq_AL
     <string name="signup_with_google_progress">Po bëhet regjistrim me Google…</string>
     <string name="open_external_link_desc">Hap lidhje të jashtme</string>
     <string name="jetpack_connection_failed_with_reason">Dështoi lidhja me Jetpack-un: %s</string>
-    <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur teJetpack-u</string>
+    <string name="jetpack_already_connected_toast">Jeni tashmë i lidhur te Jetpack-u</string>
     <string name="menu_undo_snackbar_action">ZHBËJE</string>
-    <string name="menu_visual_mode">Mënya Pamore</string>
     <string name="menu_html_mode">Mënyra HTML</string>
     <string name="menu_preview">Paraparje</string>
     <string name="menu_publish_now">Botoje Që Tani</string>
@@ -1001,6 +1034,7 @@ Language: sq_AL
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="menu_visual_mode_done_snackbar">U kalua nën mënyrën Pamore</string>
     <string name="menu_html_mode_done_snackbar">U kalua nën mënyrën HTML</string>
+    <string name="menu_visual_mode">Mënyra Pamore</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
@@ -1024,7 +1058,6 @@ Language: sq_AL
     <string name="signup_epilogue_screen_title">Llogari e re</string>
     <string name="login_prologue_screen_title">Hyrje</string>
     <string name="login_epilogue_screen_title">I futur si</string>
-    <string name="person_detail_screen_title">Hollëso personi</string>
     <string name="media_settings_screen_title">Hollësi kartele</string>
     <string name="publicize_buttons_screen_title">Butona ndarjesh me të tjerët</string>
     <string name="notifications_screen_title">Njoftime</string>
@@ -1035,6 +1068,7 @@ Language: sq_AL
     <string name="help_screen_title">Ndihmë dhe Asistencë</string>
     <string name="license_screen_title">Licencë</string>
     <string name="release_notes_screen_title">Shënime hedhjeje në qarkullim</string>
+    <string name="person_detail_screen_title">Hollësi personi</string>
     <string name="signup_epilogue_error_avatar_view">Avatari juaj u ngarkua dhe do të jetë gati për përdorim pas pak.</string>
     <string name="email_not_registered_wpcom">Hëm, s’gjejmë dot një llogari WordPress.com të lidhur me këtë adresë email. Provoni lidhjen më poshtë për të hyrë duke përdorur adresën e sajtit tuaj.</string>
     <string name="permissions_denied_message">Duket se i keni çaktivizuar lejet e domosdoshme për funksionimin e kësaj veçorie.&lt;br/>&lt;br/>Për ta ndryshuar këtë, përpunoni lejet tuaja dhe sigurohuni që &lt;strong>%s&lt;/strong> është e aktivizuar.</string>
@@ -1092,7 +1126,6 @@ Language: sq_AL
     <string name="username_changer_hint">Shtypni që të merrni më tepër sugjerime</string>
     <string name="username_changer_header">Emri juaj i tanishëm i përdoruesit është %1$s%2$s%3$s. Me pak përjashtime, të tjerët zor se do ta shohin emrin tuaj të ekranit, %4$s%5$s%6$s.</string>
     <string name="username_changer_error_none">S’ka emra përdoruesi të sugjeruar nga %1$s%2$s%3$s. Ju lutemi, që të merrni sugjerime, jepni më tepër shkronja ose numra.</string>
-    <string name="username_changer_error_generic">Ndodhi një gabim teksa merreshin sugjerrime emrash përdoruesi.</string>
     <string name="username_changer_dismiss_message">Të hidhet tej ndryshimi i emrit të përdoruesit?</string>
     <string name="username_changer_dismiss_button_positive">Hidhe Tej</string>
     <string name="username_changer_action">Ruaje</string>
@@ -1100,6 +1133,7 @@ Language: sq_AL
     <string name="signup_with_google_button">Regjistrohuni me Google</string>
     <string name="signup_with_email_button">Regjistrohuni me Email</string>
     <string name="signup_user_exists">Email tashmë ekzistues në WordPress.com.\nPo vazhdohet me hyrjen.</string>
+    <string name="username_changer_error_generic">Ndodhi një gabim teksa merreshin sugjerime emrash përdoruesi.</string>
     <string name="signup_updating_account">Po përditësohet llogaria…</string>
     <string name="signup_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
     <string name="signup_magic_link_progress">Mesazhi po dërgohet</string>
@@ -1162,7 +1196,7 @@ Language: sq_AL
     <string name="plugin_version">Versioni %s</string>
     <string name="plugin_byline">nga %s</string>
     <string name="change_photo">Ndryshoni foton</string>
-    <string name="plugin_fetch_error">S’arrihet të ngarkohe shtojca</string>
+    <string name="plugin_fetch_error">S’arrihet të ngarkohen shtojca</string>
     <string name="my_site_btn_site_pages">Faqe Sajti</string>
     <string name="site_settings_tags_hint">Administroni etiketat e sajtit tuaj</string>
     <string name="dlg_saving_tag">Po ruhet</string>
@@ -1288,7 +1322,7 @@ Language: sq_AL
     <string name="media_edit_filename_caption">Emër Kartele</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Tekst alternativ</string>
-    <string name="copy">Kopjoje</string>
+    <string name="copy_text">Kopjoje</string>
     <string name="connect_site">Lidhe Sajtin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Xixëllo dritëzë njoftimesh</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Dridhe pajisjen</string>
@@ -1578,7 +1612,7 @@ Language: sq_AL
     <string name="signout">Dilni</string>
     <string name="sign_in_wpcom">Hyni te WordPress.com</string>
     <string name="reader_label_global_related_posts">Më tepër mbi WordPress.com</string>
-    <string name="reader_label_local_related_posts">Më tepër ten %s</string>
+    <string name="reader_label_local_related_posts">Më tepër te %s</string>
     <string name="preference_open_device_settings">Hap rregullime pajisjeje</string>
     <string name="invite_invalid_email">%s: Email i pavlefshëm</string>
     <string name="invite_user_blocked_invites">%s: Ftesa të bllokuara nga përdoruesi</string>
@@ -1899,7 +1933,7 @@ Language: sq_AL
     <string name="notifications_empty_unread">Gjithçka e përditësuar!</string>
     <string name="reader_short_comment_count_multi">%s Komente</string>
     <string name="reader_short_comment_count_one">1 Koment</string>
-    <string name="reader_hint_comment_on_post">Përgjigjjuni postimit…</string>
+    <string name="reader_hint_comment_on_post">Përgjigjuni postimit…</string>
     <string name="reader_discover_visit_blog">Vizitoni %s</string>
     <string name="reader_discover_attribution_blog">Postuar fillimisht në %s</string>
     <string name="reader_discover_attribution_author">Postuar fillimisht nga: %s</string>
@@ -2006,7 +2040,6 @@ Language: sq_AL
     <string name="stats_followers_a_day">Një ditë</string>
     <string name="ssl_certificate_details">Hollësi</string>
     <string name="cab_selected">%d të përzgjedhur</string>
-    <string name="browse_our_faq_button">Shfletoni FAQ-en tonë</string>
     <string name="reader_empty_comments">Ende pa komente</string>
     <string name="reader_label_view_original">Shihni artikullin origjinal</string>
     <string name="reader_label_like">Pëlqim</string>
@@ -2028,6 +2061,7 @@ Language: sq_AL
     <string name="error_refresh_unauthorized_posts">S’keni leje të shihni ose të përpunoni postime</string>
     <string name="error_publish_empty_post">S’botohet dot një postim i zbrazët</string>
     <string name="reader_empty_posts_in_tag">S’ka postime me këtë etiketë</string>
+    <string name="browse_our_faq_button">Shfletoni PBR tonat</string>
     <string name="reader_toast_err_generic">I pazoti të kryejë këtë veprim</string>
     <string name="reader_toast_err_block_blog">S’arrihet të bllokohet ky sajt</string>
     <string name="reader_menu_block_blog">Bllokoje këtë sajt</string>
@@ -2131,10 +2165,10 @@ Language: sq_AL
     <string name="share_link">Ndajeni lidhjen me të tjerët</string>
     <string name="reader_empty_posts_in_tag_updating">Po sillen postime…</string>
     <string name="reader_likes_multi">Kjo u pëlqen %,d personave</string>
-    <string name="reader_label_reply">Përgjigjjuni</string>
     <string name="comment_spammed">Komenti u shënua si i padëshiruar</string>
     <string name="reader_likes_you_and_multi">Këtë e pëlqeni ju dhe %,d të tjerë</string>
     <string name="cant_share_no_visible_blog">S’mund të ndani me të tjerët në WordPress pa një blog të dukshëm</string>
+    <string name="reader_label_reply">Përgjigjuni</string>
     <string name="reader_likes_you_and_one">Këtë e pëlqeni ju dhe një tjetër</string>
     <string name="pick_photo">Përzgjidhni foto</string>
     <string name="pick_video">Përzgjidhni video</string>
@@ -2143,7 +2177,6 @@ Language: sq_AL
     <string name="reader_untitled_post">(Pa titull)</string>
     <string name="reader_btn_share">Ndajeni me të tjerët</string>
     <string name="reader_btn_follow">Ndiqe</string>
-    <string name="reader_hint_comment_on_comment">Përgjigjjuni komentit…</string>
     <string name="reader_label_added_tag">U shtua %s</string>
     <string name="reader_label_removed_tag">U hoq %s</string>
     <string name="reader_likes_one">Kjo i pëlqen një personi</string>
@@ -2156,6 +2189,7 @@ Language: sq_AL
     <string name="reader_toast_err_tag_invalid">Kjo s’është etiketë e vlefshme</string>
     <string name="reader_toast_err_comment_failed">S’u postua dot komenti juaj</string>
     <string name="comments_empty_list">Ende pa komente</string>
+    <string name="reader_hint_comment_on_comment">Përgjigjuni komentit…</string>
     <string name="themes">Tema</string>
     <string name="media_gallery_type_squares">Katrorë</string>
     <string name="media_gallery_type_tiled">Tjegullëzuar</string>
@@ -2228,8 +2262,8 @@ Language: sq_AL
     <string name="category_refresh_error">Gabim rifreskimi kategorish</string>
     <string name="preview">Paraparje</string>
     <string name="on">on</string>
-    <string name="reply">Përgjigjjuni</string>
     <string name="yes">Po</string>
     <string name="no">Jo</string>
     <string name="notification_settings">Rregullime Njoftimesh</string>
+    <string name="reply">Përgjigjuni</string>
 </resources>
