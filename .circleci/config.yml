@@ -245,37 +245,37 @@ workflows:
   wordpress_android:
     jobs:
       - gutenberg-bundle-build
-      - strings-check
-      - test
-      - lint
+#      - strings-check
+#      - test
+#      - lint
       - Installable Build:
           requires:
             - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
-      - WordPressUtils Connected Tests:
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
-      - Connected Tests:
-          post-to-slack: false
-          # Always run connected tests on develop and release branches
-          filters:
-            branches:
-              only:
-                - develop
-                - /^release.*/
-  Optional Tests:
-    #Optionally run connected tests on PRs
-    jobs:
-      - Hold:
-          type: approval
-          filters:
-            branches:
-              ignore:
-                - develop
-                - /^release.*/
-                - /pull\/[0-9]+/
-      - Connected Tests:
-          requires: [Hold]
+#      - WordPressUtils Connected Tests:
+#          filters:
+#            branches:
+#              ignore: /pull\/[0-9]+/
+#      - Connected Tests:
+#          post-to-slack: false
+#          # Always run connected tests on develop and release branches
+#          filters:
+#            branches:
+#              only:
+#                - develop
+#                - /^release.*/
+#  Optional Tests:
+#    #Optionally run connected tests on PRs
+#    jobs:
+#      - Hold:
+#          type: approval
+#          filters:
+#            branches:
+#              ignore:
+#                - develop
+#                - /^release.*/
+#                - /pull\/[0-9]+/
+#      - Connected Tests:
+#          requires: [Hold]
