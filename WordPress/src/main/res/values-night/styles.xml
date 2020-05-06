@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">@color/blue_30</item>
@@ -129,6 +129,11 @@
 
     <style name="DividerHorizontal">
         <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <!-- Overload of Login Theme -->
+    <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
     </style>
 
 </resources>

@@ -906,7 +906,11 @@
     </style>
 
     <!-- Overload of Login Theme -->
-    <style name="LoginTheme" parent="WordPress.NoActionBar">
+    <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
+        <item name="android:statusBarColor">@color/black</item>
+    </style>
+
+    <style name="LoginTheme" parent="Base.LoginTheme">
         <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
