@@ -25,8 +25,8 @@ commands:
           name: Save Yarn Cache
           key: yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/yarn.lock" }}
           paths:
-            - node_modules
-            - i18n-cache/data
+            - libs/gutenberg-mobile/node_modules
+            - libs/gutenberg-mobile/i18n-cache/data
   checkout-submodules:
     steps:
       - run:
