@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Rename the JS bundle
           working_directory: libs/gutenberg-mobile
-          command: mv App.js index.android.bundle
+          command: mv bundle/android/App.js bundle/android/index.android.bundle
       - persist_to_workspace:
           root: bundle/android
           paths:
