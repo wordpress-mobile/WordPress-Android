@@ -1,54 +1,137 @@
+<ar>
+14.7:
+محرِّر المكوِّنات: تمت إضافة مكوِّن العمود وقالب صفحة بادئ التشغيل إلى المدونات. تم تعديل أزرار قالب صفحة بادئ التشغيل لتجنب تداخل محتوى الصفحة. سيفتح خيار "اختيار الوسائط من الجهاز" منتقي وسائط ووردبريس المدمج بدلاً من المنتقي الافتراضي للجهاز.
+
+إصلاحات الأخطاء: خطأ يتسبب في ظهور إعدادات عنوان URL عند تغيير اتجاه الجهاز في أثناء معاينة "قوالب صفحة بادئ التشغيل".
+
+تحسينات واجهة المستخدم: تمت إضافة الجرافتار الخاص بك إلى قائمة "أنا" في "موقعي".
+</ar>
+<de-DE>
+14.7:
+Block-Editor: Spaltenblock und Seitenvorlage für Neueinsteiger für Blogs wurden hinzugefügt. Buttons der Seitenvorlage für Neueinsteiger wurden angepasst, um eine Überlappung mit dem Seiteninhalt zu vermeiden. „Medien vom Gerät auswählen“ öffnet eine integrierte WordPress-Medienauswahl, anstelle der Standardauswahl des Geräts.
+
+Fehlerkorrekturen: Ein Fehler, der dazu führte, dass ein Kästchen mit URL-Einstellungen erschien, sobald du während der Vorschau der Seitenvorlage für Neueinsteiger dein Gerät bewegt hast.
+
+Verbesserungen an der Benutzeroberfläche: Dein Gravatar wurde zum Menü unter „Meine Website“ hinzugefügt
+</de-DE>
 <en-US>
-14.6:
-Block editor enhancements: Added Cover block. Enabled crop, zoom, and rotate for images in posts. Tweaked “Take a Video” icon to differentiate from “Take a Photo.” Removed dimming effect on unselected blocks. Added toolbar for alignment options in Paragraph, Image, and MediaText blocks.
+14.7:
+Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
 
-Fixes: Issue where “wordpress://” links in a browser didn’t open the app, issue where opening a page opened an empty editor.
+Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
 
-General improvements: Dark Theme support.
+UI improvements: Added your Gravatar to the Me menu in My Site.
 </en-US>
 <es-ES>
-14.6:
-Mejoras en el editor de bloques: Añadido el bloque de portada. Activado el recorte, zoom y rotación de imágenes en las entradas. Retocado el icono «Hacer un vídeo» para diferenciarlo de «Hacer una foto». Eliminado el efecto de oscurecimiento en los bloques no seleccionados. Añadida una barra de herramientas para las opciones de alineación en los bloques de párrafo, imagen y medios y texto.
+14.7:
+Editor de bloques: Añadido un bloque de columnas y una plantilla de página de inicio para blogs. Ajustados los botones de la plantilla de página de inicio para evitar la superposición con el contenido de la página. «Elegir el medio desde el dispositivo» abre un selector de medios incorporado de WordPress en lugar del selector por defecto de tu dispositivo.
 
-Correcciones: Problema por el que los enlaces «wordpress://» en un navegador no abrían la aplicación, problema por el que al abrir una página se abría un editor vacío.
+Corrección de fallos: Un fallo causa que aparezcan los ajustes de la URL al cambiar la orientación del dispositivo mientras se previsualizan las plantillas de página de inicio.
 
-Mejoras generales: Compatibilidad para el tema oscuro.
+Mejoras en la interfaz de usuario: Añadido tu Gravatar al menú «Yo» en «Mi sitio».
 </es-ES>
 <fr-CA>
-14.6 :
-Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+14.7 :
+Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
 
-Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
+Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
 
-Améliorations générales : Prise en charge du thème sombre.
+Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
 </fr-CA>
 <fr-FR>
-14.6 :
-Améliorations de l’éditeur de blocs : Ajout du bloc de couverture. Possibilité de cadrer, zoomer et faire pivoter les images des articles. Modification de l’icône « Prendre une vidéo » pour la différencier de l’icône « Prendre une photo ». Suppression de l’effet d’assombrissement sur les blocs désélectionnés. Ajout d’une barre d’outils pour les options d’alignement dans les blocs de paragraphe, d’image et de texte de médias.
+14.7 :
+Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
 
-Corrections : Problème de non-ouverture de l’application en cliquant sur les liens « wordpress:// » d’un navigateur ; problème d’ouverture d’un éditeur vide à l’ouverture d’une page.
+Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
 
-Améliorations générales : Prise en charge du thème sombre.
+Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
 </fr-FR>
+<iw-IL>
+14.7:
+עורך הבלוקים: הוספנו בלוק טורים בתבנית של עמוד ההתחלה לבלוגים. התאמנו את הכפתורים בתבנית של עמוד ההתחלה כדי להימנע מחפיפה עם התוכן של העמוד. האפשרות 'בחירה במדיה מהמכשיר' פותחת בורר מדיה מובנה של WordPress במקום את בורר המדיה שמוגדר במכשיר שלך כברירת מחדל.
+
+תיקוני באגים: תיקנו באג שגרם להגדרות URL להופיע כאשר משנים את הכיוון של המכשיר בתצוגה המקדימה של תבניות של עמוד התחלה.
+
+שיפורים בממשק המשתמש: הופסנו את ה-Gravatar שלך לתפריט 'אני' ול'האתר שלי'.
+</iw-IL>
+<id>
+14.7:
+Penyunting blok: Menambahkan blok Kolom dan template Halaman Starter untuk blog. Menyelaraskan tombol Template Halaman Starter untuk menghindari tumpang tindih dengan konten halaman. “Pilih media dari perangkat” akan membuka pemilih media WordPress bawaan, bukan pemilih default perangkat Anda.
+
+Perbaikan bug: Bug penyebab pengaturan URL muncul saat mengubah orientasi perangkat selagi Anda mempratinjau Template Halaman Starter.
+
+Peningkatan UI: Menambahkan Gravatar ke menu Saya di Situs Saya.
+</id>
+<it-IT>
+14.7:
+Editor a blocchi: Aggiunti blocco Colonna e modello pagina di avvio di blog. Modifica di pulsanti per il modello pagina di avvio per evitare sovrapposizioni con il contenuto della stessa. "Scegli contenuti multimediali da dispositivo" apre un selezionatore contenuti multimediali integrato di WordPress.
+
+Bug corretti: Un bug causava la vista di impostazioni URL quando si riorientava il dispositivo durante l'anteprima di modelli pagina di avvio.
+
+Migliore UI: Aggiunta del Gravatar a Io in Il mio sito.
+</it-IT>
+<ja-JP>
+14.7:
+ブロックエディター :ブログにカラムブロックとスターターページテンプレートを追加しました。ページコンテンツと重複しないように、「スターターページテンプレート」ボタンを調整しました。「Choose media from device」は、デバイスのデフォルトのピッカーの代わりに組み込みの WordPress メディアピッカーを開きます。
+
+バグ修正 :スターターページテンプレートのプレビュー中にデバイスの向きを変えると、URL 設定が表示されるバグ。
+
+UI の改善 :「参加サイト」の「自分」メニューに Gravatar を追加しました。
+</ja-JP>
+<ko-KR>
+14.7:
+블록 편집기: 블로그에 대한 열 블록 및 시작 페이지 템플릿이 추가되었습니다. 페이지 내용과 겹치지 않도록 조정된 시작 페이지 템플릿 단추입니다. “장치에서 미디어 선택”은 장치의 기본 선택기 대신 내장된 워드프레스 미디어 선택기를 엽니다.
+
+버그 수정: 시작 페이지 템플릿을 미리 보는 동안 장치 방향을 변경할 때 URL 설정을 표시하는 버그입니다.
+
+UI 개선: 내 사이트의 내 메뉴에 그라바타를 추가했습니다.
+</ko-KR>
+<nl-NL>
+14.7:
+Blokeditor: Kolommenblok en startpaginasjabloon voor blogs toegevoegd. Knoppen voor startpaginasjablonen aangepast zodat ze geen pagina-content overlappen. Met 'Media kiezen vanuit apparaat' wordt een geïntegreerde WordPress-mediakiezer gebruikt, in plaats van de standaard kiezer van je apparaat.
+
+Bugfixes: Een bug die zorgde dat URL-instellingen werden weergegeven bij het wijzigen van de oriëntatie van een apparaat terwijl startpaginasjablonen werden bekeken.
+
+UI-verbeteringen: Je Gravatar is toegevoegd aan het menu Ik in Mijn site.
+</nl-NL>
 <ru-RU>
-14.6:
-Улучшения блоков: Добавлен блок обложки, включены инструменты обрезки, увеличения и поворота изображений. Изменен значок для захвата видео, убраны эффекты затемнения на невыбранных блоках. Добавлена панель инструментов для выравнивания блоков заголовка, параграфа, изображения и медиа+текст.
-Исправление:  ссылки “wordpress://”  не открывались в приложении из браузера, открытие пустой страницы в редакторе.
-Добавлена поддержка тёмной темы.
+14.7:
+Редактор блоков: добавлены блок столбца, шаблон стартовой страницы блогов. Кнопки шаблонов страниц не будут накладываться на содержимое. Выбор файлов 
+мультимедиа будет использовать встроенный компонент выбора файлов.
+
+Исправления ошибок: исправлена ошибка при изменении ориентации экрана и появлении настроек URL во время просмотра шаблонов стартовой страницы.
+
+Интерфейс: Добавлен ваш граватар в меню Мой профиль.
 </ru-RU>
 <sv-SE>
-14.6:
-Förbättringar i blockredigeraren: Nytt omslagsblock. Bilder i inlägg kan beskäras, zoomas och roteras. Ikonen ”spela in video” har gjorts tydligare för att inte likna ”ta en bild”. Ej valda block tonas inte längre ned. Ny verktygslist för justering i sidled i rubrik-, text- bild- och mediatextblock.
+14.7:
+Blockredigeraren: Nytt kolumnblock och mall för bloggstartsida. Justerat startsidans mallknappar så att de inte skymmer innehållet. ”Välj mediafil från enheten” öppnar WordPress egen mediaväljare i stället för enhetens standardverktyg.
 
-Rättat: Länkar till ”wordpress://” i webbläsaren öppnade inte appen och ett problem där en sida man öppnade ledde till ett tomt redigeringsfönster.
+Felrättningar: URL-inställningar kunde tidigare visas om man växlade mellan liggande och stående vid förhandsvisning av startsidesmallar.
 
-Allmänn förbättring: stöd för mörkt tema.
+Förbättrat användargränssnitt: Gravatar tillagt i menyn Jag under Min webbplats.
 </sv-SE>
 <tr-TR>
-14.6:
-Blok düzenleyici geliştirmeleri: Kapak bloğu eklendi. Yazılardaki görseller için kırpma, yakınlaştırma ve döndürme etkinleştirildi. "Fotoğraf Çek" den ayırt etmek için "Video Çek" simgesinde düzeltme yapıldı. Seçili olmayan bloklar üzerindeki karartma efekti kaldırıldı. Başlık, Paragraf, Resim ve MediaText bloklarındaki hizalama seçenekleri için araç çubuğu eklendi.
+14.7:
+Blok düzenleyici: Bloglar için Sütun bloğu ve Başlangıç Sayfası şablonu eklendi. Sayfa içeriğiyle çakışmayı önlemek için Başlangıç Sayfası Şablonu'nun düğmeleri düzeltildi. "Cihazdan medya seç" işlevi, cihazınızın varsayılan seçicisi yerine yerleşik bir WordPress medya seçicisi açar.
 
-Düzeltmeler: Bir tarayıcıdaki “wordpress://” bağlantılarının uygulamayı açmadığı, sayfa açmanın boş bir düzenleyici açtığı sorun.
+Hata düzeltmeleri: Başlangıç Sayfası Şablonlarını önizlerken cihaz yönü değiştirildiğinde URL ayarlarının görünmesine neden olan bir hata.
 
-Genel geliştirmeler: Koyu tema desteği.
+Kullanıcı arayüzünde yapılan iyileştirmeler: Gravatar'ınız Sitem'deki Ben menüsüne eklendi.
 </tr-TR>
+<zh-CN>
+14.7：
+区块编辑器：添加了一个“栏目”区块和一个适用于博客的入门页面模板。调整了入门页面模板按钮，从而避免与页面内容重叠。“从设备中选择媒体”会打开内置的 WordPress 媒体选择器，而不是设备默认的选择器。
+
+错误修复：如果在预览入门页面模板时更改设备方向，该错误会导致系统显示 URL 设置。
+
+用户界面改进改进：在“我的站点”的“我”菜单中添加了 Gravatar。
+</zh-CN>
+<zh-TW>
+14.7：
+區塊編輯器：我們為網誌新增了「內容欄」區塊和「入門頁面」範本。我們調整了「入門頁面範本」按鈕，避免與頁面內容重疊。選取「從裝置選擇媒體」將開啟 WordPress 內建媒體選擇器，而不是裝置預設的選擇器。
+
+錯誤修正：預覽「入門頁面範本」時如果變更裝置方向，會發生網址設定彈出的問題。
+
+改善 UI：我們在「我的網站」的「我」選單中新增了「Gravatar」。
+</zh-TW>
