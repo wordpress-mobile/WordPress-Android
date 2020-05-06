@@ -19,6 +19,7 @@ commands:
             - yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "yarn.lock" }}
       - run:
           name: Yarn Install
+          working_directory: libs/gutenberg-mobile
           command: yarn install --frozen-lockfile --prefer-offline --network-concurrency 1
       - save_cache:
           name: Save Yarn Cache
@@ -35,6 +36,7 @@ commands:
     steps:
       - run:
           name: Yarn bundle Android
+          working_directory: libs/gutenberg-mobile
           command: yarn bundle:android
   copy-js-bundle:
     steps:
@@ -50,10 +52,8 @@ jobs:
     steps:
       - git/shallow-checkout
       - checkout-submodules
-      - yarn-install:
-          working_directory: libs/gutenberg-mobile
-      - yarn-bundle-android:
-          working_directory: libs/gutenberg-mobile
+      - yarn-install
+      - yarn-bundle-android
       - run:
           name: Rename the JS bundle
           working_directory: libs/gutenberg-mobile
