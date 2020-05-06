@@ -54,7 +54,7 @@ jobs:
           working_directory: libs/gutenberg-mobile
           command: mv bundle/android/App.js bundle/android/index.android.bundle
       - persist_to_workspace:
-          root: bundle/android
+          root: libs/gutenberg-mobile/bundle/android
           paths:
             - index.android.bundle
   test:
