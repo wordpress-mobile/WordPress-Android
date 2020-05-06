@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMetaData;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
@@ -426,6 +427,21 @@ public class PostRestClient extends BaseWPComRestClient {
         if (from.getGeo() != null) {
             post.setLatitude(from.getGeo().latitude);
             post.setLongitude(from.getGeo().longitude);
+        } else {
+            List<PostMetaData> metaDataList = from.getMetadata();
+            if (metaDataList != null) {
+                for (PostMetaData metaData : metaDataList) {
+                    String key = metaData.getKey();
+                    if (key != null && metaData.getValue() != null) {
+                        if (key.equals("geo_longitude")) {
+                            post.setLongitude(Double.parseDouble(metaData.getValue()));
+                        }
+                        if (key.equals("geo_latitude")) {
+                            post.setLatitude(Double.parseDouble(metaData.getValue()));
+                        }
+                    }
+                }
+            }
         }
 
         if (from.getCategories() != null) {
