@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Material theme -->
@@ -255,6 +255,10 @@
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_disabled_selector</item>
+    </style>
+
+    <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
     </style>
 
@@ -918,7 +922,9 @@
         <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary" />
+    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary.Unelevated">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
 
     <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView">
         <item name="cardElevation">@dimen/appbar_elevation</item>
@@ -932,6 +938,7 @@
 
     <style name="LoginTheme.Button.SignUp" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
     <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">

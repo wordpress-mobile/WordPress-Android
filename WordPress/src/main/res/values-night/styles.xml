@@ -108,6 +108,11 @@
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
     </style>
 
+    <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
+        <item name="android:textColor">@color/on_surface_disabled_selector</item>
+    </style>
+
     <!-- Overload of Aztec theme -->
 
     <style name="FormatBarButton">
