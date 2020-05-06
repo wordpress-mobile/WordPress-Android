@@ -12,8 +12,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -24,10 +24,11 @@ class MapViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_web_view_item
 ) {
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private val webView: WebView = itemView.findViewById(R.id.web_view)
     @SuppressLint("SetJavaScriptEnabled")
     fun bind(item: MapItem) {
-        GlobalScope.launch {
+        coroutineScope.launch {
             delay(100)
             // See: https://developers.google.com/chart/interactive/docs/gallery/geochart
             // Loading the v42 of the Google Charts API, since the latest stable version has a problem with
