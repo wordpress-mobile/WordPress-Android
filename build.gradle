@@ -1,7 +1,7 @@
 buildscript {
     ext.kotlinVersion = '1.3.61'
     ext.navComponenVersion = '2.0.0'
-    ext.jitpack = 1
+    ext.buildGutenbergMobileJSBundle = 1
 
     repositories {
         google()
@@ -22,7 +22,7 @@ plugins {
 }
 
 ext {
-    jitpack = 1
+    buildGutenbergMobileJSBundle = 1
 }
 
 apply plugin: 'com.automattic.android.fetchstyle'
