@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spannable;
@@ -40,9 +39,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener;
@@ -80,7 +79,6 @@ import org.wordpress.android.models.ReaderBlog;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.ActionableEmptyView;
@@ -407,9 +405,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        // we need to pass activity, since this fragment extends Android Native fragment (we can pass `this` as soon as
-        // this fragment extends Support fragment.
-        mViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
 
         if (mIsTopLevel) {
@@ -905,7 +901,6 @@ public class ReaderPostListFragment extends Fragment
             @Override
             public void onLoadFilterCriteriaOptionsAsync(
                     FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, boolean refresh) {
-                loadTags(listener);
             }
 
             @Override
@@ -2275,20 +2270,6 @@ public class ReaderPostListFragment extends Fragment
     }
 
     /*
-     * load tags on which the main data will be filtered
-     */
-    private void loadTags(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener) {
-        ReaderTag defaultTag = null;
-
-        defaultTag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                requireActivity(),
-                mTagUpdateClientUtilsProvider
-        );
-
-        new LoadTagsTask(listener, defaultTag).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    /*
      * refresh adapter so latest posts appear
      */
     private void refreshPosts() {
@@ -2864,45 +2845,6 @@ public class ReaderPostListFragment extends Fragment
                 mIsTopLevel,
                 mRecyclerView
         );
-    }
-
-    private class LoadTagsTask extends AsyncTask<Void, Void, ReaderTagList> {
-        private final FilteredRecyclerView.FilterCriteriaAsyncLoaderListener mFilterCriteriaLoaderListener;
-        private ReaderTag mDefaultTag;
-
-        LoadTagsTask(FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener, ReaderTag defaultTag) {
-            mFilterCriteriaLoaderListener = listener;
-            mDefaultTag = defaultTag;
-        }
-
-        @Override
-        protected ReaderTagList doInBackground(Void... voids) {
-            ReaderTagList tagList = ReaderTagTable.getDefaultTags();
-
-            tagList.addAll(ReaderTagTable.getCustomListTags());
-
-            if (!mIsTopLevel) {
-                tagList.addAll(ReaderTagTable.getFollowedTags());
-            }
-
-            tagList.addAll(ReaderTagTable.getBookmarkTags());
-
-            if (mIsTopLevel) {
-                if (!tagList.containsFollowingTag()) {
-                    tagList.add(mDefaultTag);
-                }
-            }
-
-            return mIsTopLevel ? ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) : tagList;
-        }
-
-        @Override
-        protected void onPostExecute(ReaderTagList tagList) {
-            if (mFilterCriteriaLoaderListener != null && isAdded()) {
-                //noinspection unchecked
-                mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
-            }
-        }
     }
 
     /**
