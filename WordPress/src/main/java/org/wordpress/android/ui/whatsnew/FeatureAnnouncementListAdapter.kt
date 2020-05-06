@@ -14,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
@@ -80,7 +81,6 @@ class FeatureAnnouncementListAdapter(
                     .inflate(R.layout.feature_announcement_list_item, parent, false)
     ) {
         private val featureIcon: ImageView = itemView.findViewById(R.id.feature_item_icon)
-        private val iconContainer: View = itemView.findViewById(R.id.feature_item_icon_container)
         private val title: TextView = itemView.findViewById(R.id.feature_title)
         private val subtitle: TextView = itemView.findViewById(R.id.feature_subtitle)
 
@@ -88,19 +88,10 @@ class FeatureAnnouncementListAdapter(
             title.text = featureAnnouncementItem.title
             subtitle.text = featureAnnouncementItem.subtitle
 
-            val drawableResourceId: Int = featureIcon.context.resources
-                    .getIdentifier(
-                            StringUtils.notNullStr(featureAnnouncementItem.gridiconName),
-                            "drawable",
-                            featureIcon.context.packageName
-                    )
-
-            if (drawableResourceId > 0) {
-                featureIcon.setImageResource(drawableResourceId)
-                iconContainer.visibility = View.VISIBLE
-            } else {
-                iconContainer.visibility = View.INVISIBLE
-            }
+            imageManager.loadIntoCircle(
+                    featureIcon, ImageType.PLAN,
+                    StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
+            )
         }
     }
 

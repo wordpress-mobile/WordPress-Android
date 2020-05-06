@@ -29,17 +29,17 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             FeatureAnnouncementItem(
                     "Test Feature 1",
                     "Test Description 1",
-                    "ic_posts_white_24dp"
+                    "http://wordpress.org"
             ),
             FeatureAnnouncementItem(
                     "Test Feature 2",
                     "Test Description 1",
-                    "ic_plans_white_24dp"
+                    "http://wordpress.org"
             ),
             FeatureAnnouncementItem(
                     "Test Feature 3",
                     "Test Description 3",
-                    "ic_themes_white_24dp"
+                    "http://wordpress.org"
             )
     )
 

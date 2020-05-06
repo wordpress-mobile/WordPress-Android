@@ -14,5 +14,5 @@ data class FeatureAnnouncement(
 data class FeatureAnnouncementItem(
     val title: String,
     val subtitle: String,
-    val gridiconName: String
+    val iconUrl: String
 )
