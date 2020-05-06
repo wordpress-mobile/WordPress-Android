@@ -2,8 +2,6 @@ package org.wordpress.android.fluxc.store
 
 import android.annotation.SuppressLint
 import com.yarolegovich.wellsql.SelectQuery
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -19,10 +17,10 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
 import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 private const val ACTIVITY_LOG_PAGE_SIZE = 10
 
@@ -31,25 +29,25 @@ class ActivityLogStore
 @Inject constructor(
     private val activityLogRestClient: ActivityLogRestClient,
     private val activityLogSqlUtils: ActivityLogSqlUtils,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? ActivityLogAction ?: return
         when (actionType) {
-            ActivityLogAction.FETCH_ACTIVITIES -> {
-                GlobalScope.launch(coroutineContext) {
+            FETCH_ACTIVITIES -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_ACTIVITIES") {
                     emitChange(fetchActivities(action.payload as FetchActivityLogPayload))
                 }
             }
-            ActivityLogAction.FETCH_REWIND_STATE -> {
-                GlobalScope.launch(coroutineContext) {
+            FETCH_REWIND_STATE -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_REWIND_STATE") {
                     emitChange(fetchActivitiesRewind(action.payload as FetchRewindStatePayload))
                 }
             }
-            ActivityLogAction.REWIND -> {
-                GlobalScope.launch(coroutineContext) {
+            REWIND -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On REWIND") {
                     emitChange(rewind(action.payload as RewindPayload))
                 }
             }
@@ -244,5 +242,6 @@ class ActivityLogStore
         INVALID_RESPONSE,
         MISSING_STATE
     }
+
     class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
 }
