@@ -10,6 +10,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderParentPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
@@ -287,6 +288,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SitePickerViewModel.class)
     abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderParentPostListViewModel.class)
+    abstract ViewModel readerParentPostListViewModel(ReaderParentPostListViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
