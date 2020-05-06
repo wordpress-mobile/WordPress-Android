@@ -69,6 +69,11 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
           name: Test WordPress
           command: ./gradlew --stacktrace testVanillaRelease
       - run:
@@ -87,6 +92,11 @@ jobs:
           command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Checkstyle
           command: ./gradlew --stacktrace checkstyle
@@ -167,6 +177,11 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
           name: Build
           command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
       - run:
@@ -203,6 +218,11 @@ jobs:
           command: git submodule update --init --recursive
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build
           command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
@@ -241,8 +261,12 @@ workflows:
     jobs:
       - gutenberg-bundle-build
       - strings-check
-      - test
-      - lint
+      - test:
+          requires:
+            - gutenberg-bundle-build
+      - lint:
+          requires:
+            - gutenberg-bundle-build
       - Installable Build:
           requires:
             - gutenberg-bundle-build
@@ -250,10 +274,14 @@ workflows:
             branches:
               ignore: /pull\/[0-9]+/
       - WordPressUtils Connected Tests:
+          requires:
+            - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
+          requires:
+            - gutenberg-bundle-build
           post-to-slack: false
           # Always run connected tests on develop and release branches
           filters:
