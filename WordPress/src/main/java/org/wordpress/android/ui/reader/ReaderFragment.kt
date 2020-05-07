@@ -14,12 +14,12 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.viewmodels.ReaderParentPostListViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import javax.inject.Inject
 
-class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
+class ReaderFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ReaderParentPostListViewModel
+    private lateinit var viewModel: ReaderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +32,7 @@ class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_f
     }
 
     private fun initViewModel(view: View) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderParentPostListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
         startObserving(view)
         viewModel.start()
     }
