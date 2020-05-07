@@ -75,9 +75,13 @@ jobs:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Test WordPress
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace testVanillaRelease
       - run:
           name: Test WordPressUtils
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
       - android/save-gradle-cache
       - android/save-test-results
@@ -99,16 +103,24 @@ jobs:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Checkstyle
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace checkstyle
       - run:
           name: ktlint
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace ciktlint
       - run:
           name: Lint
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
       - run:
           name: Violations
           when: on_fail
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
             if [ -n "$GITHUB_API_TOKEN" ]; then
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
@@ -139,6 +151,8 @@ jobs:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build APK
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
@@ -183,6 +197,8 @@ jobs:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
@@ -225,6 +241,8 @@ jobs:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
