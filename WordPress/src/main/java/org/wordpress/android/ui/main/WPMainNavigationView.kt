@@ -2,7 +2,6 @@ package org.wordpress.android.ui.main
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -31,7 +30,6 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.getColorStateListFromAttribute
-import java.lang.IllegalArgumentException
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
