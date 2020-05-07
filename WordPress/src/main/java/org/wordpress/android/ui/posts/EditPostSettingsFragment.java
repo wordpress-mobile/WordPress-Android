@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -79,6 +80,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -149,6 +151,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject PostSettingsUtils mPostSettingsUtils;
+    @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -594,6 +597,7 @@ public class EditPostSettingsFragment extends Fragment {
                 int index = fragment.getCheckedIndex();
                 PostStatus status = getPostStatusAtIndex(index);
                 updatePostStatus(status);
+                PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_VISIBILITY_CHANGED);
                 break;
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
