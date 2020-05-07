@@ -3,12 +3,11 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
+import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -18,8 +17,6 @@ import org.wordpress.android.util.ActivityUtils
 import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
-    private lateinit var tagsEditText: EditText
-    private lateinit var toolbarTitle: TextView
     private var closeListener: PrepublishingScreenClosedListener? = null
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -58,13 +55,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val closeButton = view.findViewById<ImageView>(R.id.close_button)
-        val backButton = view.findViewById<ImageView>(R.id.back_button)
-        toolbarTitle = view.findViewById(R.id.toolbar_title)
-        tagsEditText = view.findViewById(R.id.tags_edit_text)
-
-        closeButton.setOnClickListener { viewModel.onCloseButtonClicked() }
-        backButton.setOnClickListener { viewModel.onBackButtonClicked() }
+        close_button.setOnClickListener { viewModel.onCloseButtonClicked() }
+        back_button.setOnClickListener { viewModel.onBackButtonClicked() }
         initViewModel()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -81,7 +73,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
         viewModel.dismissKeyboard.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                ActivityUtils.hideKeyboardForced(tagsEditText)
+                ActivityUtils.hideKeyboardForced(tags_edit_text)
             }
         })
 
@@ -92,7 +84,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         })
 
         viewModel.toolbarTitleUiState.observe(this, Observer { uiString ->
-            toolbarTitle.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
+            toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
         viewModel.start(getEditPostRepository())

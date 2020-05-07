@@ -13,6 +13,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButton
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.viewmodel.Event
@@ -20,6 +21,7 @@ import javax.inject.Inject
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
+    private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils
 ) : ViewModel() {
     private var isStarted = false
@@ -37,21 +39,23 @@ class PrepublishingHomeViewModel @Inject constructor(
         setupHomeUiState(editPostRepository, site)
     }
 
-    // TODO remove hardcoded Public with live data from the EditPostRepository / user changes.
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = listOf(
                 HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),
                 HomeUiState(
                         actionType = VISIBILITY,
-                        actionResult = UiStringText("Public"),
+                        actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
                         onActionClicked = ::onActionClicked
                 ),
                 HomeUiState(
                         actionType = PUBLISH,
                         actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                            UiStringText(
-                                    postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                            )
+                            val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                            if (label.isNotEmpty()) {
+                                UiStringText(label)
+                            } else {
+                                UiStringRes(R.string.immediately)
+                            }
                         },
                         onActionClicked = ::onActionClicked
                 ),

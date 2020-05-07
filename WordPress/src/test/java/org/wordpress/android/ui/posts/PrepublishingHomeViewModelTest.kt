@@ -17,6 +17,8 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
@@ -29,13 +31,15 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
     @Mock lateinit var site: SiteModel
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, postSettingsUtils)
+        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, getPostVisibilityUseCase, postSettingsUtils)
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(PUBLIC)
         whenever(site.name).thenReturn("")
     }
 
