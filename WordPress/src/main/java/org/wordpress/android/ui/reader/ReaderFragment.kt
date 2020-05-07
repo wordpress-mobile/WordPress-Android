@@ -35,6 +35,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private fun initViewModel(view: View) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
         startObserving(view)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // TODO come up with a proper fix
+        /**
+         * We need to start the viewModel in onResume as when the user logs-in for the first time the tags
+         * aren't stored in the DB yet.
+         */
         viewModel.start()
     }
 
