@@ -249,18 +249,16 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
     }
 
-    private void manageFilterSelection(int position) {
+    private void onSpinnerItemSelected(int position) {
+        if (mHideAppBarLayout) {
+            throw new IllegalStateException("Developer error: Spinner shouldn't be visible when the appbar is hidden.");
+        }
         if (mSelectingRememberedFilterOnCreate) {
             mSelectingRememberedFilterOnCreate = false;
             return;
         }
 
-        FilterCriteria selectedCriteria;
-        if (mHideAppBarLayout) {
-            selectedCriteria = mFilterCriteriaOptions.get(position);
-        } else {
-            selectedCriteria = (FilterCriteria) mSpinnerAdapter.getItem(position);
-        }
+        FilterCriteria selectedCriteria = (FilterCriteria) mSpinnerAdapter.getItem(position);
 
         if (mCurrentFilter == selectedCriteria) {
             AppLog.d(mTAG, "The selected STATUS is already active: "
@@ -287,7 +285,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                manageFilterSelection(position);
+                onSpinnerItemSelected(position);
             }
 
             @Override
