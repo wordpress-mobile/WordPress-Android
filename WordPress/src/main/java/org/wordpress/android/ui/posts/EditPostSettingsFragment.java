@@ -507,6 +507,7 @@ public class EditPostSettingsFragment extends Fragment {
                 case ACTIVITY_REQUEST_CODE_PICK_LOCATION:
                     if (isAdded() && resultCode == RESULT_OK) {
                         Place place = PlacePicker.getPlace(getActivity(), data);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_LOCATION_CHANGED);
                         setLocation(place);
                     }
                     break;
@@ -1196,6 +1197,7 @@ public class EditPostSettingsFragment extends Fragment {
                 if (menuItem.getItemId() == R.id.menu_change_location) {
                     showLocationPicker();
                 } else if (menuItem.getItemId() == R.id.menu_remove_location) {
+                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_LOCATION_CHANGED);
                     setLocation(null);
                 }
                 return true;
