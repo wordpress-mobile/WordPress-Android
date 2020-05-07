@@ -32,6 +32,11 @@ commands:
       - run:
           name: Checkout submodules
           command: git submodule update --init --recursive
+  checkout-gutenberg-mobile-submodule-only:
+    steps:
+      - run:
+          name: Checkout gutenberg-mobile submodule (no recursive)
+          command: git submodule update --init
   yarn-bundle-android:
     steps:
       - run:
@@ -63,9 +68,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -91,9 +94,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -135,9 +136,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
@@ -185,9 +184,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -229,9 +226,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
       - run:
@@ -262,9 +257,7 @@ jobs:
       - image: circleci/ruby:2.6.4
     steps:
       - git/shallow-checkout
-      - run:
-          name: Checkout git submodules
-          command: git submodule update --init --recursive
+      - checkout-gutenberg-mobile-submodule-only
       - run:
           name: Install bundler
           command: gem install bundler --version 2.0.2 
