@@ -1,9 +1,21 @@
+14.9
+-----
+* Fix issue with Preview post not working after switching to classic editor from inside the post
+ 
 14.8
 -----
+* Block editor: Prefill caption for image blocks when available on the Media library
+* Block editor: New block: Buttons. From now you’ll be able to add the individual Button block only inside the Buttons block
+* Block editor: Fix bug where whitespaces at start of text blocks were being removed
+* Block editor: Add support for upload options in Cover block
+* Block editor: Floating toolbar, previously located above nested blocks, is now placed at the top of the screen
+* Block editor: Fix the icons in FloatingToolbar on RTL mode
+* Block editor: Add alignment options for heading block
 * Block editor: Fix titles in the media picker
-
-* Block editor: Add alignment options for heading block on Android
 * Block editor: Update quote block to visually reflect selected alignment
+* Block editor: Fix bug where buttons in page templates were not rendering correctly on web
+* Block editor: You can now crop, zoom in/out and rotate images from the device that are being inserted in a post.
+* Added reblog functionality
  
 14.7
 -----

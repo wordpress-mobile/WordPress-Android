@@ -773,7 +773,7 @@ Language: es_CL
     <string name="media_edit_filename_caption">Nombre de Archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy">Copiar</string>
+    <string name="copy_text">Copiar</string>
     <string name="connect_site">Conectar Sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Parpadeo de luz</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>

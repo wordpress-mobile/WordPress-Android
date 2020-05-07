@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class PhotoPickerActivity extends LocaleAwareActivity
@@ -69,6 +72,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ImageEditorTracker mImageEditorTracker;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -221,6 +225,12 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
                     long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
                     doMediaIdSelected(mediaId, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
+                }
+                break;
+            case IMAGE_EDITOR_EDIT_IMAGE:
+                if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
+                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
                 }
                 break;
         }

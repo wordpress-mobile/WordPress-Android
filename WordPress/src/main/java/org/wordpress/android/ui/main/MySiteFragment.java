@@ -398,7 +398,7 @@ public class MySiteFragment extends Fragment implements
 
         rootView.findViewById(R.id.row_view_site).setOnClickListener(v -> viewSite());
 
-        rootView.findViewById(R.id.row_register_domain).setOnClickListener(v -> registerDomain());
+        mDomainRegistrationCta.setOnClickListener(v -> registerDomain());
 
         rootView.findViewById(R.id.quick_action_stats_button).setOnClickListener(v -> {
             AnalyticsTracker.track(Stat.QUICK_ACTION_STATS_TAPPED);
