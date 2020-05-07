@@ -47,6 +47,22 @@
     </issue>
 
     <issue
+        id="RtlSetPadding"
+        severity="Error"
+        message="For RtL compatibility, use setPaddingRelativeor ViewCompat.setPaddingRelative() when setting left/right padding."
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Using setPadding instead of setPaddingRelative."
+        explanation="For RtL compatibility, use setPaddingRelativeor ViewCompat.setPaddingRelative() when setting left/right padding."
+        errorLine1="            view.setPadding("
+        errorLine2="            ^">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            line="550"
+            column="13"/>
+    </issue>
+
+    <issue
         id="ClickableViewAccessibility"
         message="Custom view `RecyclableWrapperViewGroup` overrides `onTouchEvent` but not `performClick`"
         errorLine1="        public boolean onTouchEvent(MotionEvent event) {"
@@ -3898,6 +3914,270 @@
             file="../libs/login/WordPressLoginFlow/src/main/res/layout-land/signup_magic_link.xml"
             line="57"
             column="9"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        severity="Error"
+        message="Field requires API level 23 (current min is 21): `android.text.Layout#BREAK_STRATEGY_HIGH_QUALITY`"
+        category="Correctness"
+        priority="6"
+        summary="Using inlined constants on older versions"
+        explanation="This check scans through all the Android API field references in the application and flags certain constants, such as static final integers and Strings, which were introduced in later versions. These will actually be copied into the class files rather than being referenced, which means that the value is available even when running on older devices. In some cases that&apos;s fine, and in other cases it can result in a runtime crash or incorrect behavior. It depends on the context, so consider the code carefully and decide whether it&apos;s safe and can be suppressed or whether the code needs to be guarded.&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level."
+        errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
+        errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            line="53"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="InlinedApi"
+        severity="Error"
+        message="Field requires API level 23 (current min is 21): `android.text.Layout#BREAK_STRATEGY_SIMPLE`"
+        category="Correctness"
+        priority="6"
+        summary="Using inlined constants on older versions"
+        explanation="This check scans through all the Android API field references in the application and flags certain constants, such as static final integers and Strings, which were introduced in later versions. These will actually be copied into the class files rather than being referenced, which means that the value is available even when running on older devices. In some cases that&apos;s fine, and in other cases it can result in a runtime crash or incorrect behavior. It depends on the context, so consider the code carefully and decide whether it&apos;s safe and can be suppressed or whether the code needs to be guarded.&#xA;&#xA;If you really want to use this API and don&apos;t need to support older devices just set the `minSdkVersion` in your `build.gradle` or `AndroidManifest.xml` files.&#xA;&#xA;If your code is **deliberately** accessing newer APIs, and you have ensured (e.g. with conditional execution) that this code will only ever be called on a supported platform, then you can annotate your class or method with the `@TargetApi` annotation specifying the local minimum SDK to apply, such as `@TargetApi(11)`, such that this check considers 11 rather than your manifest file&apos;s minimum SDK as the required API level."
+        errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            line="53"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: android.graphics.text.LineBreaker.JUSTIFICATION_MODE_NONE, android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            line="337"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="WrongConstant"
+        severity="Error"
+        message="Must be one of: android.graphics.text.LineBreaker.JUSTIFICATION_MODE_NONE, android.graphics.text.LineBreaker.JUSTIFICATION_MODE_INTER_WORD"
+        category="Correctness"
+        priority="6"
+        summary="Incorrect constant"
+        explanation="Ensures that when parameter in a method only allows a specific set of constants, calls obey those rules."
+        errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);"
+        errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            line="342"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of com.android.tools.build:gradle than 3.4.2 is available: 3.6.3"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.4.2&apos;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build.gradle"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.appcompat:appcompat than 1.0.0 is available: 1.1.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.0.0&apos;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            line="104"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.appcompat:appcompat than 1.0.0 is available: 1.1.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.0.0&apos;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            line="109"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        severity="Warning"
+        message="A newer version of androidx.recyclerview:recyclerview than 1.0.0 is available: 1.1.0"
+        category="Correctness"
+        priority="4"
+        summary="Obsolete Gradle Dependency"
+        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
+        errorLine1="    implementation &apos;androidx.recyclerview:recyclerview:1.0.0&apos;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            line="110"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="VisibleForTests"
+        severity="Warning"
+        message="This method should only be accessed from tests or within private scope"
+        category="Correctness"
+        priority="4"
+        summary="Visible Only For Tests"
+        explanation="With the `@VisibleForTesting` annotation you can specify an `otherwise=` attribute which specifies the intended visibility if the method had not been made more widely visible for the tests.&#xA;&#xA;This check looks for accesses from production code (e.g. not tests) where the access would not have been allowed with the intended production visibility."
+        errorLine1="    @ReactProp(name = PROP_TEXT)"
+        errorLine2="                      ~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecTextShadowNode.java"
+            line="18"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="UseSparseArrays"
+        severity="Warning"
+        message="Use `new SparseArray&lt;Media>(...)` instead for better performance"
+        category="Performance"
+        priority="4"
+        summary="HashMap can be replaced with SparseArray"
+        explanation="For maps where the keys are of type integer, it&apos;s typically more efficient to use the Android `SparseArray` API. This check identifies scenarios where you might want to consider using `SparseArray` instead of `HashMap` for better performance.&#xA;&#xA;This is **particularly** useful when the value types are primitives like ints, where you can use `SparseIntArray` and avoid auto-boxing the values from `int` to `Integer`.&#xA;&#xA;If you need to construct a `HashMap` because you need to call an API outside of your control which requires a `Map`, you can suppress this warning using for example the `@SuppressLint` annotation."
+        errorLine1="    private HashMap&lt;Integer, Media> mMediaToAddAfterMounting = new HashMap&lt;>();"
+        errorLine2="                                                               ~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/java/org/wordpress/mobile/WPAndroidGlue/WPAndroidGlueCode.java"
+            line="85"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        severity="Warning"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes"
+        category="Usability:Icons"
+        priority="6"
+        summary="Icon colors do not follow the recommended visual style"
+        explanation="Notification icons and Action Bar icons should only white and shades of gray. See the Android Design Guide for more details. Note that the way Lint decides whether an icon is an action bar icon or a notification icon is based on the filename prefix: `ic_menu_` for action bar icons, `ic_stat_` for notification icons etc. These correspond to the naming conventions documented in http://developer.android.com/guide/practices/ui_guidelines/icon_design.html"
+        url="http://developer.android.com/design/style/iconography.html"
+        urls="http://developer.android.com/design/style/iconography.html">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-hdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        severity="Warning"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes"
+        category="Usability:Icons"
+        priority="6"
+        summary="Icon colors do not follow the recommended visual style"
+        explanation="Notification icons and Action Bar icons should only white and shades of gray. See the Android Design Guide for more details. Note that the way Lint decides whether an icon is an action bar icon or a notification icon is based on the filename prefix: `ic_menu_` for action bar icons, `ic_stat_` for notification icons etc. These correspond to the naming conventions documented in http://developer.android.com/guide/practices/ui_guidelines/icon_design.html"
+        url="http://developer.android.com/design/style/iconography.html"
+        urls="http://developer.android.com/design/style/iconography.html">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-mdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        severity="Warning"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes"
+        category="Usability:Icons"
+        priority="6"
+        summary="Icon colors do not follow the recommended visual style"
+        explanation="Notification icons and Action Bar icons should only white and shades of gray. See the Android Design Guide for more details. Note that the way Lint decides whether an icon is an action bar icon or a notification icon is based on the filename prefix: `ic_menu_` for action bar icons, `ic_stat_` for notification icons etc. These correspond to the naming conventions documented in http://developer.android.com/guide/practices/ui_guidelines/icon_design.html"
+        url="http://developer.android.com/design/style/iconography.html"
+        urls="http://developer.android.com/design/style/iconography.html">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-xhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="IconColors"
+        severity="Warning"
+        message="Action Bar icons should use a single gray color (`#333333` for light themes (with 60%/30% opacity for enabled/disabled), and `#FFFFFF` with opacity 80%/30% for dark themes"
+        category="Usability:Icons"
+        priority="6"
+        summary="Icon colors do not follow the recommended visual style"
+        explanation="Notification icons and Action Bar icons should only white and shades of gray. See the Android Design Guide for more details. Note that the way Lint decides whether an icon is an action bar icon or a notification icon is based on the filename prefix: `ic_menu_` for action bar icons, `ic_stat_` for notification icons etc. These correspond to the naming conventions documented in http://developer.android.com/guide/practices/ui_guidelines/icon_design.html"
+        url="http://developer.android.com/design/style/iconography.html"
+        urls="http://developer.android.com/design/style/iconography.html">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-xxhdpi/ic_launcher.png"/>
+    </issue>
+
+    <issue
+        id="ViewConstructor"
+        severity="Warning"
+        message="Custom view `ReactAztecText` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`"
+        category="Usability"
+        priority="3"
+        summary="Missing View constructors for XML inflation"
+        explanation="Some layout tools (such as the Android layout editor) need to find a constructor with one of the following signatures:&#xA;* `View(Context context)`&#xA;* `View(Context context, AttributeSet attrs)`&#xA;* `View(Context context, AttributeSet attrs, int defStyle)`&#xA;&#xA;If your custom view needs to perform initialization which does not apply when used in a layout editor, you can surround the given code with a check to see if `View#isInEditMode()` is false, since that method will return `false` at runtime but true within a user interface editor."
+        errorLine1="public class ReactAztecText extends AztecText {"
+        errorLine2="             ~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecText.java"
+            line="49"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="RtlGetPadding"
+        severity="Error"
+        message="For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding."
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Using getPaddingLeft/Right instead of getPaddingStart/End."
+        explanation="For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding."
+        errorLine1="                    (int) update.getPaddingLeft(),"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            line="551"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="RtlGetPadding"
+        severity="Error"
+        message="For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding."
+        category="Internationalization:Bidirectional Text"
+        priority="6"
+        summary="Using getPaddingLeft/Right instead of getPaddingStart/End."
+        explanation="For RtL compatibility, use getPaddingStart() and getPaddingEnd() or their ViewCompat version, when getting left/right padding."
+        errorLine1="                    (int) update.getPaddingRight(),"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/hypest/proj/a8c/android/tmp/t6/WordPress-Android/libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            line="553"
+            column="27"/>
     </issue>
 
     <issue
