@@ -116,6 +116,9 @@
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
+    <string name="me">Me</string>
+    <string name="everyone">Everyone</string>
+
     <!-- CAB -->
     <string name="cab_selected">%d selected</string>
 
@@ -2637,6 +2640,7 @@
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
+    <string name="pages_list_author">Page author</string>
 
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
@@ -2680,8 +2684,6 @@
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
-    <string name="post_list_author_me">Me</string>
-    <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_tab_published_posts">Published</string>
     <string name="post_list_tab_drafts">Drafts</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>

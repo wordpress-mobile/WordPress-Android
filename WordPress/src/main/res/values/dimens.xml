@@ -261,6 +261,8 @@
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
+    <dimen name="me_avatar_padding">2dp</dimen>
+    <dimen name="me_avatar_width">2dp</dimen>
 
     <!--site picker-->
     <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
@@ -383,7 +385,7 @@
     <dimen name="page_list_row_min_height">80dp</dimen>
     <dimen name="page_list_featured_image_size">40dp</dimen>
     <dimen name="page_list_menu_button_size">24dp</dimen>
-
+    <dimen name="page_list_tab_layout_fading_edge_width">16dp</dimen>
 
     <dimen name="quota_bar_text_minimum_height">36dp</dimen>
 
@@ -392,11 +394,13 @@
     <dimen name="post_list_row_skeleton_view_excerpt_height">16dp</dimen>
     <dimen name="post_list_row_skeleton_view_date_height">16dp</dimen>
 
+    <!-- author spinner for pages and posts lists -->
+    <dimen name="author_spinner_width">60dp</dimen>
+    <dimen name="author_spinner_avatar_size">32dp</dimen>
+    <dimen name="author_spinner_avatar_padding">2dp</dimen>
+    <dimen name="author_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
+
     <!--posts list-->
-    <dimen name="posts_list_spinner_width">60dp</dimen>
-    <dimen name="posts_list_spinner_avatar_size">32dp</dimen>
-    <dimen name="posts_list_spinner_avatar_padding">2dp</dimen>
-    <dimen name="posts_list_spinner_dropdown_avatar_horizontal_margin">13dp</dimen>
     <dimen name="posts_list_tab_layout_fading_edge_width">16dp</dimen>
     <dimen name="posts_list_compact_row_height">80dp</dimen>
     <dimen name="posts_list_compact_image_size">40dp</dimen>
