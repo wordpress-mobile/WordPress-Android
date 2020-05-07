@@ -75,9 +75,6 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    debugImplementation files("./libs/hermes-debug.aar")
-    releaseImplementation files("./libs/hermes-release.aar")
-
     implementation (project(':react-native-gutenberg-bridge')) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: "com.android.volley"
