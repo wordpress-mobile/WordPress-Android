@@ -2,7 +2,7 @@ package org.wordpress.android.ui.main
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.SparseArray
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -31,6 +31,7 @@ import org.wordpress.android.ui.reader.ReaderPostListFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.getColorStateListFromAttribute
+import java.lang.IllegalArgumentException
 
 /*
  * Bottom navigation view and related adapter used by the main activity for the
@@ -95,6 +96,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
+        navAdapter.init()
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -154,7 +156,6 @@ class WPMainNavigationView @JvmOverloads constructor(
         setImageViewSelected(position, true)
 
         AppPrefs.setMainPageIndex(position)
-        prevPosition = position
 
         // temporarily disable the nav listeners so they don't fire when we change the selected page
         assignNavigationListeners(false)
@@ -165,15 +166,15 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         val fragment = navAdapter.getFragment(position)
+        val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
-            fragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, fragment, getTagForPosition(position))
-                    // This is used because the main activity sometimes crashes because it's trying to switch fragments
-                    // after `onSaveInstanceState` was already called. This is the related issue
-                    // https://github.com/wordpress-mobile/WordPress-Android/issues/10852
-                    .commitAllowingStateLoss()
+            if (previousFragment != null) {
+                fragmentManager.beginTransaction().hide(previousFragment).show(fragment).commit()
+            } else {
+                fragmentManager.beginTransaction().show(fragment).commit()
+            }
         }
+        prevPosition = position
     }
 
     private fun setImageViewSelected(position: Int, isSelected: Boolean) {
@@ -224,6 +225,14 @@ class WPMainNavigationView @JvmOverloads constructor(
 
     private fun getTagForPosition(position: Int): String {
         return when (getPageTypeOrNull(position)) {
+            MY_SITE -> TAG_MY_SITE
+            READER -> TAG_READER
+            else -> TAG_NOTIFS
+        }
+    }
+
+    private fun getTagForPageType(pageType: PageType): String {
+        return when (pageType) {
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
             else -> TAG_NOTIFS
@@ -281,31 +290,45 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private val mFragments = SparseArray<Fragment>(numPages())
+        private val mFragments = mutableMapOf<PageType, Fragment>()
 
-        private fun createFragment(position: Int): Fragment? {
-            val fragment: Fragment = when (pages().getOrNull(position)) {
+        private fun createFragment(pageType: PageType): Fragment {
+            val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderPostListFragment.newInstance(true)
                 NOTIFS -> NotificationsListFragment.newInstance()
-                else -> return null
             }
-
-            mFragments.put(position, fragment)
+            mFragments[pageType] = fragment
+            fragmentManager.beginTransaction()
+                    .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
+                    .hide(fragment)
+                    .commit()
             return fragment
         }
 
+        internal fun init() {
+            for (pageType in pages()) {
+                if (mFragments[pageType] == null) {
+                    mFragments[pageType] = fragmentManager.findFragmentByTag(getTagForPageType(pageType))
+                            ?: createFragment(pageType)
+                }
+            }
+        }
+
         internal fun getFragment(position: Int): Fragment? {
-            if (isValidPosition(position) && mFragments.get(position) != null) {
-                return mFragments.get(position)
+            val pageType = pages().getOrElse(position) {
+                return null
+            }
+            if (mFragments[pageType] != null) {
+                return mFragments[pageType]
             }
 
             val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
             return if (fragment != null) {
-                mFragments.put(position, fragment)
+                mFragments[pageType] = fragment
                 fragment
             } else {
-                createFragment(position)
+                createFragment(pageType)
             }
         }
     }
