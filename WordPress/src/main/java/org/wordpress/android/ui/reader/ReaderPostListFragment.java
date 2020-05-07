@@ -1024,7 +1024,7 @@ public class ReaderPostListFragment extends Fragment
         mSubFilterComponent.setBackgroundColor(elevatedCardColor);
 
         if (mIsTopLevel) {
-            mRecyclerView.getAppBarLayout().addView(mSubFilterComponent);
+            ((ViewGroup) rootView.findViewById(R.id.content_container)).addView(mSubFilterComponent);
 
             mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
             mSettingsButton.setOnClickListener(v -> {
