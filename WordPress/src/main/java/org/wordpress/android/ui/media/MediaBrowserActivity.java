@@ -56,6 +56,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
+import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
@@ -106,6 +107,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
 
     private static final String SAVED_QUERY = "SAVED_QUERY";
     private static final String BUNDLE_MEDIA_CAPTURE_PATH = "mediaCapturePath";
+    private static final String SHOW_AUDIO_TAB = "showAudioTab";
 
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
@@ -130,6 +132,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     private MediaBrowserType mBrowserType;
     private AddMenuItem mLastAddMediaItemClicked;
 
+    private boolean mShowAudioTab;
+
     private enum AddMenuItem {
         ITEM_CAPTURE_PHOTO,
         ITEM_CAPTURE_VIDEO,
@@ -148,11 +152,13 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (savedInstanceState == null) {
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
+            mShowAudioTab = mMediaStore.getSiteAudio(mSite).size() > 0;
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mMediaCapturePath = savedInstanceState.getString(BUNDLE_MEDIA_CAPTURE_PATH);
             mQuery = savedInstanceState.getString(SAVED_QUERY);
+            mShowAudioTab = savedInstanceState.getBoolean(SHOW_AUDIO_TAB);
         }
 
         if (mSite == null) {
@@ -184,6 +190,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         handleSharedMedia();
 
         mTabLayout = findViewById(R.id.tab_layout);
+
         setupTabs();
 
         MediaFilter filter;
@@ -284,7 +291,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_images)); // FILTER_IMAGES
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_documents)); // FILTER_DOCUMENTS
             mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_videos)); // FILTER_VIDEOS
-            mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio)); // FILTER_AUDIO
+            if (mShowAudioTab) {
+                mTabLayout.addTab(mTabLayout.newTab().setText(R.string.media_audio)); // FILTER_AUDIO
+            }
 
             mTabLayout.clearOnTabSelectedListeners();
             mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -404,6 +413,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         outState.putString(SAVED_QUERY, mQuery);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
+        outState.putBoolean(SHOW_AUDIO_TAB, mShowAudioTab);
         if (mMediaGridFragment != null) {
             outState.putSerializable(ARG_FILTER, mMediaGridFragment.getFilter());
         }
@@ -738,6 +748,19 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             updateMediaGridItem(event.media, event.isError());
         } else {
             reloadMediaGrid();
+        }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMediaListFetched(OnMediaListFetched event) {
+        if (event.isError()) {
+            return;
+        }
+        boolean hasAudio = mMediaStore.getSiteAudio(mSite).size() > 0;
+        if (mShowAudioTab != hasAudio) {
+            mShowAudioTab = hasAudio;
+            setupTabs();
         }
     }
 
