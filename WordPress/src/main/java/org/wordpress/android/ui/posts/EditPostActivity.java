@@ -1247,7 +1247,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
-                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED, getSite());
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
