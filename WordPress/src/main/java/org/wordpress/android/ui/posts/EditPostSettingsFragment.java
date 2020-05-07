@@ -522,6 +522,7 @@ public class EditPostSettingsFragment extends Fragment {
                     extras = data.getExtras();
                     if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
+                        PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_TAGS_ADDED);
                         updateTags(selectedTags);
                     }
                     break;

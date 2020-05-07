@@ -7,9 +7,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -20,6 +22,7 @@ private const val THROTTLE_DELAY = 500L
 class PrepublishingTagsViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val updatePostTagsUseCase: UpdatePostTagsUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
@@ -54,6 +57,7 @@ class PrepublishingTagsViewModel @Inject constructor(
         updateTagsJob?.cancel()
         updateTagsJob = launch(bgDispatcher) {
             delay(THROTTLE_DELAY)
+            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_ADDED)
             updatePostTagsUseCase.updateTags(selectedTags, editPostRepository)
         }
     }
