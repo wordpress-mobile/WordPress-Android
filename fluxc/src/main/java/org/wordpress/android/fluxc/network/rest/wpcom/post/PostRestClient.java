@@ -34,7 +34,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErro
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
-import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMetaData;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
@@ -52,8 +51,6 @@ import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
 import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -429,25 +426,6 @@ public class PostRestClient extends BaseWPComRestClient {
         if (from.getGeo() != null) {
             post.setLatitude(from.getGeo().latitude);
             post.setLongitude(from.getGeo().longitude);
-        } else {
-            List<PostMetaData> metaDataList = from.getMetadata();
-            if (metaDataList != null) {
-                for (PostMetaData metaData : metaDataList) {
-                    String key = metaData.getKey();
-                    if (key != null && metaData.getValue() != null) {
-                        try {
-                            if (key.equals("geo_longitude")) {
-                                post.setLongitude(Double.parseDouble(metaData.getValue()));
-                            }
-                            if (key.equals("geo_latitude")) {
-                                post.setLatitude(Double.parseDouble(metaData.getValue()));
-                            }
-                        } catch (NumberFormatException nfe) {
-                            AppLog.w(T.POSTS, "Geo location found in wrong format in the post metadata.");
-                        }
-                    }
-                }
-            }
         }
 
         if (from.getCategories() != null) {
