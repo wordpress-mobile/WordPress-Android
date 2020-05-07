@@ -515,6 +515,7 @@ public class EditPostSettingsFragment extends Fragment {
                     if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORY_IDS)) {
                         @SuppressWarnings("unchecked")
                         List<Long> categoryList = (ArrayList<Long>) extras.getSerializable(KEY_SELECTED_CATEGORY_IDS);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_CATEGORIES_ADDED);
                         updateCategories(categoryList);
                     }
                     break;

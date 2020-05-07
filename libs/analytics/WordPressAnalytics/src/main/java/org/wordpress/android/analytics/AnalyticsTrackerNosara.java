@@ -800,6 +800,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_post_updated";
             case EDITOR_SCHEDULED_POST:
                 return "editor_post_scheduled";
+            case EDITOR_POST_CATEGORIES_ADDED:
+                return "editor_post_categories_added";
             case EDITOR_TAPPED_BLOCKQUOTE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
