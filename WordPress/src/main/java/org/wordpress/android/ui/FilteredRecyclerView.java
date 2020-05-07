@@ -50,7 +50,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private Spinner mSpinner;
     private boolean mSelectingRememberedFilterOnCreate = false;
 
-    private boolean mUseTabsForFiltering = false;
+    private boolean mHideAppBarLayout = false;
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
@@ -96,7 +96,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     public void setCurrentFilter(FilterCriteria filter) {
         mCurrentFilter = filter;
 
-        if (!mUseTabsForFiltering) {
+        if (!mHideAppBarLayout) {
             int position = mSpinnerAdapter.getIndexOfCriteria(filter);
             if (position > -1 && position != mSpinner.getSelectedItemPosition()) {
                 mSpinner.setSelection(position);
@@ -156,8 +156,8 @@ public class FilteredRecyclerView extends RelativeLayout {
                 mSpinnerDropDownItemView = a.getResourceId(
                         R.styleable.FilteredRecyclerView_wpSpinnerDropDownItemView, 0);
 
-                mUseTabsForFiltering = a.getBoolean(
-                        R.styleable.FilteredRecyclerView_wpUseTabsForFiltering, false);
+                mHideAppBarLayout = a.getBoolean(
+                        R.styleable.FilteredRecyclerView_wpHideAppBarLayout, false);
             } finally {
                 a.recycle();
             }
@@ -223,12 +223,7 @@ public class FilteredRecyclerView extends RelativeLayout {
             mSpinner = findViewById(R.id.filter_spinner);
         }
 
-
-        if (mUseTabsForFiltering) {
-            mSpinner.setVisibility(View.GONE);
-        } else {
-            mSpinner.setVisibility(View.VISIBLE);
-        }
+        mAppBarLayout.setVisibility(mHideAppBarLayout ? View.GONE : View.VISIBLE);
     }
 
     private void setup(boolean refresh) {
@@ -261,7 +256,7 @@ public class FilteredRecyclerView extends RelativeLayout {
         }
 
         FilterCriteria selectedCriteria;
-        if (mUseTabsForFiltering) {
+        if (mHideAppBarLayout) {
             selectedCriteria = mFilterCriteriaOptions.get(position);
         } else {
             selectedCriteria = (FilterCriteria) mSpinnerAdapter.getItem(position);
