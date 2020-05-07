@@ -17,7 +17,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import javax.inject.Inject
 
-class ReaderFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderViewModel
 
