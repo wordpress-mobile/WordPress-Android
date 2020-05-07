@@ -1874,6 +1874,7 @@
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
+    <string name="my_site_bottom_sheet_add_story">Story</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
