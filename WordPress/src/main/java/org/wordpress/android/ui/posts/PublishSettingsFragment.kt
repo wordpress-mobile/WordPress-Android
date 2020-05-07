@@ -24,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -69,7 +70,7 @@ abstract class PublishSettingsFragment : Fragment() {
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
-                analyticsTrackerWrapper.trackPostSettings(Stat.EDITOR_POST_SCHEDULED)
+                trackPostScheduled()
             }
         })
         viewModel.onNotificationTime.observe(this, Observer {
@@ -157,6 +158,17 @@ abstract class PublishSettingsFragment : Fragment() {
         })
         viewModel.start(getPostRepository())
         return rootView
+    }
+
+    private fun trackPostScheduled() {
+        when (getPublishSettingsFragmentType()) {
+            EDIT_POST -> {
+                analyticsTrackerWrapper.trackPostSettings(Stat.EDITOR_POST_SCHEDULED)
+            }
+            PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> {
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_SCHEDULED)
+            }
+        }
     }
 
     private fun showPostDateSelectionDialog() {
