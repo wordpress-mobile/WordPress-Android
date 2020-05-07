@@ -14,12 +14,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.viewmodels.ReaderParentPostListViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import javax.inject.Inject
 
-class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ReaderParentPostListViewModel
+    private lateinit var viewModel: ReaderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,27 +33,27 @@ class ReaderParentPostListFragment : Fragment(R.layout.reader_parent_post_list_f
     }
 
     private fun initViewModel(view: View) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderParentPostListViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
         startObserving(view)
         viewModel.start()
     }
 
     private fun startObserving(view: View) {
-        viewModel.tabs.observe(viewLifecycleOwner, Observer { event ->
-            event?.let {
-                initViewPager(it, view)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiState?.let {
+                initViewPager(uiState, view)
             }
         })
     }
 
-    private fun initViewPager(tags: ReaderTagList, view: View) {
-        val adapter = TabsAdapter(this, tags)
+    private fun initViewPager(uiState: ReaderUiState, view: View) {
+        val adapter = TabsAdapter(this, uiState.readerTagList)
         val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
         viewPager.adapter = adapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tags[position].tagDisplayName // TODO should we use displayname or title?
+            tab.text = uiState.tabTitles[position]
         }.attach()
     }
 
