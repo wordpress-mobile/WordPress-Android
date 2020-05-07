@@ -963,22 +963,21 @@
     </style>
 
     <style name="LoginTheme.PromoTitle" parent="TextAppearance.MaterialComponents.Headline4">
-        <item name="fontFamily">serif</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:maxLines">2</item>
         <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMaxTextSize">@dimen/text_sz_extra_extra_large</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
         <item name="fixWidowWords">true</item>
+        <item name="fontFamily">serif</item>
     </style>
 
     <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
         <item name="android:maxLines">2</item>
         <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMaxTextSize">@dimen/text_sz_extra_large</item>
+        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
         <item name="fixWidowWords">true</item>
     </style>
 

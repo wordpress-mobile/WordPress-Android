@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/login_promo_footer_background_color" />
-
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/intros_pager"
         android:layout_width="match_parent"

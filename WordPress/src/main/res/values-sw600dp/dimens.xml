@@ -8,4 +8,20 @@
     <dimen name="media_settings_margin">@dimen/media_settings_margin_tablet</dimen>
 
     <dimen name="bottom_sheet_dialog_width">300dp</dimen>
+
+    <!-- login -->
+    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
+    <dimen name="prologue_intro_content_max_width">600dp</dimen>
+
+    <dimen name="prologue_logo_size">50dp</dimen>
+    <dimen name="prologue_logo_margin">16dp</dimen>
+
+    <dimen name="prologue_promo_title_size">60sp</dimen>
+    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_text_size">20sp</dimen>
+    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_illustration_min_height">96dp</dimen>
+    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
 </resources>
