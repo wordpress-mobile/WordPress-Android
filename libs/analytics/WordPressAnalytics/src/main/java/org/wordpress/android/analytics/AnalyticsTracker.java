@@ -161,6 +161,7 @@ public final class AnalyticsTracker {
         EDITOR_SESSION_TEMPLATE_PREVIEW,
         EDITOR_SESSION_END,
         EDITOR_PUBLISHED_POST,
+        EDITOR_POST_PUBLISH_TAPPED,
         EDITOR_SAVED_DRAFT,
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
