@@ -15,6 +15,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import javax.inject.Inject
 
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
@@ -38,21 +39,21 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     }
 
     private fun startObserving(view: View) {
-        viewModel.tabs.observe(viewLifecycleOwner, Observer { tagList ->
-            tagList?.let {
-                initViewPager(it, view)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiState?.let {
+                initViewPager(uiState, view)
             }
         })
     }
 
-    private fun initViewPager(tags: ReaderTagList, view: View) {
-        val adapter = TabsAdapter(this, tags)
+    private fun initViewPager(uiState: ReaderUiState, view: View) {
+        val adapter = TabsAdapter(this, uiState.readerTagList)
         val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
         viewPager.adapter = adapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tags[position].tagDisplayName // TODO should we use displayname or title?
+            tab.text = uiState.tabTitles[position]
         }.attach()
     }
 

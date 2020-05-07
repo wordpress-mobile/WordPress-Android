@@ -16,8 +16,8 @@ class ReaderViewModel @Inject constructor(
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var started: Boolean = false
-    private val _tabs = MutableLiveData<ReaderTagList>()
-    val tabs: LiveData<ReaderTagList> = _tabs
+    private val _uiState = MutableLiveData<ReaderUiState>()
+    val uiState: LiveData<ReaderUiState> = _uiState
 
     fun start() {
         if (started) return
@@ -27,7 +27,13 @@ class ReaderViewModel @Inject constructor(
 
     private fun loadTabs() {
         launch {
-            _tabs.value = loadReaderTabsUseCase.loadTabs()
+            val tagList = loadReaderTabsUseCase.loadTabs()
+            _uiState.value = ReaderUiState(
+                    tagList.map { it.tagDisplayName }, // TODO should we use displayname or title?
+                    tagList
+            )
         }
     }
+
+    data class ReaderUiState(val tabTitles: List<String>, val readerTagList: ReaderTagList)
 }
