@@ -221,19 +221,11 @@ class WPMainNavigationView @JvmOverloads constructor(
         return getContentDescriptionForPosition(getPosition(pageType))
     }
 
-    private fun getTagForPosition(position: Int): String {
-        return when (getPageTypeOrNull(position)) {
-            MY_SITE -> TAG_MY_SITE
-            READER -> TAG_READER
-            else -> TAG_NOTIFS
-        }
-    }
-
     private fun getTagForPageType(pageType: PageType): String {
         return when (pageType) {
             MY_SITE -> TAG_MY_SITE
             READER -> TAG_READER
-            else -> TAG_NOTIFS
+            NOTIFS -> TAG_NOTIFS
         }
     }
 
@@ -321,7 +313,7 @@ class WPMainNavigationView @JvmOverloads constructor(
                 return mFragments[pageType]
             }
 
-            val fragment = fragmentManager.findFragmentByTag(getTagForPosition(position))
+            val fragment = fragmentManager.findFragmentByTag(getTagForPageType(pageType))
             return if (fragment != null) {
                 mFragments[pageType] = fragment
                 fragment
