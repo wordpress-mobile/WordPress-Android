@@ -12,11 +12,17 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
-class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: AppPrefsWrapper) : ViewModel() {
+class WPMainActivityViewModel @Inject constructor(
+    private val featureAnnouncementProvider: FeatureAnnouncementProvider,
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
+) : ViewModel() {
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
@@ -34,6 +40,9 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     private val _startLoginFlow = MutableLiveData<Event<Boolean>>()
     val startLoginFlow: LiveData<Event<Boolean>> = _startLoginFlow
 
+    private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
+    val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+
     fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
         isStarted = true
@@ -41,29 +50,39 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
         loadMainActions()
+
+        if (buildConfigWrapper.isFeatureAnnouncementEnabled()) {
+            checkForFeatureAnnouncements()
+        }
     }
 
     private fun loadMainActions() {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(CreateAction(
-                actionType = NO_ACTION,
-                iconRes = 0,
-                labelRes = R.string.my_site_bottom_sheet_title,
-                onClickAction = null
-        ))
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_POST,
-                iconRes = R.drawable.ic_posts_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_post,
-                onClickAction = ::onCreateActionClicked
-        ))
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_PAGE,
-                iconRes = R.drawable.ic_pages_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_page,
-                onClickAction = ::onCreateActionClicked
-        ))
+        actionsList.add(
+                CreateAction(
+                        actionType = NO_ACTION,
+                        iconRes = 0,
+                        labelRes = R.string.my_site_bottom_sheet_title,
+                        onClickAction = null
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_POST,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
+                        onClickAction = ::onCreateActionClicked
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_PAGE,
+                        iconRes = R.drawable.ic_pages_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_page,
+                        onClickAction = ::onCreateActionClicked
+                )
+        )
 
         _mainActions.postValue(actionsList)
     }
@@ -130,9 +149,9 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
 
     private fun setMainFabUiState(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         val newState = MainFabUiState(
-                        isFabVisible = isFabVisible,
-                        isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
-                        CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
+                isFabVisible = isFabVisible,
+                isFabTooltipVisible = if (appPrefsWrapper.isMainFabTooltipDisabled()) false else isFabVisible,
+                CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
         )
 
         _fabUiState.value = newState
@@ -143,5 +162,31 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
             R.string.create_post_page_fab_tooltip
         else
             R.string.create_post_page_fab_tooltip_contributors
+    }
+
+    private fun checkForFeatureAnnouncements() {
+        val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+        val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+
+        // only proceed to feature announcement logic if we are upgrading the app
+        if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+            if (canShowFeatureAnnouncement()) {
+                appPrefsWrapper.featureAnnouncementShownVersion =
+                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+                _onFeatureAnnouncementRequested.call()
+            }
+//          else {
+//              // request feature announcement from endpoint to be used on next app start
+//          }
+        } else {
+            appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+        }
+    }
+
+    private fun canShowFeatureAnnouncement(): Boolean {
+        return featureAnnouncementProvider.isFeatureAnnouncementAvailable() &&
+                appPrefsWrapper.featureAnnouncementShownVersion <
+                featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
     }
 }
