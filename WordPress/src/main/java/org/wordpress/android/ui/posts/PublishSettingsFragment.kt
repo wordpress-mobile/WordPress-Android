@@ -21,15 +21,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 abstract class PublishSettingsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     lateinit var viewModel: PublishSettingsViewModel
 
     @LayoutRes protected abstract fun getContentLayout(): Int
@@ -66,6 +69,7 @@ abstract class PublishSettingsFragment : Fragment() {
         viewModel.onPublishedDateChanged.observe(this, Observer {
             it?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
+                analyticsTrackerWrapper.trackPostSettings(Stat.EDITOR_POST_SCHEDULED)
             }
         })
         viewModel.onNotificationTime.observe(this, Observer {
