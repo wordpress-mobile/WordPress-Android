@@ -804,6 +804,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_post_categories_added";
             case EDITOR_POST_FORMAT_CHANGED:
                 return "editor_post_format_changed";
+            case EDITOR_POST_SLUG_CHANGED:
+                return "editor_post_slug_changed";
             case EDITOR_TAPPED_BLOCKQUOTE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
