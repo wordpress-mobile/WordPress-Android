@@ -26,7 +26,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        viewModel = PrepublishingTagsViewModel(mock(), updatePostTagsUseCase, TEST_DISPATCHER)
+        viewModel = PrepublishingTagsViewModel(mock(), updatePostTagsUseCase, mock(), TEST_DISPATCHER)
     }
 
     @Test

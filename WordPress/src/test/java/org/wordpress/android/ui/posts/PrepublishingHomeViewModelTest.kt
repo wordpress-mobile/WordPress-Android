@@ -36,7 +36,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, getPostVisibilityUseCase, postSettingsUtils)
+        viewModel = PrepublishingHomeViewModel(getPostTagsUseCase, getPostVisibilityUseCase, postSettingsUtils, mock())
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(PUBLIC)
