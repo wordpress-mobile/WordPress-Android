@@ -2,6 +2,7 @@ package org.wordpress.android.e2e.pages;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 
 import org.wordpress.android.R;
 
@@ -9,6 +10,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -33,7 +35,7 @@ public class MePage {
         // Using the settings button as a marker for successfully navigating to the page
         while (!isElementDisplayed(appSettings)) {
             clickOn(R.id.nav_sites);
-            clickOn(R.id.me_item);
+            clickOn(onView(allOf(withId(R.id.me_item), withEffectiveVisibility(Visibility.VISIBLE))));
         }
 
         if (!isSelfHosted()) {
