@@ -3,7 +3,7 @@
 # These are the default Gradle properties for WordPress-Android
 # Feel free to tweak them for your machine (e.g. change -Xmx value below)
 org.gradle.jvmargs=-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError
-org.gradle.parallel=false
+org.gradle.parallel=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
 
