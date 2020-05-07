@@ -13,6 +13,8 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_MY_SITE("post-from-my-site"),
     // page created from bottom sheet in my site screen
     PAGE_FROM_MY_SITE("page-from-my-site"),
+    // story created from bottom sheet in my site screen
+    STORY_FROM_MY_SITE("story-from-my-site"),
     // post created from stats empty view when no stats/post available yet
     POST_FROM_STATS("post-from-stats"),
     // post created from notifications unread page when empty
