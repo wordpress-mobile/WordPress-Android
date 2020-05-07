@@ -104,6 +104,7 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     }
 
     fun onPostPasswordChanged(password: String) {
+        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PASSWORD_CHANGED)
         updatePostPasswordUseCase.updatePassword(password, editPostRepository, ::updateUiState)
     }
 

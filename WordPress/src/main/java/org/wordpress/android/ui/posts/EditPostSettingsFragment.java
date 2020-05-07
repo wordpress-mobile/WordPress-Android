@@ -652,6 +652,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        PostAnalyticsUtilsKt
+                                .trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_PASSWORD_CHANGED);
                         updatePassword(input);
                     }
                 });
