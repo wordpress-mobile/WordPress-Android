@@ -38,8 +38,8 @@ class ReaderFragment : Fragment(R.layout.reader_parent_post_list_fragment) {
     }
 
     private fun startObserving(view: View) {
-        viewModel.tabs.observe(viewLifecycleOwner, Observer { event ->
-            event?.let {
+        viewModel.tabs.observe(viewLifecycleOwner, Observer { tagList ->
+            tagList?.let {
                 initViewPager(it, view)
             }
         })
