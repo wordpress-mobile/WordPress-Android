@@ -3,6 +3,7 @@ package org.wordpress.android.viewmodel.whatsnew
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -91,8 +92,8 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     fun `pressing close button closes the dialog`() {
         viewModel.onCloseDialogButtonPressed()
         verify(onDialogClosedObserver).onChanged(anyOrNull())
-        verify(analyticsTrackerWrapper).track(
-                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
+        verify(analyticsTrackerWrapper).track(eq(
+                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED),
                 any<Map<String, *>>()
         )
     }
