@@ -542,6 +542,7 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_EXCERPT_CHANGED);
                         updateExcerpt(input);
                     }
                 });
