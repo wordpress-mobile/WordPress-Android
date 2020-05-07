@@ -77,7 +77,7 @@ jobs:
           name: Test WordPress
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 ./gradlew testVanillaRelease --stacktrace --no-daemon -Dorg.gradle.jvmargs="-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError"
+          command: SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 ./gradlew testVanillaRelease --stacktrace --no-daemon
       - run:
           name: Test WordPressUtils
           environment:
