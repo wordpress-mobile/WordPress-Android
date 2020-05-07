@@ -280,15 +280,12 @@ class WPMainNavigationView @JvmOverloads constructor(
     }
 
     private inner class NavAdapter {
-        private val mFragments = mutableMapOf<PageType, Fragment>()
-
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
                 READER -> ReaderPostListFragment.newInstance(true)
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
-            mFragments[pageType] = fragment
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
                     .hide(fragment)
@@ -298,9 +295,8 @@ class WPMainNavigationView @JvmOverloads constructor(
 
         internal fun init() {
             for (pageType in pages()) {
-                if (mFragments[pageType] == null) {
-                    mFragments[pageType] = fragmentManager.findFragmentByTag(getTagForPageType(pageType))
-                            ?: createFragment(pageType)
+                if (fragmentManager.findFragmentByTag(getTagForPageType(pageType)) == null) {
+                    createFragment(pageType)
                 }
             }
         }
@@ -309,17 +305,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             val pageType = pages().getOrElse(position) {
                 return null
             }
-            if (mFragments[pageType] != null) {
-                return mFragments[pageType]
-            }
-
-            val fragment = fragmentManager.findFragmentByTag(getTagForPageType(pageType))
-            return if (fragment != null) {
-                mFragments[pageType] = fragment
-                fragment
-            } else {
-                createFragment(pageType)
-            }
+            return fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
         }
     }
 
