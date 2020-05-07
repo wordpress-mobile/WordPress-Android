@@ -1063,6 +1063,7 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         AppLog.v(T.POSTS, "Post formats successfully fetched!");
+        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
         updatePostFormatKeysAndNames();
     }
 

@@ -168,6 +168,7 @@ public final class AnalyticsTracker {
         EDITOR_POST_PUBLISH_NOW_TAPPED,
         EDITOR_POST_PASSWORD_CHANGED,
         EDITOR_POST_CATEGORIES_ADDED,
+        EDITOR_POST_FORMAT_CHANGED,
         EDITOR_SAVED_DRAFT,
         EDITOR_EDITED_IMAGE, // Visual editor only
         EDITOR_UPLOAD_MEDIA_FAILED, // Visual editor only
