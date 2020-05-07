@@ -11,6 +11,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+            android:id="@+id/pullToRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/pagesPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
         <FrameLayout
             android:id="@+id/searchFrame"
             android:layout_width="match_parent"
@@ -86,20 +100,6 @@
             android:src="@drawable/ic_create_white_24dp"
             android:visibility="gone"
             app:borderWidth="0dp" />
-
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/pullToRefresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/toolbar"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/pagesPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
