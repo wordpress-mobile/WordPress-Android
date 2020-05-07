@@ -30,6 +30,14 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getNewsCardShownVersion()
         set(version) = AppPrefs.setNewsCardShownVersion(version)
 
+    var featureAnnouncementShownVersion: Int
+        get() = AppPrefs.getFeatureAnnouncementShownVersion()
+        set(version) = AppPrefs.setFeatureAnnouncementShownVersion(version)
+
+    var lastFeatureAnnouncementAppVersionCode: Int
+        get() = AppPrefs.getLastFeatureAnnouncementAppVersionCode()
+        set(version) = AppPrefs.setLastFeatureAnnouncementAppVersionCode(version)
+
     var avatarVersion: Int
         get() = AppPrefs.getAvatarVersion()
         set(version) = AppPrefs.setAvatarVersion(version)
@@ -123,6 +131,8 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getLastReaderKnownUserId() = AppPrefs.getLastReaderKnownUserId()
     fun setLastReaderKnownUserId(userId: Long) = AppPrefs.setLastReaderKnownUserId(userId)
+
+    fun getLastAppVersionCode() = AppPrefs.getLastAppVersionCode()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

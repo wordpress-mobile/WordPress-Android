@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class FeatureAnnouncementProvider @Inject constructor() {
     private val localFeatureAnnouncement = FeatureAnnouncement(
-            "14.7", "https://wordpress.com/blog/2020/04/20/earth-day-live/", listOf(
+            "14.7", 857, "https://wordpress.com/blog/2020/04/20/earth-day-live/", listOf(
             FeatureAnnouncementItem(
                     "Super Publishing",
                     "Publish amazing articles using the power of your mind! Concentrate" +
@@ -27,7 +27,11 @@ class FeatureAnnouncementProvider @Inject constructor() {
     )
     )
 
-    fun getLatestFeatureAnnouncement(): FeatureAnnouncement {
+    fun getLatestFeatureAnnouncement(): FeatureAnnouncement? {
         return localFeatureAnnouncement
+    }
+
+    fun isFeatureAnnouncementAvailable(): Boolean {
+        return getLatestFeatureAnnouncement() != null
     }
 }
