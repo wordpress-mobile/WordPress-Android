@@ -1100,7 +1100,6 @@ public class ReaderPostListFragment extends Fragment
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
                 mSettingsMenuItem.setVisible(false);
-                mRecyclerView.setTabLayoutVisibility(false);
                 mViewModel.changeSubfiltersVisibility(false);
                 if (mIsTopLevel) {
                     mViewModel.onSearchMenuCollapse(false);
@@ -1143,7 +1142,6 @@ public class ReaderPostListFragment extends Fragment
                         resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
                     }
 
-                    mRecyclerView.setTabLayoutVisibility(true);
                     mViewModel.changeSubfiltersVisibility(isCurrentTagManagedInFollowingTab());
                     mViewModel.onSearchMenuCollapse(true);
                 } else {
