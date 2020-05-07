@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,6 +10,82 @@
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/searchFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:elevation="@dimen/appbar_elevation"
+            android:fitsSystemWindows="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="0dp"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+            <RelativeLayout
+                android:id="@+id/tabContainer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/tab_height"
+                android:elevation="0dp">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignStart="@+id/pages_tab_layout_fading_edge"
+                    android:layout_gravity="start"
+                    android:clipToPadding="false"
+                    android:elevation="0dp"
+                    app:tabGravity="fill"
+                    app:tabMode="scrollable"
+                    tools:paddingEnd="0dp"
+                    tools:paddingStart="@dimen/page_list_tab_layout_fading_edge_width" />
+
+                <View
+                    android:id="@+id/pages_tab_layout_fading_edge"
+                    android:layout_width="@dimen/page_list_tab_layout_fading_edge_width"
+                    android:layout_height="match_parent"
+                    android:layout_alignEnd="@+id/pages_author_selection"
+                    android:elevation="0dp" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/pages_author_selection"
+                    android:layout_width="@dimen/author_spinner_width"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/pages_list_author"
+                    android:elevation="0dp"
+                    android:paddingEnd="@dimen/margin_small"
+                    android:paddingStart="0dp" />
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/newPageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:contentDescription="@string/fab_create_desc"
+            android:src="@drawable/ic_create_white_24dp"
+            android:visibility="gone"
+            app:borderWidth="0dp" />
 
         <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
             android:id="@+id/pullToRefresh"
@@ -23,52 +100,6 @@
                 android:layout_height="match_parent" />
 
         </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-
-        <FrameLayout
-            android:id="@+id/searchFrame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:fitsSystemWindows="true">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="start"
-                app:tabContentStart="72dp"
-                app:tabGravity="fill"
-                app:tabMode="scrollable" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/newPageButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:contentDescription="@string/fab_create_desc"
-            android:src="@drawable/ic_create_white_24dp"
-            android:visibility="gone"
-            app:borderWidth="0dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

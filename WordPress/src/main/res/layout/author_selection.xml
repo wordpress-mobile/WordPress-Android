@@ -6,12 +6,12 @@
              android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/post_list_author_selection_image"
-        android:layout_width="@dimen/posts_list_spinner_avatar_size"
-        android:layout_height="@dimen/posts_list_spinner_avatar_size"
+        android:id="@+id/author_selection_image"
+        android:layout_width="@dimen/author_spinner_avatar_size"
+        android:layout_height="@dimen/author_spinner_avatar_size"
         android:layout_gravity="center"
         android:background="@drawable/bg_oval_transparent_stroke_white"
-        android:padding="@dimen/posts_list_spinner_avatar_padding"
+        android:padding="@dimen/author_spinner_avatar_padding"
         tools:src="@drawable/bg_oval_neutral_30_multiple_users_white_40dp"/>
 </FrameLayout>
 
