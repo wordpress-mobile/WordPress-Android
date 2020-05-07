@@ -500,6 +500,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
     private boolean handleFeatureAnnouncementClick() {
         if (getActivity() instanceof AppCompatActivity) {
+            AnalyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS);
             new FeatureAnnouncementDialogFragment()
                     .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
                             FeatureAnnouncementDialogFragment.TAG);

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -174,6 +177,7 @@ class WPMainActivityViewModel @Inject constructor(
                 appPrefsWrapper.featureAnnouncementShownVersion =
                         featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
                 appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+                analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                 _onFeatureAnnouncementRequested.call()
             }
 //          else {
