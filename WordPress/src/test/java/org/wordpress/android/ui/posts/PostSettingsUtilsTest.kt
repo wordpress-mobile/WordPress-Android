@@ -96,6 +96,20 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `returns "scheduled for" for private post that is local and scheduled`() {
+        postModel.setStatus(PostStatus.PRIVATE.toString())
+        postModel.setIsLocalDraft(true)
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.MINUTE, 100)
+        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
+
+        assertThat(publishedDate).isEqualTo("Schedule for 5. 5. 2019")
+    }
+
+    @Test
     fun `returns "backdated for" for local draft when publish date in the past`() {
         postModel.setIsLocalDraft(true)
         postModel.setDateCreated(dateCreated)
