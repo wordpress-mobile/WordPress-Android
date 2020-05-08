@@ -339,6 +339,14 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         }
     }
 
+    private void refreshTabs() {
+        boolean hasAudio = mMediaStore.getSiteAudio(mSite).size() > 0;
+        if (mShowAudioTab != hasAudio) {
+            mShowAudioTab = hasAudio;
+            setupTabs();
+        }
+    }
+
     private int getPositionForFilter(@NonNull MediaFilter filter) {
         return filter.getValue();
     }
@@ -471,6 +479,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.MEDIA_SETTINGS:
                 if (resultCode == MediaSettingsActivity.RESULT_MEDIA_DELETED) {
                     reloadMediaGrid();
+                    refreshTabs();
                 }
                 break;
             case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
@@ -757,11 +766,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         if (event.isError()) {
             return;
         }
-        boolean hasAudio = mMediaStore.getSiteAudio(mSite).size() > 0;
-        if (mShowAudioTab != hasAudio) {
-            mShowAudioTab = hasAudio;
-            setupTabs();
-        }
+        refreshTabs();
     }
 
     @Override
