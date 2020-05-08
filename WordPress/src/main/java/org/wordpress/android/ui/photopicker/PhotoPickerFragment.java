@@ -239,7 +239,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private boolean canShowInsertPreviewBottomBar() {
-        return mBrowserType.isGutenbergPicker();
+        return mBrowserType.isGutenbergPicker() && !mBrowserType.isVideoPicker();
     }
 
     @Override
