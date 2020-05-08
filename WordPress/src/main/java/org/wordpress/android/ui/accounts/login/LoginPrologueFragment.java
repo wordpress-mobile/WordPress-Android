@@ -56,24 +56,6 @@ public class LoginPrologueFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
-                switch (LoginProloguePagerAdapter.getTag(position)) {
-                    case LoginProloguePagerAdapter.LOGIN_PROLOGUE_POST_TAG:
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_POST);
-                        break;
-                    case LoginProloguePagerAdapter.LOGIN_PROLOGUE_STATS_TAG:
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_STATS);
-                        break;
-                    case LoginProloguePagerAdapter.LOGIN_PROLOGUE_READER_TAG:
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_READER);
-                        break;
-                    case LoginProloguePagerAdapter.LOGIN_PROLOGUE_NOTIFICATIONS_TAG:
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_NOTIFICATIONS);
-                        break;
-                    case LoginProloguePagerAdapter.LOGIN_PROLOGUE_JETPACK_TAG:
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED_JETPACK);
-                        break;
-                }
-
                 AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED);
             }
 
