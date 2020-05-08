@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -16,21 +14,16 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.news.NewsManager
-import org.wordpress.android.ui.news.NewsTracker
-import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
-import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.reblog.NoSite
 import org.wordpress.android.ui.reader.reblog.PostEditor
-import org.wordpress.android.ui.reader.reblog.Unknown
 import org.wordpress.android.ui.reader.reblog.ReblogState
 import org.wordpress.android.ui.reader.reblog.SitePicker
+import org.wordpress.android.ui.reader.reblog.Unknown
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
@@ -54,9 +47,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderPostListViewModel @Inject constructor(
-    private val newsManager: NewsManager,
-    private val newsTracker: NewsTracker,
-    private val newsTrackerHelper: NewsTrackerHelper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -66,11 +56,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val siteStore: SiteStore
 ) : ScopedViewModel(bgDispatcher) {
-    private val newsItemSource = newsManager.newsItemSource()
-    private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
-
-    private val onTagChanged: Observer<NewsItem?> = Observer { _newsItemSourceMediator.value = it }
-
     private val _subFilters = MutableLiveData<List<SubfilterListItem>>()
     val subFilters: LiveData<List<SubfilterListItem>> = _subFilters
 
@@ -101,10 +86,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val _reblogState = MutableLiveData<Event<ReblogState>>()
     val reblogState: LiveData<Event<ReblogState>> = _reblogState
 
-    /**
-     * First tag for which the card was shown.
-     */
-    private var initialTag: ReaderTag? = null
     private var isStarted = false
     private var isFirstLoad = true
 
@@ -122,9 +103,6 @@ class ReaderPostListViewModel @Inject constructor(
         eventBusWrapper.register(this)
 
         tag?.let {
-            onTagChanged(tag)
-            newsManager.pull()
-
             updateSubfilter(getCurrentSubfilterValue())
             changeSubfiltersVisibility(shouldShowSubfilter)
         }
@@ -133,44 +111,6 @@ class ReaderPostListViewModel @Inject constructor(
         _filtersMatchCount.value = hashMapOf()
 
         isStarted = true
-    }
-
-    fun getNewsDataSource(): LiveData<NewsItem> {
-        return _newsItemSourceMediator
-    }
-
-    fun onTagChanged(tag: ReaderTag?) {
-        newsTrackerHelper.reset()
-        tag?.let { newTag ->
-            // show the card only when the initial tag is selected in the filter
-            if (initialTag == null || newTag == initialTag) {
-                _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
-            } else {
-                _newsItemSourceMediator.removeSource(newsItemSource)
-                _newsItemSourceMediator.value = null
-            }
-        }
-    }
-
-    fun onNewsCardDismissed(item: NewsItem) {
-        newsTracker.trackNewsCardDismissed(READER, item.version)
-        newsManager.dismiss(item)
-    }
-
-    fun onNewsCardShown(
-        item: NewsItem,
-        currentTag: ReaderTag
-    ) {
-        initialTag = currentTag
-        if (newsTrackerHelper.shouldTrackNewsCardShown(item.version)) {
-            newsTracker.trackNewsCardShown(READER, item.version)
-            newsTrackerHelper.itemTracked(item.version)
-        }
-        newsManager.cardShown(item)
-    }
-
-    fun onNewsCardExtendedInfoRequested(item: NewsItem) {
-        newsTracker.trackNewsCardExtendedInfoRequested(READER, item.version)
     }
 
     fun loadSubFilters() {
@@ -490,6 +430,5 @@ class ReaderPostListViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         eventBusWrapper.unregister(this)
-        newsManager.stop()
     }
 }

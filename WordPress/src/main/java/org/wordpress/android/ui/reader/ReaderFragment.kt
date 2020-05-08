@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -13,7 +14,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import javax.inject.Inject
@@ -21,6 +24,7 @@ import javax.inject.Inject
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderViewModel
+    private lateinit var newsCardViewModel: NewsCardViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     private fun initViewModel(view: View) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
+        newsCardViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(NewsCardViewModel::class.java)
         startObserving(view)
     }
 
@@ -53,6 +59,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 initViewPager(uiState, view)
             }
         })
+
+        newsCardViewModel.openUrlEvent.observe(viewLifecycleOwner, Observer {
+            it?.getContentIfNotHandled()?.let { url ->
+                val activity: Activity? = activity
+                if (activity != null) {
+                    WPWebViewActivity.openURL(activity, url)
+                }
+            }
+        })
     }
 
     private fun initViewPager(uiState: ReaderUiState, view: View) {
@@ -64,6 +79,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = uiState.tabTitles[position]
         }.attach()
+
+        val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                newsCardViewModel.onTagChanged(uiState.readerTagList[position])
+            }
+        }
+        viewPager.registerOnPageChangeCallback(pageChangeCallback)
     }
 
     private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
