@@ -25,7 +25,7 @@ import javax.inject.Inject
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val postSettingsUtils: PostSettingsUtils,
     private val getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
 ) : ViewModel() {
