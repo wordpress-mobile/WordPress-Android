@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/reader_subfilter_component_height"
-    android:background="@android:color/white"
-    android:elevation="@dimen/appbar_elevation">
+    android:background="@android:color/white">
 
     <View
         android:id="@+id/filter_selection"
