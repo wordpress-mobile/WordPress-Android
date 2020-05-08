@@ -3,8 +3,8 @@ package org.wordpress.android.ui.whatsnew
 data class FeatureAnnouncements(val announcements: List<FeatureAnnouncement>)
 
 data class FeatureAnnouncement(
-    val version: String,
-    val versionCode: Int,
+    val appVersionName: String,
+    val announcementVersion: Int,
     val detailsUrl: String,
     val features: List<FeatureAnnouncementItem>
 )
