@@ -22,18 +22,20 @@ class PostSettingsUtils
         if (!TextUtils.isEmpty(dateCreated)) {
             val formattedDate = dateUtils.formatDateTime(dateCreated)
 
-            if (status == PostStatus.SCHEDULED) {
-                labelToUse = resourceProvider.getString(R.string.scheduled_for, formattedDate)
-            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
-                labelToUse = resourceProvider.getString(R.string.published_on, formattedDate)
-            } else if (postModel.isLocalDraft) {
+            if (postModel.isLocalDraft) {
                 if (PostUtils.isPublishDateInThePast(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.backdated_for, formattedDate)
                 } else if (PostUtils.shouldPublishImmediately(status, postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.immediately)
+                } else if (PostUtils.isPublishDateInTheFuture(postModel.dateCreated)) {
+                    labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
                 } else {
                     labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
                 }
+            } else if (status == PostStatus.SCHEDULED) {
+                labelToUse = resourceProvider.getString(R.string.scheduled_for, formattedDate)
+            } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
+                labelToUse = resourceProvider.getString(R.string.published_on, formattedDate)
             } else if (PostUtils.isPublishDateInTheFuture(postModel.dateCreated)) {
                 labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
             } else {
