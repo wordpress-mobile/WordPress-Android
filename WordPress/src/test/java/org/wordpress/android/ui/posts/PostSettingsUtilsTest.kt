@@ -131,6 +131,17 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `returns "immediately" for local private post that should publish immediately`() {
+        postModel.setIsLocalDraft(true)
+        postModel.setStatus(PostStatus.PRIVATE.toString())
+        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(Date()))
+
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
+
+        assertThat(publishedDate).isEqualTo("Immediately")
+    }
+
+    @Test
     fun `returns "published on" for local draft when date is not set`() {
         postModel.setIsLocalDraft(true)
         val calendar = Calendar.getInstance()
