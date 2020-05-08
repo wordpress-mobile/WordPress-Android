@@ -25,7 +25,6 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.models.news.NewsItem
-import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.reblog.NoSite
