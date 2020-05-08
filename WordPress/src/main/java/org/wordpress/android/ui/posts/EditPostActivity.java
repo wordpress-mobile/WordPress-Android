@@ -130,6 +130,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -218,7 +219,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
-        EditPostSettingsCallback {
+        EditPostSettingsCallback,
+        PrepublishingBottomSheetListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -1808,6 +1810,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     PrepublishingBottomSheetFragment.newInstance(getSite());
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
+    }
+
+    @Override public void onPublishButtonClicked() {
+        uploadPost(true);
     }
 
     private void uploadPost(final boolean publishPost) {
