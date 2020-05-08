@@ -78,7 +78,7 @@ data class PostWPComRestResponse(
     data class PostMetaData(
         @SerializedName("id") var id: Long = 0,
         @SerializedName("key") var key: String? = null,
-        @SerializedName("value") var value: String? = null
+        @SerializedName("value") var value: Any? = null
     )
 
     fun getPostAutoSave(): PostAutoSave? {
