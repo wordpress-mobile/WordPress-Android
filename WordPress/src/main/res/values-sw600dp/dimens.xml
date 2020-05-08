@@ -22,6 +22,5 @@
     <dimen name="prologue_promo_text_size">20sp</dimen>
     <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
 
-    <dimen name="prologue_promo_illustration_min_height">96dp</dimen>
     <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
 </resources>
