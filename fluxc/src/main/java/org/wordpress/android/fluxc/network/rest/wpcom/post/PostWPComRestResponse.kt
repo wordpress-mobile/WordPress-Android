@@ -125,10 +125,8 @@ data class PostWPComRestResponse(
                                 when (ex) {
                                     is JsonSyntaxException,
                                     is JsonIOException -> {
-                                        AppLog.w(POSTS, "Error in post metadata json conversion.")
+                                        AppLog.w(POSTS, "Error in post metadata json conversion: " + ex.message)
                                         jsonReader.skipValue()
-                                    }
-                                    else -> {
                                     }
                                 }
                             }
