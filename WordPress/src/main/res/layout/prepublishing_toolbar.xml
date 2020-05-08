@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize">
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/back_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/prepublishing_nudges_back_button"
-        android:src="@drawable/ic_arrow_left_white_24dp"
-        android:tint="@color/prepublishing_toolbar_icon_color"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/toolbar_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
 
-    <ImageView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/prepublishing_nudges_back_button"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:tint="@color/prepublishing_toolbar_icon_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/close_button"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/prepublishing_nudges_back_button"
-        android:src="@drawable/ic_close_white_24dp"
-        android:tint="@color/prepublishing_toolbar_icon_color"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/toolbar_title"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/prepublishing_nudges_back_button"
+            android:src="@drawable/ic_close_white_24dp"
+            android:tint="@color/prepublishing_toolbar_icon_color" />
+    </RelativeLayout>
 
     <View
         android:id="@+id/bottom_sheet_handle"
@@ -39,9 +50,9 @@
         android:layout_marginTop="@dimen/bottom_sheet_handle_margin_top"
         android:alpha="@dimen/disabled_alpha"
         android:background="@drawable/bg_bottom_sheet_handle"
+        app:layout_constraintBottom_toTopOf="@id/toolbar_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -58,11 +69,11 @@
         android:id="@+id/toolbar_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:gravity="center_horizontal"
-        android:paddingTop="@dimen/margin_small"
+        android:gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/back_button"
         app:layout_constraintRight_toLeftOf="@id/close_button"
-        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle" />
+        app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle"
+        tools:text="Publish" />
 </androidx.constraintlayout.widget.ConstraintLayout>
