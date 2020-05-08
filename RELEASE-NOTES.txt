@@ -15,8 +15,6 @@
 * Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
 * Added user Gravatar to the Me menu in My Site.
 * Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area. 
-
-* @-mention suggestions are now presented immediately after typing "@"
  
 14.6
 -----
