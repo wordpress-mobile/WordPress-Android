@@ -29,23 +29,23 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             FeatureAnnouncementItem(
                     "Test Feature 1",
                     "Test Description 1",
-                    1
+                    "https://wordpress.org/icon1.png"
             ),
             FeatureAnnouncementItem(
                     "Test Feature 2",
                     "Test Description 1",
-                    2
+                    "https://wordpress.org/icon2.png"
             ),
             FeatureAnnouncementItem(
                     "Test Feature 3",
                     "Test Description 3",
-                    3
+                    "https://wordpress.org/icon3.png"
             )
     )
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
-            850,
+            1,
             "https://wordpress.org/",
             testFeatures
     )
