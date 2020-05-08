@@ -28,7 +28,7 @@ class ReaderViewModel @Inject constructor(
         launch {
             val tagList = loadReaderTabsUseCase.loadTabs()
             _uiState.value = ReaderUiState(
-                    tagList.map { it.tagDisplayName }, // TODO should we use displayname or title?
+                    tagList.map { it.tagTitle },
                     tagList
             )
             if (tagList.isNotEmpty()) {

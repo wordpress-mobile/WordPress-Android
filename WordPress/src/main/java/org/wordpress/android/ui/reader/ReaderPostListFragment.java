@@ -1019,14 +1019,11 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.setRefreshing(true);
         }
 
-        mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int elevatedCardColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(cardElevation);
-        mSubFilterComponent.setBackgroundColor(elevatedCardColor);
+
 
         if (mIsTopLevel) {
-            ((ViewGroup) rootView.findViewById(R.id.content_container)).addView(mSubFilterComponent);
-
+            mSubFilterComponent = inflater.inflate(R.layout.subfilter_component, rootView, false);
+            ((ViewGroup) rootView.findViewById(R.id.sub_filter_component_container)).addView(mSubFilterComponent);
             mSettingsButton = mSubFilterComponent.findViewById(R.id.filter_settings_button);
             mSettingsButton.setOnClickListener(v -> {
                 showSettings();
