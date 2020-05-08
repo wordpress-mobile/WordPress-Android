@@ -25,9 +25,9 @@ import javax.inject.Inject
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val postSettingsUtils: PostSettingsUtils,
-    private val getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
+    private val getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -73,7 +73,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
                 ),
-                PublishButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button)) {
+                PublishButtonUiState(UiStringRes(getPublishButtonLabelUseCase.getLabel(editPostRepository))) {
                     analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
                     _onPublishButtonClicked.postValue(Event(Unit))
                 }
