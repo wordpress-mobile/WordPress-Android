@@ -2070,10 +2070,10 @@ public class ReaderPostListFragment extends Fragment
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            mNewsCardViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
+            mNewsCardViewModel.getNewsDataSource(mCurrentTag).removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
-                mNewsCardViewModel.getNewsDataSource().observe(getViewLifecycleOwner(), mNewsItemObserver);
+                mNewsCardViewModel.getNewsDataSource(mCurrentTag).observe(getViewLifecycleOwner(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {

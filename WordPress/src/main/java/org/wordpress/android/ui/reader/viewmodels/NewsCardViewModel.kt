@@ -6,13 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.news.NewsItem
 import org.wordpress.android.ui.news.NewsManager
 import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener
+import org.wordpress.android.util.filter
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -39,8 +39,6 @@ class NewsCardViewModel @Inject constructor(
     private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
     private var started: Boolean = false
-    private val _uiState = MutableLiveData<ReaderUiState>()
-    val uiState: LiveData<ReaderUiState> = _uiState
 
     private val _openUrlEvent = MutableLiveData<Event<String>>()
     val openUrlEvent: LiveData<Event<String>> = _openUrlEvent
@@ -69,23 +67,18 @@ class NewsCardViewModel @Inject constructor(
     fun onTagChanged(tag: ReaderTag?) {
         selectedTag = tag
         newsTrackerHelper.reset()
-        tag?.let { newTag ->
-            // show the card only when the initial tag is selected in the filter
-            if (initialTag == null || newTag == initialTag) {
-                _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
-            } else {
-                _newsItemSourceMediator.removeSource(newsItemSource)
-                _newsItemSourceMediator.value = null
-            }
+        if (initialTag == null && tag != null) {
+            initialTag = tag
+            _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
         }
     }
 
-    fun getNewsDataSource(): LiveData<NewsItem> {
-        return _newsItemSourceMediator
+    fun getNewsDataSource(tag: ReaderTag?): LiveData<NewsItem> {
+        // show the card only when the initial tag is selected in the filter
+        return _newsItemSourceMediator.filter { tag == initialTag }
     }
 
     private fun onNewsCardShown(item: NewsItem) {
-        initialTag = selectedTag
         if (newsTrackerHelper.shouldTrackNewsCardShown(item.version)) {
             newsTracker.trackNewsCardShown(READER, item.version)
             newsTrackerHelper.itemTracked(item.version)
@@ -106,6 +99,4 @@ class NewsCardViewModel @Inject constructor(
         super.onCleared()
         newsManager.stop()
     }
-
-    data class ReaderUiState(val tabTitles: List<String>, val readerTagList: ReaderTagList)
 }
