@@ -1,6 +1,8 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.post
 
 import com.google.gson.Gson
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
 import com.google.gson.TypeAdapter
 import com.google.gson.TypeAdapterFactory
 import com.google.gson.annotations.JsonAdapter
@@ -12,6 +14,8 @@ import com.google.gson.stream.JsonToken.BEGIN_OBJECT
 import com.google.gson.stream.JsonWriter
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave
 import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResponse
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.POSTS
 import java.io.IOException
 
 data class PostWPComRestResponse(
@@ -103,13 +107,31 @@ data class PostWPComRestResponse(
         fun read(jsonReader: JsonReader): List<PostMetaData> {
             val metaDataList = arrayListOf<PostMetaData>()
 
+            // Noticed several metadata formats in the json response like
+            // {"metadata”:[{“id”:”5”,”key”:”geo_latitude”,”value”:”28.6139391”}]}
+            // {"metadata”:[false]}, {"metadata":false},
+            // {"metadata":[{"id":"15","key":"switch_like_status","value":[0]}]}
+            // Returning only a list of PostMetaData type or empty list for other formats not needed currently.
+
             when (jsonReader.peek()) {
                 BEGIN_ARRAY -> {
                     jsonReader.beginArray()
                     while (jsonReader.hasNext()) {
                         if (BEGIN_OBJECT == jsonReader.peek()) {
                             val type = object : TypeToken<PostMetaData>() {}.type
-                            metaDataList.add(gson.fromJson(jsonReader, type))
+                            try {
+                                metaDataList.add(gson.fromJson(jsonReader, type))
+                            } catch (ex: Exception) {
+                                when (ex) {
+                                    is JsonSyntaxException,
+                                    is JsonIOException -> {
+                                        AppLog.w(POSTS, "Error in post metadata json conversion.")
+                                        jsonReader.skipValue()
+                                    }
+                                    else -> {
+                                    }
+                                }
+                            }
                         } else {
                             jsonReader.skipValue()
                         }
