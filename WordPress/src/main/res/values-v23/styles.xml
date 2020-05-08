@@ -3,7 +3,7 @@
 
     <!-- Overload of Login Theme -->
     <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
