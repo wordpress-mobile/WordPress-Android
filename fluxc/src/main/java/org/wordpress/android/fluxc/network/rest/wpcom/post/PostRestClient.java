@@ -437,10 +437,16 @@ public class PostRestClient extends BaseWPComRestClient {
                     if (key != null && metaData.getValue() != null) {
                         try {
                             if (key.equals("geo_longitude")) {
-                                post.setLongitude(Double.parseDouble(metaData.getValue()));
+                                Object metaDataValue = metaData.getValue();
+                                if (metaDataValue instanceof String) {
+                                    post.setLongitude(Double.parseDouble(metaDataValue.toString()));
+                                }
                             }
                             if (key.equals("geo_latitude")) {
-                                post.setLatitude(Double.parseDouble(metaData.getValue()));
+                                Object metaDataValue = metaData.getValue();
+                                if (metaDataValue instanceof String) {
+                                    post.setLatitude(Double.parseDouble(metaDataValue.toString()));
+                                }
                             }
                         } catch (NumberFormatException nfe) {
                             AppLog.w(T.POSTS, "Geo location found in wrong format in the post metadata.");
