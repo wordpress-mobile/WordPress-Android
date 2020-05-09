@@ -1331,11 +1331,6 @@ Language: id
     <string name="open_mail">Buka email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
-    <string name="login_promo_text_jetpack">Kelola situs Anda yang didukung oleh Jetpack di mana saja — WordPress selalu ada di saku Anda.</string>
-    <string name="login_promo_text_notifications">Bawa pemberitahuan ke mana pun Anda pergi — lihat komentar dan suka seketika.</string>
-    <string name="login_promo_text_anytime">Dapatkan kabar terbaru dari situs favorit Anda dan bergabung dalam percakapan di mana pun, kapan pun.</string>
-    <string name="login_promo_text_realtime">Lihat pembaca dari seluruh dunia membaca dan berinteraksi dengan situs Anda, secara real-time.</string>
-    <string name="login_promo_text_onthego">Publikasikan dari taman. Tulis blog dari bus. Beri komentar dari kafe. WordPress ada di mana pun Anda berada.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
     <string name="image_optimization_promo_title">Aktifkan pengoptimalan gambar?</string>
     <string name="leave_off">Nonaktifkan</string>

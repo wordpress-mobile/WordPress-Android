@@ -1088,11 +1088,6 @@ Language: en_AU
     <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
     <string name="image_optimization_promo_title">Turn on image optimisation?</string>
     <string name="leave_off">Leave off</string>

@@ -1361,11 +1361,6 @@ Language: sq_AL
     <string name="open_mail">Hap postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
-    <string name="login_promo_text_jetpack">Administroni në lëvizje e sipër sajtin tuaj nën Jetpack — e keni WordPress-in në xhep.</string>
-    <string name="login_promo_text_notifications">Njoftimet tuaja udhëtojnë tok me ju — shihini komentet dhe pëlqimet sapo të bëhen.</string>
-    <string name="login_promo_text_anytime">Ndiqni sajtet tuaj të parapëlqyer dhe merrni pjesë në bisedë nga kudo, kurdo.</string>
-    <string name="login_promo_text_realtime">Shihni lexues nga anembanë bota të lexojnë dhe ndërveprojnë me sajtin tuaj — aty për aty.</string>
-    <string name="login_promo_text_onthego">Botoni që nga parku. Blogoni që nga autobusi. Komentoni që nga kafja. WordPress-i vete ku veni ju.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
     <string name="image_optimization_promo_title">Të aktivizohet optimizimi i figurave?</string>
     <string name="me_profile_photo">Foto Profili</string>

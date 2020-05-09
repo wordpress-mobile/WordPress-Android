@@ -1217,11 +1217,6 @@ Language: nb_NO
     <string name="open_mail">Åpne E-post</string>
     <string name="next">Neste</string>
     <string name="enter_email_wordpress_com">Logg inn på WordPress.com ved å bruke en E-postadresse, for å behandle alle dine WordPress-nettsteder.</string>
-    <string name="login_promo_text_jetpack">Behandle din Jetpack-drevne side i farten — du har fått WordPress i lommen din.</string>
-    <string name="login_promo_text_notifications">Dine notifikasjoner reiser med deg — se kommentarer og likes mens de skjer.</string>
-    <string name="login_promo_text_anytime">Hold styr på dine favorittnettsteder og bli med i praten hvor som helst, når som helst.</string>
-    <string name="login_promo_text_realtime">Se at lesere fra rundt om i verden leser og samhandler med nettstedet ditt — i sanntid.</string>
-    <string name="login_promo_text_onthego">Publiser fra parken. Blogg fra bussen. Kommenter fra kaféen. WordPress blir med deg hvor du går.</string>
     <string name="image_optimization_promo_desc">Bildeoptimalisering krymper bilder for raskere opplastning.\n\nDu kan endre dette til enhver tid i nettstedets innstillinger.</string>
     <string name="image_optimization_promo_title">Vil du skru på bildeoptimalisering?</string>
     <string name="leave_off">La forbli skrudd av</string>

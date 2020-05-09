@@ -152,11 +152,6 @@ Language: ms
     <string name="enter_email_wordpress_com">Log masuk ke WordPress.com menggunakan alamat emel untuk mengurus semua laman WordPress anda.</string>
     <string name="next">Seterusnya</string>
     <string name="open_mail">Buka surat</string>
-    <string name="login_promo_text_jetpack">Urus laman anda yang dikuasakan Jetpack di mana sahaja — anda ada WordPress dalam saku anda.</string>
-    <string name="login_promo_text_notifications">Pemberitahuan anda merantau dengan anda - lihat ulasan dan sukaan apabila ia berlaku.</string>
-    <string name="login_promo_text_anytime">Ikuti laman kegemaran anda dan ikuti perbincangan di mana-mana, pada bila-bila masa.</string>
-    <string name="login_promo_text_realtime">Tonton pembaca dari seluruh dunia membaca dan berinteraksi dengan laman anda — dalam masa nyata.</string>
-    <string name="login_promo_text_onthego">Terbitkan dari taman. Blog dari bas. Ulas dari kedai kopi. WordPress ada di mana anda berada.</string>
     <string name="image_optimization_promo_desc">Pengoptimuman imej menecutkan imej untuk muat naik yang lebih laju.\n\nAnda boleh mengubahnya bila-bila masa dalam tetapan laman.</string>
     <string name="image_optimization_promo_title">Hidupkan pengoptimuman imej?</string>
     <string name="leave_off">Biarkan mati</string>

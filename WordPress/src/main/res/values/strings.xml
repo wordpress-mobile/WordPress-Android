@@ -2301,11 +2301,6 @@
     <string name="login_promo_viewpager_content_description">Introduction</string>
     <string name="login_promo_title_36_percent">36% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
     <string name="send_link">Send link</string>
     <string name="enter_your_password_instead">Enter your password instead</string>
