@@ -99,8 +99,9 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -125,6 +126,7 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -1023,8 +1025,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void startWithNewAccount() {
         GCMRegistrationIntentService.enqueueWork(this,
                 new Intent(this, GCMRegistrationIntentService.class));
-        // TODO handle this
-        ReaderPostListFragment.resetLastUpdateDate();
+        ReaderUpdateServiceStarter.startService(this, EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
     }
 
     private MySiteFragment getMySiteFragment() {
@@ -1151,9 +1152,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private void handleSiteRemoved() {
         if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            // TODO handle this
-            // User signed-out or removed the last self-hosted site
-            ReaderPostListFragment.resetLastUpdateDate();
             // Reset site selection
             setSelectedSite(null);
             // Show the sign in screen

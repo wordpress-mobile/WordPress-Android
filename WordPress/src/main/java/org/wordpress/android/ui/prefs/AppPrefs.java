@@ -48,6 +48,7 @@ public class AppPrefs {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
+        READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
@@ -1112,6 +1113,14 @@ public class AppPrefs {
 
     public static void setLastFeatureAnnouncementAppVersionCode(int version) {
         setInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE, version);
+    }
+
+    public static long getReaderTagsUpdatedTimestamp() {
+        return getLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, -1);
+    }
+
+    public static void setReaderTagsUpdatedTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
     }
 
     /*
