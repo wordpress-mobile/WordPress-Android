@@ -26,10 +26,10 @@ class PostSettingsUtils
             if (postModel.isLocalDraft) {
                 if (postUtilsWrapper.isPublishDateInThePast(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.backdated_for, formattedDate)
-                } else if (postUtilsWrapper.shouldPublishImmediately(status, postModel.dateCreated)) {
-                    labelToUse = resourceProvider.getString(R.string.immediately)
                 } else if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
+                } else if (postUtilsWrapper.shouldPublishImmediately(status, postModel.dateCreated)) {
+                    labelToUse = resourceProvider.getString(R.string.immediately)
                 } else {
                     labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
                 }
