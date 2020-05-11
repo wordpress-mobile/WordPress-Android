@@ -24,11 +24,11 @@ class PostSettingsUtils
             val formattedDate = dateUtils.formatDateTime(dateCreated)
 
             if (postModel.isLocalDraft) {
-                if (PostUtils.isPublishDateInThePast(postModel.dateCreated)) {
+                if (postUtilsWrapper.isPublishDateInThePast(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.backdated_for, formattedDate)
                 } else if (postUtilsWrapper.shouldPublishImmediately(status, postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.immediately)
-                } else if (PostUtils.isPublishDateInTheFuture(postModel.dateCreated)) {
+                } else if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
                 } else {
                     labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
@@ -37,7 +37,7 @@ class PostSettingsUtils
                 labelToUse = resourceProvider.getString(R.string.scheduled_for, formattedDate)
             } else if (status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE) {
                 labelToUse = resourceProvider.getString(R.string.published_on, formattedDate)
-            } else if (PostUtils.isPublishDateInTheFuture(postModel.dateCreated)) {
+            } else if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated)) {
                 labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
             } else {
                 labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
