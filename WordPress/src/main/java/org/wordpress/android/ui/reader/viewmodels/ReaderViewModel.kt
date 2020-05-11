@@ -27,11 +27,11 @@ class ReaderViewModel @Inject constructor(
     private fun loadTabs() {
         launch {
             val tagList = loadReaderTabsUseCase.loadTabs()
-            _uiState.value = ReaderUiState(
-                    tagList.map { it.tagTitle },
-                    tagList
-            )
             if (tagList.isNotEmpty()) {
+                _uiState.value = ReaderUiState(
+                        tagList.map { it.tagTitle },
+                        tagList
+                )
                 initialized = true
             }
         }
