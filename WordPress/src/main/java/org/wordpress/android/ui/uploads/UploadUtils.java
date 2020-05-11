@@ -270,7 +270,7 @@ public class UploadUtils {
         }
     }
 
-    private static void showSnackbarError(View view, String message, int buttonTitleRes,
+    public static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(
