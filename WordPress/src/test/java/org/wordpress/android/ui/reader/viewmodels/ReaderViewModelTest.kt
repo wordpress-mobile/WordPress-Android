@@ -18,6 +18,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import java.util.Date
 
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
@@ -25,7 +26,8 @@ private const val DUMMY_CURRENT_TIME: Long = 10000000000
 @RunWith(MockitoJUnitRunner::class)
 class ReaderViewModelTest {
     @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+    @JvmField
+    val rule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: ReaderViewModel
 
@@ -84,20 +86,28 @@ class ReaderViewModelTest {
     fun `UiState is updated in start() when loaded tags are NOT empty`() = test {
         // Arrange
         whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
         // Act
         viewModel.start()
         // Assert
-        assertThat(viewModel.uiState.value).isNotNull
+        assertThat(state).isNotNull
     }
 
     @Test
     fun `Tags are reloaded when FollowedTagsChanged event is received`() = test {
         // Arrange
         whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
         // Act
         viewModel.onTagsUpdated(mock())
         // Assert
-        assertThat(viewModel.uiState.value).isNotNull
+        assertThat(state).isNotNull
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
