@@ -82,6 +82,7 @@
         <attr name="readerIcon" format="enum">
             <enum name="like" value="0" />
             <enum name="comment" value="1" />
+            <enum name="reblog" value="2" />
         </attr>
     </declare-styleable>
 
@@ -175,6 +176,8 @@
         <attr name="aevButton" format="string"/>
         <!-- Optional: resource id of image -->
         <attr name="aevImage" format="reference"/>
+        <!-- Optional: defines if image should be hidden in landscape mode -->
+        <attr name="aevImageHiddenInLandscape" format="boolean" />
         <!-- Optional: string text of subtitle -->
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->

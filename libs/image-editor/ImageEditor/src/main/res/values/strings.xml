@@ -2,10 +2,14 @@
 <resources>
     <!--preview screen-->
     <string name="preview_image_description">Preview Image</string>
+    <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
     <string name="retry">Retry</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
+    <string name="insert_label_with_count">Insert %d</string>
+    <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
 
     <!--crop screen-->
+    <string name="crop">crop</string>
     <string name="done">done</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
 

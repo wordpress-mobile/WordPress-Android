@@ -1,0 +1,6 @@
+14.7:
+Penyunting blok: Menambahkan blok Kolom dan template Halaman Starter untuk blog. Menyelaraskan tombol Template Halaman Starter untuk menghindari tumpang tindih dengan konten halaman. “Pilih media dari perangkat” akan membuka pemilih media WordPress bawaan, bukan pemilih default perangkat Anda.
+
+Perbaikan bug: Bug penyebab pengaturan URL muncul saat mengubah orientasi perangkat selagi Anda mempratinjau Template Halaman Starter.
+
+Peningkatan UI: Menambahkan Gravatar ke menu Saya di Situs Saya.
