@@ -13,11 +13,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -195,17 +195,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ImageView mImgMore;
         private final ImageView mImgVideoOverlay;
-        private final LinearLayout mVisit;
+        private final View mVisit;
 
         private final ImageView mImgFeatured;
         private final ImageView mImgAvatarOrBlavatar;
 
         private final ReaderFollowButton mFollowButton;
 
-        private final ViewGroup mFramePhoto;
+        private final Group mFramePhoto;
         private final TextView mTxtPhotoTitle;
 
-        private final ViewGroup mLayoutDiscover;
+        private final Group mLayoutDiscover;
         private final ImageView mImgDiscoverAvatar;
         private final TextView mTxtDiscover;
 
@@ -228,22 +228,22 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mBtnBookmark = itemView.findViewById(R.id.bookmark);
 
             mFramePhoto = itemView.findViewById(R.id.frame_photo);
-            mTxtPhotoTitle = mFramePhoto.findViewById(R.id.text_photo_title);
-            mImgFeatured = mFramePhoto.findViewById(R.id.image_featured);
-            mImgVideoOverlay = mFramePhoto.findViewById(R.id.image_video_overlay);
+            mTxtPhotoTitle = itemView.findViewById(R.id.text_photo_title);
+            mImgFeatured = itemView.findViewById(R.id.image_featured);
+            mImgVideoOverlay = itemView.findViewById(R.id.image_video_overlay);
 
             mImgAvatarOrBlavatar = itemView.findViewById(R.id.image_avatar_or_blavatar);
             mImgMore = itemView.findViewById(R.id.image_more);
             mVisit = itemView.findViewById(R.id.visit);
 
             mLayoutDiscover = itemView.findViewById(R.id.layout_discover);
-            mImgDiscoverAvatar = mLayoutDiscover.findViewById(R.id.image_discover_avatar);
-            mTxtDiscover = mLayoutDiscover.findViewById(R.id.text_discover);
+            mImgDiscoverAvatar = itemView.findViewById(R.id.image_discover_avatar);
+            mTxtDiscover = itemView.findViewById(R.id.text_discover);
 
             mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
 
-            ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
-            mFollowButton = postHeaderView.findViewById(R.id.follow_button);
+            View postHeaderView = itemView.findViewById(R.id.layout_post_header);
+            mFollowButton = itemView.findViewById(R.id.follow_button);
 
             ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
             ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
@@ -659,14 +659,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
-                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mPostSelectedListener != null) {
-                            mPostSelectedListener.onPostSelected(post);
+                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
+                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mPostSelectedListener != null) {
+                                mPostSelectedListener.onPostSelected(post);
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 break;
 
             case SITE_PICK:
@@ -675,16 +677,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
-                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
-                        } else if (discoverData.hasBlogUrl()) {
-                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
+                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
+                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (discoverData.getBlogId() != 0) {
+                                ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                            } else if (discoverData.hasBlogUrl()) {
+                                ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 break;
 
             case OTHER:
