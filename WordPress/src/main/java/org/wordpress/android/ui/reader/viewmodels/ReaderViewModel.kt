@@ -13,6 +13,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class ReaderViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private val _uiState = MutableLiveData<ReaderUiState>()
-    val uiState: LiveData<ReaderUiState> = _uiState
+    val uiState: LiveData<ReaderUiState> = _uiState.distinct()
 
     private val _updateTags = MutableLiveData<Event<Unit>>()
     val updateTags: LiveData<Event<Unit>> = _updateTags
