@@ -82,7 +82,6 @@ class SubFilterViewModelTest {
         )
     }
 
-
     @Test
     fun `view model change subfilter visibility as requested`() {
         viewModel.changeSubfiltersVisibility(true)
