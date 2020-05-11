@@ -9,8 +9,7 @@ sealed class MainActionListItem {
     enum class ActionType {
         NO_ACTION,
         CREATE_NEW_PAGE,
-        CREATE_NEW_POST,
-        CREATE_NEW_STORY
+        CREATE_NEW_POST
     }
 
     data class CreateAction(

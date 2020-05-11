@@ -55,7 +55,4 @@ public class RequestCodes {
 
     // ImageEditor
     public static final int IMAGE_EDITOR_EDIT_IMAGE = 6000;
-
-    // Story creator
-    public static final int CREATE_STORY = 7000;
 }

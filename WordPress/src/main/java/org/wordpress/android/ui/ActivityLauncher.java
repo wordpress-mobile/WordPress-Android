@@ -13,8 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
-import com.wordpress.stories.compose.ComposeLoopFrameActivity;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -640,21 +638,6 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
         intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
-    }
-
-    public static void addNewStoryForResult(
-            Activity activity,
-            SiteModel site,
-            PagePostCreationSourcesDetail source
-    ) {
-        if (site == null) {
-            return;
-        }
-
-        Intent intent = new Intent(activity, ComposeLoopFrameActivity.class);
-        intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
-        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {

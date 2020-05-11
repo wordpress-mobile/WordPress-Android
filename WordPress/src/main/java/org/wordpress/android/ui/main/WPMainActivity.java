@@ -415,9 +415,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 case CREATE_NEW_PAGE:
                     handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     break;
-                case CREATE_NEW_STORY:
-                    handleNewStoryAction(PagePostCreationSourcesDetail.STORY_FROM_MY_SITE);
-                    break;
             }
         });
 
@@ -812,20 +809,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
 
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
-    }
-
-    private void handleNewStoryAction(PagePostCreationSourcesDetail source) {
-        if (!mSiteStore.hasSite()) {
-            // No site yet - Move to My Sites fragment that shows the create new site screen
-            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-            return;
-        }
-
-        SiteModel site = getSelectedSite();
-        if (site != null) {
-            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewStoryForResult(this, site, source);
-        }
     }
 
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
