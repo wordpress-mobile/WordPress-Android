@@ -17,7 +17,7 @@ import javax.inject.Named
 @Reusable
 class LoadReaderTabsUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-        private val readerUtilsWrapper: ReaderUtilsWrapper
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     suspend fun loadTabs(): ReaderTagList {
         return withContext(bgDispatcher) {
