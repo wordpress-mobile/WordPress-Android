@@ -384,6 +384,20 @@ public class UploadUtils {
         );
     }
 
+    public static void showSnackbar(View view, String messageText, SnackbarSequencer sequencer) {
+        sequencer.enqueue(
+                new SnackbarItem(
+                        new Info(
+                                view,
+                                new UiStringText(messageText),
+                                Snackbar.LENGTH_LONG
+                        ),
+                        null,
+                        null
+                )
+        );
+    }
+
     public static void publishPost(Activity activity, final PostModel post, SiteModel site, Dispatcher dispatcher) {
         // If the post is empty, don't publish
         if (!PostUtils.isPublishable(post)) {
