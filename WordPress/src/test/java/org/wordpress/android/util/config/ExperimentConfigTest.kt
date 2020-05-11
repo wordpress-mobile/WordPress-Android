@@ -27,11 +27,6 @@ class ExperimentConfigTest {
         assertThat(experimentConfig.getVariant()).isEqualTo(variant)
     }
 
-    @Test
-    fun `returns default variant when app config returns null`() {
-        assertThat(experimentConfig.getVariant()).isEqualTo(Variant("control_group"))
-    }
-
     private class TestExperimentConfig(appConfig: AppConfig) : ExperimentConfig(appConfig, "remote_field") {
         private val variantA = Variant("test_variant_a")
         override val variants: List<Variant>

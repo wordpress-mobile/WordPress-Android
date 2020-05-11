@@ -1,7 +1,5 @@
 package org.wordpress.android.util.config
 
-private const val CONTROL_GROUP = "control_group"
-
 /**
  * This class represents an abstract experiment configuration. An experiment has a list of variants. In this case the
  * To add an experiment don't forget to update the `remote_config_defaults.xml` file.
@@ -11,8 +9,7 @@ private const val CONTROL_GROUP = "control_group"
  */
 abstract class ExperimentConfig(
     private val appConfig: AppConfig,
-    val remoteField: String,
-    val defaultValue: String = CONTROL_GROUP
+    val remoteField: String
 ) {
     /**
      * List of all the variants in an experiment
@@ -28,7 +25,7 @@ abstract class ExperimentConfig(
      * Gets the current variant for the experiment
      */
     fun getVariant(): Variant {
-        return appConfig.getCurrentVariant(this) ?: Variant(defaultValue)
+        return appConfig.getCurrentVariant(this)
     }
 
     /**
