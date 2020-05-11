@@ -66,6 +66,9 @@ sealed class PrepublishingHomeViewHolder(
             uiState as PublishButtonUiState
 
             button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
+            button.setOnClickListener {
+                uiState.onButtonClicked.invoke()
+            }
         }
     }
 }

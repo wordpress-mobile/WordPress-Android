@@ -11,7 +11,8 @@ import javax.inject.Inject
 class PostSettingsUtils
 @Inject constructor(
     private val resourceProvider: ResourceProvider,
-    private val dateUtils: DateUtils
+    private val dateUtils: DateUtils,
+    private val postUtilsWrapper: PostUtilsWrapper
 ) {
     fun getPublishDateLabel(
         postModel: PostImmutableModel
@@ -25,7 +26,7 @@ class PostSettingsUtils
             if (postModel.isLocalDraft) {
                 if (PostUtils.isPublishDateInThePast(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.backdated_for, formattedDate)
-                } else if (PostUtils.shouldPublishImmediately(status, postModel.dateCreated)) {
+                } else if (postUtilsWrapper.shouldPublishImmediately(status, postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.immediately)
                 } else if (PostUtils.isPublishDateInTheFuture(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
@@ -41,7 +42,7 @@ class PostSettingsUtils
             } else {
                 labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
             }
-        } else if (PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)) {
+        } else if (postUtilsWrapper.shouldPublishImmediatelyOptionBeAvailable(status)) {
             labelToUse = resourceProvider.getString(R.string.immediately)
         } else {
             // TODO: What should the label be if there is no specific date and this is not a DRAFT?
