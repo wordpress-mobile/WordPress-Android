@@ -37,7 +37,7 @@ class WPMainActivityViewModelTest {
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
-            850,
+            2,
             "https://wordpress.org/",
             emptyList()
     )
@@ -191,8 +191,8 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `show feature announcement when it's available and previous announcement was for older build`() {
-        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(849)
+    fun `show feature announcement when it's available and was not shown before`() {
+        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
@@ -227,7 +227,7 @@ class WPMainActivityViewModelTest {
     @Test
     fun `don't show feature announcement when it's available but previous announcement is the same as current`() {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(850)
+        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(2)
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )

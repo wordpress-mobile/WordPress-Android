@@ -34,7 +34,9 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     init {
         _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
-            _uiModel.value = _uiModel.value?.copy(appVersion = featureAnnouncement.version, isProgressVisible = false)
+            _uiModel.value = _uiModel.value?.copy(
+                    appVersion = featureAnnouncement.appVersionName, isProgressVisible = false
+            )
         }
 
         _featureItems.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
