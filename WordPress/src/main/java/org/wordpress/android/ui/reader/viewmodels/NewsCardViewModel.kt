@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.news.NewsItem
@@ -12,7 +10,7 @@ import org.wordpress.android.ui.news.NewsTracker
 import org.wordpress.android.ui.news.NewsTracker.NewsCardOrigin.READER
 import org.wordpress.android.ui.news.NewsTrackerHelper
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener
-import org.wordpress.android.util.filter
+import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -33,10 +31,7 @@ class NewsCardViewModel @Inject constructor(
     private var initialTag: ReaderTag? = null
     private var selectedTag: ReaderTag? = null
 
-    private val onTagChanged: Observer<NewsItem?> = Observer { _newsItemSourceMediator.value = it }
-
     private val newsItemSource = newsManager.newsItemSource()
-    private val _newsItemSourceMediator = MediatorLiveData<NewsItem>()
 
     private var started: Boolean = false
 
@@ -67,18 +62,22 @@ class NewsCardViewModel @Inject constructor(
     fun onTagChanged(tag: ReaderTag?) {
         selectedTag = tag
         newsTrackerHelper.reset()
-        if (initialTag == null && tag != null) {
-            initialTag = tag
-            _newsItemSourceMediator.addSource(newsItemSource, onTagChanged)
-        }
     }
 
     fun getNewsDataSource(tag: ReaderTag?): LiveData<NewsItem> {
         // show the card only when the initial tag is selected in the filter
-        return _newsItemSourceMediator.filter { tag == initialTag }
+        return newsItemSource
+                .map { item ->
+                    if (initialTag == tag || initialTag == null) {
+                        item
+                    } else {
+                        null
+                    }
+                }
     }
 
     private fun onNewsCardShown(item: NewsItem) {
+        initialTag = selectedTag
         if (newsTrackerHelper.shouldTrackNewsCardShown(item.version)) {
             newsTracker.trackNewsCardShown(READER, item.version)
             newsTrackerHelper.itemTracked(item.version)
