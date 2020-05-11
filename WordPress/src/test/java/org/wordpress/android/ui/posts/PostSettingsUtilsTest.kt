@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
 
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
@@ -106,9 +105,9 @@ class PostSettingsUtilsTest : BaseUnitTest() {
         postModel.setStatus(PostStatus.PRIVATE.toString())
         postModel.setIsLocalDraft(true)
 
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, 100)
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+        // two hours ahead of the currentDate
+        val futureDate = "2019-05-05T22:28:20+0200"
+        postModel.setDateCreated(futureDate)
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
@@ -140,7 +139,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     fun `returns "immediately" for local private post that should publish immediately`() {
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.PRIVATE.toString())
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(Date()))
+        postModel.setDateCreated(currentDate)
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
