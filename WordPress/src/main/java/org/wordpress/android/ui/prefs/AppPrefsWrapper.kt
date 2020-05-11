@@ -62,6 +62,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.shouldShowPostSignupInterstitial()
         set(shouldShow) = AppPrefs.setShouldShowPostSignupInterstitial(shouldShow)
 
+    var readerTagsUpdatedTimestamp: Long
+        get() = AppPrefs.getReaderTagsUpdatedTimestamp()
+        set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)

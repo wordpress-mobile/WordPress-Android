@@ -16,9 +16,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import java.util.EnumSet
 import javax.inject.Inject
 
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
@@ -43,20 +47,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         startObserving(view)
     }
 
-    override fun onResume() {
-        super.onResume()
-        // TODO come up with a proper fix
-        /**
-         * We need to start the viewModel in onResume as when the user logs-in for the first time the tags
-         * aren't stored in the DB yet.
-         */
-        viewModel.start()
-    }
-
     private fun startObserving(view: View) {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
                 initViewPager(uiState, view)
+            }
+        })
+
+        viewModel.updateTags.observe(viewLifecycleOwner, Observer { updateAcion ->
+            updateAcion?.getContentIfNotHandled()?.let {
+                ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
             }
         })
 
@@ -68,6 +68,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 }
             }
         })
+        viewModel.start()
     }
 
     private fun initViewPager(uiState: ReaderUiState, view: View) {

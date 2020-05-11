@@ -213,7 +213,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean mIsAnimatingOutNewPostsBar;
 
     private static boolean mHasPurgedReaderDb;
-    private static Date mLastAutoUpdateDt;
 
     private final HistoryStack mTagPreviewHistory = new HistoryStack("tag_preview_history");
 
@@ -727,7 +726,6 @@ public class ReaderPostListFragment extends Fragment
         // there's a connection to avoid removing posts the user would expect to see offline
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
             purgeDatabaseIfNeeded();
-            updateFollowedTagsAndBlogsIfNeeded();
         }
     }
 
@@ -2777,33 +2775,11 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    /*
-     * start background service to get the latest followed tags and blogs if it's time to do so
-     */
-    private void updateFollowedTagsAndBlogsIfNeeded() {
-        if (mLastAutoUpdateDt != null) {
-            int minutesSinceLastUpdate = DateTimeUtils.minutesBetween(mLastAutoUpdateDt, new Date());
-            if (minutesSinceLastUpdate < 120) {
-                return;
-            }
-        }
-
-        AppLog.d(T.READER, "reader post list > updating tags and blogs");
-        mLastAutoUpdateDt = new Date();
-        ReaderUpdateServiceStarter.startService(getActivity(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
-    }
-
     @Override
     public void onScrollToTop() {
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    // reset the timestamp that determines when followed tags/blogs are updated so they're
-    // updated when the fragment is recreated (necessary after signin/disconnect)
-    public static void resetLastUpdateDate() {
-        mLastAutoUpdateDt = null;
     }
 
     private boolean isCurrentTagManagedInFollowingTab() {
