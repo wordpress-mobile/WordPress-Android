@@ -3,6 +3,7 @@ package org.wordpress.android.util.config
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ExperimentConfig.Variant
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,7 +42,7 @@ class AppConfig
      * Get the currently selected variant for a given experiment. This function returns null if there is no variant
      * for the current user (and the user is in the control group).
      */
-    fun getCurrentVariant(experiment: ExperimentConfig): Variant? {
+    fun getCurrentVariant(experiment: ExperimentConfig): Variant {
         val value = experimentValues.getOrPut(experiment) {
             val remoteValue = remoteConfig.getString(experiment.remoteField)
             analyticsTracker.track(
@@ -51,5 +52,6 @@ class AppConfig
             remoteValue
         }
         return experiment.variants.find { it.value == value }
+                ?: throw IllegalArgumentException("Remote variant does not match local value: $value")
     }
 }

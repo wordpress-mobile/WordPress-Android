@@ -1,0 +1,26 @@
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'java-library'
+
+kapt {
+    generateStubs = true
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/tmp/kapt/main/kotlinGenerated/"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':WordPressAnnotations')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.google.auto.service:auto-service:1.0-rc6"
+    kapt "com.google.auto.service:auto-service:1.0-rc6"
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
