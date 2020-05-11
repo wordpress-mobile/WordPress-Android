@@ -11,9 +11,9 @@ import kotlinx.android.synthetic.main.login_intro_template_view.*
 import org.wordpress.android.R
 
 class LoginProloguePageFragment : Fragment() {
-    @StringRes private var promoTitle = 0
-    @StringRes private var promoText = 0
-    @DrawableRes private var promoImage = 0
+    @StringRes private var promoTitle: Int? = null
+    @StringRes private var promoText: Int? = null
+    @DrawableRes private var promoImage: Int? = null
 
     companion object {
         private const val KEY_PROMO_TITLE = "KEY_PROMO_TITLE"
@@ -51,8 +51,8 @@ class LoginProloguePageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        promo_title.setText(promoTitle)
-        promo_text.setText(promoText)
-        illustration_view.setImageResource(promoImage)
+        promoTitle?.let { promo_title.setText(it) }
+        promoText?.let { promo_text.setText(it) }
+        promoImage?.let { illustration_view.setImageResource(it) }
     }
 }
