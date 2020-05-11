@@ -18,4 +18,6 @@
 
 /plans/mobile
 
+/whats-new/mobile
+
 /me/gutenberg/
