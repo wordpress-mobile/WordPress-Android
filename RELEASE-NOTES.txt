@@ -1,6 +1,12 @@
 14.9
 -----
-* Fix issue with Preview post not working after switching to classic editor from inside the post
+* [*] Fix issue with Preview post not working after switching to classic editor from inside the post
+* [***] Block Editor: New block: Pullquote
+* [**] Block Editor: Add support for changing background and text color in Buttons block
+* [*] Block Editor: Fix the icons and buttons in Gallery, Paragraph, List and MediaText block on RTL mode
+* [**] Block Editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.
+* [**] Block Editor: Update page templates to use recently added blocks
+
  
 14.8
 -----
