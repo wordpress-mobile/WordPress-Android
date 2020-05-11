@@ -11,7 +11,7 @@
     <!-- Excludes given file patterns from scan.              -->
     <!-- See http://checkstyle.sf.net/config_filefilters.html -->
     <module name="BeforeExecutionExclusionFileFilter">
-        <property name="fileNamePattern" value="[/\\]gen[/\\]|[/\\]node_modules[/\\]|[/\\]react-native-aztec[/\\]"/>
+        <property name="fileNamePattern" value="[/\\]gen[/\\]|[/\\]node_modules[/\\]|[/\\]gutenberg-mobile[/\\]|[/\\]react-native-aztec[/\\]"/>
     </module>
 
     <!-- Checks whether files end with a new line.                        -->
