@@ -22,7 +22,9 @@ class FeatureAnnouncementViewModel @Inject constructor(
     private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement>()
 
     private val timeOnScreenParameter = "time_on_screen_sec"
-    private var screenTimeStart = 0L
+
+    private var sessionStart: Long = 0
+    private var totalSessionsLength: Long = 0
 
     private val _uiModel = MediatorLiveData<FeatureAnnouncementUiModel>()
     val uiModel: LiveData<FeatureAnnouncementUiModel> = _uiModel
@@ -54,8 +56,6 @@ class FeatureAnnouncementViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        screenTimeStart = System.currentTimeMillis()
-
         _uiModel.value = FeatureAnnouncementUiModel(isProgressVisible = true)
 
         loadFeatures()
@@ -69,11 +69,6 @@ class FeatureAnnouncementViewModel @Inject constructor(
     }
 
     fun onCloseDialogButtonPressed() {
-        val timeOnScreen = (System.currentTimeMillis() - screenTimeStart) / 1000
-        analyticsTrackerWrapper.track(
-                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
-                mapOf(timeOnScreenParameter to timeOnScreen)
-        )
         _onDialogClosed.call()
     }
 
@@ -86,4 +81,20 @@ class FeatureAnnouncementViewModel @Inject constructor(
         val appVersion: String = "",
         val isProgressVisible: Boolean = false
     )
+
+    fun onSessionStarted() {
+        sessionStart = System.currentTimeMillis()
+    }
+
+    fun onSessionPaused() {
+        val timeOnScreen = (System.currentTimeMillis() - sessionStart) / 1000
+        totalSessionsLength += timeOnScreen
+    }
+
+    fun onSessionEnded() {
+        analyticsTrackerWrapper.track(
+                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
+                mapOf(timeOnScreenParameter to totalSessionsLength)
+        )
+    }
 }

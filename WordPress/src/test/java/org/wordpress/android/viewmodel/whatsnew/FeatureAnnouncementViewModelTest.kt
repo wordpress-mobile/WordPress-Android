@@ -6,9 +6,11 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import junit.framework.Assert
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -92,10 +94,6 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     fun `pressing close button closes the dialog`() {
         viewModel.onCloseDialogButtonPressed()
         verify(onDialogClosedObserver).onChanged(anyOrNull())
-        verify(analyticsTrackerWrapper).track(eq(
-                Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED),
-                any<Map<String, *>>()
-        )
     }
 
     @Test
@@ -103,5 +101,16 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
         viewModel.onFindMoreButtonPressed()
         verify(onAnnouncementDetailsRequestedObserver).onChanged("https://wordpress.org/")
         verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED)
+    }
+
+    @Test
+    fun `screen time is tracked when session ends`() {
+        viewModel.onSessionEnded()
+        verify(analyticsTrackerWrapper).track(
+                eq(
+                        Stat.FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED
+                ),
+                any<Map<String, *>>()
+        )
     }
 }

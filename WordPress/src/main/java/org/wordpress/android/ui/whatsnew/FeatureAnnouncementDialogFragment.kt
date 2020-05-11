@@ -95,4 +95,19 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
         super.onAttach(context)
         (activity!!.applicationContext as WordPress).component().inject(this)
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onSessionPaused()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onSessionEnded()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onSessionStarted()
+    }
 }
