@@ -50,7 +50,6 @@ import com.google.android.material.tabs.TabLayout.Tab;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -87,12 +86,10 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
-import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
-import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
@@ -119,6 +116,7 @@ import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -222,6 +220,7 @@ public class ReaderPostListFragment extends Fragment
 
     private ReaderPostListViewModel mViewModel;
     private WPMainActivityViewModel mWPMainActivityViewModel;
+    private NewsCardViewModel mNewsCardViewModel;
 
     private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
         @Override public void onChanged(@Nullable NewsItem newsItem) {
@@ -407,6 +406,8 @@ public class ReaderPostListFragment extends Fragment
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
+        mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+                                               .get(NewsCardViewModel.class);
 
         if (mIsTopLevel) {
             mWPMainActivityViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
@@ -2048,24 +2049,6 @@ public class ReaderPostListFragment extends Fragment
                 }
             };
 
-    private final NewsCardListener mNewsCardListener = new NewsCardListener() {
-        @Override public void onItemShown(@NotNull NewsItem item) {
-            mViewModel.onNewsCardShown(item, getCurrentTag());
-        }
-
-        @Override public void onItemClicked(@NotNull NewsItem item) {
-            mViewModel.onNewsCardExtendedInfoRequested(item);
-            Activity activity = getActivity();
-            if (activity != null) {
-                WPWebViewActivity.openURL(activity, item.getActionUrl());
-            }
-        }
-
-        @Override public void onDismissClicked(NewsItem item) {
-            mViewModel.onNewsCardDismissed(item);
-        }
-    };
-
     private ReaderPostAdapter getPostAdapter() {
         if (mPostAdapter == null) {
             AppLog.d(T.READER, "reader post list > creating post adapter");
@@ -2083,14 +2066,14 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
-            mPostAdapter.setOnNewsCardListener(mNewsCardListener);
+            mPostAdapter.setOnNewsCardListener(mNewsCardViewModel.getNewsCardListener());
             if (getActivity() instanceof ReaderSiteHeaderView.OnBlogInfoLoadedListener) {
                 mPostAdapter.setOnBlogInfoLoadedListener((ReaderSiteHeaderView.OnBlogInfoLoadedListener) getActivity());
             }
-            mViewModel.getNewsDataSource().removeObserver(mNewsItemObserver);
+            mNewsCardViewModel.getNewsDataSource(mCurrentTag).removeObserver(mNewsItemObserver);
             if (getPostListType().isTagType()) {
                 mPostAdapter.setCurrentTag(getCurrentTag());
-                mViewModel.getNewsDataSource().observe((FragmentActivity) getActivity(), mNewsItemObserver);
+                mNewsCardViewModel.getNewsDataSource(mCurrentTag).observe(getViewLifecycleOwner(), mNewsItemObserver);
             } else if (getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
                 mPostAdapter.setCurrentBlogAndFeed(mCurrentBlogId, mCurrentFeedId);
             } else if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
@@ -2184,8 +2167,6 @@ public class ReaderPostListFragment extends Fragment
                 );
             }
         }
-
-        mViewModel.onTagChanged(mCurrentTag);
 
         ReaderTag validTag;
 

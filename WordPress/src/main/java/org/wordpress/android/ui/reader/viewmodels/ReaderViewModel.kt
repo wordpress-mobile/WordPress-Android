@@ -15,13 +15,12 @@ class ReaderViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase
 ) : ScopedViewModel(mainDispatcher) {
-    private var started: Boolean = false
+    private var initialized: Boolean = false
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState
 
     fun start() {
-        if (started) return
-        started = true
+        if (initialized) return
         loadTabs()
     }
 
@@ -32,6 +31,9 @@ class ReaderViewModel @Inject constructor(
                     tagList.map { it.tagTitle },
                     tagList
             )
+            if (tagList.isNotEmpty()) {
+                initialized = true
+            }
         }
     }
 
