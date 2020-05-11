@@ -3,6 +3,7 @@ package org.wordpress.android.util.config
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -40,7 +41,7 @@ class AppConfigTest {
         setupFeatureConfig(buildConfigValue = true, remoteConfigValue = false)
 
         assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(featureConfig.remoteField to true))
+        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
     }
 
     @Test
@@ -48,7 +49,7 @@ class AppConfigTest {
         setupFeatureConfig(buildConfigValue = false, remoteConfigValue = true)
 
         assertThat(appConfig.isEnabled(featureConfig)).isTrue()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(featureConfig.remoteField to true))
+        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
     }
 
     @Test
@@ -56,7 +57,7 @@ class AppConfigTest {
         setupFeatureConfig(buildConfigValue = false, remoteConfigValue = false)
 
         assertThat(appConfig.isEnabled(featureConfig)).isFalse()
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(featureConfig.remoteField to false))
+        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to false))
     }
 
     @Test
@@ -69,7 +70,7 @@ class AppConfigTest {
 
         assertThat(appConfig.isEnabled(featureConfig)).isTrue()
 
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(featureConfig.remoteField to true))
+        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to true))
     }
 
     @Test
@@ -82,7 +83,7 @@ class AppConfigTest {
 
         assertThat(appConfig.isEnabled(featureConfig)).isFalse()
 
-        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(featureConfig.remoteField to false))
+        verify(analyticsTracker).track(Stat.FEATURE_FLAG_SET, mapOf(remoteField to false))
     }
 
     @Test
@@ -102,10 +103,10 @@ class AppConfigTest {
         val variant = Variant("different variant")
         setupExperimentConfig(experimentVariantA, listOf(variant))
 
-        assertThat(appConfig.getCurrentVariant(experimentConfig)).isNull()
+        assertThatIllegalArgumentException().isThrownBy { appConfig.getCurrentVariant(experimentConfig) }
         verify(analyticsTracker).track(
                 Stat.EXPERIMENT_VARIANT_SET,
-                mapOf(experimentConfig.remoteField to experimentVariantA)
+                mapOf(remoteField to experimentVariantA)
         )
     }
 
@@ -123,7 +124,7 @@ class AppConfigTest {
 
         verify(analyticsTracker).track(
                 Stat.EXPERIMENT_VARIANT_SET,
-                mapOf(experimentConfig.remoteField to experimentVariantA)
+                mapOf(remoteField to experimentVariantA)
         )
     }
 

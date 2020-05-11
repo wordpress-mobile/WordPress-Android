@@ -28,8 +28,13 @@ class AppConfig
      * Get the enabled state of a feature flag. If the flag is enabled in the BuildConfig file, it overrides the
      * remote value. The correct approach is to disable a feature flag for a release version and only enable it remotely.
      * Once the feature is ready to be fully released, we can enable the BuildConfig value.
+     * @param feature feature which we're checking remotely
+     * @param remoteField remote field to be checked
      */
     fun isEnabled(feature: FeatureConfig): Boolean {
+        if (feature.remoteField == null) {
+            return feature.buildConfigValue
+        }
         return enabledFeatures.getOrPut(feature) {
             val loadedValue = feature.buildConfigValue || remoteConfig.isEnabled(feature.remoteField)
             enabledFeatures[feature] = loadedValue

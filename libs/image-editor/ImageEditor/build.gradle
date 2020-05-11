@@ -57,17 +57,21 @@ android {
 }
 
 ext {
-    lifecycleVersion = '2.2.0'
+    viewpager2Version = '1.0.0'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     // UI
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "androidx.viewpager2:viewpager2:$viewpager2Version"
+
+    // Material
+    implementation "com.google.android.material:material:$materialVersion"
 
     // Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$navComponenVersion"
@@ -86,6 +90,7 @@ dependencies {
     }
 
     // Testing
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.assertj:assertj-core:$assertJVersion"
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
