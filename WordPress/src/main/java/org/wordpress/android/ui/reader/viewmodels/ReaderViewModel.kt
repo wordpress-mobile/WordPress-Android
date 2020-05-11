@@ -18,7 +18,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
+const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
 
 class ReaderViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
