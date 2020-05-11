@@ -6,10 +6,8 @@ import javax.inject.Inject
 /**
  * Configuration of the Tenor gif selection.
  */
-@SuppressWarnings("Unused")
 class TenorFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.TENOR_AVAILABLE,
-        "tenor_available"
+        BuildConfig.TENOR_AVAILABLE
 )
