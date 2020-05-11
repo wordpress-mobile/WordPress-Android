@@ -331,7 +331,6 @@ class SubFilterViewModel @Inject constructor(
         loadSubFilters()
     }
 
-
     override fun onCleared() {
         super.onCleared()
         eventBusWrapper.unregister(this)
