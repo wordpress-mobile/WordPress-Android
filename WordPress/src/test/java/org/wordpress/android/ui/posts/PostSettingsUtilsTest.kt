@@ -11,6 +11,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -20,14 +21,18 @@ import java.util.Date
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var dateUtils: DateUtils
+    @Mock lateinit var dateProvider: DateProvider
     private lateinit var postSettingsUtils: PostSettingsUtils
+    private lateinit var postUtilsWrapper: PostUtilsWrapper
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
     private val formattedDate = "5. 5. 2019"
     private lateinit var postModel: PostModel
+
     @Before
     fun setUp() {
-        postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils)
+        postUtilsWrapper = PostUtilsWrapper(dateProvider)
+        postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils, postUtilsWrapper)
         whenever(dateUtils.formatDateTime(any())).thenReturn(formattedDate)
         whenever(
                 resourceProvider.getString(
