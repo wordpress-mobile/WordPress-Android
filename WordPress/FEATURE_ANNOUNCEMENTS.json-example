@@ -1,4 +1,5 @@
-// remove comments from actual announcements
+// FEATURE_ANNOUNCEMENT.json file should be located in WordPress/src/main/assets
+// comments in this file are ignored by Gson, so you can either remove or leave them
 
 {
   "announcements": [
