@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
 
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
