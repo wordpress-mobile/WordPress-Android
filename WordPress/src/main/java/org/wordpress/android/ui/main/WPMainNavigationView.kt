@@ -94,7 +94,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        navAdapter.init()
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -291,14 +290,6 @@ class WPMainNavigationView @JvmOverloads constructor(
                     .hide(fragment)
                     .commit()
             return fragment
-        }
-
-        internal fun init() {
-            for (pageType in pages()) {
-                if (fragmentManager.findFragmentByTag(getTagForPageType(pageType)) == null) {
-                    createFragment(pageType)
-                }
-            }
         }
 
         internal fun getFragment(position: Int): Fragment? {
