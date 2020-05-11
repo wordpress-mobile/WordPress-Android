@@ -1247,11 +1247,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
-                if (mEditPostRepository.isPage()) {
-                    showPublishConfirmationDialogAndPublishPost();
-                } else {
-                    showPrepublishingNudgeBottomSheet(true);
-                }
+                showPrepublishingNudgeBottomSheet(true);
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1371,14 +1367,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void performPrimaryAction() {
-        if (mEditPostRepository.isPage()) {
-            performPagePrimaryAction();
-        } else {
-            performPostPrimaryAction();
-        }
-    }
-
-    private void performPostPrimaryAction() {
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 showPrepublishingNudgeBottomSheet(true);
@@ -1389,23 +1377,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return;
             case SAVE:
             case SUBMIT_FOR_REVIEW:
-                uploadPost(false);
-                break;
-        }
-    }
-
-    private void performPagePrimaryAction() {
-        switch (getPrimaryAction()) {
-            case UPDATE:
-                showUpdateConfirmationDialogAndUploadPost();
-                return;
-            case PUBLISH_NOW:
-                showPublishConfirmationDialogAndPublishPost();
-                return;
-            // In other cases, we'll upload the post without changing its status
-            case SCHEDULE:
-            case SUBMIT_FOR_REVIEW:
-            case SAVE:
                 uploadPost(false);
                 break;
         }
