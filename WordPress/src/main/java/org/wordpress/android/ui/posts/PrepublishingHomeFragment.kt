@@ -15,6 +15,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.EDITOR_ACTION
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment() {
@@ -70,12 +72,15 @@ class PrepublishingHomeFragment : Fragment() {
         })
 
         viewModel.onPublishButtonClicked.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                actionClickedListener?.onPublishButtonClicked()
+            event.getContentIfNotHandled()?.let { publishNow ->
+                actionClickedListener?.onPublishButtonClicked(publishNow)
             }
         })
 
-        viewModel.start(getEditPostRepository(), getSite())
+        val editorAction = requireNotNull(arguments?.getParcelable<EditorAction>(EDITOR_ACTION)) {
+            "arguments can't be null since the EditorAction should be supplied on instantiation of this fragment"
+        }
+        viewModel.start(getEditPostRepository(), editorAction, getSite())
     }
 
     private fun getSite(): SiteModel {
@@ -104,6 +109,13 @@ class PrepublishingHomeFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
-        fun newInstance() = PrepublishingHomeFragment()
+
+        fun newInstance(editorAction: EditorAction?) = PrepublishingHomeFragment().apply {
+            arguments = Bundle().apply {
+                editorAction?.let { editorAction ->
+                    putParcelable(EDITOR_ACTION, editorAction)
+                }
+            }
+        }
     }
 }
