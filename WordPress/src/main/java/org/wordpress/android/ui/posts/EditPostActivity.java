@@ -2846,6 +2846,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.previewTemplate(template);
     }
 
+    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
+    }
+
+    @Override public boolean onGutenbergEditorGetStarterPageTemplatesTooltipShown() {
+        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
+    }
+
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();
