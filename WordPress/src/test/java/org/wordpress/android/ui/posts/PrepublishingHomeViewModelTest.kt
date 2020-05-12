@@ -18,7 +18,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VI
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
-import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishButtonLabelUseCase
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -31,7 +31,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
-    @Mock lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
+    @Mock lateinit var getPublishButtonLabelUseCase: GetButtonUiStateUseCase
     @Mock lateinit var site: SiteModel
 
     @Before
