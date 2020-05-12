@@ -30,8 +30,7 @@ import androidx.fragment.app.Fragment;
 
 import com.wordpress.stories.compose.ComposeLoopFrameActivity;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
-import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart;
-import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
+import com.wordpress.stories.compose.frame.StorySaveEvents;
 import com.wordpress.stories.compose.story.StoryRepository;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
@@ -1079,7 +1078,7 @@ public class MySiteFragment extends Fragment implements
 
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(StorySaveResult event) {
+    public void onEventMainThread(StorySaveEvents.StorySaveResult event) {
         EventBus.getDefault().removeStickyEvent(event);
 
         if (event.isSuccess()) {
@@ -1123,7 +1122,7 @@ public class MySiteFragment extends Fragment implements
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onStorySaveStart(StorySaveProcessStart event) {
+    public void onStorySaveStart(StorySaveEvents.StorySaveProcessStart event) {
         EventBus.getDefault().removeStickyEvent(event);
         String snackbarMessage = String.format(
                 getString(R.string.story_saving_snackbar_started),
