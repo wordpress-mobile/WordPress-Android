@@ -44,6 +44,9 @@ class ReaderViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabPosition>>()
     val selectTab: LiveData<Event<TabPosition>> = _selectTab
 
+    private val _forceTabSelection = MutableLiveData<Event<ReaderTag>>()
+    val forceTabSelection: LiveData<Event<ReaderTag>> = _forceTabSelection
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -99,8 +102,14 @@ class ReaderViewModel @Inject constructor(
         return now - lastUpdated > UPDATE_TAGS_THRESHOLD
     }
 
+    fun emptyStateTabChange(tag: ReaderTag) {
+        onTagChanged(tag)
+        _forceTabSelection.postValue(Event(tag))
+    }
+
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         loadTabs()
     }
 }
+

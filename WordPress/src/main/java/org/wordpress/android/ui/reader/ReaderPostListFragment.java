@@ -119,6 +119,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
@@ -219,6 +220,7 @@ public class ReaderPostListFragment extends Fragment
     // This VM is initialized only on the Following tab
     private SubFilterViewModel mSubFilterViewModel;
     private NewsCardViewModel mNewsCardViewModel;
+    private ReaderViewModel mReaderViewModel;
 
     private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
         @Override public void onChanged(@Nullable NewsItem newsItem) {
@@ -412,6 +414,8 @@ public class ReaderPostListFragment extends Fragment
                                        .get(ReaderPostListViewModel.class);
         mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
                                                .get(NewsCardViewModel.class);
+        mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
+                                            .get(ReaderViewModel.class);
 
         if (isFollowingScreen()) {
             initSubFilterViewModel();
@@ -428,7 +432,7 @@ public class ReaderPostListFragment extends Fragment
 
         handleReblogStateChanges();
 
-        mViewModel.start(!mIsTopLevel);
+        mViewModel.start(!mIsTopLevel, mReaderViewModel);
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();
@@ -1870,16 +1874,7 @@ public class ReaderPostListFragment extends Fragment
                 tag = ReaderUtils.getDefaultTag();
         }
 
-        mRecyclerView.refreshFilterCriteriaOptions();
-
-        if (!ReaderTagTable.tagExists(tag)) {
-            tag = ReaderUtils.getDefaultTagFromDbOrCreateInMemory(
-                    requireActivity(),
-                    mTagUpdateClientUtilsProvider
-            );
-        }
-
-        setCurrentTag(tag);
+        mViewModel.onEmptyStateButtonTapped(tag);
     }
 
     /*

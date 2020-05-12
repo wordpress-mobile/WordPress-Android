@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.reblog.NoSite
 import org.wordpress.android.ui.reader.reblog.PostEditor
 import org.wordpress.android.ui.reader.reblog.ReblogState
@@ -32,7 +33,11 @@ class ReaderPostListViewModel @Inject constructor(
 
     private var isStarted = false
 
-    fun start(isTopLevelFragment: Boolean) {
+    private lateinit var readerViewModel: ReaderViewModel
+
+    fun start(isTopLevelFragment: Boolean, readerViewModel: ReaderViewModel) {
+        this.readerViewModel = readerViewModel
+
         if (isStarted) {
             return
         }
@@ -84,6 +89,10 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onSearchMenuCollapse(collapse: Boolean) {
         _shouldCollapseToolbar.value = collapse
+    }
+
+    fun onEmptyStateButtonTapped(tag: ReaderTag) {
+        readerViewModel.emptyStateTabChange(tag)
     }
 
     // TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(
