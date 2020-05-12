@@ -1080,11 +1080,11 @@ public class MySiteFragment extends Fragment implements
     @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(StorySaveResult event) {
-        // TODO WPSTORIES add TRACKS
-        // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         EventBus.getDefault().removeStickyEvent(event);
 
         if (event.isSuccess()) {
+            // TODO WPSTORIES add TRACKS
+            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
             // TODO WPSTORIES probably we want to remove this snackbar given we want to immediately start uploading it
             String snackbarMessage = String.format(
                     getString(R.string.story_saving_snackbar_finished_successfully),
@@ -1095,6 +1095,8 @@ public class MySiteFragment extends Fragment implements
                     snackbarMessage
             );
         } else {
+            // TODO WPSTORIES add TRACKS
+            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
             String errorText = String.format(
                     getString(R.string.story_saving_snackbar_finished_with_error),
                     StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()
