@@ -151,7 +151,7 @@
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_medium">38dp</dimen>
+    <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_login">100dp</dimen>
@@ -159,6 +159,7 @@
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
 
+    <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
     <dimen name="reader_button_minimum_height">36dp</dimen>
     <dimen name="reader_count_icon">18dp</dimen>
