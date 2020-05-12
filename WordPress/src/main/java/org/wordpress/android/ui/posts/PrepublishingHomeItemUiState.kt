@@ -36,7 +36,7 @@ sealed class PrepublishingHomeItemUiState {
         )
 
         data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
-                UiStringRes(R.string.prepublishing_nudges_home_publish_button),
+                UiStringRes(R.string.prepublishing_nudges_home_update_button),
                 false,
                 onButtonClicked
         )
