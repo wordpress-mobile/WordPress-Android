@@ -1368,11 +1368,6 @@ Language: fr
     <string name="open_mail">Ouvrir les e-mails</string>
     <string name="next">Suivant</string>
     <string name="enter_email_wordpress_com">Connectez-vous à WordPress.com en utilisant une adresse de messagerie pour gérer tous vos sites WordPress.com.</string>
-    <string name="login_promo_text_jetpack">Gérer votre site propulsé par Jetpack sur le pouce. Vous avez WordPress dans votre poche.</string>
-    <string name="login_promo_text_notifications">Vos notifications voyagent avec vous. Visualisez les commentaires et les réactions dès qu’ils arrivent.</string>
-    <string name="login_promo_text_anytime">Suivez vos sites favoris et rejoignez la conversation n’importe où, n’importe quand.</string>
-    <string name="login_promo_text_realtime">Observez les lecteurs du monde entier lire et interagir avec votre site, en temps réel.</string>
-    <string name="login_promo_text_onthego">Publiez pendant la sieste au parc. Bloguez dans le bus. Commentez depuis un café. WordPress vous suit partout.</string>
     <string name="image_optimization_promo_desc">L’optimisation réduit la taille des images pour un téléversement plus rapide.\n\nVous pouvez changer ceci à tout moment, dans les réglages du site.</string>
     <string name="image_optimization_promo_title">Activer l’optimisation des images ?</string>
     <string name="leave_off">Laisser désactivée</string>

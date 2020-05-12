@@ -93,6 +93,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     private static final String KEY_SIGNUP_SHEET_DISPLAYED = "KEY_SIGNUP_SHEET_DISPLAYED";
     private static final String KEY_SMARTLOCK_HELPER_STATE = "KEY_SMARTLOCK_HELPER_STATE";
     private static final String KEY_SIGNUP_FROM_LOGIN_ENABLED = "KEY_SIGNUP_FROM_LOGIN_ENABLED";
+    private static final String KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE = "KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE";
 
     private static final String FORGOT_PASSWORD_URL_SUFFIX = "wp-login.php?action=lostpassword";
 
@@ -112,6 +113,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     private boolean mIsSignupFromLoginEnabled;
     private boolean mIsSmartLockTriggeredFromPrologue;
+    private boolean mIsSiteLoginAvailableFromPrologue;
 
     private LoginMode mLoginMode;
 
@@ -142,6 +144,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                         mIsSmartLockTriggeredFromPrologue = true;
+                        mIsSiteLoginAvailableFromPrologue = true;
                         initSmartLockIfNotFinished(true);
                     }
                     break;
@@ -168,6 +171,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             }
 
             mIsSignupFromLoginEnabled = savedInstanceState.getBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED);
+            mIsSiteLoginAvailableFromPrologue = savedInstanceState.getBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE);
         }
     }
 
@@ -177,6 +181,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
         outState.putBoolean(KEY_SIGNUP_FROM_LOGIN_ENABLED, mIsSignupFromLoginEnabled);
+        outState.putBoolean(KEY_SITE_LOGIN_AVAILABLE_FROM_PROLOGUE, mIsSiteLoginAvailableFromPrologue);
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -357,14 +362,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, true), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
             }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled), true, LoginEmailFragment.TAG);
+            slideInFragment(
+                    LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, !mIsSiteLoginAvailableFromPrologue), true,
+                    LoginEmailFragment.TAG);
         }
     }
 

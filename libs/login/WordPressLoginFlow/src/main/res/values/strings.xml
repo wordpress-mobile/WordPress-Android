@@ -10,11 +10,6 @@
     <string name="password">Password</string>
     <string name="help">Help</string>
     <string name="log_in">Log In</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
@@ -81,6 +76,8 @@
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
     <string name="signin_with_google_progress">Signing in with Google&#8230;</string>
+    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="enter_your_site_address">Enter your site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
 

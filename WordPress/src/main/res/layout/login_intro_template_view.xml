@@ -1,25 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="?attr/colorPrimary"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.widgets.WPTextView
-        style="@style/LoginTheme.PromoText"
-        android:id="@+id/promo_text"
+    <View
+        android:id="@+id/footer_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:minLines="3"
-        tools:text="@string/login_promo_text_anytime"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_height="0dp"
+        android:background="@color/login_promo_footer_background_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/illustration_center_guide"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/animation_view"
+    <View
+        android:id="@+id/illustration_center_guide"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="36dp"
-        android:layout_below="@+id/promo_text"/>
-</RelativeLayout>
+        android:layout_height="1dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/illustration_view"
+        app:layout_constraintTop_toTopOf="@+id/illustration_view" />
+
+    <ImageView
+        android:id="@+id/logo_view"
+        android:layout_width="@dimen/prologue_logo_size"
+        android:layout_height="@dimen/prologue_logo_size"
+        android:layout_margin="@dimen/prologue_logo_margin"
+        android:contentDescription="@string/content_description_logo"
+        app:layout_constraintBottom_toTopOf="@+id/promo_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:srcCompat="@drawable/login_toolbar_icon"
+        app:tint="?attr/colorPrimary" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/promo_title"
+        style="@style/LoginTheme.PromoTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/prologue_promo_title_margin_vertical"
+        android:layout_marginEnd="@dimen/prologue_intro_content_margin_vertical"
+        android:layout_marginStart="@dimen/prologue_intro_content_margin_vertical"
+        app:layout_constraintBottom_toTopOf="@+id/promo_text"
+        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_view"
+        tools:text="@string/login_promo_title_36_percent" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/promo_text"
+        style="@style/LoginTheme.PromoText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/prologue_promo_text_margin_vertical"
+        android:layout_marginEnd="@dimen/prologue_intro_content_margin_vertical"
+        android:layout_marginStart="@dimen/prologue_intro_content_margin_vertical"
+        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
+        app:layout_constraintBottom_toTopOf="@+id/illustration_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promo_title"
+        tools:text="@string/login_promo_text_unlock_the_power" />
+
+    <ImageView
+        android:id="@+id/illustration_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/prologue_promo_illustration_margin_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/promo_text"
+        app:layout_constraintWidth_max="@dimen/prologue_intro_content_max_width"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/img_illustration_promo" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Material theme -->
@@ -255,6 +255,10 @@
     </style>
 
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_disabled_selector</item>
+    </style>
+
+    <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
     </style>
 
@@ -906,7 +910,11 @@
     </style>
 
     <!-- Overload of Login Theme -->
-    <style name="LoginTheme" parent="WordPress.NoActionBar">
+    <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
+
+    <style name="LoginTheme" parent="Base.LoginTheme">
         <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
 
@@ -914,7 +922,9 @@
         <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
     </style>
 
-    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary" />
+    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary.Unelevated">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
 
     <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView">
         <item name="cardElevation">@dimen/appbar_elevation</item>
@@ -928,6 +938,7 @@
 
     <style name="LoginTheme.Button.SignUp" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
     <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
@@ -951,10 +962,23 @@
         <item name="endIconDrawable">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
-    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline6">
+    <style name="LoginTheme.PromoTitle" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="android:gravity">center</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-        <item name="android:textColor">?attr/colorSurface</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:maxLines">2</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textSize">@dimen/prologue_promo_title_size</item>
+        <item name="fixWidowWords">true</item>
+        <item name="fontFamily">serif</item>
+    </style>
+
+    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:maxLines">2</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textSize">@dimen/prologue_promo_text_size</item>
+        <item name="fixWidowWords">true</item>
     </style>
 
     <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />

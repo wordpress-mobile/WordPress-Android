@@ -1357,11 +1357,6 @@ Language: pl
     <string name="open_mail">Otwórz pocztę</string>
     <string name="next">Następny</string>
     <string name="enter_email_wordpress_com">Zaloguj się do WordPress.com używając adresu email aby zarządzać wszystkimi swoimi witrynami WordPress.</string>
-    <string name="login_promo_text_jetpack">Zarządzaj swoją witryną Jetpack w locie - masz WordPressa w swojej kieszeni.</string>
-    <string name="login_promo_text_notifications">Twoje powiadomienia podróżują razem z tobą - sprawdź komentarze i polubienia jak tylko się pojawią.</string>
-    <string name="login_promo_text_anytime">Nadrób zaległości przy swoich ulubionych witrynach i dołącz do konwersacji gdziekolwiek jesteś, w dowolnym czasie.</string>
-    <string name="login_promo_text_realtime">Obserwuj jak czytający z całego świata czytają i wchodzą w interakcję z twoją witryną - w czasie rzeczywistym.</string>
-    <string name="login_promo_text_onthego">Publikuj z parku. Bloguj z autobusu. Komentuj z kawiarni. Wordpress idzie tam gdzie ty.</string>
     <string name="image_optimization_promo_desc">Optymalizacja obrazów zmniejsza ich rozmiar w celu szybszego przesyłania.\n\nMożesz zmienić to ustawienie później w ustawieniach witryny.</string>
     <string name="image_optimization_promo_title">Włączyć optymalizację obrazków?</string>
     <string name="leave_off">Zostaw na później</string>

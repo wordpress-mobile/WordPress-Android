@@ -1160,16 +1160,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
-            case LOGIN_PROLOGUE_PAGED_JETPACK:
-                return "login_prologue_paged_jetpack";
-            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
-                return "login_prologue_paged_notifications";
-            case LOGIN_PROLOGUE_PAGED_POST:
-                return "login_prologue_paged_post";
-            case LOGIN_PROLOGUE_PAGED_READER:
-                return "login_prologue_paged_reader";
-            case LOGIN_PROLOGUE_PAGED_STATS:
-                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:

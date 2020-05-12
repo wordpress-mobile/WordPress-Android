@@ -1363,11 +1363,6 @@ Language: ru
     <string name="open_mail">Открыть почту</string>
     <string name="next">Вперед</string>
     <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
-    <string name="login_promo_text_jetpack">Управляйте сайтом, созданным с помощью Jetpack, где угодно — WordPress можно всегда носить с собой.</string>
-    <string name="login_promo_text_notifications">Уведомления путешествуют вместе с вами — сразу же узнавайте о комментариях и отметках «Нравится».</string>
-    <string name="login_promo_text_anytime">Следите за обновлениями любимых сайтов и присоединяйтесь к беседе в любом месте и в любое время.</string>
-    <string name="login_promo_text_realtime">Наблюдайте, как пользователи со всего света читают ваш сайт и общаются на нем в реальном времени.</string>
-    <string name="login_promo_text_onthego">Публикуйте записи, гуляя в парке. Ведите блог из автобуса. Отправляйте комментарии из-за столика в кафе. WordPress можно брать с собой повсюду!</string>
     <string name="image_optimization_promo_desc">Средство оптимизации изображений сжимает их для ускорения загрузки.\n\nВы в любой момент можете изменить это в настройках сайта.</string>
     <string name="image_optimization_promo_title">Включить оптимизацию изображений?</string>
     <string name="leave_off">Не включать</string>

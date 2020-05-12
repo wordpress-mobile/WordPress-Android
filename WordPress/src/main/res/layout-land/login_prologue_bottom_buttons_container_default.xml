@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/margin_medium_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium_large">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/second_button"
+        style="@style/LoginTheme.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:text="@string/sign_up" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/first_button"
+        style="@style/LoginTheme.Button.SignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_weight="1"
+        android:text="@string/log_in" />
+</LinearLayout>

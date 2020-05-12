@@ -1343,11 +1343,6 @@ Language: it
     <string name="open_mail">Apri email</string>
     <string name="next">Successivo</string>
     <string name="enter_email_wordpress_com">Accedi a WordPress.com utilizzando un indirizzo email per gestire tutti i tuoi siti WordPress.com.</string>
-    <string name="login_promo_text_jetpack">Gestisci il tuo sito con Jetpack mentre sei in movimento: hai WordPress in tasca.</string>
-    <string name="login_promo_text_notifications">Le tue notifiche viaggiano con te: vedi i commenti e i Mi piace in tempo reale.</string>
-    <string name="login_promo_text_anytime">Tieni il passo con i tuoi siti preferiti e partecipa a una conversazione ovunque e in qualsiasi momento.</string>
-    <string name="login_promo_text_realtime">Guarda i lettori da tutto il mondo leggere e interagire con il tuo sito, in tempo reale.</string>
-    <string name="login_promo_text_onthego">Pubblica dal parco. Lavora al blog sull\'autobus. Commenta dal bar. WordPress si sposta con te.</string>
     <string name="image_optimization_promo_desc">L\'ottimizzazione dell\'immagine restringe l\'immagine per un caricamento più veloce.\n\nPuoi modificare questa opzione in qualsiasi momento nelle impostazioni del sito.</string>
     <string name="image_optimization_promo_title">Attivare l\'ottimizzazione dell\'immagine?</string>
     <string name="leave_off">Escludi</string>

@@ -333,6 +333,20 @@
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
+    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
+    <dimen name="prologue_intro_content_max_width">0dp</dimen>
+
+    <dimen name="prologue_logo_size">50dp</dimen>
+    <dimen name="prologue_logo_margin">16dp</dimen>
+
+    <dimen name="prologue_promo_title_size">34sp</dimen>
+    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_text_size">20sp</dimen>
+    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
+
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
 
