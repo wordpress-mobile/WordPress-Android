@@ -222,6 +222,7 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onSettingsUpdated() {
                         // mEditPostActivityHook will be null if the fragment is detached
                         if (getEditPostActivityHook() != null) {
+                            mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                             updatePostFormat(
                                     mSiteSettings.getDefaultPostFormat());
                         }
@@ -607,6 +608,7 @@ public class EditPostSettingsFragment extends Fragment {
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                 break;
         }
     }
@@ -1066,7 +1068,6 @@ public class EditPostSettingsFragment extends Fragment {
             return;
         }
         AppLog.v(T.POSTS, "Post formats successfully fetched!");
-        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
         updatePostFormatKeysAndNames();
     }
 
