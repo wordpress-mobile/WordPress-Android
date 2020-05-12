@@ -1303,7 +1303,7 @@ Language: it
     <string name="media_edit_filename_caption">Nome file</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Testo Alt</string>
-    <string name="copy">Copia</string>
+    <string name="copy_text">Copia</string>
     <string name="connect_site">Connetti un sito</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luce lampeggiante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrazione dispositivo</string>

@@ -208,20 +208,21 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
-     * Loads a File from the Glide's disk cache for the provided imgUrl using asFile().
+     * Loads a File either using a file path obtained from the media store (for local images),
+     * or using Glide's disk cache (for remote images). Using Uri allows content and remote URIs to be interchangeable.
      *
      * We can use asFile() asynchronously on the ui thread or synchronously on a background thread.
      * This function uses the asynchronous api which takes a Target argument to invoke asFile().
      */
     fun loadIntoFileWithResultListener(
-        imgUrl: String,
+        imgUri: Uri,
         requestListener: RequestListener<File>
     ) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
         GlideApp.with(context)
             .asFile()
-            .load(imgUrl)
+            .load(imgUri)
             .attachRequestListener(requestListener)
             .into(
                 // Used just to invoke asFile() and ignored thereafter.
