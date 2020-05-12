@@ -72,8 +72,8 @@ class PrepublishingHomeFragment : Fragment() {
         })
 
         viewModel.onPublishButtonClicked.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { publishNow ->
-                actionClickedListener?.onPublishButtonClicked(publishNow)
+            event.getContentIfNotHandled()?.let { publishPost ->
+                actionClickedListener?.onPublishButtonClicked(publishPost)
             }
         })
 
