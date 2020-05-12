@@ -76,7 +76,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         })
 
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
-            selectTabAction.getContentIfNotHandled()?.let {tabPosition ->
+            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
                 view_pager.currentItem = tabPosition
             }
         })
