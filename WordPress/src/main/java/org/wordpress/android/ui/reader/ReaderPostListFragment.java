@@ -1757,7 +1757,7 @@ public class ReaderPostListFragment extends Fragment
         SpannableStringBuilder ssb = new SpannableStringBuilder(description);
         int imagePlaceholderPosition = description.indexOf("%s");
         addBookmarkImageSpan(ssb, imagePlaceholderPosition);
-
+        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
         mActionableEmptyView.image.setVisibility(View.VISIBLE);
         mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
         mActionableEmptyView.subtitle.setText(ssb);

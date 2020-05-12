@@ -172,7 +172,7 @@ class WPMainActivityViewModel @Inject constructor(
         if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
             if (canShowFeatureAnnouncement()) {
                 appPrefsWrapper.featureAnnouncementShownVersion =
-                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
                 appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 _onFeatureAnnouncementRequested.call()
             }
@@ -187,6 +187,6 @@ class WPMainActivityViewModel @Inject constructor(
     private fun canShowFeatureAnnouncement(): Boolean {
         return featureAnnouncementProvider.isFeatureAnnouncementAvailable() &&
                 appPrefsWrapper.featureAnnouncementShownVersion <
-                featureAnnouncementProvider.getLatestFeatureAnnouncement()?.versionCode!!
+                featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
     }
 }
