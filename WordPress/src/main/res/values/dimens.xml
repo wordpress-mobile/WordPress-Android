@@ -173,7 +173,7 @@
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
 
-    <dimen name="reader_featured_image_height_cardview">100dp</dimen>
+    <dimen name="reader_featured_image_height_cardview">150dp</dimen>
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
