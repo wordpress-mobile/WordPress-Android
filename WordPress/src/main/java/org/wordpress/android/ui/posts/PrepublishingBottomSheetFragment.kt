@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -122,7 +123,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(),
+                    PrepublishingHomeFragment.newInstance(arguments?.getParcelable<EditorAction>(EDITOR_ACTION)),
                     PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> Pair(
@@ -184,8 +185,24 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onActionClicked(actionType)
     }
 
-    override fun onPublishButtonClicked() {
+    override fun onPublishButtonClicked(publishPost: PublishPost) {
+        prepublishingBottomSheetListener?.onPublishButtonClicked(publishPost)
         viewModel.onCloseClicked()
-        prepublishingBottomSheetListener?.onPublishButtonClicked()
+        arguments?.getBoolean(PUBLISH_POST)?.let { prepublishingBottomSheetListener?.onPublishButtonClicked(it) }
+    }
+
+    companion object {
+        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
+        const val SITE = "prepublishing_bottom_sheet_site_model"
+        const val EDITOR_ACTION = "prepublishing_bottom_sheet_editor_action"
+
+        @JvmStatic
+        fun newInstance(@NonNull site: SiteModel, @NonNull editorAction: EditorAction) =
+                PrepublishingBottomSheetFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(SITE, site)
+                        putParcelable(EDITOR_ACTION, editorAction)
+                    }
+                }
     }
 }
