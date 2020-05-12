@@ -161,18 +161,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    companion object {
-        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
-        const val SITE = "prepublishing_bottom_sheet_site_model"
-
-        @JvmStatic
-        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(SITE, site)
-            }
-        }
-    }
-
     override fun onCloseClicked() {
         viewModel.onCloseClicked()
     }
@@ -188,7 +176,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     override fun onPublishButtonClicked(publishPost: PublishPost) {
         prepublishingBottomSheetListener?.onPublishButtonClicked(publishPost)
         viewModel.onCloseClicked()
-        arguments?.getBoolean(PUBLISH_POST)?.let { prepublishingBottomSheetListener?.onPublishButtonClicked(it) }
     }
 
     companion object {
