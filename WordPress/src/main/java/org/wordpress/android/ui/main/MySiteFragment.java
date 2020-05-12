@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +28,11 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.wordpress.stories.compose.ComposeLoopFrameActivity;
+import com.wordpress.stories.compose.frame.FrameSaveNotifier;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
+import com.wordpress.stories.compose.story.StoryRepository;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -102,6 +108,8 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import static com.wordpress.stories.compose.frame.StorySaveEvents.allErrorsInResult;
+import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
@@ -1067,6 +1075,62 @@ public class MySiteFragment extends Fragment implements
                 }
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(StorySaveResult event) {
+        // TODO WPSTORIES add TRACKS
+        // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+        EventBus.getDefault().removeStickyEvent(event);
+
+        if (event.isSuccess()) {
+            // TODO WPSTORIES probably we want to remove this snackbar given we want to immediately start uploading it
+            String snackbarMessage = String.format(
+                    getString(R.string.story_saving_snackbar_finished_successfully),
+                    StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()
+            );
+            mUploadUtilsWrapper.showSnackbar(
+                    requireActivity().findViewById(R.id.coordinator),
+                    snackbarMessage
+            );
+        } else {
+            String errorText = String.format(
+                    getString(R.string.story_saving_snackbar_finished_with_error),
+                    StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()
+            );
+            String snackbarMessage = FrameSaveNotifier.buildSnackbarErrorMessage(
+                    requireActivity(),
+                    allErrorsInResult(event.getFrameSaveResult()).size(),
+                    errorText
+            );
+
+            mUploadUtilsWrapper.showSnackbarError(
+                    requireActivity().findViewById(R.id.coordinator),
+                    snackbarMessage,
+                    R.string.story_saving_failed_quick_action_manage,
+                    new OnClickListener() {
+                        @Override public void onClick(View view) {
+                            Intent intent = new Intent(requireActivity(), ComposeLoopFrameActivity.class);
+                            intent.putExtra(KEY_STORY_SAVE_RESULT, event);
+                            startActivity(intent);
+                        }
+                    }
+            );
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onStorySaveStart(StorySaveProcessStart event) {
+        EventBus.getDefault().removeStickyEvent(event);
+        String snackbarMessage = String.format(
+                getString(R.string.story_saving_snackbar_started),
+                StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()
+        );
+        mUploadUtilsWrapper.showSnackbar(
+                requireActivity().findViewById(R.id.coordinator),
+                snackbarMessage
+        );
     }
 
     @Override
