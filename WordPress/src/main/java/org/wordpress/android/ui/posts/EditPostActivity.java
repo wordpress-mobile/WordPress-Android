@@ -1811,7 +1811,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onPublishButtonClicked(boolean publishPost) {
-        uploadPost(true);
+        uploadPost(publishPost);
     }
 
     private void uploadPost(final boolean publishPost) {
