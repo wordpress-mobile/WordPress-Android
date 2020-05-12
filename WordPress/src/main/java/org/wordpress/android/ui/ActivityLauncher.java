@@ -980,6 +980,7 @@ public class ActivityLauncher {
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
             // disable deeplinking activity so to not catch WP URLs
