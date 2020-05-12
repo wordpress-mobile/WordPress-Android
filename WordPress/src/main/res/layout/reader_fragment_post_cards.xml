@@ -10,7 +10,7 @@
         android:id="@+id/sub_filter_component_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="?attr/colorSurface"
         android:elevation="@dimen/card_elevation"/>
 
     <org.wordpress.android.ui.FilteredRecyclerView
