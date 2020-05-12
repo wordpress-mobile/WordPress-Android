@@ -67,7 +67,7 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
         ))
         actionsList.add(CreateAction(
                 actionType = CREATE_NEW_STORY,
-                iconRes = R.drawable.ic_pages_white_24dp,
+                iconRes = R.drawable.ic_story_icon_24dp,
                 labelRes = R.string.my_site_bottom_sheet_add_story,
                 onClickAction = ::onCreateActionClicked
         ))
