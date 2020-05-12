@@ -185,7 +185,7 @@ workflows:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
-          post-to-slack: false
+          post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
             branches:

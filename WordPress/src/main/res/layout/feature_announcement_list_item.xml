@@ -11,7 +11,6 @@
         android:id="@+id/feature_item_icon_container"
         android:layout_width="@dimen/feature_announcement_icon_size"
         android:layout_height="@dimen/feature_announcement_icon_size"
-        android:background="@drawable/bg_oval_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,8 +18,8 @@
         <ImageView
             android:layout_gravity="center"
             android:id="@+id/feature_item_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="@null"
             tools:src="@drawable/ic_plans_white_24dp" />
 

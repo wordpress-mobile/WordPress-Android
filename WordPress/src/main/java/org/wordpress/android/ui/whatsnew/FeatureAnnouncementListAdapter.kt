@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
@@ -74,7 +76,8 @@ class FeatureAnnouncementListAdapter(
         parent: ViewGroup,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.feature_announcement_list_item, parent, false)
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.feature_announcement_list_item, parent, false)
     ) {
         private val featureIcon: ImageView = itemView.findViewById(R.id.feature_item_icon)
         private val title: TextView = itemView.findViewById(R.id.feature_title)
@@ -83,11 +86,18 @@ class FeatureAnnouncementListAdapter(
         fun bind(featureAnnouncementItem: FeatureAnnouncementItem) {
             title.text = featureAnnouncementItem.title
             subtitle.text = featureAnnouncementItem.subtitle
-            featureIcon.setImageResource(featureAnnouncementItem.iconResId)
+
+            imageManager.loadIntoCircle(
+                    featureIcon, ImageType.PLAN,
+                    StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
+            )
         }
     }
 
-    class FeatureAnnouncementFooterViewHolder(parent: ViewGroup, val viewModel: FeatureAnnouncementViewModel) :
+    class FeatureAnnouncementFooterViewHolder(
+        parent: ViewGroup,
+        val viewModel: FeatureAnnouncementViewModel
+    ) :
             RecyclerView.ViewHolder(
                     LayoutInflater.from(parent.context)
                             .inflate(R.layout.feature_announcement_list_footer, parent, false)
