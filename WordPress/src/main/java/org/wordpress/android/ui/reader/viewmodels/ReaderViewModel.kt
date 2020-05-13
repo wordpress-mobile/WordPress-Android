@@ -44,9 +44,6 @@ class ReaderViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabPosition>>()
     val selectTab: LiveData<Event<TabPosition>> = _selectTab
 
-    private val _forceTabSelection = MutableLiveData<Event<ReaderTag>>()
-    val forceTabSelection: LiveData<Event<ReaderTag>> = _forceTabSelection
-
     init {
         EventBus.getDefault().register(this)
     }
