@@ -66,7 +66,7 @@ class WhatsNewRestClient constructor(
                     features = announce.features.map {
                         Feature(
                                 title = it.title,
-                                subtitle = it.title,
+                                subtitle = it.subtitle,
                                 iconBase64 = it.iconBase64,
                                 iconUrl = it.iconUrl
                         )
