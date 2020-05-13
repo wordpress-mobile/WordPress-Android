@@ -103,7 +103,6 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun emptyStateTabChange(tag: ReaderTag) {
-        onTagChanged(tag)
         _forceTabSelection.postValue(Event(tag))
     }
 
