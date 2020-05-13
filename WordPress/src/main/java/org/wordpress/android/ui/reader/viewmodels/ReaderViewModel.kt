@@ -111,4 +111,3 @@ class ReaderViewModel @Inject constructor(
         loadTabs()
     }
 }
-
