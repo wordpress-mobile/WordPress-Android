@@ -220,7 +220,7 @@ public class ReaderPostListFragment extends Fragment
     // This VM is initialized only on the Following tab
     private SubFilterViewModel mSubFilterViewModel;
     private NewsCardViewModel mNewsCardViewModel;
-    private ReaderViewModel mReaderViewModel;
+    private ReaderViewModel mReaderViewModel = null;
 
     private Observer<NewsItem> mNewsItemObserver = new Observer<NewsItem>() {
         @Override public void onChanged(@Nullable NewsItem newsItem) {
@@ -414,8 +414,10 @@ public class ReaderPostListFragment extends Fragment
                                        .get(ReaderPostListViewModel.class);
         mNewsCardViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
                                                .get(NewsCardViewModel.class);
-        mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
-                                            .get(ReaderViewModel.class);
+        if (mIsTopLevel) {
+            mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
+                                                 .get(ReaderViewModel.class);
+        }
 
         if (isFollowingScreen()) {
             initSubFilterViewModel();

@@ -33,9 +33,9 @@ class ReaderPostListViewModel @Inject constructor(
 
     private var isStarted = false
 
-    private lateinit var readerViewModel: ReaderViewModel
+    private var readerViewModel: ReaderViewModel? = null
 
-    fun start(isTopLevelFragment: Boolean, readerViewModel: ReaderViewModel) {
+    fun start(isTopLevelFragment: Boolean, readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
         if (isStarted) {
@@ -92,7 +92,10 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {
-        readerViewModel.emptyStateTabChange(tag)
+        readerViewModel?.uiState?.value?.let {
+            val position = it.readerTagList.indexOfTagName(tag.tagSlug)
+            readerViewModel?.selectedTabChange(position)
+        }
     }
 
     // TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(
