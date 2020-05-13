@@ -102,8 +102,11 @@ class ReaderViewModel @Inject constructor(
         return now - lastUpdated > UPDATE_TAGS_THRESHOLD
     }
 
-    fun selectedTabChange(position: Int) {
-        _selectTab.postValue(Event(position))
+    fun selectedTabChange(tag: ReaderTag) {
+        uiState.value?.let {
+            val position = it.readerTagList.indexOfTagName(tag.tagSlug)
+            _selectTab.postValue(Event(position))
+        }
     }
 
     @Subscribe(threadMode = MAIN)

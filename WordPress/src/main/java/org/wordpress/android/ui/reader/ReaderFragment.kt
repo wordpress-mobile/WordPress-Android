@@ -90,15 +90,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             }
         })
 
-        viewModel.forceTabSelection.observe(viewLifecycleOwner, Observer { forceTabSelectionAction ->
-            forceTabSelectionAction.getContentIfNotHandled()?.let { tag ->
-                viewModel.uiState.value?.let {
-                    val position = it.readerTagList.indexOfTagName(tag.tagSlug)
-                    view_pager.currentItem = position
-                }
-            }
-        })
-
         viewModel.start()
     }
 
