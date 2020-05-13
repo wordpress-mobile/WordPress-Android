@@ -45,7 +45,7 @@
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
-    
+
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
@@ -2302,8 +2302,10 @@
     <string name="login_promo_title_36_percent">36% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link">Send link</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="send_link" tools:ignore="UnusedResources">Send link</string>
+    <string name="enter_your_password_instead" tools:ignore="UnusedResources">Enter your password instead</string>
+    <string name="send_link_by_email">Send link by email</string>
+    <string name="or_type_your_password">Or type your password</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
     <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
@@ -2320,7 +2322,7 @@
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
     <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>

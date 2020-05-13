@@ -7,74 +7,85 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:overScrollMode="never">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/avatar_container"
-                android:layout_width="@dimen/avatar_sz_login"
-                android:layout_height="@dimen/avatar_sz_login"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_extra_extra_large"
-                android:layout_marginBottom="@dimen/margin_extra_large">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_extra_large">
 
-                <ImageView
-                    android:id="@+id/gravatar"
+                <FrameLayout
+                    android:id="@+id/avatar_container"
+                    android:layout_width="@dimen/blavatar_sz"
+                    android:layout_height="@dimen/blavatar_sz">
+
+                    <ImageView
+                        android:id="@+id/gravatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no" />
+
+                    <ProgressBar
+                        android:id="@+id/avatar_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shape_oval_translucent"
+                        android:indeterminate="true"
+                        android:padding="@dimen/margin_large" />
+                </FrameLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/email"
+                    style="@style/Widget.LoginFlow.TextView.Subtitle"
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:importantForAccessibility="no" />
-
-                <ProgressBar
-                    android:id="@+id/avatar_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/shape_oval_translucent"
-                    android:indeterminate="true"
-                    android:padding="@dimen/margin_large" />
-            </FrameLayout>
+                    android:paddingStart="@dimen/margin_extra_large"
+                    android:paddingEnd="@dimen/margin_extra_large"
+                    android:text="@string/email_address" />
+            </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/label"
                 style="@style/Widget.LoginFlow.TextView.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/avatar_container"
-                android:gravity="center"
                 android:padding="@dimen/margin_extra_large"
                 android:text="@string/login_magic_links_label" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/login_request_magic_link"
-                style="@style/Widget.LoginFlow.Button.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/label"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/send_link" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_enter_password"
                 style="@style/Widget.LoginFlow.Button.Tertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/login_request_magic_link"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginEnd="@dimen/margin_extra_large"
+                android:layout_marginStart="@dimen/margin_extra_large"
                 android:gravity="center"
-                android:paddingStart="@dimen/margin_medium_large"
-                android:paddingLeft="@dimen/margin_medium_large"
-                android:paddingEnd="@dimen/margin_medium_large"
-                android:paddingRight="@dimen/margin_medium_large"
-                android:text="@string/enter_your_password_instead" />
+                android:paddingEnd="@dimen/margin_none"
+                android:paddingStart="@dimen/margin_none"
+                android:text="@string/or_type_your_password" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_request_magic_link"
+        style="@style/Widget.LoginFlow.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_medium_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginTop="@dimen/margin_medium_large"
+        android:text="@string/send_link_by_email" />
 
 </LinearLayout>
