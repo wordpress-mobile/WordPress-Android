@@ -15,8 +15,7 @@
         style="@style/Widget.LoginFlow.TextView.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_marginBottom="@dimen/margin_extra_medium_large"
         android:gravity="start"
         android:textAlignment="viewStart"
         tools:text="@string/enter_email_wordpress_com" />
@@ -29,12 +28,30 @@
         android:hint="@string/email_address"
         android:imeOptions="actionNext"
         android:importantForAutofill="noExcludeDescendants"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:inputType="textEmailAddress"
         android:textAlignment="viewStart"
         tools:ignore="UnusedAttribute" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_continue_button"
+        style="@style/Widget.LoginFlow.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="@string/login_continue" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/continue_tos"
+        style="@style/Widget.LoginFlow.Button.Tertiary.Small"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/continue_terms_of_service_text" />
+
     <com.google.android.material.textview.MaterialTextView
         style="@style/Widget.LoginFlow.TextView.Label"
+        android:id="@+id/login_alternatively_label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/margin_extra_large"
