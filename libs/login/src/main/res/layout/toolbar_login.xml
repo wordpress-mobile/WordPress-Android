@@ -12,11 +12,13 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/toolbar_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:tint="?attr/colorControlNormal"
+            android:visibility="gone"
             app:srcCompat="@drawable/login_toolbar_icon" />
 
     </com.google.android.material.appbar.MaterialToolbar>

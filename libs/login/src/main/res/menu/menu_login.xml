@@ -5,6 +5,7 @@
 
     <item
         android:id="@+id/help"
+        android:icon="@drawable/ic_help_outline_white_24dp"
         android:title="@string/help"
         app:showAsAction="always">
     </item>

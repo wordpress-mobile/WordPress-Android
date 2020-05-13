@@ -12,7 +12,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_buttons"
+        android:layout_above="@+id/bottom_container"
         android:layout_below="@+id/toolbar_container">
 
         <ViewStub
@@ -23,46 +23,59 @@
             android:layout_marginBottom="@dimen/margin_extra_large" />
     </ScrollView>
 
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/bottom_buttons"
+    <FrameLayout
         android:layout_width="match_parent"
-        style="@style/Widget.LoginFlow.CardView.BottomBar"
         android:layout_height="wrap_content"
+        android:id="@+id/bottom_container"
         android:layout_alignParentBottom="true">
 
-        <RelativeLayout
+        <include
+            android:id="@+id/third_party_buttons"
+            style="@style/Widget.LoginFlow.CardView.BottomBar"
+            layout="@layout/login_third_party_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingStart="@dimen/margin_small_medium"
-            android:paddingTop="@dimen/margin_medium_large"
-            android:paddingEnd="@dimen/margin_medium_large"
-            android:paddingBottom="@dimen/margin_medium_large">
+            android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/secondary_button"
-                style="@style/Widget.LoginFlow.Button.Tertiary"
-                android:layout_width="wrap_content"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/bottom_buttons"
+            style="@style/Widget.LoginFlow.CardView.BottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="@dimen/margin_extra_large"
-                android:layout_toStartOf="@+id/primary_button"
-                android:gravity="start|center_vertical"
-                android:paddingStart="@dimen/margin_medium_large"
-                android:paddingLeft="@dimen/margin_medium_large"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/margin_medium_large"
                 android:paddingEnd="@dimen/margin_medium_large"
-                android:paddingRight="@dimen/margin_medium_large"
-                android:textAlignment="viewStart"
-                tools:text="Secondary action" />
+                android:paddingStart="@dimen/margin_small_medium"
+                android:paddingTop="@dimen/margin_medium_large">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/primary_button"
-                style="@style/Widget.LoginFlow.Button.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/next" />
-        </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/secondary_button"
+                    style="@style/Widget.LoginFlow.Button.Secondary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/margin_extra_large"
+                    android:layout_toStartOf="@+id/primary_button"
+                    android:gravity="start|center_vertical"
+                    android:paddingEnd="@dimen/margin_medium_large"
+                    android:paddingLeft="@dimen/margin_medium_large"
+                    android:paddingRight="@dimen/margin_medium_large"
+                    android:paddingStart="@dimen/margin_medium_large"
+                    android:textAlignment="viewStart"
+                    tools:text="Secondary action" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/primary_button"
+                    style="@style/Widget.LoginFlow.Button.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/next" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 </RelativeLayout>

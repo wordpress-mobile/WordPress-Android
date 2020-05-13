@@ -5,11 +5,13 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,7 +23,9 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -39,6 +43,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
+import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -52,9 +57,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.app.Activity.RESULT_OK;
-
 import dagger.android.support.AndroidSupportInjection;
+
+import static android.app.Activity.RESULT_OK;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
@@ -98,11 +103,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled, boolean isUnifiedLoginEnabled) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
+        args.putBoolean(ARG_UNIFIED_LOGIN_ENABLED, isUnifiedLoginEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -128,7 +134,11 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                label.setText(R.string.enter_email_wordpress_com);
+                if (mIsUnifiedLoginEnabled) {
+                    label.setText(R.string.enter_email_to_continue_wordpress_com);
+                } else {
+                    label.setText(R.string.enter_email_wordpress_com);
+                }
                 break;
             case WOO_LOGIN_MODE:
                 label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
@@ -180,19 +190,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         googleLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAnalyticsListener.trackSocialButtonClick();
-                ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
-
-                if (NetworkUtils.checkConnection(getActivity())) {
-                    if (isAdded()) {
-                        mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                        mIsSocialLogin = true;
-                        mLoginListener.addGoogleLoginFragment();
-                    } else {
-                        AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
-                        showErrorDialog(getString(R.string.login_error_generic_start));
-                    }
-                }
+                onGoogleSigninClicked();
             }
         });
 
@@ -236,6 +234,22 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             case WPCOM_REAUTHENTICATE:
                 siteLoginButton.setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    private void onGoogleSigninClicked() {
+        mAnalyticsListener.trackSocialButtonClick();
+        ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
+
+        if (NetworkUtils.checkConnection(getActivity())) {
+            if (isAdded()) {
+                mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                mIsSocialLogin = true;
+                mLoginListener.addGoogleLoginFragment();
+            } else {
+                AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
+                showErrorDialog(getString(R.string.login_error_generic_start));
+            }
         }
     }
 
@@ -356,6 +370,65 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
         if (mCurrentEmailErrorRes != null) {
             outState.putInt(KEY_EMAIL_ERROR_RES, mCurrentEmailErrorRes);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        if (mIsUnifiedLoginEnabled && rootView != null) {
+            // Hide all unused views
+            rootView.findViewById(R.id.bottom_buttons).setVisibility(View.GONE);
+            rootView.findViewById(R.id.login_alternatively_label).setVisibility(View.GONE);
+            rootView.findViewById(R.id.login_google_button).setVisibility(View.GONE);
+            // Show the new UX
+            rootView.findViewById(R.id.third_party_buttons).setVisibility(View.VISIBLE);
+            Button continueButton = rootView.findViewById(R.id.login_continue_button);
+            continueButton.setVisibility(View.VISIBLE);
+            continueButton.setOnClickListener(new OnClickListener() {
+                public void onClick(View view) {
+                    next(getCleanedEmail());
+                }
+            });
+            Button continueTos = rootView.findViewById(R.id.continue_tos);
+            Button continueWithGoogleTosText = rootView.findViewById(R.id.continue_with_google_tos);
+            continueTos.setVisibility(View.VISIBLE);
+
+            OnClickListener onClickListener = new OnClickListener() {
+                public void onClick(View view) {
+                    Context context = getContext();
+                    if ((context instanceof SignupSheetListener)) {
+                        ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+                    }
+                }
+            };
+            continueTos.setOnClickListener(onClickListener);
+            continueWithGoogleTosText.setOnClickListener(onClickListener);
+            Resources resources = rootView
+                    .getContext()
+                    .getResources();
+            continueTos.setText(Html.fromHtml(
+                    String.format(resources.getString(R.string.continue_terms_of_service_text), "<u>", "</u>")));
+            continueWithGoogleTosText.setText(Html.fromHtml(
+                    String.format(resources.getString(R.string.continue_with_google_terms_of_service_text), "<u>",
+                            "</u>")));
+            Button continueWithGoogleButton = rootView.findViewById(R.id.continue_with_google);
+            continueWithGoogleButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onGoogleSigninClicked();
+                }
+            });
+        }
+        return rootView;
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        if (mIsUnifiedLoginEnabled) {
+            actionBar.setTitle(R.string.get_started);
+        } else {
+            super.buildToolbar(toolbar, actionBar);
         }
     }
 
