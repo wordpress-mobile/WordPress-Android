@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
@@ -165,6 +166,29 @@ class ReaderViewModelTest {
         assertThat(tabPosition).isNull()
     }
 
+    @Test
+    fun `Position is changed when selectedTabChange`() = test {
+        // Arrange
+        val tagList = createNonMockedNonEmptyReaderTagList()
+        val readerTag = tagList[2]
+
+        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(tagList)
+
+        viewModel.uiState.observeForever { }
+
+        var tabPosition: TabPosition? = null
+            viewModel.selectTab.observeForever {
+                tabPosition = it.getContentIfNotHandled()
+        }
+
+        // Act
+        viewModel.start()
+        viewModel.selectedTabChange(readerTag)
+
+        // Assert
+        assertThat(tabPosition).isEqualTo(2)
+    }
+
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
@@ -178,6 +202,15 @@ class ReaderViewModelTest {
             add(mock())
             add(mock())
             add(mock())
+        }
+    }
+
+    private fun createNonMockedNonEmptyReaderTagList(): ReaderTagList {
+        return ReaderTagList().apply {
+            add(ReaderTag("Following", "Following", "Following", " ", FOLLOWED))
+            add(ReaderTag("Discover", "Discover", "Discover", " ", FOLLOWED))
+            add(ReaderTag("Like", "Like", "Like", " ", FOLLOWED))
+            add(ReaderTag("Saved", "Saved", "Saved", "Saved", FOLLOWED))
         }
     }
 }
