@@ -151,6 +151,9 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mAvatarProgressBar = view.findViewById(R.id.avatar_progress);
         ImageView avatarView = view.findViewById(R.id.gravatar);
 
+        TextView emailView = view.findViewById(R.id.email);
+        emailView.setText(mEmail);
+
         // Design changes added to the Woo Magic link sign-in
         if (mVerifyMagicLinkEmail) {
             View avatarContainerView = view.findViewById(R.id.avatar_container);
@@ -205,7 +208,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.log_in);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
