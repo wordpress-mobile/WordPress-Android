@@ -67,6 +67,7 @@ class WhatsNewRestClient constructor(
                         Feature(
                                 title = it.title,
                                 subtitle = it.title,
+                                iconBase64 = it.iconBase64,
                                 iconUrl = it.iconUrl
                         )
                     }
@@ -87,6 +88,7 @@ class WhatsNewRestClient constructor(
         data class Feature(
             val title: String,
             val subtitle: String,
+            val iconBase64: String,
             val iconUrl: String
         )
     }
