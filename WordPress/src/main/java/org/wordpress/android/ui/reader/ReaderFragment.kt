@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.WPWebViewActivity
@@ -47,8 +49,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initToolbar()
         initViewPager()
         initViewModel()
+    }
+
+    private fun initToolbar() {
+        toolbar.title = getString(string.reader_screen_title)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     private fun initViewPager() {
