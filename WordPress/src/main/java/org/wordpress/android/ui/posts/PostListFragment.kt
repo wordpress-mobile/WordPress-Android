@@ -91,7 +91,7 @@ class PostListFragment : Fragment() {
         mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
-        mainViewModel.viewLayoutType.observe(this, Observer { optionaLayoutType ->
+        mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
             optionaLayoutType?.let { layoutType ->
                 recyclerView?.removeItemDecoration(itemDecorationCompactLayout)
                 recyclerView?.removeItemDecoration(itemDecorationStandardLayout)
@@ -111,7 +111,7 @@ class PostListFragment : Fragment() {
             }
         })
 
-        mainViewModel.authorSelectionUpdated.observe(this, Observer {
+        mainViewModel.authorSelectionUpdated.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 if (viewModel.updateAuthorFilterIfNotSearch(it)) {
                     recyclerView?.scrollToPosition(0)
@@ -141,7 +141,7 @@ class PostListFragment : Fragment() {
 
     private fun initObservers() {
         if (postListType == SEARCH) {
-            mainViewModel.searchQuery.observe(this, Observer {
+            mainViewModel.searchQuery.observe(viewLifecycleOwner, Observer {
                 if (TextUtils.isEmpty(it)) {
                     postListAdapter.submitList(null)
                 }
@@ -149,22 +149,22 @@ class PostListFragment : Fragment() {
             })
         }
 
-        viewModel.emptyViewState.observe(this, Observer {
+        viewModel.emptyViewState.observe(viewLifecycleOwner, Observer {
             it?.let { emptyViewState -> updateEmptyViewForState(emptyViewState) }
         })
 
-        viewModel.isFetchingFirstPage.observe(this, Observer {
+        viewModel.isFetchingFirstPage.observe(viewLifecycleOwner, Observer {
             swipeRefreshLayout?.isRefreshing = it == true
         })
 
-        viewModel.pagedListData.observe(this, Observer {
+        viewModel.pagedListData.observe(viewLifecycleOwner, Observer {
             it?.let { pagedListData -> updatePagedListData(pagedListData) }
         })
 
-        viewModel.isLoadingMore.observe(this, Observer {
+        viewModel.isLoadingMore.observe(viewLifecycleOwner, Observer {
             progressLoadMore?.visibility = if (it == true) View.VISIBLE else View.GONE
         })
-        viewModel.scrollToPosition.observe(this, Observer {
+        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer {
             it?.let { index ->
                 recyclerView?.scrollToPosition(index)
             }

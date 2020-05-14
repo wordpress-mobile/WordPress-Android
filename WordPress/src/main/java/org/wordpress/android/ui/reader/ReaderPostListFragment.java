@@ -416,7 +416,7 @@ public class ReaderPostListFragment extends Fragment
             mWPMainActivityViewModel = ViewModelProviders.of((FragmentActivity) getActivity(), mViewModelFactory)
                                                          .get(WPMainActivityViewModel.class);
 
-            mViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
+            mViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
                 if (isCurrentTagManagedInFollowingTab()
                     && getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                     mViewModel.onSubfilterSelected(subfilterListItem);
@@ -427,12 +427,12 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.getShouldShowSubFilters().observe(this, show -> {
+            mViewModel.getShouldShowSubFilters().observe(getViewLifecycleOwner(), show -> {
                 mSubFilterComponent.setVisibility(show ? View.VISIBLE : View.GONE);
                 mSettingsButton.setVisibility(mAccountStore.hasAccessToken() ? View.VISIBLE : View.GONE);
             });
 
-            mViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
+            mViewModel.getReaderModeInfo().observe(getViewLifecycleOwner(), readerModeInfo -> {
                 if (readerModeInfo != null) {
                     changeReaderMode(readerModeInfo, true);
 
@@ -453,7 +453,7 @@ public class ReaderPostListFragment extends Fragment
                 }
             });
 
-            mViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
+            mViewModel.getChangeBottomSheetVisibility().observe(getViewLifecycleOwner(), event -> {
                 event.applyIfNotHandled(isShowing -> {
                     FragmentManager fm = getFragmentManager();
                     if (fm != null) {
@@ -471,7 +471,7 @@ public class ReaderPostListFragment extends Fragment
                 });
             });
 
-            mViewModel.getBottomSheetEmptyViewAction().observe(this, event -> {
+            mViewModel.getBottomSheetEmptyViewAction().observe(getViewLifecycleOwner(), event -> {
                 event.applyIfNotHandled(action -> {
                     if (action instanceof OpenSubsAtPage) {
                         ReaderActivityLauncher.showReaderSubs(
@@ -486,7 +486,7 @@ public class ReaderPostListFragment extends Fragment
                 });
             });
 
-            mViewModel.getUpdateTagsAndSites().observe(this, event -> {
+            mViewModel.getUpdateTagsAndSites().observe(getViewLifecycleOwner(), event -> {
                 event.applyIfNotHandled(tasks -> {
                     if (NetworkUtils.isNetworkAvailable(getActivity())) {
                         ReaderUpdateServiceStarter.startService(getActivity(), tasks);
@@ -496,7 +496,7 @@ public class ReaderPostListFragment extends Fragment
             });
         }
 
-        mViewModel.getShouldCollapseToolbar().observe(this, collapse -> {
+        mViewModel.getShouldCollapseToolbar().observe(getViewLifecycleOwner(), collapse -> {
             if (collapse) {
                 mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                                                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
@@ -2909,7 +2909,7 @@ public class ReaderPostListFragment extends Fragment
      * Handles reblog state changes and triggers reblog actions
      */
     private void handleReblogStateChanges() {
-        mViewModel.getReblogState().observe(this, event -> {
+        mViewModel.getReblogState().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(state -> {
                 if (state instanceof NoSite) {
                     ReaderActivityLauncher.showNoSiteToReblog(getActivity());

@@ -168,7 +168,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this,
+        viewModel.uiState.observe(viewLifecycleOwner,
                 Observer { uiState ->
                     uiState?.let {
                         toggleFormProgressIndictor(uiState.isFormProgressIndicatorVisible)
@@ -196,7 +196,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 })
 
         viewModel.domainContactForm.observe(
-                this,
+                viewLifecycleOwner,
                 Observer<DomainContactFormModel> { domainContactFormModel ->
                     val currentModel = getDomainContactFormModel()
                     if (currentModel != domainContactFormModel) {
@@ -204,21 +204,21 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     }
                 })
 
-        viewModel.showCountryPickerDialog.observe(this,
+        viewModel.showCountryPickerDialog.observe(viewLifecycleOwner,
                 Observer {
                     if (it != null && it.isNotEmpty()) {
                         showCountryPicker(it)
                     }
                 })
 
-        viewModel.showStatePickerDialog.observe(this,
+        viewModel.showStatePickerDialog.observe(viewLifecycleOwner,
                 Observer {
                     if (it != null && it.isNotEmpty()) {
                         showStatePicker(it)
                     }
                 })
 
-        viewModel.formError.observe(this,
+        viewModel.formError.observe(viewLifecycleOwner,
                 Observer { error ->
                     var affectedInputFields: Array<TextInputEditText>? = null
 
@@ -249,17 +249,17 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     affectedInputFields?.firstOrNull { it.requestFocus() }
                 })
 
-        viewModel.showErrorMessage.observe(this,
+        viewModel.showErrorMessage.observe(viewLifecycleOwner,
                 Observer { errorMessage ->
                     ToastUtils.showToast(context, errorMessage)
                 })
 
-        viewModel.handleCompletedDomainRegistration.observe(this,
+        viewModel.handleCompletedDomainRegistration.observe(viewLifecycleOwner,
                 Observer { domainRegisteredEvent ->
                     mainViewModel.completeDomainRegistration(domainRegisteredEvent)
                 })
 
-        viewModel.showTos.observe(this,
+        viewModel.showTos.observe(viewLifecycleOwner,
                 Observer {
                     ActivityLauncher.openUrlExternal(
                             context,
