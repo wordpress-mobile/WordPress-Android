@@ -301,6 +301,18 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    static ReaderPostListFragment newInstanceForSearch() {
+        AppLog.d(T.READER, "reader post list > newInstance (tag)");
+
+        Bundle args = new Bundle();
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
+        args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, false);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     /*
      * show posts in a specific blog
      */
@@ -438,6 +450,11 @@ public class ReaderPostListFragment extends Fragment
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();
+        }
+
+        if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            mRecyclerView.showAppBarLayout();
+            mSearchMenuItem.expandActionView();
         }
     }
 
@@ -1124,35 +1141,8 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                hideSearchMessage();
-                hideSearchSuggestions();
-                hideSearchTabs();
-                resetSearchSuggestions();
-                if (!mIsTopLevel) {
-                    mSettingsMenuItem.setVisible(true);
-                }
-                mCurrentSearchQuery = null;
-
-                if (mBottomNavController != null) {
-                    mBottomNavController.onRequestShowBottomNavigation();
-                }
-
-
-                if (mIsTopLevel) {
-                    if (isFollowingScreen()) {
-                        mSubFilterViewModel.onSubfilterReselected();
-                    } else {
-                        // return to the followed tag that was showing prior to searching
-                        resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                    }
-
-                    mViewModel.onSearchMenuCollapse(true);
-                } else {
-                    // return to the followed tag that was showing prior to searching
-                    resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                }
-
-                return true;
+                requireActivity().finish();
+                return false;
             }
         });
 

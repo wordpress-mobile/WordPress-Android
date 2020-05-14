@@ -395,6 +395,11 @@
             android:theme="@style/WordPress.NoActionBar">
         </activity>
         <activity
+            android:name=".ui.reader.ReaderSearchActivity"
+            android:label="@string/reader"
+            android:theme="@style/WordPress.NoActionBar">
+        </activity>
+        <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
             android:label="@string/reader_title_deeplink"
