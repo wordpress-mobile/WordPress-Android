@@ -30,5 +30,7 @@
 
     <!-- Gutenberg -->
     <color name="background_color">#f6f7f7</color>
+    <color name="wordpress_blue_70">#003c56</color>
+    <color name="primary_70">@color/wordpress_blue_70</color>
 
 </resources>

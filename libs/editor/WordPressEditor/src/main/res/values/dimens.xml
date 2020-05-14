@@ -58,4 +58,10 @@
     <item name="spacing_multiplier_body" format="float" type="dimen">1.2</item>
 
     <dimen name="aztec_title_size">24sp</dimen>
+
+    <dimen name="progress_bar_height">3dp</dimen>
+
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_content_offset">72dp</dimen>
+    <dimen name="toolbar_content_offset_end">0dp</dimen>
 </resources>

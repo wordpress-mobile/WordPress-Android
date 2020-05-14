@@ -137,5 +137,7 @@
 
     <string name="long_post_dlg_saving">Saving</string>
 
+    <string name="menu_toolbar_save">Save</string>
+    <string name="menu_toolbar_title">Edit %s block"</string>
 
 </resources>
