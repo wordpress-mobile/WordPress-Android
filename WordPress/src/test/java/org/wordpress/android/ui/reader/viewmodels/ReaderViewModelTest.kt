@@ -38,6 +38,13 @@ class ReaderViewModelTest {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var dateProvider: DateProvider
     @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+    private val emptyReaderTagList =  ReaderTagList()
+    private val nonEmptyReaderTagList =  ReaderTagList().apply {
+        this.add(mock())
+        this.add(mock())
+        this.add(mock())
+        this.add(mock())
+    }
 
     @Before
     fun setup() {
@@ -94,9 +101,8 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `UiState is updated in start() when loaded tags are NOT empty`() = test {
+    fun `UiState is updated in start() when loaded tags are NOT empty`() = testWithNonEmptyTags {
         // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
@@ -108,9 +114,8 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Tags are reloaded when FollowedTagsChanged event is received`() = test {
+    fun `Tags are reloaded when FollowedTagsChanged event is received`() = testWithNonEmptyTags {
         // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
@@ -132,11 +137,9 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Last selected tab is restored after restart`() = test {
+    fun `Last selected tab is restored after restart`() = testWithNonEmptyTags {
         // Arrange
-        val tagList = createNonEmptyReaderTagList()
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(tagList)
-        whenever(appPrefsWrapper.getReaderTag()).thenReturn(tagList[3])
+        whenever(appPrefsWrapper.getReaderTag()).thenReturn(nonEmptyReaderTagList[3])
 
         var tabPosition: TabPosition? = null
         viewModel.selectTab.observeForever {
@@ -149,10 +152,8 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `SelectTab not invoked when last selected tab is null`() = test {
+    fun `SelectTab not invoked when last selected tab is null`() = testWithNonEmptyTags {
         // Arrange
-        val tagList = createNonEmptyReaderTagList()
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(tagList)
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
 
         var tabPosition: TabPosition? = null
@@ -167,17 +168,15 @@ class ReaderViewModelTest {
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(emptyReaderTagList)
             block()
         }
     }
 
-    private fun createNonEmptyReaderTagList(): ReaderTagList {
-        return ReaderTagList().apply {
-            add(mock())
-            add(mock())
-            add(mock())
-            add(mock())
+    private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(nonEmptyReaderTagList)
+            block()
         }
     }
 }
