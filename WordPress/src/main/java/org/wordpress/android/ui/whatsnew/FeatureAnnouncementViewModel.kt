@@ -65,7 +65,6 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     private fun loadFeatures() {
         launch {
-            delay(3000)
             _currentFeatureAnnouncement.value = featureAnnouncementProvider.getLatestFeatureAnnouncement()
         }
     }
