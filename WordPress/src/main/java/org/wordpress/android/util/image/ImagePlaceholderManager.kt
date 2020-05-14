@@ -10,7 +10,7 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_rectangle_neutral_10_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_neutral_30_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_neutral_10_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.neutral_0
@@ -29,7 +29,7 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_oval_neutral_0
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_neutral_30_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.color.neutral_0
             ImageType.IMAGE -> null // don't display any placeholder
             ImageType.PHOTO -> R.color.neutral_0

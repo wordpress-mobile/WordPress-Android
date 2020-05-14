@@ -18,9 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -91,7 +90,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private FullScreenDialogFragment mDialog;
     private SignupEpilogueListener mSignupEpilogueListener;
 
-    protected ImageButton mHeaderAvatarAdd;
+    protected ImageView mHeaderAvatarAdd;
     protected String mDisplayName;
     protected String mEmailAddress;
     protected String mPhotoUrl;
@@ -166,7 +165,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        final RelativeLayout headerAvatarLayout = rootView.findViewById(R.id.signup_epilogue_header_avatar_layout);
+        final FrameLayout headerAvatarLayout = rootView.findViewById(R.id.signup_epilogue_header_avatar_layout);
         headerAvatarLayout.setEnabled(mIsEmailSignup);
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
