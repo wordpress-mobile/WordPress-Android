@@ -10,17 +10,17 @@
       "features": [ // Features will appear in order they are in this list. Try to avoid using long subtitles.
         {
           "title": "Super Publishing",
-          "subtitle": "Publish amazing articles using the power of your mind! Concentrate on what you want to post, and we will do the rest!",
+          "subtitle": "Super Publishing is here! Publish using the power of your mind.",
           "iconUrl": "https://s0.wordpress.com/i/store/mobile/plans-free.png"
         },
         {
-          "title": "Great cats and superb dogs are right behind you!",
-          "subtitle": "That's right! They are right in the app! They require pets right now. Are you going to look for them or what?",
+          "title": "Amazing Feature",
+          "subtitle": "Equally amazing but unfortunately, very long and winded text that is supposed to be a brief description of the Amazing Feature that we are trying to promote.",
           "iconUrl": "https://s0.wordpress.com/i/store/mobile/plans-personal.png"
         },
         {
-          "title": "We like long feature announcements that why this one is going to be extra long and span multiple lines",
-          "subtitle": "Here we run out of budget.",
+          "title": "Small but important feature",
+          "subtitle": "We don't have much to say about it.",
           "iconUrl": "https://s0.wordpress.com/i/store/mobile/plans-premium.png"
         }
       ]
