@@ -48,7 +48,6 @@ class WPMainActivityViewModelTest {
     @Before
     fun setUp() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
-        whenever(buildConfigWrapper.isFeatureAnnouncementEnabled()).thenReturn(true)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,

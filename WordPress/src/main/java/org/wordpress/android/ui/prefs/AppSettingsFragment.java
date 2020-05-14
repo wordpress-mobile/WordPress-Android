@@ -171,8 +171,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
-        if (BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE && mFeatureAnnouncementProvider
-                .isFeatureAnnouncementAvailable()) {
+        if (mFeatureAnnouncementProvider.isFeatureAnnouncementAvailable()) {
             mWhatsNew.setSummary(getString(R.string.version_with_name_param,
                     mFeatureAnnouncementProvider.getLatestFeatureAnnouncement().getAppVersionName()));
             mWhatsNew.setOnPreferenceClickListener(this);

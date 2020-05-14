@@ -54,9 +54,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         loadMainActions()
 
-        if (buildConfigWrapper.isFeatureAnnouncementEnabled()) {
-            checkForFeatureAnnouncements()
-        }
+        checkForFeatureAnnouncements()
     }
 
     private fun loadMainActions() {
