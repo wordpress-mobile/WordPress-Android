@@ -175,7 +175,6 @@ public class ReaderPostListFragment extends Fragment
     private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
-    private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
     private View mSubFilterComponent;
@@ -1023,9 +1022,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                                               || getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                                               || mIsTopLevel)) {
+        if (mAccountStore.hasAccessToken() && getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             setupRecyclerToolbar();
         }
 
@@ -1070,20 +1067,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void setupRecyclerToolbar() {
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
-        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
         mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
-
-        if (mIsTopLevel) {
-            mSettingsMenuItem.setVisible(false);
-        } else {
-            mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    showSettings();
-                    return true;
-                }
-            });
-        }
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
@@ -1112,7 +1096,6 @@ public class ReaderPostListFragment extends Fragment
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
-                mSettingsMenuItem.setVisible(false);
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
