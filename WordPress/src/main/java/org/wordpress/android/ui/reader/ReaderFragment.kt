@@ -36,7 +36,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                newsCardViewModel.onTagChanged(it.readerTagList[position])
+                val selectedTag = it.readerTagList[position]
+                newsCardViewModel.onTagChanged(selectedTag)
+                viewModel.onTagChanged(selectedTag)
             }
         }
     }
@@ -81,6 +83,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             }
         })
 
+        viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
+            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
+                view_pager.currentItem = tabPosition
+            }
+        })
+
         newsCardViewModel.openUrlEvent.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { url ->
                 val activity: Activity? = activity
@@ -89,6 +97,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 }
             }
         })
+
         viewModel.start()
     }
 
