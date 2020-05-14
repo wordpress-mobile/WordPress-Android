@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -27,6 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
@@ -99,6 +102,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected ImageView mHeaderAvatar;
     protected WPTextView mHeaderDisplayName;
     protected WPTextView mHeaderEmailAddress;
+    protected View mBottomShadow;
+    protected NestedScrollView mScrollView;
     protected boolean mIsAvatarAdded;
     protected boolean mIsEmailSignup;
 
@@ -243,6 +248,27 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         // Set focus on static text field to avoid showing keyboard on start.
         mHeaderEmailAddress.requestFocus();
+
+        mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangeListener(
+                (OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> showBottomShadowIfNeeded());
+        // We must use onGlobalLayout here otherwise canScrollVertically will always return false
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                showBottomShadowIfNeeded();
+            }
+        });
+    }
+
+    private void showBottomShadowIfNeeded() {
+        if (mScrollView != null) {
+            final boolean canScrollDown = mScrollView.canScrollVertically(1);
+            if (mBottomShadow != null) {
+                mBottomShadow.setVisibility(canScrollDown ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
     @Override
