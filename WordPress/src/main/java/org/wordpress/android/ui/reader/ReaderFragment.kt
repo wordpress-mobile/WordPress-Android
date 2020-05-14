@@ -9,16 +9,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import java.util.EnumSet
 import javax.inject.Inject
 
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
@@ -26,37 +30,46 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private lateinit var viewModel: ReaderViewModel
     private lateinit var newsCardViewModel: NewsCardViewModel
 
+    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            viewModel.uiState.value?.let {
+                newsCardViewModel.onTagChanged(it.readerTagList[position])
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // TODO should we show a loading view before we load the tags?
-        initViewModel(view)
+        initViewPager()
+        initViewModel()
     }
 
-    private fun initViewModel(view: View) {
+    private fun initViewPager() {
+        view_pager.registerOnPageChangeCallback(viewPagerCallback)
+    }
+
+    private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderViewModel::class.java)
         newsCardViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(NewsCardViewModel::class.java)
-        startObserving(view)
+        startObserving()
     }
 
-    override fun onResume() {
-        super.onResume()
-        // TODO come up with a proper fix
-        /**
-         * We need to start the viewModel in onResume as when the user logs-in for the first time the tags
-         * aren't stored in the DB yet.
-         */
-        viewModel.start()
-    }
-
-    private fun startObserving(view: View) {
+    private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
-                initViewPager(uiState, view)
+                updateTabs(uiState)
+            }
+        })
+
+        viewModel.updateTags.observe(viewLifecycleOwner, Observer { updateAcion ->
+            updateAcion?.getContentIfNotHandled()?.let {
+                ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
             }
         })
 
@@ -68,25 +81,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 }
             }
         })
+        viewModel.start()
     }
 
-    private fun initViewPager(uiState: ReaderUiState, view: View) {
+    private fun updateTabs(uiState: ReaderUiState) {
         val adapter = TabsAdapter(this, uiState.readerTagList)
-        val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
-        viewPager.adapter = adapter
+        view_pager.adapter = adapter
 
-        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
             tab.text = uiState.tabTitles[position]
         }.attach()
-
-        val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                newsCardViewModel.onTagChanged(uiState.readerTagList[position])
-            }
-        }
-        viewPager.registerOnPageChangeCallback(pageChangeCallback)
     }
 
     private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {

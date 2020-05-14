@@ -7,6 +7,7 @@ import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,7 +16,8 @@ import javax.inject.Named
  */
 @Reusable
 class LoadReaderTabsUseCase @Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     suspend fun loadTabs(): ReaderTagList {
         return withContext(bgDispatcher) {
@@ -23,7 +25,12 @@ class LoadReaderTabsUseCase @Inject constructor(
 
             tagList.addAll(ReaderTagTable.getBookmarkTags()) // Add "Saved" tab manually
 
-            ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo()) // TODO do we need to call this?
+            // Add "Following" tab manually when on self-hosted site
+            if (!tagList.containsFollowingTag()) {
+                tagList.add(readerUtilsWrapper.getDefaultTagFromDbOrCreateInMemory())
+            }
+
+            ReaderUtils.getOrderedTagsList(tagList, ReaderUtils.getDefaultTagInfo())
         }
     }
 }
