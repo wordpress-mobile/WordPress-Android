@@ -147,7 +147,7 @@ class StatsListFragment : DaggerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.uiModel.observe(this, Observer {
+        viewModel.uiModel.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is UiModel.Success -> {
                     updateInsights(it.data)
@@ -177,33 +177,33 @@ class StatsListFragment : DaggerFragment() {
             }
         })
 
-        viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(this, Observer { event ->
+        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 navigator.navigate(activity, target)
             }
         })
 
-        viewModel.selectedDate.observe(this, Observer { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner, Observer { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedSection)
             }
         })
 
-        viewModel.listSelected.observe(this, Observer {
+        viewModel.listSelected.observe(viewLifecycleOwner, Observer {
             viewModel.onListSelected()
         })
 
-        viewModel.typesChanged.observe(this, Observer { event ->
+        viewModel.typesChanged.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
                 viewModel.onTypesChanged()
             }
         })
 
-        viewModel.scrollTo?.observe(this, Observer { event ->
+        viewModel.scrollTo?.observe(viewLifecycleOwner, Observer { event ->
             if (event != null) {
                 (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
                     event.getContentIfNotHandled()?.let { statsType ->

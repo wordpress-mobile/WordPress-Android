@@ -49,7 +49,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             }
         })
 
-        viewModel.onKeyboardOpened.observe(this, Observer {
+        viewModel.onKeyboardOpened.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 GlobalScope.launch {
                     val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager

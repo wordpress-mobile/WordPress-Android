@@ -93,12 +93,12 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.isIntroVisible.observe(this, Observer {
+        viewModel.isIntroVisible.observe(viewLifecycleOwner, Observer {
             it?.let { isIntroVisible ->
                 introduction_container.visibility = if (isIntroVisible) View.VISIBLE else View.GONE
             }
         })
-        viewModel.suggestionsLiveData.observe(this, Observer { listState ->
+        viewModel.suggestionsLiveData.observe(viewLifecycleOwner, Observer { listState ->
             if (listState != null) {
                 val isLoading = listState is ListState.Loading<*>
 
@@ -120,7 +120,7 @@ class DomainSuggestionsFragment : Fragment() {
                 }
             }
         })
-        viewModel.choseDomainButtonEnabledState.observe(this, Observer {
+        viewModel.choseDomainButtonEnabledState.observe(viewLifecycleOwner, Observer {
             chose_domain_button.isEnabled = it ?: false
         })
     }
