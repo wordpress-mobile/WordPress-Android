@@ -89,6 +89,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 }
             }
         })
+
         viewModel.start()
     }
 
