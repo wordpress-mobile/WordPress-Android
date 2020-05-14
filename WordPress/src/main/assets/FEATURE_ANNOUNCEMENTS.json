@@ -2,7 +2,7 @@
   "announcements": [
     {
       "appVersionName": "14.7",
-      "announceVersion": 1,
+      "announcementVersion": 1,
       "detailsUrl": "http://wordpress.org",
       "features": [
         {
