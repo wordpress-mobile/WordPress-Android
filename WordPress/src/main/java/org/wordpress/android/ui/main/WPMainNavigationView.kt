@@ -292,17 +292,15 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         internal fun getFragment(position: Int): Fragment? {
-            val pageType = pages().getOrElse(position) {
-                return null
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
-            return fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
         }
 
         internal fun getFragmentIfExists(position: Int): Fragment? {
-            val pageType = pages().getOrElse(position) {
-                return null
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType))
             }
-            return fragmentManager.findFragmentByTag(getTagForPageType(pageType))
         }
     }
 
