@@ -1,0 +1,6 @@
+14.7 :
+Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
+
+Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
+
+Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-13 20:16:04+0000
+Translation-Revision-Date: 2020-04-28 08:54:12+0000
 Plural-Forms: nplurals=2; plural=(n > 1);
 Generator: GlotPress/2.4.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_subscribe">Abone Ol</string>
+    <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_move_block_right">Bloğu sağa taşı</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
+    <string name="gutenberg_native_latest_blog_posts">Son Blog Yazıları</string>
+    <string name="gutenberg_native_follow_our_blog">Blogumuzu takip edin</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Renk ayarları çok yakında.</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Pano oluşturma</string>
+    <string name="new_site_creation_creating_site_loading_3">Tema ayarlama</string>
+    <string name="new_site_creation_creating_site_loading_2">Site özellikleri ekleme</string>
+    <string name="new_site_creation_creating_site_loading_1">Site URL\'sini alma</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Siteniz kısa süre içinde hazır olacak</string>
+    <string name="new_site_creation_creating_site_loading_title">Tebrikler!\nNeredeyse bitti</string>
+    <string name="pages_and_posts_cancel_auto_upload">Yüklemeyi iptal et</string>
+    <string name="gif_list_search_returned_unknown_error">İstek işlenirken bir sorun oluştu</string>
+    <string name="gif_powered_by_tenor">Destekleyen: Tenor</string>
+    <string name="gif_picker_search_hint">Tenor\'da Ara</string>
+    <string name="photo_picker_gif">Tenor\'dan Seç</string>
+    <string name="weekday_saturday">Cumartesi</string>
+    <string name="weekday_friday">Cuma</string>
+    <string name="weekday_thursday">Perşembe</string>
+    <string name="weekday_wednesday">Çarşamba</string>
+    <string name="weekday_tuesday">Salı</string>
+    <string name="weekday_monday">Pazartesi</string>
+    <string name="weekday_sunday">Pazar</string>
+    <string name="media_accessing_failed">Özel bir sitenin içeriğine erişilemedi. Bazı ortamlar kullanılamayabilir</string>
+    <string name="media_accessing_progress">Özel bir sitenin içeriğine erişiliyor.</string>
     <string name="error_failed_to_crop_and_save_image">Görsel kırpılamadı ve kaydedilemedi, lütfen tekrar deneyin.</string>
     <string name="failed_to_insert_image_tap_to_retry">Görsel ekleme başarısız.\nYeniden denemek için dokunun.</string>
     <string name="preview_image_description">Görseli ön izle</string>
@@ -31,7 +64,6 @@ Language: tr
     <string name="page_uploading">Sayfa yükleniyor</string>
     <string name="error_publish_page_no_network">Cihaz çevrimdışı. Sayfalar yerel olarak kaydedildi.</string>
     <string name="local_page_autosave_revision_available">Bu sayfada kaydedilmeyen değişiklikler yaptınız</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Sayfanız yükleniyor</string>
     <string name="editor_page_saved_locally_failed_media">Sayfa, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="editor_page_saved_locally">Sayfa cihaz üzerinde kaydedildi</string>
@@ -64,7 +96,6 @@ Language: tr
     <string name="gutenberg_native_portfolio">Portföy</string>
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Piksel cinsinden minimum yükseklik</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
     <string name="gutenberg_native_link_settings">Bağlantı Ayarları</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
@@ -80,7 +111,6 @@ Language: tr
     <string name="gutenberg_native_get_in_touch">İletişime Geçin</string>
     <string name="gutenberg_native_excerpt_length_words">Alıntı uzunluğu (sözcük)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Bana e-posta gönderin: &lt;a href=\"mailto:mail@example.com\">eposta@ornek.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Kapak ortamını düzenle</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Bitti diye ağlama, gerçekleştiği için gülümse.</string>
     <string name="gutenberg_native_customize">ÖZELLEŞTİR</string>
@@ -89,7 +119,6 @@ Language: tr
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Düğme rengi ayarları çok yakında kullanıma sunulacak.</string>
     <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
     <string name="gutenberg_native_border_radius">Kenarlık Yarıçapı</string>
-    <string name="gutenberg_native_background_opacity">Arka Plan Opaklığı</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraf bloku ekle</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Sunduğunuz hizmetlerin kısa bir tanımı.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Kişisel geçmişinizi, önemli başarılarınızı veya ilginç bir gerçeği içeren kısa bir biyografi.</string>
@@ -288,6 +317,8 @@ Language: tr
     <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
     <string name="notifications_tab_dialog_master_status_off">Bu site için bildirimler</string>
     <string name="notifications_tab_dialog_master_status_on">Bu site için bildirimler</string>
+    <string name="dialog_gutenberg_informative_description_page">Şimdi yeni sayfalar için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
+    <string name="dialog_gutenberg_informative_description_post">Şimdi yeni göçnderiler için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
     <string name="pick_media">Görsel veya video ekle.</string>
     <string name="error_post_not_submitted_retrying">Bu yazıyı inceleme için gönderemedik ama daha sonra tekrar deneyeceğiz.</string>
     <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
@@ -648,6 +679,8 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="gif_picker_empty_search_list">Aramanızla eşleşen ortam yok</string>
+    <string name="gif_picker_initial_empty_text">Medya Kitaplığınıza eklemek için GIF\'ler arayın!</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
     <string name="stats_author_label">Yazar</string>
     <string name="stats_authors">Yazarlar</string>
@@ -1288,7 +1321,7 @@ Language: tr
     <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternatif metin</string>
-    <string name="copy">Kopyala</string>
+    <string name="copy_text">Kopyala</string>
     <string name="connect_site">Site bağla</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>

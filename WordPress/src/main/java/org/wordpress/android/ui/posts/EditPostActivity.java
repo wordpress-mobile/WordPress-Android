@@ -40,7 +40,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
-import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -98,6 +97,7 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.fluxc.store.UploadStore;
 import org.wordpress.android.fluxc.tools.FluxCImageLoader;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -126,6 +126,7 @@ import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
 import org.wordpress.android.ui.posts.editor.EditorTracker;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.posts.editor.PostLoadingState;
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction;
 import org.wordpress.android.ui.posts.editor.SecondaryEditorAction;
@@ -163,6 +164,7 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.LocaleManagerWrapper;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PermissionUtils;
+import org.wordpress.android.util.ReblogUtils;
 import org.wordpress.android.util.ShortcutUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
@@ -225,6 +227,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
         PrivateAtCookieProgressDialogOnDismissListener {
+    public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -239,6 +242,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
+    public static final String EXTRA_REBLOG_POST_TITLE = "reblogPostTitle";
+    public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
+    public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
+    public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
     private static final String STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId";
@@ -339,6 +346,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject ReblogUtils mReblogUtils;
 
     private StorePostViewModel mViewModel;
 
@@ -476,6 +485,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             }
 
+            if (isRestarting && extras.getBoolean(EXTRA_IS_NEW_POST)) {
+                // editor was on a new post before the switch so, keep that signal.
+                // Fixes https://github.com/wordpress-mobile/gutenberg-mobile/issues/2072
+                mIsNewPost = true;
+            }
+
             // retrieve Editor session data if switched editors
             if (isRestarting && extras.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) != null) {
                 mPostEditorAnalyticsSession =
@@ -544,7 +559,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         createPostEditorAnalyticsSessionTracker(mShowGutenbergEditor, mEditPostRepository.getPost(), mSite, mIsNewPost);
 
         // Bump post created analytics only once, first time the editor is opened
-        if (mIsNewPost && savedInstanceState == null) {
+        if (mIsNewPost && savedInstanceState == null && !isRestarting) {
             trackEditorCreatedPost(action, getIntent());
         }
 
@@ -964,7 +979,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         } else {
             WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_error_no_permission_upload,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -1721,8 +1736,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         String outputFileExtension = MimeTypeMap.getFileExtensionFromUrl(imageUrl);
 
-        AnalyticsTracker.track(Stat.MEDIA_EDITOR_SHOWN);
-        ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
+        ArrayList<EditImageData.InputData> inputData = new ArrayList<>(1);
+        inputData.add(new EditImageData.InputData(
+                imageUrl,
+                StringUtils.notNullStr(resizedImageUrl),
+                outputFileExtension
+        ));
+        ActivityLauncher.openImageEditor(this, inputData);
     }
 
     @Override
@@ -1840,7 +1860,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             String message = TextUtils.isEmpty(account.getEmail())
                     ? getString(R.string.editor_confirm_email_prompt_message)
                     : String.format(getString(R.string.editor_confirm_email_prompt_message_with_email),
-                                    account.getEmail());
+                            account.getEmail());
 
             AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle(R.string.editor_confirm_email_prompt_title)
@@ -1848,7 +1868,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                    .setPositiveButton(android.R.string.ok,
                            (dialog, id) -> {
                                ToastUtils.showToast(EditPostActivity.this,
-                                                    getString(R.string.toast_saving_post_as_draft));
+                                       getString(R.string.toast_saving_post_as_draft));
                                savePostAndOptionallyFinish(true, false);
                            })
                    .setNegativeButton(R.string.editor_confirm_email_prompt_negative,
@@ -2128,6 +2148,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             } else if (NEW_MEDIA_POST.equals(action)) {
                 mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY,
                         getIntent().getLongArrayExtra(NEW_MEDIA_POST_EXTRA_IDS));
+            } else if (ACTION_REBLOG.equals(action)) {
+                setPostContentFromReblogAction();
             }
         }
 
@@ -2226,6 +2248,33 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    /**
+     * Sets the content of the reblogged post
+     */
+    private void setPostContentFromReblogAction() {
+        Intent intent = getIntent();
+        final String title = intent.getStringExtra(EXTRA_REBLOG_POST_TITLE);
+        final String quote = intent.getStringExtra(EXTRA_REBLOG_POST_QUOTE);
+        final String citation = intent.getStringExtra(EXTRA_REBLOG_POST_CITATION);
+        final String image = intent.getStringExtra(EXTRA_REBLOG_POST_IMAGE);
+        if (title != null && quote != null) {
+            mHasSetPostContent = true;
+            mEditPostRepository.updateAsync(postModel -> {
+                postModel.setTitle(title);
+                String content = mReblogUtils.reblogContent(image, quote, title, citation, mShowGutenbergEditor);
+                postModel.setContent(content);
+                mEditPostRepository.updatePublishDateIfShouldBePublishedImmediately(postModel);
+                return true;
+            }, (postModel, result) -> {
+                if (result == UpdatePostResult.Updated.INSTANCE) {
+                    mEditorFragment.setTitle(postModel.getTitle());
+                    mEditorFragment.setContent(postModel.getContent());
+                }
+                return null;
+            });
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -2306,7 +2355,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.MEDIA_SETTINGS:
                     if (mEditorFragment instanceof AztecEditorFragment) {
                         mEditorFragment.onActivityResult(AztecEditorFragment.EDITOR_MEDIA_SETTINGS,
-                                                         Activity.RESULT_OK, data);
+                                Activity.RESULT_OK, data);
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
@@ -2332,15 +2381,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.IMAGE_EDITOR_EDIT_IMAGE:
-                    if (data.hasExtra(UCrop.EXTRA_OUTPUT_URI)) {
-                        Uri imageUri = data.getParcelableExtra(UCrop.EXTRA_OUTPUT_URI);
-                        if (imageUri != null) {
-                            Map<String, String> properties = new HashMap<>();
-                            properties.put("actions", "crop");
-                            AnalyticsTracker.track(Stat.MEDIA_EDITOR_USED, properties);
-
-                            mEditorMedia.addNewMediaToEditorAsync(imageUri, true);
-                        }
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
+                    mImageEditorTracker.trackAddPhoto(uris);
+                    for (Uri item : uris) {
+                        mEditorMedia.addNewMediaToEditorAsync(item, false);
                     }
                     break;
             }
@@ -2497,7 +2541,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public void onAddMediaClicked() {
         if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
-         } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
+        } else if (WPMediaUtils.currentUserCanUploadMedia(mSite)) {
             mEditorPhotoPicker.showPhotoPicker(mSite);
         } else {
             // show the WP media library instead of the photo picker if the user doesn't have upload permission
@@ -2893,14 +2937,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean isRemotePreviewingFromEditor() {
         return mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.PREVIEWING
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW
+               || mPostLoadingState == PostLoadingState.PREVIEWING
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVE_PREVIEW_ERROR;
     }
 
     private boolean isUploadingPostForPreview() {
         return mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
+               || mPostLoadingState == PostLoadingState.REMOTE_AUTO_SAVING_FOR_PREVIEW;
     }
 
     private void updateOnSuccessfulUpload() {
@@ -2926,7 +2970,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
                             ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
                             : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
-                                                       );
+            );
             updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
