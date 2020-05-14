@@ -72,6 +72,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
             it?.let { uiModel ->
                 progressIndicator.visibility = if (uiModel.isProgressVisible) View.VISIBLE else View.GONE
                 versionLabel.text = getString(R.string.version_with_name_param, uiModel.appVersion)
+                featureAdapter.toggleFooterVisibility(uiModel.isFindOutMoreVisible)
             }
         })
 

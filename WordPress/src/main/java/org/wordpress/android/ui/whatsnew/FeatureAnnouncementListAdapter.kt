@@ -23,6 +23,7 @@ class FeatureAnnouncementListAdapter(
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private var viewModel: FeatureAnnouncementViewModel
     private val list = mutableListOf<FeatureAnnouncementItem>()
+    private var isFindOutMoreVisible = true
 
     init {
         (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
@@ -36,7 +37,7 @@ class FeatureAnnouncementListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == itemCount - 1) {
+        if (isFindOutMoreVisible && position == itemCount - 1) {
             return VIEW_TYPE_FOOTER
         }
         return VIEW_TYPE_FEATURE
@@ -50,9 +51,16 @@ class FeatureAnnouncementListAdapter(
         }
     }
 
+    fun toggleFooterVisibility(isVisible: Boolean) {
+        isFindOutMoreVisible = isVisible
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
-        if (list.isNotEmpty()) {
+        if (list.isNotEmpty() && isFindOutMoreVisible) {
             return list.size + 1
+        } else if (list.isNotEmpty() && !isFindOutMoreVisible) {
+            return list.size
         }
 
         return 0

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.whatsnew
 
+import android.text.TextUtils
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -43,7 +44,8 @@ class FeatureAnnouncementViewModel @Inject constructor(
     init {
         _uiModel.addSource(_currentFeatureAnnouncement) { featureAnnouncement ->
             _uiModel.value = _uiModel.value?.copy(
-                    appVersion = featureAnnouncement.appVersionName, isProgressVisible = false
+                    appVersion = featureAnnouncement.appVersionName, isProgressVisible = false,
+                    isFindOutMoreVisible = !TextUtils.isEmpty(featureAnnouncement.detailsUrl)
             )
         }
 
@@ -79,7 +81,8 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     data class FeatureAnnouncementUiModel(
         val appVersion: String = "",
-        val isProgressVisible: Boolean = false
+        val isProgressVisible: Boolean = false,
+        val isFindOutMoreVisible: Boolean = true
     )
 
     fun onSessionStarted() {

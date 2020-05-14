@@ -70,18 +70,18 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
         viewModel.onDialogClosed.observeForever(onDialogClosedObserver)
         viewModel.onAnnouncementDetailsRequested.observeForever(onAnnouncementDetailsRequestedObserver)
         viewModel.featureItems.observeForever(featuresObserver)
-
-        viewModel.start()
     }
 
     @Test
-    fun `progress is visible after start`() {
+    fun `progress and find out more is visible after start`() {
+        viewModel.start()
         assertThat(uiModelResults.isNotEmpty()).isEqualTo(true)
         assertThat(uiModelResults[0].isProgressVisible).isEqualTo(true)
     }
 
     @Test
     fun `announcement details are loaded after start`() {
+        viewModel.start()
         assertThat(uiModelResults.isNotEmpty()).isEqualTo(true)
         assertThat(uiModelResults[1].isProgressVisible).isEqualTo(false)
         assertThat(uiModelResults[1].appVersion).isEqualTo("14.7")
@@ -90,12 +90,14 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
     @Test
     fun `pressing close button closes the dialog`() {
+        viewModel.start()
         viewModel.onCloseDialogButtonPressed()
         verify(onDialogClosedObserver).onChanged(anyOrNull())
     }
 
     @Test
     fun `pressing Find Out More triggers request for announcement details with specific URL`() {
+        viewModel.start()
         viewModel.onFindMoreButtonPressed()
         verify(onAnnouncementDetailsRequestedObserver).onChanged("https://wordpress.org/")
         verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED)
@@ -110,5 +112,21 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
                 ),
                 any<Map<String, *>>()
         )
+    }
+
+    @Test
+    fun `find Out More is  visible when detailsUrl is present`() {
+        viewModel.start()
+        assertThat(uiModelResults[1].isFindOutMoreVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `find Out More is not visible when detailsUrl is missing`() {
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
+                featureAnnouncement.copy(detailsUrl = "")
+        )
+
+        viewModel.start()
+        assertThat(uiModelResults[1].isFindOutMoreVisible).isEqualTo(false)
     }
 }
