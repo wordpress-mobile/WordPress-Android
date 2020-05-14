@@ -130,5 +130,5 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium_large"
-        android:text="@string/login_continue" />
+        android:text="@string/login_done" />
 </LinearLayout>

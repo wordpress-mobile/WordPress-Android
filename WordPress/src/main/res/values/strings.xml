@@ -2326,6 +2326,7 @@
     <string name="connect_more">Connect Another Site</string>
     <string name="connect_site">Connect Site</string>
     <string name="login_continue">Continue</string>
+    <string name="login_done">Done</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
     <string name="login_username_at">\@%s</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
