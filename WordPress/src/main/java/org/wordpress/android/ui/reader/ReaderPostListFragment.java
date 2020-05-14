@@ -301,7 +301,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     static ReaderPostListFragment newInstanceForSearch() {
-        AppLog.d(T.READER, "reader post list > newInstance (tag)");
+        AppLog.d(T.READER, "reader post list > newInstance (search)");
 
         Bundle args = new Bundle();
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
