@@ -287,8 +287,7 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
-                    .hide(fragment)
-                    .commit()
+                    .commitNow()
             return fragment
         }
 
