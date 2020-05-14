@@ -24,8 +24,6 @@ class FeatureAnnouncementJsonValidityTest {
             fail("FEATURE_ANNOUNCEMENTS.json is missing")
         }
 
-        assertEquals(TextUtils.isEmpty(featureAnnouncementFileContent), false)
-
         try {
             Gson().fromJson(
                     featureAnnouncementFileContent,

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.whatsnew
 
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.wordpress.android.WordPress
@@ -31,11 +32,20 @@ class FeatureAnnouncementProvider @Inject constructor() {
             return featureAnnouncements
         }
 
+        if (TextUtils.isEmpty(featureAnnouncementFileContent)) {
+            AppLog.v(T.FEATURE_ANNOUNCEMENT, "No feature announcements found in FEATURE_ANNOUNCEMENTS.json")
+            return featureAnnouncements
+        }
+
+        Gson().fromJson(
+                featureAnnouncementFileContent,
+                FeatureAnnouncements::class.java
+        )
         val featureAnnouncement: FeatureAnnouncements = gson.fromJson(
                 featureAnnouncementFileContent,
                 FeatureAnnouncements::class.java
         )
-
+        
         featureAnnouncements.addAll(featureAnnouncement.announcements)
 
         return featureAnnouncements
