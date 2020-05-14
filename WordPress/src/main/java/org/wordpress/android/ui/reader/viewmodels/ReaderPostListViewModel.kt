@@ -25,9 +25,6 @@ class ReaderPostListViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val siteStore: SiteStore
 ) : ViewModel() {
-    private val _shouldCollapseToolbar = MutableLiveData<Boolean>()
-    val shouldCollapseToolbar: LiveData<Boolean> = _shouldCollapseToolbar
-
     private val _reblogState = MutableLiveData<Event<ReblogState>>()
     val reblogState: LiveData<Event<ReblogState>> = _reblogState
 
@@ -35,15 +32,13 @@ class ReaderPostListViewModel @Inject constructor(
 
     private var readerViewModel: ReaderViewModel? = null
 
-    fun start(isTopLevelFragment: Boolean, readerViewModel: ReaderViewModel?) {
+    fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
         if (isStarted) {
             return
         }
         isStarted = true
-
-        _shouldCollapseToolbar.value = isTopLevelFragment
     }
 
     /**
@@ -85,10 +80,6 @@ class ReaderPostListViewModel @Inject constructor(
             AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
             _reblogState.value = Event(Unknown)
         }
-    }
-
-    fun onSearchMenuCollapse(collapse: Boolean) {
-        _shouldCollapseToolbar.value = collapse
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {

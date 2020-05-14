@@ -38,7 +38,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
@@ -435,18 +434,9 @@ public class ReaderPostListFragment extends Fragment
             initSubFilterViewModel();
         }
 
-        mViewModel.getShouldCollapseToolbar().observe(this, collapse -> {
-            if (collapse) {
-                mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-            } else {
-                mRecyclerView.setToolbarScrollFlags(0);
-            }
-        });
-
         handleReblogStateChanges();
 
-        mViewModel.start(!mIsTopLevel, mReaderViewModel);
+        mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();
@@ -455,6 +445,7 @@ public class ReaderPostListFragment extends Fragment
         if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
+            mRecyclerView.setToolbarScrollFlags(0);
         }
     }
 
@@ -1122,10 +1113,6 @@ public class ReaderPostListFragment extends Fragment
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
                 mSettingsMenuItem.setVisible(false);
-                if (mIsTopLevel) {
-                    mViewModel.onSearchMenuCollapse(false);
-                }
-
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
