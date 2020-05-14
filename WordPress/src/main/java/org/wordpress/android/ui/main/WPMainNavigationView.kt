@@ -237,7 +237,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         return itemView?.findViewById(R.id.nav_icon)
     }
 
-    fun getFragment(pageType: PageType) = navAdapter.getFragment(getPosition(pageType))
+    fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
         if (isValidPosition(position)) {
@@ -296,6 +296,13 @@ class WPMainNavigationView @JvmOverloads constructor(
                 return null
             }
             return fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
+        }
+
+        internal fun getFragmentIfExists(position: Int): Fragment? {
+            val pageType = pages().getOrElse(position) {
+                return null
+            }
+            return fragmentManager.findFragmentByTag(getTagForPageType(pageType))
         }
     }
 
