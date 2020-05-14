@@ -38,7 +38,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
 
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
@@ -65,7 +65,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.feature_list)
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
-        val featureAdapter = FeatureAnnouncementListAdapter(requireActivity())
+        val featureAdapter = FeatureAnnouncementListAdapter(this)
         recyclerView.adapter = featureAdapter
 
         viewModel.uiModel.observe(this, Observer {
