@@ -83,9 +83,8 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `UiState is updated in start() when loaded tags are NOT empty`() = test {
+    fun `UiState is updated in start() when loaded tags are NOT empty`() = testWithNonEmptyTags {
         // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
@@ -97,9 +96,8 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `Tags are reloaded when FollowedTagsChanged event is received`() = test {
+    fun `Tags are reloaded when FollowedTagsChanged event is received`() = testWithNonEmptyTags {
         // Arrange
-        whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonEmptyReaderTagList())
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
@@ -117,7 +115,10 @@ class ReaderViewModelTest {
         }
     }
 
-    private fun createNonEmptyReaderTagList(): ReaderTagList {
-        return ReaderTagList().apply { add(mock()) }
+    private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList().apply { this.add(mock()) })
+            block()
+        }
     }
 }
