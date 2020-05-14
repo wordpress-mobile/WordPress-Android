@@ -91,11 +91,11 @@ class PageListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.pages.observe(this, Observer { data ->
+        viewModel.pages.observe(viewLifecycleOwner, Observer { data ->
             data?.let { setPages(data.first, data.second, data.third) }
         })
 
-        viewModel.scrollToPosition.observe(this, Observer { position ->
+        viewModel.scrollToPosition.observe(viewLifecycleOwner, Observer { position ->
             position?.let {
                 val smoothScroller = object : LinearSmoothScroller(context) {
                     override fun getVerticalSnapPreference(): Int {

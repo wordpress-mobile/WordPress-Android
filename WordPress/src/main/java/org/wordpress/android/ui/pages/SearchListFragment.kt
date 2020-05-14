@@ -78,7 +78,7 @@ class SearchListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.searchResult.observe(this, Observer { data ->
+        viewModel.searchResult.observe(viewLifecycleOwner, Observer { data ->
             data?.let { setSearchResult(data) }
         })
     }

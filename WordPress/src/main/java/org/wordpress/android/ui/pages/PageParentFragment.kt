@@ -194,15 +194,15 @@ class PageParentFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.pages.observe(this, Observer { pages ->
+        viewModel.pages.observe(viewLifecycleOwner, Observer { pages ->
             pages?.let { setPages(pages) }
         })
 
-        viewModel.isSaveButtonVisible.observe(this, Observer { isVisible ->
+        viewModel.isSaveButtonVisible.observe(viewLifecycleOwner, Observer { isVisible ->
             isVisible?.let { saveButton?.isVisible = isVisible }
         })
 
-        viewModel.saveParent.observe(this, Observer {
+        viewModel.saveParent.observe(viewLifecycleOwner, Observer {
             returnParentChoiceAndExit()
         })
     }

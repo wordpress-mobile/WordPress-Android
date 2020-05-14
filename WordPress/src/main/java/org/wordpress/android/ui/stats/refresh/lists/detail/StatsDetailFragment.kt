@@ -71,19 +71,19 @@ class StatsDetailFragment : DaggerFragment() {
     }
 
     private fun setupObservers(viewModel: StatsDetailViewModel) {
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.selectedDateChanged.observe(this, Observer { event ->
+        viewModel.selectedDateChanged.observe(viewLifecycleOwner, Observer { event ->
             if (event != null) {
                 viewModel.onDateChanged(event.selectedSection)
             }
         })
 
-        viewModel.showDateSelector.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.showDateSelector.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
     }
