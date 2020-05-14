@@ -6,6 +6,7 @@
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
     <issue id="UseSparseArrays" severity="warning" />
+    <issue id="UseRequireInsteadOfGet" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
