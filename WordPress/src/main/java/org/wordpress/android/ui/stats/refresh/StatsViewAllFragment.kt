@@ -156,13 +156,13 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { event ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { holder ->
                 val parent = activity.findViewById<View>(R.id.coordinatorLayout)
                 if (parent != null) {
@@ -177,7 +177,7 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.data.observe(this, Observer {
+        viewModel.data.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
                 loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
@@ -198,29 +198,29 @@ class StatsViewAllFragment : DaggerFragment() {
                 }
             }
         })
-        viewModel.navigationTarget.observe(this, Observer { event ->
+        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 navigator.navigate(activity, target)
             }
         })
 
-        viewModel.dateSelectorData.observe(this, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(this, Observer { event ->
+        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 navigator.navigate(activity, target)
             }
         })
 
-        viewModel.selectedDate.observe(this, Observer { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner, Observer { event ->
             if (event != null) {
                 viewModel.onDateChanged()
             }
         })
 
-        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
             app_bar_layout.postDelayed({
                 if (app_bar_layout != null) {
                     val elevation = if (hasShadow == true) {

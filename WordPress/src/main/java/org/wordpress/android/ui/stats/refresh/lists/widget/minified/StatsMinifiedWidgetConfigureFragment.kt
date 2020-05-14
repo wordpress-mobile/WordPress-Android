@@ -85,13 +85,13 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             viewModel.addWidget()
         }
 
-        siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+        siteSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
             }
         })
 
-        colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+        colorSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 StatsWidgetColorSelectionDialogFragment().show(
                         requireFragmentManager(),
@@ -100,7 +100,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             }
         })
 
-        dataTypeSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+        dataTypeSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 StatsWidgetDataTypeSelectionDialogFragment().show(
                         requireFragmentManager(),
@@ -114,14 +114,14 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
                 colorSelectionViewModel.notification,
                 dataTypeSelectionViewModel.notification
         ).observe(
-                this,
+                viewLifecycleOwner,
                 Observer { event ->
                     event?.applyIfNotHandled {
                         ToastUtils.showToast(activity, this)
                     }
                 })
 
-        viewModel.settingsModel.observe(this, Observer { uiModel ->
+        viewModel.settingsModel.observe(viewLifecycleOwner, Observer { uiModel ->
             uiModel?.let {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle
@@ -132,7 +132,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
             }
         })
 
-        viewModel.widgetAdded.observe(this, Observer { event ->
+        viewModel.widgetAdded.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
                 analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
                 minifiedWidgetUpdater.updateAppWidget(context!!, appWidgetId = appWidgetId)
