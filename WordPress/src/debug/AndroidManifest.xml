@@ -8,6 +8,19 @@
         tools:replace="android:name,android:supportsRtl"
         android:name=".WordPressDebug"
         android:supportsRtl="true">
+
+        <!-- Temporarily adding these activities here, so we are able to launch them from adb -->
+        <activity
+            android:name=".ui.accounts.LoginEpilogueActivity"
+            android:label="@string/login_epilogue_screen_title"
+            android:theme="@style/LoginTheme"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.accounts.SignupEpilogueActivity"
+            android:label="@string/signup_epilogue_screen_title"
+            android:theme="@style/LoginTheme"
+            android:exported="true" />
     </application>
 
     <!--
