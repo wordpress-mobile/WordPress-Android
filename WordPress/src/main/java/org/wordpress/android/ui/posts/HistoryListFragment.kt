@@ -122,11 +122,11 @@ class HistoryListFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.revisions.observe(this, Observer {
+        viewModel.revisions.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.listStatus.observe(this, Observer { listStatus ->
+        viewModel.listStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             listStatus?.let {
                 if (isAdded && view != null) {
                     swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
@@ -156,7 +156,7 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.showDialog.observe(this, Observer { showDialogItem ->
+        viewModel.showDialog.observe(viewLifecycleOwner, Observer { showDialogItem ->
             if (showDialogItem != null && showDialogItem.historyListItem is Revision) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(
                         showDialogItem.historyListItem,
@@ -165,7 +165,7 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.post.observe(this, Observer { post ->
+        viewModel.post.observe(viewLifecycleOwner, Observer { post ->
             actionable_empty_view.subtitle.text = if (post?.isPage == true) {
                 getString(R.string.history_empty_subtitle_page)
             } else {

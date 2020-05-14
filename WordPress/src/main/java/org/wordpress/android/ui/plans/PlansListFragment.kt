@@ -81,11 +81,11 @@ class PlansListFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.plans.observe(this, Observer {
+        viewModel.plans.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.listStatus.observe(this, Observer { listStatus ->
+        viewModel.listStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             if (isAdded && view != null) {
                 swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
             }
@@ -118,7 +118,7 @@ class PlansListFragment : Fragment() {
             }
         })
 
-        viewModel.showDialog.observe(this, Observer {
+        viewModel.showDialog.observe(viewLifecycleOwner, Observer {
             if (it is PlanOffersModel && activity is PlansListInterface) {
                 (activity as PlansListInterface).onPlanItemClicked(it)
             }

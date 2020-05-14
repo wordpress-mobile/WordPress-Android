@@ -100,13 +100,13 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             viewModel.addWidget()
         }
 
-        siteSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+        siteSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 StatsWidgetSiteSelectionDialogFragment().show(requireFragmentManager(), "stats_site_selection_fragment")
             }
         })
 
-        colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
+        colorSelectionViewModel.dialogOpened.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 StatsWidgetColorSelectionDialogFragment().show(
                         requireFragmentManager(),
@@ -116,14 +116,14 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
         })
 
         merge(siteSelectionViewModel.notification, colorSelectionViewModel.notification).observe(
-                this,
+                viewLifecycleOwner,
                 Observer { event ->
                     event?.applyIfNotHandled {
                         ToastUtils.showToast(activity, this)
                     }
                 })
 
-        viewModel.settingsModel.observe(this, Observer { uiModel ->
+        viewModel.settingsModel.observe(viewLifecycleOwner, Observer { uiModel ->
             uiModel?.let {
                 if (uiModel.siteTitle != null) {
                     site_value.text = uiModel.siteTitle
@@ -133,7 +133,7 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             }
         })
 
-        viewModel.widgetAdded.observe(this, Observer { event ->
+        viewModel.widgetAdded.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
                 analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
                 when (it.widgetType) {

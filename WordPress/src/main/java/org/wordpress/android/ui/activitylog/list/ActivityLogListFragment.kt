@@ -86,27 +86,27 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(this, Observer {
+        viewModel.events.observe(viewLifecycleOwner, Observer {
             reloadEvents(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(this, Observer { listStatus ->
+        viewModel.eventListStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             refreshProgressBars(listStatus)
         })
 
-        viewModel.showItemDetail.observe(this, Observer {
+        viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
             }
         })
 
-        viewModel.showRewindDialog.observe(this, Observer {
+        viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer {
             if (it is ActivityLogListItem.Event) {
                 displayRewindDialog(it)
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { message ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
