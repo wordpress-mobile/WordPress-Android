@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -10,9 +11,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -22,6 +25,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
 import java.util.Date
 
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
+
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderViewModelTest {
@@ -34,12 +38,26 @@ class ReaderViewModelTest {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var dateProvider: DateProvider
     @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
+    private val emptyReaderTagList = ReaderTagList()
+    private val nonEmptyReaderTagList = ReaderTagList().apply {
+        this.add(mock())
+        this.add(mock())
+        this.add(mock())
+        this.add(mock())
+    }
 
     @Before
     fun setup() {
-        viewModel = ReaderViewModel(TEST_DISPATCHER, appPrefsWrapper, dateProvider, loadReaderTabsUseCase)
+        viewModel = ReaderViewModel(
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
+                appPrefsWrapper,
+                dateProvider,
+                loadReaderTabsUseCase
+        )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
+        whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
     }
 
     @Test
@@ -108,16 +126,56 @@ class ReaderViewModelTest {
         assertThat(state).isNotNull
     }
 
+    @Test
+    fun `Last selected tab is stored into shared preferences`() {
+        // Arrange
+        val selectedTag: ReaderTag = mock()
+        // Act
+        viewModel.onTagChanged(selectedTag)
+        // Assert
+        verify(appPrefsWrapper).setReaderTag(any())
+    }
+
+    @Test
+    fun `Last selected tab is restored after restart`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(appPrefsWrapper.getReaderTag()).thenReturn(nonEmptyReaderTagList[3])
+
+        var tabPosition: TabPosition? = null
+        viewModel.selectTab.observeForever {
+            tabPosition = it.getContentIfNotHandled()
+        }
+        // Act
+        viewModel.start()
+        // Assert
+        assertThat(tabPosition).isEqualTo(3)
+    }
+
+    @Test
+    fun `SelectTab not invoked when last selected tab is null`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
+
+        var tabPosition: TabPosition? = null
+        viewModel.selectTab.observeForever {
+            tabPosition = it.getContentIfNotHandled()
+        }
+        // Act
+        viewModel.start()
+        // Assert
+        assertThat(tabPosition).isNull()
+    }
+
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(emptyReaderTagList)
             block()
         }
     }
 
     private fun <T> testWithNonEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
-            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList().apply { this.add(mock()) })
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(nonEmptyReaderTagList)
             block()
         }
     }

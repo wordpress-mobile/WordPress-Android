@@ -34,7 +34,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                newsCardViewModel.onTagChanged(it.readerTagList[position])
+                val selectedTag = it.readerTagList[position]
+                newsCardViewModel.onTagChanged(selectedTag)
+                viewModel.onTagChanged(selectedTag)
             }
         }
     }
@@ -70,6 +72,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.updateTags.observe(viewLifecycleOwner, Observer { updateAcion ->
             updateAcion?.getContentIfNotHandled()?.let {
                 ReaderUpdateServiceStarter.startService(context, EnumSet.of(TAGS, FOLLOWED_BLOGS))
+            }
+        })
+
+        viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
+            selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
+                view_pager.currentItem = tabPosition
             }
         })
 
