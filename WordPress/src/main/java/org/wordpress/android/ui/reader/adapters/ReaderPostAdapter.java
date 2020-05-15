@@ -184,6 +184,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtTitle;
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
+        private final TextView mTxtBlogUrl;
         private final TextView mTxtDateline;
 
         private final ReaderIconCountView mReblog;
@@ -218,6 +219,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
             mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
+            mTxtBlogUrl = itemView.findViewById(R.id.text_blog_url);
             mTxtDateline = itemView.findViewById(R.id.text_dateline);
 
             mReblog = itemView.findViewById(R.id.reblog);
@@ -456,32 +458,29 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        String urlString = "";
+        if (post.hasBlogUrl()) {
+            urlString = getUrlWithoutProtocol(post.getBlogUrl());
+            urlString = holder.mTxtDateline.getResources().getString(R.string.reader_blog_url, urlString);
+            holder.mTxtBlogUrl.setText(urlString);
+            holder.mTxtBlogUrl.setVisibility(View.VISIBLE);
+        } else {
+            holder.mTxtBlogUrl.setVisibility(View.GONE);
+        }
+
         holder.mTxtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
         if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
             mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
-        } else if (post.hasPostAvatar()) {
-            String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
-            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
-                    ImageType.AVATAR, imageUrl);
-            holder.mImgAvatarOrBlavatar.setBackgroundColor(0);
-            holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
             holder.mImgAvatarOrBlavatar.setVisibility(View.GONE);
         }
 
-        /*if (post.hasBlogName() && post.hasAuthorName() && !post.getBlogName().equals(post.getAuthorName())) {
-            holder.mTxtAuthorAndBlogName.setText(holder.mTxtAuthorAndBlogName.getResources()
-                                                                             .getString(R.string.author_name_blog_name,
-                                                                                     post.getAuthorName(),
-                                                                                     post.getBlogName()));
-        } else */ if (post.hasBlogName()) {
+        if (post.hasBlogName()) {
             holder.mTxtAuthorAndBlogName.setText(post.getBlogName());
-         /*} else if (post.hasAuthorName()) {
-            holder.mTxtAuthorAndBlogName.setText(post.getAuthorName());*/
         } else {
             holder.mTxtAuthorAndBlogName.setText(null);
         }
@@ -1289,5 +1288,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mIsTaskRunning = false;
         }
+    }
+
+    private String getUrlWithoutProtocol(String url) {
+        return url.replaceFirst("^(http[s]?://www\\.|http[s]?://|www\\.)", "");
     }
 }
