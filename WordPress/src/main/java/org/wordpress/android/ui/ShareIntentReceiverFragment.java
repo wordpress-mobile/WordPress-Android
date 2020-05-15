@@ -14,14 +14,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.main.SitePickerAdapter;
-import org.wordpress.android.ui.main.SitePickerAdapter.HeaderHandler;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
+import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.util.image.ImageManager;
@@ -176,21 +175,21 @@ public class ShareIntentReceiverFragment extends Fragment {
         return mAdapter;
     }
 
-    private HeaderHandler createHeaderHandler() {
-        return new HeaderHandler() {
+    private ViewHolderHandler<HeaderViewHolder> createHeaderHandler() {
+        return new ViewHolderHandler<HeaderViewHolder>() {
             @Override
-            public ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                 boolean attachToRoot) {
+            public HeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                       boolean attachToRoot) {
                 return new HeaderViewHolder(
                         layoutInflater.inflate(R.layout.share_intent_receiver_header, parent, false));
             }
 
             @Override
-            public void onBindViewHolder(ViewHolder holder, SiteList sites) {
+            public void onBindViewHolder(HeaderViewHolder holder, SiteList sites) {
                 if (!isAdded()) {
                     return;
                 }
-                ((HeaderViewHolder) holder).bindText(getString(
+                holder.bindText(getString(
                         sites.size() == 1 ? R.string.share_intent_adding_to : R.string.share_intent_pick_site));
             }
         };
