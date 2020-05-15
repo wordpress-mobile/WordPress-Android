@@ -95,10 +95,6 @@
 
     <!-- images -->
     <style name="ReaderImageView" />
-    <style name="ReaderImageView.Featured.CardView" parent="ReaderImageView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/reader_featured_image_height_cardview</item>
-    </style>
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_medium</item>
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>

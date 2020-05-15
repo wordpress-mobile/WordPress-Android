@@ -108,13 +108,16 @@
         <!-- frame photo start -->
         <ImageView
             android:id="@+id/image_featured"
-            style="@style/ReaderImageView.Featured.CardView"
             android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/reader_card_content_padding"
             android:contentDescription="@null"
+            android:cropToPadding="true"
+            android:padding="1dp"
+            app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-            app:layout_constraintTop_toBottomOf="@+id/image_avatar_or_blavatar" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_post_header" />
 
         <ImageView
             android:id="@+id/image_video_overlay"
@@ -127,7 +130,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@+id/layout_post_header"
-            app:layout_constraintBottom_toTopOf="@+id/thumbnail_strip"
+            app:layout_constraintBottom_toBottomOf="@+id/image_featured"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -144,21 +147,21 @@
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
             android:textColor="?attr/colorOnPrimarySurface"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/frame_photo"
-            app:layout_constraintBottom_toBottomOf="@id/frame_photo"
+            app:layout_constraintStart_toStartOf="@id/guideline_beginning"
+            app:layout_constraintBottom_toBottomOf="@id/image_featured"
             tools:text="text_photo_title" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/frame_photo"
             android:layout_width="0dp"
-            android:layout_height="@dimen/reader_featured_image_height_cardview"
+            android:layout_height="0dp"
             android:layout_marginTop="@dimen/reader_card_content_padding"
             android:background="?android:attr/listDivider"
-            android:padding="1dp"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@+id/layout_post_header"
-            app:constraint_referenced_ids="image_featured,text_photo_title" />
+            app:layout_constraintBottom_toBottomOf="@+id/image_featured"
+            app:constraint_referenced_ids="image_featured,text_photo_title"/>
         <!-- frame photo end -->
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
@@ -167,6 +170,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:visibility="gone"
+            android:layout_marginTop="@dimen/reader_card_content_padding"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@id/image_featured"
