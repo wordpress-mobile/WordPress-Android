@@ -8,6 +8,8 @@ import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
+import com.yarolegovich.wellsql.core.annotation.Column
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.POSTS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -27,7 +29,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 104
+        return 105
     }
 
     override fun getDbName(): String {
@@ -1078,6 +1080,11 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
+                }
+                104 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
                 }
             }
         }
