@@ -921,7 +921,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (canShowLikes) {
             holder.mLikeCount.setCount(post.numLikes);
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
-            holder.mLikeCount.setVisibility(View.VISIBLE);
+            holder.mLikeCount.setEnabled(true);
             holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mPostContainer.getContext(),
                     post.numLikes,
                     post.isLikedByCurrentUser));
@@ -935,7 +935,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
         } else {
-            holder.mLikeCount.setVisibility(View.GONE);
+            holder.mLikeCount.setEnabled(false);
             holder.mLikeCount.setOnClickListener(null);
         }
     }
@@ -962,9 +962,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean canBookmarkPost = !post.isDiscoverPost();
         if (canBookmarkPost) {
-            bookmarkButton.setVisibility(View.VISIBLE);
+            bookmarkButton.setEnabled(true);
         } else {
-            bookmarkButton.setVisibility(View.GONE);
+            bookmarkButton.setEnabled(false);
         }
 
         if (post.isBookmarked) {
@@ -1001,7 +1001,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (canShowComments) {
             holder.mCommentCount.setCount(post.numReplies);
-            holder.mCommentCount.setVisibility(View.VISIBLE);
+            holder.mCommentCount.setEnabled(true);
             holder.mCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1009,7 +1009,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         } else {
-            holder.mCommentCount.setVisibility(View.GONE);
+            holder.mCommentCount.setEnabled(false);
             holder.mCommentCount.setOnClickListener(null);
         }
     }
@@ -1024,10 +1024,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         boolean canBeReblogged = !mIsLoggedOutReader && !post.isPrivate;
         if (canBeReblogged) {
             holder.mReblog.setCount(0);
-            holder.mReblog.setVisibility(View.VISIBLE);
+            holder.mReblog.setEnabled(true);
             holder.mReblog.setOnClickListener(v -> mReblogActionListener.reblog(post));
         } else {
-            holder.mReblog.setVisibility(View.GONE);
+            holder.mReblog.setEnabled(false);
             holder.mReblog.setOnClickListener(null);
         }
     }

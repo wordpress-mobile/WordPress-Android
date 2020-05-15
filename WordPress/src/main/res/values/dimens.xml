@@ -161,7 +161,7 @@
 
     <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_button_minimum_height">36dp</dimen>
+    <dimen name="reader_button_minimum_height">44dp</dimen>
     <dimen name="reader_count_icon">18dp</dimen>
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>

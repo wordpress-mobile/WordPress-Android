@@ -297,56 +297,58 @@
         <!-- footer start -->
         <ImageView
             android:id="@+id/bookmark"
-            android:layout_width="@dimen/reader_button_minimum_height"
+            android:layout_width="0dp"
             android:layout_height="@dimen/reader_button_minimum_height"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/reader_add_bookmark"
-            android:padding="@dimen/margin_medium"
+            android:padding="@dimen/margin_large"
             android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
             android:layout_marginTop="@dimen/reader_card_content_padding"
-            app:layout_constraintStart_toEndOf="@+id/viewStub"
+            app:layout_constraintStart_toEndOf="@id/guideline_beginning"
+            app:layout_constraintEnd_toStartOf="@id/count_likes"
+            app:layout_constraintTop_toBottomOf="@id/layout_discover"
+            app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+            app:tint="@color/on_surface_primary_selector"
+            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+
+        <org.wordpress.android.ui.reader.views.ReaderIconCountView
+            android:id="@+id/count_likes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/reader_card_content_padding"
+            app:layout_constraintStart_toEndOf="@id/bookmark"
             app:layout_constraintEnd_toStartOf="@id/reblog"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:tint="@color/on_surface_primary_selector" />
+            app:layout_constraintWidth_default="wrap"
+            app:readerIcon="like" />
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/reblog"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignWithParentIfMissing="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/reader_card_content_padding"
-            app:layout_constraintStart_toEndOf="@+id/bookmark"
-            app:layout_constraintEnd_toStartOf="@id/count_comments"
             android:contentDescription="@string/reader_view_reblog"
+            android:layout_marginTop="@dimen/reader_card_content_padding"
+            app:layout_constraintStart_toEndOf="@id/count_likes"
+            app:layout_constraintEnd_toStartOf="@id/count_comments"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
+            app:layout_constraintWidth_default="wrap"
             app:readerIcon="reblog" />
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/count_comments"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/reader_view_comments"
             android:layout_marginTop="@dimen/reader_card_content_padding"
             app:layout_constraintStart_toEndOf="@id/reblog"
-            app:layout_constraintEnd_toStartOf="@id/count_likes"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:readerIcon="comment" />
-
-        <org.wordpress.android.ui.reader.views.ReaderIconCountView
-            android:id="@+id/count_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/reader_card_content_padding"
-            app:layout_constraintStart_toEndOf="@id/count_comments"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@id/layout_discover"
-            app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:readerIcon="like" />
+            app:layout_constraintWidth_default="wrap"
+            app:readerIcon="comment"/>
         <!-- footer end -->
 
         <androidx.constraintlayout.widget.Guideline
@@ -354,7 +356,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="@dimen/reader_card_content_padding" />
+            app:layout_constraintGuide_end="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
