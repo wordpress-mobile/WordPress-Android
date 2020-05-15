@@ -194,12 +194,6 @@ class SubFilterViewModel @Inject constructor(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
-        if (subfilterListItem.isTrackedItem) {
-            readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
-        } else {
-            readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
-        }
-
         when (subfilterListItem.type) {
             SubfilterListItem.ItemType.SECTION_TITLE,
             SubfilterListItem.ItemType.DIVIDER -> {
@@ -271,6 +265,11 @@ class SubFilterViewModel @Inject constructor(
     }
 
     private fun updateSubfilter(filter: SubfilterListItem) {
+        if (filter.isTrackedItem) {
+            readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
+        } else {
+            readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
+        }
         _currentSubFilter.value = filter
         val json = subfilterListItemMapper.toJson(filter)
         appPrefsWrapper.setReaderSubfilter(json)
