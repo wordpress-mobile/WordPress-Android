@@ -600,7 +600,7 @@ public class ReaderPostListFragment extends Fragment
         }
         mWasPaused = true;
 
-        mViewModel.onFragmentPause(mIsTopLevel);
+        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS);
     }
 
     @Override
@@ -654,7 +654,7 @@ public class ReaderPostListFragment extends Fragment
             showEmptyView();
         }
 
-        mViewModel.onFragmentResume(mIsTopLevel,
+        mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
                 isFollowingScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 

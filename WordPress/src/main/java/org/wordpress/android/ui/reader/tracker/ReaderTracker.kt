@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.DateTimeUtils
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,12 +30,14 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
     }
 
     fun start(type: ReaderTrackerType) {
+        AppLog.d(MAIN, "ReaderTracker: started $type")
         trackers[type]?.let {
             trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
         }
     }
 
     fun stop(type: ReaderTrackerType) {
+        AppLog.d(MAIN, "ReaderTracker: stopped $type")
         trackers[type]?.let { trackerInfo ->
             trackerInfo.startDate?.let { startDate ->
                 val accumulatedTime = trackerInfo.accumulatedTime +

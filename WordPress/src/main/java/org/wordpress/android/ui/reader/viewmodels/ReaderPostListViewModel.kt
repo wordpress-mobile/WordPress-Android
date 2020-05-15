@@ -87,13 +87,13 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     // TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(
-    fun onFragmentResume(isTopLevelFragment: Boolean, subfilterListItem: SubfilterListItem?) {
+    fun onFragmentResume(isTopLevelFragment: Boolean, isSearch: Boolean, subfilterListItem: SubfilterListItem?) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        if(!isTopLevelFragment) {
-            // top level is tracked in ReaderFragment
+        if(!isTopLevelFragment && !isSearch) {
+            // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity
             readerTracker.start(ReaderTrackerType.FILTERED_LIST)
         }
         // TODO check if the subfilter is set to a value and uncomment this code
@@ -104,13 +104,13 @@ class ReaderPostListViewModel @Inject constructor(
         }
     }
 
-    fun onFragmentPause(isTopLevelFragment: Boolean) {
+    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        if(!isTopLevelFragment) {
-            // top level is tracked in ReaderFragment
+        if(!isTopLevelFragment && !isSearch) {
+            // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity
             readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
         }
 
