@@ -92,8 +92,8 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
 
-        mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
-        mConnectMore = mBottomButtonsContainer.findViewById(R.id.secondary_button);
+//        mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
+//        mConnectMore = mBottomButtonsContainer.findViewById(R.id.secondary_button);
 
         mSitesList = rootView.findViewById(R.id.recycler_view);
         mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -104,15 +104,15 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        secondaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginEpilogueListener != null) {
-                    mLoginEpilogueListener.onConnectAnotherSite();
-                }
-            }
-        });
+//        secondaryButton.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+//        secondaryButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (mLoginEpilogueListener != null) {
+//                    mLoginEpilogueListener.onConnectAnotherSite();
+//                }
+//            }
+//        });
 
         primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,7 +217,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         final boolean isWpcom = mAccountStore.hasAccessToken();
 
         if (isWpcom) {
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, mAccountStore.getAccount());
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, mAccountStore.getAccount());
         } else if (sites.size() != 0) {
             SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
             int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
@@ -226,18 +226,18 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
             String username = site.getUsername();
             String displayName = site.getDisplayName();
 
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, avatarUrl, username, displayName);
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, avatarUrl, username, displayName);
         }
 
         if (sites.size() == 0) {
             holder.hideSitesHeading();
-            mConnectMore.setText(R.string.connect_site);
+//            mConnectMore.setText(R.string.connect_site);
         } else {
             holder.showSitesHeading(StringUtils.getQuantityString(
-                    getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
+                    getActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
                     R.string.login_epilogue_mysites_other, sites.size()));
 
-            mConnectMore.setText(R.string.connect_more);
+//            mConnectMore.setText(R.string.connect_more);
         }
     }
 
