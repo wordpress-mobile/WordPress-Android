@@ -970,8 +970,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.EDITOR_PICKER);
                     break;
                 case STOCK_MEDIA:
-                    ActivityLauncher.showStockMediaPickerForResult(
-                            this, mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
+                    final int requestCode = allowMultipleSelection
+                            ? RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT
+                            : RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK;
+                    ActivityLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
                     break;
                 case GIF:
                     ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
@@ -2299,6 +2301,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.VIDEO_LIBRARY:
                 case RequestCodes.TAKE_VIDEO:
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
                 default:
@@ -2333,6 +2336,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
                                == RequestCodes.TAKE_VIDEO) {
                         mEditorMedia.addFreshlyTakenVideoToEditor();
+                    }
+                    break;
+                case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        // pass array with single item
+                        long[] mediaIds = {data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0)};
+                        mEditorMedia
+                                .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
                 case RequestCodes.MEDIA_LIBRARY:
