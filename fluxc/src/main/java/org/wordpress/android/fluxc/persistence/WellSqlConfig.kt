@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 104
+        return 105
     }
 
     override fun getDbName(): String {
@@ -1078,6 +1078,12 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
+                }
+                104 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM_GMT TEXT")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO_GMT TEXT")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM TEXT")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO TEXT")
                 }
             }
         }
