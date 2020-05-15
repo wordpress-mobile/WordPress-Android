@@ -110,6 +110,7 @@ ext {
     fluxCVersion = '1.6.11'
 
     appCompatVersion = '1.0.2'
+    coreVersion = '1.0.2'
     constraintLayoutVersion = '1.1.3'
     materialVersion = '1.1.0'
     uCropVersion = '2.2.4'
