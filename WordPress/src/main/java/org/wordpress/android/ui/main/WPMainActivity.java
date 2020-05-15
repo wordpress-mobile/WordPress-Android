@@ -104,6 +104,7 @@ import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.uploads.UploadActionUseCase;
 import org.wordpress.android.ui.uploads.UploadUtils;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -416,6 +417,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
                     break;
             }
+        });
+
+        mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
+            new FeatureAnnouncementDialogFragment()
+                    .show(getSupportFragmentManager(), FeatureAnnouncementDialogFragment.TAG);
         });
 
         mFloatingActionButton.setOnClickListener(v -> {

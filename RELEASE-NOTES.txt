@@ -1,5 +1,7 @@
 14.9
 -----
+* Fix issue with Preview post not working after switching to classic editor from inside the post
+* [**] Block editor: Fix bug in Free Photo Library which allowed selecting multiple images but only inserted one
  
 14.8
 -----

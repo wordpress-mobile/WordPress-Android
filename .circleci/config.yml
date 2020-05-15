@@ -63,7 +63,7 @@ jobs:
           paths:
             - index.android.bundle
   test:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -89,7 +89,7 @@ jobs:
       - android/save-gradle-cache
       - android/save-test-results
   lint:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -127,7 +127,7 @@ jobs:
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
             else
               echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
-            fi 
+            fi
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
@@ -260,7 +260,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - run:
           name: Install bundler
-          command: gem install bundler --version 2.0.2 
+          command: gem install bundler --version 2.0.2
       - bundle-install/bundle-install:
           cache_key_prefix: strings-check
       - run:
@@ -293,7 +293,7 @@ workflows:
       - Connected Tests:
           requires:
             - gutenberg-bundle-build
-          post-to-slack: false
+          post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
             branches:
