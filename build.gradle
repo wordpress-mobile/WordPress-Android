@@ -1,6 +1,6 @@
 buildscript {
     ext.kotlinVersion = '1.3.61'
-    ext.navComponenVersion = '2.0.0'
+    ext.navComponentVersion = '2.0.0'
 
     repositories {
         google()
