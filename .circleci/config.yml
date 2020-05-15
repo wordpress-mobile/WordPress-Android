@@ -43,6 +43,28 @@ commands:
           name: Yarn bundle Android
           working_directory: libs/gutenberg-mobile
           command: yarn bundle:android
+  save-gutenberg-bundle-cache:
+    steps:
+      - run:
+          name: Save Gutenberg-Mobile Submodule Hash
+          command: |
+            git rev-parse @:./libs/gutenberg-mobile > gutenberg_submodule_hash
+            cat gutenberg_submodule_hash
+      - save_cache:
+          name: Cache JS Bundle
+          key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
+          paths:
+            - libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+  restore-gutenberg-bundle-cache:
+    steps:
+      - run:
+          name: Save Gutenberg-Mobile Submodule Hash
+          command: |
+            git rev-parse @:./libs/gutenberg-mobile > gutenberg_submodule_hash
+            cat gutenberg_submodule_hash
+      - restore_cache:
+          name: Restore JS Bundle From Cache
+          key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
 
 version: 2.1
 jobs:
@@ -51,17 +73,26 @@ jobs:
       - image: circleci/node:10
     steps:
       - git/shallow-checkout
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Abort If JS Bundle Exists
+          command: |
+            if [ -f "libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle" ]; then
+              echo "Gutenberg-Mobile bundle already in cache, no need to create a new one."
+              circleci-agent step halt
+            else
+              echo "Gutenberg-Mobile bundle not found in cache. Proceeding to generate new bundle"
+            fi
       - checkout-submodules
       - yarn-install
       - yarn-bundle-android
       - run:
-          name: Rename the JS bundle
-          working_directory: libs/gutenberg-mobile
-          command: mv bundle/android/App.js bundle/android/index.android.bundle
-      - persist_to_workspace:
-          root: libs/gutenberg-mobile/bundle/android
-          paths:
-            - index.android.bundle
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets
+      - run:
+          name: Move bundle to assets folder
+          command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+      - save-gutenberg-bundle-cache
   test:
     executor: 
       name: android/default
@@ -71,11 +102,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - restore-gutenberg-bundle-cache
       - run:
           name: Test WordPress
           environment:
@@ -97,11 +124,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - restore-gutenberg-bundle-cache
       - run:
           name: Checkstyle
           environment:
@@ -143,11 +166,7 @@ jobs:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
       - android/restore-gradle-cache
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build APK
           environment:
@@ -187,11 +206,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build
           environment:
@@ -229,11 +244,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build
           environment:
