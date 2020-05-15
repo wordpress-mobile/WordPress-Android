@@ -42,6 +42,10 @@
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
 
+    <!-- Reader -->
+    <color name="reader_post_list_background">@color/neutral_0</color>
+    <color name="reader_card_background">@color/white</color>
+
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
     <color name="accent_0">@color/pink_0</color>
@@ -175,6 +179,7 @@
     <color name="gray_80">#2c3338</color>
     <color name="gray_90">#1d2327</color>
     <color name="gray_100">#101517</color>
+    <color name="gray_110">#1e1e1e</color>
     <color name="green">#008a20</color>
     <color name="green_0">#e6f2e8</color>
     <color name="green_5">#b8e6bf</color>

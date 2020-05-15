@@ -10,6 +10,16 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="ReaderRecyclerView">
+        <item name="android:background">@color/reader_post_list_background</item>
+    </style>
+
+    <style name="ReaderCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardBackgroundColor">@color/reader_card_background</item>
+    </style>
+
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>

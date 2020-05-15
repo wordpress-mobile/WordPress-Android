@@ -16,9 +16,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 import androidx.constraintlayout.widget.Group;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -512,13 +510,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mTxtText.setVisibility(View.GONE);
             }
 
-            final int titleMargin;
             if (post.getCardType() == ReaderCardType.GALLERY) {
                 // if this post is a gallery, scan it for images and show a thumbnail strip of
                 // them - note that the thumbnail strip will take care of making itself visible
                 holder.mThumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
                 holder.mFramePhoto.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
                 ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
                     @Override public void showThumbnail(String thumbnailUrl) {
@@ -535,22 +531,15 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
                 mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
                         post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else {
                 holder.mFramePhoto.setVisibility(View.GONE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = 0;
             }
-
-            // set the top margin of the title based on whether there's a featured image
-            LayoutParams params = (LayoutParams) holder.mTxtTitle.getLayoutParams();
-            params.topMargin = titleMargin;
         }
 
         // show the video overlay (play icon) when there's a featured video
