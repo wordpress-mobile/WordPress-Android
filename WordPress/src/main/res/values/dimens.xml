@@ -272,6 +272,8 @@
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
 
+    <dimen name="site_list_item_height">64dp</dimen>
+
     <!-- Site Settings -->
     <dimen name="site_settings_divider_height">1dp</dimen>
     <dimen name="related_posts_dialog_padding_left">24dp</dimen>

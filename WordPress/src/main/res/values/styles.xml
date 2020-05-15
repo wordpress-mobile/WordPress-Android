@@ -995,15 +995,23 @@
         <item name="fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textStyle">bold</item>
+    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1" />
+
+    <style name="LoginTheme.Subhead2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
+    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 
     <style name="LoginEpilogueSitesList">
         <item name="colorControlHighlight">@android:color/transparent</item>

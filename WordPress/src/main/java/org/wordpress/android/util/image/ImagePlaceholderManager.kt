@@ -12,6 +12,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_neutral_30_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_neutral_10_globe_32dp
+            ImageType.BLAVATAR_ROUNDED -> R.drawable.bg_rectangle_neutral_10_radius_4dp_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_neutral_30_plans_32dp
@@ -31,6 +32,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_neutral_30_user_32dp
             ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.color.neutral_0
+            ImageType.BLAVATAR_ROUNDED -> R.drawable.bg_rectangle_neutral_10_radius_4dp
             ImageType.IMAGE -> null // don't display any placeholder
             ImageType.PHOTO -> R.color.neutral_0
             ImageType.PLAN -> R.drawable.bg_oval_neutral_30_plans_32dp
