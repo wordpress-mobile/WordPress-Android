@@ -37,6 +37,6 @@ class ReaderSearchActivity : LocaleAwareActivity() {
 
     override fun onPause() {
         super.onPause()
-        readerTracker.start(MAIN_READER)
+        readerTracker.stop(MAIN_READER)
     }
 }
