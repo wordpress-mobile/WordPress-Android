@@ -205,7 +205,8 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
 
                         String insertBlock = getFileContentFromAssets("gutenberg/insert-block.js");
                         String blockContent = getIntent().getExtras().getString(ARG_BLOCK_CONTENT);
-                        evaluateJavaScript(removeNewLines(blockContent));
+                        insertBlock = String.format(insertBlock, blockContent);
+                        evaluateJavaScript(removeNewLines(insertBlock));
                     }, 2000);
                 } else {
                     mIsRedirected = false;
