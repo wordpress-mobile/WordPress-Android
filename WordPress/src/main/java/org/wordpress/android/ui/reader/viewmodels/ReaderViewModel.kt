@@ -44,6 +44,9 @@ class ReaderViewModel @Inject constructor(
     private val _selectTab = MutableLiveData<Event<TabPosition>>()
     val selectTab: LiveData<Event<TabPosition>> = _selectTab
 
+    private val _showSearch = MutableLiveData<Event<Unit>>()
+    val showSearch: LiveData<Event<Unit>> = _showSearch
+
     init {
         EventBus.getDefault().register(this)
     }
@@ -104,6 +107,10 @@ class ReaderViewModel @Inject constructor(
             val position = it.readerTagList.indexOfTagName(tag.tagSlug)
             _selectTab.postValue(Event(position))
         }
+    }
+
+    fun onSearchActionClicked() {
+        _showSearch.value = Event(Unit)
     }
 
     @Subscribe(threadMode = MAIN)

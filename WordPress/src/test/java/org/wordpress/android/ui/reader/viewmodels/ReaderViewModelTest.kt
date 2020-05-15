@@ -23,6 +23,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 private const val DUMMY_CURRENT_TIME: Long = 10000000000
@@ -188,6 +189,20 @@ class ReaderViewModelTest {
 
         // Assert
         assertThat(tabPosition).isEqualTo(2)
+    }
+
+    @Test
+    fun `OnSearchActionClicked emits showSearch event`() {
+        // Arrange
+        var event: Event<Unit>? = null
+        viewModel.showSearch.observeForever {
+            event = it
+        }
+        // Act
+        viewModel.onSearchActionClicked()
+
+        // Assert
+        assertThat(event).isNotNull
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {

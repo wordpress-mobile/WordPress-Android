@@ -38,7 +38,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
@@ -301,6 +300,18 @@ public class ReaderPostListFragment extends Fragment
         return fragment;
     }
 
+    static ReaderPostListFragment newInstanceForSearch() {
+        AppLog.d(T.READER, "reader post list > newInstance (search)");
+
+        Bundle args = new Bundle();
+        args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, ReaderPostListType.SEARCH_RESULTS);
+        args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, false);
+
+        ReaderPostListFragment fragment = new ReaderPostListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     /*
      * show posts in a specific blog
      */
@@ -423,21 +434,18 @@ public class ReaderPostListFragment extends Fragment
             initSubFilterViewModel();
         }
 
-        mViewModel.getShouldCollapseToolbar().observe(this, collapse -> {
-            if (collapse) {
-                mRecyclerView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-            } else {
-                mRecyclerView.setToolbarScrollFlags(0);
-            }
-        });
-
         handleReblogStateChanges();
 
-        mViewModel.start(!mIsTopLevel, mReaderViewModel);
+        mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();
+        }
+
+        if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
+            mRecyclerView.showAppBarLayout();
+            mSearchMenuItem.expandActionView();
+            mRecyclerView.setToolbarScrollFlags(0);
         }
     }
 
@@ -1105,10 +1113,6 @@ public class ReaderPostListFragment extends Fragment
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
                 mSettingsMenuItem.setVisible(false);
-                if (mIsTopLevel) {
-                    mViewModel.onSearchMenuCollapse(false);
-                }
-
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
@@ -1124,35 +1128,8 @@ public class ReaderPostListFragment extends Fragment
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                hideSearchMessage();
-                hideSearchSuggestions();
-                hideSearchTabs();
-                resetSearchSuggestions();
-                if (!mIsTopLevel) {
-                    mSettingsMenuItem.setVisible(true);
-                }
-                mCurrentSearchQuery = null;
-
-                if (mBottomNavController != null) {
-                    mBottomNavController.onRequestShowBottomNavigation();
-                }
-
-
-                if (mIsTopLevel) {
-                    if (isFollowingScreen()) {
-                        mSubFilterViewModel.onSubfilterReselected();
-                    } else {
-                        // return to the followed tag that was showing prior to searching
-                        resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                    }
-
-                    mViewModel.onSearchMenuCollapse(true);
-                } else {
-                    // return to the followed tag that was showing prior to searching
-                    resetPostAdapter(ReaderPostListType.TAG_FOLLOWED);
-                }
-
-                return true;
+                requireActivity().finish();
+                return false;
             }
         });
 

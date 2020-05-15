@@ -2,6 +2,9 @@ package org.wordpress.android.ui.reader
 
 import android.app.Activity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -49,9 +52,23 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
         initToolbar()
         initViewPager()
         initViewModel()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.reader_home, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == R.id.menu_search) {
+            viewModel.onSearchActionClicked()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initToolbar() {
@@ -86,6 +103,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
             selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
                 view_pager.currentItem = tabPosition
+            }
+        })
+
+        viewModel.showSearch.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                ReaderActivityLauncher.showReaderSearch(context)
             }
         })
 
