@@ -45,7 +45,7 @@ class FeatureAnnouncementProvider @Inject constructor() {
                 featureAnnouncementFileContent,
                 FeatureAnnouncements::class.java
         )
-        
+
         featureAnnouncements.addAll(featureAnnouncement.announcements)
 
         return featureAnnouncements
