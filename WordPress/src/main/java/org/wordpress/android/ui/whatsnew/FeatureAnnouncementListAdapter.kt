@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -17,16 +17,17 @@ import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
-    val activity: FragmentActivity
+    val fragment: Fragment
 ) : Adapter<RecyclerView.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private var viewModel: FeatureAnnouncementViewModel
     private val list = mutableListOf<FeatureAnnouncementItem>()
+    private var isFindOutMoreVisible = true
 
     init {
-        (activity.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(fragment, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
     }
 
@@ -36,7 +37,7 @@ class FeatureAnnouncementListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == itemCount - 1) {
+        if (isFindOutMoreVisible && position == itemCount - 1) {
             return VIEW_TYPE_FOOTER
         }
         return VIEW_TYPE_FEATURE
@@ -50,9 +51,16 @@ class FeatureAnnouncementListAdapter(
         }
     }
 
+    fun toggleFooterVisibility(isVisible: Boolean) {
+        isFindOutMoreVisible = isVisible
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
-        if (list.isNotEmpty()) {
+        if (list.isNotEmpty() && isFindOutMoreVisible) {
             return list.size + 1
+        } else if (list.isNotEmpty() && !isFindOutMoreVisible) {
+            return list.size
         }
 
         return 0
