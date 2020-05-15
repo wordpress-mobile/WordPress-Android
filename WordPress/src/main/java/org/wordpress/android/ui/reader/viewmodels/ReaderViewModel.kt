@@ -14,6 +14,8 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.distinct
@@ -31,7 +33,8 @@ class ReaderViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateProvider: DateProvider,
-    private val loadReaderTabsUseCase: LoadReaderTabsUseCase
+    private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
+    private val readerTracker: ReaderTracker
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
 
@@ -116,5 +119,13 @@ class ReaderViewModel @Inject constructor(
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
         loadTabs()
+    }
+
+    fun onScreenInForeground() {
+        readerTracker.start(MAIN_READER)
+    }
+
+    fun onScreenInBackground() {
+        readerTracker.stop(MAIN_READER)
     }
 }
