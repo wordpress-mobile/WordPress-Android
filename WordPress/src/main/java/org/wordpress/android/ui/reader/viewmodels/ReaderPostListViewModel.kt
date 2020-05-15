@@ -92,9 +92,10 @@ class ReaderPostListViewModel @Inject constructor(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        readerTracker.start(
-                if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
-        )
+        if(!isTopLevelFragment) {
+            // top level is tracked in ReaderFragment
+            readerTracker.start(ReaderTrackerType.FILTERED_LIST)
+        }
         // TODO check if the subfilter is set to a value and uncomment this code
 
         if (subfilterListItem?.isTrackedItem == true) {
@@ -108,9 +109,10 @@ class ReaderPostListViewModel @Inject constructor(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        readerTracker.stop(
-                if (isTopLevelFragment) ReaderTrackerType.MAIN_READER else ReaderTrackerType.FILTERED_LIST
-        )
+        if(!isTopLevelFragment) {
+            // top level is tracked in ReaderFragment
+            readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
+        }
 
         if (isTopLevelFragment && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
