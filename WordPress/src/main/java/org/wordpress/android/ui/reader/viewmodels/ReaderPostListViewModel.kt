@@ -97,7 +97,7 @@ class ReaderPostListViewModel @Inject constructor(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        if(!isTopLevelFragment && !isSearch) {
+        if (!isTopLevelFragment && !isSearch) {
             // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity
             readerTracker.start(ReaderTrackerType.FILTERED_LIST)
         }
@@ -114,7 +114,7 @@ class ReaderPostListViewModel @Inject constructor(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
         )
-        if(!isTopLevelFragment && !isSearch) {
+        if (!isTopLevelFragment && !isSearch) {
             // top level is tracked in ReaderFragment, search is tracked in ReaderSearchActivity
             readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
         }

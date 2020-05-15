@@ -40,7 +40,7 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
 
     fun stop(type: ReaderTrackerType) {
         trackers[type]?.let { trackerInfo ->
-            if(isRunning(type)) {
+            if (isRunning(type)) {
                 AppLog.d(MAIN, "ReaderTracker: stopped $type")
                 trackerInfo.startDate?.let { startDate ->
                     val accumulatedTime = trackerInfo.accumulatedTime +
