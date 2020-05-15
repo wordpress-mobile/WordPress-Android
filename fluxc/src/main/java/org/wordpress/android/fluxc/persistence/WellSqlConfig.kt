@@ -1080,10 +1080,12 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
                 }
                 104 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DELETE FROM WCProductVariationModel")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM_GMT TEXT")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO_GMT TEXT")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM TEXT")
                     db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO TEXT")
+                    db.execSQL("ALTER TABLE WCProductVariationModel ADD IMAGE TEXT")
                 }
             }
         }
