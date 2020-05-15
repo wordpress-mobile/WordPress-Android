@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +17,7 @@ import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
-    val activity: FragmentActivity
+    val fragment: Fragment
 ) : Adapter<RecyclerView.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -26,8 +26,8 @@ class FeatureAnnouncementListAdapter(
     private var isFindOutMoreVisible = true
 
     init {
-        (activity.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(fragment, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
     }
 

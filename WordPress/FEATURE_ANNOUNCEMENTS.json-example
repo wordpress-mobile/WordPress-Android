@@ -5,7 +5,7 @@
   "announcements": [
     {
       "appVersionName": "14.7",  // app version name that announcement targets. Used for display purposes only.
-      "announceVersion": 1, // unique version of announcement. Used to track if the specific announcement was shown or not.
+      "announcementVersion": 1, // unique version of announcement. Used to track if the specific announcement was shown or not.
       "detailsUrl": "http://wordpress.org",  // URL that "Find out more" button will open. If empty, "Find out more" button will not be shown.
       "features": [ // Features will appear in order they are in this list. Try to avoid using long subtitles.
         {
