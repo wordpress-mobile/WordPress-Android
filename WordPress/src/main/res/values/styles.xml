@@ -989,7 +989,11 @@
 
     <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
 
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2" />
+    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="fontFamily">sans-serif-medium</item>
+    </style>
 
     <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textStyle">bold</item>

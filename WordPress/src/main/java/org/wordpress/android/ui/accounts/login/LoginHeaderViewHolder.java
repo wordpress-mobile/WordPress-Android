@@ -19,8 +19,6 @@ import org.wordpress.android.util.image.ImageType;
  * ViewHolder for a RecyclerView header used on screens shown after a user logs in.
  */
 public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
-    private final View mLoggedInAsHeading;
-    private final View mUserDetailsCard;
     private final ImageView mAvatarImageView;
     private final TextView mDisplayNameTextView;
     private final TextView mUsernameTextView;
@@ -28,38 +26,27 @@ public class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
     public LoginHeaderViewHolder(View view) {
         super(view);
-        mLoggedInAsHeading = view.findViewById(R.id.logged_in_as_heading);
-        mUserDetailsCard = view.findViewById(R.id.user_details_card);
         mAvatarImageView = view.findViewById(R.id.avatar);
         mDisplayNameTextView = view.findViewById(R.id.display_name);
         mUsernameTextView = view.findViewById(R.id.username);
         mMySitesHeadingTextView = view.findViewById(R.id.my_sites_heading);
     }
 
-    public void updateLoggedInAsHeading(Context context, ImageManager imageManager, boolean isAfterLogin,
-                                        AccountModel defaultAccount) {
-        updateLoggedInAsHeading(context, imageManager, isAfterLogin, constructGravatarUrl(context, defaultAccount),
+    public void updateLoggedInAsHeading(Context context, ImageManager imageManager, AccountModel defaultAccount) {
+        updateLoggedInAsHeading(context, imageManager, constructGravatarUrl(context, defaultAccount),
                                 defaultAccount.getUserName(), defaultAccount.getDisplayName());
     }
 
-    public void updateLoggedInAsHeading(Context context, ImageManager imageManager, boolean isAfterLogin,
-                                        String avatarUrl, String username, String displayName) {
-        if (isAfterLogin) {
-            mLoggedInAsHeading.setVisibility(View.VISIBLE);
-            mUserDetailsCard.setVisibility(View.VISIBLE);
-            imageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
-                    StringUtils.notNullStr(avatarUrl));
-            mUsernameTextView.setText(context.getString(R.string.login_username_at, username));
+    public void updateLoggedInAsHeading(Context context, ImageManager imageManager, String avatarUrl, String username,
+                                        String displayName) {
+        imageManager.loadIntoCircle(mAvatarImageView, ImageType.AVATAR_WITHOUT_BACKGROUND,
+                StringUtils.notNullStr(avatarUrl));
+        mUsernameTextView.setText(username);
 
-            if (!TextUtils.isEmpty(displayName)) {
-                mDisplayNameTextView.setText(displayName);
-            } else {
-                mDisplayNameTextView.setText(username);
-            }
+        if (!TextUtils.isEmpty(displayName)) {
+            mDisplayNameTextView.setText(displayName);
         } else {
-            imageManager.cancelRequestAndClearImageView(mAvatarImageView);
-            mLoggedInAsHeading.setVisibility(View.GONE);
-            mUserDetailsCard.setVisibility(View.GONE);
+            mDisplayNameTextView.setText(username);
         }
     }
 
