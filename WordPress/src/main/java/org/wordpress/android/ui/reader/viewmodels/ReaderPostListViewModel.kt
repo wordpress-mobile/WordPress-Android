@@ -87,7 +87,12 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     // TODO this is related to tracking time spent in reader - we should move it to the parent but also keep it here for !isTopLevel :(
-    fun onFragmentResume(isTopLevelFragment: Boolean, isSearch: Boolean, subfilterListItem: SubfilterListItem?) {
+    fun onFragmentResume(
+        isTopLevelFragment: Boolean,
+        isSearch: Boolean,
+        isFollowing: Boolean,
+        subfilterListItem: SubfilterListItem?
+    ) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > START Count [mIsTopLevel = $isTopLevelFragment]"
@@ -98,13 +103,13 @@ class ReaderPostListViewModel @Inject constructor(
         }
         // TODO check if the subfilter is set to a value and uncomment this code
 
-        if (subfilterListItem?.isTrackedItem == true) {
+        if (isFollowing && subfilterListItem?.isTrackedItem == true) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
             readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }
 
-    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean) {
+    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFollowing: Boolean) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
@@ -114,8 +119,7 @@ class ReaderPostListViewModel @Inject constructor(
             readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
         }
 
-        if (isTopLevelFragment && readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)) {
-            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+        if (isFollowing) {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }

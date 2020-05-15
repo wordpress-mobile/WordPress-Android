@@ -30,21 +30,25 @@ class ReaderTracker @Inject constructor(private val dateProvider: DateProvider) 
     }
 
     fun start(type: ReaderTrackerType) {
-        AppLog.d(MAIN, "ReaderTracker: started $type")
         trackers[type]?.let {
-            trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
+            if (!isRunning(type)) {
+                AppLog.d(MAIN, "ReaderTracker: started $type")
+                trackers[type] = it.copy(startDate = dateProvider.getCurrentDate())
+            }
         }
     }
 
     fun stop(type: ReaderTrackerType) {
-        AppLog.d(MAIN, "ReaderTracker: stopped $type")
         trackers[type]?.let { trackerInfo ->
-            trackerInfo.startDate?.let { startDate ->
-                val accumulatedTime = trackerInfo.accumulatedTime +
-                        DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
-                // let reset the startDate to null
-                trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
-            } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
+            if(isRunning(type)) {
+                AppLog.d(MAIN, "ReaderTracker: stopped $type")
+                trackerInfo.startDate?.let { startDate ->
+                    val accumulatedTime = trackerInfo.accumulatedTime +
+                            DateTimeUtils.secondsBetween(dateProvider.getCurrentDate(), startDate)
+                    // let reset the startDate to null
+                    trackers[type] = ReaderTrackerInfo(accumulatedTime = accumulatedTime)
+                } ?: AppLog.e(T.READER, "ReaderTracker > stop found a null startDate")
+            }
         }
     }
 

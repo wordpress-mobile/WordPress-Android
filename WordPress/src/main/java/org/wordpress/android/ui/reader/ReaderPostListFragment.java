@@ -455,7 +455,7 @@ public class ReaderPostListFragment extends Fragment
         mSubFilterViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
                                                      .get(SubFilterViewModel.class);
 
-        mSubFilterViewModel.getCurrentSubFilter().observe(this, subfilterListItem -> {
+        mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
                 mSubFilterViewModel.onSubfilterSelected(subfilterListItem);
                 if (shouldShowEmptyViewForSelfHostedCta()) {
@@ -465,7 +465,7 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        mSubFilterViewModel.getReaderModeInfo().observe(this, readerModeInfo -> {
+        mSubFilterViewModel.getReaderModeInfo().observe(getViewLifecycleOwner(), readerModeInfo -> {
             if (readerModeInfo != null) {
                 changeReaderMode(readerModeInfo, true);
 
@@ -486,7 +486,7 @@ public class ReaderPostListFragment extends Fragment
             }
         });
 
-        mSubFilterViewModel.getChangeBottomSheetVisibility().observe(this, event -> {
+        mSubFilterViewModel.getChangeBottomSheetVisibility().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(isShowing -> {
                 FragmentManager fm = getFragmentManager();
                 if (fm != null) {
@@ -504,7 +504,7 @@ public class ReaderPostListFragment extends Fragment
             });
         });
 
-        mSubFilterViewModel.getBottomSheetEmptyViewAction().observe(this, event -> {
+        mSubFilterViewModel.getBottomSheetEmptyViewAction().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(action -> {
                 if (action instanceof OpenSubsAtPage) {
                     ReaderActivityLauncher.showReaderSubs(
@@ -519,7 +519,7 @@ public class ReaderPostListFragment extends Fragment
             });
         });
 
-        mSubFilterViewModel.getUpdateTagsAndSites().observe(this, event -> {
+        mSubFilterViewModel.getUpdateTagsAndSites().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(tasks -> {
                 if (NetworkUtils.isNetworkAvailable(getActivity())) {
                     ReaderUpdateServiceStarter.startService(getActivity(), tasks);
@@ -600,7 +600,8 @@ public class ReaderPostListFragment extends Fragment
         }
         mWasPaused = true;
 
-        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS);
+        mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
+                isFollowingScreen());
     }
 
     @Override
@@ -655,7 +656,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFollowingScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
+                isFollowingScreen(), isFollowingScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 
     /*

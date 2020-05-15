@@ -137,18 +137,14 @@ class SubFilterViewModel @Inject constructor(
 
     fun changeSubfiltersVisibility(show: Boolean) {
         val isCurrentSubfilterTracked = getCurrentSubfilterValue().isTrackedItem
-        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
 
         if (show) {
-            if (isCurrentSubfilterTracked && !isSubfilterListTrackerRunning) {
-                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+            if (isCurrentSubfilterTracked) {
                 readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
-            } else if (!isCurrentSubfilterTracked && isSubfilterListTrackerRunning) {
-                AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+            } else {
                 readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
             }
-        } else if (isSubfilterListTrackerRunning) {
-            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+        } else {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
 
@@ -198,14 +194,9 @@ class SubFilterViewModel @Inject constructor(
         subfilterListItem: SubfilterListItem,
         requestNewerPosts: Boolean
     ) {
-        val isSubfilterItemTracked = subfilterListItem.isTrackedItem
-        val isSubfilterListTrackerRunning = readerTracker.isRunning(ReaderTrackerType.SUBFILTERED_LIST)
-
-        if (isSubfilterItemTracked && !isSubfilterListTrackerRunning) {
-            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
+        if (subfilterListItem.isTrackedItem) {
             readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
-        } else if (!isSubfilterItemTracked && isSubfilterListTrackerRunning) {
-            AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > STOP Count SUBFILTERED_LIST")
+        } else {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
 
