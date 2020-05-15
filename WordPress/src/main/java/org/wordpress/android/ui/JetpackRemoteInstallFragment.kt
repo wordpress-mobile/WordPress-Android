@@ -30,12 +30,12 @@ class JetpackRemoteInstallFragment : Fragment() {
     private lateinit var viewModel: JetpackRemoteInstallViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component()!!.inject(this)
+        (requireActivity().application as WordPress).component()!!.inject(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        activity!!.let { activity ->
+        requireActivity().let { activity ->
             viewModel = ViewModelProviders.of(this, viewModelFactory)
                     .get<JetpackRemoteInstallViewModel>(JetpackRemoteInstallViewModel::class.java)
 
@@ -104,7 +104,7 @@ class JetpackRemoteInstallFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == JETPACK_LOGIN && resultCode == Activity.RESULT_OK) {
-            val site = activity!!.intent!!.getSerializableExtra(WordPress.SITE) as SiteModel
+            val site = requireActivity().intent!!.getSerializableExtra(WordPress.SITE) as SiteModel
             viewModel.onLogin(site.id)
         }
     }

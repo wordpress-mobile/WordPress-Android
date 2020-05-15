@@ -72,7 +72,7 @@ class PostListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        nonNullActivity = checkNotNull(activity)
+        nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)

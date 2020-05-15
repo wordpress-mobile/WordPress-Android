@@ -48,7 +48,7 @@ class PageParentSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)

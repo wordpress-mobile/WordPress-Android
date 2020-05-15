@@ -70,7 +70,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component()?.inject(this)
     }
 
@@ -85,14 +85,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
         val domainProductDetails = arguments?.getParcelable(EXTRA_DOMAIN_PRODUCT_DETAILS) as DomainProductDetails
-        val site = activity!!.intent?.getSerializableExtra(WordPress.SITE) as SiteModel
+        val site = requireActivity().intent?.getSerializableExtra(WordPress.SITE) as SiteModel
 
         viewModel.start(site, domainProductDetails)
 
@@ -440,7 +440,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            states = arguments!!.getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
+            states = requireArguments().getParcelableArrayList<SupportedStateResponse>(EXTRA_STATES)
                     as ArrayList<SupportedStateResponse>
         }
 

@@ -33,8 +33,8 @@ class EditPostPublishSettingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
     }
 
@@ -156,7 +156,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostDatePickerDialogFragment.newInstance()
-        fragment.show(activity!!.supportFragmentManager, PostDatePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
     private fun showPostTimeSelectionDialog() {
@@ -165,7 +165,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostTimePickerDialogFragment.newInstance()
-        fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
     private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
@@ -174,7 +174,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
-        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPostRepository(): EditPostRepository? {

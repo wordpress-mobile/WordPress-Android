@@ -114,7 +114,7 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
@@ -480,7 +480,7 @@ class PagesFragment : Fragment() {
                 )
 
                 WPDialogSnackbar.make(
-                        view!!.findViewById(R.id.coordinatorLayout), title,
+                        requireView().findViewById(R.id.coordinatorLayout), title,
                         resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 ).show()
             }

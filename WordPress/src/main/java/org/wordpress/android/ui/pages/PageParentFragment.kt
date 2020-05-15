@@ -149,7 +149,7 @@ class PageParentFragment : Fragment() {
         pageId = activity?.intent?.getLongExtra(EXTRA_PAGE_REMOTE_ID_KEY, 0)
 
         val nonNullPageId = checkNotNull(pageId)
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 

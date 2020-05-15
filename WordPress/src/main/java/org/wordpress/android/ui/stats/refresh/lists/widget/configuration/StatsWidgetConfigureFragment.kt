@@ -69,21 +69,22 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        val nonNullActivity = requireActivity()
+        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsWidgetConfigureViewModel::class.java)
-        siteSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        siteSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
-        colorSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        colorSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
-        activity?.setResult(AppCompatActivity.RESULT_CANCELED)
+        nonNullActivity.setResult(AppCompatActivity.RESULT_CANCELED)
 
-        val appWidgetId = activity?.intent?.extras?.getInt(
+        val appWidgetId = nonNullActivity.intent?.extras?.getInt(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            activity?.finish()
+            nonNullActivity.finish()
             return
         }
 
@@ -138,13 +139,13 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
                 analyticsTrackerWrapper.trackWithWidgetType(STATS_WIDGET_ADDED, it.widgetType)
                 when (it.widgetType) {
                     WEEK_VIEWS -> {
-                        viewsWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
+                        viewsWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
                     }
                     ALL_TIME_VIEWS -> {
-                        allTimeWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
+                        allTimeWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
                     }
                     TODAY_VIEWS -> {
-                        todayWidgetUpdater.updateAppWidget(context!!, appWidgetId = it.appWidgetId)
+                        todayWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = it.appWidgetId)
                     }
                 }
                 val resultValue = Intent()

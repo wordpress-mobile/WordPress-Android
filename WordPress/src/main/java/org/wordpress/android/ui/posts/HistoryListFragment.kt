@@ -59,7 +59,7 @@ class HistoryListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (checkNotNull(activity).application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
@@ -74,7 +74,7 @@ class HistoryListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
@@ -112,7 +112,7 @@ class HistoryListFragment : Fragment() {
         val adapter: HistoryAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(checkNotNull(activity), this::onItemClicked)
+            adapter = HistoryAdapter(requireActivity(), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as HistoryAdapter

@@ -48,23 +48,24 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        val nonNullActivity = requireActivity()
+        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsMinifiedWidgetConfigureViewModel::class.java)
-        siteSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        siteSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
-        colorSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        colorSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
-        dataTypeSelectionViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        dataTypeSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
                 .get(StatsDataTypeSelectionViewModel::class.java)
-        activity?.setResult(AppCompatActivity.RESULT_CANCELED)
+        nonNullActivity.setResult(AppCompatActivity.RESULT_CANCELED)
 
-        val appWidgetId = activity?.intent?.extras?.getInt(
+        val appWidgetId = nonNullActivity.intent?.extras?.getInt(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID
         ) ?: AppWidgetManager.INVALID_APPWIDGET_ID
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            activity?.finish()
+            nonNullActivity.finish()
             return
         }
 
@@ -135,7 +136,7 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
         viewModel.widgetAdded.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
                 analyticsTrackerWrapper.trackMinifiedWidget(STATS_WIDGET_ADDED)
-                minifiedWidgetUpdater.updateAppWidget(context!!, appWidgetId = appWidgetId)
+                minifiedWidgetUpdater.updateAppWidget(requireContext(), appWidgetId = appWidgetId)
                 val resultValue = Intent()
                 resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
                 activity?.setResult(RESULT_OK, resultValue)

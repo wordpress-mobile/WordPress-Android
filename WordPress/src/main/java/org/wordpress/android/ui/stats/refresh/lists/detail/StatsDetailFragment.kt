@@ -37,7 +37,7 @@ class StatsDetailFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         initializeViewModels(nonNullActivity)
         initializeViews()

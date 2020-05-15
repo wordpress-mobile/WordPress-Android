@@ -43,7 +43,7 @@ class PlansListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
@@ -71,7 +71,7 @@ class PlansListFragment : Fragment() {
         val adapter: PlansListAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = PlansListAdapter(checkNotNull(activity), this::onItemClicked)
+            adapter = PlansListAdapter(requireActivity(), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as PlansListAdapter

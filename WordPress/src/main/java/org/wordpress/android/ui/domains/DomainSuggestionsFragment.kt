@@ -46,10 +46,10 @@ class DomainSuggestionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)

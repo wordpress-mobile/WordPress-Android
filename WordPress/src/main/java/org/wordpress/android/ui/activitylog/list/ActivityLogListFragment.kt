@@ -39,7 +39,7 @@ class ActivityLogListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         log_list_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
 
