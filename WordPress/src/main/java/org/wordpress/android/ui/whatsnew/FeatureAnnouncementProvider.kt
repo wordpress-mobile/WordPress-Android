@@ -37,10 +37,6 @@ class FeatureAnnouncementProvider @Inject constructor() {
             return featureAnnouncements
         }
 
-        Gson().fromJson(
-                featureAnnouncementFileContent,
-                FeatureAnnouncements::class.java
-        )
         val featureAnnouncement: FeatureAnnouncements = gson.fromJson(
                 featureAnnouncementFileContent,
                 FeatureAnnouncements::class.java
