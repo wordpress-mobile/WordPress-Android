@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 10:28:47+0000
-Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-06 06:12:52+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_dialog_label">Care sunt noutățile din WordPress</string>
+    <string name="insert_label_with_count">Inserează %d</string>
+    <string name="crop">decupează</string>
+    <string name="error_failed_to_load_into_file">Încărcarea în fișier a eșuat, te rog reîncearcă.</string>
+    <string name="preview_image_thumbnail_description">Previzualizează miniatura imaginii</string>
+    <string name="photo_picker_use_media">Folosește acest element media</string>
+    <string name="photo_picker_use_video">Folosește acest video</string>
+    <string name="photo_picker_photo_or_video_title">Alege un element media</string>
+    <string name="photo_picker_video_title">Alege un video</string>
+    <string name="site_picker_ask_site_select">Nu am putut selecta situl. Te rog reîncearcă.</string>
+    <string name="sitepicker_continue_flow">Continuă</string>
+    <string name="reader_reblog_error">Republicarea a eșuat</string>
+    <string name="reader_no_site_to_reblog_action">Administrează siturile</string>
+    <string name="reader_no_site_to_reblog_detail">După ce ai creat un sit WordPress.com, poți republica un conținut care îți place pe propriul sit.</string>
+    <string name="reader_no_site_to_reblog_title">Indisponibilă pentru siturile WordPress.com</string>
+    <string name="whats_new_in_version_title">Ce este nou</string>
+    <string name="comment_q_action_copied_url">Adresa legăturii a fost copiată</string>
+    <string name="copy_link_address">Copiază adresa legăturii</string>
+    <string name="comment_share_link_via">Partajează via</string>
+    <string name="comment_toast_err_share_intent">Nu pot partaja</string>
+    <string name="button_insert">Inserează</string>
+    <string name="continue_label">Continuă</string>
+    <string name="copy_text">Copiază</string>
     <string name="gutenberg_native_subscribe">Abonează-te</string>
     <string name="gutenberg_native_number_of_columns">Număr de coloane</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mută blocul în dreapta din poziția %1$s în poziția %2$s</string>
@@ -40,7 +64,7 @@ Language: ro
     <string name="media_accessing_failed">Accesarea conținutul unui sit privat a eșuat. Unele elemente media ar putea fi indisponibile.</string>
     <string name="media_accessing_progress">Accesarea conținutul unui sit privat</string>
     <string name="error_failed_to_crop_and_save_image">Decuparea și salvarea imaginii a eșuat, te rog reîncearcă.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Inserarea imaginii a eșuat.\nTe rog atinge pentru a reîncerca.</string>
+    <string name="failed_to_load_image_tap_to_retry">Încărcarea imaginii a eșuat.\nTe rog atinge pentru a reîncerca.</string>
     <string name="preview_image_description">Previzualizează imaginea</string>
     <string name="error_unknown_page_type">Format de pagină necunoscut</string>
     <string name="error_page_not_submitted">Nu am putut finaliza această acțiune și nu am trimis această pagină pentru verificare.</string>
@@ -1322,7 +1346,6 @@ Language: ro
     <string name="media_edit_filename_caption">Nume fișier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Text alternativ</string>
-    <string name="copy_text">Copiază</string>
     <string name="connect_site">Conectează situl</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luminează intermitent</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrează dispozitivul</string>
@@ -1904,7 +1927,7 @@ Language: ro
     <string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
     <string name="theme_by_author_prompt_append">de %1$s</string>
     <string name="theme_prompt">Îți mulțumim că ai ales %1$s</string>
-    <string name="theme_manage_site">ADMINISTRARE SIT</string>
+    <string name="theme_manage_site">ADMINISTREAZĂ SITUL</string>
     <string name="theme_done">GATA</string>
     <string name="theme_support">Suport</string>
     <string name="theme_details">Detalii</string>
@@ -2187,6 +2210,7 @@ Language: ro
     <string name="reader_btn_unfollow">Urmăresc</string>
     <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_share">Partajare</string>
+    <string name="reader_view_reblog">Republicare</string>
     <string name="reader_untitled_post">(Fără titlu)</string>
     <string name="comments_empty_list">Niciun comentariu până acum</string>
     <string name="empty_list_default">Această listă e goală</string>

@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 14:26:16+0000
+Translation-Revision-Date: 2020-05-05 12:05:46+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">En savoir plus</string>
+    <string name="feature_announcement_dialog_label">Quoi de neuf dans WordPress</string>
+    <string name="insert_label_with_count">Insérer %d</string>
+    <string name="crop">rogner</string>
+    <string name="error_failed_to_load_into_file">Erreur de chargement dans le fichier, veuillez réessayer.</string>
+    <string name="preview_image_thumbnail_description">Prévisualiser l’image de miniature</string>
+    <string name="photo_picker_use_media">Utiliser ce média</string>
+    <string name="photo_picker_use_video">Utiliser cette vidéo</string>
+    <string name="photo_picker_photo_or_video_title">Choisir un média</string>
+    <string name="photo_picker_video_title">Choisir une vidéo</string>
+    <string name="site_picker_ask_site_select">Impossible de sélectionner le site. Veuillez réessayer.</string>
+    <string name="sitepicker_continue_flow">Continuer</string>
+    <string name="reader_reblog_error">Échec du reblogue</string>
+    <string name="reader_no_site_to_reblog_action">Gérer les sites</string>
+    <string name="reader_no_site_to_reblog_detail">Une fois que vous avez créé un site WordPress.com, vous pouvez rebloguer un contenu que vous avez aimé sur votre propre site.</string>
+    <string name="reader_no_site_to_reblog_title">Aucun site WordPress.com disponible</string>
+    <string name="whats_new_in_version_title">Quoi de neuf ?</string>
+    <string name="comment_q_action_copied_url">Adresse du lien copiée</string>
+    <string name="copy_link_address">Copier l’adresse du lien</string>
+    <string name="comment_share_link_via">Partager via</string>
+    <string name="comment_toast_err_share_intent">Impossible de partager</string>
+    <string name="button_insert">Insérer</string>
+    <string name="continue_label">Continuer</string>
+    <string name="copy_text">Copier</string>
     <string name="gutenberg_native_subscribe">S’abonner</string>
     <string name="gutenberg_native_number_of_columns">Nombre de colonnes</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Déplace le bloc à droite de la position %1$s vers la position %2$s</string>
@@ -40,7 +64,7 @@ Language: fr
     <string name="media_accessing_failed">Échec d’accès au contenu d’un site privé. Certains médias peuvent être indisponibles</string>
     <string name="media_accessing_progress">Accéder au contenu d’un site privé</string>
     <string name="error_failed_to_crop_and_save_image">Échec du cadrage et de l’enregistrement de l’image, veuillez réessayer.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Échec de l’insertion de l’image.\nVeuillez appuyer pour recommencer.</string>
+    <string name="failed_to_load_image_tap_to_retry">Échec de l’insertion de l’image.\nVeuillez toucher pour recommencer.</string>
     <string name="preview_image_description">Afficher l’aperçu de l’image</string>
     <string name="error_unknown_page_type">Format de page inconnu</string>
     <string name="error_page_not_submitted">Nous ne pouvons ni terminer cette action ni envoyer cette page à vérifier.</string>
@@ -1322,7 +1346,6 @@ Language: fr
     <string name="media_edit_filename_caption">Nom du fichier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texte alternatif</string>
-    <string name="copy_text">Copier</string>
     <string name="connect_site">Connecter le site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Faire clignoter la lumière</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Faire vibrer l\'appareil</string>
@@ -2187,6 +2210,7 @@ Language: fr
     <string name="reader_btn_unfollow">Abonné</string>
     <string name="reader_btn_follow">Suivre</string>
     <string name="reader_btn_share">Partager</string>
+    <string name="reader_view_reblog">Rebloguer</string>
     <string name="reader_untitled_post">(Sans Titre)</string>
     <string name="comments_empty_list">Pas de commentaires pour le moment</string>
     <string name="empty_list_default">Cette liste est vide</string>
