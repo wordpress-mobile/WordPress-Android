@@ -222,7 +222,6 @@ public class EditPostSettingsFragment extends Fragment {
                     public void onSettingsUpdated() {
                         // mEditPostActivityHook will be null if the fragment is detached
                         if (getEditPostActivityHook() != null) {
-                            mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                             updatePostFormat(
                                     mSiteSettings.getDefaultPostFormat());
                         }
