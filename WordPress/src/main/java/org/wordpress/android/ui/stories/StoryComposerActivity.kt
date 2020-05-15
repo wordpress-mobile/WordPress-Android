@@ -29,6 +29,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
 
     override fun showProvidedMediaPicker() {
         // TODO implement show media picker
-        Toast.makeText(this, "picker not implemeneted yet", Toast.LENGTH_SHORT)
+        Toast.makeText(this, "picker not implemeneted yet", Toast.LENGTH_SHORT).show()
     }
 }
