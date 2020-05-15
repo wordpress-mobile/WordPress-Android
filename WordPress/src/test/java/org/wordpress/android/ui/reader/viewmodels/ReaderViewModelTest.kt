@@ -43,7 +43,6 @@ class ReaderViewModelTest {
     @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
     @Mock lateinit var readerTracker: ReaderTracker
 
-
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = ReaderTagList().apply {
         this.add(mock())
