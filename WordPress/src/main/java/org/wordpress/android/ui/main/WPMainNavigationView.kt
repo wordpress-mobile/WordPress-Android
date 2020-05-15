@@ -166,9 +166,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
             if (previousFragment != null) {
-                fragmentManager.beginTransaction().hide(previousFragment).show(fragment).commit()
+                fragmentManager.beginTransaction().detach(previousFragment).attach(fragment).commit()
             } else {
-                fragmentManager.beginTransaction().show(fragment).commit()
+                fragmentManager.beginTransaction().attach(fragment).commit()
             }
         }
         prevPosition = position
