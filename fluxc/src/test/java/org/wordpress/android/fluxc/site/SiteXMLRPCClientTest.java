@@ -20,6 +20,8 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.UnitTestUtils;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -33,6 +35,10 @@ import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +47,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
+import static org.wordpress.android.fluxc.site.SiteXMLRPCFixturesKt.SITE_OPTIONS;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteXMLRPCClientTest {
@@ -95,50 +102,31 @@ public class SiteXMLRPCClientTest {
     public void testFetchSite() throws Exception {
         SiteModel site = generateSelfHostedNonJPSite();
         mCountDownLatch = new CountDownLatch(1);
-        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                          + "<methodResponse><params><param><value>\n"
-                          + "  <struct>\n"
-                          + "  <member><name>post_thumbnail</name><value><struct>\n"
-                          + "  <member><name>value</name><value><boolean>1</boolean></value></member>\n"
-                          + "  </struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>time_zone</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>0</string></value></member>\n"
-                          + "  </struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>login_url</name><value><struct>\n"
-                          + "  <member><name>value</name><value>\n"
-                          + "  <string>https://taliwutblog.wordpress.com/wp-login.php</string>\n"
-                          + "  </value></member></struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>blog_public</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>0</string></value></member></struct>\n"
-                          + "  </value></member>\n"
-                          + "  \n"
-                          + "  <member><name>blog_title</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>@tal&amp;amp;wut blog</string>\n"
-                          + "  </value></member></struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>admin_url</name><value><struct>\n"
-                          + "  <member><name>readonly</name><value><boolean>1</boolean></value></member>\n"
-                          + "  <member><name>value</name><value>\n"
-                          + "  <string>https://taliwutblog.wordpress.com/wp-admin/</string>\n"
-                          + "  </value></member></struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>software_version</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>4.5.3-20160628</string></value></member>\n"
-                          + "  </struct></value></member>\n"
-                          + "  \n"
-                          + "  <member><name>jetpack_client_id</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>false</string></value></member></struct>\n"
-                          + "  </value></member>\n"
-                          + "  \n"
-                          + "  <member><name>home_url</name><value><struct>\n"
-                          + "  <member><name>value</name><value><string>http://taliwutblog.wordpress.com</string>\n"
-                          + "  </value></member></struct></value></member>\n"
-                          + "  </struct>\n"
-                          + "</value></param></params></methodResponse>";
+        mMockedResponse = SITE_OPTIONS;
         mSiteXMLRPCClient.fetchSite(site);
+        assertEquals(site.getShowOnFront(), "page");
+        assertEquals(site.getPageForPosts(), 2L);
+        assertEquals(site.getPageOnFront(), 1L);
+        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
+    }
+
+    @Test
+    public void testUpdateSiteHomepage() throws Exception {
+        SiteModel site = generateSelfHostedNonJPSite();
+        mCountDownLatch = new CountDownLatch(1);
+        mMockedResponse = SITE_OPTIONS;
+        Page homepageSettings = new Page(2L, 1L);
+        final AtomicBoolean success = new AtomicBoolean(false);
+        mSiteXMLRPCClient.updateSiteHomepage(site, homepageSettings, new Function1<SiteModel, Unit>() {
+            @Override public Unit invoke(SiteModel siteModel) {
+                success.set(true);
+                return null;
+            }
+        }, null);
+        assertEquals(site.getShowOnFront(), "page");
+        assertEquals(site.getPageForPosts(), 2L);
+        assertEquals(site.getPageOnFront(), 1L);
+        assertTrue(success.get());
         assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 

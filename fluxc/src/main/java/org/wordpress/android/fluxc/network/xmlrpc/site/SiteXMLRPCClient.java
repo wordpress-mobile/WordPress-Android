@@ -10,6 +10,9 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
@@ -29,10 +32,14 @@ import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Singleton;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 @Singleton
 public class SiteXMLRPCClient extends BaseXMLRPCClient {
@@ -106,7 +113,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(new String[] {
                 "software_version", "post_thumbnail", "default_comment_status", "jetpack_client_id",
-                "blog_public", "home_url", "admin_url", "login_url", "blog_title", "time_zone", "jetpack_user_email" });
+                "blog_public", "home_url", "admin_url", "login_url", "blog_title", "time_zone", "jetpack_user_email",
+                "show_on_front", "page_for_posts", "page_on_front"});
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
@@ -116,22 +124,77 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
                         if (updatedSite != null) {
                             mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
                         } else {
-                            SiteModel site = new SiteModel();
-                            site.error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                            handleOptionsError(new BaseNetworkError(GenericErrorType.INVALID_RESPONSE));
                         }
                     }
                 },
                 new BaseErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull BaseNetworkError error) {
-                        SiteModel site = new SiteModel();
-                        site.error = error;
-                        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
+                        handleOptionsError(error);
                     }
                 }
         );
         add(request);
+    }
+
+    public void updateSiteHomepage(final SiteModel site,
+                                   final SiteHomepageSettings homepageSettings,
+                                   final Function1<SiteModel, Unit> onSuccess,
+                                   final Function1<BaseNetworkError, Unit> onError) {
+        List<Object> params = new ArrayList<>(2);
+        params.add(site.getSelfHostedSiteId());
+        params.add(site.getUsername());
+        params.add(site.getPassword());
+        Map<String, Object> updatedOptions = new HashMap<>();
+        updatedOptions.put("show_on_front", homepageSettings.getShowOnFront());
+        if (homepageSettings.getShowOnFront() == ShowOnFront.PAGE) {
+            Page pageSettings = (Page) homepageSettings;
+            if (pageSettings.getPageOnFrontId() > -1) {
+                updatedOptions.put("page_on_front", pageSettings.getPageOnFrontId());
+            }
+            if (pageSettings.getPageForPostsId() > -1) {
+                updatedOptions.put("page_for_posts", pageSettings.getPageForPostsId());
+            }
+        }
+        params.add(updatedOptions);
+        final XMLRPCRequest request = new XMLRPCRequest(
+                site.getXmlRpcUrl(), XMLRPC.SET_OPTIONS, params,
+                new Listener<Object>() {
+                    @Override
+                    public void onResponse(Object response) {
+                        SiteModel updatedSite = updateSiteFromOptions(response, site);
+                        if (updatedSite != null) {
+                            mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(updatedSite));
+                            if (onSuccess != null) {
+                                onSuccess.invoke(updatedSite);
+                            }
+                        } else {
+                            BaseNetworkError error = new BaseNetworkError(GenericErrorType.INVALID_RESPONSE);
+                            handleOptionsError(error);
+                            if (onError != null) {
+                                onError.invoke(error);
+                            }
+                        }
+                    }
+                },
+                new BaseErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull BaseNetworkError error) {
+                        handleOptionsError(error);
+                        if (onError != null) {
+                            onError.invoke(error);
+                        }
+                    }
+                }
+        );
+        add(request);
+    }
+
+    private void handleOptionsError(@NonNull BaseNetworkError error) {
+        SiteModel site = new SiteModel();
+        site.error = error;
+        mDispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site));
     }
 
     public void fetchPostFormats(final SiteModel site) {
@@ -302,6 +365,9 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // If the site is not public, it's private. Note: this field doesn't always exist.
         boolean isPublic = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_public", true);
         oldModel.setIsPrivate(!isPublic);
+        oldModel.setShowOnFront(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "show_on_front", ShowOnFront.POSTS.getValue()));
+        oldModel.setPageForPosts(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "page_for_posts", -1));
+        oldModel.setPageOnFront(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "page_on_front", -1));
         return oldModel;
     }
 
