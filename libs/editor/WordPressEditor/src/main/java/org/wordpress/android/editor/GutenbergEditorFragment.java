@@ -80,12 +80,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
     private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
-    private static final String ARG_SITE_URL= "param_site_url";
-    private static final String ARG_IS_SITE_PRIVATE= "param_is_site_private";
-    private static final String ARG_SITE_USER_ID= "param_user_id";
-    private static final String ARG_SITE_USERNAME= "param_site_username";
-    private static final String ARG_SITE_PASSWORD= "param_site_password";
-    private static final String ARG_SITE_TOKEN= "param_site_token";
+    private static final String ARG_SITE_URL = "param_site_url";
+    private static final String ARG_IS_SITE_PRIVATE = "param_is_site_private";
+    private static final String ARG_SITE_USER_ID = "param_user_id";
+    private static final String ARG_SITE_USERNAME = "param_site_username";
+    private static final String ARG_SITE_PASSWORD = "param_site_password";
+    private static final String ARG_SITE_TOKEN = "param_site_token";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -414,10 +414,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 new OnGutenbergDidRequestUnsupportedBlockFallbackListener() {
                     @Override
                     public void gutenbergDidRequestUnsupportedBlockFallback(UnsupportedBlock unsupportedBlock) {
-                        openGutenergWebViewActivity(unsupportedBlock.getContent(), unsupportedBlock.getId(), unsupportedBlock.getName());
+                        openGutenbergWebViewActivity(
+                                unsupportedBlock.getContent(),
+                                unsupportedBlock.getId(),
+                                unsupportedBlock.getName()
+                        );
                     }
-                }
-                , isDarkMode());
+                }, isDarkMode());
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -448,7 +451,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
-    private void openGutenergWebViewActivity(String content, String blockId, String blockName) {
+    private void openGutenbergWebViewActivity(String content, String blockId, String blockName) {
         String siteUrl = getArguments().getString(ARG_SITE_URL);
         boolean isSitePrivate = getArguments().getBoolean(ARG_IS_SITE_PRIVATE, false);
         long userId = getArguments().getLong(ARG_SITE_USER_ID);

@@ -28,7 +28,6 @@ import java.net.URLEncoder;
 
 
 public class GutenbergWebViewActivity extends AppCompatActivity {
-
     public static final String ENCODING_UTF8 = "UTF-8";
     public static final String WPCOM_LOGIN_URL = "https://wordpress.com/wp-login.php";
 
@@ -47,6 +46,7 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
     public static final String RESULT_BLOCK_ID = "block_id";
 
     private static final String INJECT_LOCAL_STORAGE_SCRIPT_TEMPLATE = "localStorage.setItem('WP_DATA_USER_%d','%s')";
+    private static final String INJECT_CSS_SCRIPT_TEMPLATE = "window.injectCss('%s')";
     private static final String INJECT_GET_HTML_POST_CONTENT_SCRIPT = "window.getHTMLPostContent();";
     private static final String JAVA_SCRIPT_INTERFACE_NAME = "wpwebkit";
 
@@ -114,7 +114,7 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_gutenber_webview, menu);
+        inflater.inflate(R.menu.menu_gutenberg_webview, menu);
         return true;
     }
 
@@ -151,9 +151,20 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
         finish();
     }
 
+    private String getFileContentFromAssets(String assetsFileName) {
+        return Utils.getHtmlFromFile(this, assetsFileName);
+    }
+
+    private String removeNewLines(String content) {
+        return content.replace("\r\n", " ").replace("\n", " ");
+    }
+
+    private String removeWhiteSpace(String content) {
+        return content.replaceAll("\\s+", "");
+    }
+
     private void setupWebViewClient() {
         mWebView.setWebViewClient(new WebViewClient() {
-
             private boolean mIsRedirected;
 
             @Override
@@ -168,13 +179,18 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageCommitVisible(WebView view, String url) {
-                String contentFunctions = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/content-functions.js");
+                String contentFunctions = getFileContentFromAssets("gutenberg/content-functions.js");
                 evaluateJavaScript(contentFunctions);
 
-                String injectLocalStorageScript = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/local-storage-overrides.json");
-                String trimmed = injectLocalStorageScript.replace("\n", "").replace("\r", "").replaceAll("\\s+","");
+                String injectLocalStorageScript = getFileContentFromAssets("gutenberg/local-storage-overrides.json");
+                injectLocalStorageScript = removeWhiteSpace(removeNewLines(injectLocalStorageScript));
                 long userId = getIntent().getExtras().getLong(ARG_USER_ID);
-                evaluateJavaScript(String.format(INJECT_LOCAL_STORAGE_SCRIPT_TEMPLATE, userId, trimmed));
+                evaluateJavaScript(
+                        String.format(
+                                INJECT_LOCAL_STORAGE_SCRIPT_TEMPLATE,
+                                userId,
+                                injectLocalStorageScript)
+                );
 
                 super.onPageCommitVisible(view, url);
             }
@@ -184,28 +200,26 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
                 if (!mIsRedirected) {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> {
-                        String preventAutosaves = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/prevent-autosaves.js");
+                        String preventAutosaves = getFileContentFromAssets("gutenberg/prevent-autosaves.js");
                         evaluateJavaScript(preventAutosaves);
 
-                        String insertBlock = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/insert-block.js");
-                        String content = getIntent().getExtras().getString(ARG_BLOCK_CONTENT).replace("\n", "").replace("\r", "");
-                        String block = String.format(insertBlock, content);
-                        evaluateJavaScript(block);
+                        String insertBlock = getFileContentFromAssets("gutenberg/insert-block.js");
+                        String blockContent = getIntent().getExtras().getString(ARG_BLOCK_CONTENT);
+                        evaluateJavaScript(removeNewLines(blockContent));
                     }, 2000);
-
                 } else {
                     mIsRedirected = false;
 
-                    String injectCssScript = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/inject-css.js");
+                    String injectCssScript = getFileContentFromAssets("gutenberg/inject-css.js");
                     evaluateJavaScript(injectCssScript);
 
-                    String editorStyle = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/editor-style-overrides.css");
-                    String trimmed = editorStyle.replace("\n", "").replace("\r", "").replaceAll("\\s+","");
-                    evaluateJavaScript(String.format("window.injectCss('%s')", trimmed));
+                    String editorStyle = getFileContentFromAssets("gutenberg/editor-style-overrides.css");
+                    editorStyle = removeWhiteSpace(removeNewLines(editorStyle));
+                    evaluateJavaScript(String.format(INJECT_CSS_SCRIPT_TEMPLATE, editorStyle));
 
-                    String injectWPBarsCssScript = Utils.getHtmlFromFile(GutenbergWebViewActivity.this, "gutenberg/wp-bar-override.css");
-                    trimmed =  injectWPBarsCssScript.replace("\n", "").replace("\r", "").replaceAll("\\s+","");
-                    evaluateJavaScript(String.format("window.injectCss('%s')", trimmed));
+                    String injectWPBarsCssScript = getFileContentFromAssets("gutenberg/wp-bar-override.css");
+                    injectWPBarsCssScript = removeWhiteSpace(removeNewLines(injectWPBarsCssScript));
+                    evaluateJavaScript(String.format(INJECT_CSS_SCRIPT_TEMPLATE, injectWPBarsCssScript));
                 }
 
                 super.onPageFinished(view, url);
@@ -216,22 +230,27 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
                     AppLog.e(AppLog.T.EDITOR, value));
             }
         });
-
-
     }
 
     /**
      * Login to the WordPress.com and load the specified URL.
      */
-    protected void loadAuthenticatedUrl(String authenticationURL, String urlToLoad, String username, String password, String token) {
+    protected void loadAuthenticatedUrl(String authenticationURL,
+                                        String urlToLoad,
+                                        String username,
+                                        String password,
+                                        String token) {
         String postData = getAuthenticationPostData(authenticationURL, urlToLoad, username, password,
                 token);
 
         mWebView.postUrl(authenticationURL, postData.getBytes());
     }
 
-    public static String getAuthenticationPostData(String authenticationUrl, String urlToLoad, String username,
-                                                   String password, String token) {
+    public static String getAuthenticationPostData(String authenticationUrl,
+                                                   String urlToLoad,
+                                                   String username,
+                                                   String password,
+                                                   String token) {
         if (TextUtils.isEmpty(authenticationUrl)) {
             return "";
         }
@@ -281,7 +300,6 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
     }
 
     public class WPWebKit {
-
         @JavascriptInterface
         public void postMessage(String content) {
             if (content != null && content.length() > 0) {
