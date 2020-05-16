@@ -43,8 +43,6 @@ commands:
           name: Yarn bundle Android
           working_directory: libs/gutenberg-mobile
           command: yarn bundle:android
-<<<<<<< HEAD
-=======
   save-gutenberg-bundle-cache:
     steps:
       - run:
@@ -67,7 +65,6 @@ commands:
       - restore_cache:
           name: Restore JS Bundle From Cache
           key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
->>>>>>> origin/develop
 
 version: 2.1
 jobs:
@@ -76,8 +73,6 @@ jobs:
       - image: circleci/node:10
     steps:
       - git/shallow-checkout
-<<<<<<< HEAD
-=======
       - restore-gutenberg-bundle-cache
       - run:
           name: Abort If JS Bundle Exists
@@ -88,27 +83,16 @@ jobs:
             else
               echo "Gutenberg-Mobile bundle not found in cache. Proceeding to generate new bundle"
             fi
->>>>>>> origin/develop
       - checkout-submodules
       - yarn-install
       - yarn-bundle-android
       - run:
-<<<<<<< HEAD
-          name: Rename the JS bundle
-          working_directory: libs/gutenberg-mobile
-          command: mv bundle/android/App.js bundle/android/index.android.bundle
-      - persist_to_workspace:
-          root: libs/gutenberg-mobile/bundle/android
-          paths:
-            - index.android.bundle
-=======
           name: Ensure assets folder exists
           command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets
       - run:
           name: Move bundle to assets folder
           command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
       - save-gutenberg-bundle-cache
->>>>>>> origin/develop
   test:
     executor:
       name: android/default
