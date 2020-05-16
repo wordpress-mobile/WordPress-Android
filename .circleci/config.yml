@@ -11,22 +11,107 @@ commands:
       - run:
           name: Setup gradle.properties
           command: cp gradle.properties-example gradle.properties
+  yarn-install:
+    steps:
+      - restore_cache:
+          name: Restore Yarn Cache
+          keys:
+            - yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/yarn.lock" }}
+      - run:
+          name: Yarn Install
+          working_directory: libs/gutenberg-mobile
+          command: yarn install --frozen-lockfile --prefer-offline --network-concurrency 1
+      - save_cache:
+          name: Save Yarn Cache
+          key: yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/yarn.lock" }}
+          paths:
+            - libs/gutenberg-mobile/node_modules
+            - libs/gutenberg-mobile/i18n-cache/data
+  checkout-submodules:
+    steps:
+      - run:
+          name: Checkout submodules
+          command: git submodule update --init --recursive
+  checkout-gutenberg-mobile-submodule-only:
+    steps:
+      - run:
+          name: Checkout gutenberg-mobile submodule (no recursive)
+          command: git submodule update --init
+  yarn-bundle-android:
+    steps:
+      - run:
+          name: Yarn bundle Android
+          working_directory: libs/gutenberg-mobile
+          command: yarn bundle:android
+  save-gutenberg-bundle-cache:
+    steps:
+      - run:
+          name: Save Gutenberg-Mobile Submodule Hash
+          command: |
+            git rev-parse @:./libs/gutenberg-mobile > gutenberg_submodule_hash
+            cat gutenberg_submodule_hash
+      - save_cache:
+          name: Cache JS Bundle
+          key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
+          paths:
+            - libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+  restore-gutenberg-bundle-cache:
+    steps:
+      - run:
+          name: Save Gutenberg-Mobile Submodule Hash
+          command: |
+            git rev-parse @:./libs/gutenberg-mobile > gutenberg_submodule_hash
+            cat gutenberg_submodule_hash
+      - restore_cache:
+          name: Restore JS Bundle From Cache
+          key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
 
 version: 2.1
 jobs:
+  gutenberg-bundle-build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - git/shallow-checkout
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Abort If JS Bundle Exists
+          command: |
+            if [ -f "libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle" ]; then
+              echo "Gutenberg-Mobile bundle already in cache, no need to create a new one."
+              circleci-agent step halt
+            else
+              echo "Gutenberg-Mobile bundle not found in cache. Proceeding to generate new bundle"
+            fi
+      - checkout-submodules
+      - yarn-install
+      - yarn-bundle-android
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets
+      - run:
+          name: Move bundle to assets folder
+          command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+      - save-gutenberg-bundle-cache
   test:
     executor: 
       name: android/default
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - restore-gutenberg-bundle-cache
       - run:
           name: Test WordPress
-          command: ./gradlew --stacktrace testVanillaRelease
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 ./gradlew testVanillaRelease --stacktrace --no-daemon
       - run:
           name: Test WordPressUtils
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
       - android/save-gradle-cache
       - android/save-test-results
@@ -36,20 +121,30 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - restore-gutenberg-bundle-cache
       - run:
           name: Checkstyle
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace checkstyle
       - run:
           name: ktlint
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace ciktlint
       - run:
           name: Lint
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew --stacktrace lintVanillaRelease || (grep -A20 -B2 'severity="Error"' -r --include="*.xml" WordPress libs; exit 1)
       - run:
           name: Violations
           when: on_fail
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
             if [ -n "$GITHUB_API_TOKEN" ]; then
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
@@ -64,14 +159,18 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
       - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build APK
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
             if [ -n "$CIRCLE_PULL_REQUEST" ]; then
               PR_NUMBER=$(basename $CIRCLE_PULL_REQUEST)
@@ -104,10 +203,14 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug WordPress:assembleVanillaDebugAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
@@ -138,10 +241,14 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - restore-gutenberg-bundle-cache
       - run:
           name: Build
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: ./gradlew WordPress:assembleVanillaDebug && cd libs/utils && ./gradlew assembleAndroidTest --stacktrace
       - run:
           name: Decrypt credentials
@@ -161,6 +268,7 @@ jobs:
       - image: circleci/ruby:2.6.4
     steps:
       - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
       - run:
           name: Install bundler
           command: gem install bundler --version 2.0.2 
@@ -173,18 +281,29 @@ jobs:
 workflows:
   wordpress_android:
     jobs:
+      - gutenberg-bundle-build
       - strings-check
-      - test
-      - lint
+      - test:
+          requires:
+            - gutenberg-bundle-build
+      - lint:
+          requires:
+            - gutenberg-bundle-build
       - Installable Build:
+          requires:
+            - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - WordPressUtils Connected Tests:
+          requires:
+            - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
+          requires:
+            - gutenberg-bundle-build
           post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
