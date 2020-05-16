@@ -1097,7 +1097,8 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "CURRENCY TEXT NOT NULL," +
                                     "PAPER_SIZE TEXT NOT NULL," +
                                     "FORM_DATA TEXT NOT NULL," +
-                                    "STORE_OPTIONS TEXT NOT NULL)"
+                                    "STORE_OPTIONS TEXT NOT NULL," +
+                                    "REFUND TEXT NULL)"
                     )
                 }
             }
