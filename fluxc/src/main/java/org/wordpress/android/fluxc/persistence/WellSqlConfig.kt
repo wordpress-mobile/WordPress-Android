@@ -1081,12 +1081,22 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 104 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL(
-                            "CREATE TABLE WCShippingLabelModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                                    "LOCAL_SITE_ID INTEGER,LOCAL_ORDER_ID INTEGER,REMOTE_SHIPPING_LABEL_ID INTEGER," +
-                                    "CARRIER_ID TEXT NOT NULL,PRODUCT_NAMES TEXT NULL," +
-                                    "TRACKING_NUMBER TEXT NOT NULL,SERVICE_NAME TEXT NOT NULL,STATUS TEXT NOT NULL," +
-                                    "PACKAGE_NAME TEXT NOT NULL,RATE REAL NOT NULL,REFUNDABLE_AMOUNT REAL NOT NULL," +
-                                    "CURRENCY TEXT NOT NULL,PAPER_SIZE TEXT NOT NULL,FORM_DATA TEXT NOT NULL," +
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "LOCAL_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "PAPER_SIZE TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
                                     "STORE_OPTIONS TEXT NOT NULL)"
                     )
                 }
