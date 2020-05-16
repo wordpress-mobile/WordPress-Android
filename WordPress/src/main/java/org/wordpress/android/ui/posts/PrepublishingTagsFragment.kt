@@ -10,10 +10,12 @@ import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
@@ -21,6 +23,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+
 
     private lateinit var viewModel: PrepublishingTagsViewModel
 
@@ -55,10 +59,22 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        close_button.setOnClickListener { viewModel.onCloseButtonClicked() }
-        back_button.setOnClickListener { viewModel.onBackButtonClicked() }
+        close_button.setOnClickListener {
+            trackTagsChangedEvent()
+            viewModel.onCloseButtonClicked()
+        }
+        back_button.setOnClickListener {
+            trackTagsChangedEvent()
+            viewModel.onBackButtonClicked()
+        }
         initViewModel()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun trackTagsChangedEvent() {
+        if (wereTagsChanged()) {
+            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_ADDED)
+        }
     }
 
     private fun initViewModel() {
