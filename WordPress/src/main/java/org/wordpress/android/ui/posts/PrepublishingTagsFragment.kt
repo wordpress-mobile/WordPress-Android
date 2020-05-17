@@ -25,7 +25,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
-
     private lateinit var viewModel: PrepublishingTagsViewModel
 
     override fun getContentLayout() = R.layout.prepublishing_tags_fragment
