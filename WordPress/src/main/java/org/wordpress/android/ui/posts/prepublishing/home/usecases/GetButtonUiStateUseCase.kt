@@ -32,7 +32,7 @@ class GetButtonUiStateUseCase @Inject constructor(
             PrimaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
             PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
             PrimaryEditorAction.UPDATE -> UpdateButtonUiState(onButtonClicked)
-            SUBMIT_FOR_REVIEW, SAVE -> throw Exception("These actions shouldn't be available in this bottom sheet")
+            SUBMIT_FOR_REVIEW, SAVE -> throw Exception("These actions shouldn't be available in this bottom sheet.")
         }
     }
 }

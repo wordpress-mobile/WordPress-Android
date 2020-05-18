@@ -106,7 +106,6 @@ class PrepublishingHomeFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
-
         fun newInstance() = PrepublishingHomeFragment()
     }
 }

@@ -180,7 +180,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     companion object {
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
-        const val EDITOR_ACTION = "prepublishing_bottom_sheet_editor_action"
 
         @JvmStatic
         fun newInstance(@NonNull site: SiteModel) =
