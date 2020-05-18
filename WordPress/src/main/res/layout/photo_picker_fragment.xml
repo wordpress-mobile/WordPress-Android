@@ -1,124 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
 
-    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/container_media_source_bar"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical" />
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/container_media_source_bar"
-        android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_media_105dp"
-        app:aevTitle="@string/media_empty_list"
-        tools:visibility="visible" />
-
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/soft_ask_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:aevButton="@string/photo_picker_soft_ask_allow"
-        app:aevImage="@drawable/img_illustration_add_media_150dp"
-        app:aevTitle="@string/photo_picker_soft_ask_label"
-        tools:visibility="visible" />
-
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/container_media_source_bar"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/wp_stories_take_picture"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="@dimen/appbar_elevation">
+        android:layout_gravity="end|bottom"
+        android:visibility="gone"
+        android:backgroundTint="@color/pink_50"
+        android:tint="@color/white"
+        android:src="@drawable/ic_photo_camera_24px"
+        android:layout_margin="@dimen/fab_margin"
+        tools:ignore="InconsistentLayout"/>
 
-        <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/container_media_source_bar"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical" />
+
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/actionable_empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/container_media_source_bar"
+            android:visibility="gone"
+            app:aevImage="@drawable/img_illustration_media_105dp"
+            app:aevTitle="@string/media_empty_list"
+            tools:visibility="visible" />
+
+        <org.wordpress.android.ui.ActionableEmptyView
+            android:id="@+id/soft_ask_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:aevButton="@string/photo_picker_soft_ask_allow"
+            app:aevImage="@drawable/img_illustration_add_media_150dp"
+            app:aevTitle="@string/photo_picker_soft_ask_label"
+            tools:visibility="visible" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/container_media_source_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_alignParentBottom="true"
+            app:cardCornerRadius="0dp"
+            app:cardElevation="@dimen/appbar_elevation">
 
-            <ImageView
-                android:id="@+id/icon_picker"
-                android:layout_width="@dimen/photo_picker_icon"
-                android:layout_height="@dimen/photo_picker_icon"
-                android:layout_weight="1"
-                android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/photo_picker_device_desc"
-                android:src="@drawable/media_bar_button_image_multiple"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/icon_camera"
-                android:layout_width="@dimen/photo_picker_icon"
-                android:layout_height="@dimen/photo_picker_icon"
-                android:layout_weight="1"
-                android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/photo_picker_camera_desc"
-                android:src="@drawable/media_bar_button_camera"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
+                <ImageView
+                    android:id="@+id/icon_picker"
+                    android:layout_width="@dimen/photo_picker_icon"
+                    android:layout_height="@dimen/photo_picker_icon"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/photo_picker_device_desc"
+                    android:src="@drawable/media_bar_button_image_multiple"
+                    app:tint="?attr/wpColorOnSurfaceMedium"
+                    android:tintMode="src_in" />
 
-            <ImageView
-                android:id="@+id/icon_wpmedia"
-                android:layout_width="@dimen/photo_picker_icon"
-                android:layout_height="@dimen/photo_picker_icon"
-                android:layout_weight="1"
-                android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/photo_picker_wpmedia_desc"
-                android:src="@drawable/media_bar_button_library"
-                app:tint="?attr/wpColorOnSurfaceMedium"
-                android:tintMode="src_in" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/icon_camera"
+                    android:layout_width="@dimen/photo_picker_icon"
+                    android:layout_height="@dimen/photo_picker_icon"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/photo_picker_camera_desc"
+                    android:src="@drawable/media_bar_button_camera"
+                    app:tint="?attr/wpColorOnSurfaceMedium"
+                    android:tintMode="src_in" />
 
-    </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:id="@+id/icon_wpmedia"
+                    android:layout_width="@dimen/photo_picker_icon"
+                    android:layout_height="@dimen/photo_picker_icon"
+                    android:layout_weight="1"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/photo_picker_wpmedia_desc"
+                    android:src="@drawable/media_bar_button_library"
+                    app:tint="?attr/wpColorOnSurfaceMedium"
+                    android:tintMode="src_in" />
+            </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_insert_preview_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="?attr/colorSurface"
-        android:elevation="@dimen/message_bar_elevation"
-        android:visibility="gone"
-        tools:visibility="visible">
+        </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:id="@+id/text_preview"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_insert_preview_bar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:minHeight="@dimen/min_touch_target_sz"
-            android:padding="@dimen/margin_large"
-            android:text="@string/button_edit"
-            android:textAppearance="?attr/textAppearanceButton"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorSurface"
+            android:elevation="@dimen/message_bar_elevation"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-        <TextView
-            android:id="@+id/text_insert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:minHeight="@dimen/min_touch_target_sz"
-            android:padding="@dimen/margin_large"
-            android:text="@string/button_insert"
-            android:textAppearance="?attr/textAppearanceButton"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/text_preview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:minHeight="@dimen/min_touch_target_sz"
+                android:padding="@dimen/margin_large"
+                android:text="@string/button_edit"
+                android:textAppearance="?attr/textAppearanceButton"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/text_insert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:selectableItemBackground"
+                android:minHeight="@dimen/min_touch_target_sz"
+                android:padding="@dimen/margin_large"
+                android:text="@string/button_insert"
+                android:textAppearance="?attr/textAppearanceButton"
+                android:textColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/container_selection_bar" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 
@@ -23,6 +24,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
@@ -65,7 +68,8 @@ public class PhotoPickerFragment extends Fragment {
         ANDROID_CHOOSE_PHOTO_OR_VIDEO(true),
         WP_MEDIA(false),
         STOCK_MEDIA(true),
-        GIF(true);
+        GIF(true),
+        WP_STORIES_CAPTURE(true);
 
         private boolean mRequiresUploadPermission;
 
@@ -100,6 +104,7 @@ public class PhotoPickerFragment extends Fragment {
     private MediaBrowserType mBrowserType;
     private SiteModel mSite;
     private ArrayList<Integer> mSelectedPositions;
+    private FloatingActionButton mWPStoriesTakePicture;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull MediaBrowserType browserType,
@@ -136,6 +141,18 @@ public class PhotoPickerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.photo_picker_fragment, container, false);
 
+        mWPStoriesTakePicture = view.findViewById(R.id.wp_stories_take_picture);
+        if (mBrowserType.isWPStoriesPicker()) {
+            mWPStoriesTakePicture.setVisibility(View.VISIBLE);
+            mWPStoriesTakePicture.setOnClickListener(new OnClickListener() {
+                @Override public void onClick(View view) {
+                    doIconClicked(PhotoPickerIcon.WP_STORIES_CAPTURE);
+                }
+            });
+        } else {
+            mWPStoriesTakePicture.setVisibility(View.GONE);
+        }
+
         mRecycler = view.findViewById(R.id.recycler);
         mRecycler.setEmptyView(view.findViewById(R.id.actionable_empty_view));
         mRecycler.setHasFixedSize(true);
@@ -168,7 +185,7 @@ public class PhotoPickerFragment extends Fragment {
             mMediaSourceBottomBar.setVisibility(View.GONE);
         } else {
             View camera = mMediaSourceBottomBar.findViewById(R.id.icon_camera);
-            if (mBrowserType.isGutenbergPicker()) {
+            if (mBrowserType.isGutenbergPicker() || mBrowserType.isWPStoriesPicker()) {
                 camera.setVisibility(View.GONE);
             } else {
                 camera.setOnClickListener(new View.OnClickListener() {
@@ -263,7 +280,8 @@ public class PhotoPickerFragment extends Fragment {
     public void doIconClicked(@NonNull PhotoPickerIcon icon) {
         mLastTappedIcon = icon;
 
-        if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO) {
+        if (icon == PhotoPickerIcon.ANDROID_CAPTURE_PHOTO || icon == PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
+            || icon == PhotoPickerIcon.WP_STORIES_CAPTURE) {
             if (ContextCompat.checkSelfPermission(
                     getActivity(), permission.CAMERA) != PackageManager.PERMISSION_GRANTED || !hasStoragePermission()) {
                 requestCameraPermission();
@@ -290,6 +308,9 @@ public class PhotoPickerFragment extends Fragment {
             case STOCK_MEDIA:
                 break;
             case GIF:
+                break;
+            case WP_STORIES_CAPTURE:
+                // TODO WPSTORIES add TRACKS (follow along the cases above)
                 break;
         }
 

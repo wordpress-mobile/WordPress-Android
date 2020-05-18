@@ -271,6 +271,13 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
+    private void launchWPStoriesCamera() {
+        Intent intent = new Intent()
+                .putExtra(EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     private void doMediaUrisSelected(@NonNull List<Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
@@ -365,6 +372,9 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 break;
             case STOCK_MEDIA:
                 launchStockMediaPicker();
+                break;
+            case WP_STORIES_CAPTURE:
+                launchWPStoriesCamera();
                 break;
         }
     }

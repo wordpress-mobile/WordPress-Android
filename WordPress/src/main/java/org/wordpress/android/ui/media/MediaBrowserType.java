@@ -62,6 +62,10 @@ public enum MediaBrowserType {
                || this == GUTENBERG_MEDIA_PICKER;
     }
 
+    public boolean isWPStoriesPicker() {
+        return this == WP_STORIES_MEDIA_PICKER;
+    }
+
     public boolean isSingleMediaPicker() {
         return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
