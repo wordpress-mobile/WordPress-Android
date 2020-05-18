@@ -42,8 +42,12 @@ class SiteHomepageRestClient
                 "is_page_on_front" to (homepageSettings.showOnFront == ShowOnFront.PAGE).toString()
         )
         if (homepageSettings is Page) {
-            params["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()
-            params["page_for_posts_id"] = homepageSettings.pageForPostsId.toString()
+            if (homepageSettings.pageOnFrontId > 0) {
+                params["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()
+            }
+            if (homepageSettings.pageForPostsId > 0) {
+                params["page_for_posts_id"] = homepageSettings.pageForPostsId.toString()
+            }
         }
         val response = wpComGsonRequestBuilder.syncPostRequest(
                 this,
