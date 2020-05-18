@@ -1080,12 +1080,37 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
                 }
                 104 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("DELETE FROM WCProductVariationModel")
-                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM_GMT TEXT")
-                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO_GMT TEXT")
-                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_FROM TEXT")
-                    db.execSQL("ALTER TABLE WCProductVariationModel ADD DATE_ON_SALE_TO TEXT")
-                    db.execSQL("ALTER TABLE WCProductVariationModel ADD IMAGE TEXT")
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
+                    db.execSQL("CREATE TABLE WCProductVariationModel (" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "REMOTE_VARIATION_ID INTEGER," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "ON_SALE INTEGER,PURCHASABLE INTEGER," +
+                            "VIRTUAL INTEGER,DOWNLOADABLE INTEGER," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY INTEGER," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "IMAGE TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
                 }
             }
         }
