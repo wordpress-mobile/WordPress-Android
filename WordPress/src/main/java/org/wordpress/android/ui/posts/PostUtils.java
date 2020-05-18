@@ -329,9 +329,7 @@ public class PostUtils {
     }
 
     public static boolean isPublishDateInTheFuture(String dateCreated) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
-        Date now = new Date();
-        return pubDate != null && pubDate.after(now);
+        return isPublishDateInTheFuture(dateCreated, new Date());
     }
 
     public static boolean isPublishDateInTheFuture(String dateCreated, Date currentDate) {
