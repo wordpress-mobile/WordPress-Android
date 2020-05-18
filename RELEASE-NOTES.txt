@@ -1,6 +1,11 @@
 14.9
 -----
-* Fix issue with Preview post not working after switching to classic editor from inside the post
+* [*] Fix issue with Preview post not working after switching to classic editor from inside the post
+* [***] Block Editor: New block: Pullquote
+* [**] Block Editor: Add support for changing background and text color in Buttons block
+* [*] Block Editor: Fix the icons and buttons in Gallery, Paragraph, List and MediaText block on RTL mode
+* [**] Block Editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.
+* [**] Block Editor: Update page templates to use recently added blocks
 * [**] Block editor: Fix bug in Free Photo Library which allowed selecting multiple images but only inserted one
  
 14.8
@@ -16,6 +21,7 @@
 * Block editor: Update quote block to visually reflect selected alignment
 * Block editor: Fix bug where buttons in page templates were not rendering correctly on web
 * Block editor: You can now crop, zoom in/out and rotate images from the device that are being inserted in a post.
+* Block editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.
 * Added reblog functionality
  
 14.7

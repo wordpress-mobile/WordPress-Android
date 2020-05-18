@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:28:48+0000
+Translation-Revision-Date: 2020-05-05 11:31:52+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
+    <string name="feature_announcement_dialog_label">Nyheter i WordPress</string>
+    <string name="insert_label_with_count">Infoga %d</string>
+    <string name="crop">beskär</string>
+    <string name="error_failed_to_load_into_file">Lyckades inte ladda in i filen, försök igen.</string>
+    <string name="preview_image_thumbnail_description">Miniatyr av förhandsvisningsbild</string>
+    <string name="photo_picker_use_media">Använd denna mediafil</string>
+    <string name="photo_picker_use_video">Använd denna video</string>
+    <string name="photo_picker_photo_or_video_title">Välj media</string>
+    <string name="photo_picker_video_title">Välj video</string>
+    <string name="site_picker_ask_site_select">Kunde inte välja webbplats. Försök igen.</string>
+    <string name="sitepicker_continue_flow">Fortsätt</string>
+    <string name="reader_reblog_error">Reblogg misslyckades</string>
+    <string name="reader_no_site_to_reblog_action">Hantera webbplatser</string>
+    <string name="reader_no_site_to_reblog_detail">När du har skapat en webbplats på WordPress.com kan du reblogga innehåll du tycker om till din egen webbplats.</string>
+    <string name="reader_no_site_to_reblog_title">Inga webbplatser på WordPress.com tillgängliga</string>
+    <string name="whats_new_in_version_title">Nyheter</string>
+    <string name="comment_q_action_copied_url">Länkadress kopierad</string>
+    <string name="copy_link_address">Kopiera länkadress</string>
+    <string name="comment_share_link_via">Dela via</string>
+    <string name="comment_toast_err_share_intent">Kunde inte dela</string>
+    <string name="button_insert">Infoga</string>
+    <string name="continue_label">Fortsätt</string>
+    <string name="copy_text">Kopiera</string>
     <string name="gutenberg_native_subscribe">Prenumerera</string>
     <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
@@ -40,7 +64,7 @@ Language: sv_SE
     <string name="media_accessing_failed">Lyckades inte hämta innehållet från en privat webbplats. Vissa mediafiler kanske inte är tillgängliga</string>
     <string name="media_accessing_progress">Hämtning av innehåll från en privat webbplats</string>
     <string name="error_failed_to_crop_and_save_image">Lyckades inte beskära och spara bilden. Försök igen.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Kunde inte lägga in bilden.\nTryck för att försöka igen.</string>
+    <string name="failed_to_load_image_tap_to_retry">Misslyckades att ladda bild.\nTryck för att försöka igen.</string>
     <string name="preview_image_description">Förhandsgranskningsbild</string>
     <string name="error_unknown_page_type">Okänt sidformat</string>
     <string name="error_page_not_submitted">Åtgärden gick inte att slutföra och denna sida skickades inte för granskning.</string>
@@ -1322,7 +1346,6 @@ Language: sv_SE
     <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
-    <string name="copy_text">Kopiera</string>
     <string name="connect_site">Anslut webbplats</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinksignal</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrationssignal</string>
@@ -2187,6 +2210,7 @@ Language: sv_SE
     <string name="reader_btn_unfollow">Följer</string>
     <string name="reader_btn_follow">Följ</string>
     <string name="reader_btn_share">Dela</string>
+    <string name="reader_view_reblog">Reblogga</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
     <string name="comments_empty_list">Inga kommentarer … än</string>
     <string name="empty_list_default">Listan är tom</string>

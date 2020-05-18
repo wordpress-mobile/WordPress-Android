@@ -1,0 +1,4 @@
+14.8:
+<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.
+<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.
+<b>General updates:</b> Added reblog functionality.
