@@ -447,8 +447,6 @@ public class ReaderPostListFragment extends Fragment
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
         }
-
-        handleDefaultToDiscover();
     }
 
     private void initSubFilterViewModel() {
@@ -2814,19 +2812,5 @@ public class ReaderPostListFragment extends Fragment
 
     private boolean isFollowingScreen() {
         return mTagFragmentStartedWith != null && mTagFragmentStartedWith.isFollowedSites();
-    }
-
-    private void handleDefaultToDiscover() {
-        if (!mIsTopLevel) return;
-
-        if (AppPrefs.getReaderTag() == null) {
-            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-            String discoverLabel = requireActivity().getString(R.string.reader_discover_display_name);
-
-            if (discoverTag != null && discoverTag.getTagDisplayName().equals(discoverLabel)) {
-                setCurrentTag(discoverTag);
-                mReaderViewModel.selectedTabChange(discoverTag);
-            }
-        }
     }
 }
