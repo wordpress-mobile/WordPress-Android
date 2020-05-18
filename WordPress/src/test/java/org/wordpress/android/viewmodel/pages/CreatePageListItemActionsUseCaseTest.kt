@@ -98,6 +98,46 @@ class CreatePageListItemActionsUseCaseTest {
     }
 
     @Test
+    fun `verify PUBLISHED actions cannot set page as homepage when it is already set`() {
+        // Arrange
+        val expectedActions = setOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                SET_AS_POSTS_PAGE,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+        site.showOnFront = ShowOnFront.PAGE.value
+        site.pageOnFront = defaultRemoteId
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `verify PUBLISHED actions cannot set page for posts when it is already set`() {
+        // Arrange
+        val expectedActions = setOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                SET_AS_HOMEPAGE,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+        site.showOnFront = ShowOnFront.PAGE.value
+        site.pageForPosts = defaultRemoteId
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
     fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site has no remote id`() {
         // Arrange
         val expectedActions = setOf(

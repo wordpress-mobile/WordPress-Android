@@ -46,8 +46,12 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                         SET_PARENT
                 ).apply {
                     if (siteModel.showOnFront == ShowOnFront.PAGE.value && remoteId > 0) {
-                        add(SET_AS_HOMEPAGE)
-                        add(SET_AS_POSTS_PAGE)
+                        if (siteModel.pageOnFront != remoteId) {
+                            add(SET_AS_HOMEPAGE)
+                        }
+                        if (siteModel.pageForPosts != remoteId) {
+                            add(SET_AS_POSTS_PAGE)
+                        }
                     }
                     add(MOVE_TO_DRAFT)
                     add(MOVE_TO_TRASH)
