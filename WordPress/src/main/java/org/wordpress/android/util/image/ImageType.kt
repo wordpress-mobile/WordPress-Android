@@ -12,6 +12,7 @@ enum class ImageType {
     BLAVATAR,
     IMAGE,
     PHOTO,
+    READER,
     PLAN,
     PLUGIN,
     THEME,

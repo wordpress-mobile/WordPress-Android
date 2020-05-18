@@ -14,6 +14,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_placeholder_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.placeholder
+            ImageType.READER -> R.drawable.bg_rectangle_placholder_reader_radius_4dp
             ImageType.PLAN -> R.drawable.bg_oval_placholder_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
             ImageType.THEME -> R.color.placeholder
@@ -33,6 +34,7 @@ class ImagePlaceholderManager @Inject constructor() {
             ImageType.BLAVATAR -> R.color.placeholder
             ImageType.IMAGE -> null // don't display any placeholder
             ImageType.PHOTO -> R.color.placeholder
+            ImageType.READER -> R.drawable.bg_rectangle_placholder_reader_radius_4dp
             ImageType.PLAN -> R.drawable.bg_oval_placholder_plans_32dp
             ImageType.PLUGIN -> R.drawable.plugin_placeholder
             ImageType.THEME -> R.drawable.bg_rectangle_placeholder_themes_100dp

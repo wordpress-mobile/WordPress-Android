@@ -133,7 +133,8 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             android:contentDescription="@null"
             android:cropToPadding="true"
-            android:padding="1dp"
+            android:padding="@dimen/reader_image_featured_border_width"
+            android:background="@drawable/bg_reader_image_featured"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
@@ -179,11 +180,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:background="?android:attr/listDivider"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@+id/layout_post_header"
-            app:layout_constraintBottom_toBottomOf="@+id/image_featured"
+            app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+            app:layout_constraintBottom_toBottomOf="@id/image_featured"
             app:constraint_referenced_ids="image_featured,text_photo_title"/>
         <!-- frame photo end -->
 

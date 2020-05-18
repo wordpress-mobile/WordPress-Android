@@ -47,6 +47,7 @@
     <color name="reader_card_background">@color/white</color>
     <color name="reader_label_text">#6C7781</color>
     <color name="reader_post_title">?attr/textColor</color>
+    <color name="reader_image_featured_border">#1A9c9c9c</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>

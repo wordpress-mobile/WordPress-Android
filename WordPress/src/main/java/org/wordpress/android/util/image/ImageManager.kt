@@ -21,6 +21,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.CustomTarget
@@ -144,6 +146,31 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .circleCrop()
                 .attachRequestListener(requestListener)
                 .addSignature(version)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUrl" into the ImageView with a corner radius. Adds placeholder and
+     * error placeholder depending on the ImageType.
+     */
+    @JvmOverloads
+    fun loadImageWithCorners(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        cornerRadius: Int,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+
+        GlideApp.with(context)
+                .load(imgUrl)
+                .transform(CenterCrop(), RoundedCorners(cornerRadius))
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
     }

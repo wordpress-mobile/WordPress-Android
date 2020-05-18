@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -485,6 +484,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mTxtAuthorAndBlogName.setText(null);
         }
 
+        int imgFeaturedCornerRadius = holder.mImgFeatured
+            .getContext()
+            .getResources()
+            .getDimensionPixelSize(R.dimen.reader_featured_image_corner_radius);
         if (post.getCardType() == ReaderCardType.PHOTO) {
             // posts with a suitable featured image that have very little text get the "photo
             // card" treatment - show the title overlaid on the featured image without any text
@@ -493,8 +496,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mFramePhoto.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setText(post.getTitle());
-            mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
-                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
+            mImageManager.loadImageWithCorners(
+                holder.mImgFeatured,
+                ImageType.READER,
+                post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                imgFeaturedCornerRadius
+            );
             holder.mThumbnailStrip.setVisibility(View.GONE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
@@ -517,7 +524,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
                 ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
                     @Override public void showThumbnail(String thumbnailUrl) {
-                        mImageManager.load(holder.mImgFeatured, ImageType.PHOTO, thumbnailUrl, ScaleType.CENTER_CROP);
+                        mImageManager.loadImageWithCorners(
+                            holder.mImgFeatured,
+                            ImageType.READER,
+                            thumbnailUrl,
+                            imgFeaturedCornerRadius
+                        );
                     }
 
                     @Override public void showPlaceholder() {
@@ -531,8 +543,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
             } else if (post.hasFeaturedImage()) {
-                mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
-                        post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
+                mImageManager.loadImageWithCorners(
+                    holder.mImgFeatured,
+                    ImageType.READER,
+                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                    imgFeaturedCornerRadius
+                );
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
             } else {
