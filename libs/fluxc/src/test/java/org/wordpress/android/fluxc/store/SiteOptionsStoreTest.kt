@@ -116,6 +116,23 @@ class SiteOptionsStoreTest {
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
+    @Test
+    fun `call fails when page for posts and homepage are the same`() = test {
+        val invalidHomepageSettings = SiteHomepageSettings.Page(1L, 1L)
+
+        val homepageUpdatedPayload = store.updateHomepage(wpComSite, invalidHomepageSettings)
+
+        assertThat(homepageUpdatedPayload.isError).isTrue()
+        assertThat(homepageUpdatedPayload.error).isEqualTo(
+                SiteOptionsError(
+                        SiteOptionsErrorType.INVALID_PARAMETERS,
+                        "Page for posts and page on front cannot be the same"
+                )
+        )
+        verifyZeroInteractions(siteXMLRPCClient)
+        verifyZeroInteractions(siteHomepageRestClient)
+    }
+
     private fun initXMLRPCClient(
         mappedHomepageSettings: SiteHomepageSettings? = updatedHomepageSettings,
         error: BaseNetworkError? = null
