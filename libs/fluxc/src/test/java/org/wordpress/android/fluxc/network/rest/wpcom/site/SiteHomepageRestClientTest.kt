@@ -16,7 +16,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -63,7 +63,7 @@ class SiteHomepageRestClientTest {
 
     @Test
     fun `returns success when setting homepage to page`() = test {
-        val pageSettings = Page(1, 2)
+        val pageSettings = StaticPage(1, 2)
         val isPageOnFront = true
         val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
         val expectedParams = mapOf(
@@ -77,7 +77,7 @@ class SiteHomepageRestClientTest {
 
     @Test
     fun `does not add page on front parameter when it is missing`() = test {
-        val pageSettings = Page(1, 0)
+        val pageSettings = StaticPage(1, -1)
         val isPageOnFront = true
         val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
         val expectedParams = mapOf(
@@ -90,7 +90,7 @@ class SiteHomepageRestClientTest {
 
     @Test
     fun `does not add page for posts parameter when it is missing`() = test {
-        val pageSettings = Page(0, 2)
+        val pageSettings = StaticPage(-1, 2)
         val isPageOnFront = true
         val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
         val expectedParams = mapOf(
@@ -130,7 +130,7 @@ class SiteHomepageRestClientTest {
 
     @Test
     fun `returns error when API call fails`() = test {
-        testErrorResponse(Page(1, 2))
+        testErrorResponse(StaticPage(1, 2))
     }
 
     private suspend fun testErrorResponse(homepageSettings: SiteHomepageSettings) {
