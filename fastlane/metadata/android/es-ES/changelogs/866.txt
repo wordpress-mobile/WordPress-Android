@@ -1,0 +1,4 @@
+14.8:
+<b>Añadidos al editor de bloques:</b> El bloque de botones muestra varios botones en una sola fila. Los bloques de imágenes llenan los subtítulos cuando están disponibles. Los bloques de cubierta permiten la subida. Las imágenes insertadas pueden ser recortadas, ampliadas o rotadas. El bloque de encabezado incluye opciones de alineación.
+<b>Mejoras en el editor de bloques:</b> Reubicación de la barra de herramientas flotante, corrección del fallo del espacio blanco que afecta a los bloques de texto, corrección de la alineación de los iconos de la barra de herramientas en el modo RTL.
+<b>Actualizaciones generales:</b> Añadida la funcionalidad de reblog.

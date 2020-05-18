@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:46:19+0000
+Translation-Revision-Date: 2020-05-05 11:04:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: en_GB
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Find out more</string>
+    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="insert_label_with_count">Insert %d</string>
+    <string name="crop">crop</string>
+    <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
+    <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
+    <string name="photo_picker_use_media">Use this media</string>
+    <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_photo_or_video_title">Choose media</string>
+    <string name="photo_picker_video_title">Choose video</string>
+    <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="sitepicker_continue_flow">Continue</string>
+    <string name="reader_reblog_error">Reblog failed</string>
+    <string name="reader_no_site_to_reblog_action">Manage Sites</string>
+    <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
+    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
+    <string name="comment_q_action_copied_url">Link address copied</string>
+    <string name="copy_link_address">Copy link address</string>
+    <string name="comment_share_link_via">Share via</string>
+    <string name="comment_toast_err_share_intent">Unable to share</string>
+    <string name="button_insert">Insert</string>
+    <string name="continue_label">Continue</string>
+    <string name="copy_text">Copy</string>
     <string name="gutenberg_native_subscribe">Subscribe</string>
     <string name="gutenberg_native_number_of_columns">Number of columns</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Move block right from position %1$s to position %2$s</string>
@@ -40,7 +64,7 @@ Language: en_GB
     <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
     <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
     <string name="preview_image_description">Preview Image</string>
     <string name="error_unknown_page_type">Unknown page format</string>
     <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
@@ -1322,7 +1346,6 @@ Language: en_GB
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt text</string>
-    <string name="copy_text">Copy</string>
     <string name="connect_site">Connect Site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
@@ -2187,6 +2210,7 @@ Language: en_GB
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_share">Share</string>
+    <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="comments_empty_list">No comments yet</string>
     <string name="empty_list_default">This list is empty</string>
