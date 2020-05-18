@@ -1,10 +1,13 @@
+// FEATURE_ANNOUNCEMENT.json file should be located in WordPress/src/main/assets
+// comments in this file are ignored by Gson, so you can either remove or leave them
+
 {
   "announcements": [
     {
-      "appVersionName": "14.7",
-      "announcementVersion": 1,
-      "detailsUrl": "http://wordpress.org",
-      "features": [
+      "appVersionName": "14.7",  // app version name that announcement targets. Used for display purposes only.
+      "announcementVersion": 1, // unique version of announcement. Used to track if the specific announcement was shown or not.
+      "detailsUrl": "http://wordpress.org",  // URL that "Find out more" button will open. If empty, "Find out more" button will not be shown.
+      "features": [ // Features will appear in order they are in this list. Try to avoid using long subtitles.
         {
           "title": "Super Publishing",
           "subtitle": "Publish amazing articles using the power of your mind! Concentrate on what you want to post, and we will do the rest!",

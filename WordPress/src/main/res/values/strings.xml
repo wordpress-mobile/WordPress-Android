@@ -1780,7 +1780,7 @@
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
-    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
+    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
