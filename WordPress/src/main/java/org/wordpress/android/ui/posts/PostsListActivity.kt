@@ -48,8 +48,10 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
+import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -71,6 +73,7 @@ const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 
 class PostsListActivity : LocaleAwareActivity(),
         EditPostActivityHook,
+        PrepublishingBottomSheetListener,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface {
@@ -567,5 +570,18 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun onStop() {
         super.onStop()
         EventBus.getDefault().unregister(this)
+    }
+
+    override fun onPublishButtonClicked() {
+        val uploadAction = editPostRepository.getEditablePost()?.let { PublishPost(dispatcher, site, it) }
+        uploadAction?.let {
+            handleUploadAction(
+                    it,
+                this@PostsListActivity,
+                findViewById(R.id.coordinator),
+                uploadActionUseCase,
+                uploadUtilsWrapper
+        )
+        }
     }
 }
