@@ -72,7 +72,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     private fun trackTagsChangedEvent() {
         if (wereTagsChanged()) {
-            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_ADDED)
+            analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
         }
     }
 
