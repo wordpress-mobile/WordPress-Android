@@ -20,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANG
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -47,6 +48,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -103,6 +105,9 @@ class PostListMainViewModel @Inject constructor(
 
     private val _scrollToLocalPostId = SingleLiveEvent<LocalPostId>()
     val scrollToLocalPostId = _scrollToLocalPostId as LiveData<LocalPostId>
+
+    private val _openPrepublishingBottomSheet = MutableLiveData<Event<PostModel>>()
+    val openPrepublishingBottomSheet: LiveData<Event<PostModel>> = _openPrepublishingBottomSheet
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
@@ -174,6 +179,7 @@ class PostListMainViewModel @Inject constructor(
                 hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                triggerPublishAction = this::showPrepublishingBottomSheet,
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
@@ -409,6 +415,10 @@ class PostListMainViewModel @Inject constructor(
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
                 editLocalPost = this::editLocalPost
         )
+    }
+
+    private fun showPrepublishingBottomSheet(post: PostModel) {
+        _openPrepublishingBottomSheet.postValue(Event(post))
     }
 
     /**

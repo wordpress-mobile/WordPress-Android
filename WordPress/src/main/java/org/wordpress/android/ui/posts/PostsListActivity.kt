@@ -46,7 +46,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
@@ -68,6 +70,7 @@ const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
 
 class PostsListActivity : LocaleAwareActivity(),
+        EditPostActivityHook,
         BasicDialogPositiveClickInterface,
         BasicDialogNegativeClickInterface,
         BasicDialogOnDismissByOutsideTouchInterface {
@@ -82,8 +85,17 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var quickStartStore: QuickStartStore
+    @Inject internal lateinit var editPostRepository: EditPostRepository
 
     private lateinit var site: SiteModel
+    override fun getSite() = site
+    var postId: Int = 0
+
+    override fun getEditPostRepository(): EditPostRepository {
+        editPostRepository.loadPostByLocalPostId(postId)
+        return editPostRepository
+    }
+
     private lateinit var viewModel: PostListMainViewModel
 
     private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
@@ -311,6 +323,13 @@ class PostsListActivity : LocaleAwareActivity(),
                         uploadActionUseCase,
                         uploadUtilsWrapper
                 )
+            }
+        })
+        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
+            event.getContentIfNotHandled().let { post ->
+                postId = post!!.id
+                val prepublishingFragment = newInstance(site)
+                prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
         })
     }
