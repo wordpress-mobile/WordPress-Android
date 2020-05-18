@@ -25,7 +25,8 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
         val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
-        val view = requireActivity().layoutInflater.inflate(R.layout.post_notification_type_selector, null) as RadioGroup
+        val view = requireActivity().layoutInflater.inflate(R.layout.post_notification_type_selector, null)
+                as RadioGroup
         alertDialogBuilder.setView(view)
         val notificationTime = arguments?.getString(ARG_NOTIFICATION_SCHEDULE_TIME)?.let {
             SchedulingReminderModel.Period.valueOf(
