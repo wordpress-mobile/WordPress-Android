@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -79,6 +80,19 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 val metrics = resources.displayMetrics
                 behavior.peekHeight = metrics.heightPixels / 2
             }
+        }
+        setupMinimumHeightForFragmentContainer()
+    }
+
+    private fun setupMinimumHeightForFragmentContainer() {
+        val isPage = checkNotNull(arguments?.getBoolean(IS_PAGE)) {
+            "arguments can't be null."
+        }
+
+        if (isPage) {
+            prepublishing_content_fragment.minimumHeight = resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
+        } else {
+            prepublishing_content_fragment.minimumHeight = resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
         }
     }
 
