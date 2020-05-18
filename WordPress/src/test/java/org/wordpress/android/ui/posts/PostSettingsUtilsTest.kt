@@ -122,7 +122,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "published on" for local draft when date is not set`() {
+    fun `returns "publish on" for local draft when date within the next 30 minutes`() {
         postModel.setIsLocalDraft(true)
 
         // This date is 5 minutes before the currentDate
