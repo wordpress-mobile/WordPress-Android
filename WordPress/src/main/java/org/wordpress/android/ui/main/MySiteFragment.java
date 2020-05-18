@@ -28,7 +28,6 @@ import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.wordpress.stories.compose.ComposeLoopFrameActivity;
 import com.wordpress.stories.compose.frame.FrameSaveNotifier;
 import com.wordpress.stories.compose.frame.StorySaveEvents;
 import com.wordpress.stories.compose.story.StoryRepository;
@@ -79,6 +78,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails;
+import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -1110,17 +1110,16 @@ public class MySiteFragment extends Fragment implements
                     requireActivity().findViewById(R.id.coordinator),
                     snackbarMessage,
                     R.string.story_saving_failed_quick_action_manage,
-                    new OnClickListener() {
-                        @Override public void onClick(View view) {
-                            Intent intent = new Intent(requireActivity(), ComposeLoopFrameActivity.class);
-                            intent.putExtra(KEY_STORY_SAVE_RESULT, event);
-                            startActivity(intent);
-                        }
+                    view -> {
+                        Intent intent = new Intent(requireActivity(), StoryComposerActivity.class);
+                        intent.putExtra(KEY_STORY_SAVE_RESULT, event);
+                        startActivity(intent);
                     }
             );
         }
     }
 
+    @SuppressWarnings("unused")
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onStorySaveStart(StorySaveEvents.StorySaveProcessStart event) {
         EventBus.getDefault().removeStickyEvent(event);
