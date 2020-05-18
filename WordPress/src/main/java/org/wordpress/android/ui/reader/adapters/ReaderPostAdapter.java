@@ -184,6 +184,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
         private final TextView mTxtBlogUrl;
+        private final TextView mDotSeparator;
         private final TextView mTxtDateline;
 
         private final ReaderIconCountView mReblog;
@@ -219,6 +220,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtText = itemView.findViewById(R.id.text_excerpt);
             mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
             mTxtBlogUrl = itemView.findViewById(R.id.text_blog_url);
+            mDotSeparator = itemView.findViewById(R.id.dot_separator);
             mTxtDateline = itemView.findViewById(R.id.text_dateline);
 
             mReblog = itemView.findViewById(R.id.reblog);
@@ -462,8 +464,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             urlString = getUrlWithoutProtocol(post.getBlogUrl());
             holder.mTxtBlogUrl.setText(urlString);
             holder.mTxtBlogUrl.setVisibility(View.VISIBLE);
+            holder.mDotSeparator.setVisibility(View.VISIBLE);
         } else {
             holder.mTxtBlogUrl.setVisibility(View.GONE);
+            holder.mDotSeparator.setVisibility(View.GONE);
         }
 
         holder.mTxtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
