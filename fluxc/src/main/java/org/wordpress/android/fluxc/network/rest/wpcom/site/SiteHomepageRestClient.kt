@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.UserAgent
@@ -38,7 +39,7 @@ class SiteHomepageRestClient
     ): HomepageUpdatedPayload {
         val url = WPCOMREST.sites.site(site.siteId).homepage.urlV1_1
         val params = mutableMapOf(
-                "is_page_on_front" to homepageSettings.showOnFront.value
+                "is_page_on_front" to (homepageSettings.showOnFront == ShowOnFront.PAGE).toString()
         )
         if (homepageSettings is Page) {
             params["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()

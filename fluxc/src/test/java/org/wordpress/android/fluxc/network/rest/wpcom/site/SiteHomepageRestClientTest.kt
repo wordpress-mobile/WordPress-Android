@@ -64,9 +64,10 @@ class SiteHomepageRestClientTest {
     @Test
     fun `returns success when setting homepage to page`() = test {
         val pageSettings = Page(1, 2)
-        val response = UpdateHomepageResponse(true, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
+        val isPageOnFront = true
+        val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
         val expectedParams = mapOf(
-                "is_page_on_front" to "page",
+                "is_page_on_front" to isPageOnFront.toString(),
                 "page_on_front_id" to pageSettings.pageOnFrontId.toString(),
                 "page_for_posts_id" to pageSettings.pageForPostsId.toString()
         )
@@ -77,8 +78,9 @@ class SiteHomepageRestClientTest {
     @Test
     fun `returns success when setting homepage to posts`() = test {
         val postsSettings = Posts
-        val response = UpdateHomepageResponse(false, null, null)
-        val expectedParams = mapOf("is_page_on_front" to "posts")
+        val isPageOnFront = false
+        val response = UpdateHomepageResponse(isPageOnFront, null, null)
+        val expectedParams = mapOf("is_page_on_front" to isPageOnFront.toString())
 
         testSuccessResponse(response, postsSettings, expectedParams)
     }
