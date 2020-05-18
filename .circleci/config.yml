@@ -94,7 +94,7 @@ jobs:
           command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
       - save-gutenberg-bundle-cache
   test:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -103,6 +103,11 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Test WordPress
           environment:
@@ -116,7 +121,7 @@ jobs:
       - android/save-gradle-cache
       - android/save-test-results
   lint:
-    executor: 
+    executor:
       name: android/default
       api-version: "28"
     steps:
@@ -125,6 +130,11 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Checkstyle
           environment:
@@ -150,7 +160,7 @@ jobs:
               ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
             else
               echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
-            fi 
+            fi
       - android/save-gradle-cache
       - android/save-lint-results
   Installable Build:
@@ -167,6 +177,11 @@ jobs:
           command: bundle exec fastlane run configure_apply
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
           name: Build APK
           environment:
@@ -208,6 +223,11 @@ jobs:
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
           name: Build
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
@@ -246,6 +266,11 @@ jobs:
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
+          name: Ensure assets folder exists
+          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
           name: Build
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
@@ -271,7 +296,7 @@ jobs:
       - checkout-gutenberg-mobile-submodule-only
       - run:
           name: Install bundler
-          command: gem install bundler --version 2.0.2 
+          command: gem install bundler --version 2.0.2
       - bundle-install/bundle-install:
           cache_key_prefix: strings-check
       - run:

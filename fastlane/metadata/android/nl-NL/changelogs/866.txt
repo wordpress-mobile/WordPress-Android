@@ -1,0 +1,4 @@
+14.8:
+<b>Aanvullingen op de blokeditor:</b> Knopblokken geven meerdere knoppen op één rij weer; Afbeeldingenblokken vullen ondertitels in wanneer beschikbaar; Omslagblokken staan uploads toe; ingevoegde afbeeldingen kunnen bijgesneden, gezoomd of gedraaid worden; Kopblokken bevatten uitlijningsopties.
+<b>Verbeteringen aan de blokeditor:</b> Zwevende werkbalk verplaatst, bug die lege ruimte veranderde in Tekstblokken verwijderd, verkeerde uitlijning van werkbalkpictogrammen opgelost in RTL-modus.
+<b>Algemene updates:</b> Reblog-functionaliteit toegevoegd.

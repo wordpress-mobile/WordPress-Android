@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-28 10:54:11+0000
+Translation-Revision-Date: 2020-05-12 09:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">瞭解更多</string>
+    <string name="feature_announcement_dialog_label">WordPress 新功能</string>
+    <string name="insert_label_with_count">插入 %d 個</string>
+    <string name="crop">剪裁</string>
+    <string name="error_failed_to_load_into_file">無法載入檔案，請再試一次。</string>
+    <string name="preview_image_thumbnail_description">預覽圖片縮圖</string>
+    <string name="photo_picker_use_media">使用此媒體</string>
+    <string name="photo_picker_use_video">使用此視訊</string>
+    <string name="photo_picker_photo_or_video_title">選擇媒體</string>
+    <string name="photo_picker_video_title">選擇視訊</string>
+    <string name="site_picker_ask_site_select">無法選擇網站，請再試一次。</string>
+    <string name="sitepicker_continue_flow">繼續</string>
+    <string name="reader_reblog_error">轉發失敗</string>
+    <string name="reader_no_site_to_reblog_action">管理網站</string>
+    <string name="reader_no_site_to_reblog_detail">建立 WordPress.com 網站後，可以將喜歡的內容轉發到自己的網站。</string>
+    <string name="reader_no_site_to_reblog_title">沒有可用的 WordPress.com 網站</string>
+    <string name="whats_new_in_version_title">最新內容</string>
+    <string name="comment_q_action_copied_url">已複製連結位址</string>
+    <string name="copy_link_address">複製連結位址</string>
+    <string name="comment_share_link_via">分享方式：</string>
+    <string name="comment_toast_err_share_intent">無法分享</string>
+    <string name="button_insert">插入</string>
+    <string name="continue_label">繼續</string>
+    <string name="copy_text">複製</string>
     <string name="gutenberg_native_subscribe">訂閱</string>
     <string name="gutenberg_native_number_of_columns">欄位數</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
@@ -40,7 +64,7 @@ Language: zh_TW
     <string name="media_accessing_failed">無法存取私人網站的內容。部分媒體可能無法使用</string>
     <string name="media_accessing_progress">正在存取私人網站的內容</string>
     <string name="error_failed_to_crop_and_save_image">無法裁剪和儲存圖片，請再試一次。</string>
-    <string name="failed_to_insert_image_tap_to_retry">無法插入圖片。\n請點選以重試。</string>
+    <string name="failed_to_load_image_tap_to_retry">無法載入圖片。\n請點選以重試。</string>
     <string name="preview_image_description">預覽圖片</string>
     <string name="error_unknown_page_type">不明的頁面格式</string>
     <string name="error_page_not_submitted">我們無法完成此動作，因此未將此頁面提交送審。</string>
@@ -1304,7 +1328,6 @@ Language: zh_TW
     <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
-    <string name="copy_text">複製</string>
     <string name="connect_site">連結網站</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">閃爍燈</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">震動裝置</string>
@@ -2160,6 +2183,7 @@ Language: zh_TW
     <string name="reader_btn_unfollow">追蹤</string>
     <string name="reader_btn_follow">追蹤</string>
     <string name="reader_btn_share">分享</string>
+    <string name="reader_view_reblog">轉發</string>
     <string name="reader_untitled_post">（未命名）</string>
     <string name="comments_empty_list">尚未有留言</string>
     <string name="empty_list_default">清單是空的</string>

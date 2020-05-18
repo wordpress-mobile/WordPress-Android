@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
-Plural-Forms: nplurals=2; plural=n==1 || n%10==1 ? 0 : 1;
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
+Generator: GlotPress/3.0.0-alpha
 Language: mk
 -->
 <resources>
