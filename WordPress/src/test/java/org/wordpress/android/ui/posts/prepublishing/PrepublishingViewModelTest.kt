@@ -141,7 +141,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
         viewModel.onPublishButtonClicked(true)
 
-        assertThat(viewModel.dismissBottomSheet.value?.peekContent()).isNotNull()
-        assertThat(viewModel.triggerOnPublishButtonClickedListener.value?.peekContent()).isNotNull()
+        assertThat(viewModel.dismissBottomSheet.value?.peekContent()).isNotNull
+        assertThat(viewModel.triggerOnPublishButtonClickedListener.value?.peekContent()).isNotNull
     }
 }
