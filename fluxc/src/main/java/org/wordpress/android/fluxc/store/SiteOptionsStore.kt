@@ -2,6 +2,8 @@ package org.wordpress.android.fluxc.store
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -23,6 +25,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T
@@ -39,6 +42,14 @@ class SiteOptionsStore
 ) {
     suspend fun updateHomepage(site: SiteModel, homepageSettings: SiteHomepageSettings): HomepageUpdatedPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Update homepage settings") {
+                if (homepageSettings is Page && homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
+                    return@withDefaultContext HomepageUpdatedPayload(
+                            SiteOptionsError(
+                                    INVALID_PARAMETERS,
+                                    "Page for posts and page on front cannot be the same"
+                            )
+                    )
+                }
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
                     siteHomepageRestClient.updateHomepage(site, homepageSettings)
                 } else {
@@ -79,6 +90,7 @@ class SiteOptionsStore
     data class SiteOptionsError(var type: SiteOptionsErrorType, var message: String? = null) : OnChangedError
 
     enum class SiteOptionsErrorType {
+        INVALID_PARAMETERS,
         TIMEOUT,
         API_ERROR,
         INVALID_RESPONSE,
