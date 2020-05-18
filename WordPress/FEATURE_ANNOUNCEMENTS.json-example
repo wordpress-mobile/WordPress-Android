@@ -4,20 +4,20 @@
 {
   "announcements": [
     {
-      "appVersionName": "14.7", // app version name that announcement targets. Used for display purposes only.
-      "announceVersion": 1, // unique version of announcement. Used to track if the specific announcement was shown or not.
-      "detailsUrl": "http://wordpress.org",  // URL that "Find out more" button will open. If empty, "Find out more" button will not be shown.
+      "appVersionName": "14.7",  // app version name that announcement targets. Used for display purposes only.
+      "announceVersion": 1,  // unique version of announcement. Used to track if the specific announcement was shown or not.
+      "detailsUrl": "http://wordpress.org", // URL that "Find out more" button will open. If empty, "Find out more" button will not be shown.
       "features": [
         {
           "en": { // localized feature description for English language
             "title": "Super Publishing",
             "subtitle": "Super Publishing is here! Publish using the power of your mind."
           },
-          "it": { // localized feature description for Italian language
+          "it": {  // localized feature description for Italian language
             "title": "Super Pubblicazione",
             "subtitle": "Pubblicare articoli incredibili..."
           },
-          "iconBase64": "iVBORw0KGg", // icon data represented as base64 string without prefix (data:image/png;base64,).
+          "iconBase64": "iVBORw0KGg",  // icon data represented as base64 string without prefix (data:image/png;base64,).
           "iconUrl": "" // If icon is missing, we will try to load content of iconBase64
         },
         {
@@ -25,7 +25,7 @@
             "title": "Amazing Feature",
             "subtitle": "That's right! They are right in the app! They require pets right now. Are you going to look for them or what?"
           },
-          "it": {
+          "it": {  // localized feature description for Italian language
             "title": "Amazing Feature in Italian",
             "subtitle": "Description in Italian 2"
           },
@@ -37,7 +37,7 @@
             "title": "We like long feature announcements that why this one is going to be extra long and span multiple lines",
             "subtitle": "Here we run out of budget."
           },
-          "it": {
+          "it": {  // localized feature description for Italian language
             "title": "Long feature title in Italina",
             "subtitle": "Description in Italian 3"
           },
