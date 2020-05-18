@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
@@ -41,11 +41,11 @@ class SiteHomepageRestClient
         val params = mutableMapOf(
                 "is_page_on_front" to (homepageSettings.showOnFront == ShowOnFront.PAGE).toString()
         )
-        if (homepageSettings is Page) {
-            if (homepageSettings.pageOnFrontId > 0) {
+        if (homepageSettings is StaticPage) {
+            if (homepageSettings.pageOnFrontId > -1) {
                 params["page_on_front_id"] = homepageSettings.pageOnFrontId.toString()
             }
-            if (homepageSettings.pageForPostsId > 0) {
+            if (homepageSettings.pageForPostsId > -1) {
                 params["page_for_posts_id"] = homepageSettings.pageForPostsId.toString()
             }
         }
@@ -58,7 +58,7 @@ class SiteHomepageRestClient
         return when (response) {
             is Success -> {
                 val updatedHomepageSettings = siteHomepageSettingsMapper.map(response.data)
-                if (updatedHomepageSettings is Page) {
+                if (updatedHomepageSettings is StaticPage) {
                     site.pageForPosts = updatedHomepageSettings.pageForPostsId
                     site.pageOnFront = updatedHomepageSettings.pageOnFrontId
                 }
