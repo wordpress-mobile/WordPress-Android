@@ -76,6 +76,32 @@ class SiteHomepageRestClientTest {
     }
 
     @Test
+    fun `does not add page on front parameter when it is missing`() = test {
+        val pageSettings = Page(1, 0)
+        val isPageOnFront = true
+        val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
+        val expectedParams = mapOf(
+                "is_page_on_front" to isPageOnFront.toString(),
+                "page_for_posts_id" to pageSettings.pageForPostsId.toString()
+        )
+
+        testSuccessResponse(response, pageSettings, expectedParams)
+    }
+
+    @Test
+    fun `does not add page for posts parameter when it is missing`() = test {
+        val pageSettings = Page(0, 2)
+        val isPageOnFront = true
+        val response = UpdateHomepageResponse(isPageOnFront, pageSettings.pageOnFrontId, pageSettings.pageForPostsId)
+        val expectedParams = mapOf(
+                "is_page_on_front" to isPageOnFront.toString(),
+                "page_on_front_id" to pageSettings.pageOnFrontId.toString()
+        )
+
+        testSuccessResponse(response, pageSettings, expectedParams)
+    }
+
+    @Test
     fun `returns success when setting homepage to posts`() = test {
         val postsSettings = Posts
         val isPageOnFront = false
