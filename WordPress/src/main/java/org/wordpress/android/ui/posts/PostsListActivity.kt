@@ -95,7 +95,9 @@ class PostsListActivity : LocaleAwareActivity(),
     var postId: Int = 0
 
     override fun getEditPostRepository(): EditPostRepository {
-        editPostRepository.loadPostByLocalPostId(postId)
+        if (!editPostRepository.hasPost()) {
+            editPostRepository.loadPostByLocalPostId(postId)
+        }
         return editPostRepository
     }
 
