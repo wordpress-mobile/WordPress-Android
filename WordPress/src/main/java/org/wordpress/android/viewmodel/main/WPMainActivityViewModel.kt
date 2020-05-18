@@ -187,7 +187,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun canShowFeatureAnnouncement(): Boolean {
-        return featureAnnouncementProvider.isFeatureAnnouncementAvailable() &&
+        return featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable() &&
                 appPrefsWrapper.featureAnnouncementShownVersion <
                 featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
     }
