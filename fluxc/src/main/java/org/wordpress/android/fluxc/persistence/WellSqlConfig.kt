@@ -1015,7 +1015,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 91 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT NULL")
+                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT")
                 }
                 92 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM TEXT")
@@ -1074,7 +1074,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
                 }
                 102 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT STRING")
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT TEXT")
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
