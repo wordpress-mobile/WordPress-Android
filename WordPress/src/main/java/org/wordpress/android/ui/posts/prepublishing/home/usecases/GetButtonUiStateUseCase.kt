@@ -1,48 +1,39 @@
 package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
-import android.text.TextUtils
-import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction.PUBLISH_NOW
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction.SCHEDULE
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction.UPDATE
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.ScheduleButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.UpdateButtonUiState
 import org.wordpress.android.ui.posts.PublishPost
+import org.wordpress.android.ui.posts.editor.EditorActionsProvider
+import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
+import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SAVE
+import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SUBMIT_FOR_REVIEW
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import javax.inject.Inject
 
-class GetButtonUiStateUseCase @Inject constructor(private val postUtilsWrapper: PostUtilsWrapper) {
+class GetButtonUiStateUseCase @Inject constructor(
+    private val editorActionsProvider: EditorActionsProvider,
+    private val uploadUtilsWrapper: UploadUtilsWrapper
+) {
     fun getUiState(
         editPostRepository: EditPostRepository,
-        editorAction: EditorAction,
+        site: SiteModel,
         onButtonClicked: (PublishPost) -> Unit
     ): ButtonUiState {
-        val status = editPostRepository.status
-        return when {
-            !TextUtils.isEmpty(editPostRepository.dateCreated) -> {
-                when {
-                    postUtilsWrapper.isPublishDateInTheFuture(editPostRepository.dateCreated) || status == PostStatus.SCHEDULED -> createButtonUiState(
-                            SCHEDULE,
-                            onButtonClicked
-                    )
-                    status == PostStatus.PUBLISHED || status == PostStatus.PRIVATE || editPostRepository.isLocalDraft ->
-                        createButtonUiState(editorAction, onButtonClicked)
-                    else -> createButtonUiState(editorAction, onButtonClicked)
-                }
-            }
-            else -> createButtonUiState(editorAction, onButtonClicked)
+        val editorAction = editorActionsProvider.getPrimaryAction(
+                editPostRepository.status,
+                uploadUtilsWrapper.userCanPublish(site)
+        )
+
+        return when (editorAction) {
+            PrimaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
+            PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
+            PrimaryEditorAction.UPDATE -> UpdateButtonUiState(onButtonClicked)
+            SUBMIT_FOR_REVIEW, SAVE -> throw Exception("These actions shouldn't be available in this bottom sheet")
         }
     }
-
-    private fun createButtonUiState(editorAction: EditorAction, onButtonClicked: (PublishPost) -> Unit) =
-            when (editorAction) {
-                PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
-                UPDATE -> UpdateButtonUiState(onButtonClicked)
-                SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
-            }
 }
 
