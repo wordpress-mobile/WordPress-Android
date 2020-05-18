@@ -460,7 +460,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         String urlString = "";
         if (post.hasBlogUrl()) {
             urlString = getUrlWithoutProtocol(post.getBlogUrl());
-            urlString = holder.mTxtDateline.getResources().getString(R.string.reader_blog_url, urlString);
             holder.mTxtBlogUrl.setText(urlString);
             holder.mTxtBlogUrl.setVisibility(View.VISIBLE);
         } else {
