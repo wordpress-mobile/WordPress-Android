@@ -276,7 +276,7 @@ class PageListViewModelTest : BaseUnitTest() {
         // Arrange
         val actions = setOf(mock<PageItem.Action>())
 
-        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull())).thenReturn(actions)
+        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull(), anyOrNull(), any())).thenReturn(actions)
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)

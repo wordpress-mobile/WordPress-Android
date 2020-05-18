@@ -111,7 +111,12 @@ class SearchListViewModel
                         date,
                         labels,
                         labelColor,
-                        actions = pageListItemActionsUseCase.setupPageActions(PUBLISHED, uploadUiState),
+                        actions = pageListItemActionsUseCase.setupPageActions(
+                                PUBLISHED,
+                                uploadUiState,
+                                pagesViewModel.site,
+                                remoteId
+                        ),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
                         showOverlay = showOverlay
@@ -123,7 +128,12 @@ class SearchListViewModel
                     date,
                     labels,
                     labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(DRAFTS, uploadUiState),
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            DRAFTS,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
@@ -135,7 +145,12 @@ class SearchListViewModel
                     date,
                     labels,
                     labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(TRASHED, uploadUiState),
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            TRASHED,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
@@ -147,7 +162,12 @@ class SearchListViewModel
                     date,
                     labels,
                     labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(SCHEDULED, uploadUiState),
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            SCHEDULED,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
