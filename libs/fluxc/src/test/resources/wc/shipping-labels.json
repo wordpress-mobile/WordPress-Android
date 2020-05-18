@@ -89,7 +89,11 @@
     "rate": 7.65,
     "currency": "USD",
     "expiry_date": 1604847662000,
-    "label_cached": 1589295666000
+    "label_cached": 1589295666000,
+    "refund":{
+      "status": "pending",
+      "request_date": 1604847663000
+    }
   }, {
     "label_id": 2,
     "tracking": "9405500205309038753691",
