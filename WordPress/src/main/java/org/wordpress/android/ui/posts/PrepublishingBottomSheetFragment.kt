@@ -41,7 +41,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        prepublishingBottomSheetListener = if (context is EditPostActivity) {
+        prepublishingBottomSheetListener = if (context is PrepublishingBottomSheetListener) {
             context
         } else {
             throw RuntimeException("$context must implement PrepublishingBottomSheetListener")
