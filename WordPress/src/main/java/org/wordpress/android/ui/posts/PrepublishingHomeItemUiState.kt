@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -40,13 +38,6 @@ sealed class PrepublishingHomeItemUiState {
                 false,
                 onButtonClicked
         )
-
-        @Parcelize
-        enum class EditorAction : Parcelable {
-            PUBLISH_NOW,
-            SCHEDULE,
-            UPDATE,
-        }
     }
 
     enum class ActionType(val textRes: UiStringRes) {
