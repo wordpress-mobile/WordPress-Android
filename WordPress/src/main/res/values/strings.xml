@@ -113,7 +113,6 @@
     <string name="button_not_now">Not now</string>
 
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
     <!-- CAB -->
