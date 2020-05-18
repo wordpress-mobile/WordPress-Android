@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
 import javax.inject.Inject
@@ -27,13 +29,28 @@ import javax.inject.Inject
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
     private lateinit var viewModel: PrepublishingViewModel
+
+    private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_PrepublishingNudges_BottomSheetDialogTheme)
         (requireNotNull(activity).application as WordPress).component().inject(this)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        prepublishingBottomSheetListener = if (context is PrepublishingBottomSheetListener) {
+            context
+        } else {
+            throw RuntimeException("$context must implement PrepublishingBottomSheetListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        prepublishingBottomSheetListener = null
     }
 
     override fun onCreateView(
@@ -165,5 +182,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onActionClicked(actionType: ActionType) {
         viewModel.onActionClicked(actionType)
+    }
+
+    override fun onPublishButtonClicked() {
+        viewModel.onCloseClicked()
+        prepublishingBottomSheetListener?.onPublishButtonClicked()
     }
 }
