@@ -172,6 +172,7 @@
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
+    <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
 
     <dimen name="reader_featured_image_height_cardview">150dp</dimen>
 
