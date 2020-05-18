@@ -44,5 +44,7 @@
     <!-- Reader -->
     <color name="reader_post_list_background">@color/background_dark</color>
     <color name="reader_card_background">@color/gray_110</color>
+    <color name="reader_label_text">#99ffffff</color>
+    <color name="reader_post_title">#deffffff</color>
 
 </resources>
