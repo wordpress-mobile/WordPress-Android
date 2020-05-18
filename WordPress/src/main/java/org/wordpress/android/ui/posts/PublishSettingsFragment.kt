@@ -163,10 +163,10 @@ abstract class PublishSettingsFragment : Fragment() {
     private fun trackPostScheduled() {
         when (getPublishSettingsFragmentType()) {
             EDIT_POST -> {
-                analyticsTrackerWrapper.trackPostSettings(Stat.EDITOR_POST_SCHEDULED)
+                analyticsTrackerWrapper.trackPostSettings(Stat.EDITOR_POST_SCHEDULE_CHANGED)
             }
             PublishSettingsFragmentType.PREPUBLISHING_NUDGES -> {
-                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_SCHEDULED)
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_SCHEDULE_CHANGED)
             }
         }
     }
