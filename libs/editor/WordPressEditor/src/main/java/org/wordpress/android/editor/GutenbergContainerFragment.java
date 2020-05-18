@@ -29,17 +29,18 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_LOCALE = "param_locale";
     private static final String ARG_TRANSLATIONS = "param_translations";
     private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
+    private static final String ARG_EDITOR_THEME = "param_editor_theme";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-
     public static GutenbergContainerFragment newInstance(String postType,
                                                          boolean isNewPost,
                                                          String localeString,
                                                          Bundle translations,
-                                                         boolean isDarkMode) {
+                                                         boolean isDarkMode,
+                                                         Bundle editorTheme) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_POST_TYPE, postType);
@@ -47,6 +48,7 @@ public class GutenbergContainerFragment extends Fragment {
         args.putString(ARG_LOCALE, localeString);
         args.putBundle(ARG_TRANSLATIONS, translations);
         args.putBoolean(ARG_PREFERRED_COLOR_SCHEME, isDarkMode);
+        args.putBundle(ARG_EDITOR_THEME, editorTheme);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +90,7 @@ public class GutenbergContainerFragment extends Fragment {
         String localeString = getArguments().getString(ARG_LOCALE);
         Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
         boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
+        Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
@@ -104,54 +107,12 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
                 new RNEditorTheme() {
-                    @Override public ArrayList<Object> getColors() {
-                        Bundle accent = new Bundle();
-                        accent.putString("name", "Accent Color");
-                        accent.putString("slug", "accent");
-                        accent.putString("color", "#cd2653");
-
-                        Bundle primary = new Bundle();
-                        primary.putString("name", "Primary");
-                        primary.putString("slug", "primary");
-                        primary.putString("color", "#000000");
-
-                        Bundle secondary = new Bundle();
-                        secondary.putString("name", "Secondary");
-                        secondary.putString("slug", "secondary");
-                        secondary.putString("color", "#6d6d6d");
-
-                        Bundle subtle = new Bundle();
-                        subtle.putString("name", "Subtle Background");
-                        subtle.putString("slug", "subtle-background");
-                        subtle.putString("color", "#dcd7ca");
-
-                        Bundle background = new Bundle();
-                        background.putString("name", "Background Color");
-                        background.putString("slug", "background");
-                        background.putString("color", "#f5efe0");
-
-                        ArrayList<Object> colors = new ArrayList<>();
-                        colors.add(accent);
-                        colors.add(primary);
-                        colors.add(secondary);
-                        colors.add(subtle);
-                        colors.add(background);
-
-                        return colors;
+                    @Override public ArrayList<Bundle> getColors() {
+                        return editorTheme.getParcelableArrayList("colors");
                     }
 
-                    @Override public ArrayList<Object> getGradients() {
-                        Bundle gradient = new Bundle();
-                        gradient.putString("name", "Blue to Purple");
-                        gradient.putString("slug", "blue-to-purple");
-                        gradient.putString(
-                                "gradient",
-                                "linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%)"
-                        );
-                        ArrayList<Object> gradients = new ArrayList<>();
-                        gradients.add(gradient);
-
-                        return gradients;
+                    @Override public ArrayList<Bundle> getGradients() {
+                        return editorTheme.getParcelableArrayList("gradients");
                     }
                 });
 

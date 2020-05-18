@@ -75,6 +75,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
     private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
+    private static final String ARG_EDITOR_THEME = "param_editor_theme";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -109,7 +110,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
-                                                      boolean supportStockPhotos) {
+                                                      boolean supportStockPhotos,
+                                                      Bundle editorTheme) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -118,6 +120,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
         args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
+        args.putBundle(ARG_EDITOR_THEME, editorTheme);
         fragment.setArguments(args);
         return fragment;
     }
@@ -217,6 +220,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String postType = getArguments().getString(ARG_POST_TYPE);
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
+            Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -225,7 +229,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             isNewPost,
                             localeSlug,
                             getTranslations(),
-                            isDarkMode());
+                            isDarkMode(),
+                            editorTheme);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();

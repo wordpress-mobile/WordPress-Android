@@ -82,6 +82,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.EditorThemeStore;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -348,7 +349,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
     @Inject ReblogUtils mReblogUtils;
-
+    @Inject EditorThemeStore mEditorThemeStore;
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
@@ -2023,7 +2024,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
-                                supportsStockPhotos);
+                                supportsStockPhotos,
+                                mEditorThemeStore.getEditorThemeForSite(mSite));
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
