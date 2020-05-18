@@ -20,7 +20,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
@@ -123,7 +122,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(arguments?.getParcelable<EditorAction>(EDITOR_ACTION)),
+                    PrepublishingHomeFragment.newInstance(),
                     PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> Pair(
@@ -184,11 +183,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val EDITOR_ACTION = "prepublishing_bottom_sheet_editor_action"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, @NonNull editorAction: EditorAction) =
+        fun newInstance(@NonNull site: SiteModel) =
                 PrepublishingBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
-                        putParcelable(EDITOR_ACTION, editorAction)
                     }
                 }
     }

@@ -15,8 +15,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.EDITOR_ACTION
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment() {
@@ -77,10 +75,7 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        val editorAction = requireNotNull(arguments?.getParcelable<EditorAction>(EDITOR_ACTION)) {
-            "arguments can't be null since the EditorAction should be supplied on instantiation of this fragment"
-        }
-        viewModel.start(getEditPostRepository(), editorAction, getSite())
+        viewModel.start(getEditPostRepository(), getSite())
     }
 
     private fun getSite(): SiteModel {
@@ -92,8 +87,10 @@ class PrepublishingHomeFragment : Fragment() {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
-                "called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "This is possibly null because it's " +
+                    "called during config changes."
+        }
 
         return editPostActivityHook.editPostRepository
     }
@@ -110,12 +107,6 @@ class PrepublishingHomeFragment : Fragment() {
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
 
-        fun newInstance(editorAction: EditorAction?) = PrepublishingHomeFragment().apply {
-            arguments = Bundle().apply {
-                editorAction?.let { editorAction ->
-                    putParcelable(EDITOR_ACTION, editorAction)
-                }
-            }
-        }
+        fun newInstance() = PrepublishingHomeFragment()
     }
 }

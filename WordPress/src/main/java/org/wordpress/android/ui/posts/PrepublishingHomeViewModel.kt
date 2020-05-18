@@ -9,7 +9,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
@@ -37,17 +36,16 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onPublishButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onPublishButtonClicked: LiveData<Event<PublishPost>> = _onPublishButtonClicked
 
-    fun start(editPostRepository: EditPostRepository, editorAction: EditorAction, site: SiteModel) {
+    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site, editorAction)
+        setupHomeUiState(editPostRepository, site)
     }
 
     private fun setupHomeUiState(
         editPostRepository: EditPostRepository,
-        site: SiteModel,
-        editorAction: EditorAction
+        site: SiteModel
     ) {
         val prepublishingHomeUiStateList = listOf(
                 HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),

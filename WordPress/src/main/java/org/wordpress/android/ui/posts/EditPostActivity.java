@@ -115,7 +115,6 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsC
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.EditorAction;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
@@ -1248,7 +1247,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
-                showPrepublishingNudgeBottomSheet(EditorAction.PUBLISH_NOW);
+                showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1370,13 +1369,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
-                showPrepublishingNudgeBottomSheet(EditorAction.PUBLISH_NOW);
-                return;
             case UPDATE:
-                showPrepublishingNudgeBottomSheet(EditorAction.UPDATE);
-                return;
             case SCHEDULE:
-                showPrepublishingNudgeBottomSheet(EditorAction.SCHEDULE);
+                showPrepublishingNudgeBottomSheet();
                 return;
             case SUBMIT_FOR_REVIEW:
             case SAVE:
@@ -1799,13 +1794,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void showPrepublishingNudgeBottomSheet(EditorAction editorAction) {
+    private void showPrepublishingNudgeBottomSheet() {
         ActivityUtils.hideKeyboard(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
             PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite(), editorAction);
+                    PrepublishingBottomSheetFragment.newInstance(getSite());
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }
