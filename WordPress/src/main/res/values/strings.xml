@@ -2323,8 +2323,8 @@
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
-    <string name="connect_more">Connect Another Site</string>
-    <string name="connect_site">Connect Site</string>
+    <string name="connect_more">Connect another site</string>
+    <string name="connect_site">Connect a site</string>
     <string name="login_continue">Continue</string>
     <string name="login_done">Done</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
