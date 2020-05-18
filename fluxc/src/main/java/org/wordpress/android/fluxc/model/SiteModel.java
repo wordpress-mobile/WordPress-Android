@@ -10,7 +10,6 @@ import com.yarolegovich.wellsql.core.annotation.RawConstraints;
 import com.yarolegovich.wellsql.core.annotation.Table;
 
 import org.wordpress.android.fluxc.Payload;
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -55,7 +54,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mMemoryLimit; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
-    @Column private String mShowOnFront = ShowOnFront.POSTS.getValue();
+    @Column private String mShowOnFront;
     @Column private long mPageOnFront = -1;
     @Column private long mPageForPosts = -1;
 
