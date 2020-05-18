@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.whatsnew
 
 import android.text.TextUtils
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.AppLog
@@ -14,9 +15,10 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
         return getFeatureAnnouncements().firstOrNull()
     }
 
-    fun getFeatureAnnouncements(): List<FeatureAnnouncement> {
+    private fun getFeatureAnnouncements(): List<FeatureAnnouncement> {
         val defaultLanguage = "en"
-        val currentLanguage = localeManagerWrapper.getLanguage()
+        // LocaleManager might not return language code in 2 letter format, so trying to do the conversion just in case
+        val currentLanguage = localeManagerWrapper.getLanguage().split("_")[0]
 
         val featureAnnouncements = arrayListOf<FeatureAnnouncement>()
 
@@ -43,14 +45,19 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
 
             val features = arrayListOf<FeatureAnnouncementItem>()
 
+            var isLocalized = true
+
             val featuresArray = announcementObject.get("features").asJsonArray
             for (featureElement in featuresArray) {
                 val featureObject = featureElement.asJsonObject
 
-                val localizedDataObject = if (featureObject.has(currentLanguage)) {
-                    featureObject.get(currentLanguage).asJsonObject
+                val localizedDataObject: JsonObject
+
+                if (featureObject.has(currentLanguage)) {
+                    localizedDataObject = featureObject.get(currentLanguage).asJsonObject
                 } else {
-                    featureObject.get(defaultLanguage).asJsonObject
+                    localizedDataObject = featureObject.get(defaultLanguage).asJsonObject
+                    isLocalized = false
                 }
 
                 val title = localizedDataObject.get("title").asString
@@ -66,6 +73,7 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
                     announcementObject.get("appVersionName").asString,
                     announcementObject.get("announceVersion").asInt,
                     announcementObject.get("detailsUrl").asString,
+                    isLocalized,
                     features
             )
 
@@ -75,7 +83,8 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
         return featureAnnouncements
     }
 
-    fun isFeatureAnnouncementAvailable(): Boolean {
-        return getFeatureAnnouncements().isNotEmpty()
+    fun isAnnouncementOnUpgradeAvailable(): Boolean {
+        val announcements = getFeatureAnnouncements()
+        return announcements.isNotEmpty() && announcements[0].isLocalized && announcements[0].features.isNotEmpty()
     }
 }

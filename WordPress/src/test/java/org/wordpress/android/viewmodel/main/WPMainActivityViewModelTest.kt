@@ -42,6 +42,7 @@ class WPMainActivityViewModelTest {
             "14.7",
             2,
             "https://wordpress.org/",
+            true,
             emptyList()
     )
 
@@ -186,7 +187,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
@@ -201,7 +202,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
@@ -222,7 +223,7 @@ class WPMainActivityViewModelTest {
     @Test
     fun `don't show feature announcement when it's not available`() {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(false)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(false)
 
         startViewModelWithDefaultParameters()
 
@@ -236,7 +237,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
@@ -250,7 +251,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
