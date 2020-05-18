@@ -19,11 +19,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.SiteOptionsStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,6 +35,8 @@ import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -44,6 +49,7 @@ import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.PAGES
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -91,6 +97,8 @@ class PagesViewModel
     private val autoSaveConflictResolver: AutoSaveConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
+    private val siteOptionsStore: SiteOptionsStore,
+    private val appLogWrapper: AppLogWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -394,6 +402,8 @@ class PagesViewModel
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
             CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
+            SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
+            SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
         }
         return true
     }
@@ -415,6 +425,64 @@ class PagesViewModel
             trackMenuSelectionEvent(SET_PARENT)
 
             _setPageParent.postValue(pageMap[page.remoteId])
+        }
+    }
+
+    private fun setHomepage(homepageId: Long) {
+        performIfNetworkAvailable {
+            if (site.showOnFront == PAGE.value) {
+                launch {
+                    val result = siteOptionsStore.updatePageOnFront(
+                            site,
+                            homepageId
+                    )
+                    val message = when (result.isError) {
+                        true -> {
+                            appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
+                            R.string.page_homepage_update_failed
+                        }
+                        false -> {
+                            R.string.page_homepage_successfully_updated
+                        }
+                    }
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                }
+            } else {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(
+                                messageRes = R.string.page_cannot_set_homepage
+                        )
+                )
+            }
+        }
+    }
+
+    private fun setPostsPage(remoteId: Long) {
+        performIfNetworkAvailable {
+            if (site.showOnFront == PAGE.value) {
+                launch {
+                    val result = siteOptionsStore.updatePageForPosts(
+                            site,
+                            remoteId
+                    )
+                    val message = when (result.isError) {
+                        true -> {
+                            appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
+                            R.string.page_posts_page_update_failed
+                        }
+                        false -> {
+                            R.string.page_posts_page_successfully_updated
+                        }
+                    }
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                }
+            } else {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(
+                                messageRes = R.string.page_cannot_set_posts_page
+                        )
+                )
+            }
         }
     }
 

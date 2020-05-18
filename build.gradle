@@ -119,7 +119,7 @@ ext {
     androidxWorkVersion = "2.0.1"
 
     daggerVersion = '2.22.1'
-    fluxCVersion = '8cc403586'
+    fluxCVersion = 'edad85a52'
 
     appCompatVersion = '1.0.2'
     constraintLayoutVersion = '1.1.3'

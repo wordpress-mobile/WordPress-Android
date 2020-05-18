@@ -244,6 +244,13 @@
     <string name="page_permanently_deleted">Page has been permanently deleted</string>
     <string name="page_parent_changed">Page parent has been changed</string>
 
+    <string name="page_cannot_set_homepage">To set Homepage enable \"Static Homepage\" in Site Settings</string>
+    <string name="page_cannot_set_posts_page">To set Posts page enable \"Static Homepage\" in Site Settings</string>
+    <string name="page_homepage_successfully_updated">Homepage successfully updated</string>
+    <string name="page_homepage_update_failed">Homepage update failed</string>
+    <string name="page_posts_page_successfully_updated">Posts Page successfully updated</string>
+    <string name="page_posts_page_update_failed">Homepage update failed</string>
+
     <!-- posts tab -->
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
@@ -2625,6 +2632,8 @@
     <string name="pages_private">Private</string>
     <string name="pages_view">View</string>
     <string name="pages_set_parent">Set parent</string>
+    <string name="pages_set_as_homepage">Set as Homepage</string>
+    <string name="pages_set_as_posts_page">Set as Posts Page</string>
     <string name="pages_publish_now">Publish Now</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
