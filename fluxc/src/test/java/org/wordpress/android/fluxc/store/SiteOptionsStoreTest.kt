@@ -14,6 +14,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -85,7 +86,7 @@ class SiteOptionsStoreTest {
         assertThat(homepageUpdatedPayload.error).isEqualTo(
                 SiteOptionsError(
                         GENERIC_ERROR,
-                        "Site contains unexpected showOnFront value: posts"
+                        "Site contains unexpected showOnFront value: page"
                 )
         )
         verify(siteXMLRPCClient).updateSiteHomepage(eq(dotOrgSite), eq(homepageSettings), any(), any())
@@ -118,7 +119,7 @@ class SiteOptionsStoreTest {
 
     @Test
     fun `call fails when page for posts and homepage are the same`() = test {
-        val invalidHomepageSettings = SiteHomepageSettings.Page(1L, 1L)
+        val invalidHomepageSettings = SiteHomepageSettings.StaticPage(1L, 1L)
 
         val homepageUpdatedPayload = store.updateHomepage(wpComSite, invalidHomepageSettings)
 
@@ -133,11 +134,96 @@ class SiteOptionsStoreTest {
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
+    @Test
+    fun `updates page for posts and keeps page on front when they are different`() = test {
+        val updatedPageForPosts: Long = 1
+        val currentPageOnFront: Long = 2
+        wpComSite.pageOnFront = currentPageOnFront
+        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
+                siteHomepageRestClient
+        ).updateHomepage(any(), any())
+        val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
+                updatedPageForPosts, currentPageOnFront
+        )
+
+        val homepageUpdatedPayload = store.updatePageForPosts(wpComSite, updatedPageForPosts)
+
+        assertThat(homepageUpdatedPayload.homepageSettings).isEqualTo(
+                expectedHomepageSettings
+        )
+        verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
+        verifyZeroInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `updates page on front ID to 0 when it is the same as page for posts`() = test {
+        val updatedPageForPosts: Long = 1
+        val currentPageOnFront: Long = 1
+        wpComSite.pageOnFront = currentPageOnFront
+        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
+                siteHomepageRestClient
+        ).updateHomepage(any(), any())
+        val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
+                updatedPageForPosts, 0
+        )
+
+        val homepageUpdatedPayload = store.updatePageForPosts(wpComSite, updatedPageForPosts)
+
+        assertThat(homepageUpdatedPayload.homepageSettings).isEqualTo(
+                expectedHomepageSettings
+        )
+        verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
+        verifyZeroInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `updates page for posts ID to 0 when it is the same as page on front`() = test {
+        val updatedPageOnFront: Long = 1
+        val currentPageForPosts: Long = 1
+        wpComSite.pageForPosts = currentPageForPosts
+        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
+                siteHomepageRestClient
+        ).updateHomepage(any(), any())
+        val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
+                0, updatedPageOnFront
+        )
+
+        val homepageUpdatedPayload = store.updatePageOnFront(wpComSite, updatedPageOnFront)
+
+        assertThat(homepageUpdatedPayload.homepageSettings).isEqualTo(
+                expectedHomepageSettings
+        )
+        verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
+        verifyZeroInteractions(siteXMLRPCClient)
+    }
+
+    @Test
+    fun `updates page on front and keeps page for posts when they are different`() = test {
+        val updatedPageOnFront: Long = 1
+        val currentPageForPosts: Long = 2
+        wpComSite.pageForPosts = currentPageForPosts
+        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
+                siteHomepageRestClient
+        ).updateHomepage(any(), any())
+        val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
+                currentPageForPosts, updatedPageOnFront
+        )
+
+        val homepageUpdatedPayload = store.updatePageOnFront(wpComSite, updatedPageOnFront)
+
+        assertThat(homepageUpdatedPayload.homepageSettings).isEqualTo(
+                expectedHomepageSettings
+        )
+        verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
+        verifyZeroInteractions(siteXMLRPCClient)
+    }
+
     private fun initXMLRPCClient(
         mappedHomepageSettings: SiteHomepageSettings? = updatedHomepageSettings,
         error: BaseNetworkError? = null
     ) {
         val updatedSite = SiteModel()
+        updatedSite.showOnFront = ShowOnFront.PAGE.value
         whenever(siteHomepageSettingsMapper.map(updatedSite)).thenReturn(mappedHomepageSettings)
         doAnswer {
             if (error != null) {

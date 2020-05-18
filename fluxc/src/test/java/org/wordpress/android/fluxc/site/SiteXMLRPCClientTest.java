@@ -20,8 +20,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.UnitTestUtils;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
-import org.wordpress.android.fluxc.model.SiteHomepageSettings;
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -115,7 +114,7 @@ public class SiteXMLRPCClientTest {
         SiteModel site = generateSelfHostedNonJPSite();
         mCountDownLatch = new CountDownLatch(1);
         mMockedResponse = SITE_OPTIONS;
-        Page homepageSettings = new Page(2L, 1L);
+        StaticPage homepageSettings = new StaticPage(2L, 1L);
         final AtomicBoolean success = new AtomicBoolean(false);
         mSiteXMLRPCClient.updateSiteHomepage(site, homepageSettings, new Function1<SiteModel, Unit>() {
             @Override public Unit invoke(SiteModel siteModel) {

@@ -11,7 +11,7 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.XMLRPC;
 import org.wordpress.android.fluxc.model.SiteHomepageSettings;
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage;
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.SiteModel;
@@ -149,7 +149,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         Map<String, Object> updatedOptions = new HashMap<>();
         updatedOptions.put("show_on_front", homepageSettings.getShowOnFront());
         if (homepageSettings.getShowOnFront() == ShowOnFront.PAGE) {
-            Page pageSettings = (Page) homepageSettings;
+            StaticPage pageSettings = (StaticPage) homepageSettings;
             if (pageSettings.getPageOnFrontId() > -1) {
                 updatedOptions.put("page_on_front", pageSettings.getPageOnFrontId());
             }

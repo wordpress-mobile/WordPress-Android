@@ -4,7 +4,7 @@ import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient.UpdateHomepageResponse
 
@@ -22,7 +22,7 @@ class SiteHomepageSettingsMapperTest {
         site.pageOnFront = pageOnFrontId
         val homepageSettings = mapper.map(site)
 
-        assertThat((homepageSettings as Page).pageForPostsId).isEqualTo(pageForPostsId)
+        assertThat((homepageSettings as StaticPage).pageForPostsId).isEqualTo(pageForPostsId)
         assertThat(homepageSettings.pageOnFrontId).isEqualTo(pageOnFrontId)
     }
 
@@ -53,7 +53,7 @@ class SiteHomepageSettingsMapperTest {
 
         val homepageSettings = mapper.map(response)
 
-        assertThat((homepageSettings as Page).pageForPostsId).isEqualTo(pageForPostsId)
+        assertThat((homepageSettings as StaticPage).pageForPostsId).isEqualTo(pageForPostsId)
         assertThat(homepageSettings.pageOnFrontId).isEqualTo(pageOnFrontId)
     }
 

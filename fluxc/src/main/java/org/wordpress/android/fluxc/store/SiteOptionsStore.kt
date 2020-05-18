@@ -2,8 +2,7 @@ package org.wordpress.android.fluxc.store
 
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.Page
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -40,9 +39,53 @@ class SiteOptionsStore
     private val siteXMLRPCClient: SiteXMLRPCClient,
     private val siteHomepageSettingsMapper: SiteHomepageSettingsMapper
 ) {
+    suspend fun updatePageForPosts(site: SiteModel, pageForPostsId: Long): HomepageUpdatedPayload =
+            coroutineEngine.withDefaultContext(T.API, this, "Update page for posts") {
+                if (site.pageForPosts == pageForPostsId) {
+                    return@withDefaultContext HomepageUpdatedPayload(
+                            SiteOptionsError(
+                                    GENERIC_ERROR,
+                                    "Trying to set pageForPosts with an already set value"
+                            )
+                    )
+                }
+                val updatedPageOnFrontId = if (pageForPostsId == site.pageOnFront) {
+                    0
+                } else {
+                    site.pageOnFront
+                }
+                val updatedHomepageSettings = StaticPage(
+                        pageForPostsId = pageForPostsId,
+                        pageOnFrontId = updatedPageOnFrontId
+                )
+                return@withDefaultContext updateHomepage(site, updatedHomepageSettings)
+            }
+
+    suspend fun updatePageOnFront(site: SiteModel, pageOnFrontId: Long): HomepageUpdatedPayload =
+            coroutineEngine.withDefaultContext(T.API, this, "Update page on front") {
+                if (site.pageOnFront == pageOnFrontId) {
+                    return@withDefaultContext HomepageUpdatedPayload(
+                            SiteOptionsError(
+                                    GENERIC_ERROR,
+                                    "Trying to set pageOnFront with an already set value"
+                            )
+                    )
+                }
+                val updatedPageForPostsId = if (pageOnFrontId == site.pageForPosts) {
+                    0
+                } else {
+                    site.pageForPosts
+                }
+                val updatedHomepageSettings = StaticPage(
+                        pageForPostsId = updatedPageForPostsId,
+                        pageOnFrontId = pageOnFrontId
+                )
+                return@withDefaultContext updateHomepage(site, updatedHomepageSettings)
+            }
+
     suspend fun updateHomepage(site: SiteModel, homepageSettings: SiteHomepageSettings): HomepageUpdatedPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Update homepage settings") {
-                if (homepageSettings is Page && homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
+                if (homepageSettings is StaticPage && homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
                     return@withDefaultContext HomepageUpdatedPayload(
                             SiteOptionsError(
                                     INVALID_PARAMETERS,
