@@ -105,7 +105,7 @@ class SiteOptionsStoreTest {
 
     @Test
     fun `call fails when page for posts and homepage are the same`() = test {
-        val invalidHomepageSettings = SiteHomepageSettings.StaticPage(1L, 1L)
+        val invalidHomepageSettings = SiteHomepageSettings.StaticPage(pageForPostsId = 1L, pageOnFrontId = 1L)
 
         val homepageUpdatedPayload = store.updateHomepage(wpComSite, invalidHomepageSettings)
 
@@ -143,7 +143,7 @@ class SiteOptionsStoreTest {
         val currentPageOnFront: Long = 1
         wpComSite.pageOnFront = currentPageOnFront
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
-                updatedPageForPosts, 0
+                updatedPageForPosts, pageOnFrontId = 0
         )
         initSuccessResponse(expectedHomepageSettings)
 
@@ -161,7 +161,7 @@ class SiteOptionsStoreTest {
         val currentPageForPosts: Long = 1
         wpComSite.pageForPosts = currentPageForPosts
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
-                0, updatedPageOnFront
+                pageForPostsId = 0, pageOnFrontId = updatedPageOnFront
         )
         initSuccessResponse(expectedHomepageSettings)
 
