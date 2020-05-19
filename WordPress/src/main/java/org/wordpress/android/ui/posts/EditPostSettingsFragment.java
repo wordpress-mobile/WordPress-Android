@@ -44,6 +44,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.TaxonomyAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
@@ -79,6 +80,7 @@ import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -149,6 +151,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject FeaturedImageHelper mFeaturedImageHelper;
     @Inject UiHelpers mUiHelpers;
     @Inject PostSettingsUtils mPostSettingsUtils;
+    @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -504,6 +507,7 @@ public class EditPostSettingsFragment extends Fragment {
                 case ACTIVITY_REQUEST_CODE_PICK_LOCATION:
                     if (isAdded() && resultCode == RESULT_OK) {
                         Place place = PlacePicker.getPlace(getActivity(), data);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_LOCATION_CHANGED);
                         setLocation(place);
                     }
                     break;
@@ -512,6 +516,7 @@ public class EditPostSettingsFragment extends Fragment {
                     if (extras != null && extras.containsKey(KEY_SELECTED_CATEGORY_IDS)) {
                         @SuppressWarnings("unchecked")
                         List<Long> categoryList = (ArrayList<Long>) extras.getSerializable(KEY_SELECTED_CATEGORY_IDS);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_CATEGORIES_ADDED);
                         updateCategories(categoryList);
                     }
                     break;
@@ -519,6 +524,7 @@ public class EditPostSettingsFragment extends Fragment {
                     extras = data.getExtras();
                     if (resultCode == RESULT_OK && extras != null) {
                         String selectedTags = extras.getString(PostSettingsTagsActivity.KEY_SELECTED_TAGS);
+                        PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_TAGS_CHANGED);
                         updateTags(selectedTags);
                     }
                     break;
@@ -537,6 +543,7 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_EXCERPT_CHANGED);
                         updateExcerpt(input);
                     }
                 });
@@ -554,6 +561,7 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_SLUG_CHANGED);
                         updateSlug(input);
                     }
                 });
@@ -594,10 +602,12 @@ public class EditPostSettingsFragment extends Fragment {
                 int index = fragment.getCheckedIndex();
                 PostStatus status = getPostStatusAtIndex(index);
                 updatePostStatus(status);
+                PostAnalyticsUtilsKt.trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_VISIBILITY_CHANGED);
                 break;
             case POST_FORMAT:
                 String formatName = fragment.getSelectedItem();
                 updatePostFormat(getPostFormatKeyFromName(formatName));
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_FORMAT_CHANGED);
                 break;
         }
     }
@@ -647,6 +657,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new PostSettingsInputDialogFragment.PostSettingsInputDialogListener() {
                     @Override
                     public void onInputUpdated(String input) {
+                        PostAnalyticsUtilsKt
+                                .trackPostSettings(mAnalyticsTrackerWrapper, Stat.EDITOR_POST_PASSWORD_CHANGED);
                         updatePassword(input);
                     }
                 });
@@ -1185,6 +1197,7 @@ public class EditPostSettingsFragment extends Fragment {
                 if (menuItem.getItemId() == R.id.menu_change_location) {
                     showLocationPicker();
                 } else if (menuItem.getItemId() == R.id.menu_remove_location) {
+                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_LOCATION_CHANGED);
                     setLocation(null);
                 }
                 return true;

@@ -41,7 +41,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        prepublishingBottomSheetListener = if (context is EditPostActivity) {
+        prepublishingBottomSheetListener = if (context is PrepublishingBottomSheetListener) {
             context
         } else {
             throw RuntimeException("$context must implement PrepublishingBottomSheetListener")
@@ -111,6 +111,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         viewModel.dismissBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled { dismiss() }
+        })
+
+        viewModel.triggerOnPublishButtonClickedListener.observe(this, Observer { event ->
+            event.applyIfNotHandled { prepublishingBottomSheetListener?.onPublishButtonClicked() }
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
@@ -185,7 +189,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     override fun onPublishButtonClicked() {
-        viewModel.onCloseClicked()
-        prepublishingBottomSheetListener?.onPublishButtonClicked()
+        viewModel.onPublishButtonClicked()
     }
 }

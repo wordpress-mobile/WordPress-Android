@@ -90,6 +90,8 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
 
         mTagsEditText = (EditText) view.findViewById(R.id.tags_edit_text);
         mTagsEditText.setOnKeyListener(this);
+        mTagsEditText.requestFocus();
+        ActivityUtils.showKeyboard(mTagsEditText);
         mTagsEditText.post(() -> mTagsEditText.addTextChangedListener(TagsFragment.this));
 
         loadTags();
@@ -178,6 +180,14 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
         updatedText = StringEscapeUtils.unescapeHtml4(updatedText);
         mTagsEditText.setText(updatedText);
         mTagsEditText.setSelection(mTagsEditText.length());
+    }
+
+    boolean wereTagsChanged() {
+        if (mTags != null) {
+            return !mTags.equals(mTagsEditText.getText().toString());
+        } else {
+            return !mTagsEditText.getText().toString().isEmpty();
+        }
     }
 
     @SuppressWarnings("unused")

@@ -40,7 +40,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getPostTagsUseCase,
                 getPostVisibilityUseCase,
                 postSettingsUtils,
-                getPublishButtonLabelUseCase
+                getPublishButtonLabelUseCase,
+                mock()
         )
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
