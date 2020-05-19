@@ -50,7 +50,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                         any(),
                         any()
                 )
-        ).doAnswer{
+        ).doAnswer {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")

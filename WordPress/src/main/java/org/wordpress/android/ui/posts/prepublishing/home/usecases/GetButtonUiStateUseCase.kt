@@ -36,4 +36,3 @@ class GetButtonUiStateUseCase @Inject constructor(
         }
     }
 }
-
