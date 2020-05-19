@@ -1250,7 +1250,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReaderSitesSearched(OnReaderSitesSearched event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1524,7 +1524,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsStarted event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -1536,7 +1536,7 @@ public class ReaderPostListFragment extends Fragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(ReaderEvents.SearchPostsEnded event) {
-        if (!isAdded()) {
+        if (!isAdded() || getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
             return;
         }
 
@@ -2260,7 +2260,10 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-
+        // check if the event is related to this instance of the ReaderPostListFragment
+        if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
+            return;
+        }
         setIsUpdating(true, event.getAction());
         setEmptyTitleDescriptionAndButton(false);
     }
@@ -2271,11 +2274,11 @@ public class ReaderPostListFragment extends Fragment
         if (!isAdded()) {
             return;
         }
-
-        setIsUpdating(false, event.getAction());
+        // check if the event is related to this instance of the ReaderPostListFragment
         if (event.getReaderTag() != null && !isCurrentTag(event.getReaderTag())) {
             return;
         }
+        setIsUpdating(false, event.getAction());
 
         // don't show new posts if user is searching - posts will automatically
         // appear when search is exited
