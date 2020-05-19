@@ -7,8 +7,8 @@ import android.widget.LinearLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.stats_block_single_activity.view.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -25,6 +25,8 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         parent,
         R.layout.stats_block_activity_item
 ) {
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
     private val firstBlock = itemView.findViewById<LinearLayout>(R.id.first_activity)
     private val secondBlock = itemView.findViewById<LinearLayout>(R.id.second_activity)
     private val thirdBlock = itemView.findViewById<LinearLayout>(R.id.third_activity)
@@ -46,7 +48,7 @@ class ActivityViewHolder(val parent: ViewGroup) : BlockListItemViewHolder(
         if (widthInDp > BLOCK_WIDTH + 2 * GAP) {
             updateVisibility(item, widthInDp)
         } else {
-            GlobalScope.launch(Dispatchers.Main) {
+            coroutineScope.launch {
                 delay(50)
                 updateVisibility(item, parent.width / parent.context.resources.displayMetrics.density)
             }
