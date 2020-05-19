@@ -84,7 +84,15 @@ class SiteOptionsStoreTest {
     @Test
     fun `calls rest client and returns error response`() = test {
         val errorMessage = "Message"
-        initErrorResponse(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR, errorMessage, VolleyError(errorMessage))))
+        initErrorResponse(
+                WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR,
+                                errorMessage,
+                                VolleyError(errorMessage)
+                        )
+                )
+        )
 
         val updatedPayload = store.updateHomepage(wpComSite, homepageSettings)
 
