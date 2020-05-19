@@ -59,7 +59,8 @@ public class AppLog {
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
         SITE_CREATION,
-        DOMAIN_REGISTRATION
+        DOMAIN_REGISTRATION,
+        FEATURE_ANNOUNCEMENT
     }
 
     public static final String TAG = "WordPress";
