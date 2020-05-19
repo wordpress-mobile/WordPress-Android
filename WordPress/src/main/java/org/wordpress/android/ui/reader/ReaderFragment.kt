@@ -58,6 +58,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         initViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onScreenInForeground()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onScreenInBackground()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.reader_home, menu)
     }
