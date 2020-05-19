@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -209,26 +209,22 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
 
         final boolean isWpcom = mAccountStore.hasAccessToken();
+        final boolean hasSites = sites.size() != 0;
 
         if (isWpcom) {
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, mAccountStore.getAccount());
-        } else if (sites.size() != 0) {
-            SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-
-            String avatarUrl = GravatarUtils.gravatarFromEmail(site.getEmail(), avatarSz);
-            String username = site.getUsername();
-            String displayName = site.getDisplayName();
-
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, avatarUrl, username, displayName);
+            final AccountModel account = mAccountStore.getAccount();
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, account);
+        } else if (hasSites) {
+            final SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, site);
         }
 
-        if (sites.size() == 0) {
-            holder.hideSitesHeading();
-        } else {
+        if (hasSites) {
             holder.showSitesHeading(StringUtils.getQuantityString(
                     getActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
                     R.string.login_epilogue_mysites_other, sites.size()));
+        } else {
+            holder.hideSitesHeading();
         }
     }
 
