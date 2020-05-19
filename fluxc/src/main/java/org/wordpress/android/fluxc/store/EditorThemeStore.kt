@@ -4,15 +4,18 @@ import android.os.Bundle
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.EditorThemeAction
 import org.wordpress.android.fluxc.action.EditorThemeAction.FETCH_EDITOR_THEME
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Singleton
+import java.net.URI
 
 @Singleton
 class EditorThemeStore
@@ -20,11 +23,28 @@ class EditorThemeStore
     private val reactNativeStore: ReactNativeStore,
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
-) : Store(dispatcher) {
-    class OnEditorThemeChanged(
-        val editorThemes: Map<String, Bundle>
-    ) : Store.OnChanged<OnChangedError>() {
+): Store(dispatcher) {
+    var editorThemes = HashMap<String, Bundle>()
+
+    class FetchEditorThemePayload(val site: SiteModel): Payload<BaseNetworkError>() {
+        constructor(
+            error: BaseNetworkError,
+            site: SiteModel
+        ) : this(site = site) {
+            this.error = error
+        }
     }
+
+    data class OnEditorThemeChanged(
+        val editorThemes: Map<String, Bundle>,
+        var causeOfChange: EditorThemeAction
+    ) : Store.OnChanged<EditorThemeError>() {
+        constructor(error: EditorThemeError, causeOfChange: EditorThemeAction):
+                this(editorThemes = HashMap<String, Bundle>(), causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+    class EditorThemeError(var message: String? = null) : Store.OnChangedError
 
     fun getEditorThemeForSite(site: SiteModel): Bundle {
         val stubbedColors = Bundle()
@@ -82,7 +102,7 @@ class EditorThemeStore
         when (actionType) {
             FETCH_EDITOR_THEME -> {
             coroutineEngine.launch(AppLog.T.API, this, TransactionsStore::class.java.simpleName + ": On FETCH_EDITOR_THEME") {
-                handleFetchEditorTheme()
+                handleFetchEditorTheme((action.payload as FetchEditorThemePayload).site, actionType)
             }
         }
         }
@@ -92,6 +112,15 @@ class EditorThemeStore
         AppLog.d(AppLog.T.API, TransactionsStore::class.java.simpleName + " onRegister")
     }
 
-    private fun handleFetchEditorTheme() {
+    fun editorThemeKeyForSite(site: SiteModel): String {
+        return URI(site.url).getHost()
+    }
+
+    private fun handleFetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
+        val newTheme = getEditorThemeForSite(site) // change this out for call to API
+        val key = editorThemeKeyForSite(site)
+        editorThemes.set(key, newTheme)
+        val onChanged = OnEditorThemeChanged(editorThemes, action)
+        emitChange(onChanged)
     }
 }
