@@ -1704,7 +1704,7 @@
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
-    <string name="reader_label_visit">Visit</string>
+    <string name="reader_label_visit">Visit site</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 

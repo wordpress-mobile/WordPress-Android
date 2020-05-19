@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -87,7 +86,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
-    private final int mMarginLarge;
 
     private boolean mCanRequestMorePosts;
     private final boolean mIsLoggedOutReader;
@@ -195,7 +193,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ImageView mImgMore;
         private final ImageView mImgVideoOverlay;
-        private final View mVisit;
 
         private final ImageView mImgFeatured;
         private final ImageView mImgAvatarOrBlavatar;
@@ -236,7 +233,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mImgAvatarOrBlavatar = itemView.findViewById(R.id.image_avatar_or_blavatar);
             mImgMore = itemView.findViewById(R.id.image_more);
-            mVisit = itemView.findViewById(R.id.visit);
 
             mLayoutDiscover = itemView.findViewById(R.id.layout_discover);
             mImgDiscoverAvatar = itemView.findViewById(R.id.image_discover_avatar);
@@ -248,22 +244,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mFollowButton = itemView.findViewById(R.id.follow_button);
 
             ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
-            ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
             ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
-
-            // show post in internal browser when "visit" is clicked
-            View.OnClickListener visitListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (post != null) {
-                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-                        ReaderActivityLauncher.openPost(view.getContext(), post);
-                    }
-                }
-            };
-            mVisit.setOnClickListener(visitListener);
 
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
@@ -717,7 +698,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
 
