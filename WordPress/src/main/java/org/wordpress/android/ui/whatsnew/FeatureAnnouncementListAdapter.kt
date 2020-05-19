@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.whatsnew
 
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -95,10 +96,17 @@ class FeatureAnnouncementListAdapter(
             title.text = featureAnnouncementItem.title
             subtitle.text = featureAnnouncementItem.subtitle
 
-            imageManager.loadIntoCircle(
-                    featureIcon, ImageType.PLAN,
-                    StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
-            )
+            if (!TextUtils.isEmpty(featureAnnouncementItem.iconUrl)) {
+                imageManager.loadIntoCircle(
+                        featureIcon, ImageType.PLAN,
+                        StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
+                )
+            } else {
+                imageManager.loadBase64IntoCircle(
+                        featureIcon, ImageType.PLAN,
+                        StringUtils.notNullStr(featureAnnouncementItem.iconBase64)
+                )
+            }
         }
     }
 
