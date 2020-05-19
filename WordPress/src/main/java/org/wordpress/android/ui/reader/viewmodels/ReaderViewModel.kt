@@ -83,7 +83,7 @@ class ReaderViewModel @Inject constructor(
             }
             appPrefsWrapper.getReaderTag()?.let {
                 selectTab.invoke(it)
-            } ?: tagList.find { it.isDiscover }?.let {
+            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
                 selectTab.invoke(it)
             }
         }
@@ -117,6 +117,8 @@ class ReaderViewModel @Inject constructor(
     fun onSearchActionClicked() {
         _showSearch.value = Event(Unit)
     }
+
+    fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
