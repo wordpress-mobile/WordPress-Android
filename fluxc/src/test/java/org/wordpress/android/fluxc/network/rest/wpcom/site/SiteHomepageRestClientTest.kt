@@ -16,8 +16,8 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.Posts
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
@@ -53,7 +53,6 @@ class SiteHomepageRestClientTest {
         restClient = SiteHomepageRestClient(
                 dispatcher,
                 wpComGsonRequestBuilder,
-                siteHomepageSettingsMapper,
                 null,
                 requestQueue,
                 accessToken,
@@ -122,7 +121,7 @@ class SiteHomepageRestClientTest {
 
         val responseModel = restClient.updateHomepage(site, homepageSettings)
 
-        assertThat(responseModel.homepageSettings).isEqualTo(homepageSettings)
+        assertThat(responseModel).isEqualTo(response)
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/homepage/")
         return assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
@@ -145,11 +144,12 @@ class SiteHomepageRestClientTest {
                 )
         )
 
-        val responseModel = restClient.updateHomepage(site, homepageSettings)
+        val response = restClient.updateHomepage(site, homepageSettings)
 
-        assertThat(responseModel.error).isNotNull()
-        assertThat(responseModel.error.type).isEqualTo(API_ERROR)
-        assertThat(responseModel.error.message).isEqualTo(errorMessage)
+        val errorResponse = response as Response.Error<UpdateHomepageResponse>
+        assertThat(errorResponse.error).isNotNull()
+        assertThat(errorResponse.error.type).isEqualTo(API_ERROR)
+        assertThat(errorResponse.error.message).isEqualTo(errorMessage)
     }
 
     private suspend fun initHomepageResponse(

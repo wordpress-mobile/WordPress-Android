@@ -1,7 +1,9 @@
 package org.wordpress.android.fluxc.store
 
+import com.android.volley.VolleyError
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -12,11 +14,19 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.action.SiteAction
+import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
+import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
-import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
+import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient.UpdateHomepageResponse
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType
 import org.wordpress.android.fluxc.test
@@ -25,10 +35,14 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 @RunWith(MockitoJUnitRunner::class)
 class SiteOptionsStoreTest {
     @Mock lateinit var siteHomepageRestClient: SiteHomepageRestClient
-    @Mock lateinit var siteXMLRPCClient: SiteXMLRPCClient
+    @Mock lateinit var siteHomepageSettingsMapper: SiteHomepageSettingsMapper
+    @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var homepageSettings: SiteHomepageSettings
-    @Mock lateinit var updatedPayload: HomepageUpdatedPayload
+    @Mock lateinit var successResponse: Response.Success<UpdateHomepageResponse>
+    @Mock lateinit var errorResponse: Response.Error<UpdateHomepageResponse>
+    @Mock lateinit var responseData: UpdateHomepageResponse
     private lateinit var store: SiteOptionsStore
+    private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
     private lateinit var wpComSite: SiteModel
     private lateinit var selfHostedSite: SiteModel
 
@@ -36,23 +50,49 @@ class SiteOptionsStoreTest {
     fun setUp() {
         store = SiteOptionsStore(
                 initCoroutineEngine(),
+                dispatcher,
+                siteHomepageSettingsMapper,
                 siteHomepageRestClient
         )
         wpComSite = SiteModel()
         wpComSite.setIsWPCom(true)
         selfHostedSite = SiteModel()
         selfHostedSite.setIsWPCom(false)
+        actionCaptor = argumentCaptor()
     }
 
     @Test
-    fun `calls WPCom rest client when site is WPCom`() = test {
-        whenever(siteHomepageRestClient.updateHomepage(wpComSite, homepageSettings)).thenReturn(updatedPayload)
+    fun `calls rest client, updates site and returns success response`() = test {
+        val pageForPostsId: Long = 1
+        val pageOnFrontId: Long = 2
+        val updatedSettings = SiteHomepageSettings.StaticPage(pageForPostsId, pageOnFrontId)
+        initSuccessResponse(updatedSettings)
 
-        val homepageUpdatedPayload = store.updateHomepage(wpComSite, homepageSettings)
+        val updatedPayload = store.updateHomepage(wpComSite, homepageSettings)
 
-        assertThat(homepageUpdatedPayload).isEqualTo(updatedPayload)
+        assertThat(updatedPayload.homepageSettings).isEqualTo(updatedSettings)
         verify(siteHomepageRestClient).updateHomepage(wpComSite, homepageSettings)
-        verifyZeroInteractions(siteXMLRPCClient)
+        assertThat(wpComSite.showOnFront).isEqualTo(ShowOnFront.PAGE.value)
+        assertThat(wpComSite.pageOnFront).isEqualTo(pageOnFrontId)
+        assertThat(wpComSite.pageForPosts).isEqualTo(pageForPostsId)
+
+        verify(dispatcher).dispatch(actionCaptor.capture())
+        assertThat(actionCaptor.lastValue.type).isEqualTo(SiteAction.UPDATE_SITE)
+        assertThat(actionCaptor.lastValue.payload).isEqualTo(wpComSite)
+    }
+
+    @Test
+    fun `calls rest client and returns error response`() = test {
+        val errorMessage = "Message"
+        initErrorResponse(WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR, errorMessage, VolleyError(errorMessage))))
+
+        val updatedPayload = store.updateHomepage(wpComSite, homepageSettings)
+
+        assertThat(updatedPayload.isError).isTrue()
+        assertThat(updatedPayload.error.type).isEqualTo(SiteOptionsErrorType.API_ERROR)
+        assertThat(updatedPayload.error.message).isEqualTo(errorMessage)
+        verify(siteHomepageRestClient).updateHomepage(wpComSite, homepageSettings)
+        verifyZeroInteractions(dispatcher)
     }
 
     @Test
@@ -68,7 +108,6 @@ class SiteOptionsStoreTest {
                         "Page for posts and page on front cannot be the same"
                 )
         )
-        verifyZeroInteractions(siteXMLRPCClient)
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
@@ -77,9 +116,7 @@ class SiteOptionsStoreTest {
         val updatedPageForPosts: Long = 1
         val currentPageOnFront: Long = 2
         wpComSite.pageOnFront = currentPageOnFront
-        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
-                siteHomepageRestClient
-        ).updateHomepage(any(), any())
+        initSuccessResponse(SiteHomepageSettings.StaticPage(updatedPageForPosts, currentPageOnFront))
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
                 updatedPageForPosts, currentPageOnFront
         )
@@ -90,7 +127,6 @@ class SiteOptionsStoreTest {
                 expectedHomepageSettings
         )
         verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
-        verifyZeroInteractions(siteXMLRPCClient)
     }
 
     @Test
@@ -98,12 +134,10 @@ class SiteOptionsStoreTest {
         val updatedPageForPosts: Long = 1
         val currentPageOnFront: Long = 1
         wpComSite.pageOnFront = currentPageOnFront
-        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
-                siteHomepageRestClient
-        ).updateHomepage(any(), any())
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
                 updatedPageForPosts, 0
         )
+        initSuccessResponse(expectedHomepageSettings)
 
         val homepageUpdatedPayload = store.updatePageForPosts(wpComSite, updatedPageForPosts)
 
@@ -111,7 +145,6 @@ class SiteOptionsStoreTest {
                 expectedHomepageSettings
         )
         verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
-        verifyZeroInteractions(siteXMLRPCClient)
     }
 
     @Test
@@ -119,12 +152,10 @@ class SiteOptionsStoreTest {
         val updatedPageOnFront: Long = 1
         val currentPageForPosts: Long = 1
         wpComSite.pageForPosts = currentPageForPosts
-        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
-                siteHomepageRestClient
-        ).updateHomepage(any(), any())
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
                 0, updatedPageOnFront
         )
+        initSuccessResponse(expectedHomepageSettings)
 
         val homepageUpdatedPayload = store.updatePageOnFront(wpComSite, updatedPageOnFront)
 
@@ -132,7 +163,6 @@ class SiteOptionsStoreTest {
                 expectedHomepageSettings
         )
         verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
-        verifyZeroInteractions(siteXMLRPCClient)
     }
 
     @Test
@@ -140,12 +170,10 @@ class SiteOptionsStoreTest {
         val updatedPageOnFront: Long = 1
         val currentPageForPosts: Long = 2
         wpComSite.pageForPosts = currentPageForPosts
-        doAnswer { HomepageUpdatedPayload(it.getArgument<SiteHomepageSettings>(1)) }.whenever(
-                siteHomepageRestClient
-        ).updateHomepage(any(), any())
         val expectedHomepageSettings = SiteHomepageSettings.StaticPage(
                 currentPageForPosts, updatedPageOnFront
         )
+        initSuccessResponse(expectedHomepageSettings)
 
         val homepageUpdatedPayload = store.updatePageOnFront(wpComSite, updatedPageOnFront)
 
@@ -153,6 +181,20 @@ class SiteOptionsStoreTest {
                 expectedHomepageSettings
         )
         verify(siteHomepageRestClient).updateHomepage(eq(wpComSite), eq(expectedHomepageSettings))
-        verifyZeroInteractions(siteXMLRPCClient)
+    }
+
+    private suspend fun initSuccessResponse(
+        updatedSettings: SiteHomepageSettings
+    ) {
+        whenever(siteHomepageRestClient.updateHomepage(eq(wpComSite), any())).thenReturn(successResponse)
+        whenever(successResponse.data).thenReturn(responseData)
+        whenever(siteHomepageSettingsMapper.map(responseData)).thenReturn(updatedSettings)
+    }
+
+    private suspend fun initErrorResponse(
+        error: WPComGsonNetworkError? = null
+    ) {
+        whenever(siteHomepageRestClient.updateHomepage(eq(wpComSite), any())).thenReturn(errorResponse)
+        whenever(errorResponse.error).thenReturn(error)
     }
 }

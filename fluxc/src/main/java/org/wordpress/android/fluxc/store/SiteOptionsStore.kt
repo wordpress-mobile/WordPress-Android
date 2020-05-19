@@ -1,8 +1,11 @@
 package org.wordpress.android.fluxc.store
 
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
+import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
@@ -18,6 +21,8 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.PARSE_ER
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_ERROR
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType
@@ -31,6 +36,8 @@ import javax.inject.Inject
 class SiteOptionsStore
 @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
+    private val dispatcher: Dispatcher,
+    private val siteHomepageSettingsMapper: SiteHomepageSettingsMapper,
     private val siteHomepageRestClient: SiteHomepageRestClient
 ) {
     suspend fun updatePageForPosts(site: SiteModel, pageForPostsId: Long): HomepageUpdatedPayload =
@@ -79,6 +86,14 @@ class SiteOptionsStore
 
     suspend fun updateHomepage(site: SiteModel, homepageSettings: SiteHomepageSettings): HomepageUpdatedPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Update homepage settings") {
+                if (!site.isUsingWpComRestApi) {
+                    return@withDefaultContext HomepageUpdatedPayload(
+                            SiteOptionsError(
+                                    GENERIC_ERROR,
+                                    "You cannot update homepage for a self-hosted site"
+                            )
+                    )
+                }
                 if (homepageSettings is StaticPage &&
                         homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
                     return@withDefaultContext HomepageUpdatedPayload(
@@ -88,15 +103,23 @@ class SiteOptionsStore
                             )
                     )
                 }
-                return@withDefaultContext if (site.isUsingWpComRestApi) {
-                    siteHomepageRestClient.updateHomepage(site, homepageSettings)
-                } else {
-                    HomepageUpdatedPayload(
-                            SiteOptionsError(
-                                    GENERIC_ERROR,
-                                    "You cannot update homepage for a self-hosted site"
-                            )
-                    )
+                return@withDefaultContext when (val response = siteHomepageRestClient.updateHomepage(
+                        site,
+                        homepageSettings
+                )) {
+                    is Success -> {
+                        val updatedHomepageSettings = siteHomepageSettingsMapper.map(response.data)
+                        if (updatedHomepageSettings is StaticPage) {
+                            site.pageForPosts = updatedHomepageSettings.pageForPostsId
+                            site.pageOnFront = updatedHomepageSettings.pageOnFrontId
+                        }
+                        site.showOnFront = updatedHomepageSettings.showOnFront.value
+                        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(site))
+                        HomepageUpdatedPayload(updatedHomepageSettings)
+                    }
+                    is Error -> {
+                        HomepageUpdatedPayload(response.error)
+                    }
                 }
             }
 
