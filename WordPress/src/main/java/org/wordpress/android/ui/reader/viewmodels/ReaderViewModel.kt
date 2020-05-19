@@ -8,17 +8,14 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.string
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
-import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -72,28 +69,24 @@ class ReaderViewModel @Inject constructor(
                 )
                 if (!initialized) {
                     initialized = true
-                    restoreTabSelection(tagList)
+                    initializeTabSelection(tagList)
                 }
             }
         }
     }
 
-    private suspend fun restoreTabSelection(tagList: ReaderTagList) {
+    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
         withContext(bgDispatcher) {
-            val index  = if (AppPrefs.getReaderTag() == null) {
-                val discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH)
-                val discoverLabel = resourceProvider.getString(string.reader_discover_display_name)
-
-                if (discoverTag != null && discoverTag.tagDisplayName == discoverLabel) {
-                    tagList.indexOfTagName(discoverTag.tagSlug)
-                } else {
-                    -1
+            val selectTab = { it: ReaderTag ->
+                val index = tagList.indexOf(it)
+                if (index != -1) {
+                    _selectTab.postValue(Event(index))
                 }
-            } else {
-                tagList.indexOf(appPrefsWrapper.getReaderTag())
             }
-            if (index != -1) {
-                _selectTab.postValue(Event(index))
+            appPrefsWrapper.getReaderTag()?.let {
+                selectTab.invoke(it)
+            } ?: tagList.find { it.isDiscover }?.let {
+                selectTab.invoke(it)
             }
         }
     }
