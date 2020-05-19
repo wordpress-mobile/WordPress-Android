@@ -8,8 +8,6 @@ import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
-import com.yarolegovich.wellsql.core.annotation.Column
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.POSTS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE

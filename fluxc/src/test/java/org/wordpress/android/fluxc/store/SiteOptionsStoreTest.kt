@@ -38,7 +38,7 @@ class SiteOptionsStoreTest {
     @Mock lateinit var updatedPayload: HomepageUpdatedPayload
     private lateinit var store: SiteOptionsStore
     private lateinit var wpComSite: SiteModel
-    private lateinit var dotOrgSite: SiteModel
+    private lateinit var selfHostedSite: SiteModel
 
     @Before
     fun setUp() {
@@ -50,8 +50,8 @@ class SiteOptionsStoreTest {
         )
         wpComSite = SiteModel()
         wpComSite.setIsWPCom(true)
-        dotOrgSite = SiteModel()
-        dotOrgSite.setIsWPCom(false)
+        selfHostedSite = SiteModel()
+        selfHostedSite.setIsWPCom(false)
     }
 
     @Test
@@ -69,10 +69,10 @@ class SiteOptionsStoreTest {
     fun `on success returns payload from XMLRPC client`() = test {
         initXMLRPCClient()
 
-        val homepageUpdatedPayload = store.updateHomepage(dotOrgSite, homepageSettings)
+        val homepageUpdatedPayload = store.updateHomepage(selfHostedSite, homepageSettings)
 
         assertThat(homepageUpdatedPayload.homepageSettings).isEqualTo(updatedHomepageSettings)
-        verify(siteXMLRPCClient).updateSiteHomepage(eq(dotOrgSite), eq(homepageSettings), any(), any())
+        verify(siteXMLRPCClient).updateSiteHomepage(eq(selfHostedSite), eq(homepageSettings), any(), any())
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
@@ -80,7 +80,7 @@ class SiteOptionsStoreTest {
     fun `returns error when mapping fails from XMLRPC client`() = test {
         initXMLRPCClient(mappedHomepageSettings = null)
 
-        val homepageUpdatedPayload = store.updateHomepage(dotOrgSite, homepageSettings)
+        val homepageUpdatedPayload = store.updateHomepage(selfHostedSite, homepageSettings)
 
         assertThat(homepageUpdatedPayload.isError).isTrue()
         assertThat(homepageUpdatedPayload.error).isEqualTo(
@@ -89,7 +89,7 @@ class SiteOptionsStoreTest {
                         "Site contains unexpected showOnFront value: page"
                 )
         )
-        verify(siteXMLRPCClient).updateSiteHomepage(eq(dotOrgSite), eq(homepageSettings), any(), any())
+        verify(siteXMLRPCClient).updateSiteHomepage(eq(selfHostedSite), eq(homepageSettings), any(), any())
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
@@ -104,7 +104,7 @@ class SiteOptionsStoreTest {
                 )
         )
 
-        val homepageUpdatedPayload = store.updateHomepage(dotOrgSite, homepageSettings)
+        val homepageUpdatedPayload = store.updateHomepage(selfHostedSite, homepageSettings)
 
         assertThat(homepageUpdatedPayload.isError).isTrue()
         assertThat(homepageUpdatedPayload.error).isEqualTo(
@@ -113,7 +113,7 @@ class SiteOptionsStoreTest {
                         apiErrorMessage
                 )
         )
-        verify(siteXMLRPCClient).updateSiteHomepage(eq(dotOrgSite), eq(homepageSettings), any(), any())
+        verify(siteXMLRPCClient).updateSiteHomepage(eq(selfHostedSite), eq(homepageSettings), any(), any())
         verifyZeroInteractions(siteHomepageRestClient)
     }
 
@@ -233,6 +233,6 @@ class SiteOptionsStoreTest {
                 val onSuccess = it.getArgument(2) as ((SiteModel) -> Unit)
                 onSuccess.invoke(updatedSite)
             }
-        }.whenever(siteXMLRPCClient).updateSiteHomepage(eq(dotOrgSite), eq(homepageSettings), any(), any())
+        }.whenever(siteXMLRPCClient).updateSiteHomepage(eq(selfHostedSite), eq(homepageSettings), any(), any())
     }
 }

@@ -365,7 +365,8 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         // If the site is not public, it's private. Note: this field doesn't always exist.
         boolean isPublic = XMLRPCUtils.safeGetNestedMapValue(siteOptions, "blog_public", true);
         oldModel.setIsPrivate(!isPublic);
-        oldModel.setShowOnFront(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "show_on_front", ShowOnFront.POSTS.getValue()));
+        String postsValue = ShowOnFront.POSTS.getValue();
+        oldModel.setShowOnFront(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "show_on_front", postsValue));
         oldModel.setPageForPosts(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "page_for_posts", -1));
         oldModel.setPageOnFront(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "page_on_front", -1));
         return oldModel;

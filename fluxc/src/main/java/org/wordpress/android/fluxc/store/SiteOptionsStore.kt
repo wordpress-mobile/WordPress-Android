@@ -85,7 +85,8 @@ class SiteOptionsStore
 
     suspend fun updateHomepage(site: SiteModel, homepageSettings: SiteHomepageSettings): HomepageUpdatedPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Update homepage settings") {
-                if (homepageSettings is StaticPage && homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
+                if (homepageSettings is StaticPage &&
+                        homepageSettings.pageForPostsId == homepageSettings.pageOnFrontId) {
                     return@withDefaultContext HomepageUpdatedPayload(
                             SiteOptionsError(
                                     INVALID_PARAMETERS,
@@ -105,7 +106,7 @@ class SiteOptionsStore
                                             ?.let { HomepageUpdatedPayload(it) } ?: HomepageUpdatedPayload(
                                             SiteOptionsError(
                                                     GENERIC_ERROR,
-                                                    "Site contains unexpected showOnFront value: ${updatedSite.showOnFront}"
+                                                    "Show on front is: ${updatedSite.showOnFront}"
                                             )
                                     )
                                     continuation.resume(payload)
