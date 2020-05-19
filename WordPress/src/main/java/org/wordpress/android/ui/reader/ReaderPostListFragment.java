@@ -1639,20 +1639,6 @@ public class ReaderPostListFragment extends Fragment
         return getView();
     }
 
-    private int getEmptyViewTopMargin() {
-        int totalMargin = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
-        if (mIsTopLevel) {
-            totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (isCurrentTagManagedInFollowingTab()) {
-                totalMargin += getActivity().getResources()
-                                            .getDimensionPixelSize(R.dimen.reader_subfilter_component_height);
-            }
-        }
-
-        return totalMargin;
-    }
-
     private void setEmptyTitleDescriptionAndButton(boolean requestFailed) {
         if (!isAdded()) {
             return;
@@ -1660,7 +1646,7 @@ public class ReaderPostListFragment extends Fragment
 
         int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-        mActionableEmptyView.updateLayoutForSearch(false, getEmptyViewTopMargin());
+        mActionableEmptyView.updateLayoutForSearch(false, 0);
         mActionableEmptyView.subtitle.setContentDescription(null);
         boolean isSearching = false;
         String title;
