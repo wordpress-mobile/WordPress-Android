@@ -18,7 +18,6 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,8 +31,7 @@ class ReaderViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateProvider: DateProvider,
-    private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
-    private val resourceProvider: ResourceProvider
+    private val loadReaderTabsUseCase: LoadReaderTabsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
 
