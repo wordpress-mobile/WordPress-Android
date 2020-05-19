@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
+import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient.UpdateHomepageResponse
@@ -115,13 +116,11 @@ class SiteHomepageRestClientTest {
         homepageSettings: SiteHomepageSettings,
         expectedParams: Map<String, String>
     ): MapAssert<String, String>? {
-        whenever(siteHomepageSettingsMapper.map(response)).thenReturn(homepageSettings)
-
         initHomepageResponse(response)
 
         val responseModel = restClient.updateHomepage(site, homepageSettings)
 
-        assertThat(responseModel).isEqualTo(response)
+        assertThat(responseModel).isEqualTo(Success(response))
         assertThat(urlCaptor.lastValue)
                 .isEqualTo("https://public-api.wordpress.com/rest/v1.1/sites/12/homepage/")
         return assertThat(paramsCaptor.lastValue).isEqualTo(expectedParams)
@@ -129,10 +128,6 @@ class SiteHomepageRestClientTest {
 
     @Test
     fun `returns error when API call fails`() = test {
-        testErrorResponse(StaticPage(1, 2))
-    }
-
-    private suspend fun testErrorResponse(homepageSettings: SiteHomepageSettings) {
         val errorMessage = "message"
         initHomepageResponse(
                 error = WPComGsonNetworkError(
@@ -143,13 +138,12 @@ class SiteHomepageRestClientTest {
                         )
                 )
         )
-
-        val response = restClient.updateHomepage(site, homepageSettings)
-
-        val errorResponse = response as Response.Error<UpdateHomepageResponse>
+        val response = restClient.updateHomepage(site, StaticPage(1, 2))
+        val errorResponse = response as Error<UpdateHomepageResponse>
         assertThat(errorResponse.error).isNotNull()
-        assertThat(errorResponse.error.type).isEqualTo(API_ERROR)
+        assertThat(errorResponse.error.type).isEqualTo(NETWORK_ERROR)
         assertThat(errorResponse.error.message).isEqualTo(errorMessage)
+        Unit
     }
 
     private suspend fun initHomepageResponse(
