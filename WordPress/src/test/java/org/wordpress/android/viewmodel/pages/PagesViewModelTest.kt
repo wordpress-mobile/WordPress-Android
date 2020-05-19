@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.INVALID_PARAMETERS
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.PageItem
@@ -67,6 +68,7 @@ class PagesViewModelTest {
     @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var siteOptionsStore: SiteOptionsStore
     @Mock lateinit var appLogWrapper: AppLogWrapper
+    @Mock lateinit var siteStore: SiteStore
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -90,7 +92,8 @@ class PagesViewModelTest {
                 uploadStarter = uploadStarter,
                 pageListEventListenerFactory = mock(),
                 siteOptionsStore = siteOptionsStore,
-                appLogWrapper = appLogWrapper
+                appLogWrapper = appLogWrapper,
+                siteStore = siteStore
         )
         listStates = mutableListOf()
         pages = mutableListOf()

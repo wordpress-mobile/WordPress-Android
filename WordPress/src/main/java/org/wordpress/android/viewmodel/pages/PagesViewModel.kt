@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -91,6 +92,7 @@ class PagesViewModel
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
+    private val siteStore: SiteStore,
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
@@ -211,10 +213,12 @@ class PagesViewModel
                 bgDispatcher = defaultDispatcher,
                 postStore = postStore,
                 eventBusWrapper = eventBusWrapper,
+                siteStore = siteStore,
                 site = site,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadFinished = this::postUploadedFinished
+                handlePostUploadFinished = this::postUploadedFinished,
+                handleHomepageSettingsChange = this::handleHomepageSettingsChange
         )
     }
 
@@ -834,6 +838,13 @@ class PagesViewModel
     private fun postUploadedFinished(remoteId: RemoteId, isError: Boolean) {
         pageMap[remoteId.value]?.let {
             _uploadFinishedAction.postValue(Pair(it, isError))
+        }
+    }
+
+    private fun handleHomepageSettingsChange(siteModel: SiteModel) {
+        launch {
+            _site = siteModel
+            refreshPages()
         }
     }
 
