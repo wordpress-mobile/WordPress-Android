@@ -52,7 +52,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     public static final String EXTRA_MEDIA_URIS = "media_uris";
     public static final String EXTRA_MEDIA_ID = "media_id";
-    public static final String EXTRA_MEDIA_IDS = "media_ids";
     public static final String EXTRA_MEDIA_QUEUED = "media_queued";
     public static final String CHILD_REQUEST_CODE = "child_request_code";
     public static final String EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED = "launch_wpstories_camera_requested";
@@ -213,24 +212,20 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 }
                 break;
             // user selected from WP media library, extract the media ID and pass to caller
-            case RequestCodes.MULTI_SELECT_MEDIA_PICKER:
             case RequestCodes.SINGLE_SELECT_MEDIA_PICKER:
                 if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                     ArrayList<Long> ids =
                             ListUtils.fromLongArray(data.getLongArrayExtra(MediaBrowserActivity.RESULT_IDS));
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.WP_MEDIA_PICKER);
+                    if (ids != null && ids.size() == 1) {
+                        doMediaIdSelected(ids.get(0), PhotoPickerMediaSource.WP_MEDIA_PICKER);
+                    }
                 }
-                break;
-            case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
-                // TODO WPSTORIES HANDLE THIS CASE
                 break;
             // user selected a stock photo
             case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT:
                 if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
                     long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
-                    ArrayList<Long> ids = new ArrayList<>();
-                    ids.add(mediaId);
-                    doMediaIdsSelected(ids, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
+                    doMediaIdSelected(mediaId, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
                 }
                 break;
             case IMAGE_EDITOR_EDIT_IMAGE:
@@ -334,27 +329,20 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
-        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER && mediaIds != null && mediaIds.size() == 1) {
-            // if user chose a featured image, track image picked event
+    private void doMediaIdSelected(long mediaId, @NonNull PhotoPickerMediaSource source) {
+        // if user chose a featured image, track image picked event
+        if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             mFeaturedImageHelper.trackFeaturedImageEvent(
-                    FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                    mLocalPostId
+                FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                mLocalPostId
             );
-
-            Intent data = new Intent()
-                    .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
-                    .putExtra(EXTRA_MEDIA_SOURCE, source.name());
-            setResult(RESULT_OK, data);
-            finish();
-        } else {
-            // TODO WPSTORIES add TRACKS (see how it's tracked above? maybe do along the same lines)
-            Intent data = new Intent()
-                    .putExtra(EXTRA_MEDIA_IDS, mediaIds)
-                    .putExtra(EXTRA_MEDIA_SOURCE, source.name());
-            setResult(RESULT_OK, data);
-            finish();
         }
+
+        Intent data = new Intent()
+                .putExtra(EXTRA_MEDIA_ID, mediaId)
+                .putExtra(EXTRA_MEDIA_SOURCE, source.name());
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
