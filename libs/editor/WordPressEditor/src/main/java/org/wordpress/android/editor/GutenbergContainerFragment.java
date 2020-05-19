@@ -65,7 +65,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   boolean isDarkMode,
-                                  OnStarterPageTemplatesTooltipShownEventListener onStarterPageTemplatesTooltipShownEventListener) {
+                                  OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
                     onMediaLibraryButtonListener,
@@ -78,7 +78,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
                     isDarkMode,
-                    onStarterPageTemplatesTooltipShownEventListener);
+                    onSPTTooltipShownEventListener);
     }
 
     @Override
