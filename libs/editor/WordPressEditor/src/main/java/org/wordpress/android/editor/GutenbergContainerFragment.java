@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
@@ -95,6 +96,11 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
         boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
 
+        Consumer<Exception> exceptionLogger = null;
+        if (getActivity() instanceof ExceptionLogger) {
+            exceptionLogger = ((ExceptionLogger) getActivity()).getExceptionLogger();
+        }
+
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
@@ -109,8 +115,8 @@ public class GutenbergContainerFragment extends Fragment {
                 translations,
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
-                isSiteUsingWpComRestApi
-        );
+                isSiteUsingWpComRestApi,
+                exceptionLogger);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
