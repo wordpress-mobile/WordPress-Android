@@ -12,6 +12,7 @@ import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SAVE
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SUBMIT_FOR_REVIEW
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class GetButtonUiStateUseCase @Inject constructor(
@@ -32,7 +33,9 @@ class GetButtonUiStateUseCase @Inject constructor(
             PrimaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
             PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
             PrimaryEditorAction.UPDATE -> UpdateButtonUiState(onButtonClicked)
-            SUBMIT_FOR_REVIEW, SAVE -> throw Exception("These actions shouldn't be available in this bottom sheet.")
+            SUBMIT_FOR_REVIEW, SAVE -> {
+                throw IllegalStateException("These actions shouldn't be available in this bottom sheet.")
+            }
         }
     }
 }
