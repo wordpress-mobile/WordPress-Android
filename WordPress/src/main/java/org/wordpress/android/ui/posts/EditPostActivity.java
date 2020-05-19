@@ -173,6 +173,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder;
+import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.aztec.exceptions.DynamicLayoutGetBlockIndexOutOfBoundsException;
@@ -193,6 +194,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
@@ -1740,6 +1742,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onPublishButtonClicked(boolean publishPost) {
         uploadPost(publishPost);
+        if (publishPost) {
+            AppRatingDialog.INSTANCE
+                    .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
+        }
     }
 
     private void uploadPost(final boolean publishPost) {
