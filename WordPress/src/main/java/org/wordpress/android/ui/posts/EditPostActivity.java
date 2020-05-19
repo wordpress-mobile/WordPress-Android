@@ -1740,7 +1740,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onPublishButtonClicked(boolean publishPost) {
+    @Override public void onSubmitButtonClicked(boolean publishPost) {
         uploadPost(publishPost);
         if (publishPost) {
             AppRatingDialog.INSTANCE

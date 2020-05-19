@@ -33,8 +33,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
-    private val _onPublishButtonClicked = MutableLiveData<Event<PublishPost>>()
-    val onPublishButtonClicked: LiveData<Event<PublishPost>> = _onPublishButtonClicked
+    private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
+    val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
@@ -73,7 +73,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         onActionClicked = ::onActionClicked
                 ),
                 getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
-                    _onPublishButtonClicked.postValue(Event(publishPost))
+                    _onSubmitButtonClicked.postValue(Event(publishPost))
                 }
         )
 
