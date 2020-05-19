@@ -172,9 +172,6 @@ class WPMainActivityViewModel @Inject constructor(
         // only proceed to feature announcement logic if we are upgrading the app
         if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
             if (canShowFeatureAnnouncement()) {
-                appPrefsWrapper.featureAnnouncementShownVersion =
-                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
-                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
                 analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                 _onFeatureAnnouncementRequested.call()
             }

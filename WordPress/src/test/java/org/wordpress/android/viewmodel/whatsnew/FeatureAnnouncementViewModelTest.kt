@@ -12,11 +12,13 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel.FeatureAnnouncementUiModel
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
@@ -26,7 +28,9 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     @Mock lateinit var onAnnouncementDetailsRequestedObserver: Observer<String>
     @Mock lateinit var featuresObserver: Observer<List<FeatureAnnouncementItem>>
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
+    @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
 
     private val uiModelResults = mutableListOf<FeatureAnnouncementUiModel>()
 
@@ -64,10 +68,12 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
         uiModelResults.clear()
 
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(featureAnnouncement)
-
+        whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         viewModel = FeatureAnnouncementViewModel(
                 featureAnnouncementProvider,
                 analyticsTrackerWrapper,
+                buildConfigWrapper,
+                appPrefsWrapper,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.uiModel.observeForever { if (it != null) uiModelResults.add(it) }
@@ -132,5 +138,13 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
         viewModel.start()
         assertThat(uiModelResults[1].isFindOutMoreVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `announcement and app versions are recorder as shown when announcement is diaplyed`() {
+        viewModel.start()
+
+        verify(appPrefsWrapper).featureAnnouncementShownVersion = 1
+        verify(appPrefsWrapper).lastFeatureAnnouncementAppVersionCode = 850
     }
 }
