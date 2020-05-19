@@ -25,6 +25,7 @@ import org.wordpress.android.util.helpers.WPWebChromeClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Locale;
 
 
 public class GutenbergWebViewActivity extends AppCompatActivity {
@@ -187,6 +188,7 @@ public class GutenbergWebViewActivity extends AppCompatActivity {
                 long userId = getIntent().getExtras().getLong(ARG_USER_ID);
                 evaluateJavaScript(
                         String.format(
+                                Locale.US,
                                 INJECT_LOCAL_STORAGE_SCRIPT_TEMPLATE,
                                 userId,
                                 injectLocalStorageScript)
