@@ -65,6 +65,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -461,7 +462,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         String urlString = "";
         if (post.hasBlogUrl()) {
-            urlString = getUrlWithoutProtocol(post.getBlogUrl());
+            urlString = UrlUtils.removeScheme(post.getBlogUrl());
             holder.mTxtBlogUrl.setText(urlString);
             holder.mTxtBlogUrl.setVisibility(View.VISIBLE);
             holder.mDotSeparator.setVisibility(View.VISIBLE);
@@ -1307,9 +1308,5 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mIsTaskRunning = false;
         }
-    }
-
-    private String getUrlWithoutProtocol(String url) {
-        return url.replaceFirst("^(http[s]?://www\\.|http[s]?://|www\\.)", "");
     }
 }
