@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.SiteModel.ORIGIN_WPCOM_REST
 import org.wordpress.android.ui.pages.PageItem.Action.CANCEL_AUTO_UPLOAD
 import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
@@ -78,7 +79,7 @@ class CreatePageListItemActionsUseCaseTest {
     }
 
     @Test
-    fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage`() {
+    fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is WPCom`() {
         // Arrange
         val expectedActions = setOf(
                 VIEW_PAGE,
@@ -89,6 +90,29 @@ class CreatePageListItemActionsUseCaseTest {
                 MOVE_TO_TRASH
         )
         site.showOnFront = ShowOnFront.PAGE.value
+        site.setIsWPCom(true)
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `verify PUBLISHED actions contain HOMEPAGE settings when site has static homepage and is Jetpack`() {
+        // Arrange
+        val expectedActions = setOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                SET_AS_HOMEPAGE,
+                SET_AS_POSTS_PAGE,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+        site.showOnFront = ShowOnFront.PAGE.value
+        site.setIsJetpackConnected(true)
+        site.origin = ORIGIN_WPCOM_REST
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
@@ -109,6 +133,7 @@ class CreatePageListItemActionsUseCaseTest {
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageOnFront = defaultRemoteId
+        site.setIsWPCom(true)
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
@@ -129,6 +154,7 @@ class CreatePageListItemActionsUseCaseTest {
         )
         site.showOnFront = ShowOnFront.PAGE.value
         site.pageForPosts = defaultRemoteId
+        site.setIsWPCom(true)
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
@@ -151,6 +177,26 @@ class CreatePageListItemActionsUseCaseTest {
 
         // Act
         val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, remoteId)
+
+        // Assert
+        assertThat(publishedActions).isEqualTo(expectedActions)
+    }
+
+    @Test
+    fun `verify PUBLISHED actions does not contant HOMEPAGE settings when site is self hosted`() {
+        // Arrange
+        val expectedActions = setOf(
+                VIEW_PAGE,
+                SET_PARENT,
+                MOVE_TO_DRAFT,
+                MOVE_TO_TRASH
+        )
+        site.showOnFront = ShowOnFront.PAGE.value
+        site.setIsWPCom(false)
+        site.setIsJetpackConnected(false)
+
+        // Act
+        val publishedActions = useCase.setupPageActions(PUBLISHED, mock(), site, defaultRemoteId)
 
         // Assert
         assertThat(publishedActions).isEqualTo(expectedActions)

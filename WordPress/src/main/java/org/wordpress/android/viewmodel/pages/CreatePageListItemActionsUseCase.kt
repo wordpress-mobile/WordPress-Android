@@ -45,7 +45,7 @@ class CreatePageListItemActionsUseCase @Inject constructor() {
                         VIEW_PAGE,
                         SET_PARENT
                 ).apply {
-                    if (siteModel.showOnFront == ShowOnFront.PAGE.value && remoteId > 0) {
+                    if (siteModel.isUsingWpComRestApi && siteModel.showOnFront == ShowOnFront.PAGE.value && remoteId > 0) {
                         if (siteModel.pageOnFront != remoteId) {
                             add(SET_AS_HOMEPAGE)
                         }
