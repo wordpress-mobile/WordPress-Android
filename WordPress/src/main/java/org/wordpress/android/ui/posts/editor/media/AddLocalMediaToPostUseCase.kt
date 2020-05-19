@@ -36,13 +36,14 @@ class AddLocalMediaToPostUseCase @Inject constructor(
     }
 
     /**
-     * Copies files to app storage, optimizes them, adds them to the editor and initiates an upload.
+     * Copies files to app storage, optimizes them, adds them to the editor and optionally initiates an upload.
      */
     suspend fun addNewMediaToEditorAsync(
         uriList: List<Uri>,
         site: SiteModel,
         freshlyTaken: Boolean,
-        editorMediaListener: EditorMediaListener
+        editorMediaListener: EditorMediaListener,
+        doUploadAfterAdding: Boolean = true
     ): Boolean {
         // Copy files to apps storage to make sure they are permanently accessible.
         val copyFilesResult: CopyMediaResult = copyMediaToAppStorageUseCase.copyFilesToAppStorageIfNecessary(uriList)
@@ -62,7 +63,12 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         )
 
         // Add media to editor and initiate upload
-        addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
+        if (doUploadAfterAdding) {
+            addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
+        } else {
+            // only add media without uploading
+            appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, createMediaModelsResult.mediaModels)
+        }
 
         return !optimizeMediaResult.loadingSomeMediaFailed &&
                 !createMediaModelsResult.loadingSomeMediaFailed &&
