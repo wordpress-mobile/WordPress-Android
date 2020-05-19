@@ -58,7 +58,6 @@
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="keep_editing">Keep editing</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="removed">Removed</string>
@@ -334,9 +333,7 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes" translatable="false">@string/publish_now</string>
-    <string name="dialog_confirm_update_title">Ready to Update?</string>
     <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
     <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
     <string name="dialog_confirm_update_yes" translatable="false">@string/update_now</string>
