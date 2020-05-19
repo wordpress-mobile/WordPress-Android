@@ -10,8 +10,8 @@
         android:layout_width="@dimen/blavatar_sz"
         android:layout_height="@dimen/blavatar_sz"
         android:layout_marginEnd="@dimen/margin_extra_large"
+        android:contentDescription="@string/blavatar_desc"
         android:gravity="center_vertical"
-        android:importantForAccessibility="no"
         android:src="@drawable/bg_rectangle_neutral_10_radius_4dp_globe_32dp" />
 
     <LinearLayout
