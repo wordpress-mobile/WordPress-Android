@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 17:17:27+0000
+Translation-Revision-Date: 2020-05-06 13:52:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: de
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Mehr erfahren</string>
+    <string name="feature_announcement_dialog_label">Was ist neu in WordPress?</string>
+    <string name="insert_label_with_count">%d einfügen</string>
+    <string name="crop">zuschneiden</string>
+    <string name="error_failed_to_load_into_file">Laden in die Datei fehlgeschlagen, bitte versuche es erneut. </string>
+    <string name="preview_image_thumbnail_description">Vorschau des Vorschaubilds</string>
+    <string name="photo_picker_use_media">Diese Medien verwenden</string>
+    <string name="photo_picker_use_video">Dieses Video verwenden</string>
+    <string name="photo_picker_photo_or_video_title">Medien auswählen</string>
+    <string name="photo_picker_video_title">Video auswählen</string>
+    <string name="site_picker_ask_site_select">Die Website konnte nicht ausgewählt werden. Bitte versuche es erneut.</string>
+    <string name="sitepicker_continue_flow">Weiter</string>
+    <string name="reader_reblog_error">Rebloggen ist fehlgeschlagen</string>
+    <string name="reader_no_site_to_reblog_action">Websites verwalten</string>
+    <string name="reader_no_site_to_reblog_detail">Sobald du eine Website bei WordPress.com erstellt hast, kannst du Inhalte, die dir gefallen, auf deiner eigenen Website rebloggen.</string>
+    <string name="reader_no_site_to_reblog_title">Keine verfügbaren Websites bei WordPress.com</string>
+    <string name="whats_new_in_version_title">Was ist neu?</string>
+    <string name="comment_q_action_copied_url">Link-Adresse wurde kopiert</string>
+    <string name="copy_link_address">Link-Adresse kopieren</string>
+    <string name="comment_share_link_via">Teilen über</string>
+    <string name="comment_toast_err_share_intent">Teilen nicht möglich</string>
+    <string name="button_insert">Einfügen</string>
+    <string name="continue_label">Weiter</string>
+    <string name="copy_text">Kopieren</string>
     <string name="gutenberg_native_subscribe">Abonnieren</string>
     <string name="gutenberg_native_number_of_columns">Anzahl an Spalten</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bewege den Block von Position %1$s nach rechts zur Position %2$s</string>
@@ -40,7 +64,7 @@ Language: de
     <string name="media_accessing_failed">Auf den Inhalt einer privaten Website konnte nicht zugegriffen werden. Einige Medien sind möglicherweise nicht verfügbar.</string>
     <string name="media_accessing_progress">Auf den Inhalt einer privaten Website wird zugegriffen</string>
     <string name="error_failed_to_crop_and_save_image">Das Bild konnte nicht zugeschnitten und gespeichert werden, bitte versuche es erneut.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Das Einfügen von Medien ist fehlgeschlagen.\nBitte tippe, um es erneut zu versuchen.</string>
+    <string name="failed_to_load_image_tap_to_retry">Das Laden des Bildes ist fehlgeschlagen.\nBitte tippe, um es erneut zu versuchen.</string>
     <string name="preview_image_description">Vorschaubild</string>
     <string name="error_unknown_page_type">Unbekanntes Seitenformat</string>
     <string name="error_page_not_submitted">Wir konnten diese Aktion nicht abschließen und haben diese Seite nicht zur Überprüfung gesendet.</string>
@@ -836,7 +860,7 @@ Language: de
     <string name="reader_empty_followed_tags_subtitle">Füge hier Tags hinzu, um Beiträge zu deinen Lieblingsthemen zu finden</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="install_jetpack_retry">Erneut versuchen</string>
-    <string name="install_jetpack_continue">Weiter</string>
+    <string name="install_jetpack_continue">Einrichten</string>
     <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
     <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
     <string name="jetpack_installed">Jetpack installiert</string>
@@ -1322,7 +1346,6 @@ Language: de
     <string name="media_edit_filename_caption">Dateiname</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativtext</string>
-    <string name="copy_text">Kopieren</string>
     <string name="connect_site">Website verbinden</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinklicht</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gerät vibrieren lassen</string>
@@ -2187,6 +2210,7 @@ Language: de
     <string name="reader_btn_unfollow">Folge ich</string>
     <string name="reader_btn_follow">Folgen</string>
     <string name="reader_btn_share">Teilen</string>
+    <string name="reader_view_reblog">Rebloggen</string>
     <string name="reader_untitled_post">(Ohne Titel)</string>
     <string name="comments_empty_list">Bisher keine Kommentare</string>
     <string name="empty_list_default">Diese Liste ist leer</string>

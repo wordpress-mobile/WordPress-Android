@@ -1,137 +1,96 @@
 <ar>
-14.7:
-محرِّر المكوِّنات: تمت إضافة مكوِّن العمود وقالب صفحة بادئ التشغيل إلى المدونات. تم تعديل أزرار قالب صفحة بادئ التشغيل لتجنب تداخل محتوى الصفحة. سيفتح خيار "اختيار الوسائط من الجهاز" منتقي وسائط ووردبريس المدمج بدلاً من المنتقي الافتراضي للجهاز.
-
-إصلاحات الأخطاء: خطأ يتسبب في ظهور إعدادات عنوان URL عند تغيير اتجاه الجهاز في أثناء معاينة "قوالب صفحة بادئ التشغيل".
-
-تحسينات واجهة المستخدم: تمت إضافة الجرافتار الخاص بك إلى قائمة "أنا" في "موقعي".
+14.8:
+<b>إضافات محرِّر المكوِّن:</b> يعرض مكوِّن الأزرار أزرارًا متعددة في صف واحد؛ وتقوم مكوِّنات الصورة بملء التسميات التوضيحية سابقًا عند توافرها؛ وتسمح مكوِّنات الغلاف بالرفع؛ ويمكن قص الصور المدرجة أو تكبيرها/تصغيرها أو تدويرها؛ ويتضمن مكوِّن العنوان خيارات المحاذاة.
+<b>تحسينات محرِّر المكوِّن:</b> تم تغيير موقع شريط الأدوات العائم، وإصلاح الخطأ الذي أدى إلى ظهور مسافات بيضاء في مكوِّنات النص، وإصلاح أيقونات شريط الأدوات مختلفة المحاذاة في وضع "من اليمين إلى اليسار".
+<b>تحديثات عامة</b> تمت إضافة وظيفة إعادة التدوين.
 </ar>
 <de-DE>
-14.7:
-Block-Editor: Spaltenblock und Seitenvorlage für Neueinsteiger für Blogs wurden hinzugefügt. Buttons der Seitenvorlage für Neueinsteiger wurden angepasst, um eine Überlappung mit dem Seiteninhalt zu vermeiden. „Medien vom Gerät auswählen“ öffnet eine integrierte WordPress-Medienauswahl, anstelle der Standardauswahl des Geräts.
-
-Fehlerkorrekturen: Ein Fehler, der dazu führte, dass ein Kästchen mit URL-Einstellungen erschien, sobald du während der Vorschau der Seitenvorlage für Neueinsteiger dein Gerät bewegt hast.
-
-Verbesserungen an der Benutzeroberfläche: Dein Gravatar wurde zum Menü unter „Meine Website“ hinzugefügt
+14.8:
+<b>Zum Block-Editor hinzugefügt:</b> Buttons-Block zeigt mehrere Buttons in einer Zeile an; Bild-Blöcke füllen Bildunterschriften automatisch aus, falls verfügbar; Überschriften-Block beinhaltet Ausrichtungs-Optionen.
+<b>Block-Editor-Verbesserungen:</b> Schwebende Werkzeugleiste neu platziert, Fehler behoben, wodurch es zu zusätzlichen Leerzeichen in Textblöcken kam, fehlerhaft ausgerichtete Icons in der Werkzeugleiste behoben im RTL-Modus.
+<b>Allgemeine Aktualisierungen:</b> Reblog-Funktionalität hinzugefügt.
 </de-DE>
 <en-US>
-14.7:
-Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
-
-Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
-
-UI improvements: Added your Gravatar to the Me menu in My Site.
+14.8:
+<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.
+<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.
+<b>General updates:</b> Added reblog functionality.
 </en-US>
 <es-ES>
-14.7:
-Editor de bloques: Añadido un bloque de columnas y una plantilla de página de inicio para blogs. Ajustados los botones de la plantilla de página de inicio para evitar la superposición con el contenido de la página. «Elegir el medio desde el dispositivo» abre un selector de medios incorporado de WordPress en lugar del selector por defecto de tu dispositivo.
-
-Corrección de fallos: Un fallo causa que aparezcan los ajustes de la URL al cambiar la orientación del dispositivo mientras se previsualizan las plantillas de página de inicio.
-
-Mejoras en la interfaz de usuario: Añadido tu Gravatar al menú «Yo» en «Mi sitio».
+14.8:
+<b>Añadidos al editor de bloques:</b> El bloque de botones muestra varios botones en una sola fila. Los bloques de imágenes llenan los subtítulos cuando están disponibles. Los bloques de cubierta permiten la subida. Las imágenes insertadas pueden ser recortadas, ampliadas o rotadas. El bloque de encabezado incluye opciones de alineación.
+<b>Mejoras en el editor de bloques:</b> Reubicación de la barra de herramientas flotante, corrección del fallo del espacio blanco que afecta a los bloques de texto, corrección de la alineación de los iconos de la barra de herramientas en el modo RTL.
+<b>Actualizaciones generales:</b> Añadida la funcionalidad de reblog.
 </es-ES>
 <fr-CA>
-14.7 :
-Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
-
-Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
-
-Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
+14.8 :
+<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
+<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
+<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
 </fr-CA>
 <fr-FR>
-14.7 :
-Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
-
-Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
-
-Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
+14.8 :
+<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
+<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
+<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
 </fr-FR>
 <iw-IL>
-14.7:
-עורך הבלוקים: הוספנו בלוק טורים בתבנית של עמוד ההתחלה לבלוגים. התאמנו את הכפתורים בתבנית של עמוד ההתחלה כדי להימנע מחפיפה עם התוכן של העמוד. האפשרות 'בחירה במדיה מהמכשיר' פותחת בורר מדיה מובנה של WordPress במקום את בורר המדיה שמוגדר במכשיר שלך כברירת מחדל.
-
-תיקוני באגים: תיקנו באג שגרם להגדרות URL להופיע כאשר משנים את הכיוון של המכשיר בתצוגה המקדימה של תבניות של עמוד התחלה.
-
-שיפורים בממשק המשתמש: הופסנו את ה-Gravatar שלך לתפריט 'אני' ול'האתר שלי'.
+14.8:
+<b>תוספות לעורך הבלוקים:</b> בלוק הכפתורים מציג מספר כפתורים בשורה אחת; בלוג התמונה ממלא מראש את התיאורים כאשר אלה זמינים; בלוק הכיסוי מאפשר העלאה; אפשר לחתוך, להגדיל את מרחק התצוגה או לסובב תמונות שנוספו; בלוק הכותרת כולל אפשרויות יישור.
+<b>שיפורים בעורך הבלוקים:</b> שינינו את המיקום של סרגל הכלים הצף, תיקנו באגים שהשפיעו על הרווחים הלבנים בבלוקים של טקסט ותיקנו את היישור העקום של הסמלים בסרגל הכלים בתצוגה מימין לשמאל.
+<b>עדכונים כלליים:</b> נוספה פונקציולניות לפרסום בלוג מחדש.
 </iw-IL>
 <id>
-14.7:
-Penyunting blok: Menambahkan blok Kolom dan template Halaman Starter untuk blog. Menyelaraskan tombol Template Halaman Starter untuk menghindari tumpang tindih dengan konten halaman. “Pilih media dari perangkat” akan membuka pemilih media WordPress bawaan, bukan pemilih default perangkat Anda.
-
-Perbaikan bug: Bug penyebab pengaturan URL muncul saat mengubah orientasi perangkat selagi Anda mempratinjau Template Halaman Starter.
-
-Peningkatan UI: Menambahkan Gravatar ke menu Saya di Situs Saya.
+14.8:
+<b>Tambahan pada penyunting blok:</b> Blok Tombol menampilkan beberapa tombol dalam satu baris, blok Gambar menuliskan keterangan jika ada, blok Sampul mengizinkan untuk mengunggah; gambar yang disisipkan dapat dipotong, diperbesar/diperkecil, atau diputar; blok Heading menyertakan pilihan penyelarasan.
+<b>Peningkatan pada penyunting blok:</b> Memindahkan bilah peralatan melayang, memperbaiki bug yang memengaruhi spasi putih di blok Teks, memperbaiki ikon bilah peralatan yang tidak selaras di mode RTL.
+<b>Pembaruan umum:</b> Menambahkan fungsionalitas reblog.
 </id>
 <it-IT>
-14.7:
-Editor a blocchi: Aggiunti blocco Colonna e modello pagina di avvio di blog. Modifica di pulsanti per il modello pagina di avvio per evitare sovrapposizioni con il contenuto della stessa. "Scegli contenuti multimediali da dispositivo" apre un selezionatore contenuti multimediali integrato di WordPress.
-
-Bug corretti: Un bug causava la vista di impostazioni URL quando si riorientava il dispositivo durante l'anteprima di modelli pagina di avvio.
-
-Migliore UI: Aggiunta del Gravatar a Io in Il mio sito.
+14.8:
+<b>Aggiunte all'editor a blocchi:</b> più pulsanti su una riga per il blocco Pulsanti; didascalie precompilate nei blocchi Immagine; caricamento nei blocchi Copertina; ritaglio, zoom o rotazione delle immagini; opzioni di allineamento per il blocco Titolo.
+<b>Miglioramenti all'editor a blocchi:</b> barra mobile riposizionata, corretto bug dello spazio bianco nei blocchi Testo, corrette icone della barra disallineate in modalità RTL.
+<b>Aggiornamenti generali:</b> aggiunta funzione di ripubblicazione.
 </it-IT>
 <ja-JP>
-14.7:
-ブロックエディター :ブログにカラムブロックとスターターページテンプレートを追加しました。ページコンテンツと重複しないように、「スターターページテンプレート」ボタンを調整しました。「Choose media from device」は、デバイスのデフォルトのピッカーの代わりに組み込みの WordPress メディアピッカーを開きます。
-
-バグ修正 :スターターページテンプレートのプレビュー中にデバイスの向きを変えると、URL 設定が表示されるバグ。
-
-UI の改善 :「参加サイト」の「自分」メニューに Gravatar を追加しました。
+14.8:
+<b>ブロックエディターの追加機能:</b> ボタンブロックで、複数のボタンを1行に表示できます。画像ブロックで、キャプションがある場合自動で情報を追加します。カバーブロックのアップロードができます。挿入画像は、切り抜き、ズーム、回転できます。 見出しブロックに配置オプションが含まれています。
+<b>ブロックエディターの改善:</b> フローティングツールバーの再配置、テキストブロックのバグの影響による空白の修正、RTL モードでのツールバーアイコンの整列不良の修正。
+<b>一般的な更新:</b> リブログ機能を追加しました。
 </ja-JP>
-<ko-KR>
-14.7:
-블록 편집기: 블로그에 대한 열 블록 및 시작 페이지 템플릿이 추가되었습니다. 페이지 내용과 겹치지 않도록 조정된 시작 페이지 템플릿 단추입니다. “장치에서 미디어 선택”은 장치의 기본 선택기 대신 내장된 워드프레스 미디어 선택기를 엽니다.
-
-버그 수정: 시작 페이지 템플릿을 미리 보는 동안 장치 방향을 변경할 때 URL 설정을 표시하는 버그입니다.
-
-UI 개선: 내 사이트의 내 메뉴에 그라바타를 추가했습니다.
-</ko-KR>
 <nl-NL>
-14.7:
-Blokeditor: Kolommenblok en startpaginasjabloon voor blogs toegevoegd. Knoppen voor startpaginasjablonen aangepast zodat ze geen pagina-content overlappen. Met 'Media kiezen vanuit apparaat' wordt een geïntegreerde WordPress-mediakiezer gebruikt, in plaats van de standaard kiezer van je apparaat.
-
-Bugfixes: Een bug die zorgde dat URL-instellingen werden weergegeven bij het wijzigen van de oriëntatie van een apparaat terwijl startpaginasjablonen werden bekeken.
-
-UI-verbeteringen: Je Gravatar is toegevoegd aan het menu Ik in Mijn site.
+14.8:
+<b>Aanvullingen op de blokeditor:</b> Knopblokken geven meerdere knoppen op één rij weer; Afbeeldingenblokken vullen ondertitels in wanneer beschikbaar; Omslagblokken staan uploads toe; ingevoegde afbeeldingen kunnen bijgesneden, gezoomd of gedraaid worden; Kopblokken bevatten uitlijningsopties.
+<b>Verbeteringen aan de blokeditor:</b> Zwevende werkbalk verplaatst, bug die lege ruimte veranderde in Tekstblokken verwijderd, verkeerde uitlijning van werkbalkpictogrammen opgelost in RTL-modus.
+<b>Algemene updates:</b> Reblog-functionaliteit toegevoegd.
 </nl-NL>
 <ru-RU>
-14.7:
-Редактор блоков: добавлены блок столбца, шаблон стартовой страницы блогов. Кнопки шаблонов страниц не будут накладываться на содержимое. Выбор файлов 
-мультимедиа будет использовать встроенный компонент выбора файлов.
-
-Исправления ошибок: исправлена ошибка при изменении ориентации экрана и появлении настроек URL во время просмотра шаблонов стартовой страницы.
-
-Интерфейс: Добавлен ваш граватар в меню Мой профиль.
+14.8:
+<b>Добавления к редактору блоков:</b> Блок кнопок может показывать несколько кнопок в один ряд. Блок обложки позволяет загрузку файла. Вставленные изображения могут быть обрезаны, увеличены или повернуты. Блок заголовка включает возможности выравнивания.
+<b>Улучшения блоков:</b> Перемещена плавающая панель инструментов, исправлено пустое место в блоках текста, исправлены значки панели инструментов для RTL-языков.
+<b>Общее:</b> Добавлена возможность перепубликации (реблог).
 </ru-RU>
 <sv-SE>
-14.7:
-Blockredigeraren: Nytt kolumnblock och mall för bloggstartsida. Justerat startsidans mallknappar så att de inte skymmer innehållet. ”Välj mediafil från enheten” öppnar WordPress egen mediaväljare i stället för enhetens standardverktyg.
-
-Felrättningar: URL-inställningar kunde tidigare visas om man växlade mellan liggande och stående vid förhandsvisning av startsidesmallar.
-
-Förbättrat användargränssnitt: Gravatar tillagt i menyn Jag under Min webbplats.
+14.8:
+<b>Nyheter i blockredigeraren:</b> Knappblock visar flera knappar i samma rad, Bildblock fyller i bildtexter automatiskt om det går, Cover-block tillåter uppladdning, bilder kan beskäras, zoomas och roteras, Rubrikblock hanterar textjustering.
+<b>Förbättringar i blockredigeraren:</b> Flytande verktygsfält flyttat, rättat fel med romrum i textblock, rättat justering av verktygsknappar i RTL-läge.
+<b>Allmänna uppdateringar:</b> Ny reblog-funktion.
 </sv-SE>
 <tr-TR>
-14.7:
-Blok düzenleyici: Bloglar için Sütun bloğu ve Başlangıç Sayfası şablonu eklendi. Sayfa içeriğiyle çakışmayı önlemek için Başlangıç Sayfası Şablonu'nun düğmeleri düzeltildi. "Cihazdan medya seç" işlevi, cihazınızın varsayılan seçicisi yerine yerleşik bir WordPress medya seçicisi açar.
-
-Hata düzeltmeleri: Başlangıç Sayfası Şablonlarını önizlerken cihaz yönü değiştirildiğinde URL ayarlarının görünmesine neden olan bir hata.
-
-Kullanıcı arayüzünde yapılan iyileştirmeler: Gravatar'ınız Sitem'deki Ben menüsüne eklendi.
+14.8:
+<b> Blok düzenleyici eklemeleri: </b> Düğme bloğu, tek bir satırda birden fazla düğme görüntüler; Görüntü blokları altyazıları mevcut olduğunda doldurur; Kapak blokları yüklemeye izin verir; eklenen görüntüler kırpılabilir, yakınlaştırılabilir veya döndürülebilir; Başlık bloğu hizalama seçeneklerini içerir.
+<b> Blok düzenleyici geliştirmeleri: </b> Yeniden yerleştirilmiş kayan araç çubuğu, metin bloklarında sabit hata etkisi beyaz alanı, RTL modunda sabit yanlış hizalanmış araç çubuğu simgeleri.
+<b> Genel güncellemeler: </b> Yeniden bloglama işlevi eklendi.
 </tr-TR>
 <zh-CN>
-14.7：
-区块编辑器：添加了一个“栏目”区块和一个适用于博客的入门页面模板。调整了入门页面模板按钮，从而避免与页面内容重叠。“从设备中选择媒体”会打开内置的 WordPress 媒体选择器，而不是设备默认的选择器。
-
-错误修复：如果在预览入门页面模板时更改设备方向，该错误会导致系统显示 URL 设置。
-
-用户界面改进改进：在“我的站点”的“我”菜单中添加了 Gravatar。
+14.8：
+<b>区块编辑器添加内容：</b>按钮区块可在单个行中显示多个按钮；图片区块可预填充标题（如果有）；封面区块支持上传；插入的图片可以裁剪、缩放或旋转；标题区块包括对齐选项。
+<b>区块编辑器改进：</b>重新定位了浮动工具栏，修复了文本区块中影响空格的错误，修复了 RTL 模式中工具栏图标未对齐的问题。
+<b>常规更新：</b>添加了转载功能。
 </zh-CN>
 <zh-TW>
-14.7：
-區塊編輯器：我們為網誌新增了「內容欄」區塊和「入門頁面」範本。我們調整了「入門頁面範本」按鈕，避免與頁面內容重疊。選取「從裝置選擇媒體」將開啟 WordPress 內建媒體選擇器，而不是裝置預設的選擇器。
-
-錯誤修正：預覽「入門頁面範本」時如果變更裝置方向，會發生網址設定彈出的問題。
-
-改善 UI：我們在「我的網站」的「我」選單中新增了「Gravatar」。
+14.8：
+<b>區塊編輯器新增功能：</b>按鈕區塊可於單一列中顯示多個按鈕；圖片區塊會在有標題可用時預先填入標題內容；封面區塊提供上傳功能；插入的圖片可裁切、縮放或旋轉；標題包含對齊選項。
+<b>改善區塊編輯器：</b>重新調整浮動工具列的位置、修正導致文字區塊空白字元的錯誤，也已修復 RTL 模式中工具列圖示不一致的問題。
+<b>一般更新：</b>新增轉發文章功能。
 </zh-TW>
