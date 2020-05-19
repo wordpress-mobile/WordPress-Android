@@ -1,6 +1,5 @@
 wp.getProfile
 wp.getOptions
-wp.setOptions
 wp.getPostFormats
 wp.getUsersBlogs
 wp.getMediaLibrary
