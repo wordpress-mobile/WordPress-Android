@@ -42,7 +42,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getPostTagsUseCase,
                 getPostVisibilityUseCase,
                 postSettingsUtils,
-                getButtonUiStateUseCase
+                getButtonUiStateUseCase,
+                mock()
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(

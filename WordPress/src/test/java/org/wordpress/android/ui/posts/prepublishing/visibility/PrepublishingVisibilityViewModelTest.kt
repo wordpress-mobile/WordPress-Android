@@ -39,7 +39,8 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
         viewModel = PrepublishingVisibilityViewModel(
                 getPostVisibilityUseCase,
                 updatePostPasswordUseCase,
-                updatePostStatusUseCase
+                updatePostStatusUseCase,
+                mock()
         )
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
     }
