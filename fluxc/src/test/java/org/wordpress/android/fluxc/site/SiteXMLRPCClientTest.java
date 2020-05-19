@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.UnitTestUtils;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
-import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType;
@@ -34,10 +33,6 @@ import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import java.lang.reflect.Method;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -46,7 +41,6 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.wordpress.android.fluxc.site.SiteUtils.generateSelfHostedNonJPSite;
-import static org.wordpress.android.fluxc.site.SiteXMLRPCFixturesKt.SITE_OPTIONS;
 
 @RunWith(RobolectricTestRunner.class)
 public class SiteXMLRPCClientTest {
@@ -67,7 +61,7 @@ public class SiteXMLRPCClientTest {
                 XMLRPCRequest request = (XMLRPCRequest) invocation.getArguments()[0];
                 try {
                     Class<XMLRPCRequest> requestClass = (Class<XMLRPCRequest>)
-                                    Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
+                            Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
                     // Reflection code equivalent to:
                     // Object o = request.parseNetworkResponse(data)
                     Method parseNetworkResponse = requestClass.getDeclaredMethod("parseNetworkResponse",
@@ -101,31 +95,50 @@ public class SiteXMLRPCClientTest {
     public void testFetchSite() throws Exception {
         SiteModel site = generateSelfHostedNonJPSite();
         mCountDownLatch = new CountDownLatch(1);
-        mMockedResponse = SITE_OPTIONS;
+        mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                          + "<methodResponse><params><param><value>\n"
+                          + "  <struct>\n"
+                          + "  <member><name>post_thumbnail</name><value><struct>\n"
+                          + "  <member><name>value</name><value><boolean>1</boolean></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>time_zone</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>0</string></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>login_url</name><value><struct>\n"
+                          + "  <member><name>value</name><value>\n"
+                          + "  <string>https://taliwutblog.wordpress.com/wp-login.php</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>blog_public</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>0</string></value></member></struct>\n"
+                          + "  </value></member>\n"
+                          + "  \n"
+                          + "  <member><name>blog_title</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>@tal&amp;amp;wut blog</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>admin_url</name><value><struct>\n"
+                          + "  <member><name>readonly</name><value><boolean>1</boolean></value></member>\n"
+                          + "  <member><name>value</name><value>\n"
+                          + "  <string>https://taliwutblog.wordpress.com/wp-admin/</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>software_version</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>4.5.3-20160628</string></value></member>\n"
+                          + "  </struct></value></member>\n"
+                          + "  \n"
+                          + "  <member><name>jetpack_client_id</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>false</string></value></member></struct>\n"
+                          + "  </value></member>\n"
+                          + "  \n"
+                          + "  <member><name>home_url</name><value><struct>\n"
+                          + "  <member><name>value</name><value><string>http://taliwutblog.wordpress.com</string>\n"
+                          + "  </value></member></struct></value></member>\n"
+                          + "  </struct>\n"
+                          + "</value></param></params></methodResponse>";
         mSiteXMLRPCClient.fetchSite(site);
-        assertEquals(site.getShowOnFront(), "page");
-        assertEquals(site.getPageForPosts(), 2L);
-        assertEquals(site.getPageOnFront(), 1L);
-        assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
-    }
-
-    @Test
-    public void testUpdateSiteHomepage() throws Exception {
-        SiteModel site = generateSelfHostedNonJPSite();
-        mCountDownLatch = new CountDownLatch(1);
-        mMockedResponse = SITE_OPTIONS;
-        StaticPage homepageSettings = new StaticPage(2L, 1L);
-        final AtomicBoolean success = new AtomicBoolean(false);
-        mSiteXMLRPCClient.updateSiteHomepage(site, homepageSettings, new Function1<SiteModel, Unit>() {
-            @Override public Unit invoke(SiteModel siteModel) {
-                success.set(true);
-                return null;
-            }
-        }, null);
-        assertEquals(site.getShowOnFront(), "page");
-        assertEquals(site.getPageForPosts(), 2L);
-        assertEquals(site.getPageOnFront(), 1L);
-        assertTrue(success.get());
         assertTrue(mCountDownLatch.await(UnitTestUtils.DEFAULT_TIMEOUT_MS, TimeUnit.MILLISECONDS));
     }
 
@@ -137,9 +150,9 @@ public class SiteXMLRPCClientTest {
         // 3. Report the parse error and its details in an OnUnexpectedError
         final SiteModel site = generateSelfHostedNonJPSite();
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "  <string>whoops</string>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "  <string>whoops</string>\n"
+                          + "</value></param></params></methodResponse>";
 
         doAnswer(new Answer() {
             @Override
@@ -179,18 +192,18 @@ public class SiteXMLRPCClientTest {
     @Test
     public void testFetchSites() throws Exception {
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "<array><data><value><struct>\n"
-                + "<member><name>isAdmin</name><value><boolean>1</boolean></value></member>\n"
-                + "<member><name>url</name><value>\n"
-                + "<string>http://docbrown.url/</string>\n"
-                + "</value></member>\n"
-                + "<member><name>blogid</name><value><string>1</string></value></member>\n"
-                + "<member><name>blogName</name><value><string>Doc Brown Testing</string></value></member>\n"
-                + "<member><name>xmlrpc</name><value>\n"
-                + "<string>http://docbrown.url/xmlrpc.php</string>\n"
-                + "</value></member></struct></value></data></array>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "<array><data><value><struct>\n"
+                          + "<member><name>isAdmin</name><value><boolean>1</boolean></value></member>\n"
+                          + "<member><name>url</name><value>\n"
+                          + "<string>http://docbrown.url/</string>\n"
+                          + "</value></member>\n"
+                          + "<member><name>blogid</name><value><string>1</string></value></member>\n"
+                          + "<member><name>blogName</name><value><string>Doc Brown Testing</string></value></member>\n"
+                          + "<member><name>xmlrpc</name><value>\n"
+                          + "<string>http://docbrown.url/xmlrpc.php</string>\n"
+                          + "</value></member></struct></value></data></array>\n"
+                          + "</value></param></params></methodResponse>";
         final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
 
         mCountDownLatch = new CountDownLatch(1);
@@ -201,9 +214,9 @@ public class SiteXMLRPCClientTest {
     @Test
     public void testFetchSitesResponseNotArray() throws Exception {
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "<string>disaster!</string>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "<string>disaster!</string>\n"
+                          + "</value></param></params></methodResponse>";
         final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
 
         doAnswer(new Answer() {

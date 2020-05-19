@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
-import org.wordpress.android.fluxc.model.SiteHomepageSettingsMapper
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
@@ -20,7 +19,6 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.SERVER_E
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteHomepageRestClient
-import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsErrorType.GENERIC_ERROR
@@ -29,15 +27,11 @@ import org.wordpress.android.fluxc.store.Store.OnChangedError
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class SiteOptionsStore
 @Inject constructor(
     private val coroutineEngine: CoroutineEngine,
-    private val siteHomepageRestClient: SiteHomepageRestClient,
-    private val siteXMLRPCClient: SiteXMLRPCClient,
-    private val siteHomepageSettingsMapper: SiteHomepageSettingsMapper
+    private val siteHomepageRestClient: SiteHomepageRestClient
 ) {
     suspend fun updatePageForPosts(site: SiteModel, pageForPostsId: Long): HomepageUpdatedPayload =
             coroutineEngine.withDefaultContext(T.API, this, "Update page for posts") {
@@ -97,25 +91,12 @@ class SiteOptionsStore
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
                     siteHomepageRestClient.updateHomepage(site, homepageSettings)
                 } else {
-                    suspendCoroutine { continuation ->
-                        siteXMLRPCClient.updateSiteHomepage(
-                                site,
-                                homepageSettings,
-                                { updatedSite ->
-                                    val payload = siteHomepageSettingsMapper.map(updatedSite)
-                                            ?.let { HomepageUpdatedPayload(it) } ?: HomepageUpdatedPayload(
-                                            SiteOptionsError(
-                                                    GENERIC_ERROR,
-                                                    "Show on front is: ${updatedSite.showOnFront}"
-                                            )
-                                    )
-                                    continuation.resume(payload)
-                                },
-                                { error ->
-                                    continuation.resume(HomepageUpdatedPayload(error))
-                                }
-                        )
-                    }
+                    HomepageUpdatedPayload(
+                            SiteOptionsError(
+                                    GENERIC_ERROR,
+                                    "You cannot update homepage for a self-hosted site"
+                            )
+                    )
                 }
             }
 
