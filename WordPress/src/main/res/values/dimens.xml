@@ -197,7 +197,6 @@
 
     <!-- Increased touch targets to make views more accessible -->
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
-    <dimen name="reader_visit_layout_extra_padding">12dp</dimen>
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
