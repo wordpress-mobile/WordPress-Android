@@ -70,19 +70,24 @@ class ReaderViewModel @Inject constructor(
                 )
                 if (!initialized) {
                     initialized = true
-                    restoreTabSelection(tagList)
+                    initializeTabSelection(tagList)
                 }
             }
         }
     }
 
-    private suspend fun restoreTabSelection(tagList: ReaderTagList) {
+    private suspend fun initializeTabSelection(tagList: ReaderTagList) {
         withContext(bgDispatcher) {
-            appPrefsWrapper.getReaderTag()?.let {
+            val selectTab = { it: ReaderTag ->
                 val index = tagList.indexOf(it)
                 if (index != -1) {
                     _selectTab.postValue(Event(index))
                 }
+            }
+            appPrefsWrapper.getReaderTag()?.let {
+                selectTab.invoke(it)
+            } ?: tagList.find { it.isDefaultSelectedTab() }?.let {
+                selectTab.invoke(it)
             }
         }
     }
@@ -115,6 +120,8 @@ class ReaderViewModel @Inject constructor(
     fun onSearchActionClicked() {
         _showSearch.value = Event(Unit)
     }
+
+    private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
