@@ -126,7 +126,8 @@
             android:contentDescription="@string/show_more_desc"
             android:paddingTop="@dimen/margin_medium"
             android:paddingBottom="@dimen/margin_medium"
-            app:layout_constraintEnd_toEndOf="@+id/guideline_end"
+            android:layout_marginEnd="@dimen/margin_medium_large"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/guideline_top"
             app:tint="?attr/wpColorOnSurfaceMedium" />
 
