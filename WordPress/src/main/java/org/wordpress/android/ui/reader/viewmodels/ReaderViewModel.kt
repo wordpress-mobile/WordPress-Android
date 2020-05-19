@@ -118,7 +118,7 @@ class ReaderViewModel @Inject constructor(
         _showSearch.value = Event(Unit)
     }
 
-    fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
+    private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
