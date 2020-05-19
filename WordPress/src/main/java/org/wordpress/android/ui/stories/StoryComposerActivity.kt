@@ -222,4 +222,3 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
     }
 }
-
