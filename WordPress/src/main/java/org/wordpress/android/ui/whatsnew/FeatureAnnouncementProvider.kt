@@ -1,16 +1,22 @@
 package org.wordpress.android.ui.whatsnew
 
 import android.text.TextUtils
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.StringUtils
 import java.io.FileNotFoundException
 import javax.inject.Inject
 
 class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: LocaleManagerWrapper) {
+    private val gson: Gson by lazy {
+        val builder = GsonBuilder()
+        builder.create()
+    }
+
     fun getLatestFeatureAnnouncement(): FeatureAnnouncement? {
         return getFeatureAnnouncements().firstOrNull()
     }
@@ -37,47 +43,41 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
             return featureAnnouncements
         }
 
-        val rootAnnouncementObject = JsonParser().parse(featureAnnouncementFileContent).asJsonObject
-        val announcementsArray = rootAnnouncementObject["announcements"].asJsonArray
+        val parsedFeatureAnnouncement: ParsedFeatureAnnouncements = gson.fromJson(
+                featureAnnouncementFileContent,
+                ParsedFeatureAnnouncements::class.java
+        )
 
-        for (announcementElement in announcementsArray) {
-            val announcementObject = announcementElement.asJsonObject
-
-            val features = arrayListOf<FeatureAnnouncementItem>()
-
-            var isLocalized = true
-
-            val featuresArray = announcementObject.get("features").asJsonArray
-            for (featureElement in featuresArray) {
-                val featureObject = featureElement.asJsonObject
-
-                val localizedDataObject: JsonObject
-
-                if (featureObject.has(currentLanguage)) {
-                    localizedDataObject = featureObject.get(currentLanguage).asJsonObject
-                } else {
-                    localizedDataObject = featureObject.get(defaultLanguage).asJsonObject
-                    isLocalized = false
-                }
-
-                val title = localizedDataObject.get("title").asString
-                val subtitle = localizedDataObject.get("subtitle").asString
-
-                val iconBase64 = featureObject.get("iconBase64").asString
-                val iconUrl = featureObject.get("iconUrl").asString
-
-                features.add(FeatureAnnouncementItem(title, subtitle, iconBase64, iconUrl))
+        for (parsedAnnouncement in parsedFeatureAnnouncement.announcements) {
+            val isLocalized = parsedAnnouncement.features.all { feature ->
+                feature.localizedContent.containsKey(currentLanguage)
             }
 
-            val featureAnnouncement = FeatureAnnouncement(
-                    announcementObject.get("appVersionName").asString,
-                    announcementObject.get("announceVersion").asInt,
-                    announcementObject.get("detailsUrl").asString,
+            val mappedFeatures = arrayListOf<FeatureAnnouncementItem>()
+            for (parsedFeature in parsedAnnouncement.features) {
+                val localizedFeatureData = parsedFeature.localizedContent.getOrElse(currentLanguage) {
+                    parsedFeature.localizedContent[defaultLanguage]
+                }
+
+                mappedFeatures.add(
+                        FeatureAnnouncementItem(
+                                StringUtils.notNullStr(localizedFeatureData?.title),
+                                StringUtils.notNullStr(localizedFeatureData?.subtitle),
+                                parsedFeature.iconBase64,
+                                parsedFeature.iconUrl
+                        )
+                )
+            }
+
+            val mappedAnnouncement = FeatureAnnouncement(
+                    parsedAnnouncement.appVersionName,
+                    parsedAnnouncement.announcementVersion,
+                    parsedAnnouncement.detailsUrl,
                     isLocalized,
-                    features
+                    mappedFeatures
             )
 
-            featureAnnouncements.add(featureAnnouncement)
+            featureAnnouncements.add(mappedAnnouncement)
         }
 
         return featureAnnouncements
@@ -87,4 +87,24 @@ class FeatureAnnouncementProvider @Inject constructor(val localeManagerWrapper: 
         val announcements = getFeatureAnnouncements()
         return announcements.isNotEmpty() && announcements[0].isLocalized && announcements[0].features.isNotEmpty()
     }
+
+    private data class ParsedFeatureAnnouncements(val announcements: List<ParsedFeatureAnnouncement>)
+
+    private data class ParsedFeatureAnnouncement(
+        val appVersionName: String,
+        val announcementVersion: Int,
+        val detailsUrl: String,
+        val features: List<ParsedFeatureAnnouncementItem>
+    )
+
+    private data class ParsedFeatureAnnouncementItem(
+        val localizedContent: HashMap<String, ParsedFeatureAnnouncementItemLocalizedContent>,
+        val iconBase64: String,
+        val iconUrl: String
+    )
+
+    private data class ParsedFeatureAnnouncementItemLocalizedContent(
+        val title: String,
+        val subtitle: String
+    )
 }
