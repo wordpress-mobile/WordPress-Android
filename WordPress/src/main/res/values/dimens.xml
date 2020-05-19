@@ -263,9 +263,6 @@
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
 
     <!--site picker-->
-    <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
-    <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
