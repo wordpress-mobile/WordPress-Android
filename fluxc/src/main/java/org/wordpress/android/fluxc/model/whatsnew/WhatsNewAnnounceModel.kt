@@ -8,8 +8,11 @@ import kotlinx.android.parcel.Parcelize
 @SuppressLint("ParcelCreator")
 data class WhatsNewAnnounceModel(
     val appVersionName: String,
-    val announceVersion: Int,
+    val announcementVersion: Int,
+    val minimumAppVersionCode: Int,
     val detailsUrl: String,
+    val isLocalized: Boolean,
+    val responseLocale: String,
     val features: List<Feature>
 ) : Parcelable {
     // TODO: implement equals and hashcode?
