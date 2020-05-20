@@ -1,6 +1,7 @@
 15.0
 -----
- 
+* [**] Block Editor: Fix bug in media picker, now you can add new pictures and videos directly to your video, image and media & text blocks.
+
 14.9
 -----
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post
