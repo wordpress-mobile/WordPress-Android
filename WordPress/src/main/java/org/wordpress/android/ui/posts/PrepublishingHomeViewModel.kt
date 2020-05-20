@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
@@ -12,17 +13,21 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VI
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishButtonLabelUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
-    private val postSettingsUtils: PostSettingsUtils
+    private val postSettingsUtils: PostSettingsUtils,
+    private val getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -31,6 +36,9 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
+
+    private val _onPublishButtonClicked = MutableLiveData<Event<Unit>>()
+    val onPublishButtonClicked: LiveData<Event<Unit>> = _onPublishButtonClicked
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
@@ -72,7 +80,10 @@ class PrepublishingHomeViewModel @Inject constructor(
                 )
             }
 
-            add(PublishButtonUiState(UiStringRes(R.string.prepublishing_nudges_home_publish_button), {}))
+            add(PublishButtonUiState(UiStringRes(getPublishButtonLabelUseCase.getLabel(editPostRepository))) {
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
+                _onPublishButtonClicked.postValue(Event(Unit))
+            })
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)

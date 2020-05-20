@@ -33,6 +33,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
 
+    private val _triggerOnPublishButtonClickedListener = MutableLiveData<Event<Unit>>()
+    val triggerOnPublishButtonClickedListener: LiveData<Event<Unit>> = _triggerOnPublishButtonClickedListener
+
     init {
         dispatcher.register(this)
     }
@@ -89,6 +92,11 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         val screen = PrepublishingScreen.valueOf(actionType.name)
         currentScreen = screen
         navigateToScreen(screen)
+    }
+
+    fun onPublishButtonClicked() {
+        onCloseClicked()
+        _triggerOnPublishButtonClickedListener.postValue(Event(Unit))
     }
 
     /**

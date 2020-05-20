@@ -182,6 +182,14 @@ public abstract class TagsFragment extends Fragment implements TextWatcher, View
         mTagsEditText.setSelection(mTagsEditText.length());
     }
 
+    boolean wereTagsChanged() {
+        if (mTags != null) {
+            return !mTags.equals(mTagsEditText.getText().toString());
+        } else {
+            return !mTagsEditText.getText().toString().isEmpty();
+        }
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTaxonomyChanged(OnTaxonomyChanged event) {

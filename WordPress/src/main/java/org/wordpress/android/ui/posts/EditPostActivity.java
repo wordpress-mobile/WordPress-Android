@@ -130,6 +130,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -166,6 +167,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -217,7 +219,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
-        EditPostSettingsCallback {
+        EditPostSettingsCallback,
+        PrepublishingBottomSheetListener {
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -331,6 +334,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     private StorePostViewModel mViewModel;
 
@@ -1245,6 +1249,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
@@ -1370,6 +1375,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 showUpdateConfirmationDialogAndUploadPost();
                 return;
             case PUBLISH_NOW:
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return;
             // In other cases, we'll upload the post without changing its status
@@ -1804,6 +1810,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
+    }
+
+    @Override public void onPublishButtonClicked() {
+        uploadPost(true);
     }
 
     private void uploadPost(final boolean publishPost) {
