@@ -168,7 +168,7 @@ public class PhotoPickerFragment extends Fragment {
             mMediaSourceBottomBar.setVisibility(View.GONE);
         } else {
             View camera = mMediaSourceBottomBar.findViewById(R.id.icon_camera);
-            if (mBrowserType.isGutenbergPicker()) {
+            if (!mBrowserType.isGutenbergPicker()) {
                 camera.setVisibility(View.GONE);
             } else {
                 camera.setOnClickListener(new View.OnClickListener() {
