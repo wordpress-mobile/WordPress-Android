@@ -130,7 +130,8 @@
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_tag_header_image_height">128dp</dimen>
-    <dimen name="reader_xpost_padding_left">50dp</dimen>
+    <dimen name="reader_xpost_padding_left">0dp</dimen>
+    <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
     <dimen name="reader_card_avatar_margin_end">18dp</dimen>

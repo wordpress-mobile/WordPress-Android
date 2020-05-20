@@ -73,6 +73,18 @@
         <item name="android:textColor">@color/reader_label_text</item>
     </style>
 
+    <style name="ReaderTextView.XPost.SubTitle" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:minHeight">@dimen/avatar_sz_extra_small</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="textColor">@color/reader_post_title</item>
+    </style>
+
     <style name="ReaderTextView.MetaHeader">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

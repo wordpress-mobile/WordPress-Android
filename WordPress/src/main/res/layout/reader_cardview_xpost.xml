@@ -11,68 +11,54 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingBottom="@dimen/margin_large">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_beginning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/reader_xpost_padding_left" />
-
-        <ImageView
-            android:id="@+id/image_blavatar"
-            android:layout_width="@dimen/blavatar_sz"
-            android:layout_height="@dimen/blavatar_sz"
-            android:layout_gravity="top|start"
-            android:importantForAccessibility="no"
-            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
-            app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:padding="@dimen/reader_card_content_padding">
 
         <ImageView
             android:id="@+id/image_avatar"
-            style="@style/ReaderImageView.Avatar.Small"
-            android:layout_gravity="bottom|end"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="14dp"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:layout_marginStart="@dimen/reader_xpost_avatar_margin_start"
+            android:background="@drawable/bg_oval_white_stroke_1dp"
             android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
             android:src="@drawable/bg_rectangle_placeholder_user_32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_subtitle"
             app:layout_constraintStart_toStartOf="@id/image_blavatar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/text_subtitle" />
+
+        <ImageView
+            android:id="@+id/image_blavatar"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:background="@drawable/bg_oval_white_stroke_1dp"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_avatar" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/ReaderTextView.XPost.SubTitle"
+            app:fixWidowWords="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="text_subtitle" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_extra_large"
             android:ellipsize="end"
-            android:fontFamily="serif"
-            android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/image_avatar"
+            android:maxLines="3"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_avatar"
             tools:text="text_title" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textAppearance="?attr/textAppearanceCaption"
-            app:fixWidowWords="true"
-            app:layout_constraintStart_toEndOf="@id/image_avatar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_title"
-            tools:text="text_subtitle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
