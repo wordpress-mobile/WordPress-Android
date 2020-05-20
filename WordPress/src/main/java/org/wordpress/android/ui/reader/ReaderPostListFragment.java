@@ -607,9 +607,6 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-
-        checkPostAdapter();
-
         if (mWasPaused) {
             AppLog.d(T.READER, "reader post list > resumed from paused state");
             mWasPaused = false;
@@ -743,6 +740,8 @@ public class ReaderPostListFragment extends Fragment
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED && NetworkUtils.isNetworkAvailable(getActivity())) {
             purgeDatabaseIfNeeded();
         }
+
+        checkPostAdapter();
     }
 
     @Override
@@ -758,7 +757,7 @@ public class ReaderPostListFragment extends Fragment
     private void checkPostAdapter() {
         if (isAdded() && mRecyclerView.getAdapter() == null) {
             mRecyclerView.setAdapter(getPostAdapter());
-
+            refreshPosts();
             if (!mHasUpdatedPosts && NetworkUtils.isNetworkAvailable(getActivity())) {
                 mHasUpdatedPosts = true;
                 if (getPostListType().isTagType()) {
