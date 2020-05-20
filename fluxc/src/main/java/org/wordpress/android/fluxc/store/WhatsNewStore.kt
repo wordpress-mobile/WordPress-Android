@@ -43,7 +43,6 @@ class WhatsNewStore @Inject constructor(
 
     suspend fun fetchWhatsNew(versionCode: String, forced: Boolean) =
             coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
-
                 if (!forced && whatsNewSqlUtils.hasCachedAnnouncements()) {
                     return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements())
                 }
@@ -51,7 +50,6 @@ class WhatsNewStore @Inject constructor(
                 val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(versionCode)
 
                 return@withDefaultContext if (!fetchedWhatsNewPayload.isError) {
-
                     val fetchedAnnouncements = fetchedWhatsNewPayload.whatsNewItems
                     whatsNewSqlUtils.updateAnnouncementCache(fetchedAnnouncements)
                     OnWhatsNewFetched(fetchedAnnouncements)
