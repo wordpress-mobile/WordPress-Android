@@ -56,13 +56,16 @@ class WhatsNewRestClient constructor(
     }
 
     private fun buildWhatsNewPayload(
-        announcements: List<Announce>
+        announcements: List<Announce>?
     ): WhatsNewFetchedPayload {
         return WhatsNewFetchedPayload(announcements?.map { announce ->
             WhatsNewAnnounceModel(
                     appVersionName = announce.appVersionName,
-                    announceVersion = announce.announceVersion,
+                    announcementVersion = announce.announcementVersion,
+                    minimumAppVersionCode = announce.minimumAppVersionCode,
                     detailsUrl = announce.detailsUrl,
+                    isLocalized = announce.isLocalized,
+                    responseLocale = announce.responseLocale,
                     features = announce.features.map {
                         Feature(
                                 title = it.title,
@@ -76,12 +79,15 @@ class WhatsNewRestClient constructor(
     }
 
     data class WhatsNewResponse(
-        val announcements: List<Announce>
+        val announcements: List<Announce>?
     ) : Response {
         data class Announce(
             val appVersionName: String,
-            val announceVersion: Int,
+            val announcementVersion: Int,
+            val minimumAppVersionCode: Int,
             val detailsUrl: String,
+            val isLocalized: Boolean,
+            val responseLocale: String,
             val features: List<Feature>
         )
 
