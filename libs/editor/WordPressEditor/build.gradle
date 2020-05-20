@@ -75,7 +75,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    implementation (project(':react-native-gutenberg-bridge')) {
+    implementation (project(':@wordpress_react-native-bridge')) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: "com.android.volley"
         exclude group: 'com.google.code.findbugs'
