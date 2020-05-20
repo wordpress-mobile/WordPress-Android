@@ -16,8 +16,11 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
+import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
+import org.wordpress.android.models.ReaderTag.LIKED_PATH
 import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -158,10 +161,23 @@ class ReaderViewModelTest {
     }
 
     @Test
-    fun `SelectTab not invoked when last selected tab is null`() = testWithNonEmptyTags {
+    fun `SelectTab is invoked when last selected tab is null`() = testWithNonMockedNonEmptyTags {
         // Arrange
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
 
+        var tabPosition: TabPosition? = null
+        viewModel.selectTab.observeForever {
+            tabPosition = it.getContentIfNotHandled()
+        }
+        // Act
+        viewModel.start()
+        // Assert
+        assertThat(tabPosition).isGreaterThan(-1)
+    }
+
+    @Test
+    fun `SelectTab when tags are empty`() = testWithEmptyTags {
+        // Arrange
         var tabPosition: TabPosition? = null
         viewModel.selectTab.observeForever {
             tabPosition = it.getContentIfNotHandled()
@@ -223,12 +239,19 @@ class ReaderViewModelTest {
         }
     }
 
+    private fun <T> testWithNonMockedNonEmptyTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonMockedNonEmptyReaderTagList())
+            block()
+        }
+    }
+
     private fun createNonMockedNonEmptyReaderTagList(): ReaderTagList {
         return ReaderTagList().apply {
-            add(ReaderTag("Following", "Following", "Following", " ", FOLLOWED))
-            add(ReaderTag("Discover", "Discover", "Discover", " ", FOLLOWED))
-            add(ReaderTag("Like", "Like", "Like", " ", FOLLOWED))
-            add(ReaderTag("Saved", "Saved", "Saved", "Saved", FOLLOWED))
+            add(ReaderTag("Following", "Following", "Following", FOLLOWING_PATH, ReaderTagType.DEFAULT))
+            add(ReaderTag("Discover", "Discover", "Discover", DISCOVER_PATH, ReaderTagType.DEFAULT))
+            add(ReaderTag("Like", "Like", "Like", LIKED_PATH, ReaderTagType.DEFAULT))
+            add(ReaderTag("Saved", "Saved", "Saved", "Saved", ReaderTagType.DEFAULT))
         }
     }
 }

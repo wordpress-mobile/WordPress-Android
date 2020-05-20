@@ -175,7 +175,6 @@ public class ReaderPostListFragment extends Fragment
     private TabLayout mSearchTabs;
 
     private SearchView mSearchView;
-    private MenuItem mSettingsMenuItem;
     private MenuItem mSearchMenuItem;
 
     private View mSubFilterComponent;
@@ -1024,9 +1023,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         // add a menu to the filtered recycler's toolbar
-        if (mAccountStore.hasAccessToken() && (getPostListType() == ReaderPostListType.TAG_FOLLOWED
-                                               || getPostListType() == ReaderPostListType.SEARCH_RESULTS
-                                               || mIsTopLevel)) {
+        if (mAccountStore.hasAccessToken() && getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
             setupRecyclerToolbar();
         }
 
@@ -1071,20 +1068,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private void setupRecyclerToolbar() {
         Menu menu = mRecyclerView.addToolbarMenu(R.menu.reader_list);
-        mSettingsMenuItem = menu.findItem(R.id.menu_reader_settings);
         mSearchMenuItem = menu.findItem(R.id.menu_reader_search);
-
-        if (mIsTopLevel) {
-            mSettingsMenuItem.setVisible(false);
-        } else {
-            mSettingsMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    showSettings();
-                    return true;
-                }
-            });
-        }
 
         mSearchView = (SearchView) mSearchMenuItem.getActionView();
         mSearchView.setQueryHint(getString(R.string.reader_hint_post_search));
@@ -1113,7 +1097,6 @@ public class ReaderPostListFragment extends Fragment
                 resetPostAdapter(ReaderPostListType.SEARCH_RESULTS);
                 populateSearchSuggestions(null);
                 showSearchMessageOrSuggestions();
-                mSettingsMenuItem.setVisible(false);
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
@@ -1639,20 +1622,6 @@ public class ReaderPostListFragment extends Fragment
         return getView();
     }
 
-    private int getEmptyViewTopMargin() {
-        int totalMargin = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
-
-        if (mIsTopLevel) {
-            totalMargin += getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-            if (isCurrentTagManagedInFollowingTab()) {
-                totalMargin += getActivity().getResources()
-                                            .getDimensionPixelSize(R.dimen.reader_subfilter_component_height);
-            }
-        }
-
-        return totalMargin;
-    }
-
     private void setEmptyTitleDescriptionAndButton(boolean requestFailed) {
         if (!isAdded()) {
             return;
@@ -1660,7 +1629,7 @@ public class ReaderPostListFragment extends Fragment
 
         int heightToolbar = getActivity().getResources().getDimensionPixelSize(R.dimen.toolbar_height);
         int heightTabs = getActivity().getResources().getDimensionPixelSize(R.dimen.tab_height);
-        mActionableEmptyView.updateLayoutForSearch(false, getEmptyViewTopMargin());
+        mActionableEmptyView.updateLayoutForSearch(false, 0);
         mActionableEmptyView.subtitle.setContentDescription(null);
         boolean isSearching = false;
         String title;
