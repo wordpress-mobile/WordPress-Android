@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid
-        android:color="@android:color/white" >
-    </solid>
     <stroke
         android:width="@dimen/reader_image_avatar_or_blavatar_border_width"
-        android:color="@color/neutral_120"/>
+        android:color="@color/reader_image_avatar_or_blavatar_border"/>
 </shape>

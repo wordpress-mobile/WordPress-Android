@@ -87,8 +87,6 @@
     <color name="neutral_80">@color/gray_80</color>
     <color name="neutral_90">@color/gray_90</color>
     <color name="neutral_100">@color/gray_100</color>
-    <color name="neutral_110">@color/gray_110</color>
-    <color name="neutral_120">@color/gray_120</color>
     <color name="primary">@color/wordpress_blue_50</color>
     <color name="primary_0">@color/wordpress_blue_0</color>
     <color name="primary_5">@color/wordpress_blue_5</color>
@@ -177,8 +175,6 @@
     <color name="gray_80">#2c3338</color>
     <color name="gray_90">#1d2327</color>
     <color name="gray_100">#101517</color>
-    <color name="gray_110">#1e1e1e</color>
-    <color name="gray_120">#eeeeee</color>
     <color name="green">#008a20</color>
     <color name="green_0">#e6f2e8</color>
     <color name="green_5">#b8e6bf</color>
@@ -319,8 +315,10 @@
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
     <color name="reader_card_background">@color/white</color>
-    <color name="reader_label_text">#6c7781</color>
-    <color name="reader_post_title">?attr/textColor</color>
-    <color name="reader_image_featured_border">#1a9c9c9c</color>
+    <color name="reader_label_text">@color/gray_40</color>
+    <color name="reader_post_title">@color/gray_90</color>
+    <color name="reader_site_title">@color/gray_90</color>
+    <color name="reader_image_featured_border">@color/gray_0</color>
+    <color name="reader_image_avatar_or_blavatar_border">@color/gray_0</color>
 
 </resources>

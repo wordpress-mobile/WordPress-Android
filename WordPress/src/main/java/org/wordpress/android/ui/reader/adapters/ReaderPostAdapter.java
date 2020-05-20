@@ -402,7 +402,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR,
+        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR,
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
