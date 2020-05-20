@@ -4,8 +4,8 @@ import android.content.Context
 import com.android.volley.RequestQueue
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
-import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnounceModel
-import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnounceModel.Feature
+import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel
+import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel.WhatsNewAnnouncementFeature
 import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -59,7 +59,7 @@ class WhatsNewRestClient constructor(
         announcements: List<Announce>?
     ): WhatsNewFetchedPayload {
         return WhatsNewFetchedPayload(announcements?.map { announce ->
-            WhatsNewAnnounceModel(
+            WhatsNewAnnouncementModel(
                     appVersionName = announce.appVersionName,
                     announcementVersion = announce.announcementVersion,
                     minimumAppVersionCode = announce.minimumAppVersionCode,
@@ -67,7 +67,7 @@ class WhatsNewRestClient constructor(
                     isLocalized = announce.isLocalized,
                     responseLocale = announce.responseLocale,
                     features = announce.features.map {
-                        Feature(
+                        WhatsNewAnnouncementFeature(
                                 title = it.title,
                                 subtitle = it.subtitle,
                                 iconBase64 = it.iconBase64,
