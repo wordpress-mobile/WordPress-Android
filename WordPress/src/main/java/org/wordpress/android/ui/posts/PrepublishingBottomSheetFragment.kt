@@ -107,9 +107,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         }
 
         if (isPage) {
-            prepublishing_content_fragment.minimumHeight = resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
+            prepublishing_content_fragment.minimumHeight =
+                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
         } else {
-            prepublishing_content_fragment.minimumHeight = resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
+            prepublishing_content_fragment.minimumHeight =
+                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
         }
     }
 
