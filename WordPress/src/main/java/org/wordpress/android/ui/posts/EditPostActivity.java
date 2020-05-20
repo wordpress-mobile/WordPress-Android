@@ -167,6 +167,7 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -214,8 +215,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditorPhotoPickerListener,
         EditorMediaListener,
         EditPostSettingsFragment.EditPostActivityHook,
-        BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
@@ -245,8 +244,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String TAG_PUBLISH_CONFIRMATION_DIALOG = "tag_publish_confirmation_dialog";
-    private static final String TAG_UPDATE_CONFIRMATION_DIALOG = "tag_update_confirmation_dialog";
     private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
     private static final String TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG = "tag_gb_rollout_v2_informative_dialog";
 
@@ -333,6 +330,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject DateTimeUtilsWrapper mDateTimeUtils;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
+    @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
 
     private StorePostViewModel mViewModel;
 
@@ -1247,6 +1245,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 uploadPost(false);
                 return true;
             case PUBLISH_NOW:
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
@@ -1340,37 +1339,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mHtmlModeMenuStateOn ? Editor.HTML : (isGutenberg ? Editor.GUTENBERG : Editor.CLASSIC));
     }
 
-    private void showUpdateConfirmationDialogAndUploadPost() {
-        showConfirmationDialogAndUploadPost(TAG_UPDATE_CONFIRMATION_DIALOG,
-                getString(R.string.dialog_confirm_update_title),
-                mEditPostRepository.isPage() ? getString(R.string.dialog_confirm_update_message_page)
-                        : getString(R.string.dialog_confirm_update_message_post),
-                getString(R.string.dialog_confirm_update_yes),
-                getString(R.string.keep_editing));
-    }
-
-    private void showPublishConfirmationDialogAndPublishPost() {
-        showConfirmationDialogAndUploadPost(TAG_PUBLISH_CONFIRMATION_DIALOG,
-                getString(R.string.dialog_confirm_publish_title),
-                mEditPostRepository.isPage() ? getString(R.string.dialog_confirm_publish_message_page)
-                        : getString(R.string.dialog_confirm_publish_message_post),
-                getString(R.string.dialog_confirm_publish_yes),
-                getString(R.string.keep_editing));
-    }
-
-    private void showConfirmationDialogAndUploadPost(@NonNull String identifier, @NonNull String title,
-                                                     @NonNull String description, @NonNull String positiveButton,
-                                                     @NonNull String negativeButton) {
-        BasicFragmentDialog publishConfirmationDialog = new BasicFragmentDialog();
-        publishConfirmationDialog.initialize(identifier, title, description, positiveButton, negativeButton, null);
-        publishConfirmationDialog.show(getSupportFragmentManager(), identifier);
-    }
-
     private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
             case UPDATE:
             case SCHEDULE:
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return;
             case SUBMIT_FOR_REVIEW:
@@ -1686,41 +1660,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.openImageEditor(this, resizedImageUrl, imageUrl, outputFileExtension);
     }
 
-    @Override
-    public void onNegativeClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case TAG_PUBLISH_CONFIRMATION_DIALOG:
-            case TAG_UPDATE_CONFIRMATION_DIALOG:
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
-        }
-    }
-
-    @Override
-    public void onPositiveClicked(@NonNull String instanceTag) {
-        switch (instanceTag) {
-            case TAG_UPDATE_CONFIRMATION_DIALOG:
-                uploadPost(false);
-                break;
-            case TAG_PUBLISH_CONFIRMATION_DIALOG:
-                uploadPost(true);
-                AppRatingDialog.INSTANCE
-                        .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
-                break;
-            case TAG_GB_INFORMATIVE_DIALOG:
-                // no op
-                break;
-            case TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG:
-                // no op
-                break;
-            default:
-                AppLog.e(T.EDITOR, "Dialog instanceTag is not recognized");
-                throw new UnsupportedOperationException("Dialog instanceTag is not recognized");
-        }
-    }
-
     /*
      * user clicked OK on a settings list dialog displayed from the settings fragment - pass the event
      * along to the settings fragment
@@ -1805,8 +1744,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onPublishButtonClicked(boolean publishPost) {
+    @Override public void onSubmitButtonClicked(boolean publishPost) {
         uploadPost(publishPost);
+        if (publishPost) {
+            AppRatingDialog.INSTANCE
+                    .incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE);
+        }
     }
 
     private void uploadPost(final boolean publishPost) {

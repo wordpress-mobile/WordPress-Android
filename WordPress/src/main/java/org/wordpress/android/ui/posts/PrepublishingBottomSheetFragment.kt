@@ -113,9 +113,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.applyIfNotHandled { dismiss() }
         })
 
-        viewModel.triggerOnPublishButtonClickedListener.observe(this, Observer { event ->
+        viewModel.triggerOnSubmitButtonClickedListener.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
-                prepublishingBottomSheetListener?.onPublishButtonClicked(publishPost)
+                prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
             }
         })
 
@@ -178,8 +178,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onActionClicked(actionType)
     }
 
-    override fun onPublishButtonClicked(publishPost: PublishPost) {
-        viewModel.onPublishButtonClicked(publishPost)
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        viewModel.onSubmitButtonClicked(publishPost)
     }
 
     companion object {

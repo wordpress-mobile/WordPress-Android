@@ -16,8 +16,8 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
@@ -42,7 +42,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getPostTagsUseCase,
                 getPostVisibilityUseCase,
                 postSettingsUtils,
-                getButtonUiStateUseCase
+                getButtonUiStateUseCase,
+                mock()
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(
@@ -96,7 +97,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(mock(), site)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
+        assertThat(viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.size).isEqualTo(
                 expectedActionsAmount
         )
     }
@@ -228,10 +229,10 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that tapping publish button will invoke onPublishButtonClicked`() {
+    fun `verify that tapping submit button will invoke onSubmitButtonClicked`() {
         // arrange
         var event: Event<PublishPost>? = null
-        viewModel.onPublishButtonClicked.observeForever {
+        viewModel.onSubmitButtonClicked.observeForever {
             event = it
         }
 
@@ -246,8 +247,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
 
-    private fun getButtonUiState(): ButtonUiState? {
-        return viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.first()
+    private fun getButtonUiState(): SubmitButtonUiState? {
+        return viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.first()
     }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
