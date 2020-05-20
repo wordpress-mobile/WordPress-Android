@@ -35,6 +35,15 @@
         <item name="textColor">?attr/textColor</item>
     </style>
 
+    <style name="ReaderTextView.Site.Title" parent="ReaderTextView">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="textColor">@color/reader_site_title</item>
+    </style>
+
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

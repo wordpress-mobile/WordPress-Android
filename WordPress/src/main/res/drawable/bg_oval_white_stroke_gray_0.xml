@@ -6,5 +6,5 @@
     </solid>
     <stroke
         android:width="@dimen/reader_image_avatar_or_blavatar_border_width"
-        android:color="@color/neutral_120"/>
+        android:color="@color/gray_0"/>
 </shape>
