@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-12-19 20:28:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: en_CA
 -->
 <resources>
@@ -1110,7 +1110,6 @@ Language: en_CA
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt text</string>
-    <string name="copy">Copy</string>
     <string name="connect_site">Connect Site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>

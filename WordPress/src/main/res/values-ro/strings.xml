@@ -1,13 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-20 06:26:22+0000
-Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-06 06:12:52+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Află mai mult</string>
+    <string name="feature_announcement_dialog_label">Care sunt noutățile din WordPress</string>
+    <string name="insert_label_with_count">Inserează %d</string>
+    <string name="crop">decupează</string>
+    <string name="error_failed_to_load_into_file">Încărcarea în fișier a eșuat, te rog reîncearcă.</string>
+    <string name="preview_image_thumbnail_description">Previzualizează miniatura imaginii</string>
+    <string name="photo_picker_use_media">Folosește acest element media</string>
+    <string name="photo_picker_use_video">Folosește acest video</string>
+    <string name="photo_picker_photo_or_video_title">Alege un element media</string>
+    <string name="photo_picker_video_title">Alege un video</string>
+    <string name="site_picker_ask_site_select">Nu am putut selecta situl. Te rog reîncearcă.</string>
+    <string name="sitepicker_continue_flow">Continuă</string>
+    <string name="reader_reblog_error">Republicarea a eșuat</string>
+    <string name="reader_no_site_to_reblog_action">Administrează siturile</string>
+    <string name="reader_no_site_to_reblog_detail">După ce ai creat un sit WordPress.com, poți republica un conținut care îți place pe propriul sit.</string>
+    <string name="reader_no_site_to_reblog_title">Indisponibilă pentru siturile WordPress.com</string>
+    <string name="whats_new_in_version_title">Ce este nou</string>
+    <string name="comment_q_action_copied_url">Adresa legăturii a fost copiată</string>
+    <string name="copy_link_address">Copiază adresa legăturii</string>
+    <string name="comment_share_link_via">Partajează via</string>
+    <string name="comment_toast_err_share_intent">Nu pot partaja</string>
+    <string name="button_insert">Inserează</string>
+    <string name="continue_label">Continuă</string>
+    <string name="copy_text">Copiază</string>
+    <string name="gutenberg_native_subscribe">Abonează-te</string>
+    <string name="gutenberg_native_number_of_columns">Număr de coloane</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mută blocul în dreapta din poziția %1$s în poziția %2$s</string>
+    <string name="gutenberg_native_move_block_right">Mută blocul în dreapta</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mută blocul în stânga din poziția %1$s în poziția %2$s</string>
+    <string name="gutenberg_native_move_block_left">Mută blocul în stânga</string>
+    <string name="gutenberg_native_latest_blog_posts">Ultimele articole pe de blog</string>
+    <string name="gutenberg_native_follow_our_blog">Urmărește blogul nostru</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Atinge de două ori pentru a muta blocul în dreapta</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Atinge de două ori pentru a muta blocul în stânga</string>
+    <string name="gutenberg_native_columns_settings">Setări coloane</string>
+    <string name="gutenberg_native_color_settings_are_coming_soon">Setările de culoare vor fi disponibile în curând.</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Creez panoul de control</string>
+    <string name="new_site_creation_creating_site_loading_3">Inițializez tema</string>
+    <string name="new_site_creation_creating_site_loading_2">Adaug funcționalitățile sitului</string>
+    <string name="new_site_creation_creating_site_loading_1">Preiau URL-ul sitului</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Situl tău va fi gata în curând</string>
+    <string name="new_site_creation_creating_site_loading_title">Ura!\nAproape gata</string>
+    <string name="pages_and_posts_cancel_auto_upload">Anulează încărcarea</string>
+    <string name="gif_list_search_returned_unknown_error">A fost o problemă la gestionarea cererii</string>
+    <string name="gif_powered_by_tenor">Propulsat de Tenor</string>
+    <string name="gif_picker_search_hint">Caută Tenor</string>
+    <string name="photo_picker_gif">Alege din Tenor</string>
+    <string name="weekday_saturday">Sâmbătă</string>
+    <string name="weekday_friday">Vineri</string>
+    <string name="weekday_thursday">Joi</string>
+    <string name="weekday_wednesday">Miercuri</string>
+    <string name="weekday_tuesday">Marți</string>
+    <string name="weekday_monday">Luni</string>
+    <string name="weekday_sunday">Duminică</string>
+    <string name="media_accessing_failed">Accesarea conținutul unui sit privat a eșuat. Unele elemente media ar putea fi indisponibile.</string>
+    <string name="media_accessing_progress">Accesarea conținutul unui sit privat</string>
     <string name="error_failed_to_crop_and_save_image">Decuparea și salvarea imaginii a eșuat, te rog reîncearcă.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Inserarea imaginii a eșuat.\nTe rog atinge pentru a reîncerca.</string>
+    <string name="failed_to_load_image_tap_to_retry">Încărcarea imaginii a eșuat.\nTe rog atinge pentru a reîncerca.</string>
     <string name="preview_image_description">Previzualizează imaginea</string>
     <string name="error_unknown_page_type">Format de pagină necunoscut</string>
     <string name="error_page_not_submitted">Nu am putut finaliza această acțiune și nu am trimis această pagină pentru verificare.</string>
@@ -31,7 +88,6 @@ Language: ro
     <string name="page_uploading">Încarc pagina</string>
     <string name="error_publish_page_no_network">Dispozitivul este offline. Pagina a fost salvată local.</string>
     <string name="local_page_autosave_revision_available">Ai modificări nesalvate în această pagină</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Pagina ta se încarcă</string>
     <string name="editor_page_saved_locally_failed_media">Pagina a eșuat la încărcările media și a fost salvată local</string>
     <string name="editor_page_saved_locally">Pagini salvate pe dispozitiv</string>
@@ -64,7 +120,6 @@ Language: ro
     <string name="gutenberg_native_portfolio">Portofoliu</string>
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoliul meu prezintă diferite proiecte create de-a lungul carierei mele. Vezi informațiile mele de contact de mai jos și intrăm în legătură.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Înălțime minimă, în pixeli</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
     <string name="gutenberg_native_link_settings">Setări legătură</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hai să vorbim 👋 Nu ezita să mă contactezi, ai mai jos informațiile mele de contact, sau să-mi trimiți un mesaj folosind formularul.</string>
@@ -80,7 +135,6 @@ Language: ro
     <string name="gutenberg_native_get_in_touch">Intră în contact</string>
     <string name="gutenberg_native_excerpt_length_words">Lungime rezumat (cuvinte)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Trimite-mi un email la: &lt;a href=\"mailto:mail@example.com\">mail@exemplu.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Editează elementul media pentru copertă</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nu plânge pentru că s-a terminat, zâmbește pentru că s-a întâmplat.</string>
     <string name="gutenberg_native_customize">PERSONALIZEAZĂ</string>
@@ -89,7 +143,6 @@ Language: ro
     <string name="gutenberg_native_button_color_settings_are_coming_soon">Setările pentru culoarea butoanelor vor fi disponibile în curând.</string>
     <string name="gutenberg_native_border_settings">Setări chenar</string>
     <string name="gutenberg_native_border_radius">Rotunjire chenar</string>
-    <string name="gutenberg_native_background_opacity">Opacitate fundal</string>
     <string name="gutenberg_native_add_paragraph_block">Adaugă un bloc Paragraf</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">O scurtă descriere a serviciilor pe care le oferi.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">O biografie scurtă, ca un istoric personal, realizări importante sau fapte interesante.</string>
@@ -288,8 +341,8 @@ Language: ro
     <string name="notifications_tab_dialog_master_hint_on">Dezactivează afișarea notificărilor în fila notificări pentru acest sit</string>
     <string name="notifications_tab_dialog_master_status_off">Notificări pentru acest sit</string>
     <string name="notifications_tab_dialog_master_status_on">Notificări pentru acest sit</string>
-    <string name="dialog_gutenberg_informative_description_page">Acum folosești editorul de blocuri pentru pagini noi - foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
-    <string name="dialog_gutenberg_informative_description_post">Acum folosești editorul de blocuri pentru articole noi - foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
+    <string name="dialog_gutenberg_informative_description_page">Acum folosești editorul de blocuri pentru pagini noi, foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
+    <string name="dialog_gutenberg_informative_description_post">Acum folosești editorul de blocuri pentru articole noi, foarte bine! Dacă vrei să treci la editorul clasic, mergi la „Situl meu” > „Setări sit”.</string>
     <string name="pick_media">Adaugă imagine sau video</string>
     <string name="error_post_not_submitted_retrying">Nu am putut trimite acest articol pentru verificare, dar vom încerca din nou mai târziu.</string>
     <string name="error_post_not_scheduled_retrying">Nu am putut programa acest articol, dar vom încerca din nou mai târziu.</string>
@@ -650,6 +703,9 @@ Language: ro
     <string name="stats_no_data_for_period">Nu există date pentru această perioadă</string>
     <string name="preference_strip_image_location">Înlătură locația din Media</string>
     <string name="stats_cannot_be_started">Pentru moment, nu putem deschide statisticile. Te rog reîncearcă mai târziu</string>
+    <string name="gif_picker_endless_scroll_network_error">Unele elemente media au eșuat la încărcare din cauza unei erori de rețea.</string>
+    <string name="gif_picker_empty_search_list">Nu s-a potrivit niciun element media cu căutarea ta</string>
+    <string name="gif_picker_initial_empty_text">Caută pentru a găsi imagini GIF pe care să le adaugi în biblioteca ta Media!</string>
     <string name="stats_author_views_label">Vizualizări</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>
@@ -1290,7 +1346,6 @@ Language: ro
     <string name="media_edit_filename_caption">Nume fișier</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Text alternativ</string>
-    <string name="copy">Copiază</string>
     <string name="connect_site">Conectează situl</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luminează intermitent</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrează dispozitivul</string>
@@ -1872,7 +1927,7 @@ Language: ro
     <string name="theme_activation_error">Ceva a mers prost. Nu pot activa tema</string>
     <string name="theme_by_author_prompt_append">de %1$s</string>
     <string name="theme_prompt">Îți mulțumim că ai ales %1$s</string>
-    <string name="theme_manage_site">ADMINISTRARE SIT</string>
+    <string name="theme_manage_site">ADMINISTREAZĂ SITUL</string>
     <string name="theme_done">GATA</string>
     <string name="theme_support">Suport</string>
     <string name="theme_details">Detalii</string>
@@ -2155,6 +2210,7 @@ Language: ro
     <string name="reader_btn_unfollow">Urmăresc</string>
     <string name="reader_btn_follow">Urmărește</string>
     <string name="reader_btn_share">Partajare</string>
+    <string name="reader_view_reblog">Republicare</string>
     <string name="reader_untitled_post">(Fără titlu)</string>
     <string name="comments_empty_list">Niciun comentariu până acum</string>
     <string name="empty_list_default">Această listă e goală</string>

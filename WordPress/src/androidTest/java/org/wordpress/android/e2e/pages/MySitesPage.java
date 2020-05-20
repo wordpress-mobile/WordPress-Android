@@ -8,8 +8,10 @@ import androidx.test.espresso.ViewInteraction;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
@@ -47,5 +49,11 @@ public class MySitesPage {
 
     public void startNewPost() {
         clickOn(R.id.fab_button);
+    }
+
+    public void gotoSiteSettings() {
+        onView(withId(R.id.row_settings))
+                .perform(scrollTo());
+        clickOn(R.id.row_settings);
     }
 }

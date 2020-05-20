@@ -87,12 +87,17 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
+import org.wordpress.android.ui.PagePostCreationSourcesDetail;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.main.BottomNavController;
+import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -103,6 +108,9 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.reblog.NoSite;
+import org.wordpress.android.ui.reader.reblog.PostEditor;
+import org.wordpress.android.ui.reader.reblog.SitePicker;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -154,7 +162,8 @@ public class ReaderPostListFragment extends Fragment
         ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
         WPMainActivity.OnActivityBackPressedListener,
-        WPMainActivity.OnScrollToTopListener {
+        WPMainActivity.OnScrollToTopListener,
+        ReblogActionListener {
     private static final int TAB_POSTS = 0;
     private static final int TAB_SITES = 1;
     private static final int NO_POSITION = -1;
@@ -495,6 +504,8 @@ public class ReaderPostListFragment extends Fragment
                 mRecyclerView.setToolbarScrollFlags(0);
             }
         });
+
+        handleReblogStateChanges();
 
         mViewModel.start(
                 mCurrentTag,
@@ -1682,6 +1693,9 @@ public class ReaderPostListFragment extends Fragment
         String description = null;
         ActionableEmptyViewButtonType button = null;
 
+        // Ensure the default image is reset for empty views before applying logic
+        mActionableEmptyView.image.setImageResource(R.drawable.img_illustration_empty_results_216dp);
+
         if (shouldShowEmptyViewForSelfHostedCta()) {
             setEmptyTitleAndDescriptionForSelfHostedCta();
             return;
@@ -1709,7 +1723,8 @@ public class ReaderPostListFragment extends Fragment
                             title = getString(R.string.reader_empty_followed_blogs_title);
                             description = getString(R.string.reader_empty_followed_blogs_description);
                         }
-
+                        mActionableEmptyView.image.setImageResource(
+                                R.drawable.img_illustration_following_empty_results_196dp);
                         button = ActionableEmptyViewButtonType.DISCOVER;
                     } else if (getCurrentTag().isPostsILike()) {
                         title = getString(R.string.reader_empty_posts_liked_title);
@@ -1761,7 +1776,6 @@ public class ReaderPostListFragment extends Fragment
         SpannableStringBuilder ssb = new SpannableStringBuilder(description);
         int imagePlaceholderPosition = description.indexOf("%s");
         addBookmarkImageSpan(ssb, imagePlaceholderPosition);
-
         mActionableEmptyView.image.setVisibility(View.VISIBLE);
         mActionableEmptyView.title.setText(R.string.reader_empty_saved_posts_title);
         mActionableEmptyView.subtitle.setText(ssb);
@@ -2076,6 +2090,7 @@ public class ReaderPostListFragment extends Fragment
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
+            mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
             mPostAdapter.setOnPostPopupListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
@@ -2890,6 +2905,51 @@ public class ReaderPostListFragment extends Fragment
                 //noinspection unchecked
                 mFilterCriteriaLoaderListener.onFilterCriteriasLoaded((List) tagList);
             }
+        }
+    }
+
+    /**
+     * Handles reblog state changes and triggers reblog actions
+     */
+    private void handleReblogStateChanges() {
+        mViewModel.getReblogState().observe(this, event -> {
+            event.applyIfNotHandled(state -> {
+                if (state instanceof NoSite) {
+                    ReaderActivityLauncher.showNoSiteToReblog(getActivity());
+                } else if (state instanceof SitePicker) {
+                    SitePicker sitePickerStateData = (SitePicker) state;
+                    ActivityLauncher.showSitePickerForResult(
+                            this,
+                            sitePickerStateData.getSite(),
+                            SitePickerMode.REBLOG_SELECT_MODE
+                    );
+                } else if (state instanceof PostEditor) {
+                    PostEditor postEditorStateData = (PostEditor) state;
+                    ActivityLauncher.openEditorForReblog(
+                            getActivity(),
+                            postEditorStateData.getSite(),
+                            postEditorStateData.getPost(),
+                            PagePostCreationSourcesDetail.POST_FROM_REBLOG
+                    );
+                } else { // Error
+                    ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
+                }
+                return null;
+            });
+        });
+    }
+
+    @Override
+    public void reblog(ReaderPost post) {
+        mViewModel.onReblogButtonClicked(post);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.SITE_PICKER && resultCode == Activity.RESULT_OK) {
+            int siteLocalId = data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1);
+            mViewModel.onReblogSiteSelected(siteLocalId);
         }
     }
 }

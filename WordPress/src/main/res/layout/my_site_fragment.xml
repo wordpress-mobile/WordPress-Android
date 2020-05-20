@@ -64,7 +64,7 @@
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
                             tools:ignore="UnusedAttribute"
-                            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
                     </com.google.android.material.card.MaterialCardView>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -309,8 +309,9 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/row_register_domain"
-                            style="@style/MySiteListRowLayout">
+                            style="@style/MySiteListRowLayout"
+                            android:foreground="@null"
+                            tools:ignore="UnusedAttribute">
 
                             <ImageView
                                 android:id="@+id/my_site_register_domain_icon"

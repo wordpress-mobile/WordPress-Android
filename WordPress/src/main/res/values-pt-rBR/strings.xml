@@ -1,11 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-28 20:10:19+0000
-Plural-Forms: nplurals=2; plural=(n > 1);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-08 17:11:39+0000
+Plural-Forms: nplurals=2; plural=n > 1;
+Generator: GlotPress/3.0.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="crop">recortar</string>
+    <string name="photo_picker_use_media">Use esta mídia</string>
+    <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_no_site_to_reblog_action">Gerenciar sites</string>
+    <string name="reader_no_site_to_reblog_detail">Assim que você criar um site no WordPress.com, você poderá republicar o conteúdo que você curtir em seu próprio site.</string>
+    <string name="whats_new_in_version_title">Novidades</string>
+    <string name="comment_q_action_copied_url">Link copiado</string>
+    <string name="copy_link_address">Copiar link</string>
+    <string name="comment_toast_err_share_intent">Não é possível compartilhar </string>
+    <string name="button_insert">Inserir</string>
+    <string name="continue_label">Continuar</string>
+    <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_subscribe">Assinar</string>
+    <string name="gutenberg_native_number_of_columns">Número de colunas</string>
+    <string name="gutenberg_native_latest_blog_posts">Posts mais recentes</string>
+    <string name="gutenberg_native_follow_our_blog">Siga o nosso blog</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancelar envio</string>
+    <string name="weekday_saturday">Sábado</string>
+    <string name="weekday_friday">Sexta-feira</string>
+    <string name="weekday_thursday">Quinta-feira</string>
+    <string name="weekday_wednesday">Quarta-feira</string>
+    <string name="weekday_tuesday">Terça-feira</string>
+    <string name="weekday_monday">Segunda-feira</string>
+    <string name="weekday_sunday">Domingo</string>
+    <string name="error_publish_page_no_network">O dispositivo está off-line. A página será salva localmente.</string>
+    <string name="editor_page_saved_locally">Página salva no dispositivo</string>
+    <string name="editor_page_saved_online">Página salva online</string>
+    <string name="app_theme_dark">Escuro</string>
+    <string name="app_theme_light">Claro</string>
+    <string name="gutenberg_native_want_to_work_with_us">Quer trabalhar conosco?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_team">Equipe</string>
+    <string name="gutenberg_native_success_message">Mensagem de sucesso</string>
+    <string name="gutenberg_native_strategy">Estratégia</string>
+    <string name="gutenberg_native_services">Serviços</string>
+    <string name="gutenberg_native_portfolio">Portfólio</string>
+    <string name="gutenberg_native_link_to">Link para</string>
+    <string name="gutenberg_native_link_settings">Configurações do link</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_button_color_settings_are_coming_soon">Configurações de cor do botão em breve.</string>
+    <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
@@ -1197,7 +1239,6 @@ Language: pt_BR
     <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy">Copiar</string>
     <string name="connect_site">Conectar site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Sinal luminoso</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>
