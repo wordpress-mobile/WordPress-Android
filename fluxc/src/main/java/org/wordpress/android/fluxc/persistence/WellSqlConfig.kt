@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 104
+        return 105
     }
 
     override fun getDbName(): String {
@@ -1078,6 +1078,19 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
+                }
+                104 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementModel")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeatureModel")
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
+                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION_CODE INTEGER," +
+                                    "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncementFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "ANNOUNCEMENT_ID INTEGER,TITLE TEXT,SUBTITLE TEXT,ICON_URL TEXT,ICON_BASE64 TEXT)"
+                    )
                 }
             }
         }
