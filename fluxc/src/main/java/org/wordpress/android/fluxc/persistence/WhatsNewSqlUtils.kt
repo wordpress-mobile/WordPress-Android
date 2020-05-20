@@ -16,7 +16,6 @@ import javax.inject.Singleton
 @Singleton
 class WhatsNewSqlUtils
 @Inject constructor() {
-
     fun hasCachedAnnouncements(): Boolean {
         return WellSql.select(WhatsNewAnnouncementBuilder::class.java).count() > 0
     }
