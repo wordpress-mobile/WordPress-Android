@@ -61,7 +61,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
+    fun `verify that post home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
         val expectedActionsAmount = 3
 
@@ -72,6 +72,45 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
                 expectedActionsAmount
         )
+    }
+
+    @Test
+    fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
+        // arrange
+        val expectedActionsAmount = 2
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
+                expectedActionsAmount
+        )
+    }
+
+    @Test
+    fun `verify that tags actions is propagated to prepublishingHomeUiState once post is not a page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(false)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(getHomeUiState(TAGS)).isNotNull()
+    }
+
+    @Test
+    fun `verify that tags actions is not propagated to prepublishingHomeUiState once post is a page`() {
+        // arrange
+        whenever(editPostRepository.isPage).thenReturn(true)
+
+        // act
+        viewModel.start(editPostRepository, site)
+
+        // assert
+        assertThat(getHomeUiState(TAGS)).isNull()
     }
 
     @Test

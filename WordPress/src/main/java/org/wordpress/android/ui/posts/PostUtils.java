@@ -353,8 +353,8 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    public static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
-        return postStatus == PostStatus.DRAFT;
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
+        return postStatus == PostStatus.DRAFT || postStatus == PostStatus.PRIVATE;
     }
 
     static boolean shouldPublishImmediatelyOptionBeAvailable(String postStatus) {
