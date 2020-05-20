@@ -38,7 +38,7 @@
             android:id="@+id/image_avatar_or_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:importantForAccessibility="no"
-            android:background="@drawable/bg_oval_white_stroke_1dp"
+            android:background="@drawable/bg_reader_avatar_or_blavatar_with_border"
             android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@+id/guideline_beginning"

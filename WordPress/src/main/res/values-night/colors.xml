@@ -59,5 +59,6 @@
     <color name="reader_post_title">@color/gray_5</color>
     <color name="reader_site_title">@color/gray_5</color>
     <color name="reader_image_featured_border">@color/gray_80</color>
+    <color name="reader_image_avatar_or_blavatar_border">@color/gray_80</color>
 
 </resources>
