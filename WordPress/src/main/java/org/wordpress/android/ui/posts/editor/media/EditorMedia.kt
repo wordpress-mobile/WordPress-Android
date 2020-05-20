@@ -135,7 +135,7 @@ class EditorMedia @Inject constructor(
                     site,
                     freshlyTaken,
                     editorMediaListener,
-                    (editorType == POST_EDITOR)
+                    (editorType == POST_EDITOR) // also start upload if this is a Posts editor
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))

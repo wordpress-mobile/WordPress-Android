@@ -66,7 +66,7 @@ class AddLocalMediaToPostUseCase @Inject constructor(
         if (doUploadAfterAdding) {
             addToEditorAndUpload(createMediaModelsResult.mediaModels, editorMediaListener)
         } else {
-            // only add media without uploading
+            // Only add media without uploading
             appendMediaToEditorUseCase.addMediaToEditor(editorMediaListener, createMediaModelsResult.mediaModels)
         }
 
