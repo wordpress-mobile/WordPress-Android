@@ -7,6 +7,7 @@
 
     <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
+        style="@style/ReaderRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
@@ -16,7 +17,6 @@
     <include
         android:id="@+id/empty_custom_view"
         layout="@layout/reader_empty_view" />
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/layout_new_posts"

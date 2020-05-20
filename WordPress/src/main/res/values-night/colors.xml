@@ -41,6 +41,8 @@
 
     <color name="post_history_underlying_background">@color/gray_100</color>
 
+    <!-- Reader -->
+
     <!-- Reader Following empty view -->
     <color name="reader_following_empty_view_upper_right_plus">@color/red_70</color>
     <color name="reader_following_empty_view_mid_left_plus">@color/celadon_60</color>
@@ -49,4 +51,11 @@
     <color name="reader_following_empty_view_outline">@color/transparent</color>
     <color name="reader_following_empty_view_middle_plus">@color/gray_60</color>
     <color name="reader_following_empty_view_background">@color/transparent</color>
+
+    <!-- Reader Post Card -->
+    <color name="reader_post_list_background">@color/background_dark</color>
+    <color name="reader_card_background">@color/neutral_110</color>
+    <color name="reader_label_text">#99ffffff</color>
+    <color name="reader_post_title">#deffffff</color>
+
 </resources>
