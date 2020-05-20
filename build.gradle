@@ -1,6 +1,7 @@
 buildscript {
     ext.kotlinVersion = '1.3.61'
     ext.navComponenVersion = '2.0.0'
+    ext.buildGutenbergMobileJSBundle = 1
 
     repositories {
         google()
@@ -20,9 +21,25 @@ plugins {
     id 'com.gradle.build-scan' version '2.0.2'
 }
 
+ext {
+    buildGutenbergMobileJSBundle = 1
+}
+
 apply plugin: 'com.automattic.android.fetchstyle'
 
 project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
+def suppressJSBundle =  System.getenv('SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD').asBoolean()
+project.ext.buildGutenbergMobileJSBundle = !(suppressJSBundle || project.ext.buildGutenbergFromSource)
+
+if (project.ext.buildGutenbergFromSource) {
+    def nodeModulesDir = new File('libs/gutenberg-mobile/node_modules')
+    if (!nodeModulesDir.exists()) {
+        def message = "Attempting to build Gutenberg from source without a libs/gutenberg-mobile/node_modules directory. \
+Either run `yarn install` manually within libs/gutenberg-mobile or disable building Gutenberg from source by \
+setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
+        throw new GradleException(message)
+    }
+}
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -107,7 +124,7 @@ ext {
     androidxWorkVersion = "2.0.1"
 
     daggerVersion = '2.22.1'
-    fluxCVersion = '1.6.12-beta-3'
+    fluxCVersion = '1.6.12'
 
     appCompatVersion = '1.0.2'
     constraintLayoutVersion = '1.1.3'

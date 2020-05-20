@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.RNEditorTheme;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
@@ -29,6 +30,7 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_LOCALE = "param_locale";
     private static final String ARG_TRANSLATIONS = "param_translations";
     private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
+    private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
 
     private boolean mHtmlModeEnabled;
@@ -40,6 +42,7 @@ public class GutenbergContainerFragment extends Fragment {
                                                          String localeString,
                                                          Bundle translations,
                                                          boolean isDarkMode,
+                                                         boolean isSiteUsingWpComRestApi,
                                                          Bundle editorTheme) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
@@ -48,6 +51,7 @@ public class GutenbergContainerFragment extends Fragment {
         args.putString(ARG_LOCALE, localeString);
         args.putBundle(ARG_TRANSLATIONS, translations);
         args.putBoolean(ARG_PREFERRED_COLOR_SCHEME, isDarkMode);
+        args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
         fragment.setArguments(args);
         return fragment;
@@ -66,6 +70,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
+                                  AddMentionUtil addMentionUtil,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -78,6 +83,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
+                    addMentionUtil,
                     isDarkMode);
     }
 
@@ -90,6 +96,7 @@ public class GutenbergContainerFragment extends Fragment {
         String localeString = getArguments().getString(ARG_LOCALE);
         Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
         boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
+        boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
@@ -106,15 +113,17 @@ public class GutenbergContainerFragment extends Fragment {
                 translations,
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
-                new RNEditorTheme() {
-                    @Override public ArrayList<Bundle> getColors() {
-                        return editorTheme.getParcelableArrayList("colors");
-                    }
-
-                    @Override public ArrayList<Bundle> getGradients() {
-                        return editorTheme.getParcelableArrayList("gradients");
-                    }
-                });
+                isSiteUsingWpComRestApi,
+                                        new RNEditorTheme() {
+            @Override public ArrayList<Bundle> getColors() {
+                return editorTheme.getParcelableArrayList("colors");
+            }
+            
+            @Override public ArrayList<Bundle> getGradients() {
+                return editorTheme.getParcelableArrayList("gradients");
+            }
+        }
+        );
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;

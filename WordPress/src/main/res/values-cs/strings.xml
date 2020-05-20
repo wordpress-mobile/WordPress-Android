@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2020-03-31 06:52:54+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: cs_CZ
 -->
 <resources>
@@ -691,7 +691,6 @@ Language: cs_CZ
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="copy_text">Kopírovat</string>
     <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>

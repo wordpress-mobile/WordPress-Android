@@ -1,0 +1,4 @@
+14.8:
+<b>Zum Block-Editor hinzugefügt:</b> Buttons-Block zeigt mehrere Buttons in einer Zeile an; Bild-Blöcke füllen Bildunterschriften automatisch aus, falls verfügbar; Überschriften-Block beinhaltet Ausrichtungs-Optionen.
+<b>Block-Editor-Verbesserungen:</b> Schwebende Werkzeugleiste neu platziert, Fehler behoben, wodurch es zu zusätzlichen Leerzeichen in Textblöcken kam, fehlerhaft ausgerichtete Icons in der Werkzeugleiste behoben im RTL-Modus.
+<b>Allgemeine Aktualisierungen:</b> Reblog-Funktionalität hinzugefügt.

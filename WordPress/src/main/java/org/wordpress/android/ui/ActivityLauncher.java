@@ -947,6 +947,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void viewSuggestUsersForResult(@NonNull Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, SuggestUsersActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivityForResult(intent, RequestCodes.SELECTED_USER_MENTION);
+    }
+
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
@@ -980,6 +986,7 @@ public class ActivityLauncher {
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
             // disable deeplinking activity so to not catch WP URLs

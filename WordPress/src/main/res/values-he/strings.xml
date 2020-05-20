@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-30 09:54:12+0000
+Translation-Revision-Date: 2020-05-13 13:54:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">למידע נוסף</string>
+    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
+    <string name="insert_label_with_count">להוסיף %d</string>
+    <string name="crop">לחתוך</string>
+    <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
+    <string name="preview_image_thumbnail_description">להציג תצוגה מקדימה של התמונה הממוזערת</string>
+    <string name="photo_picker_use_media">להשתמש בפריט המדיה הזה</string>
+    <string name="photo_picker_use_video">להשתמש בווידאו הזה</string>
+    <string name="photo_picker_photo_or_video_title">לבחור מדיה</string>
+    <string name="photo_picker_video_title">לבחור וידאו</string>
+    <string name="site_picker_ask_site_select">לא ניתן היה לבחור אתר. יש לנסות שוב.</string>
+    <string name="sitepicker_continue_flow">המשך</string>
+    <string name="reader_reblog_error">הפרסום החדש בבלוג נכשל</string>
+    <string name="reader_no_site_to_reblog_action">ניהול אתרים</string>
+    <string name="reader_no_site_to_reblog_detail">לאחר יצירת אתר ב-WordPress.com, אפשר לפרסם מחדש בבלוג את התוכן שברצונך להציג באתר שלך.</string>
+    <string name="reader_no_site_to_reblog_title">אין אתרי WordPress.com זמינים</string>
+    <string name="whats_new_in_version_title">מה חדש</string>
+    <string name="comment_q_action_copied_url">כתובת הקישור הועתקה</string>
+    <string name="copy_link_address">להעתיק את הכתובת של הקישור</string>
+    <string name="comment_share_link_via">לשתף דרך</string>
+    <string name="comment_toast_err_share_intent">לא ניתן לשתף</string>
+    <string name="button_insert">להוסיף</string>
+    <string name="continue_label">המשך</string>
+    <string name="copy_text">להעתיק</string>
     <string name="gutenberg_native_subscribe">להירשם</string>
     <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
@@ -40,7 +64,7 @@ Language: he_IL
     <string name="media_accessing_failed">נכשלה הגישה לתוכן באתר פרטי. חלק מפרטי המדיה עלולים להיות לא זמינים</string>
     <string name="media_accessing_progress">ניגש לתוכן של אתר פרטי</string>
     <string name="error_failed_to_crop_and_save_image">פעולת החיתוך והשמירה של התמונה נכשלה, יש לנסות שוב.</string>
-    <string name="failed_to_insert_image_tap_to_retry">ההוספה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
+    <string name="failed_to_load_image_tap_to_retry">הטעינה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
     <string name="preview_image_description">להציג תצוגה מקדימה של התמונה</string>
     <string name="error_unknown_page_type">פורמט עמוד לא ידוע</string>
     <string name="error_page_not_submitted">לא הצלחנו להשלים את הפעולה ולא שלחנו את העמוד לבדיקה.</string>
@@ -1319,7 +1343,6 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="copy_text">העתק</string>
     <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>

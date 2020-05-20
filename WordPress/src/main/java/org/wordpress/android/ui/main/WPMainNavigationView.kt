@@ -94,7 +94,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        navAdapter.init()
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -167,9 +166,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
             if (previousFragment != null) {
-                fragmentManager.beginTransaction().hide(previousFragment).show(fragment).commit()
+                fragmentManager.beginTransaction().detach(previousFragment).attach(fragment).commit()
             } else {
-                fragmentManager.beginTransaction().show(fragment).commit()
+                fragmentManager.beginTransaction().attach(fragment).commit()
             }
         }
         prevPosition = position
@@ -238,7 +237,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         return itemView?.findViewById(R.id.nav_icon)
     }
 
-    fun getFragment(pageType: PageType) = navAdapter.getFragment(getPosition(pageType))
+    fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
         if (isValidPosition(position)) {
@@ -288,24 +287,20 @@ class WPMainNavigationView @JvmOverloads constructor(
             }
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
-                    .hide(fragment)
-                    .commit()
+                    .commitNow()
             return fragment
         }
 
-        internal fun init() {
-            for (pageType in pages()) {
-                if (fragmentManager.findFragmentByTag(getTagForPageType(pageType)) == null) {
-                    createFragment(pageType)
-                }
+        internal fun getFragment(position: Int): Fragment? {
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 
-        internal fun getFragment(position: Int): Fragment? {
-            val pageType = pages().getOrElse(position) {
-                return null
+        internal fun getFragmentIfExists(position: Int): Fragment? {
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType))
             }
-            return fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
         }
     }
 
