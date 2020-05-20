@@ -48,36 +48,43 @@ class PrepublishingHomeViewModel @Inject constructor(
     }
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
-        val prepublishingHomeUiStateList = listOf(
-                HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)),
-                HomeUiState(
-                        actionType = VISIBILITY,
-                        actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                        onActionClicked = ::onActionClicked
-                ),
-                HomeUiState(
-                        actionType = PUBLISH,
-                        actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                            val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                            if (label.isNotEmpty()) {
-                                UiStringText(label)
-                            } else {
-                                UiStringRes(R.string.immediately)
-                            }
-                        },
-                        onActionClicked = ::onActionClicked
-                ),
-                HomeUiState(
+        val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
+            add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
+
+            add(HomeUiState(
+                    actionType = VISIBILITY,
+                    actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                    onActionClicked = ::onActionClicked
+            ))
+
+            add(HomeUiState(
+                    actionType = PUBLISH,
+                    actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
+                        val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                        if (label.isNotEmpty()) {
+                            UiStringText(label)
+                        } else {
+                            UiStringRes(R.string.immediately)
+                        }
+                    },
+                    onActionClicked = ::onActionClicked
+            ))
+
+            if (!editPostRepository.isPage) {
+                add(HomeUiState(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
-                ),
-                PublishButtonUiState(UiStringRes(getPublishButtonLabelUseCase.getLabel(editPostRepository))) {
-                    analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
-                    _onPublishButtonClicked.postValue(Event(Unit))
-                }
-        )
+                )
+                )
+            }
+
+            add(PublishButtonUiState(UiStringRes(getPublishButtonLabelUseCase.getLabel(editPostRepository))) {
+                analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
+                _onPublishButtonClicked.postValue(Event(Unit))
+            })
+        }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
     }

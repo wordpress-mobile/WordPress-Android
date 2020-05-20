@@ -8,7 +8,6 @@
     <FrameLayout
         android:id="@+id/prepublishing_content_fragment"
         android:layout_width="0dp"
-        android:minHeight="@dimen/prepublishing_fragment_container_min_height"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
