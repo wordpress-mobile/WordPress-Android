@@ -90,6 +90,7 @@ class PostListMainViewModel @Inject constructor(
         get() = bgDispatcher + scrollToTargetPostJob
 
     private lateinit var site: SiteModel
+    private lateinit var editPostRepository: EditPostRepository
 
     private val _viewState = MutableLiveData<PostListMainViewState>()
     val viewState: LiveData<PostListMainViewState> = _viewState
@@ -106,8 +107,8 @@ class PostListMainViewModel @Inject constructor(
     private val _scrollToLocalPostId = SingleLiveEvent<LocalPostId>()
     val scrollToLocalPostId = _scrollToLocalPostId as LiveData<LocalPostId>
 
-    private val _openPrepublishingBottomSheet = MutableLiveData<Event<PostModel>>()
-    val openPrepublishingBottomSheet: LiveData<Event<PostModel>> = _openPrepublishingBottomSheet
+    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
+    val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
@@ -205,8 +206,9 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState) {
+    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState, editPostRepository: EditPostRepository) {
         this.site = site
+        this.editPostRepository = editPostRepository
 
         if (isSearchExpanded.value == true) {
             setViewLayoutAndIcon(COMPACT, false)
@@ -418,7 +420,8 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun showPrepublishingBottomSheet(post: PostModel) {
-        _openPrepublishingBottomSheet.postValue(Event(post))
+        editPostRepository.loadPostByLocalPostId(post.id)
+        _openPrepublishingBottomSheet.postValue(Event(Unit))
     }
 
     /**
@@ -526,5 +529,9 @@ class PostListMainViewModel @Inject constructor(
     private fun setUserPreferredViewLayoutType() {
         val savedLayoutType = prefs.postListViewLayoutType
         setViewLayoutAndIcon(savedLayoutType, false)
+    }
+
+    fun onBottomSheetPublishButtonClicked(postId: LocalId) {
+        postActionHandler.publishPost(postId.value)
     }
 }

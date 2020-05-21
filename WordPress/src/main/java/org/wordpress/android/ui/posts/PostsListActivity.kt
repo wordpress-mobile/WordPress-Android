@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -48,7 +49,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissBy
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostListType.SEARCH
-import org.wordpress.android.ui.posts.PostUploadAction.PublishPost
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion.newInstance
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
@@ -91,15 +91,9 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
     private lateinit var site: SiteModel
-    override fun getSite() = site
-    var postId: Int = 0
 
-    override fun getEditPostRepository(): EditPostRepository {
-        if (!editPostRepository.hasPost()) {
-            editPostRepository.loadPostByLocalPostId(postId)
-        }
-        return editPostRepository
-    }
+    override fun getSite() = site
+    override fun getEditPostRepository() = editPostRepository
 
     private lateinit var viewModel: PostListMainViewModel
 
@@ -246,7 +240,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState)
+        viewModel.start(site, initPreviewState, editPostRepository)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {
@@ -331,8 +325,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
-            event.getContentIfNotHandled().let { post ->
-                postId = post!!.id
+            event.applyIfNotHandled {
                 val prepublishingFragment = newInstance(site)
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
@@ -574,16 +567,7 @@ class PostsListActivity : LocaleAwareActivity(),
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onPublishButtonClicked() {
-        val uploadAction = editPostRepository.getEditablePost()?.let { PublishPost(dispatcher, site, it) }
-        uploadAction?.let {
-            handleUploadAction(
-                    it,
-                this@PostsListActivity,
-                findViewById(R.id.coordinator),
-                uploadActionUseCase,
-                uploadUtilsWrapper
-        )
-        }
+    override fun onPublishButtonClicked(postId: LocalId) {
+        viewModel.onBottomSheetPublishButtonClicked(postId)
     }
 }
