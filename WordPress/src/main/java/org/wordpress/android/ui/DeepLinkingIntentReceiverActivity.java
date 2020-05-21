@@ -79,6 +79,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 handleOpenEditorFromTrackingUrl(uri);
             } else if (isFromAppBanner(host)) {
                 handleAppBanner(host);
+            } else if (shouldEditPost(host)) {
+                handleOpenEditorFromDeepLink(uri);
             } else if (shouldViewPost(host)) {
                 handleViewPost(uri);
             } else {
@@ -130,7 +132,57 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         handleOpenEditor(redirectUri);
     }
 
+    private boolean shouldEditPost(String host) {
+        return StringUtils.equals(host, DEEP_LINK_HOST_POST);
+    }
+
+    private void handleOpenEditorFromDeepLink(@NonNull Uri uri) {
+        String blogId = uri.getQueryParameter("blogId");
+        String postId = uri.getQueryParameter("postId");
+
+        if (blogId == null) {
+            // No blogId provided. Follow default behaviour: open a blank editor with the current selected site
+            ActivityLauncher.openEditorInNewStack(getContext());
+            return;
+        }
+
+        SiteModel site;
+        
+        Long lBlogId = parseBlogId(blogId);
+        if (lBlogId != null) {
+            // Blog id is a number so we check for it as site id
+            site = mSiteStore.getSiteBySiteId(lBlogId);
+        } else {
+            // Blog id is not a number so we check for it as blog name or url
+            List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(blogId);
+            site = matchedSites.isEmpty() ? null : matchedSites.get(0);
+        }
+        
+        if (site == null) {
+            // Site not found. Open a blank editor with the current selected site
+            ActivityLauncher.openEditorInNewStack(getContext());
+            return;
+        }
+        
+        if (postId == null) {
+            // Open new post editor for given site
+            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+        }
+    
+        // TODO: 21/05/2020 Open editor with post id
+        ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+    }
+
+    private Long parseBlogId(String blogString) {
+        try {
+            return Long.valueOf(blogString);
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
     private void handleOpenEditor(@NonNull Uri uri) {
+        // TODO: 21/05/2020 Also check for post id in path/query
         String urlPathSegment = uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
         openEditorForSite(urlPathSegment);
     }
@@ -174,9 +226,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             case DEEP_LINK_HOST_NOTIFICATIONS:
                 ActivityLauncher.viewNotificationsInNewStack(getContext());
                 break;
-            case DEEP_LINK_HOST_POST:
-                ActivityLauncher.openEditorInNewStack(getContext());
-                break;
             case DEEP_LINK_HOST_STATS:
                 long primarySiteId = mAccountStore.getAccount().getPrimarySiteId();
                 SiteModel siteModel = mSiteStore.getSiteBySiteId(primarySiteId);
@@ -191,7 +240,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private boolean isFromAppBanner(String host) {
         return (host != null
                 && (host.equals(DEEP_LINK_HOST_NOTIFICATIONS)
-                || host.equals(DEEP_LINK_HOST_POST)
                 || host.equals(DEEP_LINK_HOST_READ)
                 || host.equals(DEEP_LINK_HOST_STATS)));
     }

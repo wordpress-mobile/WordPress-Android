@@ -1,0 +1,53 @@
+# Implement intent handling for https://wordpress.com/post/blog_id/post_id & wordpress://post/blog_id=1231/post_id=12
+
+[X] Separate URI parsing for deep-linked POST intents from generic deep-link intent URIs
+
+[ ] Parse blogId and postId from deep link query parameters
+    [X] If no parameter is given, open empty editor in current site (current default)
+    [X] If post id is given without blog id, ignore both and open empty editor in current site
+    [X] If blog id is given, open editor for that blog
+    [ ] If post id is also given, open editor with that post
+
+    [ ] Parse blogId and postId from deep link query parameters
+        [X] If no parameter is given, open empty editor in current site (current default)
+        [X] If blog id is given, open editor for that blog
+        [ ] If post id is also given, open editor with that post
+        [ ] If post id is given without blog id, ignore both and open empty editor in current site
+
+
+
+## Test
+
+### Site ids
+
+Test site: 177737282
+Other test site: 177737315
+
+### Deep link
+
+### Open post
+
+adb shell am start \
+ -W -a android.intent.action.VIEW \
+ -c android.intent.category.BROWSABLE \
+ -d "wordpress://post?blogId=177737282\&postId=1194"
+
+### New post on blog
+
+adb shell am start \
+ -W -a android.intent.action.VIEW \
+ -c android.intent.category.BROWSABLE \
+ -d "wordpress://post?blogId=177737282
+
+### New post on current blog
+
+adb shell am start \
+ -W -a android.intent.action.VIEW \
+ -c android.intent.category.BROWSABLE \
+ -d "wordpress://post?postId=1194"
+
+adb shell am start \
+ -W -a android.intent.action.VIEW \
+ -c android.intent.category.BROWSABLE \
+ -d "wordpress://post"
+
