@@ -100,6 +100,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
                                 it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
                         )
                         editorMedia.onPhotoPickerMediaChosen(uriList)
+                    } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
+                        handleMediaPickerResult(it)
                     }
                 }
             }
