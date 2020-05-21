@@ -219,9 +219,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mPostContainer = itemView.findViewById(R.id.post_container);
             mRootLayout = itemView.findViewById(R.id.root_layout);
-            if (mRootLayout != null) {
-                mRootLayoutConstraintSet.clone(mRootLayout);
-            }
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -450,6 +447,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        // Set title below thumbnail strip if card type is GALLERY
+        holder.mRootLayoutConstraintSet.clone(holder.mRootLayout);
+        View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
+                ? holder.mThumbnailStrip : holder.mImgFeatured;
+        holder.mRootLayoutConstraintSet.connect(
+                holder.mTxtTitle.getId(),
+                ConstraintSet.TOP,
+                txtTitlePreviousView.getId(),
+                ConstraintSet.BOTTOM,
+                mMarginExtraLarge
+        );
+        holder.mRootLayoutConstraintSet.applyTo(holder.mRootLayout);
+
         String urlString = "";
         if (post.hasBlogUrl()) {
             urlString = UrlUtils.removeScheme(post.getBlogUrl());
@@ -477,17 +487,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             holder.mTxtAuthorAndBlogName.setText(null);
         }
-
-        View txtTitlePrevView = post.getCardType() == ReaderCardType.GALLERY
-            ? holder.mThumbnailStrip : holder.mImgFeatured;
-        holder.mRootLayoutConstraintSet.connect(
-            holder.mTxtTitle.getId(),
-            ConstraintSet.TOP,
-            txtTitlePrevView.getId(),
-            ConstraintSet.BOTTOM,
-            mMarginExtraLarge
-        );
-        holder.mRootLayoutConstraintSet.applyTo(holder.mRootLayout);
 
         int imgFeaturedCornerRadius = holder.mImgFeatured
             .getContext()
