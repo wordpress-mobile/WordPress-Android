@@ -531,7 +531,9 @@ class PostListMainViewModel @Inject constructor(
         setViewLayoutAndIcon(savedLayoutType, false)
     }
 
-    fun onBottomSheetPublishButtonClicked(postId: LocalId) {
-        postActionHandler.publishPost(postId.value)
+    fun onBottomSheetPublishButtonClicked() {
+        editPostRepository.getEditablePost()?.let {
+            postActionHandler.publishPost(it)
+        }
     }
 }

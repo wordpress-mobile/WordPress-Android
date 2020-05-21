@@ -151,6 +151,10 @@ class PostActionHandler(
         }
     }
 
+    fun publishPost(post: PostModel) {
+        triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
+    }
+
     private fun moveTrashedPostToDraft(post: PostModel) {
         /*
          * We need network connection to move a post to remote draft. We can technically move it to the local drafts
