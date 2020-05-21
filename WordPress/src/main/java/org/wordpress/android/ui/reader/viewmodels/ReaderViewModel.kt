@@ -65,7 +65,7 @@ class ReaderViewModel @Inject constructor(
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ReaderUiState(
-                        tagList.map { it.tagDisplayName },
+                        tagList.map { it.label },
                         tagList
                 )
                 if (!initialized) {
