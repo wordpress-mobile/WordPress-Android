@@ -73,6 +73,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -1808,7 +1809,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    @Override public void onPublishButtonClicked() {
+    @Override public void onPublishButtonClicked(@NotNull LocalId postId) {
         uploadPost(true);
     }
 
