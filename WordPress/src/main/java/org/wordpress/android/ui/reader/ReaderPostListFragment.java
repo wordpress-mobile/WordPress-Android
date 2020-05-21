@@ -1614,7 +1614,7 @@ public class ReaderPostListFragment extends Fragment
      * parent to be the main activity's CoordinatorLayout
      */
     private View getSnackbarParent() {
-        View coordinator = getActivity().findViewById(R.id.coordinator);
+        View coordinator = getActivity().findViewById(R.id.coordinator_layout);
         if (coordinator != null) {
             return coordinator;
         }
