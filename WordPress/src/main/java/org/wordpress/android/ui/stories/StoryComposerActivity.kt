@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
+import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
@@ -41,7 +42,11 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
 
-class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, MediaPickerProvider, EditorMediaListener {
+class StoryComposerActivity : ComposeLoopFrameActivity(),
+        SnackbarProvider,
+        MediaPickerProvider,
+        EditorMediaListener,
+        NotificationIntentLoader {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -78,6 +83,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
+        setNotificationExtrasLoader(this)
         editorMedia.start(site!!, this, STORY_EDITOR)
         startObserving()
     }
@@ -222,5 +228,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
     private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
+    }
+
+    // NotificationIntentLoader
+    override fun loadIntentForErrorNotification() : Intent {
+        val notificationIntent = Intent(applicationContext, StoryComposerActivity::class.java)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        notificationIntent.putExtra(WordPress.SITE, site)
+        // TODO WPSTORIES add TRACKS
+        // add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+//        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+//        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+        return notificationIntent
     }
 }
