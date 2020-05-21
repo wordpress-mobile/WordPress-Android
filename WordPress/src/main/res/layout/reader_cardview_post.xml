@@ -300,7 +300,7 @@
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
             app:tint="@color/on_surface_primary_selector"
             app:layout_constraintWidth_default="wrap"
-            app:layout_constraintHorizontal_chainStyle="spread"/>
+            app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/reblog"
