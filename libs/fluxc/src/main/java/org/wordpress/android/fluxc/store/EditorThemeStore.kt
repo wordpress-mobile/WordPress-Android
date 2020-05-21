@@ -19,6 +19,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import java.net.URI
 
+private fun editorThemeKeyForSite(site: SiteModel): String {
+    return URI(site.url).getHost()
+}
+
 @Singleton
 class EditorThemeStore
 @Inject constructor(
@@ -27,8 +31,7 @@ class EditorThemeStore
     dispatcher: Dispatcher
 ): Store(dispatcher) {
     private val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-
-    var editorThemes = HashMap<String, EditorTheme>()
+    private var editorThemes = HashMap<String, EditorTheme>()
 
     class FetchEditorThemePayload(val site: SiteModel): Payload<BaseNetworkError>() {
         constructor(
@@ -40,18 +43,22 @@ class EditorThemeStore
     }
 
     data class OnEditorThemeChanged(
-        val editorThemes: Map<String, EditorTheme>,
+        private val editorThemes: Map<String, EditorTheme>,
         var causeOfChange: EditorThemeAction
     ) : Store.OnChanged<EditorThemeError>() {
         constructor(error: EditorThemeError, causeOfChange: EditorThemeAction):
                 this(editorThemes = HashMap<String, EditorTheme>(), causeOfChange = causeOfChange) {
             this.error = error
         }
+
+        fun getEditorThemeForSite(site: SiteModel): EditorTheme? {
+            return editorThemes.getValue(editorThemeKeyForSite(site))
+        }
     }
     class EditorThemeError(var message: String? = null) : Store.OnChangedError
 
     fun getEditorThemeForSite(site: SiteModel): EditorTheme? {
-        return null
+        return editorThemes.getValue(editorThemeKeyForSite(site))
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -68,10 +75,6 @@ class EditorThemeStore
 
     override fun onRegister() {
         AppLog.d(AppLog.T.API, TransactionsStore::class.java.simpleName + " onRegister")
-    }
-
-    fun editorThemeKeyForSite(site: SiteModel): String {
-        return URI(site.url).getHost()
     }
 
     private suspend fun handleFetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
