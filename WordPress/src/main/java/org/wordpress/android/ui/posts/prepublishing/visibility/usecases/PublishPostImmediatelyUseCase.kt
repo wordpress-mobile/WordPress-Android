@@ -13,7 +13,7 @@ class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtil
         onPostUpdated: () -> Unit
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
-            postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601());
+            postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
             postModel.setStatus(PostStatus.PUBLISHED.toString())
             true
         }, { _, result ->
