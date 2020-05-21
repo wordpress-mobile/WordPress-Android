@@ -104,8 +104,6 @@ import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_I
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
 public class ActivityLauncher {
-    private static final String TAG = ActivityLauncher.class.getSimpleName();
-
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);

@@ -48,8 +48,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String REDIRECT_TO_PARAM = "redirect_to";
     private static final String STATS_PATH = "stats";
 
-    private static final String TAG = DeepLinkingIntentReceiverActivity.class.getSimpleName();
-
     private String mInterceptedUri;
     private String mBlogId;
     private String mPostId;
