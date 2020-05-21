@@ -63,16 +63,19 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
+import org.wordpress.android.fluxc.model.EditorThemeSupport;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -83,6 +86,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.EditorThemeStore;
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -330,6 +334,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UploadStore mUploadStore;
+    @Inject EditorThemeStore mEditorThemeStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
     @Inject QuickStartStore mQuickStartStore;
@@ -352,7 +357,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject protected PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
     @Inject ReblogUtils mReblogUtils;
-    @Inject EditorThemeStore mEditorThemeStore;
+
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
@@ -2024,14 +2029,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+
+//                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+                        Bundle editorTheme = new Bundle();
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
-                                                                   isSiteUsingWpComRestApi,
-                                                                   mEditorThemeStore.getEditorThemeForSite(mSite));
+                                isSiteUsingWpComRestApi,
+                                editorTheme);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2834,9 +2842,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
-        refreshEditorContent();
+        refreshEditorTheme();
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
+            refreshEditorContent();
             List<MediaModel> failedMedia =
                     mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
             if (failedMedia != null && !failedMedia.isEmpty()) {
@@ -3050,6 +3059,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    private void refreshEditorTheme() {
+        FetchEditorThemePayload payload = new FetchEditorThemePayload(mSite);
+        mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onEditorThemeChanged(EditorThemeStore.OnEditorThemeChanged event) {
+        if (mEditorFragment instanceof EditorThemeUpdateListener) {
+            EditorThemeSupport editorTheme = event.getEditorThemeForSite(mSite).getThemeSupport();
+            ((EditorThemeUpdateListener) mEditorFragment).onEditorThemeUpdated(editorTheme.toBundle());
+        }
+    }
     // EditPostActivityHook methods
 
     @Override

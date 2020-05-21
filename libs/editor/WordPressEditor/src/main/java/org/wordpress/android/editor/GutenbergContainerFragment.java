@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
-import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.RNEditorTheme;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -114,15 +113,7 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
                 isSiteUsingWpComRestApi,
-                                        new RNEditorTheme() {
-            @Override public ArrayList<Bundle> getColors() {
-                return editorTheme.getParcelableArrayList("colors");
-            }
-            
-            @Override public ArrayList<Bundle> getGradients() {
-                return editorTheme.getParcelableArrayList("gradients");
-            }
-        }
+                editorTheme
         );
 
         // clear the content initialization flag since a new ReactRootView has been created;
@@ -211,5 +202,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void mediaSelectionCancelled() {
         mWPAndroidGlueCode.mediaSelectionCancelled();
+    }
+
+    public void updateTheme(Bundle editorTheme) {
+        mWPAndroidGlueCode.updateTheme(editorTheme);
     }
 }

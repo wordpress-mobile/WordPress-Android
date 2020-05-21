@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,6 +49,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +63,8 @@ import static org.wordpress.mobile.WPAndroidGlue.Media.createRNMediaUsingMimeTyp
 
 public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         EditorMediaUploadListener,
-        IHistoryListener {
+        IHistoryListener,
+        EditorThemeUpdateListener {
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
@@ -105,7 +108,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       boolean isNewPost,
                                                       String localeSlug,
                                                       boolean isSiteUsingWpComRestApi,
-                                                      Bundle editorTheme) {
+                                                      @Nullable Bundle editorTheme) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -226,7 +229,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             getTranslations(),
                             isDarkMode(),
                             isSiteUsingWpComRestApi,
-                                                           editorTheme);
+                            editorTheme);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -924,5 +927,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onGalleryMediaUploadSucceeded(final long galleryId, long remoteMediaId, int remaining) {
+    }
+
+    @Override
+    public void onEditorThemeUpdated(Bundle editorTheme) {
+        getGutenbergContainerFragment().updateTheme(editorTheme);
     }
 }
