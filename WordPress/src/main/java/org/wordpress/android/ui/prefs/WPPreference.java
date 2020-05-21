@@ -6,14 +6,14 @@ import android.content.res.TypedArray;
 import android.preference.Preference;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 public class WPPreference extends Preference implements PreferenceHint {
     private String mHint;
@@ -38,17 +38,23 @@ public class WPPreference extends Preference implements PreferenceHint {
         super.onBindView(view);
 
         Resources res = getContext().getResources();
-        TextView titleView = (TextView) view.findViewById(android.R.id.title);
-        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
+        TextView titleView = view.findViewById(android.R.id.title);
+        TextView summaryView = view.findViewById(android.R.id.summary);
         if (titleView != null) {
-            titleView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_large));
-            titleView.setTextColor(res.getColor(
-                    isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorText)
-                            : R.color.neutral_20));
+            TextViewCompat.setTextAppearance(titleView, R.style.TextAppearance_MaterialComponents_Subtitle1);
+            if (!isEnabled()) {
+                titleView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_disabled));
+            } else {
+                titleView.setAlpha(1f);
+            }
         }
         if (summaryView != null) {
-            summaryView.setTextSize(TypedValue.COMPLEX_UNIT_PX, res.getDimensionPixelSize(R.dimen.text_sz_medium));
-            summaryView.setTextColor(res.getColor(isEnabled() ? R.color.neutral : R.color.neutral_20));
+            TextViewCompat.setTextAppearance(summaryView, R.style.TextAppearance_MaterialComponents_Body2);
+            if (!isEnabled()) {
+                summaryView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_disabled));
+            } else {
+                summaryView.setAlpha(ResourcesCompat.getFloat(res, R.dimen.material_emphasis_medium));
+            }
         }
     }
 

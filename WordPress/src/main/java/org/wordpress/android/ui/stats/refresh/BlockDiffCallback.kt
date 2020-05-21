@@ -24,7 +24,6 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.IMAGE_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.INFO
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK
-import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LINK_BUTTON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LIST_ITEM_WITH_ICON
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Type.LOADING_ITEM
@@ -72,7 +71,6 @@ class BlockDiffCallback(
                 CHART_LEGEND,
                 REFERRED_ITEM,
                 QUICK_SCAN_ITEM,
-                LINK_BUTTON,
                 DIALOG_BUTTONS,
                 TAG_ITEM,
                 IMAGE_ITEM,

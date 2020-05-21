@@ -1,94 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_content_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:clickable="true"
     android:focusable="true"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
-    tools:layout_height="?attr/listPreferredItemHeightLarge" >
+    tools:layout_height="?attr/listPreferredItemHeightLarge">
 
     <RelativeLayout
-        android:background="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:background="?attr/selectableItemBackground">
 
         <ImageView
             android:id="@+id/action_icon"
-            android:background="@drawable/bg_oval_primary_50"
-            android:contentDescription="@string/activity_log_icon"
+            android:layout_width="@dimen/activity_log_icon_size"
+            android:layout_height="@dimen/activity_log_icon_size"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_height="@dimen/activity_log_icon_size"
             android:layout_margin="@dimen/activity_log_icon_margin"
-            android:layout_width="@dimen/activity_log_icon_size"
+            android:background="@drawable/bg_oval_primary_50"
+            android:contentDescription="@string/activity_log_icon"
             android:padding="@dimen/margin_medium"
-            android:src="@drawable/ic_notice_outline_white_24dp" >
-        </ImageView>
+            android:src="@drawable/ic_notice_outline_white_24dp" />
 
         <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/activity_log_icon_margin"
             android:layout_toEndOf="@id/action_icon"
-            android:layout_width="fill_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/action_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:singleLine="true"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                 android:textColor="?attr/wpColorText"
-                tools:text="Rewinding to June 1 2018 12:22PM" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="Rewinding to June 1 2018 12:22PM" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/action_summary"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColor="@color/neutral_40"
-                tools:text="Rewind in progress" >
-            </org.wordpress.android.widgets.WPTextView>
+                tools:text="Rewind in progress" />
 
         </LinearLayout>
 
         <View
-            android:background="@drawable/notifications_list_divider_full_width"
-            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/list_divider_height"
-            android:layout_width="match_parent" >
-        </View>
+            android:layout_alignParentBottom="true"
+            android:background="?android:attr/listDivider" />
 
         <FrameLayout
-            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/activity_progress_bar_height"
-            android:layout_width="match_parent" >
+            android:layout_alignParentBottom="true">
 
             <ProgressBar
                 android:id="@+id/rewind_progress_bar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
+                android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
                 android:background="@color/neutral_10"
                 android:indeterminate="true"
-                android:layout_gravity="center_vertical"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
-                android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
-                android:layout_width="match_parent"
-                android:theme="@style/LinearProgress"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal" >
-            </ProgressBar>
+                android:theme="@style/LinearProgress" />
 
         </FrameLayout>
 

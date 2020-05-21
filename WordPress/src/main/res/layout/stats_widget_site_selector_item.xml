@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/site_container"
     android:layout_width="match_parent"
@@ -17,18 +16,18 @@
         android:layout_marginStart="@dimen/margin_extra_medium_large"
         android:layout_marginTop="@dimen/stats_widget_dialog_icon_top_bottom_margin"
         android:contentDescription="@string/my_site_icon_dialog_title"
-        app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp"/>
+        app:srcCompat="@drawable/ic_placeholder_blavatar_grey_lighten_20_40dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/margin_extra_medium_large"
         android:layout_marginStart="@dimen/stats_widget_dialog_title_left_margin"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_title"
             style="@style/StatsWidgetConfigureTitle"
             android:layout_width="match_parent"
@@ -36,15 +35,15 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@string/unknown"/>
+            android:text="@string/unknown" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/site_url"
             style="@style/StatsWidgetConfigureValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@string/unknown"/>
+            android:text="@string/unknown" />
     </LinearLayout>
 </FrameLayout>

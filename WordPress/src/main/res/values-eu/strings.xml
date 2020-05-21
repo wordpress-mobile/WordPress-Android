@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-12-08 18:04:56+0000
+Translation-Revision-Date: 2019-12-08 17:50:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: eu_ES
 -->
 <resources>
@@ -12,30 +12,12 @@ Language: eu_ES
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000_000_000_000">%sQi</string>
-    <string name="reader_filter_all_sites">Gune guztiak</string>
     <string name="reader_filter_sites_title">Guneak</string>
     <string name="reader_filter_tags_title">Etiketak</string>
     <string name="reader_save_for_later_display_name">Gordeta</string>
     <string name="reader_discover_display_name">Aurkitu</string>
     <string name="reader_my_likes_display_name">Atsegiteak</string>
     <string name="site_cannot_be_loaded">Ezin ditugu zure gunearentzako datuak kargatu orain. Mesedez, saiatu geroago</string>
-    <string name="gutenberg_native_wordpress_media_library">WordPress Media Liburutegia</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lanean gogor gabiltza argitalpen bakoitzean bloke gehiago gehitzeko. Bitartean, sarrera hau editatu dezakezu ere webean.</string>
-    <string name="gutenberg_native_unsupported">Ez Bateragarria</string>
-    <string name="gutenberg_native_ungroup">Destaldekatu</string>
-    <string name="gutenberg_native_translate">Itzuli</string>
-    <string name="gutenberg_native_title">Izenburua:</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap egin teklatua izkutatzeko</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tap egin hemen laguntza erakusteko</string>
-    <string name="gutenberg_native_take_a_video">Hartu Bideo bat</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Hartu Argazki edo Bideo bat</string>
-    <string name="gutenberg_native_take_a_photo">Hartu Argazki bat</string>
-    <string name="gutenberg_native_start_writing">Hasi idazten…</string>
-    <string name="gutenberg_native_size">Tamaina</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Albo-barrako pluginaren izenburua</string>
-    <string name="gutenberg_native_show_section">Erakutsi Atala</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">%s ez da oraindik bateragarria iOSerako WordPressekin</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s ez da oraindik bateragarria iAndroiderako WordPressekin</string>
     <string name="add_media_progress">Media gehitzen</string>
     <string name="post_title">Izenburua</string>
     <string name="post_settings_post_format">Bidalketa formatua</string>
@@ -383,10 +365,7 @@ Language: eu_ES
     <string name="content_required">Iruzkina beharrezkoa da</string>
     <string name="sure_to_cancel_edit_comment">Iruzkin honen edizioa ezeztatu?</string>
     <string name="saving_changes">Aldaketak gordetzen</string>
-    <string name="hint_comment_content">Iruzkina</string>
     <string name="trash">Zakarrontzia</string>
-    <string name="trash_no">Ez bidali zakarrontzira</string>
-    <string name="trash_yes">Zakarrontzira bidali</string>
     <string name="dlg_confirm_trash_comments">Zakarrontzira bidali?</string>
     <string name="dlg_trashing_comments">Zakarrontzira bidaltzen</string>
     <string name="dlg_spamming_comments">Spam bezala markatzen</string>
@@ -482,7 +461,6 @@ Language: eu_ES
     <string name="pages">Orrialdeak</string>
     <string name="no_network_title">Ez dago sarerik eskuragarri</string>
     <string name="ok">Ados</string>
-    <string name="blogusername">Blogeko erabiltzaile-izena</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress Android-erako</string>
     <string name="tos">Zerbitzuaren baldintzak</string>
@@ -495,7 +473,6 @@ Language: eu_ES
     <string name="quickpress_add_alert_title">Sarbide zuzenaren izena</string>
     <string name="settings">Ezarpenak</string>
     <string name="quickpress_add_error">Sarbide zuzenaren izena ezin da hutsik egon.</string>
-    <string name="quickpress_window_title">Aukeratu Argitaratze Azkarra erabiltzeko blog bat</string>
     <string name="categories">Kategoriak</string>
     <string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>
     <string name="title">Izenburua</string>

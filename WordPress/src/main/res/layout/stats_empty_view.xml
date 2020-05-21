@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.wordpress.android.ui.ActionableEmptyView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.ui.ActionableEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/statsEmptyView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_default"
     android:visibility="gone"
-    tools:visibility="visible"
     app:aevButton="@string/stats_manage_insights"
     app:aevImage="@drawable/img_illustration_insights_94dp"
     app:aevSubtitle="@string/stats_insights_management_title"
-    app:aevTitle="@string/stats_empty_insights_title"/>
+    app:aevTitle="@string/stats_empty_insights_title"
+    tools:visibility="visible" />

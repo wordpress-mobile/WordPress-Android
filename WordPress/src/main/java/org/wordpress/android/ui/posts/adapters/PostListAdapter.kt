@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -18,19 +17,17 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.posts.PostListItemType
 import org.wordpress.android.viewmodel.posts.PostListItemType.EndListIndicatorItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.LoadingItem
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
-import org.wordpress.android.viewmodel.posts.PostListItemType.SectionHeaderItem
 
 private const val VIEW_TYPE_POST = 0
 private const val VIEW_TYPE_POST_COMPACT = 1
 private const val VIEW_TYPE_ENDLIST_INDICATOR = 2
 private const val VIEW_TYPE_LOADING = 3
 private const val VIEW_TYPE_LOADING_COMPACT = 4
-private const val VIEW_TYPE_SECTION_HEADER = 5
 
 class PostListAdapter(
     context: Context,
@@ -43,7 +40,6 @@ class PostListAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is EndListIndicatorItem -> VIEW_TYPE_ENDLIST_INDICATOR
-            is SectionHeaderItem -> VIEW_TYPE_SECTION_HEADER
             is PostListItemUiState -> {
                 when (itemLayoutType) {
                     STANDARD -> VIEW_TYPE_POST
@@ -79,10 +75,6 @@ class PostListAdapter(
             VIEW_TYPE_POST_COMPACT -> {
                 PostListItemViewHolder.Compact(parent, imageManager, uiHelpers)
             }
-            VIEW_TYPE_SECTION_HEADER -> {
-                val view = layoutInflater.inflate(R.layout.page_divider_item, parent, false)
-                SectionHeaderViewHolder(view)
-            }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it
                 throw IllegalStateException("The view type '$viewType' needs to be handled")
@@ -108,14 +100,6 @@ class PostListAdapter(
             }
             // getItem returns the item, or NULL, if a null placeholder is at the specified position.
             item?.let { holder.onBind((item as LoadingItem)) }
-        }
-        if (holder is SectionHeaderViewHolder) {
-            val item = getItem(position)
-            assert(item is SectionHeaderItem) {
-                "If we are presenting SectionHeaderViewHolder, the item has to be of type SectionHeaderItem " +
-                        "for position: $position"
-            }
-            item?.let { holder.onBind((item as SectionHeaderItem)) }
         }
     }
 
@@ -143,13 +127,6 @@ class PostListAdapter(
             buttonDeletePermanently?.setVisible(item.options.showDeletePermanentlyButton)
         }
     }
-    private class SectionHeaderViewHolder(view: View) : ViewHolder(view) {
-        private val dividerTitle = itemView.findViewById<TextView>(R.id.divider_text)
-
-        fun onBind(headerItem: SectionHeaderItem) {
-            dividerTitle.setText(headerItem.type.titleResId)
-        }
-    }
 
     private class EndListViewHolder(view: View) : ViewHolder(view)
 }
@@ -171,9 +148,6 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
                 is RemoteId -> oldItem.localOrRemoteId == newItem.data.remotePostId.id
             }
         }
-        if (oldItem is SectionHeaderItem && newItem is SectionHeaderItem) {
-            return oldItem.type == newItem.type
-        }
         return false
     }
 
@@ -190,9 +164,6 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
         if (oldItem is PostListItemUiState && newItem is PostListItemUiState) {
             return oldItem.data == newItem.data
         }
-        if (oldItem is SectionHeaderItem && newItem is SectionHeaderItem) {
-            return oldItem.type == newItem.type
-        }
         return false
     }
 
@@ -204,9 +175,9 @@ private val PostListDiffItemCallback = object : DiffUtil.ItemCallback<PostListIt
              * We don't need to use the payload in onBindViewHolder unless we want to. Passing a non-null value
              * suppresses the default ItemAnimator, which is all we need in this case.
              */
-            if (oldItem.data.progressBarState is PostListItemProgressBar.Determinate &&
-                    newItem.data.progressBarState is PostListItemProgressBar.Determinate &&
-                    oldItem.data.progressBarState.progress != newItem.data.progressBarState.progress) {
+            if (oldItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    newItem.data.progressBarUiState is ProgressBarUiState.Determinate &&
+                    oldItem.data.progressBarUiState.progress != newItem.data.progressBarUiState.progress) {
                 return true
             }
         }

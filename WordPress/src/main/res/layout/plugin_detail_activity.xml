@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                     xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                                     xmlns:tools="http://schemas.android.com/tools"
-                                                     android:id="@+id/plugin_detail_container"
-                                                     android:layout_width="match_parent"
-                                                     android:layout_height="match_parent"
-                                                     android:fitsSystemWindows="false">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/plugin_detail_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -20,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="false"
-            app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
@@ -34,7 +32,7 @@
                     android:id="@+id/image_banner"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/plugin_banner_size"
-                    android:background="@color/neutral_10"
+                    android:background="@color/placeholder"
                     android:contentDescription="@string/plugin_detail_banner_desc" />
 
                 <ImageView
@@ -42,15 +40,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
-                    android:contentDescription="@null"
                     android:background="@drawable/media_settings_gradient_scrim"
+                    android:contentDescription="@null"
                     tools:layout_height="74dp" />
             </FrameLayout>
 
-            <androidx.appcompat.widget.Toolbar
+            <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@null"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
@@ -70,17 +69,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+            <com.google.android.material.card.MaterialCardView style="@style/PluginCardView">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/neutral_0"
                         android:padding="@dimen/margin_extra_large">
 
                         <ImageView
@@ -95,109 +90,102 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:orientation="vertical"
-                            android:layout_toEndOf="@+id/image_icon">
+                            android:layout_toEndOf="@+id/image_icon"
+                            android:orientation="vertical">
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/text_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/wpColorText"
-                                android:textSize="@dimen/text_sz_large"
+                                android:layout_marginStart="@dimen/margin_extra_large"
+                                android:textAppearance="?attr/textAppearanceSubtitle1"
                                 android:textStyle="bold"
-                                tools:text="text_title"
-                                android:layout_marginStart="@dimen/margin_extra_large"/>
+                                tools:text="text_title" />
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/text_byline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/margin_extra_large"
                                 android:linksClickable="true"
-                                android:textColor="?attr/wpColorText"
-                                android:textColorLink="@color/primary_50"
-                                android:textSize="@dimen/text_sz_medium"
-                                tools:text="text_byline"
-                                android:layout_marginStart="@dimen/margin_extra_large"/>
+                                android:textAppearance="?attr/textAppearanceBody2"
+                                android:textColorLink="?attr/colorPrimary"
+                                tools:text="text_byline" />
                         </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent" >
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:id="@+id/plugin_version_layout"
-                            android:background="?android:attr/selectableItemBackground"
-                            android:clickable="true"
-                            android:focusable="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:layout_height="match_parent"
                             android:layout_toStartOf="@+id/plugin_btn_container"
-                            android:layout_width="wrap_content"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:orientation="vertical"
-                            android:paddingBottom="@dimen/margin_extra_large"
                             android:paddingStart="@dimen/margin_extra_large"
                             android:paddingTop="@dimen/margin_extra_large"
-                            tools:ignore="RtlSymmetry" >
+                            android:paddingBottom="@dimen/margin_extra_large"
+                            tools:ignore="RtlSymmetry">
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/plugin_version_top"
+                                style="@style/PluginCardViewPrimaryText"
                                 android:drawableEnd="@drawable/ic_info_outline_grey_dark_18dp"
                                 android:drawablePadding="@dimen/margin_small"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                tools:text="plugin_version_top"
-                                style="@style/PluginCardViewPrimaryText" />
+                                app:drawableTint="?attr/wpColorOnSurfaceMedium"
+                                tools:text="plugin_version_top" />
 
-                            <TextView
+                            <com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/plugin_version_bottom"
+                                style="@style/PluginCardViewSecondaryText"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:textColor="@color/neutral_40"
-                                tools:text="plugin_version_bottom"
-                                style="@style/PluginCardViewSecondaryText" />
+                                tools:text="plugin_version_bottom" />
                         </LinearLayout>
 
                         <FrameLayout
                             android:id="@+id/plugin_btn_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:layout_height="match_parent"
-                            android:layout_width="wrap_content"
-                            android:paddingEnd="@dimen/margin_extra_large"
-                            android:paddingStart="@dimen/margin_extra_large" >
+                            android:paddingStart="@dimen/margin_extra_large"
+                            android:paddingEnd="@dimen/margin_extra_large">
 
-                            <androidx.appcompat.widget.AppCompatButton
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/plugin_btn_update"
-                                android:layout_height="wrap_content"
+                                style="@style/Widget.MaterialComponents.Button.TextButton"
                                 android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="@string/update_verb"
-                                android:textAllCaps="true"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
-                                android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible"
-                                style="@style/WordPress.Button.Secondary" />
+                                tools:visibility="visible" />
 
-                            <androidx.appcompat.widget.AppCompatButton
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/plugin_btn_install"
-                                android:layout_height="wrap_content"
+                                style="@style/Widget.MaterialComponents.Button.TextButton"
                                 android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="@string/plugin_install"
-                                android:textAllCaps="true"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
-                                android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
-                                tools:visibility="visible"
-                                style="@style/WordPress.Button.Secondary" />
+                                tools:visibility="visible" />
 
-                            <androidx.appcompat.widget.AppCompatButton
+                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/plugin_installed"
-                                android:enabled="false"
+                                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
+                                android:enabled="false"
                                 android:text="@string/plugin_installed"
                                 android:textSize="@dimen/text_sz_medium"
                                 android:visibility="gone"
@@ -215,31 +203,36 @@
                     </RelativeLayout>
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/plugin_card_site"
-                style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                style="@style/PluginCardView">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/plugin_state_active_container"
-                        style="@style/PluginCardViewHorizontalContainer">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <TextView
-                            style="@style/PluginCardViewPrimaryText"
-                            android:text="@string/plugin_detail_label_state_active" />
+                        <RelativeLayout style="@style/PluginCardViewHorizontalContainer">
 
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/plugin_state_active"
-                            android:theme="@style/SwitchBlueMedium"
-                            style="@style/PluginCardViewSecondaryElement" />
-                    </RelativeLayout>
+                            <TextView
+                                style="@style/PluginCardViewPrimaryText"
+                                android:text="@string/plugin_detail_label_state_active" />
 
-                    <View style="@style/PostSettingsDivider" />
+                            <androidx.appcompat.widget.SwitchCompat
+                                android:id="@+id/plugin_state_active"
+                                style="@style/PluginCardViewSecondaryElement"
+                                android:theme="@style/SwitchBlueMedium" />
+
+                        </RelativeLayout>
+
+                        <View style="@style/PostSettingsDivider" />
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:id="@+id/plugin_state_autoupdates_container"
@@ -251,40 +244,45 @@
 
                         <androidx.appcompat.widget.SwitchCompat
                             android:id="@+id/plugin_state_autoupdates"
-                            android:theme="@style/SwitchBlueMedium"
-                            style="@style/PluginCardViewSecondaryElement" />
+                            style="@style/PluginCardViewSecondaryElement"
+                            android:theme="@style/SwitchBlueMedium" />
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
-                style="@style/PluginCardView"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+            <com.google.android.material.card.MaterialCardView style="@style/PluginCardView">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:id="@+id/plugin_settings_page"
-                        style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <TextView
-                            style="@style/PluginCardViewPrimaryText"
-                            android:text="@string/plugin_settings" />
+                        <RelativeLayout
 
-                        <ImageView
-                            style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
-                            android:contentDescription="@string/plugin_external_link_icon_content_description"
-                            android:src="@drawable/ic_external_white_24dp" />
-                    </RelativeLayout>
+                            style="@style/PluginCardViewHorizontalContainer"
+                            android:background="?attr/selectableItemBackground">
 
-                    <View style="@style/PostSettingsDivider" />
+                            <TextView
+                                style="@style/PluginCardViewPrimaryText"
+                                android:text="@string/plugin_settings" />
+
+                            <ImageView
+                                style="@style/PluginCardViewSecondaryElement.ExternalLinkImage"
+                                android:contentDescription="@string/plugin_external_link_icon_content_description"
+                                android:src="@drawable/ic_external_white_24dp" />
+                        </RelativeLayout>
+
+                        <View style="@style/PostSettingsDivider" />
+
+                    </LinearLayout>
 
                     <RelativeLayout
                         android:id="@+id/plugin_wp_org_page"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             style="@style/PluginCardViewPrimaryText"
@@ -301,7 +299,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_home_page"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             style="@style/PluginCardViewPrimaryText"
@@ -313,20 +311,18 @@
                             android:src="@drawable/ic_external_white_24dp" />
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <androidx.cardview.widget.CardView
-                style="@style/PluginCardView"
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/plugin_wp_org_details_container"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                style="@style/PluginCardView">
 
                 <LinearLayout style="@style/PluginCardViewVerticalContainer">
 
                     <RelativeLayout
                         android:id="@+id/plugin_description_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_description_label"
@@ -355,7 +351,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_installation_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_installation_label"
@@ -384,7 +380,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_whatsnew_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_whatsnew_label"
@@ -413,7 +409,7 @@
                     <RelativeLayout
                         android:id="@+id/plugin_faq_container"
                         style="@style/PluginCardViewHorizontalContainer"
-                        android:background="?android:attr/selectableItemBackground">
+                        android:background="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/plugin_faq_label"
@@ -437,7 +433,7 @@
 
                     </RelativeLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <include layout="@layout/plugin_ratings_cardview" />
         </LinearLayout>

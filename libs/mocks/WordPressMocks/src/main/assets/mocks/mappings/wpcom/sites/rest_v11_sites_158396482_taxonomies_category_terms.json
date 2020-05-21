@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPath": "/rest/v1.1/sites/158396482/taxonomies/category/terms/"
+        "urlPath": "/rest/v1.1/sites/106707880/taxonomies/category/terms/"
     },
     "response": {
         "status": 200,
@@ -9,50 +9,34 @@
             "found": 3,
             "terms": [
                 {
-                    "ID": 21452108,
-                    "name": "Android Test",
-                    "slug": "android-test",
-                    "description": "",
-                    "post_count": 6,
-                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/android-test/feed/",
-                    "parent": 0,
-                    "meta": {
-                        "links": {
-                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:android-test",
-                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:android-test/help",
-                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
-                        }
-                    }
-                },
-                {
-                    "ID": 43134051,
-                    "name": "iOS Test",
-                    "slug": "ios-test",
-                    "description": "",
-                    "post_count": 25,
-                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/ios-test/feed/",
-                    "parent": 0,
-                    "meta": {
-                        "links": {
-                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:ios-test",
-                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:ios-test/help",
-                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
-                        }
-                    }
-                },
-                {
                     "ID": 1,
                     "name": "Uncategorized",
                     "slug": "uncategorized",
                     "description": "",
-                    "post_count": 159,
-                    "feed_url": "https://e2eflowtestingmobile.wordpress.com/category/uncategorized/feed/",
+                    "post_count": 1,
+                    "feed_url": "http://infocusphotographers.com/category/uncategorized/feed/",
                     "parent": 0,
                     "meta": {
                         "links": {
-                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized",
-                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/categories/slug:uncategorized/help",
-                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
+                        }
+                    }
+                },
+                {
+                    "ID": 1674,
+                    "name": "Wedding",
+                    "slug": "wedding",
+                    "description": "",
+                    "post_count": 1,
+                    "feed_url": "http://infocusphotographers.com/category/wedding/feed/",
+                    "parent": 0,
+                    "meta": {
+                        "links": {
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:wedding",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:wedding/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
                         }
                     }
                 }

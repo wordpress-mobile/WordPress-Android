@@ -144,7 +144,7 @@ class EditorPhotoPicker(
                 MediaToolbarAction.CAMERA -> photoPickerFragment.showCameraPopupMenu(
                         activity.findViewById(action.buttonId)
                 )
-                MediaToolbarAction.GALLERY -> photoPickerFragment.showPickerPopupMenu(
+                MediaToolbarAction.GALLERY -> photoPickerFragment.performActionOrShowPopup(
                         activity.findViewById(action.buttonId)
                 )
                 MediaToolbarAction.LIBRARY -> photoPickerFragment.doIconClicked(PhotoPickerIcon.WP_MEDIA)

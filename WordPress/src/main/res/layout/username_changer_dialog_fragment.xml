@@ -1,80 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_extra_large"
-        android:layout_width="match_parent"
         android:text="@string/username_changer_header"
-        style="@style/LoginTheme.Heading" >
-    </TextView>
+        android:textAppearance="?attr/textAppearanceBody2" />
 
     <RelativeLayout
-        android:background="@android:color/white"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:paddingEnd="@dimen/margin_extra_large"
-        android:paddingStart="@dimen/margin_extra_large" >
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large">
 
         <ImageView
             android:id="@+id/icon"
-            android:importantForAccessibility="no"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_width="wrap_content"
-            android:paddingBottom="@dimen/margin_extra_large"
+            android:importantForAccessibility="no"
             android:paddingTop="@dimen/margin_extra_large"
-            android:tint="@color/neutral_20"
-            android:src="@drawable/ic_search_white_24dp" >
-        </ImageView>
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:src="@drawable/ic_search_white_24dp"
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"
-            android:background="@android:color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/icon"
+            android:background="@android:color/transparent"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:hint="@string/username_changer_hint"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_width="match_parent"
-            android:paddingBottom="@dimen/margin_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
-            android:textColorHint="@color/neutral_20"
-            app:theme="@style/LoginTheme.EditText" >
-        </com.google.android.material.textfield.TextInputEditText>
+            android:paddingBottom="@dimen/margin_extra_large" />
 
         <ProgressBar
+            android:background="?attr/colorSurface"
             android:id="@+id/progress"
-            android:background="@android:color/white"
-            android:layout_centerVertical="true"
-            android:layout_height="@dimen/progress_spinner_small"
             android:layout_width="@dimen/progress_spinner_small"
-            android:paddingBottom="@dimen/margin_extra_large"
+            android:layout_height="@dimen/progress_spinner_small"
+            android:layout_centerVertical="true"
             android:paddingTop="@dimen/margin_extra_large"
-            android:visibility="gone" >
-        </ProgressBar>
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
     <View
-        android:background="@color/neutral_0"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" >
-    </View>
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/suggestions"
-        android:background="@android:color/white"
-        android:layout_height="fill_parent"
         android:layout_width="match_parent"
-        android:scrollbars="vertical" >
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

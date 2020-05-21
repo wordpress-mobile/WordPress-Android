@@ -24,8 +24,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetDataTypeSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetSiteSelectionDialogFragment
 import org.wordpress.android.ui.stats.refresh.utils.trackMinifiedWidget
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.mergeNotNull
 import javax.inject.Inject
@@ -93,15 +93,19 @@ class StatsMinifiedWidgetConfigureFragment : DaggerFragment() {
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(),
-                        "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_view_mode_selection_fragment"
+                )
             }
         })
 
         dataTypeSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetDataTypeSelectionDialogFragment()
-                        .show(requireFragmentManager(), "stats_data_type_selection_fragment")
+                StatsWidgetDataTypeSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_data_type_selection_fragment"
+                )
             }
         })
 

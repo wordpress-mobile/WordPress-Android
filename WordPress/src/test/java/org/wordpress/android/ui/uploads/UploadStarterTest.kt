@@ -39,6 +39,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.post.PostStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.UploadStore
@@ -84,6 +85,30 @@ class UploadStarterTest {
     )
     private val draftPosts = sitesAndDraftPosts.values.flatten()
 
+    private val sitesAndDraftPages: Map<SiteModel, List<PostModel>> = mapOf(
+            sites[0] to listOf(
+                    createLocallyChangedPostModel(DRAFT, page = true),
+                    createLocallyChangedPostModel(DRAFT, page = true),
+                    createLocallyChangedPostModel(PUBLISHED, page = true),
+                    createLocallyChangedPostModel(SCHEDULED, page = true),
+                    createLocallyChangedPostModel(PENDING, page = true),
+                    createLocallyChangedPostModel(PENDING, page = true),
+                    createLocallyChangedPostModel(PRIVATE, page = true),
+                    createLocallyChangedPostModel(UNKNOWN, page = true)
+            ),
+            sites[1] to listOf(
+                    createLocallyChangedPostModel(DRAFT, page = true),
+                    createLocallyChangedPostModel(PUBLISHED, page = true),
+                    createLocallyChangedPostModel(PUBLISHED, page = true),
+                    createLocallyChangedPostModel(SCHEDULED, page = true),
+                    createLocallyChangedPostModel(PENDING, page = true),
+                    createLocallyChangedPostModel(PRIVATE, page = true),
+                    createLocallyChangedPostModel(PRIVATE, page = true),
+                    createLocallyChangedPostModel(UNKNOWN, page = true)
+            )
+    )
+    private val draftPages = sitesAndDraftPages.values.flatten()
+
     private val siteStore = mock<SiteStore> {
         on { sites } doReturn sites
     }
@@ -93,8 +118,14 @@ class UploadStarterTest {
         }
     }
 
+    private val pageStore = mock<PageStore> {
+        sites.forEach {
+            onBlocking { getPagesWithLocalChanges(eq(it)) } doReturn sitesAndDraftPages.getValue(it)
+        }
+    }
+
     @Test
-    fun `when the internet connection is restored and the app is in foreground, it uploads locally changed posts`() {
+    fun `when the internet connection is restored and the app is in foreground, it uploads changed posts & pages`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(UNAVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -113,7 +144,7 @@ class UploadStarterTest {
         connectionStatus.postValue(AVAILABLE)
 
         // Then
-        verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any()
@@ -144,7 +175,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when the app is placed in the foreground, it uploads locally changed posts`() {
+    fun `when the app is placed in the foreground, it uploads locally changed posts & pages`() {
         // Given
         val connectionStatus = createConnectionStatusLiveData(AVAILABLE)
         val uploadServiceFacade = createMockedUploadServiceFacade()
@@ -158,7 +189,7 @@ class UploadStarterTest {
         lifecycle.handleLifecycleEvent(Event.ON_START)
 
         // Then
-        verify(uploadServiceFacade, times(draftPosts.size)).uploadPost(
+        verify(uploadServiceFacade, times(draftPosts.size + draftPages.size)).uploadPost(
                 context = any(),
                 post = any(),
                 trackAnalytics = any()
@@ -166,7 +197,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading a single site, only posts of that site are uploaded`() {
+    fun `when uploading a single site, only posts & pages of that site are uploaded`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -179,7 +210,8 @@ class UploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages
+                .getValue(site).size
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
@@ -188,7 +220,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading, it ignores locally changed posts that are not publishable`() {
+    fun `when uploading, it ignores locally changed posts & pages that are not publishable`() {
         // Given
         val site: SiteModel = sites[1]
 
@@ -208,7 +240,8 @@ class UploadStarterTest {
 
         // Then
         // subtract - 1 as we've returned isPublishable = false for the first post of the site
-        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size - 1
+        val expectedUploadPostExecutions = sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages
+                .getValue(site).size - 1
         verify(uploadServiceFacade, times(expectedUploadPostExecutions)).uploadPost(
                 context = any(),
                 post = any(),
@@ -217,7 +250,7 @@ class UploadStarterTest {
     }
 
     @Test
-    fun `when uploading, it ignores posts that are already queued`() {
+    fun `when uploading, it ignores posts & pages that are already queued`() {
         // Given
         val site: SiteModel = sites[1]
         val (expectedQueuedPosts, expectedUploadedPosts) = sitesAndDraftPosts.getValue(site).let { posts ->
@@ -227,12 +260,21 @@ class UploadStarterTest {
                     posts.subList(posts.size / 2, posts.size)
             )
         }
+        val (expectedQueuedPages, expectedUploadedPages) = sitesAndDraftPages.getValue(site).let { pages ->
+            // Split into halves of already queued and what should be uploaded
+            return@let Pair(
+                    pages.subList(0, pages.size / 2),
+                    pages.subList(pages.size / 2, pages.size)
+            )
+        }
+        val expectedQueuedPostsAndPages = expectedQueuedPosts + expectedQueuedPages
+        val expectedUploadPostsAndPages = expectedUploadedPosts + expectedUploadedPages
 
         val connectionStatus = createConnectionStatusLiveData(null)
         val uploadServiceFacade = mock<UploadServiceFacade> {
             on { isPostUploadingOrQueued(any()) } doAnswer {
                 val post = it.arguments.first() as PostModel
-                expectedQueuedPosts.contains(post)
+                expectedQueuedPostsAndPages.contains(post)
             }
         }
 
@@ -242,14 +284,14 @@ class UploadStarterTest {
         starter.queueUploadFromSite(site)
 
         // Then
-        verify(uploadServiceFacade, times(expectedUploadedPosts.size)).uploadPost(
+        verify(uploadServiceFacade, times(expectedUploadPostsAndPages.size)).uploadPost(
                 context = any(),
-                post = argWhere { expectedUploadedPosts.contains(it) },
+                post = argWhere { expectedUploadPostsAndPages.contains(it) },
                 trackAnalytics = any()
         )
         verify(
                 uploadServiceFacade,
-                times(sitesAndDraftPosts.getValue(site).size)
+                times(sitesAndDraftPosts.getValue(site).size + sitesAndDraftPages.getValue(site).size)
         ).isPostUploadingOrQueued(any())
         verifyNoMoreInteractions(uploadServiceFacade)
     }
@@ -450,6 +492,7 @@ class UploadStarterTest {
 
     private fun defaultSetup(siteModel: SiteModel, postModel: PostModel) = test {
         whenever(postStore.getPostsWithLocalChanges(any())).thenReturn(listOf(postModel))
+        whenever(pageStore.getPagesWithLocalChanges(siteModel)).thenReturn(listOf())
     }
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
@@ -462,6 +505,7 @@ class UploadStarterTest {
     ) = UploadStarter(
             context = mock(),
             postStore = postStore,
+            pageStore = pageStore,
             siteStore = siteStore,
             bgDispatcher = Dispatchers.Unconfined,
             ioDispatcher = Dispatchers.Unconfined,
@@ -501,12 +545,13 @@ class UploadStarterTest {
             on { this.lifecycle } doReturn lifecycle
         }
 
-        fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT) = PostModel().apply {
+        fun createLocallyChangedPostModel(postStatus: PostStatus = DRAFT, page: Boolean = false) = PostModel().apply {
             setId(Random.nextInt())
             setTitle(UUID.randomUUID().toString())
             setStatus(postStatus.toString())
             setIsLocallyChanged(true)
             setDateLocallyChanged(DateTimeUtils.iso8601FromTimestamp(Date().time / 1000))
+            setIsPage(page)
         }
 
         fun createSiteModel(isWpCom: Boolean = true) = SiteModel().apply {

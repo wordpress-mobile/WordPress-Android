@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="?attr/selectableItemBackground"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/selectableItemBackground"
     android:minHeight="@dimen/reader_button_minimum_height"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium" >
+    android:paddingStart="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_medium">
 
     <ImageView
         android:id="@+id/icon_bookmark_button"
-        android:contentDescription="@null"
-        android:layout_gravity="center_vertical"
-        android:layout_height="@dimen/reader_count_icon"
         android:layout_width="@dimen/reader_count_icon"
+        android:layout_height="@dimen/reader_count_icon"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
         android:src="@drawable/ic_bookmark_outline_bookmark_selector_24dp"
-        android:tint="@color/neutral_primary_40_neutral_40_selector" >
-    </ImageView>
+        app:tint="@color/on_surface_primary_selector" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/label_bookmark_button"
-        android:importantForAccessibility="no"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_small"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_small"
+        android:textColor="@color/on_surface_medium_primary_selector"
+        android:importantForAccessibility="no"
         android:text="@string/reader_btn_bookmark"
-        android:textColor="@color/neutral_primary_40_neutral_40_selector"
-        android:textSize="@dimen/text_sz_medium" >
-    </org.wordpress.android.widgets.WPTextView>
+        android:textAppearance="?attr/textAppearanceBody2" />
 
 </LinearLayout>

@@ -7,13 +7,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 
-import org.wordpress.android.R;
 import org.wordpress.android.util.ValidationUtils;
 
 public class EditTextPreferenceWithValidation extends SummaryEditTextPreference {
@@ -40,16 +37,11 @@ public class EditTextPreferenceWithValidation extends SummaryEditTextPreference 
         final AlertDialog dialog = (AlertDialog) getDialog();
         final Button positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
         if (positiveButton != null) {
-            positiveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callChangeListener(getEditText().getText());
-                    dialog.dismiss();
-                }
+            positiveButton.setOnClickListener(v -> {
+                callChangeListener(getEditText().getText());
+                dialog.dismiss();
             });
 
-            positiveButton.setTextColor(ContextCompat.getColorStateList(getContext(),
-                    R.color.primary_40_neutral_40_selector));
 
             getEditText().addTextChangedListener(new TextWatcher() {
                 @Override

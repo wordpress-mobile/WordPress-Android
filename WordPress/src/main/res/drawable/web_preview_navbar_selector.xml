@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:color="@color/gray_30" android:state_enabled="false"/>
-    <item android:color="@color/gray_60"/>
+    <item android:alpha="@dimen/material_emphasis_disabled" android:color="?attr/colorOnSurface" android:state_enabled="false" />
+    <item android:alpha="@dimen/material_emphasis_medium" android:color="?attr/colorOnSurface" />
 
 </selector>

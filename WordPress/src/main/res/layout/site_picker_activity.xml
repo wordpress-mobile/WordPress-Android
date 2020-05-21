@@ -1,49 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <org.wordpress.android.ui.ActionableEmptyView
-            android:id="@+id/actionable_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:aevTitle="@string/site_picker_remove_site_empty"
-            tools:visibility="visible">
-        </org.wordpress.android.ui.ActionableEmptyView>
+        <include layout="@layout/toolbar_main" />
 
-        <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-            android:id="@+id/ptr_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionable_empty_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="@dimen/margin_medium"
-                android:scrollbars="vertical"/>
+                android:visibility="gone"
+                app:aevTitle="@string/site_picker_remove_site_empty"
+                tools:visibility="visible" />
 
-        </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+            <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+                android:id="@+id/ptr_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-    </RelativeLayout>
+                <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="@dimen/margin_medium"
+                    android:scrollbars="vertical" />
+
+            </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -112,13 +112,25 @@ public class DateTimeUtils {
     }
 
     /**
-     * Returns the current UTC date
+     * Returns the current UTC date.
+     *
+     * @deprecated This method doesn't work as expected and shouldn't be used in production code. It doesn't take
+     * into account that `Date` class uses TimeZone.getDefault(). It substracts the currentOffsetFromUTC, but the
+     * final date still uses system default timezone.
      */
+    @Deprecated
     public static Date nowUTC() {
         Date dateTimeNow = new Date();
         return localDateToUTC(dateTimeNow);
     }
 
+    /**
+     *
+     * @deprecated This method doesn't work as expected and shouldn't be used in production code. It doesn't take
+     * into account that `Date` class uses TimeZone.getDefault(). It substracts the currentOffsetFromUTC, but the
+     * final date still uses system default timezone.
+     */
+    @Deprecated
     public static Date localDateToUTC(Date dtLocal) {
         if (dtLocal == null) {
             return null;

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.stockmedia;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -43,6 +41,7 @@ import org.wordpress.android.fluxc.store.StockMediaStore;
 import org.wordpress.android.fluxc.store.StockMediaStore.FetchStockMediaListPayload;
 import org.wordpress.android.fluxc.store.StockMediaStore.OnStockMediaListFetched;
 import org.wordpress.android.ui.ActionableEmptyView;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -52,7 +51,6 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
@@ -70,7 +68,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-public class StockMediaPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class StockMediaPickerActivity extends LocaleAwareActivity implements SearchView.OnQueryTextListener {
     private static final int MIN_SEARCH_QUERY_SIZE = 3;
     private static final String TAG_RETAINED_FRAGMENT = "retained_fragment";
 
@@ -193,7 +191,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
         });
 
-        if (enableMultiselect()) {
+        if (isMultiSelectEnabled()) {
             mTextPreview.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     previewSelection();
@@ -215,11 +213,6 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         }
         showUploadProgressDialog(false);
         super.onDestroy();
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
     }
 
     @Override
@@ -274,7 +267,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean enableMultiselect() {
+    private boolean isMultiSelectEnabled() {
         return mRequestCode == RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT;
     }
 
@@ -451,7 +444,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
 
             Intent intent = new Intent();
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 long[] idArray = new long[count];
                 for (int i = 0; i < count; i++) {
                     idArray[i] = event.mediaList.get(i).getMediaId();
@@ -508,7 +501,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 String labelAdd = String.format(getString(R.string.add_count), numSelected);
                 mTextAdd.setText(labelAdd);
 
@@ -608,7 +601,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
 
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 if (isSelected) {
                     int count = mSelectedItems.indexOf(position) + 1;
                     String label = Integer.toString(count);
@@ -618,7 +611,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
                 }
             } else {
                 holder.mSelectionCountTextView.setVisibility(
-                        isSelected || enableMultiselect() ? View.VISIBLE : View.GONE);
+                        isSelected || isMultiSelectEnabled() ? View.VISIBLE : View.GONE);
             }
 
             float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -661,7 +654,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             if (!isValidPosition(position)) return;
 
             // if this is single select, make sure to deselect any existing selection
-            if (selected && !enableMultiselect() && !mSelectedItems.isEmpty()) {
+            if (selected && !isMultiSelectEnabled() && !mSelectedItems.isEmpty()) {
                 int prevPosition = mSelectedItems.get(0);
                 StockViewHolder prevHolder = (StockViewHolder) mRecycler.findViewHolderForAdapterPosition(prevPosition);
                 if (prevHolder != null) {
@@ -683,7 +676,7 @@ public class StockMediaPickerActivity extends AppCompatActivity implements Searc
             }
 
             // show and animate the count bubble
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 if (selected) {
                     String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
                     holder.mSelectionCountTextView.setText(label);

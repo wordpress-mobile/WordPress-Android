@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,6 +32,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -64,6 +64,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String KEY_IS_SOCIAL = "KEY_IS_SOCIAL";
     private static final String KEY_OLD_SITES_IDS = "KEY_OLD_SITES_IDS";
     private static final String KEY_REQUESTED_EMAIL = "KEY_REQUESTED_EMAIL";
+    private static final String KEY_EMAIL_ERROR_RES = "KEY_EMAIL_ERROR_RES";
     private static final String LOG_TAG = LoginEmailFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 1002;
     private static final int EMAIL_CREDENTIALS_REQUEST_CODE = 25100;
@@ -78,6 +79,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private String mGoogleEmail;
     private String mRequestedEmail;
     private boolean mIsSocialLogin;
+    private Integer mCurrentEmailErrorRes = null;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -135,7 +137,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         if (BuildConfig.DEBUG) {
             mEmailInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_EMAIL);
         }
-        mEmailInput.addTextChangedListener(this);
+        mEmailInput.post(new Runnable() {
+            @Override public void run() {
+                mEmailInput.addTextChangedListener(LoginEmailFragment.this);
+            }
+        });
+
         mEmailInput.setOnEditorCommitListener(this);
         mEmailInput.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -288,6 +295,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, LoginEmailFragment.this)
                 .addApi(Auth.CREDENTIALS_API)
                 .build();
+        showEmailError();
     }
 
     @Override
@@ -312,6 +320,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mIsSocialLogin = savedInstanceState.getBoolean(KEY_IS_SOCIAL);
             mIsDisplayingEmailHints = savedInstanceState.getBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS);
             mHasDismissedEmailHints = savedInstanceState.getBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS);
+            if (savedInstanceState.containsKey(KEY_EMAIL_ERROR_RES)) {
+                mCurrentEmailErrorRes = savedInstanceState.getInt(KEY_EMAIL_ERROR_RES);
+            }
         } else {
             mAnalyticsListener.trackEmailFormViewed();
         }
@@ -326,6 +337,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         outState.putBoolean(KEY_IS_SOCIAL, mIsSocialLogin);
         outState.putBoolean(KEY_IS_DISPLAYING_EMAIL_HINTS, mIsDisplayingEmailHints);
         outState.putBoolean(KEY_HAS_DISMISSED_EMAIL_HINTS, mHasDismissedEmailHints);
+        if (mCurrentEmailErrorRes != null) {
+            outState.putInt(KEY_EMAIL_ERROR_RES, mCurrentEmailErrorRes);
+        }
     }
 
     protected void next(String email) {
@@ -334,11 +348,26 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
 
         if (isValidEmail(email)) {
+            clearEmailError();
             startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
         } else {
             showEmailError(R.string.email_invalid);
+        }
+    }
+
+    /**
+     * This is cleared every time the text is changed or the email is valid so that if the user rotates the device, they
+     * don't receive an unnecessary warning from a previous error.
+     */
+    private void clearEmailError() {
+        mCurrentEmailErrorRes = null;
+    }
+
+    private void showEmailError() {
+        if (mCurrentEmailErrorRes != null) {
+             showEmailError(mCurrentEmailErrorRes);
         }
     }
 
@@ -376,14 +405,16 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         mEmailInput.setError(null);
         mIsSocialLogin = false;
+        clearEmailError();
     }
 
     private void showEmailError(int messageId) {
+        mCurrentEmailErrorRes = messageId;
         mEmailInput.setError(getString(messageId));
     }
 
     private void showErrorDialog(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();

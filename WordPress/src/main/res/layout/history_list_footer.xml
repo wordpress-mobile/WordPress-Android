@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/footer_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
     android:padding="@dimen/margin_extra_large"
-    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-    android:textColor="?attr/wpColorTextSubtle"
-    tools:text="Post Created on September 19, 2018 at 8:51am" >
-</org.wordpress.android.widgets.WPTextView>
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/wpColorOnSurfaceMedium"
+    tools:text="Post Created on September 19, 2018 at 8:51am" />

@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-11 08:50:23+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-04-24 07:55:35+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: sk
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Nepodarilo sa orezať a uložiť obrázok, skúste znova.</string>
+    <string name="preview_image_description">Náhľad obrázku</string>
+    <string name="error_unknown_page_type">Neznámy formát stránky</string>
+    <string name="error_publish_page_no_network">Zariadenie je offline. Stránka bola uložená lokálne.</string>
+    <string name="local_page_autosave_revision_available">Na tejto stránke ste vykonali neuložené zmeny.</string>
+    <string name="editor_uploading_page">Vaša stránka sa nahráva</string>
+    <string name="app_theme_dark">Tmavá</string>
+    <string name="app_theme_light">Svetlá</string>
+    <string name="app_theme">Vzhľad</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_link_to">Odkaz na</string>
+    <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Poďme spolu niečo vybudovať.</string>
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Poďme spolu niečo vybudovať</string>
+    <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J. K. Rowling</string>
+    <string name="reader_filter_empty_tags_action">Pridať značku</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
     <string name="scheduled_for">Naplánované na: %s</string>
@@ -37,23 +57,13 @@ Language: sk
     <string name="new_site_creation_create_site_button">Vytvoriť webovú stránku</string>
     <string name="site_creation_error_generic_subtitle">Chyba pri komunikácii so serverom, prosím skúste to znova</string>
     <string name="site_creation_error_generic_title">Nastal problém</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Vlastná kategória</string>
-    <string name="new_site_creation_button_skip">Preskočiť</string>
-    <string name="new_site_creation_tag_line_description">Slogan je krátky text, ktorý sa zobrazuje vpravo od názvu.</string>
-    <string name="new_site_creation_tag_line_hint">Slogan</string>
-    <string name="new_site_creation_site_title_hint">Názov webovej stránky</string>
-    <string name="new_site_creation_site_info_header_subtitle">Povedzte nám viac o webovej stránke, ktorú vytvárate.</string>
-    <string name="new_site_creation_site_info_header_title">Základné informácie</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Nastal problém</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">Žiadne spojenie</string>
     <string name="new_site_creation_preview_title">Vaša webová stránka bola vytvorená!</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvoriť webovú stránku</string>
     <string name="snackbar_conflict_undo">Vrátiť späť</string>
     <string name="stats_no_data_for_period">Žiadne dáta pre toto obdobie</string>
     <string name="preference_strip_image_location">Odstrániť lokáciu z médiá</string>
-    <string name="giphy_powered_by_giphy">Poháňa GIPHY</string>
-    <string name="giphy_picker_search_hint">Vyhľadať v Giphy</string>
     <string name="stats_author_views_label">Zobrazenia</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autori</string>
@@ -213,7 +223,6 @@ Language: sk
     <string name="people_empty_list_filtered_email_followers">Zatiaľ žiadni odberatelia e-mailov</string>
     <string name="people_empty_list_filtered_followers">Zatiaľ žiadni odberatelia</string>
     <string name="people_empty_list_filtered_users">Zatiaľ žiadni používatelia</string>
-    <string name="connection_service_facebook_notice">Od 1. augusta 2018 spoločnosť Facebook už neumožňuje priame zdieľanie príspevkov na profily služby Facebook. Pripojenia na stránky Facebooku zostávajú nezmenené.</string>
     <string name="reader_empty_posts_liked_description">Zobrazia sa tu príspevky, ktoré sa vám páčia</string>
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
@@ -235,7 +244,6 @@ Language: sk
     <string name="featured_image_desc">hlavný obrázok</string>
     <string name="button_discard">Odstrániť</string>
     <string name="reader_avatar_desc">profilová fotka</string>
-    <string name="reader_blavatar_desc">ikona stránky</string>
     <string name="notification_channel_transient_title">Prechodný</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Vložte, prosím, Vašu emailovú adresu</string>
@@ -256,7 +264,7 @@ Language: sk
     <string name="activity_log_rewind_started_snackbar_message">Vaše webové stránky sa obnovujú\nNávrat na %1$s %2$s</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
     <string name="plugin_auto_managed">automaticky spravované</string>
-    <string name="reader_save_posts_locally_dialog_message">Uložte tento príspevok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii iba v tomto zariadení - uložené príspevky sa nesynchronizujú s vašimi ďalšími zariadeniami. (Zatiaľ! Pracujeme na tom.)</string>
+    <string name="reader_save_posts_locally_dialog_message">Uložte tento článok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii na tomto zariadení - uložené články sa nesynchronizujú s vašimi ďalšími zariadeniami.</string>
     <string name="reader_save_posts_locally_dialog_title">Uložiť články na neskôr</string>
     <string name="reader_empty_search_request_failed">Nie je možné vyhľadávať</string>
     <string name="reader_empty_search_title">Žiadne výsledky neboli nájdené</string>
@@ -281,7 +289,6 @@ Language: sk
     <string name="reader_add_bookmark">Pridať do uložených článkov</string>
     <string name="reader_save_for_later_title">Uložené články</string>
     <string name="removed">Odstránený</string>
-    <string name="tabbar_accessibility_label_write">Nový článok. Napíšte nový článok.</string>
     <string name="my_site_icon_content_description">Zmeniť ikonu webovej stránky</string>
     <string name="my_site_icon_dialog_cancel_button">Zrušiť</string>
     <string name="my_site_icon_dialog_remove_button">Odstrániť</string>
@@ -312,7 +319,6 @@ Language: sk
     <string name="preference_privacy_settings">Nastavenia súkromia</string>
     <string name="preference_collect_information">Zbierajte informácie</string>
     <string name="post_submitted">Článok bol odoslaný</string>
-    <string name="write_post">Napísať článok</string>
     <string name="login_email_button_signup">Nemáte účet? %1$sZaregistrujte sa%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Vlastnosť pluginu vyžaduje, aby bola webová stránka v dobrom stave.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkcia pluginu vyžaduje, aby predplatenie primárnej domény bolo spojené s týmto používateľom.</string>
@@ -354,7 +360,6 @@ Language: sk
     <string name="site_settings_quota_space_unlimited">%1$s z neobmedzeného</string>
     <string name="preview_count">Ukážka %d</string>
     <string name="add_count">Pridať %d</string>
-    <string name="fab_create_desc">vytvoriť</string>
     <string name="fab_add_tag_desc">Vytvoriť značku</string>
     <string name="navigate_up_desc">navigovať hore</string>
     <string name="notification_settings_switch_desc">Notifikácie</string>
@@ -680,7 +685,6 @@ Language: sk
     <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
-    <string name="copy">Kopírovať</string>
     <string name="connect_site">Pripojte webovú stránku</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vybračné zariadenie</string>
@@ -773,8 +777,6 @@ Language: sk
     <string name="editor_dropped_text_error">Vyskytla sa chyba pri odovzdávaní textu.</string>
     <string name="editor_dropped_html_images_not_allowed">Odovzdávanie obrázkov zatiaľ čo HTML ich nepodporuje.</string>
     <string name="editor_content_hint">Zdieľajte svoj príbeh…</string>
-    <string name="post_list_trashed">Zahodené</string>
-    <string name="post_list_scheduled">Naplánované</string>
     <string name="post_status_post_private">Súkromné</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Nepotvrdená recenzia</string>
@@ -795,7 +797,6 @@ Language: sk
     <string name="post_settings_more_options">Viac možností</string>
     <string name="post_settings_categories_and_tags">Kategórie a značky</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Neprečítané</string>
     <string name="notifications_tab_title_all">Všetky</string>
     <string name="top_level_category_name">Najvyššia úroveň</string>
     <string name="category_parent">Nadradená kategória (nepovinné):</string>
@@ -866,7 +867,6 @@ Language: sk
     <string name="sharing">Zdieľanie</string>
     <string name="tabbar_accessibility_label_notifications">Upozornenia. Upraviť upozornenia.</string>
     <string name="tabbar_accessibility_label_reader">Čitateľ. Nasledovať obsah z ostatných webový stránok.</string>
-    <string name="tabbar_accessibility_label_me">Ja. Zobraziť profil a spraviť zmeny.</string>
     <string name="tabbar_accessibility_label_my_site">Moja webová stránka. Zobraziť moju webovú stránku a spravovať ju, vrátane štatistky.</string>
     <string name="my_site_btn_sharing">Zdieľanie</string>
     <string name="button_not_now">Teraz nie</string>
@@ -1436,7 +1436,6 @@ Language: sk
     <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="reader_page_followed_blogs">Sledované webové stránky</string>
     <string name="reader_page_followed_tags">Sledované značky</string>
-    <string name="reader_title_subs">Značky a webové stránky</string>
     <string name="reader_title_tag_preview">Značka čítačky</string>
     <string name="reader_title_blog_preview">Webová stránka čítačky</string>
     <string name="ssl_certificate_ask_trust">Ak sa bežne pripájate bez problémov, táto chyba môže znamenať, že sa niekto pokúša prevziať vašu identitu. Neodporúčame vám pokračovať. Chcete aj napriek tomu dôverovať tomuto certifikátu?</string>
@@ -1490,10 +1489,7 @@ Language: sk
     <string name="content_required">Vyžaduje sa komentár</string>
     <string name="sure_to_cancel_edit_comment">Zrušiť úpravu tohto komentáru?</string>
     <string name="saving_changes">Ukladajú sa zmeny</string>
-    <string name="hint_comment_content">Komentár</string>
     <string name="trash">Kôš</string>
-    <string name="trash_no">Nevymazávať</string>
-    <string name="trash_yes">Kôš</string>
     <string name="dlg_confirm_trash_comments">Odstrániť?</string>
     <string name="dlg_trashing_comments">Vymazáva sa</string>
     <string name="dlg_spamming_comments">Označené ako spam</string>
@@ -1594,7 +1590,6 @@ Language: sk
     <string name="pages">Podstránky</string>
     <string name="no_network_title">Sieť nedostupná</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Používateľské meno</string>
     <string name="link_enter_url">URL adresa</string>
     <string name="app_title">WordPress pre Android</string>
     <string name="tos">Zmluvné podmienky</string>
@@ -1607,7 +1602,6 @@ Language: sk
     <string name="quickpress_add_alert_title">Nastaviť skrátené meno</string>
     <string name="settings">Nastavenia</string>
     <string name="quickpress_add_error">Názov skratky nemôže byť prázdny</string>
-    <string name="quickpress_window_title">Vyberte blog pre QuickPress skratku</string>
     <string name="pages_private">Súkromné</string>
     <string name="categories">Kategórie</string>
     <string name="tags_separate_with_commas">Oddeľujte značky čiarkami</string>

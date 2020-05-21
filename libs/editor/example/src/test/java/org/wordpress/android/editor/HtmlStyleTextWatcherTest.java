@@ -362,7 +362,7 @@ public class HtmlStyleTextWatcherTest {
         mWatcher.onTextChanged(mContent, deletedChar, 1, 0);
         mWatcher.afterTextChanged(mContent);
 
-        // "b>" should be re-styled
+        // "<b>" should be re-styled
         assertEquals(0, mSpanRange.getOpeningTagLoc());
         assertEquals(2, mSpanRange.getClosingTagLoc());
 

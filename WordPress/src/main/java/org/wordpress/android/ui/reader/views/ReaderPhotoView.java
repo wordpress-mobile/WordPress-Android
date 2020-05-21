@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
@@ -72,10 +73,13 @@ public class ReaderPhotoView extends RelativeLayout {
     public void setImageUrl(String imageUrl,
                             int hiResWidth,
                             boolean isPrivate,
+                            boolean isPrivateAtSite,
                             PhotoViewListener listener) {
         int loResWidth = (int) (hiResWidth * 0.10f);
-        mLoResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, PhotonUtils.Quality.LOW);
-        mHiResImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, PhotonUtils.Quality.MEDIUM);
+        mLoResImageUrl = ReaderUtils
+                .getResizedImageUrl(imageUrl, loResWidth, 0, isPrivate, isPrivateAtSite, PhotonUtils.Quality.LOW);
+        mHiResImageUrl = ReaderUtils
+                .getResizedImageUrl(imageUrl, hiResWidth, 0, isPrivate, isPrivateAtSite, PhotonUtils.Quality.MEDIUM);
 
         mPhotoViewListener = listener;
         loadImage();
@@ -108,7 +112,7 @@ public class ReaderPhotoView extends RelativeLayout {
                 .loadWithResultListener(mImageView, ImageType.IMAGE, mHiResImageUrl, ScaleType.CENTER, mLoResImageUrl,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onLoadFailed(@Nullable Exception e) {
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (e != null) {
                             AppLog.e(AppLog.T.READER, e);
                         }
@@ -120,7 +124,7 @@ public class ReaderPhotoView extends RelativeLayout {
                     }
 
                     @Override
-                    public void onResourceReady(Drawable resource) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         handleResponse();
                     }
                 });

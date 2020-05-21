@@ -8,14 +8,14 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import androidx.appcompat.widget.AppCompatTextView;
+import com.google.android.material.textview.MaterialTextView;
 
 import org.wordpress.android.R;
 
 /**
  * Custom TextView - with an option to auto fix widow words.
  */
-public class WPTextView extends AppCompatTextView {
+public class WPTextView extends MaterialTextView {
     protected boolean mFixWidowWordEnabled;
 
     public WPTextView(Context context) {

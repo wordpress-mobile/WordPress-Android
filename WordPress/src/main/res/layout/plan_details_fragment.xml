@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scroll_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/content_margin"
         android:paddingStart="@dimen/content_margin"
-        android:paddingTop="@dimen/margin_extra_large">
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/content_margin">
 
         <ImageView
             android:id="@+id/image_plan_icon"
@@ -24,13 +22,13 @@
             android:layout_height="@dimen/plan_icon_size"
             android:layout_gravity="center_horizontal"
             android:importantForAccessibility="no"
-            tools:src="@drawable/bg_oval_neutral_30_plans_32dp"/>
+            tools:src="@drawable/bg_oval_placholder_plans_32dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_large"
             android:focusable="true"
             android:orientation="vertical">
 
@@ -39,9 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="?attr/wpColorText"
-                android:textSize="@dimen/text_sz_extra_large"
-                tools:text="Personal Plan"/>
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                tools:text="Personal Plan" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/plan_tagline"
@@ -50,26 +47,26 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_medium"
                 android:gravity="center_horizontal"
-                android:textColor="@color/neutral_40"
-                android:textSize="@dimen/text_sz_large"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
                 android:textStyle="italic"
-                tools:text="Best for beginners"/>
+                tools:text="Best for beginners" />
 
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_height="@dimen/divider_size"
             android:layout_marginTop="@dimen/margin_large"
-            android:background="@color/divider"/>
+            android:layout_marginBottom="@dimen/margin_large"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:id="@+id/plan_features_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/margin_large"/>
+            android:paddingBottom="@dimen/margin_large" />
     </LinearLayout>
 
 </org.wordpress.android.widgets.WPScrollView>

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.core.view.ViewCompat;
 
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.tools.FormattableContent;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper;
@@ -29,9 +28,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
     private static final String DOUBLE_EMPTY_LINE = "\n\t\n\t";
     private CommentStatus mCommentStatus = CommentStatus.APPROVED;
     private int mNormalBackgroundColor;
-    private int mNormalTextColor;
-    private int mAgoTextColor;
-    private int mUnapprovedTextColor;
     private int mIndentedLeftPadding;
 
     private boolean mStatusChanged;
@@ -77,7 +73,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         noteBlockHolder.mNameTextView
                 .setText(Html.fromHtml("<strong>" + getNoteText().toString() + "</strong>"));
         noteBlockHolder.mAgoTextView.setText(DateTimeUtils.timeSpanFromTimestamp(getTimestamp(),
-                WordPress.getContext()));
+                noteBlockHolder.mAgoTextView.getContext()));
         if (!TextUtils.isEmpty(getMetaHomeTitle()) || !TextUtils.isEmpty(getMetaSiteUrl())) {
             noteBlockHolder.mBulletTextView.setVisibility(View.VISIBLE);
             noteBlockHolder.mSiteTextView.setVisibility(View.VISIBLE);
@@ -140,18 +136,12 @@ public class CommentUserNoteBlock extends UserNoteBlock {
         if (mCommentStatus == CommentStatus.UNAPPROVED) {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
-                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning_white);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_surface_with_padding);
             } else {
-                view.setBackgroundResource(R.drawable.bg_rectangle_warning_0_warning);
+                view.setBackgroundResource(R.drawable.bg_rectangle_warning_surface);
             }
 
             noteBlockHolder.mDividerView.setVisibility(View.INVISIBLE);
-
-            noteBlockHolder.mAgoTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mBulletTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mSiteTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mNameTextView.setTextColor(mUnapprovedTextColor);
-            noteBlockHolder.mCommentTextView.setTextColor(mUnapprovedTextColor);
         } else {
             if (hasCommentNestingLevel()) {
                 paddingStart = mIndentedLeftPadding;
@@ -161,12 +151,6 @@ public class CommentUserNoteBlock extends UserNoteBlock {
                 view.setBackgroundColor(mNormalBackgroundColor);
                 noteBlockHolder.mDividerView.setVisibility(View.VISIBLE);
             }
-
-            noteBlockHolder.mAgoTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mBulletTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mSiteTextView.setTextColor(mAgoTextColor);
-            noteBlockHolder.mNameTextView.setTextColor(mNormalTextColor);
-            noteBlockHolder.mCommentTextView.setTextColor(mNormalTextColor);
         }
         ViewCompat.setPaddingRelative(view, paddingStart, paddingTop, paddingEnd, paddingBottom);
 
@@ -256,10 +240,7 @@ public class CommentUserNoteBlock extends UserNoteBlock {
             return;
         }
 
-        mNormalTextColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
-        mNormalBackgroundColor = context.getResources().getColor(android.R.color.white);
-        mAgoTextColor = context.getResources().getColor(R.color.neutral);
-        mUnapprovedTextColor = context.getResources().getColor(R.color.warning_60);
+        mNormalBackgroundColor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorSurface);
         // Double margin_extra_large for increased indent in comment replies
         mIndentedLeftPadding = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large) * 2;
     }

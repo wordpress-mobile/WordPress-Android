@@ -5,6 +5,7 @@
 
     <!-- WARNING -->
     <issue id="RtlSymmetry" severity="warning" />
+    <issue id="UseSparseArrays" severity="warning" />
 
     <issue id="NewApi">
         <warning path="src/main/res/values/reader_styles.xml" />
@@ -46,7 +47,6 @@
     <issue id="ObsoleteSdkInt" severity="error" />
     <issue id="ViewHolder" severity="error" />
     <issue id="DuplicateDivider" severity="error" />
-    <issue id="UseSparseArrays" severity="error" />
     <issue id="InefficientWeight" severity="error" />
     <issue id="UnusedResources" severity="error" />
     <issue id="UselessParent" severity="error" />

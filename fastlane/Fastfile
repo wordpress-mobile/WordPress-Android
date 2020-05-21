@@ -58,6 +58,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   desc "Creates a new release branch from the current develop"
   lane :code_freeze do | options |
+    gutenberg_dep_check()
     old_version = android_codefreeze_prechecks(options)
    
     android_bump_version_release()
@@ -66,8 +67,9 @@ ENV["HAS_ALPHA_VERSION"]="true"
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
     
+    localize_gutenberg(skip_module_update: true)
     localize_libs()
-    android_tag_build()
+    ensure_git_status_clean()
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
@@ -314,14 +316,41 @@ ENV["HAS_ALPHA_VERSION"]="true"
 ######################################################################## 
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   libraries_strings_path = [
-    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]}
+    {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
 
+  private_lane :commit_strings do | options |
+    if (options[:auto_commit]) then
+       sh("cd .. && git add #{main_strings_path}")
+       sh("git commit -m 'Update strings for translation'")
+       sh("git push origin HEAD") 
+    else
+      UI.important("Your #{main_strings_path} has changed.")
+      UI.input("Please, review the changes, commit them and press return to continue.")
+    end
+  end
+
+  
   desc "Merge libraries strings files into the main app one"
   lane :localize_libs do | options |
     if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
-      UI.important("Your #{main_strings_path} has changed.")
-      UI.input("Please, review the changes, commit them and press return to continue.")
+      commit_strings(options)
+    end
+  end
+
+  desc "Import Gutenberg strings"
+  lane :localize_gutenberg do | options |
+    unless options[:skip_module_update] then
+      sh("git submodule init")
+      sh("git submodule update")
+    end
+
+    sh("cd .. && python ./tools/merge_strings_xml.py")
+    
+    is_repo_clean = ("git status --porcelain").empty?
+    unless is_repo_clean then
+      commit_strings(options)
     end
   end
 
@@ -387,6 +416,40 @@ ENV["HAS_ALPHA_VERSION"]="true"
       extract_universal_apk(bundle_path:"#{build_dir}#{name}", apk_path:"#{build_dir}#{apk_name}")
     end
     "#{build_dir}#{name}"
+  end
+
+  #####################################################################################
+  # gutenberg_dep_check
+  # -----------------------------------------------------------------------------------
+  # Verifies that Gutenberg is on the last released version 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane gutenberg_dep_check
+  #####################################################################################
+  desc "Verifies that Gutenberg is on the last released version"
+  lane :gutenberg_dep_check do | options |
+    # Pull the latest develop
+    sh("git checkout develop")
+    sh("git pull")
+    sh("git submodule init")
+    sh("git submodule update")
+
+    Dir.chdir("../libs/gutenberg-mobile") do
+      sh("git fetch --tags")
+      last_tag_hash = sh("git rev-list --tags --max-count\=1")
+      submodule_hash = sh("git rev-parse HEAD")
+
+      if (last_tag_hash != submodule_hash)
+        error_message = "Gutenberg submodule hash is not on the last tag!\nSubmodule hash: #{submodule_hash}\nLast tag hash: #{last_tag_hash}"
+        UI.user_error!(error_message) unless UI.interactive? 
+        
+        if (!UI.confirm("#{error_message}\nDo you want to continue anyway?"))
+          UI.user_error!("Aborted by user request. Please fix Gutenberg reference and try again.")
+        end
+      else
+        UI.message("Gutenberg is on the last tag: #{last_tag_hash}.")  
+      end
+    end
   end
 
 #####################################################################################

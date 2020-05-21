@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-06-14 08:40:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: da_DK
 -->
 <resources>
@@ -211,10 +211,7 @@ Language: da_DK
     <string name="dlg_approving_comments">Godkender</string>
     <string name="dlg_confirm_trash_comments">Smid i papirkurven?</string>
     <string name="saving_changes">Gemmer ændringer</string>
-    <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Papirkurv</string>
-    <string name="trash_no">Slet ikke</string>
-    <string name="trash_yes">Slet</string>
     <string name="mnu_comment_trash">Slet</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="mnu_comment_unapprove">Fjern godkendelse</string>
@@ -298,7 +295,6 @@ Language: da_DK
     <string name="posts">Indlæg</string>
     <string name="pages">Sider</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Version</string>
     <string name="app_title">WordPress til Android</string>
@@ -310,7 +306,6 @@ Language: da_DK
     <string name="immediately">Øjeblikkeligt</string>
     <string name="quickpress_add_alert_title">Vælg navn på genvej.</string>
     <string name="settings">Indstillinger</string>
-    <string name="quickpress_window_title">Vælg blog til QuickPress genvej</string>
     <string name="quickpress_add_error">Genvejsnavn kan ikke være tomt</string>
     <string name="title">Titel</string>
     <string name="categories">Kategorier</string>

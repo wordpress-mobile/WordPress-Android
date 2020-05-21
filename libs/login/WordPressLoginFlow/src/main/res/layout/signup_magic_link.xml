@@ -1,58 +1,50 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar_login" >
-    </include>
+    <include layout="@layout/toolbar_login" />
 
     <RelativeLayout
-        android:gravity="center"
-        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+        android:gravity="center">
 
         <ImageView
             android:id="@+id/signup_magic_link_image"
-            android:contentDescription="@null"
-            android:layout_centerHorizontal="true"
-            android:layout_height="@dimen/magic_link_sent_illustration_sz"
             android:layout_width="@dimen/magic_link_sent_illustration_sz"
+            android:layout_height="@dimen/magic_link_sent_illustration_sz"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@null"
             android:scaleType="centerInside"
-            app:srcCompat="@drawable/login_email_alert" >
-        </ImageView>
+            app:srcCompat="@drawable/login_email_alert" />
 
         <TextView
             android:id="@+id/signup_magic_link_label"
-            android:gravity="center"
-            android:layout_below="@+id/signup_magic_link_image"
-            android:layout_height="wrap_content"
+            style="@style/LoginTheme.TextLabel"
             android:layout_width="match_parent"
-            android:paddingBottom="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_extra_extra_large"
-            android:paddingLeft="@dimen/margin_extra_extra_large"
-            android:paddingRight="@dimen/margin_extra_extra_large"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_magic_link_image"
+            android:gravity="center"
             android:paddingStart="@dimen/margin_extra_extra_large"
+            android:paddingLeft="@dimen/margin_extra_extra_large"
             android:paddingTop="@dimen/margin_extra_large"
-            android:text="@string/signup_magic_link_message"
-            style="@style/Base.TextAppearance.AppCompat.Body1" >
-        </TextView>
+            android:paddingEnd="@dimen/margin_extra_extra_large"
+            android:paddingRight="@dimen/margin_extra_extra_large"
+            android:paddingBottom="@dimen/margin_extra_large"
+            android:text="@string/signup_magic_link_message" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/signup_magic_link_button"
+            style="@style/LoginTheme.Button.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/signup_magic_link_label"
             android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_width="wrap_content"
-            android:text="@string/open_mail"
-            android:theme="@style/LoginTheme.Button"
-            style="@style/Widget.AppCompat.Button.Colored" >
-        </Button>
+            android:text="@string/open_mail" />
 
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

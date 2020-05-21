@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-        <include layout="@layout/preference_dialog_title"/>
+    <include layout="@layout/preference_dialog_title" />
 
-        <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
-            android:id="@+id/master_switch"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            app:masterTitleOn="@string/notifications_tab_dialog_master_status_on"
-            app:masterTitleOff="@string/notifications_tab_dialog_master_status_off"
-            app:masterHintOn="@string/notifications_tab_dialog_master_hint_on"
-            app:masterHintOff="@string/notifications_tab_dialog_master_hint_off"
-            app:masterContentDescription="@string/notifications_tab_dialog_switch_desc"
-            app:masterContentInsetStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
-            app:masterOffsetEnd="@dimen/notifications_tab_dialog_toolbar_content_offset"
-            app:masterViewStyle="normal">
-        </org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView>
+    <org.wordpress.android.ui.prefs.notifications.PrefMasterSwitchToolbarView
+        android:id="@+id/master_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:masterContentDescription="@string/notifications_tab_dialog_switch_desc"
+        app:masterContentInsetStart="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        app:masterHintOff="@string/notifications_tab_dialog_master_hint_off"
+        app:masterHintOn="@string/notifications_tab_dialog_master_hint_on"
+        app:masterOffsetEnd="@dimen/notifications_tab_dialog_toolbar_content_offset"
+        app:masterTitleOff="@string/notifications_tab_dialog_master_status_off"
+        app:masterTitleOn="@string/notifications_tab_dialog_master_status_on"
+        app:masterViewStyle="normal" />
 
 </LinearLayout>
 

@@ -1,5 +1,0 @@
-13.8:
-* Förbättringar i blockredigeraren: Nytt distanselement som kan skapa avstånd mellan olika innehållsblock.
-* Sökfunktionen för blogginlägg har modifierats så att den söker inom alla kategorier.
-* En rad förbättringar ”under motorhuven” i hela appen. Totalt 26 avhjälpta kraschorsaker och andra fel.
-

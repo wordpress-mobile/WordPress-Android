@@ -1,5 +1,0 @@
-13.8:
-* Blok düzenleyici iyileştirmeleri: İçerik arasında beyaz boşluk oluşturmak için Spacer bloğu eklendi.
-* Blog Gönderi Arama tüm kategorilerin altındaki gönderileri içerecek şekilde değiştirildi.
-* Tüm uygulama içinde görünmeyen bir çok iyileştirme yapıldı -26 benzersiz kapanma ve hata düzeltmeleri.
-

@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:padding="@dimen/margin_medium">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="@+id/blavatar"
+        android:layout_alignParentTop="@+id/blavatar"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_toEndOf="@id/blavatar"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/blogName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/wordpress_blog"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/blogUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColorLink="?attr/colorPrimary" />
+    </LinearLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/blavatar"
+        android:layout_width="@dimen/blavatar_sz"
+        android:layout_height="@dimen/blavatar_sz"
+        android:gravity="center|center"
+        android:scaleType="centerCrop" />
+</RelativeLayout>

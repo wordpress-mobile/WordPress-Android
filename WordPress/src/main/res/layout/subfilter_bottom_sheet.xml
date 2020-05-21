@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:contentDescription="@string/reader_bottom_sheet_content_description"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/title"
+        style="@style/SiteTagBottomSheetTitle"
+        android:layout_width="match_parent"
+        android:text="@string/reader_filter_main_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@id/tab_layout"
+            android:layout_width="match_parent"
+            android:elevation="0dp"
+            android:layout_height="@dimen/tab_height"
+            android:layout_marginStart="@dimen/content_margin_bottom_sheet_tab_start"
+            android:background="@android:color/transparent"
+            app:tabIndicatorColor="?attr/colorPrimary"
+            app:tabMode="scrollable"
+            app:tabPaddingEnd="@dimen/content_bottom_sheet_tab_padding"
+            app:tabPaddingStart="@dimen/content_bottom_sheet_tab_padding"
+            app:tabTextColor="@color/primary_on_surface_selector" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</LinearLayout>

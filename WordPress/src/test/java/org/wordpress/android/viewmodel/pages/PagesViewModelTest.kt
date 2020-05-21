@@ -1,8 +1,13 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,9 +27,10 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded
 import org.wordpress.android.test
-import org.wordpress.android.ui.uploads.PostEvents
+import org.wordpress.android.ui.pages.PageItem
+import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.DONE
@@ -45,6 +51,7 @@ class PagesViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var actionPerformer: ActionPerformer
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
@@ -60,9 +67,14 @@ class PagesViewModelTest {
                 actionPerfomer = actionPerformer,
                 networkUtils = networkUtils,
                 previewStateHelper = mock(),
+                analyticsTracker = mock(),
+                uploadStatusTracker = mock(),
+                autoSaveConflictResolver = mock(),
                 uiDispatcher = Dispatchers.Unconfined,
                 defaultDispatcher = Dispatchers.Unconfined,
-                eventBusWrapper = mock()
+                eventBusWrapper = mock(),
+                uploadStarter = uploadStarter,
+                pageListEventListenerFactory = mock()
         )
         listStates = mutableListOf()
         pages = mutableListOf()
@@ -107,7 +119,7 @@ class PagesViewModelTest {
         viewModel.start(site)
 
         val query = "query"
-        val drafts = listOf(PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0))
+        val drafts = listOf(PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0))
         val expectedResult = sortedMapOf(DRAFTS to drafts)
         whenever(pageStore.search(site, query)).thenReturn(drafts)
 
@@ -151,36 +163,69 @@ class PagesViewModelTest {
     }
 
     @Test
-    fun `when a page is being uploaded, page actions are disabled`() = test {
-        // Arrange
+    fun `Auto-upload is initiated when the user enters the screen`() = test {
+        // Given
         setUpPageStoreWithEmptyPages()
+        // When
         viewModel.start(site)
-
-        assertThat(viewModel.arePageActionsEnabled).isTrue()
-
-        // Act
-        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(createPostModel()))
-
-        // Assert
-        assertThat(viewModel.arePageActionsEnabled).isFalse()
+        // Then
+        verify(uploadStarter).queueUploadFromSite(site)
     }
 
     @Test
-    fun `when a page upload is completed, page actions are re-enabled`() = test {
+    fun `Auto-upload is initiated when the user pulls to refresh`() = test {
         // Given
-        val page = createPostModel()
-
         setUpPageStoreWithEmptyPages()
         viewModel.start(site)
-
-        viewModel.onEventBackgroundThread(PostEvents.PostUploadStarted(page))
-        assertThat(viewModel.arePageActionsEnabled).isFalse()
-
         // When
-        viewModel.onPostUploaded(OnPostUploaded(page))
+        viewModel.onPullToRefresh()
+        // Then
+        // invoked twice - once in start() and once in onPullToRefresh()
+        verify(uploadStarter, times(2)).queueUploadFromSite(site)
+    }
+
+    @Test
+    fun `postUploadAction invoked on edit post activity result`() = test {
+        // Given
+        val intent = mock<Intent>()
+        val pageModel = setUpPageStoreWithASinglePage()
+        whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
+                .thenReturn(pageModel)
+
+        viewModel.start(site)
+        // When
+        viewModel.onPageEditFinished(pageModel.pageId, intent)
+        // Then
+        assertThat(viewModel.postUploadAction.value).isEqualTo(Triple(pageModel.post, pageModel.site, intent))
+    }
+
+    @Test
+    fun `publish now menu action updates publishAction live data`() = test {
+        // Given
+        val pageModel = setUpPageStoreWithASinglePage()
+        val page: PageItem.Page = mock()
+        whenever(page.remoteId).thenReturn(pageModel.remoteId)
+        viewModel.start(site)
+        // When
+        viewModel.onMenuAction(PUBLISH_NOW, page)
 
         // Then
-        assertThat(viewModel.arePageActionsEnabled).isTrue()
+        assertThat(viewModel.publishAction.value).isEqualTo(pageModel)
+    }
+
+    @Test
+    fun `scrollToPage is invoked on edit post activity result`() = test {
+        // Given
+        val intent = mock<Intent>()
+        val pageModel = setUpPageStoreWithASinglePage()
+        whenever(pageStore.getPageByLocalId(eq(pageModel.pageId), anyOrNull()))
+                .thenReturn(pageModel)
+
+        viewModel.start(site)
+        // When
+        viewModel.onPageEditFinished(pageModel.pageId, intent)
+        // Then
+        assertThat(viewModel.scrollToPage.value).isEqualTo(pageModel)
     }
 
     private suspend fun setUpPageStoreWithEmptyPages() {
@@ -191,7 +236,7 @@ class PagesViewModelTest {
     }
 
     private suspend fun setUpPageStoreWithASinglePage(): PageModel {
-        val pageModel = PageModel(site, 1, "title", DRAFT, Date(), false, 1, null, 0)
+        val pageModel = PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0)
 
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
         whenever(pageStore.requestPagesFromServer(any())).thenReturn(
@@ -199,13 +244,5 @@ class PagesViewModelTest {
         )
 
         return pageModel
-    }
-
-    private companion object Fixtures {
-        fun createPostModel() = PostModel().apply {
-            setId(1_001)
-            setRemotePostId(2_034)
-            setIsPage(true)
-        }
     }
 }

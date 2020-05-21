@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/people_list_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
-                android:minHeight="@dimen/people_list_row_height">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/people_list_row"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
+    android:minHeight="@dimen/people_list_row_height">
 
     <ImageView
         android:id="@+id/person_avatar"
         style="@style/PersonAvatar"
         android:layout_centerVertical="true"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginTop="@dimen/people_list_row_role_margin_top"
-        android:layout_toEndOf="@id/person_avatar" >
+        android:layout_toEndOf="@id/person_avatar">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/person_display_name"
             android:layout_alignBottom="@+id/person_display_name"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/person_display_name"
-            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:ellipsize="end"
             android:gravity="end|center_vertical"
             android:maxLines="1"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_small"
-            tools:text="role"/>
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="role" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_display_name"
@@ -43,35 +42,33 @@
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="display_name"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="display_name" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/person_username"
             style="@style/PersonTextView"
-            android:layout_alignStart="@id/person_display_name"
             android:layout_below="@id/person_display_name"
+            android:layout_alignStart="@id/person_display_name"
             android:layout_toStartOf="@id/person_role"
+            android:alpha="@dimen/material_emphasis_medium"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="username"/>
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:text="username" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/follower_subscribed_date"
             style="@style/PersonTextView"
-            android:layout_alignStart="@id/person_display_name"
             android:layout_below="@id/person_username"
-            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_alignStart="@id/person_display_name"
             android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_large"
             android:layout_toStartOf="@id/person_role"
             android:gravity="start"
             android:textAlignment="viewStart"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_small"
-            tools:text="Since {date}"/>
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="Since {date}" />
 
     </RelativeLayout>
 </RelativeLayout>

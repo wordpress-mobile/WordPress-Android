@@ -1,10 +1,7 @@
-<androidx.appcompat.widget.SwitchCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.SwitchCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar_switch"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:layout_width="wrap_content"
-    android:theme="@style/SwitchBlueLight"
-    tools:ignore="RtlSymmetry" >
-</androidx.appcompat.widget.SwitchCompat>
+    tools:ignore="RtlSymmetry" />

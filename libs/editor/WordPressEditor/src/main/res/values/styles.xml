@@ -4,18 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Calypso.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="colorAccent">@color/blue_medium</item>
-        <item name="colorPrimary">@color/blue_wordpress</item>
-        <item name="colorPrimaryDark">@color/status_bar</item>
-    </style>
-
-    <style name="Calypso.Dialog.Alert" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/blue_medium</item>
-        <item name="colorPrimary">@color/blue_wordpress</item>
-        <item name="colorPrimaryDark">@color/status_bar</item>
-    </style>
-
     <style name="FormatBarButton">
         <item name="android:minWidth">@dimen/format_bar_height</item>
         <item name="android:minHeight">@dimen/format_bar_height</item>

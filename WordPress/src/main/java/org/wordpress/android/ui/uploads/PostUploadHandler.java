@@ -14,14 +14,13 @@ import androidx.annotation.NonNull;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -31,12 +30,15 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.UploadMediaPayload;
 import org.wordpress.android.fluxc.store.PostStore;
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged;
 import org.wordpress.android.fluxc.store.PostStore.OnPostUploaded;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.FetchPostStatusFailed;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaveFailed;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostAutoSaved;
+import org.wordpress.android.ui.uploads.AutoSavePostIfNotDraftResult.PostIsDraftInRemote;
 import org.wordpress.android.ui.uploads.PostEvents.PostUploadStarted;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
@@ -62,7 +64,7 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-public class PostUploadHandler implements UploadHandler<PostModel> {
+public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePostIfNotDraftCallback {
     private static ArrayList<PostModel> sQueuedPostsList = new ArrayList<>();
     private static Set<Integer> sFirstPublishPosts = new HashSet<>();
     private static PostModel sCurrentUploadingPost = null;
@@ -79,6 +81,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @Inject MediaStore mMediaStore;
     @Inject UiHelpers mUiHelpers;
     @Inject UploadActionUseCase mUploadActionUseCase;
+    @Inject AutoSavePostIfNotDraftUseCase mAutoSavePostIfNotDraftUseCase;
 
     PostUploadHandler(PostUploadNotifier postUploadNotifier) {
         ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
@@ -189,7 +192,7 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     }
 
     private enum UploadPostTaskResult {
-        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD
+        PUSH_POST_DISPATCHED, ERROR, NOTHING_TO_UPLOAD, AUTO_SAVE_OR_UPDATE_DRAFT
     }
 
     private class UploadPostTask extends AsyncTask<PostModel, Boolean, UploadPostTaskResult> {
@@ -286,8 +289,8 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
                     break;
                 case REMOTE_AUTO_SAVE:
                     AppLog.d(T.POSTS, "PostUploadHandler - REMOTE_AUTO_SAVE. Post: " + mPost.getTitle());
-                    mDispatcher.dispatch(PostActionBuilder.newRemoteAutoSavePostAction(payload));
-                    break;
+                    mAutoSavePostIfNotDraftUseCase.autoSavePostOrUpdateDraft(payload, PostUploadHandler.this);
+                    return UploadPostTaskResult.AUTO_SAVE_OR_UPDATE_DRAFT;
                 case DO_NOTHING:
                     AppLog.d(T.POSTS, "PostUploadHandler - DO_NOTHING. Post: " + mPost.getTitle());
                     // A single post might be enqueued twice for upload. It might cause some side-effects when the
@@ -604,6 +607,34 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
     }
 
+    @Override
+    public void handleAutoSavePostIfNotDraftResult(@NotNull AutoSavePostIfNotDraftResult result) {
+        PostModel post = result.getPost();
+        if (result instanceof FetchPostStatusFailed
+            || result instanceof PostAutoSaveFailed
+            || result instanceof PostAutoSaved) {
+            /*
+             * If we fail to check the status of the post or auto-save fails, we deliberately don't show an error
+             * notification since it's not a user initiated action. We'll retry the action later on.
+             */
+            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
+            finishUpload();
+        } else if (result instanceof PostIsDraftInRemote) {
+            /*
+             * If the post is a draft in remote, we'll update it directly instead of auto-saving it. Please see
+             * documentation of `AutoSavePostIfNotDraftUseCase` for details.
+             *
+             * We opted not to restore the current status after the post is uploaded to avoid its complexity and to
+             * replicate `UPLOAD_AS_DRAFT`. We may change this in the future.
+             */
+            post.setStatus(PostStatus.DRAFT.toString());
+            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
+            mDispatcher.dispatch(PostActionBuilder.newPushPostAction(new RemotePostPayload(post, site)));
+        } else {
+            throw new IllegalStateException("All AutoSavePostIfNotDraftResult types must be handled");
+        }
+    }
+
     /**
      * Has priority 9 on OnPostUploaded events, which ensures that PostUploadHandler is the first to receive
      * and process OnPostUploaded events, before they trickle down to other subscribers.
@@ -611,6 +642,10 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
     public void onPostUploaded(OnPostUploaded event) {
+        // check if the event is related to the PostModel that is being uploaded by PostUploadHandler
+        if (!isPostUploading(event.post)) {
+            return;
+        }
         SiteModel site = mSiteStore.getSiteByLocalId(event.post.getLocalSiteId());
 
         if (event.isError()) {
@@ -659,17 +694,5 @@ public class PostUploadHandler implements UploadHandler<PostModel> {
         }
 
         finishUpload();
-    }
-
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN, priority = 9)
-    public void onPostChanged(OnPostChanged event) {
-        if (event.causeOfChange instanceof CauseOfOnPostChanged.RemoteAutoSavePost) {
-            int postLocalId = ((RemoteAutoSavePost) event.causeOfChange).getLocalPostId();
-            PostModel post = mPostStore.getPostByLocalPostId(postLocalId);
-            SiteModel site = mSiteStore.getSiteByLocalId(post.getLocalSiteId());
-            mPostUploadNotifier.incrementUploadedPostCountFromForegroundNotification(post);
-            finishUpload();
-        }
     }
 }

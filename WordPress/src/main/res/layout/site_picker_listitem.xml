@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_large"
+        android:background="?attr/selectableItemBackground"
         android:paddingTop="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/image_blavatar"
             android:layout_width="@dimen/blavatar_sz"
             android:layout_height="@dimen/blavatar_sz"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
             android:layout_marginStart="@dimen/site_picker_blavatar_margin_left"
-            android:background="@android:color/white"
+            android:layout_marginEnd="@dimen/site_picker_blavatar_margin_right"
+            android:background="@color/placeholder"
+            android:contentDescription="@string/blavatar_desc"
             android:gravity="center_vertical"
             android:padding="1dp"
-            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
-            android:contentDescription="@string/blavatar_desc"/>
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
         <LinearLayout
+            android:id="@+id/metadata_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:layout_toEndOf="@id/image_blavatar"
             android:orientation="vertical">
 
@@ -40,22 +38,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="?attr/wpColorText"
-                android:textSize="@dimen/text_sz_large"
-                tools:text="text_title"/>
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                tools:text="text_title" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_domain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:gravity="center_vertical"
                 android:maxLines="1"
-                android:textColor="?attr/wpColorTextSubtle"
-                android:textSize="@dimen/text_sz_medium"
-                tools:text="text_domain"/>
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="text_domain" />
 
         </LinearLayout>
 
@@ -65,10 +59,10 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/neutral_10"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="?android:attr/listDivider"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </LinearLayout>

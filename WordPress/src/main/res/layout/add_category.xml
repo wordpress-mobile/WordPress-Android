@@ -1,66 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingTop="@dimen/margin_extra_medium_large"
+    android:paddingEnd="@dimen/margin_extra_medium_large">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/categoryTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/category_name"
-            android:textColor="?attr/wpColorText"
-            android:textStyle="bold"
-            android:labelFor="@+id/category_name"
-            android:textSize="@dimen/text_sz_large"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"/>
+        android:orientation="vertical">
 
         <!-- Category name -->
-        <EditText
-            android:id="@+id/category_name"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/category_name_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/categoryTitle"
-            android:inputType="text"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Pony" />
+            android:hint="@string/category_name">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                tools:text="Pony" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!--  Parent category -->
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/parentDescLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/category_name"
-            android:layout_marginTop="20dp"
-            android:text="@string/category_parent"
-            android:textColor="?attr/wpColorText"
-            android:textStyle="bold"
+            android:layout_marginTop="@dimen/margin_large"
             android:labelFor="@+id/parent_category"
-            android:textSize="@dimen/text_sz_large"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"/>
+            android:text="@string/category_parent"
+            android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/parent_category"
-            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/parentDescLabel"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:textColor="?attr/wpColorTextSubtle"
-            android:textSize="@dimen/text_sz_large"
-            tools:listitem="@layout/wp_simple_list_item_1"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"/>
-    </RelativeLayout>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+            tools:listitem="@layout/wp_simple_list_item_1" />
+    </LinearLayout>
 </ScrollView>

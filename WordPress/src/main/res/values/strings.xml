@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
@@ -45,9 +45,6 @@
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
-
-    <!-- default strings -->
-    <string name="wordpress" translatable="false">WordPress</string>
 
     <!-- general strings -->
     <string name="posts">Posts</string>
@@ -100,16 +97,18 @@
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
-    <string name="copy">Copy</string>
+    <string name="copy_text">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
     <string name="delete_yes">Delete</string>
     <string name="add_count">Add %d</string>
     <string name="preview_count">Preview %d</string>
-    <string name="write_post">Write Post</string>
     <string name="dismiss">dismiss</string>
     <string name="exit">exit</string>
     <string name="ok">OK</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
+    <string name="local_draft">Local draft</string>
+    <string name="local_changes">Local changes</string>
+    <string name="continue_label">Continue</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -156,6 +155,8 @@
     <string name="media_upload_error">Media upload error occurred</string>
     <string name="media_generic_error">Media error occurred</string>
     <string name="media_space_used">%1$s used</string>
+    <string name="media_accessing_progress">Accessing content of a private site</string>
+    <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
 
     <string name="media_upload_state_queued">Queued</string>
     <string name="media_upload_state_uploading">Uploading</string>
@@ -247,7 +248,6 @@
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
     <string name="untitled">Untitled</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
-    <string name="local_draft">Local draft</string>
     <string name="post_uploading">Uploading post</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_queued">Queued post</string>
@@ -277,6 +277,7 @@
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
+    <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
     <string name="button_delete_permanently">Delete Permanently</string>
@@ -359,6 +360,7 @@
     <!-- post autosave revision dialog -->
     <string name="dialog_confirm_autosave_title">Which version would you like to edit?</string>
     <string name="dialog_confirm_autosave_body_first_part">You recently made changes to this post but didn\'t save them. Choose a version to load:\n\n</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">You recently made changes to this page but didn\'t save them. Choose a version to load:\n\n</string>
     <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %s\n\nFrom another device\nSaved on %s\n</string>
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
@@ -369,8 +371,9 @@
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages \u2014 great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
+    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
@@ -405,6 +408,8 @@
     <string name="comment_unspam_talkback">Comment marked as not spam</string>
     <string name="comment_title">%s on %s</string>
     <string name="comment_read_source_post">Read the source post</string>
+    <string name="comment_toast_err_share_intent">Unable to share</string>
+    <string name="comment_share_link_via">Share via</string>
 
     <!-- comment menu and buttons on comment detail - keep these short! -->
     <string name="mnu_comment_approve">Approve</string>
@@ -423,14 +428,15 @@
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_deleting_comments">Deleting comments</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
-    <string name="trash_yes">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
+    <string name="dlg_confirm_action_trash">Trash</string>
+    <string name="dlg_cancel_action_dont_trash">Don\'t trash</string>
 
     <!-- comment actions -->
     <string name="reply">Reply</string>
     <string name="trash">Trash</string>
     <string name="like">Like</string>
     <string name="approve">Approve</string>
+    <string name="copy_link_address">Copy link address</string>
     <string name="comment_moderated_approved">Comment approved!</string>
     <string name="comment_liked">Comment liked</string>
     <string name="comment_q_action_done_generic">Action done!</string>
@@ -438,6 +444,7 @@
     <string name="comment_q_action_liking">Liking…</string>
     <string name="comment_q_action_approving">Approving…</string>
     <string name="comment_q_action_replying">Replying…</string>
+    <string name="comment_q_action_copied_url">Link address copied</string>
 
     <!-- pending draft local notifications -->
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
@@ -448,7 +455,6 @@
     <string name="pending_draft_one_generic">Don\'t leave it hanging! \'%1$s\' is waiting to be published.</string>
 
     <!-- edit comment view -->
-    <string name="hint_comment_content">Comment</string>
     <string name="saving_changes">Saving changes</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="dlg_sure_to_delete_comment">Permanently delete this comment?</string>
@@ -678,6 +684,14 @@
     <string name="site_settings_optimize_images_summary">Enable to resize and compress pictures</string>
     <string name="site_settings_optimize_video_summary">Enable to resize and compress videos</string>
 
+    <string name="weekday_sunday">Sunday</string>
+    <string name="weekday_monday">Monday</string>
+    <string name="weekday_tuesday">Tuesday</string>
+    <string name="weekday_wednesday">Wednesday</string>
+    <string name="weekday_thursday">Thursday</string>
+    <string name="weekday_friday">Friday</string>
+    <string name="weekday_saturday">Saturday</string>
+
     <string name="detail_approve_manual">Require manual approval for everyone\'s comments.</string>
     <string name="detail_approve_auto_if_previously_approved">Automatically approve if the user has a previously approved comment</string>
     <string name="detail_approve_auto">Automatically approve everyone\'s comments.</string>
@@ -805,6 +819,7 @@
 
     <!-- preferences -->
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
     <string name="preference_open_device_settings">Open device settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="preference_crash_reports">Crash reports</string>
@@ -818,6 +833,22 @@
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="preference_strip_image_location">Remove location from media</string>
+    <string name="app_theme">Appearance</string>
+    <string name="app_theme_light">Light</string>
+    <string name="app_theme_dark">Dark</string>
+    <string name="app_theme_default">Set by Battery Saver</string>
+    <string name="app_theme_entry_value_light" translatable="false">light</string>
+    <string name="app_theme_entry_value_dark" translatable="false">dark</string>
+    <string name="app_theme_entry_value_default" translatable="false">default</string>
+    <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_light</string>
+    <string-array name="app_theme_entries" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/app_theme_light</item>
+        <item>@string/app_theme_dark</item>
+    </string-array>
+    <string-array name="app_theme_entry_values" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/app_theme_entry_value_light</item>
+        <item>@string/app_theme_entry_value_dark</item>
+    </string-array>
 
     <!-- stats -->
     <string name="stats">Stats</string>
@@ -877,21 +908,34 @@
 
     <!-- Stats accessibility strings -->
     <string name="stats_loading_card">Loading selected card data</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_collapse_content_description">Collapse</string>
     <string name="stats_item_expanded">Item expanded</string>
     <string name="stats_item_collapsed">Item collapsed</string>
-    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
+    <string name="stats_bar_chart_accessibility_entry">%1$s, %2$d %3$s</string>
+    <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
+
+    <string name="stats_box_type_low">low</string>
+    <string name="stats_box_type_medium">medium</string>
+    <string name="stats_box_type_high">high</string>
+    <string name="stats_box_type_very_high">very high</string>
+
+    <string name="stats_posting_activity_action">navigate all stats for this period</string>
+    <string name="stats_posting_activity_content_description">The days with %1$s views for %2$s are : %2$s %3$s.Tap for more.</string>
+    <string name="stats_posting_activity_label_content_description">Posting Activity for %1$s</string>
+    <string name="stats_posting_activity_empty_description">There are no stats in this period.</string>
+    <string name="stats_posting_activity_end_description">You have heard all stats for this period.
+        Tapping again will restart from the beginning.</string>
 
     <string name="stats_manage_your_stats">Manage Your Stats</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
-    <string name="stats_management_edit">Edit</string>
+    <string name="stats_management_add_new_stats_card">Add new stats card</string>
+    <string name="stats_management_screen_title">Add New Card</string>
     <string name="stats_management_new">New</string>
 
     <!-- Stats refreshed widgets -->
@@ -1029,8 +1073,10 @@
     <string name="stats_most_popular_percent_views">%1$d%% of views</string>
     <string name="stats_insights_posting_activity">Posting Activity</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
-    <string name="stats_insights_add_insights_header">Add Insights</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customize.</string>
+
+    <string name="stats_insights_management_general">General</string>
+    <string name="stats_insights_management_posts_and_pages">Posts and Pages</string>
+    <string name="stats_insights_management_activity">Activity</string>
 
     <!-- Stats refreshed widgets -->
     <string name="stats_widget_log_in_message">Please log in to the WordPress app to add a widget.</string>
@@ -1081,7 +1127,7 @@
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
 
     <!-- QuickPress -->
-    <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
+    <string name="quickpress_shortcut_activity_label">Select blog for QuickPress shortcut</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
     <string name="quickpress_add_alert_title">Set shortcut name</string>
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
@@ -1123,10 +1169,10 @@
     <string name="notifications_label_new_notifications">New notifications</string>
     <string name="notifications_label_new_notifications_subtitle">Tap to show them</string>
     <string name="notifications_tab_title_all">All</string>
-    <string name="notifications_tab_title_unread">Unread</string>
-    <string name="notifications_tab_title_comments" translatable="false">@string/comments</string>
-    <string name="notifications_tab_title_follows" translatable="false">@string/follows</string>
-    <string name="notifications_tab_title_likes" translatable="false">@string/stats_likes</string>
+    <string name="notifications_tab_title_unread_notifications">Unread</string>
+    <string name="notifications_tab_title_comments">Comments</string>
+    <string name="notifications_tab_title_follows">Follows</string>
+    <string name="notifications_tab_title_likes">Likes</string>
 
     <!-- Notification Settings -->
     <string name="notification_settings">Notification Settings</string>
@@ -1225,17 +1271,29 @@
 
     <!-- reader -->
     <string name="reader">Reader</string>
-    <string name="reader_filter_all_sites">All sites</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_sites_title">Sites</string>
     <string name="reader_filter_tags_title">Tags</string>
+    <string name="reader_filter_main_title">Following</string>
+    <string name="reader_filter_empty_sites_list">See the newest posts from sites you follow</string>
+    <string name="reader_filter_empty_tags_list">You can follow posts on a specific subject by adding a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_list">Log in to WordPress.com to see the latest posts from sites you follow</string>
+    <string name="reader_filter_self_hosted_empty_tagss_list">Log in to WordPress.com to see the latest posts from tags you follow</string>
+    <string name="reader_filter_empty_sites_action">Follow a site</string>
+    <string name="reader_filter_empty_tags_action">Add a tag</string>
+    <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
+    <string name="editor_page_saved_online">Page saved online</string>
     <string name="editor_post_saved_locally">Post saved on device</string>
+    <string name="editor_page_saved_locally">Page saved on device</string>
     <string name="editor_draft_saved_online">Draft saved online</string>
     <string name="editor_draft_saved_locally">Draft saved on device</string>
     <string name="editor_post_saved_locally_failed_media">The post has failed media uploads and has been saved locally</string>
+    <string name="editor_page_saved_locally_failed_media">The page has failed media uploads and has been saved locally</string>
     <string name="editor_uploading_post">Your post is uploading</string>
+    <string name="editor_uploading_page">Your page is uploading</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="editor_post_converted_back_to_draft">Post converted back to draft</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
@@ -1439,12 +1497,11 @@
     <string name="tos">Terms of Service</string>
     <string name="privacy_policy">Privacy policy</string>
 
-    <!-- Remote Post Changes -->
-    <string name="local_changes">Local changes</string>
-
-    <!-- Remote Post has conflicts with local post -->
+    <!-- Remote Post&Page has conflicts with local post -->
     <string name="local_post_is_conflicted">Version conflict</string>
     <string name="local_post_autosave_revision_available">You\'ve made unsaved changes to this post</string>
+    <string name="local_page_is_conflicted" translatable="false">@string/local_post_is_conflicted</string>
+    <string name="local_page_autosave_revision_available">You\'ve made unsaved changes to this page</string>
 
     <!-- Post Remote Preview -->
     <string name="post_preview_saving_draft">Saving…</string>
@@ -1460,7 +1517,6 @@
 
     <string name="image_settings">Image settings</string>
     <string name="wordpress_blog">WordPress blog</string>
-    <string name="blogusername">blogusername</string>
     <string name="wordpress_dot_com" translatable="false">wordpress.com</string>
 
     <!-- Error Messages -->
@@ -1489,6 +1545,7 @@
     <string name="error_publish_empty_page">Can\'t publish an empty page</string>
     <string name="error_save_empty_draft">Can\'t save an empty draft</string>
     <string name="error_publish_no_network">Device is offline. Post saved locally.</string>
+    <string name="error_publish_page_no_network">Device is offline. Page saved locally.</string>
     <string name="error_upload_post_param">There was an error uploading this post: %s.</string>
     <string name="error_upload_page_param">There was an error uploading this page: %s.</string>
     <string name="error_upload_post_media_param">There was an error uploading the media in this post: %s.</string>
@@ -1590,7 +1647,7 @@
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
-    <string name="reader_title_subs">Tags &amp; Sites</string>
+    <string name="reader_title_subs">Manage Tags &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
 
@@ -1615,6 +1672,12 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+
+    <!-- accessibility content desciptions -->
+    <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
+    <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
+    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
+    <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1646,6 +1709,14 @@
     <string name="reader_view_comments">View comments</string>
 
     <string name="reader_excerpt_link">Visit %s for more</string>
+
+    <!-- reblog -->
+    <string name="reader_view_reblog">Reblog</string>
+    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
+    <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
+    <string name="reader_no_site_to_reblog_action">Manage Sites</string>
+    <string name="reader_reblog_error">Reblog failed</string>
+    <string name="sitepicker_continue_flow">Continue</string>
 
     <!-- like counts -->
     <string name="reader_label_like">Like</string>
@@ -1699,6 +1770,7 @@
     <!-- empty list/grid text -->
     <string name="reader_empty_posts_no_connection" translatable="false">@string/no_network_title</string>
     <string name="reader_empty_posts_request_failed">Unable to retrieve posts</string>
+    <string name="reader_self_hosted_select_filter">Use the filter button to find posts on specific subjects</string>
     <string name="reader_empty_posts_in_tag">No posts with this tag</string>
     <string name="reader_empty_posts_in_tag_updating">Fetching posts…</string>
     <string name="reader_empty_posts_in_custom_list">The sites in this list haven\'t posted anything recently</string>
@@ -1707,7 +1779,7 @@
     <string name="reader_empty_recommended_blogs">No recommended sites</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="reader_empty_followed_blogs_search_title">No sites matching your search</string>
-    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
+    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_title">No recent posts</string>
     <string name="reader_empty_followed_blogs_no_recent_posts_description">The sites you follow haven\'t posted anything recently</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
@@ -1785,6 +1857,7 @@
     <string name="my_site_create_new_site">Create a new site for your business, magazine, or personal blog; or connect an existing WordPress installation.</string>
     <string name="my_site_create_new_site_title">You don\'t have any sites</string>
     <string name="my_site_add_new_site">Add new site</string>
+    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="my_site_custom_domain_name">All WordPress.com plans include a custom domain name. Register your free premium domain now.</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
@@ -1798,8 +1871,9 @@
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
 
-    <string name="my_site_bottom_sheet_add_post">Create new post</string>
-    <string name="my_site_bottom_sheet_add_page">Create new page</string>
+    <string name="my_site_bottom_sheet_title">Add new</string>
+    <string name="my_site_bottom_sheet_add_post">Blog post</string>
+    <string name="my_site_bottom_sheet_add_page">Site page</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -1811,6 +1885,7 @@
     <string name="site_picker_remove_site_empty">No sites matching your search</string>
     <string name="site_picker_remove_site_error">Error removing site, try again later</string>
     <string name="site_picker_failed_selecting_added_site">Couldn\'t select newly added self-hosted site.</string>
+    <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
 
     <!-- Application logs view -->
     <string name="logs_copied_to_clipboard">Application logs have been copied to the clipboard</string>
@@ -1831,8 +1906,6 @@
 
     <!--TabBar Accessibility Labels-->
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
-    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
-    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
 
@@ -1850,7 +1923,6 @@
     <string name="connected_accounts_label">Connected accounts</string>
     <string name="connection_service_label">Publicize to %s</string>
     <string name="connection_service_description">Connect to automatically share your blog posts to %s.</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="share_btn_connect">Connect</string>
     <string name="share_btn_disconnect">Disconnect</string>
     <string name="share_btn_reconnect">Reconnect</string>
@@ -1900,7 +1972,8 @@
     <string name="connecting_account">Connecting account</string>
     <string name="sharing_label_message">Change the text of the sharing buttons\' label. This text won\'t appear until you add at least one sharing button.</string>
     <string name="sharing_twitter_message">This will be included in tweets when people share using the Twitter button</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
+    <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
+    <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicize cannot connect to Facebook Profiles, only published Pages.</string>
 
     <!--Theme Browser-->
     <string name="current_theme">Current Theme</string>
@@ -2167,6 +2240,8 @@
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
+    <string name="suggestion_invalid_user">"%s is not a valid user"</string>
+    <string name="suggestion_no_matching_users">"No matching users available."</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
@@ -2185,15 +2260,20 @@
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
 
     <string name="photo_picker_title">Choose photo</string>
+    <string name="photo_picker_video_title">Choose video</string>
+    <string name="photo_picker_photo_or_video_title">Choose media</string>
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
+    <string name="photo_picker_gif">Choose from Tenor</string>
     <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
+    <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
@@ -2203,11 +2283,13 @@
     <string name="stock_media_picker_initial_empty_text">Search to find free photos to add to your Media Library</string>
     <string name="stock_media_picker_initial_empty_subtext">Photos provided by %s</string>
 
-    <string name="giphy_picker_search_hint">Search Giphy</string>
-    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="giphy_picker_empty_search_list">No media matching your search</string>
-    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
+    <!-- GIFs -->
+    <string name="gif_picker_search_hint">Search Tenor</string>
+    <string name="gif_powered_by_tenor">Powered by Tenor</string>
+    <string name="gif_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
+    <string name="gif_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
+    <string name="gif_picker_empty_search_list" tools:ignore="UnusedResources">No media matching your search</string>
+    <string name="gif_list_search_returned_unknown_error" tools:ignore="UnusedResources">There was a problem handling the request</string>
 
     <!-- E-mail verification reminder dialog -->
     <string name="toast_saving_post_as_draft">Saving post as draft</string>
@@ -2436,8 +2518,7 @@
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="fab_add_tag_desc">Create Tag</string>
-    <string name="fab_create_desc">create</string>
-    <string name="reader_blavatar_desc">site icon</string>
+    <string name="fab_create_desc">Create a post</string>
     <string name="reader_avatar_desc">profile picture</string>
     <string name="reader_gallery_images_desc">image gallery</string>
     <string name="quick_start_completed_tasks_header_chevron_expand_desc">expand</string>
@@ -2557,22 +2638,65 @@
     <string name="pages_empty_scheduled">You don\'t have any scheduled pages</string>
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
 
+
+    <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
+    <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
+
+    <string name="page_local_draft" translatable="false">@string/local_draft</string>
+    <string name="page_local_changes" translatable="false">@string/local_changes</string>
+    <string name="page_uploading">Uploading page</string>
+    <string name="page_uploading_draft" translatable="false">@string/post_uploading_draft</string>
+    <string name="page_queued">Queued page</string>
+
+    <string name="page_waiting_for_connection_publish">We\'ll publish the page when your device is back online.</string>
+    <string name="page_waiting_for_connection_pending">We\'ll submit your page for review when your device is back online.</string>
+    <string name="page_waiting_for_connection_scheduled">We\'ll schedule your page when your device is back online.</string>
+    <string name="page_waiting_for_connection_private">We\'ll publish your private page when your device is back online.</string>
+    <string name="page_waiting_for_connection_draft">We\'ll save your draft when your device is back online</string>
+
+    <string name="error_media_recover_page_not_published">We couldn\'t upload this media, and didn\'t publish the page.</string>
+    <string name="error_media_recover_page_not_published_private">We couldn\'t upload this media, and didn\'t publish this private page.</string>
+    <string name="error_media_recover_page_not_scheduled">We couldn\'t upload this media, and didn\'t schedule this page.</string>
+    <string name="error_media_recover_page_not_submitted">We couldn\'t upload this media, and didn\'t submit this page for review. </string>
+
+    <string name="error_page_not_published_retrying">We couldn\'t publish this page, but we\'ll try again later.</string>
+    <string name="error_page_not_published_retrying_private">We couldn\'t publish this private page, but we\'ll try again later.</string>
+    <string name="error_page_not_scheduled_retrying">We couldn\'t schedule this page, but we\'ll try again later.</string>
+    <string name="error_page_not_submitted_retrying">We couldn\'t submit this page for review, but we\'ll try again later. </string>
+
+    <string name="error_media_recover_page_not_published_retrying" translatable="false">@string/error_page_not_published_retrying</string>
+    <string name="error_media_recover_page_not_published_retrying_private" translatable="false">@string/error_page_not_published_retrying_private</string>
+    <string name="error_media_recover_page_not_scheduled_retrying" translatable="false">@string/error_page_not_scheduled_retrying</string>
+    <string name="error_media_recover_page_not_submitted_retrying" translatable="false">@string/error_page_not_submitted_retrying</string>
+
+
+    <string name="error_page_not_published">We couldn\'t complete this action, and didn\'t publish this page.</string>
+    <string name="error_page_not_published_private">We couldn\'t complete this action, and didn\'t publish this private page.</string>
+    <string name="error_page_not_scheduled">We couldn\'t complete this action, and didn\'t schedule this page.</string>
+    <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
+
+    <string name="error_media_recover_page" translatable="false">@string/error_media_recover_post</string>
+    <string name="error_unknown_page_type">Unknown page format</string>
 
     <!-- Posts -->
+    <string name="post_list_author">Post author</string>
     <string name="post_list_author_me">Me</string>
     <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_published">Published</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_scheduled">Scheduled</string>
-    <string name="post_list_trashed">Trashed</string>
+    <string name="post_list_tab_published_posts">Published</string>
+    <string name="post_list_tab_drafts">Drafts</string>
+    <string name="post_list_tab_scheduled_posts">Scheduled</string>
+    <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
-
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>
     <string name="web_preview_desktop">Desktop</string>
+
+    <string name="create_post_page_fab_tooltip">Create a post or page</string>
+    <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
@@ -2596,15 +2720,7 @@
     <string name="new_site_creation_preview_subtitle">You\'ll be able to customize look and feel of your site later</string>
     <string name="site_creation_segments_title">Tell us what kind of site you\’d like to make</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
@@ -2617,6 +2733,14 @@
     <string name="notification_new_site_creation_title">Create Site</string>
     <string name="notification_new_site_creation_failed">There was a problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We\'re creating your new site</string>
+
+    <string name="new_site_creation_creating_site_loading_title">Hooray!\nAlmost done</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Your site will be ready shortly</string>
+    <string name="new_site_creation_creating_site_loading_1">Grabbing site URL</string>
+    <string name="new_site_creation_creating_site_loading_2">Adding site features</string>
+    <string name="new_site_creation_creating_site_loading_3">Setting up theme</string>
+    <string name="new_site_creation_creating_site_loading_4">Creating dashboard</string>
+
     <string name="cancel_new_site_wizard_content_description">Cancel Site Creation Wizard</string>
     <string name="site_created_but_not_fetched_snackbar_message">It seems like you\'re on a slow connection. If you don\'t see your new site in the list, try refreshing.</string>
     <string name="new_site_creation_clear_all_content_description">Clear</string>
@@ -2633,104 +2757,229 @@
     <string name="description_collapse">Collapse</string>
     <string name="description_expand">Expand</string>
 
+    <string name="preview_image_description">Preview Image</string>
+    <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
+    <string name="done">done</string>
+    <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
+    <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
+    <string name="crop">crop</string>
+    <string name="insert_label_with_count">Insert %d</string>
+
+    <!-- Feature Announcement -->
+    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="feature_announcement_find_out_mode">Find out more</string>
 
     <!--Autogenerated:Gutenberg Native-->
+    <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
+    <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_10_street_road" tools:ignore="UnusedResources">10 Street Road</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_555_555_1234" tools:ignore="UnusedResources">(555)555–1234</string>
+    <!-- translators: sample content for "Portfolio" page template -->
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented" tools:ignore="UnusedResources">A description of the project and the works presented.</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a" tools:ignore="UnusedResources">&lt;a href=\"mailto:mail@example.com\"&gt;mail@example.com&lt;/a&gt;</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest" tools:ignore="UnusedResources">A short bio with personal history, key achievements, or an interesting fact.</string>
+    <!-- translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer" tools:ignore="UnusedResources">A short description of the services you offer.</string>
     <string name="gutenberg_native_add_a_description" tools:ignore="UnusedResources">Add a description</string>
+    <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_annotation" tools:ignore="UnusedResources">Add annotation</string>
+    <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
+    <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_link_text" tools:ignore="UnusedResources">Add link text</string>
+    <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Add paragraph block</string>
+    <string name="gutenberg_native_add_to_beginning" tools:ignore="UnusedResources">Add To Beginning</string>
+    <string name="gutenberg_native_add_to_end" tools:ignore="UnusedResources">Add To End</string>
     <string name="gutenberg_native_add_url" tools:ignore="UnusedResources">Add URL</string>
     <string name="gutenberg_native_add_video" tools:ignore="UnusedResources">ADD VIDEO</string>
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
+    <!-- translators: title for "Blog" page template -->
+    <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
     <string name="gutenberg_native_clear_all_settings" tools:ignore="UnusedResources">Clear All Settings</string>
+    <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
+    <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
+    <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Double tap and hold to edit</string>
     <string name="gutenberg_native_double_tap_to_add_a_block" tools:ignore="UnusedResources">Double tap to add a block</string>
     <!-- translators: accessibility text (hint for focusing a slider) -->
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider" tools:ignore="UnusedResources">Double tap to change the value using slider</string>
     <!-- translators: accessibility text -->
     <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Double tap to edit this value</string>
+    <!-- translators: accessibility text (hint for moving to color settings) -->
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">Double tap to go to color settings</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">Double tap to move the block down</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Double tap to move the block to the left</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Double tap to move the block to the right</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Double tap to move the block up</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Double tap to redo last change</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block" tools:ignore="UnusedResources">Double tap to remove the block</string>
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
     <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Double tap to select a video</string>
     <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Double tap to select an image</string>
+    <string name="gutenberg_native_double_tap_to_select_layout" tools:ignore="UnusedResources">Double tap to select layout</string>
     <!-- translators: accessibility text (hint for switches) -->
     <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Double tap to toggle setting</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
-    <string name="gutenberg_native_empty" tools:ignore="UnusedResources">Empty</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_dr_seuss" tools:ignore="UnusedResources">Dr. Seuss</string>
+    <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
+    <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a" tools:ignore="UnusedResources">Email me: &lt;a href=\"mailto:mail@example.com\"&gt;mail@example.com&lt;/a&gt;</string>
+    <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <!-- translators: accessibility text. %s: gallery caption. -->
+    <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
+    <!-- translators: sample content for "About" page template
+translators: sample content for "Contact" page template
+translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_get_in_touch" tools:ignore="UnusedResources">Get in Touch</string>
+    <!-- translators: sample content for "Portfolio" page template -->
+    <string name="gutenberg_native_get_in_touch_c53e1927" tools:ignore="UnusedResources">Get in touch!</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_get_in_touch_dbfe07f2" tools:ignore="UnusedResources">Get in Touch!</string>
     <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
     <string name="gutenberg_native_here_is_the_panel_content" tools:ignore="UnusedResources">Here is the panel content!</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <!-- translators: accessibility text. 1: heading level. 2: heading content. -->
-    <string name="gutenberg_native_level_1_s_2_s" tools:ignore="UnusedResources">Level %1$s. %2$s</string>
-    <!-- translators: accessibility text. %s: heading level. -->
-    <string name="gutenberg_native_level_s_empty" tools:ignore="UnusedResources">Level %s. Empty.</string>
+    <!-- translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_inspiration" tools:ignore="UnusedResources">Inspiration</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than" tools:ignore="UnusedResources">It is our choices, Harry, that show what we truly are, far more than our abilities.</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_j_k_rowling" tools:ignore="UnusedResources">J.K. Rowling</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_juan_p_rez" tools:ignore="UnusedResources">Juan Pérez</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_let_s_build_something_together" tools:ignore="UnusedResources">Let’s build something together</string>
+    <!-- translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_let_s_build_something_together_93c12eb5" tools:ignore="UnusedResources">Let’s Build Something Together</string>
+    <!-- translators: sample content for "Portfolio" page template -->
+    <string name="gutenberg_native_let_s_build_something_together_e349ef7a" tools:ignore="UnusedResources">Let\'s build something together.</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati" tools:ignore="UnusedResources">Let\'s talk 👋 Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
+    <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Move block left</string>
+    <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block left from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Move block right</string>
+    <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block right from position %1$s to position %2$s</string>
     <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Move block up</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block up from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Move Image Backward</string>
+    <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
     <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">My Document Setting Panel</string>
+    <!-- translators: sample content for "Portfolio" page template -->
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car" tools:ignore="UnusedResources">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
     <string name="gutenberg_native_my_post_publish_panel" tools:ignore="UnusedResources">My post publish panel</string>
     <string name="gutenberg_native_my_post_status_info" tools:ignore="UnusedResources">My post status info</string>
     <string name="gutenberg_native_my_pre_publish_panel" tools:ignore="UnusedResources">My pre publish panel</string>
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
+    <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
+    <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
+    <!-- translators: title for "Portfolio" page template -->
+    <string name="gutenberg_native_portfolio" tools:ignore="UnusedResources">Portfolio</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_position_or_job_title" tools:ignore="UnusedResources">Position or Job Title</string>
     <!-- translators: accessibility text. empty post title. -->
     <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Post title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the post title. -->
     <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Post title. %s</string>
     <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem displaying block</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
+    <!-- translators: sample content for "Portfolio" page template -->
+    <string name="gutenberg_native_project_name" tools:ignore="UnusedResources">Project Name</string>
     <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
-    <!-- translators: accessibility text. %s: current block position (number). -->
-    <string name="gutenberg_native_remove_block_at_row_s" tools:ignore="UnusedResources">Remove block at row %s</string>
-    <string name="gutenberg_native_reset" tools:ignore="UnusedResources">RESET</string>
+    <string name="gutenberg_native_remove_image" tools:ignore="UnusedResources">Remove Image</string>
+    <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
-    <string name="gutenberg_native_row_d" tools:ignore="UnusedResources">Row %d.</string>
-    <!-- translators: accessibility text. %s: block name. -->
-    <string name="gutenberg_native_s_block" tools:ignore="UnusedResources">%s Block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s block. Empty</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s block. This block has invalid content</string>
     <!-- translators: %s: Name of the block -->
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android" tools:ignore="UnusedResources">\'%s\' isn\'t yet supported on WordPress for Android</string>
+    <!-- translators: %s: Name of the block -->
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">\'%s\' isn\'t yet supported on WordPress for iOS</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_sally_smith" tools:ignore="UnusedResources">Sally Smith</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_samuel_the_dog" tools:ignore="UnusedResources">Samuel the Dog</string>
+    <string name="gutenberg_native_select_a_color" tools:ignore="UnusedResources">Select a color</string>
+    <!-- translators: title for "Services" page template -->
+    <string name="gutenberg_native_services" tools:ignore="UnusedResources">Services</string>
+    <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
     <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
     <string name="gutenberg_native_size" tools:ignore="UnusedResources">Size</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
+    <!-- translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_strategy" tools:ignore="UnusedResources">Strategy</string>
+    <string name="gutenberg_native_success_message" tools:ignore="UnusedResources">Success Message</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>
     <string name="gutenberg_native_take_a_photo_or_video" tools:ignore="UnusedResources">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_video" tools:ignore="UnusedResources">Take a Video</string>
     <string name="gutenberg_native_tap_here_to_show_help" tools:ignore="UnusedResources">Tap here to show help</string>
     <string name="gutenberg_native_tap_to_hide_the_keyboard" tools:ignore="UnusedResources">Tap to hide the keyboard</string>
+    <!-- translators: title for "Team" page template -->
+    <string name="gutenberg_native_team" tools:ignore="UnusedResources">Team</string>
+    <string name="gutenberg_native_template_preview" tools:ignore="UnusedResources">Template Preview</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing" tools:ignore="UnusedResources">The way to get started is to quit talking and begin doing.</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i" tools:ignore="UnusedResources">This is sample content, included with the template to illustrate its features. Remove or replace it with your own words and media.</string>
     <string name="gutenberg_native_title" tools:ignore="UnusedResources">Title:</string>
     <string name="gutenberg_native_translate" tools:ignore="UnusedResources">Translate</string>
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
-    <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Unsupported</string>
+    <!-- translators: sample content for "Contact" page template -->
+    <string name="gutenberg_native_usa" tools:ignore="UnusedResources">USA</string>
+    <!-- translators: accessibility text. %s: video caption. -->
+    <string name="gutenberg_native_video_caption_s" tools:ignore="UnusedResources">Video caption. %s</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u" tools:ignore="UnusedResources">Visitors will want to know who is on the other side of the page. Use this space to write about yourself, your site, your business, or anything you want. Use the testimonials below to quote others, talking about the same thing – in their own words.</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_walt_disney" tools:ignore="UnusedResources">Walt Disney</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_want_to_work_with_us" tools:ignore="UnusedResources">Want to work with us?</string>
+    <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources">Warning Message</string>
+    <!-- translators: sample content for "Team" page template -->
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o" tools:ignore="UnusedResources">We are a small team of talented professionals with a wide range of skills and experience. We love what we do, and we do it with passion. We look forward to working with you.</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m" tools:ignore="UnusedResources">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
+    <!-- translators: sample content for "Services" page template -->
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you" tools:ignore="UnusedResources">We offer a range of services to help you achieve the results you\'re after. Not sure what you need, or what it costs? We can explain what services are right for you and tell you more about our fees. Get in touch below.</string>
+    <!-- translators: sample content for "Blog" page template -->
+    <string name="gutenberg_native_welcome_to_our_new_blog" tools:ignore="UnusedResources">Welcome to our new blog</string>
+    <!-- translators: sample content for "About" page template -->
+    <string name="gutenberg_native_what_people_say" tools:ignore="UnusedResources">What People Say</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
     <!--/Autogenerated:Gutenberg Native-->
 </resources>

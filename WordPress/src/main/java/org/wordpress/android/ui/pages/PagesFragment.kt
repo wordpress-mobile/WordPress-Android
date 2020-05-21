@@ -42,14 +42,14 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.pages.PageItem.Page
-import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.uploads.UploadActionUseCase
+import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
@@ -87,6 +87,8 @@ class PagesFragment : Fragment() {
     @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
     @Inject lateinit var previewStateHelper: PreviewStateHelper
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
+    @Inject lateinit var uploadActionUseCase: UploadActionUseCase
+    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
 
@@ -121,18 +123,17 @@ class PagesFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.EDIT_POST && resultCode == Activity.RESULT_OK && data != null) {
-            val pageId = data.getLongExtra(EditPostActivity.EXTRA_POST_REMOTE_ID, -1)
-
             if (EditPostActivity.checkToRestart(data)) {
                 ActivityLauncher.editPageForResult(data, this@PagesFragment, viewModel.site,
-                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0))
+                        data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, 0), false)
 
                 // a restart will happen so, no need to continue here
                 return
             }
-
-            if (pageId != -1L) {
-                viewModel.onPageEditFinished()
+            // we need to work with local ids, since local drafts don't have remote ids
+            val localPageId = data.getIntExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, -1)
+            if (localPageId != -1) {
+                viewModel.onPageEditFinished(localPageId, data)
             }
         } else if (requestCode == RequestCodes.PAGE_PARENT && resultCode == Activity.RESULT_OK && data != null) {
             val parentId = data.getLongExtra(EXTRA_PAGE_PARENT_ID_KEY, -1)
@@ -314,9 +315,9 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editPage.observe(this, Observer { page ->
+        viewModel.editPage.observe(this, Observer { (site, page, loadAutoRevision) ->
             page?.let {
-                ActivityLauncher.editPageForResult(this, page)
+                ActivityLauncher.editPageForResult(this, site, page.id, loadAutoRevision)
             }
         })
 
@@ -345,10 +346,6 @@ class PagesFragment : Fragment() {
             page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
-        viewModel.displayDeleteDialog.observe(this, Observer { page ->
-            page?.let { displayDeleteDialog(page) }
-        })
-
         viewModel.isNewPageButtonVisible.observe(this, Observer { isVisible ->
             isVisible?.let {
                 if (isVisible) {
@@ -366,6 +363,48 @@ class PagesFragment : Fragment() {
                 (pagesPager.adapter as PagesPagerAdapter).scrollToPage(page)
             }
         })
+
+        viewModel.dialogAction.observe(this, Observer {
+            it?.show(activity, activity.supportFragmentManager, uiHelpers)
+        })
+
+        viewModel.postUploadAction.observe(this, Observer {
+            it?.let { (post, site, data) ->
+                uploadUtilsWrapper.handleEditPostResultSnackbars(
+                        activity,
+                        activity.findViewById(R.id.coordinator),
+                        data,
+                        post,
+                        site,
+                        uploadActionUseCase.getUploadAction(post),
+                        View.OnClickListener {
+                            uploadUtilsWrapper.publishPost(
+                                    activity,
+                                    post,
+                                    site
+                            ) }
+                )
+            }
+        })
+
+        viewModel.publishAction.observe(this, Observer {
+            it?.let {
+                uploadUtilsWrapper.publishPost(activity, it.post, it.site)
+            }
+        })
+
+        viewModel.uploadFinishedAction.observe(this, Observer {
+            it?.let { (page, isError) ->
+                uploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                        activity,
+                        activity.findViewById(R.id.coordinator),
+                        isError,
+                        page.post,
+                        null,
+                        page.site
+                )
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -376,10 +415,6 @@ class PagesFragment : Fragment() {
         }
 
         initializeSearchView()
-    }
-
-    fun onPageDeleteConfirmed(remoteId: Long) {
-        viewModel.onDeleteConfirmed(remoteId)
     }
 
     private fun refreshProgressBars(listState: PageListState?) {
@@ -408,16 +443,12 @@ class PagesFragment : Fragment() {
         }
     }
 
-    private fun displayDeleteDialog(page: Page) {
-        val dialog = BasicFragmentDialog()
-        dialog.initialize(
-                page.id.toString(),
-                getString(R.string.delete_page),
-                getString(R.string.page_delete_dialog_message, page.title),
-                getString(R.string.delete),
-                getString(R.string.cancel)
-        )
-        dialog.show(requireFragmentManager(), page.id.toString())
+    fun onPositiveClickedForBasicDialog(instanceTag: String) {
+        viewModel.onPositiveClickedForBasicDialog(instanceTag)
+    }
+
+    fun onNegativeClickedForBasicDialog(instanceTag: String) {
+        viewModel.onNegativeClickedForBasicDialog(instanceTag)
     }
 
     override fun onStart() {
@@ -478,6 +509,6 @@ class PagesPagerAdapter(val context: Context, val fm: FragmentManager) : Fragmen
 
     fun scrollToPage(page: PageModel) {
         val listFragment = listFragments[PageListType.fromPageStatus(page.status)]?.get()
-        listFragment?.scrollToPage(page.remoteId)
+        listFragment?.scrollToPage(page.pageId)
     }
 }

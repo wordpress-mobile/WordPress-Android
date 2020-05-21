@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ms
 -->
 <resources>
@@ -80,7 +80,6 @@ Language: ms
     <string name="media_edit_filetype_caption">Jenis Fail</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="copy">Salin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lampu kelip</string>
     <string name="connect_site">Sambung Laman</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gegarkan peranti</string>
@@ -194,7 +193,6 @@ Language: ms
     <string name="post_settings_not_set">Tidak Ditetapkan</string>
     <string name="notifications_tab_title_all">Semua</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Belum dibaca</string>
     <string name="category_parent">Kategori induk (pilihan):</string>
     <string name="top_level_category_name">Paras Atas</string>
     <string name="media_empty_audio_list">Anda tidak mempunyai audio</string>
@@ -263,7 +261,6 @@ Language: ms
     <string name="connections_label">Sambungan</string>
     <string name="tabbar_accessibility_label_notifications">Pemberitahuan. Urus pemberitahuan anda.</string>
     <string name="sharing">Berkongsi</string>
-    <string name="tabbar_accessibility_label_me">Saya. Lihat profail anda dan buat perubahan.</string>
     <string name="tabbar_accessibility_label_reader">Pembaca. Ikut kandungan dari laman lain.</string>
     <string name="tabbar_accessibility_label_my_site">Laman Saya. Lihat laman anda dan uruskannya, termasuk statistik.</string>
     <string name="button_not_now">Bikan sekarang</string>
@@ -844,7 +841,6 @@ Language: ms
     <string name="dlg_unapproving_comments">Tidak meluluskan</string>
     <string name="dlg_trashing_comments">Hantar ke sampah</string>
     <string name="dlg_confirm_trash_comments">Hantar ke sampah?</string>
-    <string name="trash_yes">Sampah</string>
     <string name="trash">Sampah</string>
     <string name="saving_changes">Simpan perubahan</string>
     <string name="comment_status_approved">Diluluskan</string>
@@ -875,10 +871,8 @@ Language: ms
     <string name="post_settings">Tetapan kiriman</string>
     <string name="remove_account">Buang laman</string>
     <string name="sure_to_cancel_edit_comment">Batal menyunting komen ini?</string>
-    <string name="hint_comment_content">Ulasan</string>
     <string name="toast_comment_unedited">Ulasan tidak berubah</string>
     <string name="content_required">Ulasan diwajibkan</string>
-    <string name="trash_no">Jangan sampahkan</string>
     <string name="edit_comment">Sunting ulasan</string>
     <string name="learn_more">Pelajari selanjutnya</string>
     <string name="dlg_spamming_comments">Ditanda sebagai spam</string>
@@ -956,7 +950,6 @@ Language: ms
     <string name="pages">Laman</string>
     <string name="posts">Kiriman</string>
     <string name="anonymous">Tak bernama</string>
-    <string name="blogusername">namapenggunablog</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versi</string>
@@ -969,7 +962,6 @@ Language: ms
     <string name="immediately">Segera</string>
     <string name="quickpress_add_alert_title">Set nama jalan pintas</string>
     <string name="settings">Tetapan</string>
-    <string name="quickpress_window_title">Pilih blog untuk jalan pintas QuickPress</string>
     <string name="quickpress_add_error">Nama jalan pintas tidak boleh kosong</string>
     <string name="categories">Kategori</string>
     <string name="title">Tajuk</string>

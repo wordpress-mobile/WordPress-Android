@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,8 +38,8 @@ import org.wordpress.android.login.LoginMagicLinkSentFragment;
 import org.wordpress.android.login.LoginMode;
 import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
-import org.wordpress.android.login.SignupBottomSheetDialog;
-import org.wordpress.android.login.SignupBottomSheetDialog.SignupSheetListener;
+import org.wordpress.android.login.SignupBottomSheetDialogFragment;
+import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
@@ -49,6 +47,7 @@ import org.wordpress.android.support.ZendeskExtraTags;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionSource;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
@@ -64,7 +63,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarte
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.CrashLoggingUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
@@ -84,7 +82,7 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 
-public class LoginActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener,
+public class LoginActivity extends LocaleAwareActivity implements ConnectionCallbacks, OnConnectionFailedListener,
         Callback, LoginListener, GoogleListener, LoginPrologueListener, SignupSheetListener,
         HasSupportFragmentInjector, BasicDialogPositiveClickInterface {
     public static final String ARG_JETPACK_CONNECT_SOURCE = "ARG_JETPACK_CONNECT_SOURCE";
@@ -105,12 +103,10 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         FINISHED
     }
 
-    private SignupBottomSheetDialog mSignupSheet;
     private SmartLockHelper mSmartLockHelper;
     private SmartLockHelperState mSmartLockHelperState = SmartLockHelperState.NOT_TRIGGERED;
     private JetpackConnectionSource mJetpackConnectSource;
     private boolean mIsJetpackConnect;
-    private boolean mSignupSheetDisplayed;
 
     private LoginMode mLoginMode;
 
@@ -118,11 +114,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
     @Inject protected SiteStore mSiteStore;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,18 +146,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
                     break;
             }
         } else {
-            mSignupSheetDisplayed = savedInstanceState.getBoolean(KEY_SIGNUP_SHEET_DISPLAYED);
             mSmartLockHelperState = SmartLockHelperState.valueOf(
                     savedInstanceState.getString(KEY_SMARTLOCK_HELPER_STATE));
 
             if (mSmartLockHelperState != SmartLockHelperState.NOT_TRIGGERED) {
                 // reconnect SmartLockHelper
                 initSmartLockHelperConnection();
-            }
-
-            if (mSignupSheetDisplayed) {
-                mSignupSheet = new SignupBottomSheetDialog(this, this);
-                mSignupSheet.show();
             }
         }
     }
@@ -175,17 +160,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(KEY_SIGNUP_SHEET_DISPLAYED, mSignupSheetDisplayed);
         outState.putString(KEY_SMARTLOCK_HELPER_STATE, mSmartLockHelperState.name());
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (mSignupSheetDisplayed && mSignupSheet != null) {
-            mSignupSheet.dismiss();
-        }
-
-        super.onDestroy();
     }
 
     private void showFragment(Fragment fragment, String tag) {
@@ -242,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         switch (getLoginMode()) {
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial()) {
+                if (!mSiteStore.hasSite() && AppPrefs.shouldShowPostSignupInterstitial() && !doLoginUpdate) {
                     ActivityLauncher.showPostSignupInterstitial(this);
                 } else {
                     ActivityLauncher.showMainActivityAndLoginEpilogue(this, oldSitesIds, doLoginUpdate);
@@ -389,15 +364,13 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_BUTTON_TAPPED);
-        mSignupSheet = new SignupBottomSheetDialog(this, this);
-        mSignupSheet.show();
-        mSignupSheetDisplayed = true;
+        SignupBottomSheetDialogFragment signupFragment = SignupBottomSheetDialogFragment.newInstance();
+        signupFragment.show(getSupportFragmentManager(), SignupBottomSheetDialogFragment.TAG);
     }
 
     @Override
     public void onSignupSheetCanceled() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_CANCELED);
-        mSignupSheetDisplayed = false;
     }
 
     @Override
@@ -824,9 +797,12 @@ public class LoginActivity extends AppCompatActivity implements ConnectionCallba
     }
 
     private void dismissSignupSheet() {
-        if (mSignupSheet != null) {
-            mSignupSheet.dismiss();
-            mSignupSheetDisplayed = false;
+        SignupBottomSheetDialogFragment signupFragment =
+                (SignupBottomSheetDialogFragment) getSupportFragmentManager()
+                        .findFragmentByTag(SignupBottomSheetDialogFragment.TAG);
+
+        if (signupFragment != null) {
+            signupFragment.dismiss();
         }
     }
 

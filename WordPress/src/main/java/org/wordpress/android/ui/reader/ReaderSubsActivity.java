@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,19 +10,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +33,7 @@ import org.wordpress.android.datasets.ReaderBlogTable;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -46,12 +44,10 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
 import java.util.ArrayList;
@@ -62,7 +58,7 @@ import java.util.List;
  * activity which shows the user's subscriptions and recommended subscriptions - includes
  * followed tags, followed blogs, and recommended blogs
  */
-public class ReaderSubsActivity extends AppCompatActivity
+public class ReaderSubsActivity extends LocaleAwareActivity
         implements ReaderTagAdapter.TagDeletedListener {
     private EditText mEditAdd;
     private ImageButton mBtnAdd;
@@ -76,14 +72,9 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private static final int NUM_TABS = 3;
 
-    private static final int TAB_IDX_FOLLOWED_TAGS = 0;
-    private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
-    private static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
+    public static final int TAB_IDX_FOLLOWED_TAGS = 0;
+    public static final int TAB_IDX_FOLLOWED_BLOGS = 1;
+    public static final int TAB_IDX_RECOMMENDED_BLOGS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +89,9 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        int normalColor = ContextCompat.getColor(this, R.color.primary_30);
-        int selectedColor = ContextCompat.getColor(this, android.R.color.white);
-        tabLayout.setTabTextColors(normalColor, selectedColor);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         tabLayout.setupWithViewPager(mViewPager);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -118,10 +105,17 @@ public class ReaderSubsActivity extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             // Shadow removed on Activities with a tab toolbar
-            actionBar.setElevation(0.0f);
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        View bottomBar = findViewById(R.id.layout_bottom);
+
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(this);
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
+
+        bottomBar.setBackgroundColor(elevatedColor);
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -282,12 +276,12 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         if (!ReaderTag.isValidTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_invalid);
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_invalid));
             return;
         }
 
         if (ReaderTagTable.isFollowedTagName(entry)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_tag_exists);
+            showInfoSnackbar(getString(R.string.reader_toast_err_tag_exists));
             return;
         }
 
@@ -321,7 +315,7 @@ public class ReaderSubsActivity extends AppCompatActivity
 
         // make sure it isn't already followed
         if (ReaderBlogTable.isFollowedBlogUrl(normUrl) || ReaderBlogTable.isFollowedFeedUrl(normUrl)) {
-            ToastUtils.showToast(this, R.string.reader_toast_err_already_follow_blog);
+            showInfoSnackbar(getString(R.string.reader_toast_err_already_follow_blog));
             return;
         }
 
@@ -352,10 +346,10 @@ public class ReaderSubsActivity extends AppCompatActivity
 
                 if (succeeded) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
-                    showInfoToast(getString(R.string.reader_label_added_tag, tag.getLabel()));
+                    showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
                 } else {
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_add_tag);
+                    showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
                 }
             }
@@ -403,7 +397,7 @@ public class ReaderSubsActivity extends AppCompatActivity
                                     .toString(statusCode) + ")";
                             break;
                     }
-                    ToastUtils.showToast(ReaderSubsActivity.this, errMsg);
+                    showInfoSnackbar(errMsg);
                 }
             }
         };
@@ -422,10 +416,10 @@ public class ReaderSubsActivity extends AppCompatActivity
                     // clear the edit text and hide the soft keyboard
                     mEditAdd.setText(null);
                     EditTextUtils.hideSoftInput(mEditAdd);
-                    showInfoToast(getString(R.string.reader_label_followed_blog));
+                    showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                 } else {
-                    ToastUtils.showToast(ReaderSubsActivity.this, R.string.reader_toast_err_follow_blog);
+                    showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }
             }
         };
@@ -456,13 +450,14 @@ public class ReaderSubsActivity extends AppCompatActivity
     }
 
     /*
-     * toast message shown when adding/removing a tag - appears above the edit text at the bottom
+     * Snackbar message shown when adding/removing or something goes wrong
      */
-    private void showInfoToast(String text) {
-        int yOffset = findViewById(R.id.layout_bottom).getHeight() + DisplayUtils.dpToPx(this, 8);
-        Toast toast = Toast.makeText(this, text, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM, 0, yOffset);
-        toast.show();
+    private void showInfoSnackbar(String text) {
+        View bottomView = findViewById(R.id.layout_bottom);
+
+        WPSnackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
+        snackbar.setAnchorView(bottomView);
+        snackbar.show();
     }
 
     /*
@@ -476,7 +471,7 @@ public class ReaderSubsActivity extends AppCompatActivity
             mLastAddedTagName = null;
         }
         String labelRemovedTag = getString(R.string.reader_label_removed_tag);
-        showInfoToast(String.format(labelRemovedTag, tag.getLabel()));
+        showInfoSnackbar(String.format(labelRemovedTag, tag.getLabel()));
     }
 
     /*
@@ -488,6 +483,15 @@ public class ReaderSubsActivity extends AppCompatActivity
         }
 
         String pageTitle = AppPrefs.getReaderSubsPageTitle();
+
+        if (getIntent().hasExtra(ReaderConstants.ARG_SUBS_TAB_POSITION)) {
+            PagerAdapter adapter = getPageAdapter();
+            int tabIndex = getIntent().getIntExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, TAB_IDX_FOLLOWED_TAGS);
+            pageTitle = (String) adapter.getPageTitle(tabIndex);
+
+            if (!TextUtils.isEmpty(pageTitle)) AppPrefs.setReaderSubsPageTitle(pageTitle);
+        }
+
         if (TextUtils.isEmpty(pageTitle)) {
             return;
         }

@@ -13,47 +13,45 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_large"
         android:contentDescription="@null"
-        tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"/>
+        tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider"
-        android:layout_toEndOf="@+id/image_icon"/>
+        android:layout_height="@dimen/divider_size"
+        android:layout_toEndOf="@+id/image_icon"
+        android:background="?android:listDivider" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
-        android:orientation="vertical"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginBottom="20dp"
         android:layout_toEndOf="@+id/image_icon"
-        android:layout_marginEnd="@dimen/margin_extra_large">
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_large"
             android:textAlignment="viewStart"
-            android:layout_gravity="start"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
             tools:text="text_service" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="start"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/neutral_30"
-            android:textSize="@dimen/text_sz_medium"
             android:textAlignment="viewStart"
-            android:layout_gravity="start"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="text_user" />
     </LinearLayout>
 

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.widgets.WPTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.WPTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_header_text"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:clickable="false"
     android:gravity="center_vertical"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:padding="@dimen/margin_extra_large"
     android:text="@string/activity_log_limited_content_on_free_plan"
-    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-    android:textColor="?attr/wpColorTextSubtle" >
-</org.wordpress.android.widgets.WPTextView>
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/wpColorOnSurfaceMedium" />

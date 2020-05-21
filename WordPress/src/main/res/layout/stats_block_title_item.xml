@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              style="@style/StatsBlockLine"
-              android:layout_width="match_parent"
-              android:orientation="horizontal">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <ImageButton
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/stats_item_settings"
         android:src="@drawable/ic_ellipsis_vertical_grey_darken_48dp"
-        android:contentDescription="@string/stats_item_settings"/>
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 
 </LinearLayout>

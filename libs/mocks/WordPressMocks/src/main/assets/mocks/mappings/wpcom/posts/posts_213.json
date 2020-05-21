@@ -1,0 +1,189 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPath": "/rest/v1.1/sites/106707880/posts/213/",
+        "queryParameters": {
+            "context": {
+                "equalTo": "edit"
+            },
+            "locale": {
+                "matches": "(.*)"
+            }
+        }
+    },
+    "response": {
+        "status": 200,
+        "jsonBody": {
+            "ID": 213,
+            "site_ID": 106707880,
+            "author": {
+                "ID": 68646169,
+                "login": "thenomadicwordsmith",
+                "email": "thenomadicwordsmith@wordpress.com",
+                "name": "thenomadicwordsmith",
+                "first_name": "Nomadic",
+                "last_name": "Wordsmith",
+                "nice_name": "thenomadicwordsmith",
+                "URL": "http://thenomadicwordsmith.wordpress.com",
+                "avatar_URL": "https://0.gravatar.com/avatar/9ba48385fc40dfd9a55a3348d8e7f4d9?s=96&d=identicon&r=G",
+                "profile_URL": "http://en.gravatar.com/thenomadicwordsmith",
+                "site_ID": 71769073
+            },
+            "date": "2019-07-16T02:39:44+00:00",
+            "modified": "2019-07-16T02:39:45+00:00",
+            "title": "Summer Band Jam",
+            "URL": "http://infocusphotographers.com/?p=213",
+            "short_URL": "https://wp.me/p7dJAQ-3r",
+            "content": "<!-- wp:paragraph -->\n<p>This event was so much fun, I couldn&#x2019;t wait to share a few of my favorite shots!</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:image {\"id\":307} -->\n<figure class=\"wp-block-image\"><img src=\"https://infocusphotographers.files.wordpress.com/2019/05/02-top-image-tablet-1.png\" alt=\"\" class=\"wp-image-307\" /></figure>\n<!-- /wp:image -->\n\n<!-- wp:image {\"id\":308} -->\n<figure class=\"wp-block-image\"><img src=\"https://infocusphotographers.files.wordpress.com/2019/05/02-bottom-image-tablet-1.png\" alt=\"\" class=\"wp-image-308\" /></figure>\n<!-- /wp:image -->",
+            "excerpt": "",
+            "slug": "summer-band-jam",
+            "guid": "http://infocusphotographers.com/?p=213",
+            "status": "draft",
+            "sticky": false,
+            "password": "",
+            "parent": false,
+            "type": "post",
+            "discussion": {
+                "comments_open": true,
+                "comment_status": "open",
+                "pings_open": true,
+                "ping_status": "open",
+                "comment_count": 0
+            },
+            "likes_enabled": true,
+            "sharing_enabled": true,
+            "like_count": 0,
+            "i_like": false,
+            "is_reblogged": false,
+            "is_following": false,
+            "global_ID": "e41d1c97a7b93a594b07e4df51dfafb3",
+            "featured_image": "https://infocusphotographers.files.wordpress.com/2019/02/adult-band-concert-995301.jpg",
+            "post_thumbnail": {
+                "ID": 151,
+                "URL": "https://infocusphotographers.files.wordpress.com/2019/02/adult-band-concert-995301.jpg",
+                "guid": "http://infocusphotographers.files.wordpress.com/2019/02/adult-band-concert-995301.jpg",
+                "mime_type": "image/jpeg",
+                "width": 5184,
+                "height": 3456
+            },
+            "format": "standard",
+            "geo": false,
+            "menu_order": 0,
+            "page_template": "",
+            "publicize_URLs": [],
+            "terms": {
+                "category": {
+                    "Uncategorized": {
+                        "ID": 1,
+                        "name": "Uncategorized",
+                        "slug": "uncategorized",
+                        "description": "",
+                        "post_count": 1,
+                        "parent": 0,
+                        "meta": {
+                            "links": {
+                                "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                                "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                                "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
+                            }
+                        }
+                    }
+                },
+                "post_tag": {},
+                "post_format": {},
+                "mentions": {}
+            },
+            "tags": {},
+            "categories": {
+                "Uncategorized": {
+                    "ID": 1,
+                    "name": "Uncategorized",
+                    "slug": "uncategorized",
+                    "description": "",
+                    "post_count": 1,
+                    "parent": 0,
+                    "meta": {
+                        "links": {
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/categories/slug:uncategorized/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880"
+                        }
+                    }
+                }
+            },
+            "attachments": {},
+            "attachment_count": 0,
+            "metadata": [
+                {
+                    "id": "502",
+                    "key": "email_notification",
+                    "value": "1553125754"
+                },
+                {
+                    "id": "564",
+                    "key": "geo_public",
+                    "value": "0"
+                },
+                {
+                    "id": "496",
+                    "key": "jabber_published",
+                    "value": "1553125752"
+                },
+                {
+                    "id": "503",
+                    "key": "timeline_notification",
+                    "value": "1553125801"
+                },
+                {
+                    "id": "565",
+                    "key": "_thumbnail_id",
+                    "value": "151"
+                }
+            ],
+            "meta": {
+                "links": {
+                    "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/213",
+                    "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/213/help",
+                    "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880",
+                    "replies": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/213/replies/",
+                    "likes": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/213/likes/"
+                }
+            },
+            "capabilities": {
+                "publish_post": true,
+                "delete_post": true,
+                "edit_post": true
+            },
+            "revisions": [
+                401,
+                400,
+                309,
+                303,
+                300,
+                299,
+                298,
+                297,
+                296,
+                292,
+                291,
+                289,
+                288,
+                287,
+                286,
+                285,
+                284,
+                283,
+                280,
+                277,
+                273,
+                267,
+                240,
+                214
+            ],
+            "other_URLs": {
+                "permalink_URL": "http://infocusphotographers.com/2019/07/16/%postname%/",
+                "suggested_slug": "summer-band-jam"
+            }
+        }
+    }
+}

@@ -5,7 +5,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.util.TypedValue;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -56,109 +55,11 @@ public class WPPrefUtils {
     }
 
     /**
-     * Styles a {@link TextView} to display a large title against a dark background.
-     */
-    public static void layoutAsLightTitle(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size, android.R.color.white);
-    }
-
-    /**
-     * Styles a {@link TextView} to display a large title against a light background.
-     */
-    public static void layoutAsDarkTitle(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_extra_large);
-        setTextViewAttributes(view, size,
-                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
-    }
-
-    /**
-     * Styles a {@link TextView} to display medium sized text as a header with sub-elements.
-     */
-    public static void layoutAsSubhead(TextView view) {
-        int color =
-                view.isEnabled() ? ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText)
-                        : R.color.neutral_20;
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size, color);
-    }
-
-    /**
-     * Styles a {@link TextView} to display smaller text.
-     */
-    public static void layoutAsBody1(TextView view) {
-        int color = view.isEnabled() ? R.color.neutral : R.color.neutral_20;
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, color);
-    }
-
-    /**
-     * Styles a {@link TextView} to display smaller text with a dark grey color.
-     */
-    public static void layoutAsBody2(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, R.color.neutral);
-    }
-
-    /**
-     * Styles a {@link TextView} to display very small helper text.
-     */
-    public static void layoutAsCaption(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.neutral_40);
-    }
-
-    /**
      * Styles a {@link TextView} to display text in a button.
      */
     public static void layoutAsFlatButton(TextView view) {
         int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
         setTextViewAttributes(view, size, R.color.primary_40);
-    }
-
-    /**
-     * Styles a {@link TextView} to display text in a button.
-     */
-    public static void layoutAsRaisedButton(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_medium);
-        setTextViewAttributes(view, size, android.R.color.white);
-    }
-
-    /**
-     * Styles a {@link TextView} to display text in an editable text field.
-     */
-    public static void layoutAsInput(EditText view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size,
-                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
-        view.setHintTextColor(view.getResources().getColor(R.color.neutral_20));
-        view.setTextColor(ContextExtensionsKt.getColorFromAttribute(view.getContext(), R.attr.wpColorText));
-        view.setSingleLine(true);
-    }
-
-    /**
-     * Styles a {@link TextView} to display selected numbers in a {@link android.widget.NumberPicker}.
-     */
-    public static void layoutAsNumberPickerSelected(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_triple_extra_large);
-        setTextViewAttributes(view, size, R.color.primary_40);
-    }
-
-    /**
-     * Styles a {@link TextView} to display non-selected numbers in a {@link android.widget.NumberPicker}.
-     */
-    public static void layoutAsNumberPickerPeek(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_large);
-        setTextViewAttributes(view, size,
-                ContextExtensionsKt.getColorResIdFromAttribute(view.getContext(), R.attr.wpColorText));
-    }
-
-    /**
-     * Styles a {@link TextView} to display text in a dialog message.
-     */
-    public static void layoutAsDialogMessage(TextView view) {
-        int size = view.getResources().getDimensionPixelSize(R.dimen.text_sz_small);
-        setTextViewAttributes(view, size, R.color.neutral);
     }
 
     public static void setTextViewAttributes(TextView textView, int size, int colorRes) {

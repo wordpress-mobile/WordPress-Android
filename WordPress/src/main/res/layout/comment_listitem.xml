@@ -1,42 +1,42 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/margin_large"
         android:paddingStart="@dimen/content_margin"
+        android:paddingTop="@dimen/margin_large"
         android:paddingEnd="@dimen/content_margin"
-        android:paddingTop="@dimen/margin_large">
+        android:paddingBottom="@dimen/margin_large">
 
         <FrameLayout
             android:id="@+id/frame_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_small">
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_marginEnd="@dimen/margin_large">
 
             <ImageView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"
-                android:contentDescription="@null"/>
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/image_checkmark"
                 android:layout_width="@dimen/notifications_avatar_sz"
                 android:layout_height="@dimen/notifications_avatar_sz"
                 android:background="@drawable/bg_oval_primary_40"
+                android:contentDescription="@string/comment_checkmark_desc"
                 android:padding="@dimen/margin_medium"
                 android:src="@drawable/ic_checkmark_white_24dp"
-                android:contentDescription="@string/comment_checkmark_desc"
                 android:visibility="gone" />
 
         </FrameLayout>
@@ -45,12 +45,12 @@
             android:id="@+id/layout_date_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:gravity="end"
-            android:orientation="vertical"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_large">
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:gravity="end"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_date"
@@ -75,16 +75,15 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/layout_date_status"
+            android:layout_toEndOf="@+id/frame_avatar"
             android:ellipsize="end"
+            android:gravity="start"
             android:lines="2"
             android:maxLines="2"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="title"
             android:textAlignment="viewStart"
-            android:gravity="start"
-            android:layout_toStartOf="@+id/layout_date_status"
-            android:layout_toEndOf="@+id/frame_avatar"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="title" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/comment"
@@ -92,15 +91,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
             android:layout_marginTop="@dimen/margin_extra_small"
+            android:layout_toEndOf="@+id/frame_avatar"
+            android:alpha="@dimen/material_emphasis_medium"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:textColor="?attr/wpColorTextSubtle"
             android:importantForAccessibility="no"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="comment"
+            android:maxLines="2"
             android:paddingEnd="@dimen/margin_large"
-            android:layout_toEndOf="@+id/frame_avatar"/>
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:ignore="RtlSymmetry"
+            tools:text="comment" />
 
     </RelativeLayout>
 
-</LinearLayout>
+</FrameLayout>

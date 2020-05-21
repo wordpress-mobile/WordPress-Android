@@ -48,7 +48,7 @@ platform :android do
     screenshot_devices = [
       {
         screenshot_type: 'phone',
-        device_name: 'Pixel_2_XL_API_28',
+        device_name: 'Pixel_3_API_28',
         device_serial: options[:phone_serial],
       },
       {
@@ -75,8 +75,6 @@ platform :android do
       .select { |hsh| hsh[:promo_config] != false }
       .map { |hsh| hsh[:google_play] }
 
-    puts locales
-
     # Allow creating screenshots for just one locale
     if options[:locale] != nil
       locales.keep_if { |locale|
@@ -87,14 +85,17 @@ platform :android do
       should_clear_previous_screenshots = false
     end
 
+    puts locales
+
     screenshot_options = {
       output_directory: "fastlane/metadata/android",
-      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/WordPress-vanilla-debug.apk",
-      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/WordPress-vanilla-debug-androidTest.apk",
+      app_apk_path: "WordPress/build/outputs/apk/vanilla/debug/org.wordpress.android-vanilla-debug.apk",
+      tests_apk_path: "WordPress/build/outputs/apk/androidTest/vanilla/debug/org.wordpress.android-vanilla-debug-androidTest.apk",
       use_tests_in_classes: "org.wordpress.android.ui.screenshots.WPScreenshotTest",
       reinstall_app: false,
       clear_previous_screenshots: should_clear_previous_screenshots,
       locales: locales,
+      test_instrumentation_runner: "org.wordpress.android.WordPressTestRunner",
     }
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
@@ -121,12 +122,13 @@ platform :android do
       "play_store_screenshot_4" => {desc: "play_store_screenshot_5.txt"},
       "play_store_screenshot_5" => {desc: "play_store_screenshot_4.txt"},
 
-      "enhanced_play_store_screenshot-1" => {desc: "play_store_screenshot_1.html"},
-      "enhanced_play_store_screenshot-2" => {desc: "play_store_screenshot_2.html"},
-      "enhanced_play_store_screenshot-3" => {desc: "play_store_screenshot_3.html"},
-      "enhanced_play_store_screenshot-4" => {desc: "play_store_screenshot_4.html"},
-      "enhanced_play_store_screenshot-5" => {desc: "play_store_screenshot_5.html"},
-      "enhanced_play_store_screenshot-6" => {desc: "play_store_screenshot_6.html"},
+      "enhanced_app_store_screenshot_1" => {desc: "play_store_screenshot_1.html"},
+      "enhanced_app_store_screenshot_2" => {desc: "play_store_screenshot_2.html"},
+      "enhanced_app_store_screenshot_3" => {desc: "play_store_screenshot_3.html"},
+      "enhanced_app_store_screenshot_4" => {desc: "play_store_screenshot_4.html"},
+      "enhanced_app_store_screenshot_5" => {desc: "play_store_screenshot_5.html"},
+      "enhanced_app_store_screenshot_6" => {desc: "play_store_screenshot_6.html"},
+      "enhanced_app_store_screenshot_7" => {desc: "play_store_screenshot_7.html"},
     }
 
     locales = SUPPORTED_LOCALES
@@ -176,6 +178,13 @@ platform :android do
       .select { |hsh| hsh[:promo_config] != false }
       .map { |hsh| hsh[:google_play] }
 
+    # Allow creating promo screenshots for just one locale
+    if options[:locale] != nil
+      locales.keep_if { |locale|
+        locale.casecmp(options[:locale]) == 0
+      }
+    end
+
     # Remove locales we're not interested in
     Pathname(repaired_screenshot_directory)
         .children
@@ -221,6 +230,7 @@ platform :android do
     emulators = [
         Dir.pwd + "/emulators/Nexus_9_API_28.ini",
         Dir.pwd + "/emulators/Pixel_2_XL_API_28.ini",
+        Dir.pwd + "/emulators/Pixel_3_API_28.ini",
     ]
 
     emulators.each do |emulator_configuration|

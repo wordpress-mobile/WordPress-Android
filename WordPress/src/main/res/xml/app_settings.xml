@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:key="@string/pref_key_app_settings_root">
 
     <org.wordpress.android.ui.prefs.DetailListPreference
         android:key="@string/pref_key_language"
-        android:layout="@layout/wp_preference_layout"
-        android:title="@string/interface_language"/>
+        android:title="@string/interface_language" />
+
+    <ListPreference
+        android:defaultValue="@string/app_theme_entry_value_default_key"
+        android:dialogTitle="@string/app_theme"
+        android:entries="@array/app_theme_entries"
+        android:entryValues="@array/app_theme_entry_values"
+        android:key="@string/pref_key_app_theme"
+        android:summary="%s"
+        android:title="@string/app_theme" />
 
     <PreferenceScreen
         android:id="@+id/pref_privacy_settings"
@@ -17,57 +24,52 @@
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
-            android:key="@string/pref_key_send_usage"
             android:icon="@drawable/ic_stats_white_24dp"
-            android:layout="@layout/wp_preference_layout"
+            android:key="@string/pref_key_send_usage"
             android:title="@string/preference_collect_information"
-            app:iconTint="@color/neutral"/>
+            app:iconTint="?attr/wpColorOnSurfaceMedium" />
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/cookie_policy_learn_more_header"
             app:button="@string/learn_more"
             app:caption="@string/cookie_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"/>
+            app:url="https://www.automattic.com/cookies" />
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/privacy_policy_learn_more_header"
             app:button="@string/privacy_policy_read"
             app:caption="@string/privacy_policy_learn_more_caption"
-            app:url="https://www.automattic.com/privacy"/>
+            app:url="https://www.automattic.com/privacy" />
 
         <org.wordpress.android.ui.prefs.LearnMorePreference
             android:title="@string/third_party_policy_learn_more_header"
             app:button="@string/learn_more"
             app:caption="@string/third_party_policy_learn_more_caption"
-            app:url="https://www.automattic.com/cookies"/>
+            app:url="https://www.automattic.com/cookies" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:defaultValue="true"
-            android:key="@string/pref_key_send_crash"
             android:icon="@drawable/ic_bug_white_24dp"
-            android:layout="@layout/wp_preference"
+            android:key="@string/pref_key_send_crash"
             android:summary="@string/preference_crash_reports_summary"
             android:title="@string/preference_crash_reports"
-            app:iconTint="@color/neutral"/>
+            app:iconTint="?attr/wpColorOnSurfaceMedium" />
 
     </PreferenceScreen>
 
     <Preference
         android:key="@string/pref_key_device_settings"
-        android:layout="@layout/wp_preference_layout"
-        android:title="@string/preference_open_device_settings"/>
+        android:title="@string/preference_open_device_settings" />
 
     <PreferenceCategory
         android:key="@string/pref_key_optimize_media"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/media">
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_image"
             android:key="@string/pref_key_optimize_image"
-            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_images_summary"
-            android:title="@string/site_settings_optimize_images"/>
+            android:title="@string/site_settings_optimize_images" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_width"
@@ -76,7 +78,7 @@
             android:entryValues="@array/site_settings_image_max_size_values"
             android:key="@string/pref_key_site_image_width"
             android:title="@string/site_settings_default_image_width_title"
-            app:longClickHint="@string/site_settings_image_width_hint"/>
+            app:longClickHint="@string/site_settings_image_width_hint" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_image_quality"
@@ -85,21 +87,19 @@
             android:entryValues="@array/site_settings_image_quality_values"
             android:key="@string/pref_key_site_image_quality"
             android:title="@string/site_settings_default_image_quality_title"
-            app:longClickHint="@string/site_settings_image_quality_hint"/>
+            app:longClickHint="@string/site_settings_image_quality_hint" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_strip_image_location"
             android:defaultValue="false"
-            android:layout="@layout/wp_preference_layout"
             android:key="@string/pref_key_strip_image_location"
-            android:title="@string/preference_strip_image_location"/>
+            android:title="@string/preference_strip_image_location" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
             android:id="@+id/pref_optimize_video"
             android:key="@string/pref_key_optimize_video"
-            android:layout="@layout/wp_preference_layout"
             android:summary="@string/site_settings_optimize_video_summary"
-            android:title="@string/site_settings_optimize_videos"/>
+            android:title="@string/site_settings_optimize_videos" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_size"
@@ -108,7 +108,7 @@
             android:entryValues="@array/site_settings_video_width_values"
             android:key="@string/pref_key_site_video_width"
             android:title="@string/site_settings_default_video_width_title"
-            app:longClickHint="@string/site_settings_video_width_hint"/>
+            app:longClickHint="@string/site_settings_video_width_hint" />
 
         <org.wordpress.android.ui.prefs.DetailListPreference
             android:id="@+id/pref_default_video_quality"
@@ -117,24 +117,25 @@
             android:entryValues="@array/site_settings_video_bitrate_values"
             android:key="@string/pref_key_site_video_encoder_bitrate"
             android:title="@string/site_settings_default_video_quality_title"
-            app:longClickHint="@string/site_settings_video_quality_hint"/>
+            app:longClickHint="@string/site_settings_video_quality_hint" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_key_about_section"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/about_the_app">
 
         <Preference
             android:key="@string/pref_key_app_about"
-            android:layout="@layout/wp_preference_layout"
-            android:title="@string/app_title"/>
+            android:title="@string/app_title" />
 
         <Preference
             android:key="@string/pref_key_oss_licenses"
-            android:layout="@layout/wp_preference_layout"
-            android:title="@string/open_source_licenses"/>
+            android:title="@string/open_source_licenses" />
+
+        <Preference
+            android:key="@string/pref_key_whats_new"
+            android:title="@string/whats_new_in_version_title" />
 
     </PreferenceCategory>
 </PreferenceScreen>

@@ -19,8 +19,10 @@
     <string name="pref_key_about_section" translatable="false">wp_pref_app_about_section</string>
     <string name="pref_key_experimental_section" translatable="false">wp_pref_app_experimental_section</string>
     <string name="pref_key_language" translatable="false">wp_pref_language</string>
+    <string name="pref_key_app_theme" translatable="false">wp_pref_app_theme</string>
     <string name="pref_key_app_about" translatable="false">wp_pref_app_about</string>
     <string name="pref_key_oss_licenses" translatable="false">wp_pref_open_source_licenses</string>
+    <string name="pref_key_whats_new" translatable="false">wp_pref_whats_new</string>
     <string name="pref_notification_blogs" translatable="false">wp_pref_notification_blogs</string>
     <string name="pref_notification_blogs_followed" translatable="false">pref_notification_blogs_followed</string>
     <string name="pref_notification_other_category" translatable="false">wp_pref_notification_other_category</string>
@@ -172,17 +174,17 @@
         <item>-1</item>
     </string-array>
 
-    <string-array name="weekdays">
-        <item>Sunday</item>
-        <item>Monday</item>
-        <item>Tuesday</item>
-        <item>Wednesday</item>
-        <item>Thursday</item>
-        <item>Friday</item>
-        <item>Saturday</item>
+    <string-array name="site_settings_weekdays" translatable="false">
+        <item>@string/weekday_sunday</item>
+        <item>@string/weekday_monday</item>
+        <item>@string/weekday_tuesday</item>
+        <item>@string/weekday_wednesday</item>
+        <item>@string/weekday_thursday</item>
+        <item>@string/weekday_friday</item>
+        <item>@string/weekday_saturday</item>
     </string-array>
 
-    <string-array name="weekday_values">
+    <string-array name="site_settings_weekday_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>

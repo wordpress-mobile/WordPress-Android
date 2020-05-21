@@ -1,5 +1,0 @@
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-

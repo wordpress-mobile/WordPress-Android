@@ -6,10 +6,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.graphics.ColorUtils;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -36,6 +39,10 @@ public class ReaderCommentsPostHeaderView extends LinearLayout {
 
     private void initView(Context context) {
         inflate(context, R.layout.reader_comments_post_header_view, this);
+
+        setBackgroundColor(ColorUtils
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.colorOnSurface),
+                        getResources().getInteger(R.integer.selected_list_item_opacity)));
     }
 
     public void setPost(final ReaderPost post) {

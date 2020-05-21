@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?attr/selectableItemBackground"
-    android:layout_height="wrap_content"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:minHeight="@dimen/reader_button_minimum_height"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium" >
+    android:paddingStart="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_medium">
 
     <ImageView
+        android:tintMode="src_in"
         android:id="@+id/image_count"
-        android:contentDescription="@null"
-        android:layout_gravity="center_vertical"
-        android:layout_height="@dimen/reader_count_icon"
         android:layout_width="@dimen/reader_count_icon"
+        android:layout_height="@dimen/reader_count_icon"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
         tools:src="@drawable/ic_comment_white_24dp"
-        tools:tint="@color/neutral" >
-    </ImageView>
+        tools:tint="?attr/wpColorOnSurfaceMedium"/>
 
     <!--Set appropriate verbose content description to whole layout programmatically ex. "321 people liked this"-->
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text_count"
-        android:importantForAccessibility="no"
-        android:layout_gravity="center_vertical"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_small"
         android:layout_width="wrap_content"
-        android:textColor="@color/neutral_accent_neutral_40_selector"
-        android:textSize="@dimen/text_sz_medium"
-        tools:text="2" >
-    </TextView>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_extra_small"
+        android:importantForAccessibility="no"
+        android:textAppearance="?attr/textAppearanceBody2"
+        tools:text="2"/>
 
 </LinearLayout>

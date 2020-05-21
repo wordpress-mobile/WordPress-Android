@@ -6,8 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:foreground="?selectableItemBackground"
+    android:background="?selectableItemBackground"
     android:minHeight="@dimen/two_line_list_item_height">
 
     <ImageView
@@ -16,6 +15,8 @@
         android:layout_height="@dimen/site_creation_segments_icon_size"
         android:layout_marginEnd="@dimen/margin_medium"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:tintMode="src_in"
+        app:tint="?attr/wpColorOnSurfaceMedium"
         android:contentDescription="@null"
         app:layout_constraintBottom_toTopOf="@+id/subtitle"
         app:layout_constraintEnd_toStartOf="@+id/title"
@@ -25,7 +26,7 @@
         tools:src="@drawable/ic_add_white_24dp"
         tools:tint="@color/neutral_80"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -33,8 +34,7 @@
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:layout_marginTop="@dimen/margin_extra_large"
         android:textAlignment="viewStart"
-        android:textColor="@color/neutral_80"
-        android:textSize="@dimen/text_sz_large"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:layout_constraintBottom_toTopOf="@+id/subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -51,8 +51,8 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
         android:textAlignment="viewStart"
-        android:textColor="?attr/wpColorTextSubtle"
-        android:textSize="@dimen/text_sz_medium"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
+        android:textAppearance="?attr/textAppearanceBody2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -63,9 +63,9 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:layout_marginStart="@dimen/site_creation_segments_list_divider_start_margin"
-        android:background="@color/neutral_5"
+        android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

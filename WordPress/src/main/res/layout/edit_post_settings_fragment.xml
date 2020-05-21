@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/settings_fragment_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_default">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,314 +11,290 @@
 
         <!--Publish-->
 
-        <androidx.cardview.widget.CardView
-            style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@android:color/white"
-            card_view:cardCornerRadius="@dimen/default_cardview_radius">
+        <LinearLayout style="@style/PostSettingsCardViewInnerLayout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_publish"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_publish" />
 
             <LinearLayout
-                style="@style/PostSettingsCardViewInnerLayout">
+                android:id="@+id/post_status_container"
+                style="@style/PostSettingsContainer">
 
-                <TextView
-                    android:id="@+id/post_settings_publish"
-                    style="@style/PostSettingsSectionHeader"
-                    android:text="@string/post_settings_publish"/>
-                <LinearLayout
-                    android:id="@+id/post_status_container"
-                    style="@style/PostSettingsContainer">
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_status" />
 
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_status"/>
-
-                    <TextView
-                        android:id="@+id/post_status"
-                        style="@style/PostSettingsSubtitle"/>
-                </LinearLayout>
-
-                <View style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/publish_date_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/publish_date"/>
-
-                    <TextView
-                        android:id="@+id/publish_date"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/immediately"/>
-                </LinearLayout>
-
-                <View style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/post_password_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/password"/>
-
-                    <TextView
-                        android:id="@+id/post_password"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-                </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_status"
+                    style="@style/PostSettingsSubtitle" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/publish_date_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/publish_date" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/publish_date"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/immediately" />
+            </LinearLayout>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_password_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/password" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_password"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!--Categories & Tags-->
 
-        <androidx.cardview.widget.CardView
-            style="@style/PostSettingsCardView"
+
+        <LinearLayout
             android:id="@+id/post_categories_and_tags_card"
-            card_view:cardBackgroundColor="@android:color/white"
-            card_view:cardCornerRadius="@dimen/default_cardview_radius">
+            style="@style/PostSettingsCardViewInnerLayout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_categories_and_tags_header"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_categories_and_tags" />
 
             <LinearLayout
-                style="@style/PostSettingsCardViewInnerLayout">
+                android:id="@+id/post_categories_container"
+                style="@style/PostSettingsContainer">
 
-                <TextView
-                    android:id="@+id/post_settings_categories_and_tags_header"
-                    style="@style/PostSettingsSectionHeader"
-                    android:text="@string/post_settings_categories_and_tags"/>
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/categories" />
 
-                <LinearLayout
-                    android:id="@+id/post_categories_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/categories"/>
-
-                    <TextView
-                        android:id="@+id/post_categories"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-                </LinearLayout>
-
-                <View style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/post_tags_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_tags"/>
-
-                    <TextView
-                        android:id="@+id/post_tags"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-                </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_categories"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_tags_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_tags" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_tags"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!--Featured Image-->
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/post_featured_image_card_view"
-            style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@android:color/white"
-            card_view:cardCornerRadius="@dimen/default_cardview_radius">
 
-            <LinearLayout
-                style="@style/PostSettingsCardViewInnerLayout">
+        <LinearLayout style="@style/PostSettingsCardViewInnerLayout">
 
-                <TextView
-                    android:id="@+id/post_settings_featured_image_header"
-                    style="@style/PostSettingsSectionHeader"
-                    android:text="@string/post_settings_featured_image"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_featured_image_header"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_featured_image" />
 
-                <RelativeLayout
-                    style="@style/PostSettingsContainer">
+            <RelativeLayout style="@style/PostSettingsContainer">
 
-                    <Button
-                        android:id="@+id/post_add_featured_image_button"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/post_add_featured_image_button"
+                    style="@style/WordPress.Button.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_settings_set_featured_image" />
+
+                <FrameLayout
+                    android:id="@+id/post_featured_image_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/post_featured_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/featured_image_desc"
+                        android:maxHeight="@dimen/post_settings_featured_image_height_max"
+                        android:minHeight="@dimen/post_settings_featured_image_height_min" />
+
+                    <ImageView
+                        android:id="@+id/post_featured_image_local"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/featured_image_desc"
+                        android:maxHeight="@dimen/post_settings_featured_image_height_max"
+                        android:minHeight="@dimen/post_settings_featured_image_height_min" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/post_featured_image_retry_overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignStart="@id/post_featured_image_container"
+                    android:layout_alignTop="@id/post_featured_image_container"
+                    android:layout_alignEnd="@id/post_featured_image_container"
+                    android:layout_alignBottom="@id/post_featured_image_container"
+                    android:layout_centerInParent="true"
+                    android:background="@color/black_translucent_50"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="@dimen/post_settings_retry_image_size"
+                        android:layout_height="@dimen/post_settings_retry_image_size"
+                        android:contentDescription="@string/retry"
+                        android:src="@drawable/ic_refresh_white_24dp" />
+
+                    <com.google.android.material.textview.MaterialTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/post_settings_set_featured_image"/>
-
-                    <FrameLayout
-                            android:id="@+id/post_featured_image_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <ImageView
-                            android:id="@+id/post_featured_image"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="@string/featured_image_desc"
-                            android:maxHeight="@dimen/post_settings_featured_image_height_max"
-                            android:minHeight="@dimen/post_settings_featured_image_height_min"/>
-
-                        <ImageView
-                            android:id="@+id/post_featured_image_local"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="@string/featured_image_desc"
-                            android:layout_gravity="start"
-                            android:maxHeight="@dimen/post_settings_featured_image_height_max"
-                            android:minHeight="@dimen/post_settings_featured_image_height_min"/>
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:id="@+id/post_featured_image_retry_overlay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_alignBottom="@id/post_featured_image_container"
-                        android:layout_alignEnd="@id/post_featured_image_container"
-                        android:layout_alignStart="@id/post_featured_image_container"
-                        android:layout_alignTop="@id/post_featured_image_container"
-                        android:layout_centerInParent="true"
-                        android:background="@color/black_translucent_50"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:text="@string/editor_failed_to_insert_media_tap_to_retry"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_sz_medium" />
 
-                        <ImageView
-                            android:layout_width="@dimen/post_settings_retry_image_size"
-                            android:layout_height="@dimen/post_settings_retry_image_size"
-                            android:contentDescription="@string/retry"
-                            android:src="@drawable/media_retry_image"/>
+                </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/editor_failed_to_insert_media_tap_to_retry"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_sz_medium"/>
+                <RelativeLayout
+                    android:id="@+id/post_featured_image_progress_overlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/post_featured_image_container"
+                    android:layout_alignStart="@id/post_featured_image_container"
+                    android:layout_alignTop="@id/post_featured_image_container"
+                    android:layout_alignEnd="@id/post_featured_image_container"
+                    android:layout_alignBottom="@id/post_featured_image_container"
+                    android:layout_centerInParent="true"
+                    android:background="@color/black_translucent_50">
 
-                    </LinearLayout>
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/featured_image_progress_desc"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="@dimen/margin_small"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/white" />
 
-                    <RelativeLayout
-                        android:id="@+id/post_featured_image_progress_overlay"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_above="@+id/post_featured_image_container"
-                        android:layout_alignBottom="@id/post_featured_image_container"
-                        android:layout_alignEnd="@id/post_featured_image_container"
-                        android:layout_alignStart="@id/post_featured_image_container"
-                        android:layout_alignTop="@id/post_featured_image_container"
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/featured_image_progress_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:background="@color/black_translucent_50">
-
-                        <ProgressBar
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@+id/featured_image_progress_desc"
-                            android:layout_marginBottom="@dimen/margin_small"
-                            android:layout_centerHorizontal="true"
-                            android:indeterminate="true"
-                            android:indeterminateTint="@color/white"/>
-
-                        <TextView
-                            android:id="@+id/featured_image_progress_desc"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:paddingTop="@dimen/margin_small"
-                            android:gravity="center"
-                            android:text="@string/post_settings_featured_image_uploading_tap_for_options"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_sz_medium"/>
-
-                    </RelativeLayout>
+                        android:gravity="center"
+                        android:paddingTop="@dimen/margin_small"
+                        android:text="@string/post_settings_featured_image_uploading_tap_for_options"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_sz_medium" />
 
                 </RelativeLayout>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+        </LinearLayout>
 
         <!--More Options-->
 
-        <androidx.cardview.widget.CardView
-            style="@style/PostSettingsCardView"
-            card_view:cardBackgroundColor="@android:color/white"
-            card_view:cardCornerRadius="@dimen/default_cardview_radius">
+        <LinearLayout style="@style/PostSettingsCardViewInnerLayout">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/post_settings_more_options_header"
+                style="@style/PostSettingsSectionHeader"
+                android:text="@string/post_settings_more_options" />
 
             <LinearLayout
-                style="@style/PostSettingsCardViewInnerLayout">
+                android:id="@+id/post_format_container"
+                style="@style/PostSettingsContainer">
 
-                <TextView
-                    android:id="@+id/post_settings_more_options_header"
-                    style="@style/PostSettingsSectionHeader"
-                    android:text="@string/post_settings_more_options"/>
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_post_format" />
 
-                <LinearLayout
-                    android:id="@+id/post_format_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_post_format"/>
-
-                    <TextView
-                        android:id="@+id/post_format"
-                        style="@style/PostSettingsSubtitle"/>
-
-                </LinearLayout>
-
-                <View android:id="@+id/post_format_bottom_separator"
-                      style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/post_slug_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_slug"/>
-
-                    <TextView
-                        android:id="@+id/post_slug"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-                </LinearLayout>
-
-                <View style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/post_excerpt_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_excerpt"/>
-
-                    <TextView
-                        android:id="@+id/post_excerpt"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-
-                </LinearLayout>
-
-                <View style="@style/PostSettingsDivider"/>
-
-                <LinearLayout
-                    android:id="@+id/post_location_container"
-                    style="@style/PostSettingsContainer">
-
-                    <TextView
-                        style="@style/PostSettingsTitle"
-                        android:text="@string/post_settings_location"/>
-
-                    <TextView
-                        android:id="@+id/post_location"
-                        style="@style/PostSettingsSubtitle"
-                        android:hint="@string/post_settings_not_set"/>
-
-                </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_format"
+                    style="@style/PostSettingsSubtitle" />
 
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+
+            <View
+                android:id="@+id/post_format_bottom_separator"
+                style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_slug_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_slug" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_slug"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
+            </LinearLayout>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_excerpt_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_excerpt" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_excerpt"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
+
+            </LinearLayout>
+
+            <View style="@style/PostSettingsDivider" />
+
+            <LinearLayout
+                android:id="@+id/post_location_container"
+                style="@style/PostSettingsContainer">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/PostSettingsTitle"
+                    android:text="@string/post_settings_location" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/post_location"
+                    style="@style/PostSettingsSubtitle"
+                    android:hint="@string/post_settings_not_set" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.ColorUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -151,9 +150,11 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         int mediumMargin = context.getResources().getDimensionPixelSize(R.dimen.margin_medium);
         mContentWidth = displayWidth - (cardMargin * 2) - (contentPadding * 2) - (mediumMargin * 2);
 
-        mColorAuthor = ContextCompat.getColor(context, R.color.primary_40);
-        mColorNotAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorText);
-        mColorHighlight = ContextCompat.getColor(context, R.color.neutral_0);
+        mColorAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorPrimary);
+        mColorNotAuthor = ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface);
+        mColorHighlight = ColorUtils
+                .setAlphaComponent(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnSurface),
+                        context.getResources().getInteger(R.integer.selected_list_item_opacity));
 
         setHasStableIds(true);
     }
@@ -288,7 +289,7 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
             commentHolder.mContainer.setBackgroundColor(mColorHighlight);
             commentHolder.mProgress.setVisibility(mShowProgressForHighlightedComment ? View.VISIBLE : View.GONE);
         } else {
-            commentHolder.mContainer.setBackgroundColor(Color.WHITE);
+            commentHolder.mContainer.setBackgroundColor(0);
             commentHolder.mProgress.setVisibility(View.GONE);
         }
 
@@ -410,8 +411,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
 
         AnalyticsUtils.trackWithReaderPostDetails(isAskingToLike
-                                                    ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
-                                                    : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
+                ? AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED
+                : AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_UNLIKED, mPost);
     }
 
     public boolean refreshComment(long commentId) {
@@ -559,8 +560,8 @@ public class ReaderCommentAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     /*
-    * Set a post to adapter and update relevant information in the post header
-    */
+     * Set a post to adapter and update relevant information in the post header
+     */
     public void setPost(ReaderPost post) {
         if (post != null) {
             mPost = post;

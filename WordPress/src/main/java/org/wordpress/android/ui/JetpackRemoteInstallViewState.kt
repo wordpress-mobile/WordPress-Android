@@ -24,7 +24,7 @@ sealed class JetpackRemoteInstallViewState(
             R.string.install_jetpack,
             R.string.install_jetpack_message,
             icon = R.drawable.ic_plans_white_24dp,
-            iconTint = R.color.jetpack_green_50,
+            iconTint = R.color.jetpack_green,
             buttonResource = R.string.install_jetpack_continue,
             onClick = onClick
     )
@@ -34,7 +34,7 @@ sealed class JetpackRemoteInstallViewState(
             R.string.installing_jetpack,
             R.string.installing_jetpack_message,
             icon = R.drawable.ic_plans_white_24dp,
-            iconTint = R.color.jetpack_green_50,
+            iconTint = R.color.jetpack_green,
             progressBarVisible = true
     )
 
@@ -44,7 +44,7 @@ sealed class JetpackRemoteInstallViewState(
             R.string.jetpack_installed_message,
             icon = R.drawable.ic_plans_white_24dp,
             buttonResource = R.string.install_jetpack_continue,
-            iconTint = R.color.jetpack_green_50,
+            iconTint = R.color.jetpack_green,
             onClick = onClick
     )
 

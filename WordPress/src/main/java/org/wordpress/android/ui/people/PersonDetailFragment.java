@@ -11,9 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.PeopleTable;
@@ -91,7 +95,7 @@ public class PersonDetailFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(ARG_CURRENT_USER_ID, mCurrentUserId);
         outState.putLong(ARG_PERSON_ID, mPersonId);
@@ -108,6 +112,15 @@ public class PersonDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.person_detail_fragment, container, false);
+
+        Toolbar toolbar = rootView.findViewById(R.id.toolbar_main);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(null);
+        }
 
         mAvatarImageView = rootView.findViewById(R.id.person_avatar);
         mDisplayNameTextView = rootView.findViewById(R.id.person_display_name);
@@ -134,7 +147,7 @@ public class PersonDetailFragment extends Fragment {
         refreshPersonDetails();
     }
 
-    public void refreshPersonDetails() {
+    void refreshPersonDetails() {
         if (!isAdded()) {
             return;
         }
@@ -185,7 +198,7 @@ public class PersonDetailFragment extends Fragment {
         }
     }
 
-    public void setPersonDetails(long personID, int localTableBlogID) {
+    void setPersonDetails(long personID, int localTableBlogID) {
         mPersonId = personID;
         mLocalTableBlogId = localTableBlogID;
         refreshPersonDetails();
@@ -197,12 +210,7 @@ public class PersonDetailFragment extends Fragment {
         boolean isCurrentUser = mCurrentUserId == mPersonId;
         boolean canChangeRole = (site != null) && !isCurrentUser && site.getHasCapabilityPromoteUsers();
         if (canChangeRole) {
-            mRoleContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showRoleChangeDialog();
-                }
-            });
+            mRoleContainer.setOnClickListener(v -> showRoleChangeDialog());
         } else {
             // Remove the selectableItemBackground if the user can't be edited
             mRoleContainer.setBackground(null);
@@ -218,14 +226,14 @@ public class PersonDetailFragment extends Fragment {
         }
 
         RoleChangeDialogFragment dialog = RoleChangeDialogFragment.newInstance(person.getPersonID(),
-                                                                               mSiteStore.getSiteByLocalId(
-                                                                                       mLocalTableBlogId),
-                                                                               person.getRole());
+                mSiteStore.getSiteByLocalId(
+                        mLocalTableBlogId),
+                person.getRole());
         dialog.show(getFragmentManager(), null);
     }
 
     // used to optimistically update the role
-    public void changeRole(String newRole) {
+    void changeRole(String newRole) {
         mRoleTextView.setText(RoleUtils.getDisplayName(newRole, mUserRoles));
     }
 
@@ -236,7 +244,7 @@ public class PersonDetailFragment extends Fragment {
         mDisplayNameTextView.setPadding(0, newPadding, 0, 0);
     }
 
-    public Person loadPerson() {
+    Person loadPerson() {
         return PeopleTable.getPerson(mPersonId, mLocalTableBlogId, mPersonType);
     }
 }

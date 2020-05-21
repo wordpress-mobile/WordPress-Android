@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true">
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/create_actions_recycler_view"
-        android:layout_height="match_parent"
+        android:id="@+id/content_recycler_view"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
-        android:layout_marginTop="@dimen/margin_extra_large"
         android:layout_marginBottom="@dimen/margin_extra_large"/>
-
 </LinearLayout>

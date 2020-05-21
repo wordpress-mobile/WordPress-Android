@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -24,21 +23,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:textColor="@color/neutral_30"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
             android:textSize="18sp" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/note_footer_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/neutral_30"
-            android:textSize="@dimen/text_sz_large" />
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorOnSurfaceMedium" />
 
     </LinearLayout>
 
     <View
         android:id="@+id/divider_view"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:background="@drawable/notifications_list_divider" />
 </LinearLayout>

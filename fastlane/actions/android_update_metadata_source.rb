@@ -51,7 +51,7 @@ module Fastlane
                                           env_name: "FL_ANDROID_UPDATE_METADATA_SOURCE_RELEASE_VERSION",
                                           description: "The release version of the app (to use to mark the release notes)",
                                           verify_block: proc do |value|
-                                            UI.user_error!("No relase version for UpdateMetadataSourceAction given, pass using `release_version: 'version'`") unless (value and not value.empty?) 
+                                            UI.user_error!("No release version for UpdateMetadataSourceAction given, pass using `release_version: 'version'`") unless (value and not value.empty?)
                                           end),
             FastlaneCore::ConfigItem.new(key: :source_files,
                                           env_name: "FL_ANDROID_UPDATE_METADATA_SOURCE_SOURCE_FILES",

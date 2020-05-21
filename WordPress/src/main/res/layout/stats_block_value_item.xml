@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/value_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="8dp"
-    android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_extra_large">
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingBottom="8dp">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"
         style="@style/StatsBlockBigValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/unit"
         style="@style/StatsBlockBigValueUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/change"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:textColor="@color/success_50"
+        android:textColor="?attr/wpColorSuccess"
         android:textSize="16sp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </LinearLayout>

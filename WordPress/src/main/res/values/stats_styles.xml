@@ -2,8 +2,7 @@
 <resources>
     <!-- TextViews -->
 
-    <style name="JetpackConnectionText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
+    <style name="JetpackConnectionText" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
@@ -13,48 +12,30 @@
         <item name="android:paddingStart">@dimen/margin_extra_medium_large</item>
     </style>
 
-    <style name="JetpackInstallTitleText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">@dimen/text_sz_extra_large</item>
-        <item name="android:textColor">@color/neutral_40</item>
+    <style name="JetpackInstallTitleText" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="JetpackInstallMessageText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textSize">@dimen/text_sz_large</item>
-        <item name="android:textColor">?attr/wpColorText</item>
+    <style name="JetpackInstallMessageText" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:layout_marginTop">@dimen/margin_medium</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="JetpackFaqButton">
+    <style name="JetpackFaqButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
-        <item name="android:background">@android:color/transparent</item>
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:gravity">center_horizontal</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textAppearance">@style/Base.TextAppearance.AppCompat.Body2</item>
-        <item name="android:textColor">@color/primary_40</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
     <style name="JetpackTermsAndConditionsButton">
         <item name="android:autoLink">all</item>
         <item name="android:linksClickable">false</item>
         <item name="android:selectAllOnFocus">false</item>
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="BlueMediumProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:colorAccent">@color/primary_40</item>
-        <item name="android:indeterminateTint">@color/primary_40</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <!-- Stats Refresh -->
 
-    <style name="StatsBlock">
-        <item name="android:background">@android:color/white</item>
-    </style>
+    <style name="StatsBlock" />
 
     <style name="StatsLoadingBlock" parent="StatsBlock">
         <item name="android:minHeight">96dp</item>
@@ -65,55 +46,41 @@
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
     </style>
 
-    <style name="StatsBlockTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+    <style name="StatsBlockTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="StatsDateTimeZone" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsDateTimeZone" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="StatsBlockBigTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/gray_100</item>
+    <style name="StatsBlockBigTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textSize">@dimen/text_sz_extra_large</item>
     </style>
 
-    <style name="StatsBlockItem" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+    <style name="StatsBlockItem" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <style name="StatsBlockValue" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <style name="StatsBlockEmpty" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="StatsBlockValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
-    </style>
-
-    <style name="StatsBlockEmpty" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
-    </style>
-
-    <style name="StatsBlockText" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsBlockText" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
     </style>
 
-    <style name="StatsBlockLabel" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/neutral_30</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsBlockLabel" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="StatsBlockLink" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/primary_50</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsBlockLink" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.AppCompat.Body1">
+    <style name="StatsBlockColumnSmallHeader" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textColor">@color/stats_block_column</item>
-        <item name="android:textSize">@dimen/text_sz_extra_small</item>
     </style>
 
     <style name="StatsBlockColumnSmallValue" parent="TextAppearance.AppCompat.Body2">
@@ -121,41 +88,28 @@
         <item name="android:textSize">@dimen/text_sz_larger</item>
     </style>
 
-    <style name="StatsGraphLabel">
-        <item name="android:textColor">@color/neutral_30</item>
-        <item name="android:textSize">@dimen/text_sz_extra_small</item>
-    </style>
+    <style name="StatsGraphLabel" parent="TextAppearance.MaterialComponents.Caption" />
 
-    <style name="StatsBlockBigValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_extra_extra_large</item>
+    <style name="StatsBlockBigValue" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="android:layout_marginEnd">@dimen/margin_key</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="StatsBlockBigValueUnit" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+    <style name="StatsBlockBigValueUnit" parent="TextAppearance.MaterialComponents.Body1" />
+
+    <style name="StatsBlockPostingActivityLabel" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="StatsBlockPostingActivityLabel" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-    </style>
+    <style name="StatsBlockPostingActivityLegend" parent="TextAppearance.MaterialComponents.Body2" />
 
-    <style name="StatsBlockPostingActivityLegend" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
-    </style>
-
-    <style name="StatsLegend" parent="TextAppearance.AppCompat.Body1">
+    <style name="StatsLegend" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:layout_marginBottom">6dp</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:drawablePadding">8dp</item>
-        <item name="android:textColor">?attr/wpColorTextSubtle</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:drawableStart">@drawable/bg_rectangle_primary_60_16dp</item>
+        <item name="android:drawableStart">@drawable/bg_stats_visitors_legend</item>
     </style>
 
     <style name="StatsList">
@@ -175,51 +129,45 @@
         <item name="android:layout_marginStart">@dimen/stats_activity_box_end_margin</item>
     </style>
 
-    <style name="StatsReferredItemLabel" parent="TextAppearance.AppCompat.Body1">
+    <style name="StatsReferredItemLabel" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
 
-    <style name="StatsReferredItemTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_dark</item>
+    <style name="StatsReferredItemTitle" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="StatsBlockQuickScanLabel" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_dark</item>
+    <style name="StatsBlockQuickScanLabel" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
     </style>
 
-    <style name="StatsBlockQuickScanValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_dark</item>
-        <item name="android:textSize">@dimen/text_sz_double_extra_large</item>
+    <style name="StatsBlockQuickScanValue" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="StatsTag" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsTag" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">?attr/colorOnPrimarySurface</item>
+        <item name="android:backgroundTint">?attr/colorError</item>
     </style>
 
-    <style name="StatsMapLegend" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">?attr/wpColorText</item>
-        <item name="android:textSize">@dimen/text_sz_small</item>
+    <style name="StatsMapLegend" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="StatsWidgetConfigureTitle" parent="TextAppearance.AppCompat.Body2">
-        <item name="android:textColor">@color/grey_900</item>
-        <item name="android:textSize">@dimen/text_sz_large</item>
+    <!-- Stats Widget -->
+
+    <style name="StatsWidgetConfigureTitle">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="StatsWidgetConfigureValue" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:textColor">@color/grey_500</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+    <style name="StatsWidgetConfigureValue">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="StatsWidgetSiteIcon">
@@ -385,4 +333,10 @@
     <style name="StatsWidgetBlockValue.Light">
         <item name="android:textColor">@color/gray_50</item>
     </style>
+
+    <style name="InsightsManagementHeader" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+
+    <style name="InsightsManagementItem" parent="TextAppearance.MaterialComponents.Body1" />
 </resources>

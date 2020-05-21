@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:foreground="?attr/selectableItemBackground"
-              android:gravity="center"
-              android:orientation="horizontal"
-              android:paddingBottom="@dimen/margin_medium"
-              android:paddingEnd="@dimen/margin_extra_medium_large"
-              android:paddingStart="0dp"
-              android:paddingTop="@dimen/margin_medium"
-              tools:ignore="UnusedAttribute">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="0dp"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingEnd="@dimen/margin_extra_medium_large"
+    android:paddingBottom="@dimen/margin_medium"
+    tools:ignore="UnusedAttribute">
     <!-- UnusedAttribute is ignored since foreground was added in API 23, however the impact of the missing foreground
          on lower APIs will be minimal -->
 
@@ -18,19 +18,18 @@
         android:id="@+id/post_list_author_selection_image"
         android:layout_width="@dimen/posts_list_spinner_avatar_size"
         android:layout_height="@dimen/posts_list_spinner_avatar_size"
-        android:layout_marginEnd="@dimen/posts_list_spinner_dropdown_avatar_horizontal_margin"
         android:layout_marginStart="@dimen/posts_list_spinner_dropdown_avatar_horizontal_margin"
+        android:layout_marginEnd="@dimen/posts_list_spinner_dropdown_avatar_horizontal_margin"
         android:importantForAccessibility="no"
         android:padding="@dimen/posts_list_spinner_avatar_padding"
         tools:src="@drawable/bg_oval_neutral_30_multiple_users_white_40dp"
-        tools:tint="@color/neutral_50"/>
+        tools:tint="@color/neutral_50" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/post_list_author_selection_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/text"
-        tools:text="@string/post_list_author_everyone"/>
+        android:textAppearance="?attr/textAppearanceBody1"
+        tools:text="@string/post_list_author_everyone" />
 </LinearLayout>

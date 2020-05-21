@@ -1,11 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2018-09-07 09:39:36+0000
+Translation-Revision-Date: 2019-12-25 16:34:28+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: vi_VN
 -->
 <resources>
+    <string name="domain_contact_information_state_not_available_hint">Tiểu bang (không có sẵn)</string>
+    <string name="error_network_connection">Hãy kiểm tra kết nối mạng và thử lại.</string>
+    <string name="error_browser_no_network">Không thể tải trang này ngay bây giờ.</string>
+    <string name="site_settings_disconnected_toast">Không có kết nối. Tính năng chỉnh sửa đã bị tắt.</string>
+    <string name="site_settings_password_updated">Đã cập nhật mật khẩu</string>
+    <string name="site_settings_password_dialog_title">Cập nhật mật khẩu</string>
+    <string name="domain_registration_registering_domain_name_progress_dialog_message">Đang đăng kí tên miền…</string>
+    <string name="domain_registration_state_picker_dialog_title">Chọn tiểu bang</string>
+    <string name="domain_registration_country_picker_dialog_title">Chọn quốc gia</string>
+    <string name="domain_registration_result_continue_button">tiếp tục</string>
+    <string name="domain_registration_result_title">Xin chúc mừng</string>
+    <string name="domain_contact_information_register_domain_button">Đăng ký Tên miền</string>
+    <string name="domain_contact_information_postal_code_hint">Mã bưu chính</string>
+    <string name="domain_contact_information_state_hint">Tiểu bang</string>
+    <string name="domain_contact_information_city_hint">Thành phố</string>
+    <string name="domain_contact_information_address_hint_two">Địa chỉ 2</string>
+    <string name="domain_contact_information_address_hint">Địa chỉ</string>
+    <string name="domain_contact_information_country_hint">Quốc gia</string>
+    <string name="domain_contact_information_country_code_hint">Mã Quốc gia</string>
+    <string name="domain_contact_information_phone_number_hint">Điện thoại</string>
+    <string name="stats_management_dismiss_insights_news_card">Hủy</string>
+    <string name="quick_start_focus_point_description">nhấp ở đây</string>
+    <string name="quick_start_list_create_site_title">Tạo site của bạn</string>
+    <string name="quick_start_list_create_site_subtitle">Đưa site của bạn lên và chạy</string>
+    <string name="quick_start_dialog_view_site_title">Xem site của bạn</string>
+    <string name="quick_start_dialog_view_site_message_short">Nhấp %1$s Xem Site %2$s để xem trước site của bạn</string>
+    <string name="quick_start_dialog_share_site_title">Chia sẻ site của bạn</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Nhâos %1$s Chia sẻ %2$s để tiếp tục</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Nhấp %1$s Kết nối %2$s để thêm các tài khoản phương tiện xã hội của bạn</string>
+    <string name="quick_start_dialog_share_site_message">Kết nối tới các tài khoản phương tiện xã hội của bạn - site của bạn sẽ tự động chia sẻ các bài viết mới.</string>
+    <string name="quick_start_dialog_publish_post_title">Xuất bản 1 bài viết</string>
+    <string name="quick_start_dialog_publish_post_message_short">Nhấp %1$s Tạo bài viết %2$s để tạo 1 bài viết mới</string>
+    <string name="quick_start_dialog_need_help_title">Muốn 1 chút trợ giúp khi bắt đầu?</string>
+    <string name="quick_start_dialog_need_help_button_positive">Có</string>
+    <string name="quick_start_dialog_need_help_button_neutral">Không bao giờ</string>
+    <string name="quick_start_dialog_need_help_button_negative">Không</string>
+    <string name="quick_start_dialog_follow_sites_title">Theo dõi các site khác</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Nhấp %1$s Tìm kiếm %2$s để tìm các site với các quan tâm tương tự</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấp %1$s Ngước đọc %2$s để tiếp tục</string>
+    <string name="quick_start_dialog_customize_site_title">Tùy chỉnh size của bạn</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Nhấp %1$s Chủ đề %2$s để tiếp tục</string>
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
     <string name="duplicate_site_detected">Đã phát hiện site trùng lặp.</string>
@@ -474,6 +515,7 @@ Language: vi_VN
     <string name="error_refresh_comments">Bình luận không thể được làm mới tại thời điểm này</string>
     <string name="error_refresh_pages">Trang không thể được làm mới tại thời điểm này</string>
     <string name="error_refresh_posts">Bài viết không thể được làm mới tại thời điểm này</string>
+    <string name="error_deleting_post">Đã xảy ra lỗi khi xoá bài.</string>
     <string name="notifications_empty_list">Không có thông báo</string>
     <string name="sdcard_message">Một thẻ SD được gắn là cần thiết để tải lên media</string>
     <string name="cat_name_required">Dòng tên danh mục là bắt buộc</string>
@@ -489,6 +531,7 @@ Language: vi_VN
     <string name="reader_title_applog">Nhật kí ứng dụng</string>
     <string name="fatal_db_error">Một lỗi đã xảy ra trong khi tạo cơ sở dữ liệu ứng dụng. Thử cài đặt lại ứng dụng.</string>
     <string name="error_blog_hidden">Blog này bị ẩn và không thể tải được. Bật nó lên trong thiết đặt và thử lại.</string>
+    <string name="error_refresh_media">Đa phương tiện không thể được làm mới tại thời điểm này</string>
     <string name="wordpress_blog">Blog WordPress</string>
     <string name="image_settings">Thiết đặt ảnh</string>
     <string name="local_changes">Các thay đổi nội bộ</string>
@@ -508,10 +551,7 @@ Language: vi_VN
     <string name="content_required">Bình luận là bắt buộc</string>
     <string name="sure_to_cancel_edit_comment">Hủy bỏ việc sửa bình luận này?</string>
     <string name="saving_changes">Đang lưu các thay đổi</string>
-    <string name="hint_comment_content">Bình luận</string>
     <string name="trash">Thùng rác</string>
-    <string name="trash_no">Không đưa vào thùng rác </string>
-    <string name="trash_yes">Thùng rác</string>
     <string name="dlg_confirm_trash_comments">Đưa vào thùng rác?</string>
     <string name="dlg_trashing_comments">Đưa vào thùng rác</string>
     <string name="dlg_spamming_comments">Đánh dấu là spam</string>
@@ -537,6 +577,7 @@ Language: vi_VN
     <string name="media_gallery_type_thumbnail_grid">Lưới hình thu nhỏ</string>
     <string name="learn_more">Tìm hiểu thêm</string>
     <string name="post_not_found">Một lỗi đã xảy ra khi tải bài viết. Làm mới bài viết của bạn và thử lại.</string>
+    <string name="plugin_not_found">Đã xảy ra lỗi khi truy cập plugin này</string>
     <string name="cancel_edit">Hủy bỏ sửa</string>
     <string name="connection_error">Lỗi kết nối</string>
     <string name="select_categories">Chọn danh mục</string>
@@ -545,6 +586,8 @@ Language: vi_VN
     <string name="cant_share_no_visible_blog">Bạn không thể chia sẻ cho WordPress mà không có một blog hiện hữu</string>
     <string name="comment_spammed">Bình luận được đánh dấu như spam</string>
     <string name="reader_label_reply">Trả lời</string>
+    <string name="reader_likes_multi">%,d người thích điều này</string>
+    <string name="reader_likes_you_and_multi">Bạn và %,d người khác thích điều này</string>
     <string name="reader_toast_err_get_post">Không thể lấy bài viết này</string>
     <string name="pick_video">Chọn video</string>
     <string name="pick_photo">Chọn ảnh</string>
@@ -564,6 +607,7 @@ Language: vi_VN
     <string name="reader_btn_follow">Theo dõi</string>
     <string name="reader_btn_share">Chia sẻ</string>
     <string name="reader_untitled_post">(Chưa có tiêu đề)</string>
+    <string name="comments_empty_list">Chưa có bình luận</string>
     <string name="empty_list_default">Danh sách này trống rỗng</string>
     <string name="stats_timeframe_months">Tháng</string>
     <string name="stats_timeframe_weeks">Tuần</string>
@@ -586,6 +630,7 @@ Language: vi_VN
     <string name="media_gallery_type_squares">Ô vuông</string>
     <string name="themes">Chủ đề</string>
     <string name="discard">Hủy bỏ</string>
+    <string name="manage">Quản lý</string>
     <string name="more_notifications">và %d nhiều hơn.</string>
     <string name="new_notifications">%d thông báo mới</string>
     <string name="follows">Theo dõi</string>
@@ -597,6 +642,7 @@ Language: vi_VN
     <string name="error_media_upload">Một lỗi đã xảy ra trong khi tải lên media</string>
     <string name="publish_date">Xuất bản</string>
     <string name="incorrect_credentials">Tên người dùng hoặc mật khẩu không đúng.</string>
+    <string name="log_in">Đăng nhập</string>
     <string name="username">Tên người dùng</string>
     <string name="password">Mật khẩu</string>
     <string name="reader">Người đọc</string>
@@ -605,7 +651,6 @@ Language: vi_VN
     <string name="pages">Trang</string>
     <string name="no_network_title">Không có mạng</string>
     <string name="ok">Đồng ý</string>
-    <string name="blogusername">tên người dùng blog</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress cho Android</string>
     <string name="tos">Điều khoản dịch vụ</string>
@@ -618,12 +663,12 @@ Language: vi_VN
     <string name="quickpress_add_alert_title">Đặt tên lối tắt</string>
     <string name="settings">Thiết đặt</string>
     <string name="quickpress_add_error">Tên lối tắt không thể để trống</string>
-    <string name="quickpress_window_title">Chọn blog cho lối tắt QuickPress</string>
     <string name="categories">Danh mục</string>
     <string name="title">Tiêu đề</string>
     <string name="dlg_deleting_comments">Xóa bình luận</string>
     <string name="sdcard_title">Yêu cầu thẻ SD</string>
     <string name="media">Media</string>
+    <string name="approve">Chấp thuận</string>
     <string name="delete">Xóa</string>
     <string name="none">Không</string>
     <string name="no">Không</string>

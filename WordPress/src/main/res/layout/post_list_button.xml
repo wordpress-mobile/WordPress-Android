@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/margin_large">
 
     <ImageView
+        android:alpha="@dimen/material_emphasis_medium"
         android:id="@+id/image"
         android:layout_width="16dp"
         android:layout_height="16dp"

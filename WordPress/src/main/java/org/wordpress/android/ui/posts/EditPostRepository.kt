@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.model.post.PostStatus.fromPost
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.NoChanges
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Updated
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -111,7 +113,7 @@ class EditPostRepository
 
     fun updateAsync(
         action: (PostModel) -> Boolean,
-        onSuccess: ((PostImmutableModel) -> Unit)? = null
+        onCompleted: ((PostImmutableModel, UpdatePostResult) -> Unit)? = null
     ) {
         launch {
             reportTransactionState(true)
@@ -122,9 +124,9 @@ class EditPostRepository
             if (isUpdated) {
                 requireNotNull(post).let {
                     _postChanged.value = Event(it)
-                    onSuccess?.invoke(it)
                 }
             }
+            onCompleted?.invoke(requireNotNull(post), if (isUpdated) Updated else NoChanges)
         }
     }
 
@@ -226,5 +228,10 @@ class EditPostRepository
         post = postStore.getPostByRemotePostId(remotePostId, site)
         savePostSnapshot()
         reportTransactionState(false)
+    }
+
+    sealed class UpdatePostResult {
+        object Updated : UpdatePostResult()
+        object NoChanges : UpdatePostResult()
     }
 }

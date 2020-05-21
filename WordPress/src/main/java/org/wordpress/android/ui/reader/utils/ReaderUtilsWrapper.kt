@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.utils
 
 import dagger.Reusable
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType
 import javax.inject.Inject
 
 /**
@@ -12,6 +14,9 @@ import javax.inject.Inject
  */
 @Reusable
 class ReaderUtilsWrapper @Inject constructor() {
-    fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean): String? =
-            ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate)
+    fun getResizedImageUrl(imageUrl: String?, width: Int, height: Int, isPrivate: Boolean, isAtomic: Boolean): String? =
+            ReaderUtils.getResizedImageUrl(imageUrl, width, height, isPrivate, isAtomic)
+
+    fun getTagFromTagName(tagName: String, tagType: ReaderTagType): ReaderTag =
+            ReaderUtils.getTagFromTagName(tagName, tagType)
 }

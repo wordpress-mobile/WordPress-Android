@@ -26,7 +26,8 @@ import java.util.List;
 public class SiteUtils {
     public static final String GB_EDITOR_NAME = "gutenberg";
     public static final String AZTEC_EDITOR_NAME = "aztec";
-    private static final int GB_ROLLOUT_PERCENTAGE = 100;
+    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
+    private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
     /**
      * Migrate the old app-wide editor preference value to per-site setting. wpcom sites will make a network call
@@ -45,16 +46,53 @@ public class SiteUtils {
             return;
         }
 
-        // In a later version we might override mobile_editor setting if it's set to `aztec` and show a specific notice
-        // for these users ("We made a lot of progress on the block editor and we think it's now better than
-        // the classic editor, we switched it on, but you can change the configuration in your Site Settings").
-        // ^ This code should be here.
-
         // If the user is already in the rollout group, we can skip this the migration.
         if (AppPrefs.isUserInGutenbergRolloutGroup()) {
             return;
         }
 
+        // -------- Rollout: Phase 2 -------
+        //
+        // If user has any Aztec enabled sites, we'll migrate their sites to Gutenberg and schedule showing popup.
+        if (atLeastOneSiteHasAztecEnabled(siteStore)) {
+            // Randomly pick the user in the rollout group
+            if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE_PHASE_2)) {
+                if (!NetworkUtils.isNetworkAvailable(WordPress.getContext())) {
+                    // If the network is not available, abort. We can't update the remote setting.
+                    return;
+                }
+
+                for (SiteModel site : siteStore.getSites()) {
+                    // Show "phase 2" dialog on sites that get switched from aztec to gutenberg
+                    if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
+                        AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
+                        // Will show the popup again, even if it was displayed in the past
+                        AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), false);
+                        continue;
+                    }
+
+                    // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
+                    if (TextUtils.isEmpty(site.getMobileEditor())) {
+                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
+                    }
+                }
+
+                // Track and enable Gutenberg for all sites using a single network call. Ideally we would track this
+                // on the network response, but this would make this rollout even more complex.
+                // There might be some rare events when we register a site switched to Gutenberg which is actually
+                // still on Aztec.
+                trackGutenbergEnabledForNonGutenbergSites(siteStore,
+                        BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_2);
+                dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
+                        new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME, false)));
+
+                // After enabling Gutenberg on these sites, we consider the user entered the rollout group
+                AppPrefs.setUserInGutenbergRolloutGroup();
+            }
+        }
+
+        // -------- Rollout: Phase 1 -------
+        //
         // Check if the user has been "randomly" selected to enter the rollout group.
         //
         // For self hosted sites, there are often one or two users, and the user id is probably 0, 1 in these cases.
@@ -63,7 +101,7 @@ public class SiteUtils {
         //
         // To exclude ids 0 and 1, to rollout for 10% users,
         // we'll use a test like `id % 100 >= 90` instead of `id % 100 < 10`.
-        if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE)) {
+        if (accountStore.getAccount().getUserId() % 100 >= (100 - GB_ROLLOUT_PERCENTAGE_PHASE_1)) {
             if (atLeastOneSiteHasAztecEnabled(siteStore)) {
                 // If the user has opt-ed out from at least one of their site, then exclude them from the cohort
                 return;
@@ -81,7 +119,12 @@ public class SiteUtils {
                 }
             }
 
-            // Enable Gutenberg for all sites using a single network call
+            // Track and enable and  Gutenberg for all sites using a single network call. Ideally we would track this
+            // on the network response, but this would make this rollout even more complex.
+            // There might be some rare events when we register a site switched to Gutenberg which is actually
+            // still on Aztec.
+            trackGutenbergEnabledForNonGutenbergSites(siteStore,
+                    BlockEditorEnabledSource.ON_PROGRESSIVE_ROLLOUT_PHASE_1);
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.GB_EDITOR_NAME)));
 
@@ -100,6 +143,15 @@ public class SiteUtils {
         } else {
             dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorForAllSitesAction(
                     new DesignateMobileEditorForAllSitesPayload(SiteUtils.AZTEC_EDITOR_NAME)));
+        }
+    }
+
+    private static void trackGutenbergEnabledForNonGutenbergSites(final SiteStore siteStore,
+                                                                  final BlockEditorEnabledSource source) {
+        for (SiteModel site : siteStore.getSites()) {
+            if (!TextUtils.equals(site.getMobileEditor(), GB_EDITOR_NAME)) {
+                AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, site, source.asPropertyMap());
+            }
         }
     }
 
@@ -126,21 +178,30 @@ public class SiteUtils {
     }
 
     public static void enableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
-            dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                    new DesignateMobileEditorPayload(siteModel, SiteUtils.GB_EDITOR_NAME)));
+        // Send the setting to the server
+        dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
+                new DesignateMobileEditorPayload(siteModel, GB_EDITOR_NAME)));
+        // Update the local site
+        siteModel.setMobileEditor(GB_EDITOR_NAME);
+        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static void disableBlockEditor(Dispatcher dispatcher, SiteModel siteModel) {
+        // Send the setting to the server
         dispatcher.dispatch(SiteActionBuilder.newDesignateMobileEditorAction(
-                new DesignateMobileEditorPayload(siteModel, SiteUtils.AZTEC_EDITOR_NAME)));
+                new DesignateMobileEditorPayload(siteModel, AZTEC_EDITOR_NAME)));
+        // Update the local site
+        siteModel.setMobileEditor(AZTEC_EDITOR_NAME);
+        dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(siteModel));
     }
 
     public static boolean isBlockEditorDefaultForNewPost(SiteModel site) {
         if (site == null) {
-            return false;
+            return true;
         }
         if (TextUtils.isEmpty(site.getMobileEditor())) {
-            return AppPrefs.isGutenbergDefaultForNewPosts();
+            // Default to block editor when mobile editor setting is empty
+            return true;
         } else {
             return site.getMobileEditor().equals(SiteUtils.GB_EDITOR_NAME);
         }
@@ -170,7 +231,7 @@ public class SiteUtils {
      * @return true if the site is WPCom or Jetpack and is not private
      */
     public static boolean isPhotonCapable(SiteModel site) {
-        return SiteUtils.isAccessedViaWPComRest(site) && !site.isPrivate();
+        return SiteUtils.isAccessedViaWPComRest(site) && (!site.isPrivate() || site.isWPComAtomic());
     }
 
     public static boolean isAccessedViaWPComRest(SiteModel site) {
@@ -178,7 +239,8 @@ public class SiteUtils {
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
-        return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH);
+        return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
+                site.isPrivateWPComAtomic());
     }
 
     public static ArrayList<Integer> getCurrentSiteIds(SiteStore siteStore, boolean selfhostedOnly) {
@@ -207,6 +269,11 @@ public class SiteUtils {
                 if (index > 0) {
                     jetpackVersion = jetpackVersion.substring(0, index);
                 }
+                // Jetpack version field is sometimes "false" instead of a number on self-hosted sites that are no
+                // longer active.
+                if (jetpackVersion.equals("false")) {
+                    return false;
+                }
                 Version siteJetpackVersion = new Version(jetpackVersion);
                 Version minVersion = new Version(limitVersion);
                 return siteJetpackVersion.compareTo(minVersion) >= 0;
@@ -214,7 +281,7 @@ public class SiteUtils {
                 String errorStr = "Invalid site jetpack version " + jetpackVersion + ", expected " + limitVersion;
                 AppLog.e(AppLog.T.UTILS, errorStr, e);
                 CrashLoggingUtils.logException(e, AppLog.T.UTILS, errorStr);
-                return true;
+                return false;
             }
         }
         return false;
@@ -239,5 +306,9 @@ public class SiteUtils {
 
     public static boolean hasCustomDomain(@NonNull SiteModel site) {
         return !site.getUrl().contains(".wordpress.com");
+    }
+
+    public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
+        return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
     }
 }

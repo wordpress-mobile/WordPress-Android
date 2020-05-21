@@ -95,12 +95,19 @@ class PostDayViewsMapper
             )
         }
         val result = mutableListOf<BlockListItem>()
+
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+                R.string.stats_views,
+                chartItems
+        )
+
         result.add(
                 BarChartItem(
                         chartItems,
                         selectedItem = selectedDay,
                         onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn
+                        onBarChartDrawn = onBarChartDrawn,
+                        entryContentDescriptions = contentDescriptions
                 )
         )
         return result

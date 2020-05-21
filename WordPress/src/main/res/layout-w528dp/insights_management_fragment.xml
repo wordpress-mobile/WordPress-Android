@@ -1,109 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/insightsManagementScrollView"
-android:layout_width="wrap_content"
-android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/insightsManagementScrollView"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/insightsManagementContainer"
-    style="@style/StatsInsightManagementList"
-    android:paddingBottom="@dimen/margin_large"
-    android:layout_marginStart="@dimen/margin_large"
-    android:layout_marginEnd="@dimen/margin_large">
-
-    <TextView
-        android:id="@+id/insightsManagementSubtitle"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/insightCards"
+        style="@style/StatsInsightManagementList"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/stats_insights_management_margin"
-        android:paddingBottom="@dimen/stats_insights_management_margin"
-        android:gravity="center_horizontal"
-        android:text="@string/stats_insights_management_title"
-        android:textColor="@color/grey_darken_20"
-        android:textSize="@dimen/text_sz_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/addedInsightsCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="false"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/insightsManagementSubtitle"
-        app:cardCornerRadius="@dimen/default_cardview_radius"
-        app:cardElevation="@dimen/default_cardview_elevation">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addedInsights"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:scrollbars="none"
-            tools:listitem="@layout/insights_management_list_item"/>
-
-    </androidx.cardview.widget.CardView>
-
-    <TextView
-        android:id="@+id/addedInsightsInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/grey_darken_20"
-        android:textSize="@dimen/text_sz_medium"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:paddingBottom="@dimen/margin_extra_extra_medium_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addedInsightsCard"
-        android:text="@string/stats_insights_management_drag_and_drop_hint"/>
-
-    <TextView
-        android:id="@+id/addInsightsHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/grey_darken_20"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addedInsightsInfo"
-        android:text="@string/stats_insights_add_insights_header"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/removedInsightsCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="false"
-        android:layout_marginTop="@dimen/margin_large"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addInsightsHeader"
-        app:cardCornerRadius="@dimen/default_cardview_radius"
-        app:cardElevation="@dimen/default_cardview_elevation">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/removedInsights"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:nestedScrollingEnabled="false"
-            tools:listitem="@layout/insights_management_list_item"
-            />
-
-    </androidx.cardview.widget.CardView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:nestedScrollingEnabled="false"
+        android:paddingBottom="@dimen/margin_large"
+        android:scrollbars="none"
+        android:translationZ="1dp"
+        tools:listitem="@layout/insights_management_list_item" />
 
 </ScrollView>

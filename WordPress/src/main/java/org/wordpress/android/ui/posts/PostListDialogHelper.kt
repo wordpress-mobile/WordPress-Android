@@ -16,6 +16,7 @@ private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TR
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
+private const val POST_TYPE = "post_type"
 
 /**
  * This is a temporary class to make the PostListViewModel more manageable. Please feel free to refactor it any way
@@ -110,7 +111,7 @@ class PostListDialogHelper(
     }
 
     fun showAutoSaveRevisionDialog(post: PostModel) {
-        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN)
+        analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_SHOWN, mapOf(POST_TYPE to "post"))
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG,
                 title = UiStringRes(R.string.dialog_confirm_autosave_title),
@@ -156,7 +157,9 @@ class PostListDialogHelper(
                 // open the editor with the restored auto save
                 localPostIdForAutosaveRevisionResolutionDialog = null
                 editRestoredAutoSavePost(it)
-                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED)
+                analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "post"))
             }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
@@ -178,7 +181,10 @@ class PostListDialogHelper(
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the local post (don't use the auto save version)
                 editLocalPost(it)
-                analyticsTracker.track(UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED)
+                analyticsTracker.track(
+                        UNPUBLISHED_REVISION_DIALOG_LOAD_LOCAL_VERSION_CLICKED,
+                        mapOf(POST_TYPE to "post")
+                )
             }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }

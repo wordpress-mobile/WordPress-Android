@@ -19,15 +19,16 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.posts.PostListItemAction
 import org.wordpress.android.viewmodel.posts.PostListItemAction.MoreItem
 import org.wordpress.android.viewmodel.posts.PostListItemAction.SingleItem
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Determinate
-import org.wordpress.android.viewmodel.posts.PostListItemProgressBar.Indeterminate
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
+import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiState
 import org.wordpress.android.viewmodel.posts.PostListItemUiStateData
 import org.wordpress.android.widgets.PostListButton
@@ -111,6 +112,7 @@ sealed class PostListItemViewHolder(
 
             itemView.setOnClickListener { item.onSelected.invoke() }
             uiHelpers.updateVisibility(moreButton, item.compactActions.actions.isNotEmpty())
+            moreButton.expandTouchTargetArea(R.dimen.post_list_more_button_extra_padding)
             moreButton.setOnClickListener { onMoreClicked(item.compactActions.actions, moreButton) }
         }
     }
@@ -121,7 +123,7 @@ sealed class PostListItemViewHolder(
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
-        updateProgressBarState(data.progressBarState)
+        updateProgressBarState(data.progressBarUiState)
         uiHelpers.updateVisibility(disabledOverlay, data.showOverlay)
         if (data.disableRippleEffect) {
             container.background = null
@@ -147,13 +149,13 @@ sealed class PostListItemViewHolder(
         menu.show()
     }
 
-    private fun updateProgressBarState(progressBarState: PostListItemProgressBar) {
-        uiHelpers.updateVisibility(uploadProgressBar, progressBarState.visibility)
-        when (progressBarState) {
+    private fun updateProgressBarState(progressBarUiState: ProgressBarUiState) {
+        uiHelpers.updateVisibility(uploadProgressBar, progressBarUiState.visibility)
+        when (progressBarUiState) {
             Indeterminate -> uploadProgressBar.isIndeterminate = true
             is Determinate -> {
                 uploadProgressBar.isIndeterminate = false
-                uploadProgressBar.progress = progressBarState.progress
+                uploadProgressBar.progress = progressBarUiState.progress
             }
         }
     }

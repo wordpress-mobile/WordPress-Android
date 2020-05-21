@@ -1,36 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/stats_insights_button_container_height"
     android:gravity="end">
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_negative"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_medium"
         android:layout_marginBottom="@dimen/margin_medium"
-        android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/margin_medium"
-        android:textColor="@color/blue_50"
-        android:textSize="@dimen/text_sz_medium"
-        tools:text="Cancel"/>
+        tools:text="Cancel" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_positive"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_medium"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:background="?attr/selectableItemBackground"
-        android:padding="@dimen/margin_medium"
-        android:textColor="@color/blue_50"
-        android:textSize="@dimen/text_sz_medium"
-        tools:text="OK"/>
+        android:layout_marginBottom="@dimen/margin_medium"
+        tools:text="OK" />
 
 </LinearLayout>

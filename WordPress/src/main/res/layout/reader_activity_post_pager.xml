@@ -13,7 +13,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar_main" />
 
     <ProgressBar
         android:id="@+id/progress_loading"
@@ -22,5 +22,11 @@
         android:layout_centerInParent="true"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <!-- this coordinator exists only for snackbars -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>

@@ -7,8 +7,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/neutral_0">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -27,80 +26,78 @@
                 android:id="@+id/comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/margin_extra_large"
                 android:paddingTop="@dimen/margin_large"
-                android:background="@android:color/white"
-                android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large">
+                android:paddingEnd="@dimen/margin_extra_large">
 
                 <ImageView
                     android:id="@+id/image_avatar"
                     style="@style/ReaderImageView.Avatar"
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_marginEnd="@dimen/margin_large"
-                    android:importantForAccessibility="no"
-                    />
+                    android:importantForAccessibility="no" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/text_date"
+                    android:layout_toEndOf="@+id/image_avatar"
                     android:background="?android:selectableItemBackground"
                     android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="@color/link_reader"
-                    android:textSize="@dimen/text_sz_extra_large"
-                    tools:text="text_name"
-                    android:textAlignment="viewStart"
                     android:gravity="start"
-                    android:layout_toStartOf="@+id/text_date"
-                    android:layout_toEndOf="@+id/image_avatar"/>
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="@dimen/text_sz_extra_large"
+                    tools:text="text_name" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/text_name"
-                    android:background="?android:selectableItemBackground"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="@dimen/margin_extra_small"
-                    android:paddingTop="@dimen/margin_extra_small"
-                    android:textColor="@color/neutral_40"
-                    android:textSize="@dimen/text_sz_large"
-                    tools:text="text_post_title"
-                    android:textAlignment="viewStart"
-                    android:gravity="start"
-                    android:accessibilityTraversalAfter="@+id/text_name"
                     android:layout_alignStart="@+id/text_name"
                     android:layout_toStartOf="@+id/text_status"
-                    tools:ignore="UnusedAttribute"/>
+                    android:accessibilityTraversalAfter="@+id/text_name"
+                    android:alpha="@dimen/material_emphasis_medium"
+                    android:background="?android:selectableItemBackground"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="1"
+                    android:paddingTop="@dimen/margin_extra_small"
+                    android:paddingBottom="@dimen/margin_extra_small"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    tools:ignore="UnusedAttribute"
+                    tools:text="text_post_title" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_date"
                     style="@style/ReaderTextView.Date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:maxLines="1"
-                    tools:text="date"
-                    android:accessibilityTraversalAfter="@+id/text_post_title"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="@dimen/margin_small"
-                    tools:ignore="UnusedAttribute"/>
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:accessibilityTraversalAfter="@+id/text_post_title"
+                    android:maxLines="1"
+                    tools:ignore="UnusedAttribute"
+                    tools:text="date" />
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/text_post_title"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:textSize="@dimen/text_sz_small"
-                    android:visibility="visible"
-                    tools:text="STATUS"
-                    android:accessibilityTraversalAfter="@+id/text_date"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="@dimen/margin_small"
-                    tools:ignore="UnusedAttribute"/>
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:accessibilityTraversalAfter="@+id/text_date"
+                    android:textSize="@dimen/text_sz_small"
+                    android:visibility="visible"
+                    tools:ignore="UnusedAttribute"
+                    tools:text="STATUS" />
             </RelativeLayout>
 
             <!--
@@ -111,17 +108,15 @@
                 android:id="@+id/text_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/margin_large"
-                android:paddingBottom="@dimen/margin_large"
-                android:textColor="?attr/wpColorText"
-                android:textColorLink="@color/link_reader"
-                android:background="@android:color/white"
-                android:textIsSelectable="false"
-                android:textSize="@dimen/text_sz_large"
                 android:fontFamily="serif"
-                tools:text="text_content"
+                android:paddingStart="@dimen/margin_extra_large"
+                android:paddingTop="@dimen/margin_large"
                 android:paddingEnd="@dimen/margin_extra_large"
-                android:paddingStart="@dimen/margin_extra_large"/>
+                android:paddingBottom="@dimen/margin_large"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColorLink="?attr/colorSecondary"
+                android:textIsSelectable="false"
+                tools:text="text_content" />
 
         </LinearLayout>
 

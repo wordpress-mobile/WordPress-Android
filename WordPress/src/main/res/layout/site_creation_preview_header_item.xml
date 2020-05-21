@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sitePreviewHeaderLayout"
     style="@style/SiteCreationHeaderLinearLayoutStyle">
@@ -8,10 +7,10 @@
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/sitePreviewTitle"
         style="@style/SiteCreationPreviewHeaderTitle"
-        app:fixWidowWords="true"/>
+        app:fixWidowWords="true" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/sitePreviewSubtitle"
         style="@style/SiteCreationPreviewHeaderSubtitle"
-        app:fixWidowWords="true"/>
+        app:fixWidowWords="true" />
 </LinearLayout>

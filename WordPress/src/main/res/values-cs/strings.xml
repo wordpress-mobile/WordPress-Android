@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-28 12:57:35+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-03-31 06:52:54+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: cs_CZ
 -->
 <resources>
-    <string name="gutenberg_native_translate">Překlad</string>
+    <string name="send_verification_email">Poslat ověřovací email</string>
+    <string name="gutenberg_native_translate">Přeložit</string>
     <string name="gutenberg_native_title">Název:</string>
+    <string name="gutenberg_native_size">Velikost</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>
@@ -23,11 +25,9 @@ Language: cs_CZ
     <string name="domain_contact_information_phone_number_hint">Telefon</string>
     <string name="domain_contact_information_organization_hint">Organizace (volitelné)</string>
     <string name="stats_management_new">Nový</string>
-    <string name="stats_management_edit">Upravit</string>
     <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
     <string name="stats_management_try_it_now">Vyzkoušet</string>
-    <string name="post_list_drafts">Koncepty</string>
-    <string name="post_list_published">Publikováno</string>
+    <string name="post_list_tab_drafts">Koncepty</string>
     <string name="post_list_author_everyone">Všichni</string>
     <string name="post_list_author_me">Já</string>
     <string name="stats_insights_average_words">Průměr slov/příspěvek</string>
@@ -76,14 +76,9 @@ Language: cs_CZ
     <string name="notification_new_site_creation_title">Vytvořit stránku</string>
     <string name="new_site_creation_create_site_button">Vytvořit stránku</string>
     <string name="new_site_creation_search_domain_input_hint">Prohledat domény</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Vlastní rubrika</string>
-    <string name="new_site_creation_button_skip">Přeskočit</string>
-    <string name="new_site_creation_site_title_hint">Název stránky</string>
     <string name="new_site_creation_screen_title_step_count">%1$d z %2$d</string>
     <string name="new_site_creation_screen_title_general">Vytvořit webovou stránku</string>
     <string name="preference_strip_image_location">Odstranit polohu z médií</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_search_hint">Prohledat Giphy</string>
     <string name="stats_author_views_label">Zobrazení</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoři</string>
@@ -255,7 +250,6 @@ Language: cs_CZ
     <string name="featured_image_desc">náhledový obrázek</string>
     <string name="button_discard">Zahodit</string>
     <string name="reader_avatar_desc">profilový obrázek</string>
-    <string name="reader_blavatar_desc">ikona stránky</string>
     <string name="notification_channel_transient_title">Přechodný</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Zadejte emailovou adresu</string>
@@ -276,7 +270,7 @@ Language: cs_CZ
     <string name="activity_log_rewind_started_snackbar_message">Vaše stránky jsou obnovovány.\nObnovuji stránku k %1$s %2$s</string>
     <string name="activity_log_button">Tlačítko akce s protokolem aktivit</string>
     <string name="plugin_auto_managed">Spravován automaticky</string>
-    <string name="reader_save_posts_locally_dialog_message">Uložte si příspěvek a kdykoli se k němu vraťe. Příspěvek bude dostupný pouze na tomto zařízení  — na synchronizaci mezi zařízeními pracujeme.</string>
+    <string name="reader_save_posts_locally_dialog_message">Uložte si příspěvek a kdykoli se k němu vraťte. Příspěvek bude dostupný pouze na tomto zařízení.</string>
     <string name="reader_save_posts_locally_dialog_title">Uložit příspěvek na později</string>
     <string name="reader_empty_search_request_failed">Vyhledávání se nezdařilo</string>
     <string name="reader_empty_search_title">Nebyly nalezeny žádné výsledky</string>
@@ -301,7 +295,6 @@ Language: cs_CZ
     <string name="reader_add_bookmark">Přidat do uložených příspěvků</string>
     <string name="reader_save_for_later_title">Uložené příspěvky</string>
     <string name="removed">Odstraněno</string>
-    <string name="tabbar_accessibility_label_write">Nový příspěvek. Napište nový příspěvek.</string>
     <string name="my_site_icon_content_description">Změnit ikonu webu</string>
     <string name="my_site_icon_dialog_cancel_button">Zrušit</string>
     <string name="my_site_icon_dialog_remove_button">Odstranit</string>
@@ -332,7 +325,6 @@ Language: cs_CZ
     <string name="preference_privacy_settings">Nastavení ochrany osobních údajů</string>
     <string name="preference_collect_information">Sbírat informace</string>
     <string name="post_submitted">Příspěvek odeslán</string>
-    <string name="write_post">Napsat příspěvek</string>
     <string name="login_email_button_signup">Ještě nemáte svůj účet? %1$sRegistrujte se%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Funkce pluginu vyžaduje, aby stránka byla v dobrém stavu.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Funkce tohoto pluginu vyžadují, aby byl tento uživatel přiřazen k odběru primární domény.</string>
@@ -374,7 +366,6 @@ Language: cs_CZ
     <string name="site_settings_quota_space_unlimited">%1$s z neomezeného množství</string>
     <string name="preview_count">Náhled %d</string>
     <string name="add_count">Přidat %d</string>
-    <string name="fab_create_desc">vytvořit</string>
     <string name="fab_add_tag_desc">vytvořit štítek</string>
     <string name="navigate_up_desc">přejít nahoru</string>
     <string name="notification_settings_switch_desc">Upozornění</string>
@@ -700,7 +691,6 @@ Language: cs_CZ
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="copy">Kopírovat</string>
     <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>
@@ -794,8 +784,6 @@ Language: cs_CZ
     <string name="editor_dropped_text_error">Při odstraňování textu došlo k chybě</string>
     <string name="editor_dropped_html_images_not_allowed">Odstraňování obrázků v režimu HTML není povoleno</string>
     <string name="editor_content_hint">Sdílejte svůj příběh zde…</string>
-    <string name="post_list_trashed">Smazáno</string>
-    <string name="post_list_scheduled">Naplánovat</string>
     <string name="post_status_post_private">Soukromé</string>
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Čeká na schválení</string>
@@ -816,7 +804,6 @@ Language: cs_CZ
     <string name="post_settings_more_options">Více nastavení</string>
     <string name="post_settings_categories_and_tags">Rubriky a štítky</string>
     <string name="post_settings_status">Stav</string>
-    <string name="notifications_tab_title_unread">Nepřečtené</string>
     <string name="notifications_tab_title_all">Vše</string>
     <string name="top_level_category_name">Nejvyšší úroveň</string>
     <string name="category_parent">Nadřazená rubrika (volitelné):</string>
@@ -887,7 +874,6 @@ Language: cs_CZ
     <string name="sharing">Sdílení</string>
     <string name="tabbar_accessibility_label_notifications">Notifikace. Spravovat notifikace.</string>
     <string name="tabbar_accessibility_label_reader">Čtenář. Sledujte obsah z jiných stránek.</string>
-    <string name="tabbar_accessibility_label_me">Mě. Zobrazte svůj profil a proveďte změny.</string>
     <string name="tabbar_accessibility_label_my_site">Moje stránka. Zobrazte své stránky a spravujte je, včetně statistik.</string>
     <string name="my_site_btn_sharing">Sdílení</string>
     <string name="button_not_now">Teď ne</string>
@@ -1459,7 +1445,6 @@ Language: cs_CZ
     <string name="reader_hint_add_tag_or_url">Zadejte URL nebo štítek, který chcete sledovat</string>
     <string name="reader_page_followed_blogs">Stránky které sledujete</string>
     <string name="reader_page_followed_tags">Štítky které sledujete</string>
-    <string name="reader_title_subs">Štítky a weby</string>
     <string name="reader_title_tag_preview">Štítek čtenáře</string>
     <string name="reader_title_blog_preview">Web čtenáře</string>
     <string name="ssl_certificate_ask_trust">Pokud se k tomuto webu obvykle připojujete bez problémů, pak tato chyba znamená, že se někdo snaží podvrhnout vaši identitu a neměli byste dále pokračovat. Chcete i přesto důvěřovat tomuto certifikátu?</string>
@@ -1512,10 +1497,7 @@ Language: cs_CZ
     <string name="content_required">Je vyžadován komentář</string>
     <string name="sure_to_cancel_edit_comment">Ukončit úpravy tohoto komentáře?</string>
     <string name="saving_changes">Ukládám změny</string>
-    <string name="hint_comment_content">Komentář</string>
     <string name="trash">Koš</string>
-    <string name="trash_no">Ponechat</string>
-    <string name="trash_yes">Odstranit</string>
     <string name="dlg_confirm_trash_comments">Přesunout do koše?</string>
     <string name="dlg_trashing_comments">Přesunuji do koše</string>
     <string name="dlg_spamming_comments">Označuji jako spam</string>
@@ -1616,7 +1598,6 @@ Language: cs_CZ
     <string name="pages">Stránky</string>
     <string name="no_network_title">Síť není dostupná</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Jmémo blogera</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress pro Android</string>
     <string name="tos">Podmínky služby</string>
@@ -1629,7 +1610,6 @@ Language: cs_CZ
     <string name="quickpress_add_alert_title">Nastavit název zkráceného odkazu</string>
     <string name="settings">Nastavení</string>
     <string name="quickpress_add_error">Název zkráceného odkazu nemůže být prázdný</string>
-    <string name="quickpress_window_title">Vyberte web pro zkrácený odkaz QuickPress</string>
     <string name="pages_private">Soukromé</string>
     <string name="categories">Rubriky</string>
     <string name="tags_separate_with_commas">Štítky (oddělte štítky čárkami)</string>

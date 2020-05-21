@@ -1,91 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-11-23 07:49:45+0000
+Translation-Revision-Date: 2019-11-20 03:34:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: en_AU
 -->
 <resources>
-    <string name="gutenberg_native_wordpress_media_library">WordPress Media Library</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
-    <string name="gutenberg_native_unsupported">Unsupported</string>
-    <string name="gutenberg_native_ungroup">Ungroup</string>
-    <string name="gutenberg_native_translate">Translate</string>
-    <string name="gutenberg_native_title">Title:</string>
-    <string name="gutenberg_native_tap_to_hide_the_keyboard">Tap to hide the keyboard</string>
-    <string name="gutenberg_native_tap_here_to_show_help">Tap here to show help</string>
-    <string name="gutenberg_native_take_a_video">Take a Video</string>
-    <string name="gutenberg_native_take_a_photo_or_video">Take a Photo or Video</string>
-    <string name="gutenberg_native_take_a_photo">Take a Photo</string>
-    <string name="gutenberg_native_start_writing">Start writing…</string>
-    <string name="gutenberg_native_size">Size</string>
-    <string name="gutenberg_native_sidebar_title_plugin">Sidebar title plugin</string>
-    <string name="gutenberg_native_show_section">Show section</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios">\'%s\' isn\'t yet supported on WordPress for iOS</string>
-    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' isn\'t yet supported on WordPress for Android</string>
-    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>
-    <string name="gutenberg_native_s_block_empty">%s block. Empty</string>
-    <string name="gutenberg_native_s_block">%s Block</string>
-    <string name="gutenberg_native_row_d">Row %d.</string>
-    <string name="gutenberg_native_reset_block">Reset Block</string>
-    <string name="gutenberg_native_reset">RESET</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Remove block at row %s</string>
-    <string name="gutenberg_native_remove_annotations">Remove annotations</string>
-    <string name="gutenberg_native_problem_opening_the_video">Problem opening the video</string>
-    <string name="gutenberg_native_problem_displaying_block">Problem displaying block</string>
-    <string name="gutenberg_native_post_title_s">Post title. %s</string>
-    <string name="gutenberg_native_post_title_empty">Post title. Empty</string>
-    <string name="gutenberg_native_paste_url">Paste URL</string>
-    <string name="gutenberg_native_page_break_block_s">Page break block. %s</string>
-    <string name="gutenberg_native_open_settings">Open Settings</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">No application can handle this request. Please install a Web browser.</string>
-    <string name="gutenberg_native_navigate_up">Navigate Up</string>
-    <string name="gutenberg_native_my_pre_publish_panel">My pre publish panel</string>
-    <string name="gutenberg_native_my_post_status_info">My post status info</string>
-    <string name="gutenberg_native_my_post_publish_panel">My post publish panel</string>
-    <string name="gutenberg_native_my_document_setting_panel">My Document Setting Panel</string>
-    <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Move block up from row %1$s to row %2$s</string>
-    <string name="gutenberg_native_move_block_up">Move block up</string>
-    <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Move block down from row %1$s to row %2$s</string>
-    <string name="gutenberg_native_move_block_down">Move block down</string>
-    <string name="gutenberg_native_link_text">Link text</string>
-    <string name="gutenberg_native_link_inserted">Link inserted</string>
-    <string name="gutenberg_native_level_s_empty">Level %s. Empty.</string>
-    <string name="gutenberg_native_level_1_s_2_s">Level %1$s. %2$s</string>
-    <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
-    <string name="gutenberg_native_hide_keyboard">Hide keyboard</string>
-    <string name="gutenberg_native_here_is_the_panel_content">Here is the panel content!</string>
-    <string name="gutenberg_native_help_icon">Help icon</string>
-    <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
-    <string name="gutenberg_native_empty">Empty</string>
-    <string name="gutenberg_native_double_tap_to_undo_last_change">Double tap to undo last change</string>
-    <string name="gutenberg_native_double_tap_to_toggle_setting">Double tap to toggle setting</string>
-    <string name="gutenberg_native_double_tap_to_select_an_image">Double tap to select an image</string>
-    <string name="gutenberg_native_double_tap_to_select_a_video">Double tap to select a video</string>
-    <string name="gutenberg_native_double_tap_to_select">Double tap to select</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Double tap to remove the block</string>
-    <string name="gutenberg_native_double_tap_to_redo_last_change">Double tap to redo last change</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_up">Double tap to move the block up</string>
-    <string name="gutenberg_native_double_tap_to_move_the_block_down">Double tap to move the block down</string>
-    <string name="gutenberg_native_double_tap_to_edit_this_value">Double tap to edit this value</string>
-    <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Double tap to change the value using slider</string>
-    <string name="gutenberg_native_double_tap_to_add_a_block">Double tap to add a block</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Double tap and hold to edit</string>
-    <string name="gutenberg_native_current_value_is_s">Current value is %s</string>
-    <string name="gutenberg_native_content">Content…</string>
-    <string name="gutenberg_native_clear_all_settings">Clear All Settings</string>
-    <string name="gutenberg_native_choose_from_device">Choose from device</string>
-    <string name="gutenberg_native_annotations_sidebar">Annotations Sidebar</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
-    <string name="gutenberg_native_alt_text">Alt Text</string>
-    <string name="gutenberg_native_add_video">ADD VIDEO</string>
-    <string name="gutenberg_native_add_url">Add URL</string>
-    <string name="gutenberg_native_add_link_text">Add link text</string>
-    <string name="gutenberg_native_add_image_or_video">ADD IMAGE OR VIDEO</string>
-    <string name="gutenberg_native_add_image">ADD IMAGE</string>
-    <string name="gutenberg_native_add_block_here">ADD BLOCK HERE</string>
-    <string name="gutenberg_native_add_annotation">Add annotation</string>
-    <string name="gutenberg_native_add_a_description">Add a description</string>
     <string name="reader_empty_saved_posts_content_description">Tap the Add to Save Posts button to save a post to your list.</string>
     <string name="reader_acessibility_list_loaded">\"The list has loaded with %1$d items.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notifications</string>
@@ -97,8 +17,6 @@ Language: en_AU
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts u2014 great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -195,24 +113,19 @@ Language: en_AU
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
-    <string name="sharing_facebook_account_must_have_pages">The Facebook connection could not be made because this account does not have access to any pages. Facebook supports sharing connections to Facebook Pages, but not to Facebook Profiles.</string>
     <string name="stats_post_views_label">Views</string>
     <string name="stats_post_label">Post</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
-    <string name="stats_posting_activity_graph">Graph of posting activity.</string>
     <string name="stats_item_collapsed">Item collapsed</string>
     <string name="stats_item_expanded">Item expanded</string>
     <string name="stats_collapse_content_description">Collapse</string>
     <string name="stats_expand_content_description">Expand</string>
     <string name="stats_graph_updated">Graph updated.</string>
     <string name="stats_overview_content_description">%1$s %2$s for period: %3$s, change from previous period - %4$s</string>
-    <string name="stats_bar_chart_content_description">Graph of site views.</string>
     <string name="stats_loading_card">Loading selected card data</string>
     <string name="site_settings_editor">Editor</string>
     <string name="description_expand">Expand</string>
     <string name="description_collapse">Collapse</string>
-    <string name="editor_retry_failed_uploads">Retry uploading</string>
-    <string name="editor_toast_failed_uploads">Some media uploads have failed. You can\'t save or publish\n        your post in this state.</string>
     <string name="my_site_verify_your_email_without_email">Verify your email address - instructions sent to your email</string>
     <string name="my_site_verify_your_email">Verify your email address - instructions sent to %s</string>
     <string name="link_dialog_button_cancel">Cancel</string>
@@ -288,7 +201,6 @@ Language: en_AU
     <string name="domain_registration_contact_form_input_error">Please enter a valid %s</string>
     <string name="domains_suggestions_choose_domain">Choose Domain</string>
     <string name="stats_management_new">New</string>
-    <string name="stats_management_edit">Edit</string>
     <string name="stats_management_dismiss_insights_news_card">Dismiss</string>
     <string name="stats_management_try_it_now">Try it now</string>
     <string name="stats_management_news_card_message">Choose what stats to see, and focus on the data you care most about. Tap %1$s at the bottom of Insights to customise your stats.</string>
@@ -297,14 +209,10 @@ Language: en_AU
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_drafts">Drafts</string>
-    <string name="post_list_published">Published</string>
     <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Items shown above will show in your Insights tab. Drag and drop to customise.</string>
-    <string name="stats_insights_add_insights_header">Add Insights</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Annual Site Stats</string>
@@ -445,15 +353,7 @@ Language: en_AU
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
-    <string name="new_site_creation_verticals_custom_subtitle">Custom category</string>
-    <string name="new_site_creation_button_skip">Skip</string>
-    <string name="new_site_creation_tag_line_description">The tagline is a short line of text shown right below the title.</string>
-    <string name="new_site_creation_tag_line_hint">Tagline</string>
-    <string name="new_site_creation_site_title_hint">Site Title</string>
-    <string name="new_site_creation_site_info_header_subtitle">Tell us more about the site you are creating.</string>
-    <string name="new_site_creation_site_info_header_title">Basic Information</string>
     <string name="site_creation_fetch_suggestions_error_unknown">There was a problem</string>
-    <string name="site_creation_fetch_suggestions_error_no_connection">No connection</string>
     <string name="site_creation_segments_subtitle">This helps us make recommendations. But you’re never locked in — all sites evolve!</string>
     <string name="site_creation_segments_title">Tell us what kind of site you’d like to make</string>
     <string name="new_site_creation_preview_title">Your site has been created!</string>
@@ -476,11 +376,6 @@ Language: en_AU
     <string name="stats_no_data_for_period">No data for this period</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="stats_cannot_be_started">We cannot open the statistics at the moment. Please try again later</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Some media failed to load due to a network error.</string>
-    <string name="giphy_picker_empty_search_list">No media matching your search</string>
-    <string name="giphy_picker_initial_empty_text">Search to find GIFs to add to your Media Library!</string>
-    <string name="giphy_picker_search_hint">Search Giphy</string>
     <string name="stats_author_views_label">Views</string>
     <string name="stats_author_label">Author</string>
     <string name="stats_authors">Authors</string>
@@ -659,7 +554,6 @@ Language: en_AU
     <string name="people_empty_list_filtered_email_followers">No email followers yet</string>
     <string name="people_empty_list_filtered_followers">No followers yet</string>
     <string name="people_empty_list_filtered_users">No users yet</string>
-    <string name="connection_service_facebook_notice">As of August 1, 2018, Facebook no longer allows direct sharing of posts to Facebook Profiles. Connections to Facebook Pages remain unchanged.</string>
     <string name="reader_empty_posts_liked_description">Posts that you like will appear here</string>
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
@@ -681,7 +575,6 @@ Language: en_AU
     <string name="featured_image_desc">featured image</string>
     <string name="button_discard">Discard</string>
     <string name="reader_avatar_desc">profile picture</string>
-    <string name="reader_blavatar_desc">site icon</string>
     <string name="notification_channel_transient_title">Transient</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_identity_input_dialog_enter_email">Please enter your email address</string>
@@ -702,7 +595,6 @@ Language: en_AU
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="plugin_auto_managed">Auto-managed</string>
-    <string name="reader_save_posts_locally_dialog_message">Save this post, and come back to read it whenever you\'d like. It will only be available on this device — saved posts don\'t sync to your other devices. (Yet! We\'re working on it.)</string>
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
     <string name="reader_empty_search_request_failed">Unable to perform search</string>
     <string name="reader_empty_search_title">No results found</string>
@@ -727,7 +619,6 @@ Language: en_AU
     <string name="reader_add_bookmark">Add to saved posts</string>
     <string name="reader_save_for_later_title">Saved posts</string>
     <string name="removed">Removed</string>
-    <string name="tabbar_accessibility_label_write">New post. Write a new post.</string>
     <string name="my_site_icon_content_description">Change site icon</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_dialog_remove_button">Remove</string>
@@ -758,7 +649,6 @@ Language: en_AU
     <string name="preference_privacy_settings">Privacy settings</string>
     <string name="preference_collect_information">Collect information</string>
     <string name="post_submitted">Post submitted</string>
-    <string name="write_post">Write Post</string>
     <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Plugin feature requires the site to be in good standing.</string>
     <string name="plugin_install_site_ineligible_not_domain_owner">Plugin feature requires primary domain subscription to be associated with this user.</string>
@@ -800,7 +690,6 @@ Language: en_AU
     <string name="site_settings_quota_space_unlimited">%1$s of unlimited</string>
     <string name="preview_count">Preview %d</string>
     <string name="add_count">Add %d</string>
-    <string name="fab_create_desc">create</string>
     <string name="fab_add_tag_desc">Create Tag</string>
     <string name="navigate_up_desc">navigate up</string>
     <string name="notification_settings_switch_desc">Notifications</string>
@@ -1126,7 +1015,6 @@ Language: en_AU
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt text</string>
-    <string name="copy">Copy</string>
     <string name="connect_site">Connect Site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
@@ -1220,8 +1108,6 @@ Language: en_AU
     <string name="editor_dropped_text_error">Error occurred while dropping text</string>
     <string name="editor_dropped_html_images_not_allowed">Dropping images while in HTML mode is not allowed</string>
     <string name="editor_content_hint">Share your story here…</string>
-    <string name="post_list_trashed">Trashed</string>
-    <string name="post_list_scheduled">Scheduled</string>
     <string name="post_status_post_private">Private</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_pending_review">Pending review</string>
@@ -1242,7 +1128,6 @@ Language: en_AU
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_status">Status</string>
-    <string name="notifications_tab_title_unread">Unread</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="top_level_category_name">Top level</string>
     <string name="category_parent">Parent category (optional):</string>
@@ -1313,7 +1198,6 @@ Language: en_AU
     <string name="sharing">Sharing</string>
     <string name="tabbar_accessibility_label_notifications">Notifications. Manage your notifications.</string>
     <string name="tabbar_accessibility_label_reader">Reader. Follow content from other sites.</string>
-    <string name="tabbar_accessibility_label_me">Me. View your profile and make changes.</string>
     <string name="tabbar_accessibility_label_my_site">My Site. View your site and manage it, including stats.</string>
     <string name="my_site_btn_sharing">Sharing</string>
     <string name="button_not_now">Not now</string>
@@ -1886,7 +1770,6 @@ Language: en_AU
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_title_subs">Tags &amp; Sites</string>
     <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
@@ -1940,10 +1823,7 @@ Language: en_AU
     <string name="content_required">Comment is required</string>
     <string name="sure_to_cancel_edit_comment">Cancel editing this comment?</string>
     <string name="saving_changes">Saving changes</string>
-    <string name="hint_comment_content">Comment</string>
     <string name="trash">Trash</string>
-    <string name="trash_no">Don\'t trash</string>
-    <string name="trash_yes">Trash</string>
     <string name="dlg_confirm_trash_comments">Send to trash?</string>
     <string name="dlg_trashing_comments">Sending to trash</string>
     <string name="dlg_spamming_comments">Marking as spam</string>
@@ -2044,7 +1924,6 @@ Language: en_AU
     <string name="pages">Pages</string>
     <string name="no_network_title">No network available</string>
     <string name="ok">OK</string>
-    <string name="blogusername">blogusername</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Terms of Service</string>
@@ -2057,7 +1936,6 @@ Language: en_AU
     <string name="quickpress_add_alert_title">Set shortcut name</string>
     <string name="settings">Settings</string>
     <string name="quickpress_add_error">Shortcut name can\'t be empty</string>
-    <string name="quickpress_window_title">Select blog for QuickPress shortcut</string>
     <string name="pages_private">Private</string>
     <string name="categories">Categories</string>
     <string name="tags_separate_with_commas">Separate tags with commas</string>

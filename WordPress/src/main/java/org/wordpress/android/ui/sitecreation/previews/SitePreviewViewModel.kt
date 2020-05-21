@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -35,6 +36,8 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.SUCCESS
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -46,7 +49,15 @@ import kotlin.coroutines.CoroutineContext
 
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
+const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
 private const val ERROR_CONTEXT = "site_preview"
+
+private val loadingTexts = listOf(
+        UiStringRes(R.string.new_site_creation_creating_site_loading_1),
+        UiStringRes(R.string.new_site_creation_creating_site_loading_2),
+        UiStringRes(R.string.new_site_creation_creating_site_loading_3),
+        UiStringRes(R.string.new_site_creation_creating_site_loading_4)
+)
 
 class SitePreviewViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
@@ -63,6 +74,7 @@ class SitePreviewViewModel @Inject constructor(
         get() = bgDispatcher + job
     private var isStarted = false
     private var webviewFullyLoadedTracked = false
+    private var loadingAnimationJob: Job? = null
 
     private lateinit var siteCreationState: SiteCreationState
     private lateinit var urlWithoutScheme: String
@@ -102,6 +114,7 @@ class SitePreviewViewModel @Inject constructor(
         super.onCleared()
         dispatcher.unregister(fetchWpComSiteUseCase)
         job.cancel()
+        loadingAnimationJob?.cancel()
     }
 
     fun start(siteCreationState: SiteCreationState) {
@@ -112,7 +125,7 @@ class SitePreviewViewModel @Inject constructor(
         this.siteCreationState = siteCreationState
         urlWithoutScheme = requireNotNull(siteCreationState.domain)
 
-        updateUiState(SitePreviewFullscreenProgressUiState)
+        showFullscreenProgress()
         startCreateSiteService()
     }
 
@@ -121,9 +134,6 @@ class SitePreviewViewModel @Inject constructor(
             siteCreationState.apply {
                 val serviceData = SiteCreationServiceData(
                         segmentId,
-                        verticalId,
-                        siteTitle,
-                        siteTagLine,
                         urlWithoutScheme
                 )
                 _startCreateSiteService.value = SitePreviewStartServiceData(serviceData, previousState)
@@ -134,7 +144,7 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     fun retry() {
-        updateUiState(SitePreviewFullscreenProgressUiState)
+        showFullscreenProgress()
         startCreateSiteService(serviceStateForRetry)
     }
 
@@ -152,14 +162,12 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     private fun showFullscreenErrorWithDelay() {
-        updateUiState(SitePreviewFullscreenProgressUiState)
-        launch {
+        showFullscreenProgress()
+        launch(mainDispatcher) {
             // We show the loading indicator for a bit so the user has some feedback when they press retry
             delay(CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE)
             tracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR)
-            withContext(mainDispatcher) {
-                updateUiState(SitePreviewConnectionErrorUiState)
-            }
+            updateUiState(SitePreviewConnectionErrorUiState)
         }
     }
 
@@ -282,11 +290,34 @@ class SitePreviewViewModel @Inject constructor(
         )
     }
 
+    private fun showFullscreenProgress() {
+        loadingAnimationJob?.cancel()
+        loadingAnimationJob = launch(mainDispatcher) {
+            var i = 0
+            val listSize = loadingTexts.size
+            while (isActive) {
+                updateUiState(
+                        SitePreviewFullscreenProgressUiState(
+                                animate = i != 0, // the first text should appear without an animation
+                                loadingTextResId = loadingTexts[i++ % listSize]
+                        )
+                )
+                delay(LOADING_STATE_TEXT_ANIMATION_DELAY)
+            }
+        }
+    }
+
     private fun updateUiState(uiState: SitePreviewUiState) {
+        if (uiState !is SitePreviewFullscreenProgressUiState) {
+            loadingAnimationJob?.cancel()
+        }
         _uiState.value = uiState
     }
 
     private fun updateUiStateAsync(uiState: SitePreviewUiState) {
+        if (uiState !is SitePreviewFullscreenProgressUiState) {
+            loadingAnimationJob?.cancel()
+        }
         _uiState.postValue(uiState)
     }
 
@@ -302,7 +333,7 @@ class SitePreviewViewModel @Inject constructor(
                 contentLayoutVisibility = true,
                 webViewVisibility = true,
                 webViewErrorVisibility = false
-                )
+        )
 
         data class SitePreviewWebErrorUiState(val data: SitePreviewData) : SitePreviewUiState(
                 contentLayoutVisibility = true,
@@ -315,11 +346,8 @@ class SitePreviewViewModel @Inject constructor(
                 shimmerVisibility = true
         )
 
-        object SitePreviewFullscreenProgressUiState : SitePreviewUiState(
-                fullscreenProgressLayoutVisibility = true
-        ) {
-            const val loadingTextResId = R.string.notification_new_site_creation_creating_site_subtitle
-        }
+        data class SitePreviewFullscreenProgressUiState(val loadingTextResId: UiString, val animate: Boolean) :
+                SitePreviewUiState(fullscreenProgressLayoutVisibility = true)
 
         sealed class SitePreviewFullscreenErrorUiState constructor(
             val titleResId: Int,

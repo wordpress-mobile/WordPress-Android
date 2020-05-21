@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="stats_list_card_horizontal_spacing">8dp</dimen>
-    <dimen name="stats_list_card_top_spacing">4dp</dimen>
-    <dimen name="stats_list_card_bottom_spacing">4dp</dimen>
-    <dimen name="stats_list_card_first_spacing">8dp</dimen>
-    <dimen name="stats_list_card_last_spacing">8dp</dimen>
+    <dimen name="stats_list_card_top_spacing">8dp</dimen>
+    <dimen name="stats_list_card_bottom_spacing">8dp</dimen>
+    <dimen name="stats_list_card_first_spacing">16dp</dimen>
+    <dimen name="stats_list_card_last_spacing">16dp</dimen>
     <dimen name="stats_list_item_left_margin">48dp</dimen>
 </resources>

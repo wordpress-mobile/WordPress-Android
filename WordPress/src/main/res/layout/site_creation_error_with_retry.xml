@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/error_layout"
@@ -14,76 +13,75 @@
         android:contentDescription="@string/cancel_new_site_wizard_content_description"
         android:padding="@dimen/margin_extra_large"
         android:src="@drawable/ic_close_white_24dp"
-        android:tint="@color/primary"
+        app:tint="?attr/colorPrimary"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/error_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:gravity="center"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_extra_large"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/wpColorOnSurfaceMedium"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/error_subtitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:text="No internet connection"/>
+        tools:text="No internet connection" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/error_subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:gravity="center"
-        android:textColor="@color/neutral_80"
-        android:textSize="@dimen/text_sz_large"
+        android:textAppearance="?attr/textAppearanceBody1"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/error_retry"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/error_title"
-        tools:text="Error communicating with the server, please try again"/>
+        tools:text="Error communicating with the server, please try again" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/error_retry"
         style="@style/WordPress.Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:text="@string/retry"
         app:layout_constraintBottom_toTopOf="@+id/contact_support"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_subtitle"/>
+        app:layout_constraintTop_toBottomOf="@+id/error_subtitle" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/contact_support"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="@string/contact_support"
         android:textAllCaps="true"
-        android:textColor="@color/primary_40"
+        android:textColor="?attr/colorPrimary"
         android:visibility="gone"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_retry"/>
+        app:layout_constraintTop_toBottomOf="@+id/error_retry" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

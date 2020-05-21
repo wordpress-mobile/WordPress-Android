@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<selector
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:color="@color/neutral_70"
-        android:state_selected="true"/>
+    <item android:color="?attr/colorOnSurface" android:state_selected="true" />
 
-    <item
-        android:color="@color/neutral_70"
-        android:state_focused="true"/>
+    <item android:color="?attr/colorOnSurface" android:state_focused="true" />
 
-    <item android:color="@color/neutral_30"/>
+    <item android:color="?attr/colorOnSurface" android:alpha="@dimen/material_emphasis_medium" />
 
 </selector>

@@ -35,7 +35,11 @@ class DomainSuggestionsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
     }
 
@@ -48,7 +52,8 @@ class DomainSuggestionsFragment : Fragment() {
         mainViewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DomainSuggestionsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(DomainSuggestionsViewModel::class.java)
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)
         val site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -59,7 +64,11 @@ class DomainSuggestionsFragment : Fragment() {
     }
 
     private fun setupViews() {
-        domain_suggestions_list.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        domain_suggestions_list.layoutManager = LinearLayoutManager(
+                activity,
+                RecyclerView.VERTICAL,
+                false
+        )
         domain_suggestions_list.setEmptyView(actionableEmptyView)
         chose_domain_button.setOnClickListener {
             val selectedDomain = viewModel.selectedSuggestion.value
@@ -95,6 +104,7 @@ class DomainSuggestionsFragment : Fragment() {
 
                 domain_suggestions_container.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
                 suggestion_progress_bar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                suggestion_search_icon.visibility = if (isLoading) View.GONE else View.VISIBLE
 
                 if (!isLoading) {
                     reloadSuggestions(listState.data)
@@ -121,7 +131,10 @@ class DomainSuggestionsFragment : Fragment() {
         adapter.updateSuggestionsList(domainSuggestions)
     }
 
-    private fun onDomainSuggestionSelected(domainSuggestion: DomainSuggestionResponse?, selectedPosition: Int) {
+    private fun onDomainSuggestionSelected(
+        domainSuggestion: DomainSuggestionResponse?,
+        selectedPosition: Int
+    ) {
         viewModel.onDomainSuggestionsSelected(domainSuggestion, selectedPosition)
     }
 }

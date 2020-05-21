@@ -12,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.FAILED
-import org.wordpress.android.ui.posts.EditPostActivity.AfterSavePostListener
+import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 
 @RunWith(MockitoJUnitRunner::class)
@@ -83,7 +83,7 @@ class UploadMediaUseCaseTest {
 
         private fun createEditorMediaListener() = mock<EditorMediaListener> {
             on { syncPostObjectWithUiAndSaveIt(any()) }.thenAnswer { invocation ->
-                (invocation.getArgument(0) as AfterSavePostListener).onPostSave()
+                (invocation.getArgument(0) as OnPostUpdatedFromUIListener).onPostUpdatedFromUI()
             }
         }
 

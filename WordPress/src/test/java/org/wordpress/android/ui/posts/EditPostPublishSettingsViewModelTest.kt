@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.CalendarEvent
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel.PublishUiModel
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -59,9 +60,9 @@ class EditPostPublishSettingsViewModelTest : BaseUnitTest() {
         post = PostModel()
         whenever(editPostRepository.updateAsync(any(), any())).then {
             val action: (PostModel) -> Boolean = it.getArgument(0)
-            val onSuccess: (PostImmutableModel) -> Unit = it.getArgument(1)
+            val onCompleted: (PostImmutableModel, UpdatePostResult) -> Unit = it.getArgument(1)
             action(post)
-            onSuccess(post)
+            onCompleted(post, UpdatePostResult.Updated)
             null
         }
         whenever(editPostRepository.getPost()).thenReturn(post)

@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -21,8 +20,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
         viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
 
-        val datePickerDialog = DatePickerDialog(
-                ContextThemeWrapper(activity, R.style.Calypso_Dialog),
+        val datePickerDialog = DatePickerDialog(activity,
                 null,
                 viewModel.year ?: 0,
                 viewModel.month ?: 0,

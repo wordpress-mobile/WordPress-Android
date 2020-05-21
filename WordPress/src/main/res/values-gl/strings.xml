@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-12 09:20:02+0000
+Translation-Revision-Date: 2020-05-09 18:18:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: gl_ES
 -->
 <resources>
+    <string name="reader_following_display_name">Seguindo</string>
+    <string name="reader_save_for_later_display_name">Gardados</string>
+    <string name="reader_discover_display_name">Descubre</string>
+    <string name="reader_my_likes_display_name">Gústame</string>
+    <string name="notifications_tab_dialog_switch_desc">Notificacións</string>
     <string name="link_dialog_edit_hint">http(s)://</string>
     <string name="domain_contact_information_postal_code_hint">Código Postal</string>
     <string name="domain_contact_information_city_hint">Cidade</string>
@@ -14,14 +19,11 @@ Language: gl_ES
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo ao insertar os medios.\nPor favor, toca para volver a intentalo.</string>
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
-    <string name="post_list_drafts">Borradores</string>
-    <string name="post_list_published">Publicados</string>
+    <string name="post_list_tab_drafts">Borradores</string>
     <string name="post_list_author_everyone">Todos</string>
     <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_drag_and_drop_hint">Os elementos que se ven abaixo mostrarán a túa pestana de detalles. Arrastra e solta para personalizala.</string>
-    <string name="stats_insights_add_insights_header">Engadir detalles</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
     <string name="stats_insights_social">Social</string>
     <string name="stats_insights_annual_site_stats">Estatísticas anuais do sitio</string>
@@ -109,20 +111,30 @@ Language: gl_ES
     <string name="pages_move_to_trash">Mover ao lixo</string>
     <string name="pages_publish_now">Publicar agora</string>
     <string name="pages_view">Ver</string>
+    <string name="pages_trashed">No lixo</string>
+    <string name="pages_scheduled">Programadas</string>
+    <string name="pages_drafts">Borradores</string>
+    <string name="pages_published">Publicadas</string>
     <string name="page_moved_to_scheduled">Programouse a páxina</string>
     <string name="page_moved_to_published">Publicouse a páxina</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="sites">Sitios</string>
     <string name="activity_log_event">Evento</string>
+    <string name="activity">Actividade</string>
+    <string name="notification_settings_followed_dialog_title">Notificacións</string>
     <string name="comment_title">%s en %s</string>
     <string name="media_preview_title">%1$d de %2$d</string>
+    <string name="notification_settings_switch_desc">Notificacións</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
     <string name="file_size_in_megabytes">%s MB</string>
     <string name="file_size_in_kilobytes">%s kB</string>
     <string name="file_size_in_bytes">%s B</string>
     <string name="site_settings_quota_space_value">%1$s de %2$s</string>
+    <string name="notifications_screen_title">Notificacións</string>
+    <string name="reader_screen_title">Lector</string>
+    <string name="my_site_section_screen_title">O meu sitio</string>
     <string name="license_screen_title">Licencia</string>
     <string name="version_with_name_param">Version %s</string>
     <string name="copyright_with_year_and_company_params">© %1$d %2$s</string>
@@ -130,6 +142,11 @@ Language: gl_ES
     <string name="at_username">\@%s</string>
     <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
+    <string name="my_site_btn_site_pages">Páxinas do sitio</string>
+    <string name="login_epilogue_mysites_other">Os meus sitios</string>
+    <string name="login_epilogue_mysites_one">O meu sitio</string>
+    <string name="notifications_tab_title_all">Todas</string>
+    <string name="likes">Gústame</string>
     <string name="media_encoder_quality_100">Máxima</string>
     <string name="media_encoder_quality_95">Moi alta</string>
     <string name="media_encoder_quality_90">Alta</string>
@@ -307,8 +324,8 @@ Language: gl_ES
     <string name="username_mentions">Mencións do usuario</string>
     <string name="site_achievements">Logros do sitio</string>
     <string name="site_follows">Seguimentos do sitio</string>
-    <string name="likes_on_my_posts">\"gústame\" nos meus artigos</string>
-    <string name="likes_on_my_comments">\"gústame\" nos meus comentarios</string>
+    <string name="likes_on_my_posts">Gústame nos meus artigos</string>
+    <string name="likes_on_my_comments">Gústame nos meus comentarios</string>
     <string name="comments_on_my_site">Comentarios no meu sitio</string>
     <string name="site_settings_list_editor_summary_other">%d elementos</string>
     <string name="site_settings_list_editor_summary_one">1 elemento</string>
@@ -496,10 +513,10 @@ Language: gl_ES
     <string name="reader_discover_attribution_blog">Publicado orixinalmente en %s</string>
     <string name="reader_discover_attribution_author">Publicado orixinalmente por %s</string>
     <string name="reader_discover_attribution_author_and_blog">Publicado orixinalmente por %1$s en %2$s</string>
-    <string name="reader_short_like_count_multi">%s \"gústame\"</string>
-    <string name="reader_short_like_count_none">\"Gústame\"</string>
+    <string name="reader_short_like_count_multi">%s gústame</string>
+    <string name="reader_short_like_count_none">Gústame</string>
     <string name="reader_label_follow_count">%,d seguidores</string>
-    <string name="reader_short_like_count_one">1 \"gústame\"</string>
+    <string name="reader_short_like_count_one">1 gústame</string>
     <string name="reader_menu_tags">Editar etiquetas e blogues</string>
     <string name="reader_title_post_detail">Artigo da Guía de Lectura</string>
     <string name="notifications_push_summary">Configuración de notificacións que aparece no teu dispositivo</string>
@@ -508,7 +525,7 @@ Language: gl_ES
     <string name="notifications_disabled">As notificacións da aplicación están desactivadas. Pulsa aquí para activalas na Configuración.</string>
     <string name="notification_types">Tipos de notificacións</string>
     <string name="error_loading_notifications">Non foi posible cargar a configuración das notificacións</string>
-    <string name="comment_likes">\"Gústame\" nos comentarios</string>
+    <string name="comment_likes">Gústame ao comentario</string>
     <string name="email">Correo electrónico</string>
     <string name="notifications_tab">Lapela de notificacións</string>
     <string name="app_notifications">Notificacións da aplicación</string>
@@ -548,7 +565,7 @@ Language: gl_ES
     <string name="my_site_header_publish">Publicar</string>
     <string name="my_site_header_look_and_feel">Aparencia</string>
     <string name="my_site_btn_site_settings">Configuración</string>
-    <string name="my_site_btn_blog_posts">Artigos do blogue</string>
+    <string name="my_site_btn_blog_posts">Artigos</string>
     <string name="reader_label_new_posts_subtitle">Pulsa para velos</string>
     <string name="my_site_header_configuration">Configuración</string>
     <string name="select_all">Seleccionar todo</string>
@@ -578,7 +595,7 @@ Language: gl_ES
     <string name="stats_visitors">Lectores</string>
     <string name="stats_views">Visitas</string>
     <string name="stats_timeframe_years">Anos</string>
-    <string name="stats_likes">\"Gústame\"</string>
+    <string name="stats_likes">Gústame</string>
     <string name="stats_view_countries">Países</string>
     <string name="stats_view_followers">Seguidores</string>
     <string name="stats_view_publicize">Publicize</string>
@@ -636,7 +653,6 @@ Language: gl_ES
     <string name="reader_hint_add_tag_or_url">Introduce unha URL ou unha etiqueta para seguila</string>
     <string name="reader_page_followed_blogs">Sitios que sigo</string>
     <string name="reader_page_followed_tags">Etiquetas que sigo</string>
-    <string name="reader_title_subs">Etiquetas e blogues</string>
     <string name="reader_title_tag_preview">Etiqueta da Guía de Lectura</string>
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
@@ -689,10 +705,7 @@ Language: gl_ES
     <string name="content_required">Fai falla un comentario</string>
     <string name="sure_to_cancel_edit_comment">Cancelar a edición deste comentario?</string>
     <string name="saving_changes">Gardando os cambios</string>
-    <string name="hint_comment_content">Comentario</string>
     <string name="trash">Lixo</string>
-    <string name="trash_no">Non botalo ao lixo</string>
-    <string name="trash_yes">Botalo ao lixo</string>
     <string name="dlg_confirm_trash_comments">Botar ao lixo?</string>
     <string name="dlg_trashing_comments">Enviando ao lixo</string>
     <string name="dlg_spamming_comments">Sinalando como spam</string>
@@ -792,7 +805,6 @@ Language: gl_ES
     <string name="pages">Páxinas</string>
     <string name="no_network_title">Non hai rede dispoñible</string>
     <string name="ok">Vale</string>
-    <string name="blogusername">usuario</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de servizo</string>
@@ -805,7 +817,6 @@ Language: gl_ES
     <string name="quickpress_add_alert_title">Establecer o nome do atallo</string>
     <string name="settings">Configuración</string>
     <string name="quickpress_add_error">O nome do atallo non pode estar baleiro</string>
-    <string name="quickpress_window_title">Seleccionar un blogue para o atallo de QuickPress</string>
     <string name="pages_private">Privado</string>
     <string name="categories">Categorías</string>
     <string name="tags_separate_with_commas">Etiquetas (separadas por comas)</string>

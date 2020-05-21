@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ListItemWithIcon.TextStyle
@@ -29,10 +29,10 @@ class ListItemWithIconViewHolder(parent: ViewGroup, val imageManager: ImageManag
         iconContainer.setIconOrAvatar(item, imageManager)
         text.setTextOrHide(item.textResource, item.text)
         val textColor = when (item.textStyle) {
-            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.wpColorText)
-            LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorTextSubtle)
+            TextStyle.NORMAL -> text.context.getColorResIdFromAttribute(R.attr.colorOnSurface)
+            LIGHT -> text.context.getColorResIdFromAttribute(R.attr.wpColorOnSurfaceMedium)
         }
-        text.setTextColor(ContextCompat.getColor(text.context, textColor))
+        text.setTextColor(AppCompatResources.getColorStateList(text.context, textColor))
         value.setTextOrHide(item.valueResource, item.value)
         divider.visibility = if (item.showDivider) {
             View.VISIBLE

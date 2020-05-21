@@ -11,39 +11,39 @@
         android:layout_width="@dimen/avatar_sz_small"
         android:layout_height="@dimen/avatar_sz_small"
         android:layout_centerVertical="true"
-        tools:src="@drawable/bg_rectangle_neutral_10_user_32dp"
         android:layout_marginEnd="@dimen/margin_large"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        tools:src="@drawable/bg_rectangle_placeholder_user_32dp" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_divider_height"
-        android:background="@color/divider"
-        android:layout_toEndOf="@+id/image_avatar"/>
+        android:layout_toEndOf="@+id/image_avatar"
+        android:background="?android:attr/listDivider" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
-        android:ellipsize="end"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_large"
-        tools:text="text_user"
         android:layout_marginEnd="@dimen/margin_large"
-        android:textAlignment="viewStart"
-        android:gravity="start"
+        android:layout_marginBottom="20dp"
+        android:layout_toStartOf="@+id/button_connect"
         android:layout_toEndOf="@+id/image_avatar"
-        android:layout_toStartOf="@+id/button_connect"/>
+        android:ellipsize="end"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        tools:text="text_user" />
 
     <org.wordpress.android.ui.publicize.ConnectButton
         android:id="@+id/button_connect"
+        style="@style/PublicizeConnectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/margin_extra_large"/>
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/margin_extra_large" />
 </RelativeLayout>

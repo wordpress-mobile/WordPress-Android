@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- preview screen -->
+    <dimen name="preview_image_view_margin">16dp</dimen>
+    <dimen name="preview_image_thumbnail_size">65dp</dimen>
+    <dimen name="preview_image_thumbnail_margin">2dp</dimen>
+    <dimen name="preview_image_thumbnails_tab_layout_margin">@dimen/preview_image_view_margin</dimen>
+    <dimen name="insert_layout_margin">@dimen/preview_image_view_margin</dimen>
+    <dimen name="border_thickness">4dp</dimen>
+
+    <dimen name="retry_image_size">60dp</dimen>
+    <dimen name="retry_text_view_top_margin">16dp</dimen>
+
+    <!-- text size -->
+    <dimen name="text_sz_medium">14sp</dimen>
+</resources>

@@ -5,6 +5,8 @@
     <dimen name="content_margin">@dimen/content_margin_tablet</dimen>
     <dimen name="content_margin_site_row_end">@dimen/content_margin_site_row_end_tablet</dimen>
     <dimen name="content_margin_site_row_start">@dimen/content_margin_site_row_start_tablet</dimen>
+    <dimen name="content_margin_bottom_sheet_row_start">@dimen/content_margin_bottom_sheet_row_start_tablet</dimen>
+    <dimen name="content_margin_bottom_sheet_tab_start">@dimen/content_margin_bottom_sheet_tab_start_tablet</dimen>
     <dimen name="reader_card_margin">@dimen/reader_card_margin_tablet</dimen>
     <dimen name="reader_detail_margin">@dimen/reader_detail_margin_tablet</dimen>
     <dimen name="notifications_content_margin">@dimen/content_margin_tablet</dimen>

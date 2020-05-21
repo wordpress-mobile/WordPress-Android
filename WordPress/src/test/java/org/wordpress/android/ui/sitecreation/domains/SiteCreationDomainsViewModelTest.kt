@@ -112,42 +112,8 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyEmptyTitleQueryUiState() = testWithSuccessResponse {
-        viewModel.start(null, SEGMENT_ID)
+        viewModel.start(SEGMENT_ID)
         verifyInitialContentUiState(requireNotNull(viewModel.uiState.value), showProgress = false)
-    }
-
-    /**
-     * Verifies the initial UI state for when the VM is started with a non-empty site title.
-     */
-    @Test
-    fun verifyMultiResultTitleQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyInitialContentUiState(requireNotNull(captor.firstValue), showProgress = true)
-    }
-
-    /**
-     * Verifies the UI state for after the VM is started with a non-empty site title and it results in some domain
-     * suggestions.
-     */
-    @Test
-    fun verifyMultiResultTitleQueryUiStateAfterResponse() = testWithSuccessResponse {
-        viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyVisibleItemsContentUiState(captor.secondValue)
-    }
-
-    /**
-     * Verifies the UI state for after the VM is started with a non-empty site title and fetchDomains results in error
-     */
-    @Test
-    fun verifyErrorResultTitleQueryUiStateAfterResponse() = testWithErrorResponse {
-        viewModel.start(ERROR_RESULT_FETCH_QUERY, SEGMENT_ID)
-        val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        verifyInitialContentUiState(captor.secondValue)
     }
 
     /**
@@ -155,7 +121,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryInitialUiState() = testWithSuccessResponse {
-        viewModel.start(null, SEGMENT_ID)
+        viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -168,7 +134,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithEmptyResults() =
             testWithSuccessResponse(queryResultSizePair = EMPTY_RESULT_DOMAIN_FETCH_QUERY) {
-                viewModel.start(null, SEGMENT_ID)
+                viewModel.start(SEGMENT_ID)
                 viewModel.updateQuery(EMPTY_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -184,7 +150,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterResponseWithMultipleResults() =
             testWithSuccessResponse {
-                viewModel.start(null, SEGMENT_ID)
+                viewModel.start(SEGMENT_ID)
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -198,7 +164,7 @@ class SiteCreationDomainsViewModelTest {
     @Test
     fun verifyDomainUnavailableUiStateAfterResponseWithMultipleResults() =
             testWithSuccessResponse(isDomainAvailableInSuggestions = false) {
-                viewModel.start(null, SEGMENT_ID)
+                viewModel.start(SEGMENT_ID)
                 viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
                 val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
                 verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -212,7 +178,7 @@ class SiteCreationDomainsViewModelTest {
      */
     @Test
     fun verifyNonEmptyUpdateQueryUiStateAfterErrorResponse() = testWithErrorResponse {
-        viewModel.start(null, SEGMENT_ID)
+        viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(ERROR_RESULT_FETCH_QUERY)
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
         verify(uiStateObserver, times(3)).onChanged(captor.capture())
@@ -228,27 +194,12 @@ class SiteCreationDomainsViewModelTest {
     }
 
     /**
-     * Verifies the UI state after the user enters an empty query (presses clear button) with a non-empty site title
-     * which results in multiple domain suggestions.
-     */
-    @Test
-    fun verifyClearQueryWithNonEmptyTitleUiStateAfterResponseWithMultipleResults() =
-            testWithSuccessResponse {
-                viewModel.start(MULTI_RESULT_DOMAIN_FETCH_QUERY.first, SEGMENT_ID)
-                viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
-                viewModel.updateQuery("")
-                val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)
-                verify(uiStateObserver, times(6)).onChanged(captor.capture())
-                verifyVisibleItemsContentUiState(captor.lastValue, false, 20)
-            }
-
-    /**
      * Verifies the UI state after the user enters an empty query (presses clear button) with an empty site title
      * which results in initial UI state
      */
     @Test
     fun verifyClearQueryWithEmptyTitleInitialState() = testWithSuccessResponse {
-        viewModel.start(null, SEGMENT_ID)
+        viewModel.start(SEGMENT_ID)
         viewModel.updateQuery(MULTI_RESULT_DOMAIN_FETCH_QUERY.first)
         viewModel.updateQuery("")
         val captor = ArgumentCaptor.forClass(DomainsUiState::class.java)

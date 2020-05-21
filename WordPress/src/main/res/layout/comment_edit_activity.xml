@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:clipToPadding="false"
-    android:paddingBottom="@dimen/margin_large"
-    android:paddingTop="@dimen/margin_large"
-    android:background="@android:color/white"
-    android:scrollbarStyle="outsideInset"
-    android:paddingStart="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <include layout="@layout/toolbar_main" />
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_large"
+        android:scrollbarStyle="outsideInset">
 
-        <LinearLayout
-            android:id="@+id/edit_comment_container"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/edit_comment_content"
+            <LinearLayout
+                android:id="@+id/edit_comment_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                android:hint="@string/hint_comment_content"
-                android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
-                android:minLines="4"
-                android:typeface="serif"
-                android:textColorLink="@color/link_reader" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/edit_link_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    app:hintEnabled="false">
 
-        <ProgressBar
-            android:id="@+id/edit_comment_progress"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="gone"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_comment_content"
+                        android:background="@android:color/transparent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|start"
+                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                        android:minLines="4"
+                        android:textColorHint="@android:color/transparent"
+                        android:textColorLink="?attr/colorSecondary"
+                        android:typeface="serif"
+                        tools:text="Comment" />
 
-    </RelativeLayout>
-</ScrollView>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/edit_comment_progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

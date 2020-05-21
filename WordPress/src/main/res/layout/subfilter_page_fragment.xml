@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_recycler_view"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
+        android:scrollbars="vertical"
+        android:paddingBottom="@dimen/margin_extra_large"/>
+
+    <LinearLayout
+        android:id="@+id/empty_state_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:importantForAccessibility="yes">
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/title"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:fixWidowWords="true"
+            android:layout_marginTop="50dp"
+            style="@style/ActionableEmptyStateTitle"
+            android:text="@string/reader_filter_empty_sites_list"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/action_button"
+            android:ellipsize="end"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minHeight="@dimen/default_dialog_button_height"
+            android:minWidth="@dimen/min_touch_target_sz"
+            android:textAllCaps="true"
+            android:textColor="@color/primary"
+            android:visibility="visible"
+            android:text="@string/reader_filter_empty_sites_action"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+
+    </LinearLayout>
+</RelativeLayout>

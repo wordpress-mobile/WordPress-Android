@@ -1,27 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_extra_medium_large"
+    android:paddingTop="@dimen/margin_extra_medium_large"
+    android:paddingEnd="@dimen/margin_extra_medium_large">
 
-    <EditText
-        android:id="@+id/post_settings_input_dialog_edit_text"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/post_settings_input_dialog_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="6"
-        android:inputType="text"
-        android:paddingBottom="@dimen/margin_large"
-        android:layout_marginEnd="@dimen/post_settings_input_dialog_edit_text_side_margin"
-        android:layout_marginStart="@dimen/post_settings_input_dialog_edit_text_side_margin"
-        android:importantForAutofill="no"
-        tools:targetApi="O"/>
+        android:layout_marginBottom="@dimen/margin_large">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/post_settings_input_dialog_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:maxLines="6"
+            tools:targetApi="O" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/post_settings_input_dialog_hint"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/post_settings_input_dialog_hint_side_margin"
-        android:layout_marginStart="@dimen/post_settings_input_dialog_hint_side_margin" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

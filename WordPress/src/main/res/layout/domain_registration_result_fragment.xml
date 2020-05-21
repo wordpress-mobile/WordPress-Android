@@ -1,45 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_centerVertical="true"
-    android:background="@color/background"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:contentDescription="@null"
         android:scaleType="center"
-        android:src="@drawable/img_confetti_284dp"/>
+        android:src="@drawable/img_confetti_284dp" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/domain_registration_result_title"
-        android:textSize="@dimen/text_sz_extra_large"
-        android:textStyle="bold"/>
+        android:textAppearance="?attr/textAppearanceHeadline6" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/domain_registration_result_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="@dimen/margin_medium"
         android:text="@string/domain_registration_result_description"
-        android:textSize="@dimen/text_sz_large"/>
+        android:textAppearance="?attr/textAppearanceSubtitle1" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_button"
         style="@style/WordPress.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
-        android:text="@string/domain_registration_result_continue_button"/>
+        android:text="@string/domain_registration_result_continue_button" />
 </LinearLayout>

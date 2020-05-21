@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/preview_dest">
+    <fragment
+        android:id="@+id/preview_dest"
+        android:name="org.wordpress.android.imageeditor.preview.PreviewImageFragment"
+        tools:layout="@layout/preview_image_fragment">
+        <action
+            android:id="@+id/action_previewFragment_to_cropFragment"
+            app:destination="@id/crop_dest">
+            <argument
+                android:name="inputFilePath"
+                app:argType="string"
+                android:defaultValue='""'/>
+            <argument
+                android:name="outputFileExtension"
+                app:argType="string"
+                app:nullable="true"/>
+            <argument
+                android:name="shouldReturnToPreviewScreen"
+                app:argType="boolean"
+                android:defaultValue='false'/>
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/crop_dest"
+        android:name="org.wordpress.android.imageeditor.crop.CropFragment">
+        <argument
+            android:name="inputFilePath"
+            app:argType="string"
+            android:defaultValue='""'/>
+        <argument
+            android:name="outputFileExtension"
+            app:argType="string"
+            app:nullable="true"/>
+        <argument
+            android:name="shouldReturnToPreviewScreen"
+            app:argType="boolean"
+            android:defaultValue='false'/>
+    </fragment>
+</navigation>

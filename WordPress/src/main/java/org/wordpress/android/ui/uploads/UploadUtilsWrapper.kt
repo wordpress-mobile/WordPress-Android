@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.ui.uploads.UploadActionUseCase.UploadAction
 import org.wordpress.android.util.SnackbarSequencer
 import javax.inject.Inject
@@ -71,7 +73,7 @@ class UploadUtilsWrapper @Inject constructor(
         site: SiteModel,
         uploadAction: UploadAction,
         publishPostListener: OnClickListener?
-    ) = UploadUtils.handleEditPostResultSnackbars(
+    ) = UploadUtils.handleEditPostModelResultSnackbars(
             activity,
             dispatcher,
             snackbarAttachView,
@@ -99,4 +101,19 @@ class UploadUtilsWrapper @Inject constructor(
         buttonTitleRes: Int,
         onClickListener: OnClickListener?
     ) = UploadUtils.showSnackbarSuccessActionOrange(view, messageRes, buttonTitleRes, onClickListener, sequencer)
+
+    fun getErrorMessageResIdFromPostError(
+        postStatus: PostStatus,
+        isPage: Boolean,
+        postError: PostError,
+        isEligibleForAutoUpload: Boolean
+    ) = UploadUtils.getErrorMessageResIdFromPostError(
+            postStatus,
+            isPage,
+            postError,
+            isEligibleForAutoUpload
+    )
+
+    fun publishPost(activity: Activity, post: PostModel, site: SiteModel) =
+            UploadUtils.publishPost(activity, post, site, dispatcher)
 }

@@ -26,7 +26,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:text="@string/post_signup_interstitial_title"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textAppearance="?attr/textAppearanceHeadline6"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/subtitle_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
         android:layout_marginBottom="@dimen/margin_extra_extra_large"
         android:text="@string/post_signup_interstitial_subtitle"
         android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         app:fixWidowWords="true"
         app:layout_constraintBottom_toTopOf="@+id/create_new_site_button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,39 +49,38 @@
         app:layout_constraintTop_toBottomOf="@+id/title_view"
         app:layout_constraintWidth_max="@dimen/post_signup_interstitial_max_width" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/create_new_site_button"
+        style="@style/WordPress.Button.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/post_signup_interstitial_create_new_site"
-        android:theme="@style/WordPress.Button"
         app:layout_constraintBottom_toTopOf="@+id/add_self_hosted_site_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/subtitle_view"
         app:layout_constraintWidth_max="@dimen/post_signup_interstitial_max_width" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_self_hosted_site_button"
+        style="@style/WordPress.Button.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_small"
         android:text="@string/post_signup_interstitial_add_self_hosted_site"
-        android:theme="@style/WordPress.Button"
         app:layout_constraintBottom_toTopOf="@+id/dismiss_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/create_new_site_button"
         app:layout_constraintWidth_max="@dimen/post_signup_interstitial_max_width" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dismiss_button"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/post_signup_interstitial_not_right_now"
-        android:textColor="@color/primary_50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

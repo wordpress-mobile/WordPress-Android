@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
 import com.yalantis.ucrop.UCropActivity;
 
@@ -331,9 +331,10 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                     switch (requestCode) {
                         case RequestCodes.PHOTO_PICKER:
                             if (data != null) {
-                                String mediaUriString = data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_URI);
+                                String[] mediaUriStringsArray =
+                                        data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS);
 
-                                if (mediaUriString != null) {
+                                if (mediaUriStringsArray != null && mediaUriStringsArray.length > 0) {
                                     PhotoPickerMediaSource source = PhotoPickerMediaSource.fromString(
                                             data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE));
                                     AnalyticsTracker.Stat stat =
@@ -341,7 +342,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
                                                 ? AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_SHOT_NEW
                                                 : AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_GRAVATAR_GALLERY_PICKED;
                                     AnalyticsTracker.track(stat);
-                                    Uri imageUri = Uri.parse(mediaUriString);
+                                    Uri imageUri = Uri.parse(mediaUriStringsArray[0]);
 
                                     if (imageUri != null) {
                                         boolean wasSuccess = WPMediaUtils.fetchMediaAndDoNext(
@@ -598,13 +599,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             mImageManager.loadIntoCircle(mHeaderAvatar, ImageType.AVATAR_WITHOUT_BACKGROUND,
                     newAvatarUploaded ? injectFilePath : avatarUrl, new RequestListener<Drawable>() {
                         @Override
-                        public void onLoadFailed(@Nullable Exception e) {
+                        public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                             AppLog.e(T.NUX, "Uploading image to Gravatar succeeded, but setting image view failed");
                             showErrorDialogWithCloseButton(getString(R.string.signup_epilogue_error_avatar_view));
                         }
 
                         @Override
-                        public void onResourceReady(@NotNull Drawable resource) {
+                        public void onResourceReady(@NotNull Drawable resource, @Nullable Object model) {
                             if (newAvatarUploaded && resource instanceof BitmapDrawable) {
                                 Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                                 // create a copy since the original bitmap may by automatically recycled
@@ -651,7 +652,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
         };
 
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setNeutralButton(R.string.login_error_button, dialogListener)
                 .setNegativeButton(R.string.signup_epilogue_error_button_negative, dialogListener)
@@ -661,7 +662,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void showErrorDialogWithCloseButton(String message) {
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), R.style.LoginTheme))
+        AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)
                 .create();

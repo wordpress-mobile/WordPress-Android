@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.LongSparseArray;
@@ -12,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -32,7 +31,7 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTermUploaded;
 import org.wordpress.android.fluxc.store.TaxonomyStore.RemoteTermPayload;
 import org.wordpress.android.models.CategoryNode;
-import org.wordpress.android.util.LocaleManager;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -49,7 +48,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.ui.posts.EditPostActivity.EXTRA_POST_LOCAL_ID;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class SelectCategoriesActivity extends AppCompatActivity {
+public class SelectCategoriesActivity extends LocaleAwareActivity {
     public static final String KEY_SELECTED_CATEGORY_IDS = "KEY_SELECTED_CATEGORY_IDS";
 
     private ListView mListView;
@@ -65,11 +64,6 @@ public class SelectCategoriesActivity extends AppCompatActivity {
     @Inject PostStore mPostStore;
     @Inject TaxonomyStore mTaxonomyStore;
     @Inject Dispatcher mDispatcher;
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,13 +83,16 @@ public class SelectCategoriesActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.select_categories);
-        setTitle(getResources().getString(R.string.select_categories));
 
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        setTitle(getResources().getString(R.string.select_categories));
 
         mListView = (ListView) findViewById(android.R.id.list);
         mListScrollPositionManager = new ListScrollPositionManager(mListView, false);

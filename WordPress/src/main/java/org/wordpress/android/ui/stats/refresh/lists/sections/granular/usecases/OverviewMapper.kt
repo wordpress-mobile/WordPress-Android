@@ -12,6 +12,10 @@ import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Colum
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Columns.Column
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.ValueItem.State
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper.SelectedType.Comments
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper.SelectedType.Likes
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper.SelectedType.Views
+import org.wordpress.android.ui.stats.refresh.lists.sections.granular.usecases.OverviewMapper.SelectedType.Visitors
 import org.wordpress.android.ui.stats.refresh.utils.ContentDescriptionHelper
 import org.wordpress.android.ui.stats.refresh.utils.MILLION
 import org.wordpress.android.ui.stats.refresh.utils.StatsDateFormatter
@@ -32,6 +36,17 @@ class OverviewMapper
             R.string.stats_likes,
             R.string.stats_comments
     )
+
+    enum class SelectedType(val value: Int) {
+        Views(0),
+        Visitors(1),
+        Likes(2),
+        Comments(3);
+
+        companion object {
+            fun valueOf(value: Int): SelectedType? = values().find { it.value == value }
+        }
+    }
 
     fun buildTitle(
         selectedItem: PeriodData,
@@ -99,11 +114,11 @@ class OverviewMapper
     private fun PeriodData.getValue(
         selectedPosition: Int
     ): Long? {
-        return when (selectedPosition) {
-            0 -> this.views
-            1 -> this.visitors
-            2 -> this.likes
-            3 -> this.comments
+        return when (SelectedType.valueOf(selectedPosition)) {
+            Views -> this.views
+            Visitors -> this.visitors
+            Likes -> this.likes
+            Comments -> this.comments
             else -> null
         }
     }
@@ -166,11 +181,11 @@ class OverviewMapper
         selectedItemPeriod: String
     ): List<BlockListItem> {
         val chartItems = dates.map {
-            val value = when (selectedType) {
-                0 -> it.views
-                1 -> it.visitors
-                2 -> it.likes
-                3 -> it.comments
+            val value = when (SelectedType.valueOf(selectedType)) {
+                Views -> it.views
+                Visitors -> it.visitors
+                Likes -> it.likes
+                Comments -> it.comments
                 else -> 0L
             }
             Bar(
@@ -196,13 +211,35 @@ class OverviewMapper
         if (shouldShowVisitors) {
             result.add(ChartLegend(R.string.stats_visitors))
         }
+
+        val entryType = when (SelectedType.valueOf(selectedType)) {
+            Visitors -> R.string.stats_visitors
+            Likes -> R.string.stats_likes
+            Comments -> R.string.stats_comments
+            else -> R.string.stats_views
+        }
+
+        val overlappingType = if (shouldShowVisitors) {
+            R.string.stats_visitors
+        } else {
+            null
+        }
+
+        val contentDescriptions = statsUtils.getBarChartEntryContentDescriptions(
+                entryType,
+                chartItems,
+                overlappingType,
+                overlappingItems
+        )
+
         result.add(
                 BarChartItem(
                         chartItems,
                         overlappingEntries = overlappingItems,
                         selectedItem = selectedItemPeriod,
                         onBarSelected = onBarSelected,
-                        onBarChartDrawn = onBarChartDrawn
+                        onBarChartDrawn = onBarChartDrawn,
+                        entryContentDescriptions = contentDescriptions
                 )
         )
         return result

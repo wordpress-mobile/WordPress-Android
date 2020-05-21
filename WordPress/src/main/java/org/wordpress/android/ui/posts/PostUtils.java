@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.model.post.PostLocation;
 import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
+import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaUploadCompletionProcessor;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -37,6 +38,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 
 import java.text.BreakIterator;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -258,7 +260,7 @@ public class PostUtils {
             return null;
         }
 
-        String s = HtmlUtils.fastStripHtml(description);
+        String s = HtmlUtils.fastStripHtml(removeWPGallery(description));
         if (s.length() < MAX_EXCERPT_LEN) {
             return trimEx(s);
         }
@@ -284,6 +286,15 @@ public class PostUtils {
             return null;
         }
         return trimEx(result.toString()) + "...";
+    }
+
+    /**
+     * Removes the wp-gallery tag and its internals from the given string.
+     *
+     * See https://github.com/wordpress-mobile/WordPress-Android/issues/11063
+     */
+    public static String removeWPGallery(String str) {
+        return str.replaceAll("(?s)<!--\\swp:gallery?(.*?)wp:gallery\\s-->", "");
     }
 
     public static String getFormattedDate(PostModel post) {
@@ -409,57 +420,42 @@ public class PostUtils {
     }
 
     public static String replaceMediaFileWithUrlInGutenbergPost(@NonNull String postContent,
-                                                 String localMediaId, MediaFile mediaFile) {
+                                                 String localMediaId, MediaFile mediaFile, String siteUrl) {
         if (mediaFile != null && contentContainsGutenbergBlocks(postContent)) {
             String remoteUrl = org.wordpress.android.util.StringUtils
                     .notNullStr(Utils.escapeQuotes(mediaFile.getFileURL()));
-            // TODO: replace the URL
-            if (!mediaFile.isVideo()) {
-                // replace gutenberg block id holder with serverMediaId, and url_holder with remoteUrl
-                String oldImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newImgBlockHeader = String.format(GB_IMG_BLOCK_HEADER_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgBlockHeader, newImgBlockHeader);
-
-                String oldMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER, localMediaId);
-                String newMediaTextBlockHeader = String.format(GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER,
-                        mediaFile.getMediaId());
-                postContent = postContent.replace(oldMediaTextBlockHeader, newMediaTextBlockHeader);
-
-                // replace class wp-image-id with serverMediaId, and url_holder with remoteUrl
-                String oldImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, localMediaId);
-                String newImgClass = String.format(GB_IMG_BLOCK_CLASS_PLACEHOLDER, mediaFile.getMediaId());
-                postContent = postContent.replace(oldImgClass, newImgClass);
-
-                // let's first find this occurrence and keep note of the position, as we need to replace the
-                // immediate `src` value before
-                int iStartOfWpImageClassAttribute = postContent.indexOf(newImgClass);
-                if (iStartOfWpImageClassAttribute != -1) {
-                    // now search negatively, for the src attribute appearing right before
-                    int iStartOfImgTag = postContent.lastIndexOf("<img", iStartOfWpImageClassAttribute);
-                    if (iStartOfImgTag != -1) {
-                        Pattern p = Pattern.compile("<img[^>]*src=[\\\"']([^\\\"^']*)");
-                        Matcher m = p.matcher(postContent.substring(iStartOfImgTag));
-                        if (m.find()) {
-                            String src = m.group();
-                            int startIndex = src.indexOf("src=") + SRC_ATTRIBUTE_LENGTH_PLUS_ONE;
-                            String srcTag = src.substring(startIndex, src.length());
-                            // now replace the url
-                            postContent = postContent.replace(srcTag, remoteUrl);
-                        }
-                    }
-                }
-            } else {
-                // TODO replace in GB Video block?
-            }
+            MediaUploadCompletionProcessor processor = new MediaUploadCompletionProcessor(localMediaId, mediaFile,
+                    siteUrl);
+            postContent = processor.processContent(postContent);
         }
         return postContent;
     }
 
     public static boolean isMediaInGutenbergPostBody(@NonNull String postContent,
                                             String localMediaId) {
-        // check if media is in Gutenberg Post
-        String imgBlockHeaderToSearchFor = String.format("<!-- wp:image {\"id\":%s} -->", localMediaId);
-        return postContent.indexOf(imgBlockHeaderToSearchFor) != -1;
+        List<String> patterns = new ArrayList<>();
+        // Regex for Image and Video blocks
+        patterns.add("<!-- wp:(?:image|video){1} \\{[^\\}]*\"id\":%s([^\\d\\}][^\\}]*)*\\} -->");
+        // Regex for Media&Text block
+        patterns.add("<!-- wp:media-text \\{[^\\}]*\"mediaId\":%s([^\\d\\}][^\\}]*)*\\} -->");
+        // Regex for Gallery block
+        patterns.add("<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\\d*,)*%s(?:,\\d*)*\\][^\\}]*\\} -->");
+
+        StringBuilder sb = new StringBuilder();
+        // Merge the patterns into one so we don't need to go over the post content multiple times
+        for (int i = 0; i < patterns.size(); i++) {
+            sb.append("(?:")
+              // insert the media id
+              .append(String.format(patterns.get(i), localMediaId))
+              .append(")");
+            boolean notLast = i != patterns.size() - 1;
+            if (notLast) {
+                sb.append("|");
+            }
+        }
+
+        Matcher matcher = Pattern.compile(sb.toString()).matcher(postContent);
+        return matcher.find();
     }
 
     public static boolean isPostInConflictWithRemote(PostImmutableModel post) {
@@ -495,7 +491,8 @@ public class PostUtils {
 
     public static UiStringText getCustomStringForAutosaveRevisionDialog(PostModel post) {
         Context context = WordPress.getContext();
-        String firstPart = context.getString(R.string.dialog_confirm_autosave_body_first_part);
+        String firstPart = post.isPage() ? context.getString(R.string.dialog_confirm_autosave_body_first_part_for_page)
+                : context.getString(R.string.dialog_confirm_autosave_body_first_part);
 
         String lastModified =
                 TextUtils.isEmpty(post.getDateLocallyChanged()) ? post.getLastModified() : post.getDateLocallyChanged();

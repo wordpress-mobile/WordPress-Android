@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.shimmer.ShimmerFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/StatsLoadingBlock"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/WordPress.CardView.Unelevated"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateLayoutChanges="false">
+    android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/stats_block_list"
-        android:contentDescription="@string/stats_loading_card"
+    <com.facebook.shimmer.ShimmerFrameLayout
+        style="@style/StatsLoadingBlock"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</com.facebook.shimmer.ShimmerFrameLayout>
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="false">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/stats_block_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/stats_loading_card" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+</com.google.android.material.card.MaterialCardView>

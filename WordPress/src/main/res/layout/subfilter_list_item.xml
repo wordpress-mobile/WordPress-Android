@@ -3,31 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SubfilterSiteTagItem"
-    android:layout_width="match_parent"
-    android:orientation="horizontal">
+    android:layout_width="match_parent">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
         style="@style/SiteTagFilteredTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@+id/item_selected"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/item_url"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginBottom="@dimen/margin_large"
+        tools:text="Unknown" />
+
+    <TextView
+        android:id="@+id/item_url"
+        style="@style/SiteTagFilteredUrl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/item_selected"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/unknown" />
+        app:layout_constraintTop_toBottomOf="@+id/item_title"
+        android:visibility="visible"
+        tools:text="www.unknown.com" />
 
     <ImageView
         android:id="@+id/item_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_done_white_24dp"
-        android:tint="@color/primary"
+        app:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="gone"
         tools:visibility="visible"
-        android:contentDescription="@null" />
+        android:contentDescription="@string/reader_btn_selected_filter_tick_content_description" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

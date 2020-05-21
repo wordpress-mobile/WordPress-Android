@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: cy_GB
 -->
 <resources>
@@ -530,10 +530,7 @@ Language: cy_GB
     <string name="content_required">Mae angen sylw</string>
     <string name="sure_to_cancel_edit_comment">Diddymu golygu\'r sylw hwn?</string>
     <string name="saving_changes">Cadw\'r newidiadau</string>
-    <string name="hint_comment_content">Sylw</string>
     <string name="trash">Sbwriel</string>
-    <string name="trash_no">Peidiwch â\'u hanfon i\'r sbwriel</string>
-    <string name="trash_yes">Sbwriel</string>
     <string name="dlg_confirm_trash_comments">Anfon i\'r sbwriel?</string>
     <string name="dlg_trashing_comments">Anfon i\'r sbwriel</string>
     <string name="dlg_spamming_comments">Marcio fel sbam</string>
@@ -629,7 +626,6 @@ Language: cy_GB
     <string name="posts">Cofnodion</string>
     <string name="pages">Tudalennau</string>
     <string name="no_network_title">Dim rhwydwaith ar gael</string>
-    <string name="blogusername">blogusername</string>
     <string name="ok">Iawn</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Fersiwn</string>
@@ -642,7 +638,6 @@ Language: cy_GB
     <string name="immediately">Ar unwaith</string>
     <string name="quickpress_add_alert_title">Gosod enw\'r llwybr byr</string>
     <string name="settings">Gosodiadau</string>
-    <string name="quickpress_window_title">Dewiswch flog ar gyfer llwybr byr QuickPress</string>
     <string name="quickpress_add_error">Nid yw enw\'r llwybr byr yn gallu bod yn wag</string>
     <string name="categories">Categorïau</string>
     <string name="title">Teitl</string>

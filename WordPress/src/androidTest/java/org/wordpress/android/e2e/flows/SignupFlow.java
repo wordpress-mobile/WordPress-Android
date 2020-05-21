@@ -20,17 +20,25 @@ import static org.wordpress.android.support.WPSupportUtils.populateTextField;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 
 public class SignupFlow {
-    public void chooseSignupWithEmail() {
+    public SignupFlow chooseSignupWithEmail() {
         clickOn(onView(withId(R.id.create_site_button)));
         clickOn(onView(withId(R.id.signup_email)));
+
+        return this;
     }
 
-    public void enterEmail(String email,
-                           ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
+    public SignupFlow enterEmail(String email) {
         // Email file = id/input
         populateTextField(onView(withId(R.id.input)), email);
         clickOn(onView(withId(R.id.primary_button)));
 
+        // Should See Open Mail button
+        waitForElementToBeDisplayed(R.id.signup_magic_link_button);
+
+        return this;
+    }
+
+    public SignupFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
         // Follow the magic link to continue login
         // Intent is invoked directly rather than through a browser as WireMock is unavailable once in the background
         Intent intent = new Intent(
@@ -39,9 +47,11 @@ public class SignupFlow {
         ).setPackage(getApplicationContext().getPackageName());
 
         magicLinkActivityTestRule.launchActivity(intent);
+
+        return this;
     }
 
-    public void checkEpilogue(String displayName, String username) {
+    public SignupFlow checkEpilogue(String displayName, String username) {
         // Check Epilogue data
         ViewInteraction emailHeaderView = onView(withId(R.id.signup_epilogue_header_email));
         waitForElementToBeDisplayed(emailHeaderView);
@@ -51,9 +61,11 @@ public class SignupFlow {
 
         waitForElementToBeDisplayed(displayNameField);
         waitForElementToBeDisplayed(usernameField);
+
+        return this;
     }
 
-    public void enterPassword(String password) {
+    public SignupFlow enterPassword(String password) {
         // Enter Password
         ViewInteraction passwordField = onView(allOf(withId(R.id.input), withHint("Password (optional)")));
         waitForElementToBeDisplayed(passwordField);
@@ -61,15 +73,19 @@ public class SignupFlow {
 
         // Click continue
         clickOn(onView(withId(R.id.primary_button)));
+
+        return this;
     }
 
-    public void dismissInterstitial() {
+    public SignupFlow dismissInterstitial() {
         // Dismiss post-signup interstitial
         clickOn(onView(withId(R.id.dismiss_button)));
+
+        return this;
     }
 
     public void confirmSignup() {
         // Confirm signup
-        waitForElementToBeDisplayed(R.id.nav_me);
+        waitForElementToBeDisplayed(R.id.nav_sites);
     }
 }

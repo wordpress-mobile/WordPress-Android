@@ -13,12 +13,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.support.AndroidSupportInjection
@@ -74,7 +74,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
         (nonNullActivity.application as WordPress).component()?.inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.domain_registration_details_fragment, container, false)
     }
 
@@ -152,7 +156,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private fun setupTosLink() {
         tos_explanation.text = Html.fromHtml(
                 String.format(
-                        resources.getString(R.string.domain_registration_privacy_protection_tos), "<u>", "</u>"
+                        resources.getString(R.string.domain_registration_privacy_protection_tos),
+                        "<u>",
+                        "</u>"
                 )
         )
         tos_explanation.movementMethod = LinkMovementMethod.getInstance()
@@ -189,12 +195,14 @@ class DomainRegistrationDetailsFragment : Fragment() {
                     }
                 })
 
-        viewModel.domainContactForm.observe(this, Observer<DomainContactFormModel> { domainContactFormModel ->
-            val currentModel = getDomainContactFormModel()
-            if (currentModel != domainContactFormModel) {
-                populateContactForm(domainContactFormModel!!)
-            }
-        })
+        viewModel.domainContactForm.observe(
+                this,
+                Observer<DomainContactFormModel> { domainContactFormModel ->
+                    val currentModel = getDomainContactFormModel()
+                    if (currentModel != domainContactFormModel) {
+                        populateContactForm(domainContactFormModel!!)
+                    }
+                })
 
         viewModel.showCountryPickerDialog.observe(this,
                 Observer {
@@ -225,7 +233,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
                         STATE -> affectedInputFields = arrayOf(state_input)
                         COUNTRY_CODE -> affectedInputFields = arrayOf(country_input)
                         EMAIL -> affectedInputFields = arrayOf(email_input)
-                        PHONE -> affectedInputFields = arrayOf(country_code_input, phone_number_input)
+                        PHONE -> affectedInputFields = arrayOf(
+                                country_code_input,
+                                phone_number_input
+                        )
                         else -> {
                         } // Something else, will just show a Toast with an error message
                     }
@@ -250,7 +261,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
         viewModel.showTos.observe(this,
                 Observer {
-                    ActivityLauncher.openUrlExternal(context, WPUrlUtils.buildTermsOfServiceUrl(context))
+                    ActivityLauncher.openUrlExternal(
+                            context,
+                            WPUrlUtils.buildTermsOfServiceUrl(context)
+                    )
                 })
     }
 
@@ -272,8 +286,15 @@ class DomainRegistrationDetailsFragment : Fragment() {
         var formIsCompleted = true
 
         val requiredFields = arrayOf(
-                first_name_input, last_name_input, email_input, country_code_input, phone_number_input,
-                country_input, address_first_line_input, city_input, postal_code_input
+                first_name_input,
+                last_name_input,
+                email_input,
+                country_code_input,
+                phone_number_input,
+                country_input,
+                address_first_line_input,
+                city_input,
+                postal_code_input
         )
 
         var fieldToFocusOn: TextInputEditText? = null
@@ -301,7 +322,10 @@ class DomainRegistrationDetailsFragment : Fragment() {
     private fun showEmptyFieldError(editText: EditText) {
         val parent = editText.parent.parent
         if (parent is TextInputLayout) {
-            showFieldError(editText, getString(R.string.domain_registration_contact_form_input_error, parent.hint))
+            showFieldError(
+                    editText,
+                    getString(R.string.domain_registration_contact_form_input_error, parent.hint)
+            )
         }
     }
 
@@ -340,7 +364,11 @@ class DomainRegistrationDetailsFragment : Fragment() {
     }
 
     private fun showCountryPicker(countries: List<SupportedDomainCountry>) {
-        val dialogFragment = CountryPickerDialogFragment.newInstance(countries.toCollection(ArrayList()))
+        val dialogFragment = CountryPickerDialogFragment.newInstance(
+                countries.toCollection(
+                        ArrayList()
+                )
+        )
         dialogFragment.setTargetFragment(this, 0)
         dialogFragment.show(requireFragmentManager(), CountryPickerDialogFragment.TAG)
     }
@@ -423,7 +451,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
             builder.setItems(states.map { it.name }.toTypedArray()) { _, which ->
                 viewModel.onStateSelected(states[which])
@@ -473,7 +501,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
 
             viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
-            val builder = AlertDialog.Builder(requireContext())
+            val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)
             builder.setItems(countries.map { it.name }.toTypedArray()) { _, which ->
                 viewModel.onCountrySelected(countries[which])

@@ -10,17 +10,17 @@ import org.wordpress.android.R;
  * Dialogs related to comment moderation displayed from CommentsActivity and NotificationsActivity
  */
 class CommentDialogs {
-    public static final int ID_COMMENT_DLG_APPROVING = 100;
-    public static final int ID_COMMENT_DLG_DISAPPROVING = 101;
-    public static final int ID_COMMENT_DLG_SPAMMING = 102;
-    public static final int ID_COMMENT_DLG_TRASHING = 103;
-    public static final int ID_COMMENT_DLG_DELETING = 104;
+    static final int ID_COMMENT_DLG_APPROVING = 100;
+    static final int ID_COMMENT_DLG_DISAPPROVING = 101;
+    static final int ID_COMMENT_DLG_SPAMMING = 102;
+    static final int ID_COMMENT_DLG_TRASHING = 103;
+    static final int ID_COMMENT_DLG_DELETING = 104;
 
     private CommentDialogs() {
         throw new AssertionError();
     }
 
-    public static Dialog createCommentDialog(Activity activity, int dialogId) {
+    static Dialog createCommentDialog(Activity activity, int dialogId) {
         final int resId;
         switch (dialogId) {
             case ID_COMMENT_DLG_APPROVING:

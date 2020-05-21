@@ -15,7 +15,7 @@
         <scale android:scaleWidth="100%">
             <shape>
                 <corners android:radius="2dp"/>
-                <solid android:color="@color/gray_10"/>
+                <solid android:color="@color/stats_value_bar_color"/>
             </shape>
         </scale>
     </item>

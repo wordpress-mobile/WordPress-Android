@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "urlPattern": "/rest/v1.1/sites/158396482/media(/)?($|\\?.*)",
+        "urlPattern": "/rest/v1.1/sites/106707880/media(/)?($|\\?.*)",
         "queryParameters": {
             "media_type": {
                 "equalTo": "image"
@@ -60,10 +60,10 @@
                     },
                     "meta": {
                         "links": {
-                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/media/243",
-                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/media/243/help",
-                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482",
-                            "parent": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/158396482/posts/225"
+                            "self": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/243",
+                            "help": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/media/243/help",
+                            "site": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880",
+                            "parent": "{{request.requestLine.baseUrl}}/rest/v1.1/sites/106707880/posts/225"
                         }
                     }
                 }

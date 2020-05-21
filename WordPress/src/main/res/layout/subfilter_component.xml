@@ -1,76 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/one_line_list_item_height"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/reader_subfilter_component_height"
     android:background="@android:color/white"
     android:elevation="@dimen/appbar_elevation">
 
-    <LinearLayout
+    <View
         android:id="@+id/filter_selection"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_btn_select_filter_content_description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/filter_list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:importantForAccessibility="no"
         android:paddingStart="@dimen/margin_extra_large"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:src="@drawable/ic_filter_list_white_24dp"
+        app:tint="?attr/wpColorOnSurfaceMedium"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/selected_filter_name"
+        style="@style/SiteTagSelectedFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/remove_filter_button"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/filter_list_button"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/view">
+        tools:text="a very long title of this great site done for check reason" />
 
-        <ImageView
-            android:id="@+id/filter_list_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_filter_list_white_24dp"
-            android:tint="@color/neutral_70"
-            android:background="@null"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/selected_filter_name"
-            style="@style/SiteTagFilteredTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:ellipsize="end"
-            android:singleLine="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/filter_list_button"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/reader_filter_all_sites" />
-
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/remove_filter_button"
+        android:layout_width="@dimen/min_touch_target_sz"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackgroundBorderless"
+        android:contentDescription="@string/reader_btn_remove_filter_content_description"
+        android:src="@drawable/ic_cross_small_white_24dp"
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        android:paddingTop="@dimen/margin_extra_small"
+        android:paddingEnd="@dimen/margin_large"
+        android:paddingStart="@dimen/margin_large"
+        app:layout_constraintStart_toEndOf="@+id/selected_filter_name"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"/>
 
     <View
         android:id="@+id/view"
-        android:layout_width="@dimen/list_divider_height"
+        android:layout_width="@dimen/divider_size"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/divider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/filter_settings_button"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toStartOf="@+id/filter_settings_button" />
 
     <ImageView
         android:id="@+id/filter_settings_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@null"
-        android:paddingStart="@dimen/margin_extra_large"
+        android:contentDescription="@string/reader_menu_tags"
         android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
         android:src="@drawable/ic_cog_white_24dp"
-        android:tint="@color/neutral_70"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:tint="?attr/wpColorOnSurfaceMedium"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/reader_subfilter_end_guideline_margin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

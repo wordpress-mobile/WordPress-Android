@@ -4,12 +4,13 @@
     included by ReaderPostDetailFragment
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/layout_post_detail_content"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingTop="@dimen/margin_medium">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_post_detail_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_medium">
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/text_title"
@@ -27,16 +28,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/neutral_40"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="text_dateline"
-            android:layout_marginEnd="@dimen/margin_large"/>
+            android:layout_marginEnd="@dimen/margin_large"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            tools:text="text_dateline" />
 
         <org.wordpress.android.ui.reader.views.ReaderTagStrip
             android:id="@+id/tag_strip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
     <org.wordpress.android.ui.reader.views.ReaderWebView
@@ -44,64 +45,62 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
     <RelativeLayout
         android:id="@+id/excerpt_footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_extra_large"
-        android:background="@color/neutral_0"
+        android:layout_marginBottom="@dimen/margin_extra_large"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_excerpt_footer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:background="?android:selectableItemBackground"
-            android:drawablePadding="@dimen/margin_medium"
             android:drawableEnd="@drawable/ic_external_grey_min_24dp"
+            android:drawablePadding="@dimen/margin_medium"
             android:padding="@dimen/margin_extra_large"
-            android:textColor="?attr/wpColorTextSubtle"
-            tools:text="text_excerpt_footer"/>
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            app:drawableTint="?attr/wpColorOnSurfaceMedium"
+            tools:text="text_excerpt_footer" />
     </RelativeLayout>
 
     <View
         android:id="@+id/layout_liking_users_divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider_size"
         android:layout_marginTop="@dimen/margin_medium"
-        android:background="@color/divider"
+        android:background="?android:attr/listDivider"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:labelFor="@+id/layout_liking_users_view"
         android:id="@+id/text_liking_users_label"
+        style="@style/ReaderTextView.MetaHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="@dimen/margin_medium"
+        android:labelFor="@+id/layout_liking_users_view"
         android:text="@string/reader_label_liked_by"
-        android:textAllCaps="true"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <!-- liking avatars are inserted into this view at runtime -->
     <org.wordpress.android.ui.reader.views.ReaderLikingUsersView
         android:id="@+id/layout_liking_users_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/avatar_sz_small"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="@dimen/margin_medium"
         android:background="?android:selectableItemBackground"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
 </LinearLayout>

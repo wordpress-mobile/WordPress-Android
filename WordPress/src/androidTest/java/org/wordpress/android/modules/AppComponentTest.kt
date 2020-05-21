@@ -26,6 +26,7 @@ import javax.inject.Singleton
     AndroidSupportInjectionModule::class,
     ViewModelModule::class,
     StatsModule::class,
+    TrackerTestModule::class,
     // Login flow library
     LoginAnalyticsModule::class,
     LoginFragmentModule::class,

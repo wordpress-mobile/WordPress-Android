@@ -8,12 +8,12 @@
         "jsonBody": {
             "sites": [
                 {
-                    "ID": 158396482,
-                    "name": "Mobile E2E Testing",
-                    "description": "",
-                    "URL": "https://e2eflowtestingmobile.wordpress.com",
-                    "user_can_manage": false,
-                    "capabilities": {
+                      "ID": 106707880,
+                      "name": "In Focus Photography",
+                      "description": "",
+                      "URL": "http:\/\/infocusphotographers.com",
+                      "user_can_manage": false,
+                      "capabilities": {
                         "edit_pages": true,
                         "edit_posts": true,
                         "edit_others_posts": true,
@@ -26,44 +26,97 @@
                         "manage_categories": true,
                         "manage_options": true,
                         "moderate_comments": true,
-                        "activate_wordads": true,
+                        "activate_wordads": false,
                         "promote_users": true,
                         "publish_posts": true,
                         "upload_files": true,
                         "delete_users": false,
                         "remove_users": true,
                         "view_stats": true
-                    },
-                    "jetpack": false,
-                    "is_multisite": true,
-                    "post_count": 80,
-                    "subscribers_count": 1,
-                    "lang": "en",
-                    "logo": {
-                        "id": 0,
-                        "sizes": [],
-                        "url": ""
-                    },
-                    "visible": true,
-                    "is_private": false,
-                    "single_user_site": true,
-                    "is_vip": false,
-                    "is_following": true,
-                    "options": {
+                      },
+                      "jetpack": false,
+                      "is_multisite": true,
+                      "post_count": 2,
+                      "subscribers_count": 0,
+                      "lang": "en",
+                      "icon": {
+                        "img": "https:\/\/secure.gravatar.com\/blavatar\/e150bfd1895a72358af2b617b575be19",
+                        "ico": "https:\/\/secure.gravatar.com\/blavatar\/e150bfd1895a72358af2b617b575be19"
+                      },
+                      "logo": {
+                        "id": 104,
+                        "sizes": {
+                          "thumbnail": {
+                            "height": 124,
+                            "width": 150,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=150",
+                            "orientation": "landscape"
+                          },
+                          "medium": {
+                            "height": 247,
+                            "width": 300,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=300",
+                            "orientation": "landscape"
+                          },
+                          "edin-thumbnail-landscape": {
+                            "height": 240,
+                            "width": 330,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=330&h=240&crop=1",
+                            "orientation": "landscape"
+                          },
+                          "edin-thumbnail-square": {
+                            "height": 330,
+                            "width": 330,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=330&h=330&crop=1",
+                            "orientation": "landscape"
+                          },
+                          "edin-thumbnail-avatar": {
+                            "height": 96,
+                            "width": 96,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=96&h=96&crop=1",
+                            "orientation": "landscape"
+                          },
+                          "edin-hero": {
+                            "height": 384,
+                            "width": 466,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=466&h=384&crop=1",
+                            "orientation": "landscape"
+                          },
+                          "edin-logo": {
+                            "height": 192,
+                            "width": 233,
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png?w=233",
+                            "orientation": "landscape"
+                          },
+                          "full": {
+                            "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png",
+                            "height": 384,
+                            "width": 466,
+                            "orientation": "landscape"
+                          }
+                        },
+                        "url": "https:\/\/infocusphotographers.files.wordpress.com\/2016\/03\/infocus_logo22.png"
+                      },
+                      "visible": true,
+                      "is_private": false,
+                      "single_user_site": false,
+                      "is_vip": false,
+                      "is_following": false,
+                      "options": {
                         "timezone": "",
                         "gmt_offset": 0,
                         "blog_public": 1,
                         "videopress_enabled": false,
-                        "upgraded_filetypes_enabled": false,
-                        "login_url": "https://e2eflowtestingmobile.wordpress.com/wp-login.php",
-                        "admin_url": "https://e2eflowtestingmobile.wordpress.com/wp-admin/",
-                        "is_mapped_domain": false,
+                        "upgraded_filetypes_enabled": true,
+                        "login_url": "https:\/\/infocusphotographers.wordpress.com\/wp-login.php",
+                        "admin_url": "https:\/\/infocusphotographers.wordpress.com\/wp-admin\/",
+                        "is_mapped_domain": true,
                         "is_redirect": false,
-                        "unmapped_url": "https://e2eflowtestingmobile.wordpress.com",
+                        "unmapped_url": "https:\/\/infocusphotographers.wordpress.com",
                         "featured_images_enabled": false,
-                        "theme_slug": "pub/independent-publisher-2",
+                        "theme_slug": "pub\/edin",
                         "header_image": false,
-                        "background_color": false,
+                        "background_color": "ffffff",
                         "image_default_link_type": "none",
                         "image_thumbnail_width": 150,
                         "image_thumbnail_height": 150,
@@ -72,37 +125,46 @@
                         "image_medium_height": 300,
                         "image_large_width": 1024,
                         "image_large_height": 1024,
-                        "permalink_structure": "/%year%/%monthnum%/%day%/%postname%/",
+                        "permalink_structure": "\/%year%\/%monthnum%\/%day%\/%postname%\/",
                         "post_formats": [],
                         "default_post_format": "0",
                         "default_category": 1,
                         "allowed_file_types": [
-                            "jpg",
-                            "jpeg",
-                            "png",
-                            "gif",
-                            "pdf",
-                            "doc",
-                            "ppt",
-                            "odt",
-                            "pptx",
-                            "docx",
-                            "pps",
-                            "ppsx",
-                            "xls",
-                            "xlsx",
-                            "key"
+                          "jpg",
+                          "jpeg",
+                          "png",
+                          "gif",
+                          "pdf",
+                          "doc",
+                          "ppt",
+                          "odt",
+                          "pptx",
+                          "docx",
+                          "pps",
+                          "ppsx",
+                          "xls",
+                          "xlsx",
+                          "key",
+                          "asc",
+                          "mp3",
+                          "m4a",
+                          "wav",
+                          "ogg",
+                          "zip"
                         ],
-                        "show_on_front": "posts",
+                        "show_on_front": "page",
                         "default_likes_enabled": true,
                         "default_sharing_status": true,
                         "default_comment_status": true,
                         "default_ping_status": true,
-                        "software_version": "5.1",
-                        "created_at": "2019-02-14T09:49:46+00:00",
+                        "software_version": "5.2.2",
+                        "created_at": "2016-02-09T16:07:34+00:00",
                         "wordads": false,
                         "publicize_permanently_disabled": false,
-                        "frame_nonce": "877da9b185",
+                        "frame_nonce": "c0bfd655c4",
+                        "jetpack_frame_nonce": "c0bfd655c4",
+                        "page_on_front": 1,
+                        "page_for_posts": 0,
                         "headstart": false,
                         "headstart_is_fresh": false,
                         "ak_vp_bundle_enabled": null,
@@ -112,98 +174,169 @@
                         "podcasting_archive": null,
                         "is_domain_only": false,
                         "is_automated_transfer": false,
+                        "is_wpcom_atomic": false,
                         "is_wpcom_store": false,
                         "woocommerce_is_active": false,
-                        "design_type": "blog",
-                        "site_goals": null
-                    },
-                    "plan": {
-                        "product_id": 1,
-                        "product_slug": "free_plan",
-                        "product_name_short": "Free",
-                        "free_trial": false,
+                        "design_type": null,
+                        "site_goals": null,
+                        "site_segment": null
+                      },
+                      "plan": {
+                        "product_id": 1029,
+                        "product_slug": "personal-bundle-2y",
+                        "product_name": "WordPress.com Personal",
+                        "product_name_short": "Personal",
                         "expired": false,
                         "user_is_owner": false,
-                        "is_free": true,
+                        "is_free": false,
                         "features": {
-                            "active": [
-                                "free-blog",
-                                "space",
-                                "support"
+                          "active": [
+                            "free-blog",
+                            "custom-domain",
+                            "space",
+                            "support",
+                            "wordads-jetpack"
+                          ],
+                          "available": {
+                            "free-blog": [
+                              "free_plan",
+                              "personal-bundle",
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "blogger-bundle",
+                              "blogger-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
                             ],
-                            "available": {
-                                "free-blog": [
-                                    "personal-bundle",
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "custom-domain": [
-                                    "personal-bundle",
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "space": [
-                                    "personal-bundle",
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "no-adverts/no-adverts.php": [
-                                    "personal-bundle",
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "support": [
-                                    "personal-bundle",
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "custom-design": [
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "videopress": [
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "unlimited_themes": [
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "live_support": [
-                                    "value_bundle",
-                                    "business-bundle"
-                                ],
-                                "simple-payments": [
-                                    "value_bundle",
-                                    "business-bundle",
-                                    "ecommerce-bundle"
-                                ],
-                                "premium-themes": [
-                                    "business-bundle"
-                                ],
-                                "google-analytics": [
-                                    "business-bundle"
-                                ]
-                            }
+                            "space": [
+                              "free_plan",
+                              "personal-bundle",
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "blogger-bundle",
+                              "blogger-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "support": [
+                              "free_plan",
+                              "personal-bundle",
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "blogger-bundle",
+                              "blogger-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "custom-domain": [
+                              "personal-bundle",
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "blogger-bundle",
+                              "blogger-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "no-adverts\/no-adverts.php": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "custom-design": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "videopress": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "unlimited_themes": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "live_support": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "simple-payments": [
+                              "value_bundle",
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "value_bundle-2y",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "premium-themes": [
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ],
+                            "google-analytics": [
+                              "business-bundle",
+                              "ecommerce-bundle",
+                              "business-bundle-2y",
+                              "ecommerce-bundle",
+                              "ecommerce-bundle-2y"
+                            ]
+                          }
                         }
-                    },
-                    "jetpack_modules": null,
-                    "meta": {
+                      },
+                      "jetpack_modules": null,
+                      "meta": {
                         "links": {
-                            "self": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482",
-                            "help": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/help",
-                            "posts": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/posts/",
-                            "comments": "https://ic-api.wordpress.com/rest/v1.1/sites/158396482/comments/",
-                            "xmlrpc": "https://e2eflowtestingmobile.wordpress.com/xmlrpc.php"
+                          "self": "{{request.requestLine.baseUrl}}\/rest\/v1.1\/sites\/106707880",
+                          "help": "{{request.requestLine.baseUrl}}\/rest\/v1.1\/sites\/106707880\/help",
+                          "posts": "{{request.requestLine.baseUrl}}\/rest\/v1.1\/sites\/106707880\/posts\/",
+                          "comments": "{{request.requestLine.baseUrl}}\/rest\/v1.1\/sites\/106707880\/comments\/",
+                          "xmlrpc": "https:\/\/infocusphotographers.wordpress.com\/xmlrpc.php"
                         }
-                    },
-                    "quota": {
-                        "space_allowed": 3221225472,
-                        "space_used": 55817,
-                        "percent_used": 0.0017327877382437389,
-                        "space_available": 3221169655
-                    },
-                    "launch_status": false
+                      },
+                      "quota": {
+                        "space_allowed": 6442450944,
+                        "space_used": 442302007,
+                        "percent_used": 6.865430731947224,
+                        "space_available": 6000148937
+                      },
+                      "launch_status": false
                 }
             ]
         },

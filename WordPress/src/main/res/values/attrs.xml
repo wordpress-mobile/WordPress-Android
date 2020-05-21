@@ -7,8 +7,13 @@
     <attr name="wpColorText" format="reference|color" />
     <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
+    <attr name="wpColorSuccess" format="reference|color" />
+    <attr name="wpColorAppBar" format="reference|color" />
+    <attr name="wpColorOnSurfaceMedium" format="reference|color" />
 
     <attr name="wpColorWarningDark" format="reference|color" />
+    <attr name="wpColorWarningLight" format="reference|color" />
+    <attr name="wpColorActionModeIcon" format="reference|color" />
 
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
@@ -16,12 +21,9 @@
         <attr name="maxSummaryLines" format="integer" />
         <attr name="longClickHint" />
         <attr name="dialogMessage" format="string" />
-        <attr name="iconTint" format="color" />
+        <attr name="iconTint" format="color|reference" />
         <attr name="switchThumbTint" format="integer" />
-        <attr name="switchTrackTint" format="integer" />
-        <attr name="preferenceTextColor" format="color" />
-        <attr name="backgroundColorChecked" format="color" />
-        <attr name="backgroundColorUnchecked" format="color" />
+        <attr name="startOffset" format="dimension|reference" />
     </declare-styleable>
 
     <!-- DetailListPreference attributes -->
@@ -80,6 +82,7 @@
         <attr name="readerIcon" format="enum">
             <enum name="like" value="0" />
             <enum name="comment" value="1" />
+            <enum name="reblog" value="2" />
         </attr>
     </declare-styleable>
 
@@ -150,6 +153,22 @@
     </declare-styleable>
 
     <!--
+    WPTooltipView
+    -->
+    <declare-styleable name="WPTooltipView">
+        <!-- Position of the Tooltip -->
+        <attr name="wpTooltipPosition">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+            <enum name="above" value="2"/>
+            <enum name="below" value="3"/>
+        </attr>
+        <attr name="wpTooltipMessage" format="reference"/>
+        <attr name="wpArrowHorizontalOffsetFromEnd" format="dimension"/>
+        <attr name="wpArrowHorizontalOffsetFromStart" format="dimension"/>
+    </declare-styleable>
+
+    <!--
         Actionable Empty View
     -->
     <declare-styleable name="ActionableEmptyView">
@@ -157,6 +176,8 @@
         <attr name="aevButton" format="string"/>
         <!-- Optional: resource id of image -->
         <attr name="aevImage" format="reference"/>
+        <!-- Optional: defines if image should be hidden in landscape mode -->
+        <attr name="aevImageHiddenInLandscape" format="boolean" />
         <!-- Optional: string text of subtitle -->
         <attr name="aevSubtitle" format="string"/>
         <!-- Required: string text of title -->
@@ -189,5 +210,16 @@
             <enum name="highlighted" value="0" />
             <enum name="normal" value="1" />
         </attr>
+    </declare-styleable>
+
+    <!-- BadgedImageView attributes -->
+    <declare-styleable name="BadgedImageView">
+        <attr name="badgeBackground" format="reference" />
+        <attr name="badgeBackgroundSize" format="dimension" />
+        <attr name="badgeBackgroundBorderWidth" format="dimension" />
+        <attr name="badgeIcon" format="reference" />
+        <attr name="badgeIconSize" format="dimension" />
+        <attr name="badgeHorizontalOffset" format="dimension" />
+        <attr name="badgeVerticalOffset" format="dimension" />
     </declare-styleable>
 </resources>

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
+    android:id="@+id/post_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:stateListAnimator="@anim/pressed_card"
-    app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="@dimen/default_cardview_radius"
-    app:cardElevation="@dimen/reader_card_elevation" >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_container"
@@ -18,10 +14,10 @@
         android:layout_height="wrap_content"
         android:background="?android:selectableItemBackground"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingTop="@dimen/margin_large"
         android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingEnd="@dimen/reader_card_content_padding">
+        android:paddingTop="@dimen/margin_large"
+        android:paddingEnd="@dimen/reader_card_content_padding"
+        android:paddingBottom="@dimen/margin_large">
 
         <FrameLayout
             android:layout_width="wrap_content"
@@ -33,35 +29,35 @@
                 android:layout_width="@dimen/blavatar_sz"
                 android:layout_height="@dimen/blavatar_sz"
                 android:layout_gravity="top|start"
-                android:contentDescription="@string/reader_blavatar_desc"
-                android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
             <ImageView
                 android:id="@+id/image_avatar"
                 style="@style/ReaderImageView.Avatar.Small"
                 android:layout_gravity="bottom|end"
+                android:layout_marginStart="14dp"
                 android:layout_marginTop="14dp"
-                android:contentDescription="@string/reader_avatar_desc"
-                android:src="@drawable/bg_rectangle_neutral_10_user_32dp"
-                android:layout_marginStart="14dp"/>
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg_rectangle_placeholder_user_32dp" />
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="@dimen/margin_large">
+            android:layout_marginStart="@dimen/margin_large"
+            android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_title"
+                style="@style/ReaderTextView.Post.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="@color/neutral_40"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold"
                 android:fontFamily="serif"
+                android:maxLines="1"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"
                 tools:text="text_title" />
 
             <org.wordpress.android.widgets.WPTextView
@@ -70,8 +66,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/neutral_30"
-                android:textSize="@dimen/text_sz_small"
+                android:textAppearance="?attr/textAppearanceCaption"
                 app:fixWidowWords="true"
                 tools:text="text_subtitle" />
 
@@ -79,4 +74,9 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider" />
+
+</LinearLayout>

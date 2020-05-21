@@ -1,89 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/plugin_row_width"
     android:layout_height="match_parent"
-    android:background="?android:attr/selectableItemBackground"
-    android:paddingBottom="@dimen/margin_small"
-    android:paddingEnd="@dimen/margin_medium"
-    android:paddingStart="@dimen/margin_medium" >
+    android:layout_marginStart="@dimen/margin_small"
+    android:layout_marginEnd="@dimen/margin_small"
+    android:layout_marginBottom="@dimen/margin_small"
+    android:background="?android:attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/plugin_icon"
-        android:layout_width="@dimen/plugin_row_width"
-        android:layout_height="@dimen/plugin_row_width"
-        android:contentDescription="@string/plugin_icon_content_description"
-        tools:src="@drawable/plugin_placeholder" />
-
-    <TextView
-        android:id="@+id/plugin_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_icon"
-        android:breakStrategy="simple"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_medium"
-        android:textStyle="bold"
-        tools:text="plugin_name"
-        tools:ignore="UnusedAttribute"/>
-
-    <TextView
-        android:id="@+id/plugin_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/plugin_name"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="@color/neutral_40"
-        android:textSize="@dimen/text_sz_small"
-        tools:text="plugin_author" />
-
-    <FrameLayout
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/plugin_author"
-        android:paddingBottom="@dimen/margin_large">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/plugin_status_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/plugin_icon"
+            android:layout_width="@dimen/plugin_row_width"
+            android:layout_height="@dimen/plugin_row_width"
+            android:contentDescription="@string/plugin_icon_content_description"
+            tools:src="@drawable/plugin_placeholder" />
 
-            <ImageView
-                android:id="@+id/plugin_status_icon"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:contentDescription="@null"
-                tools:src="@drawable/ic_sync_white_24dp"
-                tools:tint="@color/warning_50" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="@dimen/margin_small_medium"
+            android:paddingTop="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_small_medium"
+            android:paddingBottom="@dimen/margin_medium">
 
-            <TextView
-                android:id="@+id/plugin_status_text"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/plugin_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:breakStrategy="simple"
+                android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="@color/warning_50"
-                android:textSize="@dimen/text_sz_small"
-                tools:text="@string/plugin_needs_update" />
-        </LinearLayout>
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textStyle="bold"
+                tools:ignore="UnusedAttribute"
+                tools:text="plugin_name" />
 
-        <RatingBar
-            android:id="@+id/rating_bar"
-            style="@style/WPRatingBar.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:numStars="5"
-            tools:rating="3" />
-    </FrameLayout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/plugin_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/plugin_name"
+                android:layout_marginBottom="@dimen/margin_medium"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textAppearance="?attr/textAppearanceCaption"
+                tools:text="plugin_author" />
 
-</RelativeLayout>
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/plugin_author"
+                android:layout_alignParentBottom="true">
+
+                <LinearLayout
+                    android:id="@+id/plugin_status_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/plugin_status_icon"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:contentDescription="@null"
+                        tools:src="@drawable/ic_sync_white_24dp"
+                        tools:tint="?attr/wpColorWarningDark" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/plugin_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/wpColorWarningDark"
+                        tools:text="@string/plugin_needs_update" />
+                </LinearLayout>
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    style="@style/WPRatingBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:numStars="5"
+                    tools:rating="3" />
+            </FrameLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

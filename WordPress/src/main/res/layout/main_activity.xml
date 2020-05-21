@@ -30,31 +30,46 @@
             android:id="@+id/connection_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/warning_50"
+            android:background="?attr/wpColorWarningDark"
             android:gravity="center"
             android:paddingBottom="@dimen/margin_medium"
             android:paddingTop="@dimen/margin_medium"
             android:text="@string/connectionbar_no_connection"
             android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_sz_small"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorOnPrimarySurface"
             android:visibility="gone"
             tools:visibility="visible"/>
 
         <View
             android:id="@+id/navbar_separator"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/neutral_10"/>
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider"/>
 
         <org.wordpress.android.ui.main.WPMainNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:elevation="0dp"
+            android:background="?attr/colorSurface"
+            app:elevation="@dimen/navbar_elevation"
             app:menu="@menu/bottom_nav_main"/>
     </LinearLayout>
+
+    <org.wordpress.android.ui.WPTooltipView
+        android:id="@+id/fab_tooltip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:wpTooltipPosition="above"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:wpTooltipMessage="@string/create_post_page_fab_tooltip"
+        app:wpArrowHorizontalOffsetFromEnd="@dimen/main_fab_tooltip_offset_end"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:importantForAccessibility="noHideDescendants"
+        android:layout_above="@+id/fab_button"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_button"
@@ -66,9 +81,8 @@
         android:layout_marginEnd="@dimen/fab_margin"
         android:visibility="gone"
         tools:visibility="visible"
-        android:contentDescription="@string/fab_create_desc"
+        android:contentDescription="@string/create_post_page_fab_tooltip"
         android:src="@drawable/ic_create_white_24dp"
         app:borderWidth="0dp"/>
-
 
 </RelativeLayout>

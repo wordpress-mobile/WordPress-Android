@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_theme_entry_value_default_key" translatable="false">@string/app_theme_entry_value_default</string>
+    <string-array name="app_theme_entries" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/app_theme_light</item>
+        <item>@string/app_theme_dark</item>
+        <item>@string/app_theme_default</item>
+    </string-array>
+    <string-array name="app_theme_entry_values" translatable="false" tools:ignore="InconsistentArrays">
+        <item>@string/app_theme_entry_value_light</item>
+        <item>@string/app_theme_entry_value_dark</item>
+        <item>@string/app_theme_entry_value_default</item>
+    </string-array>
+</resources>

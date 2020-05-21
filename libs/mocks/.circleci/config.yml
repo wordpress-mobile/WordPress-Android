@@ -1,0 +1,26 @@
+version: 2.1
+
+orbs:
+  # Using 1.0 of our Orbs means it will use the latest 1.0.x version from https://github.com/wordpress-mobile/circleci-orbs
+  ios: wordpress-mobile/ios@1.0
+
+workflows:
+  wordpress_mocks:
+    jobs:
+      - ios/validate-podspec:
+          name: Validate Podspec
+          sources: https://cdn.cocoapods.org/
+          xcode-version: "11.2.1"
+          podspec-path: WordPressMocks.podspec
+          bundle-install: true
+      - ios/publish-podspec:
+          name: Publish to Trunk
+          xcode-version: "11.2.1"
+          podspec-path: WordPressMocks.podspec
+          bundle-install: true
+          post-to-slack: true
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/

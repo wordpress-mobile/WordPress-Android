@@ -51,6 +51,10 @@ public class AppPrefs {
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
+        READER_TAG_WAS_FOLLOWING,
+
+        // last selected subfilter in the reader
+        READER_SUBFILTER,
 
         // title of the last active page in ReaderSubsActivity
         READER_SUBS_PAGE_TITLE,
@@ -117,6 +121,7 @@ public class AppPrefs {
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         USER_IN_GUTENBERG_ROLLOUT_GROUP,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+        SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
@@ -183,6 +188,10 @@ public class AppPrefs {
         // user id last used to login with
         LAST_USED_USER_ID,
 
+        // last user access status in reader
+        LAST_READER_KNOWN_ACCESS_TOKEN_STATUS,
+        LAST_READER_KNOWN_USER_ID,
+
         // used to indicate that user opted out of quick start
         IS_QUICK_START_DISABLED,
 
@@ -203,6 +212,15 @@ public class AppPrefs {
 
         // Used to indicate whether or not the the post-signup interstitial must be shown
         SHOULD_SHOW_POST_SIGNUP_INTERSTITIAL,
+
+        // used to indicate that we do not need to show the main FAB tooltip
+        IS_MAIN_FAB_TOOLTIP_DISABLED,
+
+        // version of the last shown feature announcement
+        FEATURE_ANNOUNCEMENT_SHOWN_VERSION,
+
+        // last app version code feature announcement was shown for
+        LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
     }
 
     private static SharedPreferences prefs() {
@@ -300,19 +318,46 @@ public class AppPrefs {
             return null;
         }
         int tagType = getInt(DeletablePrefKey.READER_TAG_TYPE);
-        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType));
+
+        boolean wasFollowing = false;
+
+        // The intention here is to check if the `DeletablePrefKey.READER_TAG_WAS_FOLLOWING` key
+        // was present at all in the Shared Prefs.
+        // We could have it not set for example in cases where user is upgrading from
+        // a previous version of the app. In those cases we do not have enough information as of the saved
+        // tag was a Following tag or not, so (as with empty `DeletablePrefKey.READER_TAG_NAME`)
+        // let's do not use this piece of information.
+        String wasFallowingString = getString(DeletablePrefKey.READER_TAG_WAS_FOLLOWING);
+        if (TextUtils.isEmpty(wasFallowingString)) return null;
+
+        wasFollowing = getBoolean(DeletablePrefKey.READER_TAG_WAS_FOLLOWING, false);
+
+        return ReaderUtils.getTagFromTagName(tagName, ReaderTagType.fromInt(tagType), wasFollowing);
     }
 
     public static void setReaderTag(ReaderTag tag) {
         if (tag != null && !TextUtils.isEmpty(tag.getTagSlug())) {
             setString(DeletablePrefKey.READER_TAG_NAME, tag.getTagSlug());
             setInt(DeletablePrefKey.READER_TAG_TYPE, tag.tagType.toInt());
+            setBoolean(
+                    DeletablePrefKey.READER_TAG_WAS_FOLLOWING,
+                    tag.isFollowedSites() || tag.isDefaultInMemoryTag()
+            );
         } else {
             prefs().edit()
                    .remove(DeletablePrefKey.READER_TAG_NAME.name())
                    .remove(DeletablePrefKey.READER_TAG_TYPE.name())
+                   .remove(DeletablePrefKey.READER_TAG_WAS_FOLLOWING.name())
                    .apply();
         }
+    }
+
+    public static String getReaderSubfilter() {
+        return getString(DeletablePrefKey.READER_SUBFILTER);
+    }
+
+    public static void setReaderSubfilter(@NonNull String json) {
+        setString(DeletablePrefKey.READER_SUBFILTER, json);
     }
 
     /**
@@ -384,6 +429,22 @@ public class AppPrefs {
         setLong(UndeletablePrefKey.LAST_USED_USER_ID, userId);
     }
 
+    public static boolean getLastReaderKnownAccessTokenStatus() {
+        return getBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, false);
+    }
+
+    public static void setLastReaderKnownAccessTokenStatus(boolean accessTokenStatus) {
+        setBoolean(UndeletablePrefKey.LAST_READER_KNOWN_ACCESS_TOKEN_STATUS, accessTokenStatus);
+    }
+
+    public static long getLastReaderKnownUserId() {
+        return getLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID);
+    }
+
+    public static void setLastReaderKnownUserId(long userId) {
+        setLong(UndeletablePrefKey.LAST_READER_KNOWN_USER_ID, userId);
+    }
+
     /**
      * name of the last shown activity - used at startup to restore the previously selected
      * activity, also used by analytics tracker
@@ -400,8 +461,9 @@ public class AppPrefs {
         remove(DeletablePrefKey.LAST_ACTIVITY_STR);
     }
 
-    public static int getMainPageIndex() {
-        return getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+    public static int getMainPageIndex(int maxIndexValue) {
+        int value = getInt(DeletablePrefKey.MAIN_PAGE_INDEX);
+        return value > maxIndexValue ? 0 : value;
     }
 
     public static void setMainPageIndex(int index) {
@@ -624,14 +686,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.GUTENBERG_DEFAULT_FOR_NEW_POSTS);
     }
 
-    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
+    private static boolean getShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL) {
         if (TextUtils.isEmpty(siteURL)) {
             return false;
         }
 
         Set<String> urls;
         try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+            urls = prefs().getStringSet(key.name(), null);
         } catch (ClassCastException exp) {
             // no operation - This should not happen.
             return false;
@@ -642,20 +704,20 @@ public class AppPrefs {
             if (urls.contains(siteURL)) {
                 flag = true;
                 // remove the flag from Prefs
-                setShowGutenbergInfoPopupForTheNewPosts(siteURL, false);
+                setShowGutenbergInfoPopupForTheNewPosts(key, siteURL, false);
             }
         }
 
         return flag;
     }
 
-    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
+    private static void setShowGutenbergInfoPopupForTheNewPosts(PrefKey key, String siteURL, boolean show) {
         if (TextUtils.isEmpty(siteURL)) {
             return;
         }
         Set<String> urls;
         try {
-            urls = prefs().getStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), null);
+            urls = prefs().getStringSet(key.name(), null);
         } catch (ClassCastException exp) {
             // nope - this should never happens
             return;
@@ -674,8 +736,28 @@ public class AppPrefs {
         }
 
         SharedPreferences.Editor editor = prefs().edit();
-        editor.putStringSet(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS.name(), newUrls);
+        editor.putStringSet(key.name(), newUrls);
         editor.apply();
+    }
+
+    public static boolean shouldShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL) {
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2, siteURL);
+    }
+
+    public static void setShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL, boolean show) {
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
+                siteURL, show);
+    }
+
+    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
+        return getShowGutenbergInfoPopupForTheNewPosts(
+                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL);
+    }
+
+    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
+        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
+                siteURL, show);
     }
 
     public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
@@ -694,7 +776,7 @@ public class AppPrefs {
         return urls != null && urls.contains(siteURL);
     }
 
-    public static void setGutenbergInfoPopupDisplayed(String siteURL) {
+    public static void setGutenbergInfoPopupDisplayed(String siteURL, boolean isDisplayed) {
         if (isGutenbergInfoPopupDisplayed(siteURL)) {
             return;
         }
@@ -714,8 +796,11 @@ public class AppPrefs {
         if (urls != null) {
             newUrls.addAll(urls);
         }
-        newUrls.add(siteURL);
-
+        if (isDisplayed) {
+            newUrls.add(siteURL);
+        } else {
+            newUrls.remove(siteURL);
+        }
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(DeletablePrefKey.GUTENBERG_OPT_IN_DIALOG_SHOWN.name(), newUrls);
         editor.apply();
@@ -869,6 +954,14 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
+    public static void setMainFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isMainFabTooltipDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+    }
+
     public static void setQuickStartMigrationDialogShown(Boolean shown) {
         setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
     }
@@ -1003,6 +1096,22 @@ public class AppPrefs {
     private static List<String> getPostWithHWAccelerationOff() {
         String idsAsString = getString(DeletablePrefKey.AZTEC_EDITOR_DISABLE_HW_ACC_KEYS, "");
         return Arrays.asList(idsAsString.split(","));
+    }
+
+    public static void setFeatureAnnouncementShownVersion(int version) {
+        setInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, version);
+    }
+
+    public static int getFeatureAnnouncementShownVersion() {
+        return getInt(UndeletablePrefKey.FEATURE_ANNOUNCEMENT_SHOWN_VERSION, -1);
+    }
+
+    public static int getLastFeatureAnnouncementAppVersionCode() {
+        return getInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE);
+    }
+
+    public static void setLastFeatureAnnouncementAppVersionCode(int version) {
+        setInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE, version);
     }
 
     /*

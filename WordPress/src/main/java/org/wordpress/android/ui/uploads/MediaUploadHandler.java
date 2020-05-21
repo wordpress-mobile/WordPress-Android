@@ -232,8 +232,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
     }
 
     private MediaModel getNextMediaToUpload() {
-        if (!sPendingUploads.isEmpty()) {
-            return sPendingUploads.remove(0);
+        synchronized (sPendingUploads) {
+            if (!sPendingUploads.isEmpty()) {
+                return sPendingUploads.remove(0);
+            }
         }
         return null;
     }
@@ -244,8 +246,10 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
                 return;
             }
 
-            // no match found in queue
-            sPendingUploads.add(media);
+            synchronized (sPendingUploads) {
+                // no match found in queue
+                sPendingUploads.add(media);
+            }
         }
     }
 
@@ -391,13 +395,15 @@ public class MediaUploadHandler implements UploadHandler<MediaModel>, VideoOptim
             }
         }
 
-        for (MediaModel queuedMedia : sPendingUploads) {
-            AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
-                              + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
-                                      .getFilePath()
-                              + ", " + queuedMedia.getLocalSiteId());
-            if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
-                return true;
+        synchronized (sPendingUploads) {
+            for (MediaModel queuedMedia : sPendingUploads) {
+                AppLog.i(T.MEDIA, "MediaUploadHandler > Attempting to add media with path " + mediaModel.getFilePath()
+                                  + " and site id " + mediaModel.getLocalSiteId() + ". Comparing with " + queuedMedia
+                                          .getFilePath()
+                                  + ", " + queuedMedia.getLocalSiteId());
+                if (isSameMediaFileQueuedForThisPost(queuedMedia, mediaModel)) {
+                    return true;
+                }
             }
         }
         return false;

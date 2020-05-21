@@ -11,12 +11,11 @@ import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
 import org.wordpress.android.ui.sitecreation.segments.SiteCreationSegmentsViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationSiteInfoViewModel;
-import org.wordpress.android.ui.sitecreation.verticals.SiteCreationVerticalsViewModel;
 import org.wordpress.android.ui.stats.refresh.StatsViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.DaysListViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.InsightsListViewModel;
@@ -31,6 +30,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsDa
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsSiteSelectionViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWidgetConfigureViewModel;
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
 import org.wordpress.android.viewmodel.ViewModelKey;
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel;
@@ -38,10 +38,12 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel;
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel;
 import org.wordpress.android.viewmodel.domains.DomainRegistrationDetailsViewModel;
 import org.wordpress.android.viewmodel.domains.DomainSuggestionsViewModel;
-import org.wordpress.android.viewmodel.giphy.GiphyPickerViewModel;
+import org.wordpress.android.viewmodel.gif.GifPickerViewModel;
 import org.wordpress.android.viewmodel.history.HistoryViewModel;
+import org.wordpress.android.viewmodel.main.SitePickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.pages.PageListViewModel;
+import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel;
 import org.wordpress.android.viewmodel.pages.PageParentViewModel;
 import org.wordpress.android.viewmodel.pages.PagesViewModel;
 import org.wordpress.android.viewmodel.pages.SearchListViewModel;
@@ -95,6 +97,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SubfilterPageViewModel.class)
+    abstract ViewModel subfilterPageViewModel(SubfilterPageViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -188,18 +195,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(SiteCreationVerticalsViewModel.class)
-    abstract ViewModel siteCreationVerticalsViewModel(SiteCreationVerticalsViewModel viewModel);
-
-    @Binds
-    @IntoMap
     @ViewModelKey(SiteCreationDomainsViewModel.class)
     abstract ViewModel siteCreationDomainsViewModel(SiteCreationDomainsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SiteCreationSiteInfoViewModel.class)
-    abstract ViewModel siteCreationSiteInfoViewModel(SiteCreationSiteInfoViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -223,8 +220,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(GiphyPickerViewModel.class)
-    abstract ViewModel giphyPickerViewModel(GiphyPickerViewModel viewModel);
+    @ViewModelKey(GifPickerViewModel.class)
+    abstract ViewModel gifPickerViewModel(GifPickerViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -275,6 +272,21 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PostSignupInterstitialViewModel.class)
     abstract ViewModel postSignupInterstitialViewModel(PostSignupInterstitialViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PageParentSearchViewModel.class)
+    abstract ViewModel pageParentSearchViewModel(PageParentSearchViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FeatureAnnouncementViewModel.class)
+    abstract ViewModel featureAnnouncementViewModel(FeatureAnnouncementViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SitePickerViewModel.class)
+    abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

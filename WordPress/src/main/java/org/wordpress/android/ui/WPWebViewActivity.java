@@ -4,8 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
@@ -35,16 +34,29 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.snackbar.Snackbar;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload;
+import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
+import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ConfigurationExtensionsKt;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -59,6 +71,7 @@ import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState;
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenUiState;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -104,7 +117,8 @@ import kotlin.Unit;
  * or self-signed certs in place.
  * - REFERRER_URL: url to add as an HTTP referrer header, currently only used for non-authed reader posts
  */
-public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener {
+public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWebViewClientListener,
+        PrivateAtCookieProgressDialogOnDismissListener {
     public static final String AUTHENTICATION_URL = "authenticated_url";
     public static final String AUTHENTICATION_USER = "authenticated_user";
     public static final String AUTHENTICATION_PASSWD = "authenticated_passwd";
@@ -121,16 +135,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     public static final String WEBVIEW_USAGE_TYPE = "webview_usage_type";
     public static final String ACTION_BAR_TITLE = "action_bar_title";
     public static final String SHOW_PREVIEW_MODE_TOGGLE = "SHOW_PREVIEW_MODE_TOGGLE";
+    public static final String PRIVATE_AT_SITE_ID = "PRIVATE_AT_SITE_ID";
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject UiHelpers mUiHelpers;
+    @Inject PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject Dispatcher mDispatcher;
 
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
     private WPWebViewViewModel mViewModel;
     private ListPopupWindow mPreviewModeSelector;
+    private ElevationOverlayProvider mElevationOverlayProvider;
     private View mNavBarContainer;
     private LinearLayout mNavBar;
     private View mNavigateForwardButton;
@@ -150,9 +168,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     private void setLightStatusBar() {
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
             Window window = getWindow();
-            window.setStatusBarColor(getColor(R.color.white));
-            window.getDecorView().setSystemUiVisibility(
-                    window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            window.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorSurface));
+
+            if (!ConfigurationExtensionsKt.isDarkTheme(getResources().getConfiguration())) {
+                window.getDecorView().setSystemUiVisibility(
+                        window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
         }
     }
 
@@ -171,6 +192,15 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         initViewModel(webViewUsageCategory);
 
         mNavBarContainer = findViewById(R.id.navbar_container);
+
+        mElevationOverlayProvider = new ElevationOverlayProvider(WPWebViewActivity.this);
+
+        int elevatedAppbarColor =
+                mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                        getResources().getDimension(R.dimen.appbar_elevation));
+
+        mNavBarContainer.setBackgroundColor(elevatedAppbarColor);
+
         mNavBar = findViewById(R.id.navbar);
 
         mNavigateBackButton = findViewById(R.id.back_button);
@@ -239,12 +269,6 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 showSubtitle(actionBar);
                 actionBar.setDisplayShowTitleEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
-                Drawable upIcon = toolbar.getNavigationIcon();
-                if (upIcon != null) {
-                    upIcon.setColorFilter(getResources().getColor(R.color.gray_60), PorterDuff.Mode.SRC_ATOP);
-                }
-
                 if (isActionableDirectUsage()) {
                     String title = getIntent().getStringExtra(ACTION_BAR_TITLE);
                     if (title != null) {
@@ -393,6 +417,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                             mPreviewModeSelector.setHorizontalOffset(-popupOffset);
                             mPreviewModeSelector.setVerticalOffset(popupOffset);
                             mPreviewModeSelector.setModal(true);
+
+                            int elevatedPopupBackgroundColor =
+                                    mElevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
+                                            getResources().getDimension(R.dimen.popup_over_toolbar_elevation));
+                            mPreviewModeSelector.setBackgroundDrawable(new ColorDrawable(elevatedPopupBackgroundColor));
+
                             mPreviewModeSelector.setOnDismissListener(new OnDismissListener() {
                                 @Override public void onDismiss() {
                                     mViewModel.togglePreviewModeSelectorVisibility(false);
@@ -445,7 +475,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     // frameNonce is used to show drafts, without it "no page found" error would be thrown
     public static void openJetpackBlogPostPreview(Context context, String url, String shareableUrl, String shareSubject,
                                                   String frameNonce, boolean allowPreviewModeSelection,
-                                                  boolean startPreviewForResult) {
+                                                  boolean startPreviewForResult, long privateSiteId) {
         if (!TextUtils.isEmpty(frameNonce)) {
             url += "&frame-nonce=" + UrlUtils.urlEncode(frameNonce);
         }
@@ -458,6 +488,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         }
         if (!TextUtils.isEmpty(shareSubject)) {
             intent.putExtra(WPWebViewActivity.SHARE_SUBJECT, shareSubject);
+        }
+        if (privateSiteId > 0) {
+            intent.putExtra(WPWebViewActivity.PRIVATE_AT_SITE_ID, privateSiteId);
         }
         if (startPreviewForResult) {
             intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, WPWebViewUsageCategory.REMOTE_PREVIEWING.getValue());
@@ -522,7 +555,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             Context context,
             WPWebViewUsageCategory directUsageCategory,
             String postTitle
-                                                      ) {
+    ) {
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.WEBVIEW_USAGE_TYPE, directUsageCategory.getValue());
         intent.putExtra(WPWebViewActivity.ACTION_BAR_TITLE, postTitle);
@@ -540,19 +573,20 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     public static void openURL(Context context, String url) {
-        openURL(context, url, false);
+        openURL(context, url, false, 0);
     }
 
     public static void openURL(Context context, String url, String referrer) {
-        openURL(context, url, referrer, false);
+        openURL(context, url, referrer, false, 0);
     }
 
-    public static void openURL(Context context, String url, boolean allowPreviewModeSelection) {
-        openURL(context, url, null, allowPreviewModeSelection);
+    public static void openURL(Context context, String url, boolean allowPreviewModeSelection,
+                               long privateSiteId) {
+        openURL(context, url, null, allowPreviewModeSelection, privateSiteId);
     }
 
     public static void openURL(Context context, String url, String referrer,
-                               boolean allowPreviewModeSelection) {
+                               boolean allowPreviewModeSelection, long privateSiteId) {
         if (context == null) {
             AppLog.e(AppLog.T.UTILS, "Context is null");
             return;
@@ -567,6 +601,9 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         Intent intent = new Intent(context, WPWebViewActivity.class);
         intent.putExtra(WPWebViewActivity.URL_TO_LOAD, url);
         intent.putExtra(WPWebViewActivity.SHOW_PREVIEW_MODE_TOGGLE, allowPreviewModeSelection);
+        if (privateSiteId > 0) {
+            intent.putExtra(WPWebViewActivity.PRIVATE_AT_SITE_ID, privateSiteId);
+        }
         if (!TextUtils.isEmpty(referrer)) {
             intent.putExtra(REFERRER_URL, referrer);
         }
@@ -598,7 +635,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             String shareSubject,
             boolean allowPreviewModeSelection,
             boolean startPreviewForResult
-                                    ) {
+    ) {
         if (!checkContextAndUrl(context, url)) {
             return;
         }
@@ -710,6 +747,25 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             return;
         }
 
+        // if we load content of private AT site we need to make sure we have a special cookie first
+        long privateAtSiteId = extras.getLong(PRIVATE_AT_SITE_ID);
+        if (privateAtSiteId > 0 && mPrivateAtomicCookie.isCookieRefreshRequired()) {
+            PrivateAtCookieRefreshProgressDialog.Companion.showIfNecessary(getSupportFragmentManager());
+            mDispatcher.dispatch(SiteActionBuilder.newFetchPrivateAtomicCookieAction(
+                    new FetchPrivateAtomicCookiePayload(privateAtSiteId)));
+            return;
+        } else if (privateAtSiteId > 0 && mPrivateAtomicCookie.exists()) {
+            // make sure we add cookie to the cookie manager if it exists
+            CookieManager.getInstance().setCookie(
+                    mPrivateAtomicCookie.getDomain(), mPrivateAtomicCookie.getCookieContent()
+            );
+        }
+
+        loadWebContent();
+    }
+
+    private void loadWebContent() {
+        Bundle extras = getIntent().getExtras();
         String addressToLoad = extras.getString(URL_TO_LOAD);
         String username = extras.getString(AUTHENTICATION_USER, "");
         String password = extras.getString(AUTHENTICATION_PASSWD, "");
@@ -788,7 +844,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                     URLEncoder.encode(StringUtils.notNullStr(username), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(password), ENCODING_UTF8),
                     URLEncoder.encode(StringUtils.notNullStr(urlToLoad), ENCODING_UTF8)
-                                           );
+            );
 
             // Add token authorization when signing in to WP.com
             if (WPUrlUtils.safeToAddWordPressComAuthToken(authenticationUrl)
@@ -886,5 +942,44 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             super.onBackPressed();
             setResultIfNeeded();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mDispatcher.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        mDispatcher.unregister(this);
+        super.onStop();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateAtomicCookieFetched(OnPrivateAtomicCookieFetched event) {
+        if (event.isError()) {
+            AppLog.e(AppLog.T.MAIN,
+                    "Failed to load private AT cookie. " + event.error.type + " - " + event.error.message);
+            WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                      .show();
+        } else {
+            CookieManager.getInstance().setCookie(mPrivateAtomicCookie.getDomain(),
+                    mPrivateAtomicCookie.getCookieContent());
+        }
+
+        // if the dialog is not showing by the time cookie fetched it means that it was dismissed and content was loaded
+        if (PrivateAtCookieRefreshProgressDialog.Companion.isShowing(getSupportFragmentManager())) {
+            loadWebContent();
+            PrivateAtCookieRefreshProgressDialog.Companion.dismissIfNecessary(getSupportFragmentManager());
+        }
+    }
+
+    @Override
+    public void onCookieProgressDialogCancelled() {
+        WPSnackbar.make(findViewById(R.id.snackbar_anchor), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
+                  .show();
+        loadWebContent();
     }
 }

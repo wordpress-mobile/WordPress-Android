@@ -1,5 +1,0 @@
-13.8:
-* Peningkatan penyunting blok: Menambahkan blok Spacer untuk membuat spasi putih di antara konten.
-* Memodifikasi Pencarian Pos Blog untuk menyertakan pos di semua kategori.
-* Banyak peningkatan di seluruh aplikasi – Memperbaiki 26 crash dan bug unik.
-

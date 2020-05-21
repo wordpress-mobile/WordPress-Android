@@ -66,6 +66,11 @@ public class WPSnackbar {
         return this;
     }
 
+     public WPSnackbar setAnchorView(View anchorView) {
+        mSnackbar.setAnchorView(anchorView);
+        return this;
+    }
+
     public void dismiss() {
         if (mSnackbar != null) {
             mSnackbar.dismiss();

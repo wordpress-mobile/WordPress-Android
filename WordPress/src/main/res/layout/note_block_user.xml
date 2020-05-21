@@ -1,84 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_block_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:contentDescription="@null"
+    android:focusable="true"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <LinearLayout
-        android:contentDescription="@null"
-        android:focusable="true"
-        android:clickable="true"
-        android:id="@+id/user_block_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?android:selectableItemBackground"
-        android:paddingStart="@dimen/margin_extra_large"
-        android:paddingEnd="@dimen/margin_extra_large">
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium">
+
+        <ImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="@dimen/notifications_avatar_sz"
+            android:layout_height="@dimen/notifications_avatar_sz"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/notifications_adjusted_font_margin"
+            android:importantForAccessibility="no" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_medium">
+            android:orientation="vertical">
 
-            <ImageView
-                android:importantForAccessibility="no"
-                android:id="@+id/user_avatar"
-                android:layout_width="@dimen/notifications_avatar_sz"
-                android:layout_height="@dimen/notifications_avatar_sz"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/notifications_adjusted_font_margin" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceSubtitle2"
+                tools:text="Bob Ross" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:textSize="@dimen/text_sz_medium"
-                    android:textStyle="bold"
-                    android:textColor="?attr/wpColorText"
-                    tools:text="Bob Ross" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_blog_url"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary"
+                tools:text="Paint with Me" />
 
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_blog_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:textColor="@color/primary_50"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="Paint with Me" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/user_blog_tagline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
-                    android:singleLine="true"
-                    android:textColor="?attr/wpColorTextSubtle"
-                    android:textSize="@dimen/text_sz_medium"
-                    tools:text="www.bobross.com" />
-
-            </LinearLayout>
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/user_blog_tagline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/wpColorOnSurfaceMedium"
+                tools:text="www.bobross.com" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/notifications_list_divider_full_width" />
-
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:background="@drawable/notifications_list_divider_full_width" />
+
 </LinearLayout>

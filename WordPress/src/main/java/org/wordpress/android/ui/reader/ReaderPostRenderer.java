@@ -214,7 +214,8 @@ public class ReaderPostRenderer {
     }
 
     private String makeImageTag(final String imageUrl, int width, int height, final String imageClass) {
-        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate);
+        String newImageUrl = ReaderUtils.getResizedImageUrl(imageUrl, width, height, mPost.isPrivate,
+                false); // don't use atomic proxy for WebView images
         if (height > 0) {
             return "<img class='" + imageClass + "'"
                    + " src='" + newImageUrl + "'"
@@ -307,7 +308,8 @@ public class ReaderPostRenderer {
                 mPost.getFeaturedImage(),
                 mResourceVars.mFullSizeImageWidthPx,
                 mResourceVars.mFeaturedImageHeightPx,
-                mPost.isPrivate);
+                mPost.isPrivate,
+                mPost.isPrivateAtomic);
 
         return "<img class='size-full' src='" + imageUrl + "'/>";
     }
@@ -362,7 +364,8 @@ public class ReaderPostRenderer {
               // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
               .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
               .append("<style type='text/css'>")
-              .append(" body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;}")
+              .append(" body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;")
+              .append(" color: ").append(mResourceVars.mTextColor).append("; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
               // gallery as those will be handled with the .tiled-gallery rules bellow.
@@ -375,6 +378,8 @@ public class ReaderPostRenderer {
                       + ", dl, table { width: auto !important; height: auto !important; }")
               // make sure long strings don't force the user to scroll horizontally
               .append(" body, p, div, a { word-wrap: break-word; }")
+               // change horizontal line color
+              .append(" hr { border-color: ").append(mResourceVars.mGreyExtraLightStr).append("; }")
               // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
               .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
@@ -398,7 +403,7 @@ public class ReaderPostRenderer {
               // so the user sees something while they're loading
               .append(" img.size-full, img.size-large, img.size-medium {")
               .append(" display: block; margin-left: auto; margin-right: auto;")
-              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append(";")
+              .append(" background-color: ").append(mResourceVars.mGreyMediumDarkStr).append(";")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }");
 
         if (isWideDisplay) {

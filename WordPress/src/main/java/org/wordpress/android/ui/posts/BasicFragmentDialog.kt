@@ -4,10 +4,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import androidx.appcompat.app.AlertDialog.Builder
 import androidx.appcompat.app.AppCompatDialogFragment
-import org.wordpress.android.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
  * Basic dialog fragment with support for 1,2 or 3 buttons.
@@ -78,7 +76,7 @@ class BasicFragmentDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = Builder(ContextThemeWrapper(activity, R.style.Calypso_Dialog_Alert))
+        val builder = MaterialAlertDialogBuilder(activity)
         builder.setMessage(mMessage)
                 .setPositiveButton(mPositiveButtonLabel) { _, _ ->
                     dismissedByPositiveButton = true

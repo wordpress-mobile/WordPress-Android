@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 
@@ -18,24 +16,12 @@ class SearchInputWithHeader(private val uiHelpers: UiHelpers, rootView: View, on
     private val headerSubtitle = rootView.findViewById<TextView>(R.id.subtitle)
     private val searchInput = rootView.findViewById<EditText>(R.id.input)
     private val progressBar = rootView.findViewById<View>(R.id.progress_bar)
-    private val clearAllButton = rootView.findViewById<View>(R.id.clear_all_btn)
     private val clearAllLayout = rootView.findViewById<View>(R.id.clear_all_layout)
     private val divider = rootView.findViewById<View>(R.id.divider)
 
     var onTextChanged: ((String) -> Unit)? = null
 
     init {
-        val context = rootView.context
-        val greyColor = ContextCompat.getColor(context, R.color.neutral_30)
-
-        val inputDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_search_white_24dp)
-        inputDrawable?.setTint(greyColor)
-        searchInput.setCompoundDrawablesRelativeWithIntrinsicBounds(inputDrawable, null, null, null)
-
-        val clearButtonDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_close_white_24dp)
-        clearButtonDrawable?.setTint(greyColor)
-        clearAllButton.background = clearButtonDrawable
-
         clearAllLayout.setOnClickListener {
             onClear()
         }

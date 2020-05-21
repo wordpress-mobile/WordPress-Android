@@ -26,9 +26,6 @@ import org.wordpress.android.util.UrlUtilsWrapper
 
 private val DUMMY_SITE_DATA: SiteCreationServiceData = SiteCreationServiceData(
         123,
-        "m1p2",
-        "title",
-        "tagLine",
         "slug"
 )
 private const val LANGUAGE_ID = "lang_id"
@@ -71,10 +68,7 @@ class CreateSiteUseCaseTest {
         assertThat(captor.value.payload).isInstanceOf(NewSitePayload::class.java)
         val payload = captor.value.payload as NewSitePayload
         assertThat(payload.siteName).isEqualTo(DUMMY_SITE_DATA.domain)
-        assertThat(payload.siteTitle).isEqualTo(DUMMY_SITE_DATA.siteTitle)
         assertThat(payload.segmentId).isEqualTo(DUMMY_SITE_DATA.segmentId)
-        assertThat(payload.verticalId).isEqualTo(DUMMY_SITE_DATA.verticalId)
-        assertThat(payload.tagLine).isEqualTo(DUMMY_SITE_DATA.siteTagLine)
     }
 
     @Test

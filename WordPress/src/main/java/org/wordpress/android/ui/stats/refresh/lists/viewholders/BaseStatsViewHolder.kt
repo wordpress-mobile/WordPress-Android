@@ -23,7 +23,6 @@ abstract class BaseStatsViewHolder(
                 setFullWidth()
             }
             ManagementType.CONTROL -> {
-                itemView.background = null
                 setFullWidth()
             }
         }

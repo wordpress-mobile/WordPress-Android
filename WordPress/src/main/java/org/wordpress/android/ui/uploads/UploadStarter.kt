@@ -10,12 +10,14 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.UploadActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
@@ -51,6 +53,7 @@ class UploadStarter @Inject constructor(
     private val context: Context,
     private val dispatcher: Dispatcher,
     private val postStore: PostStore,
+    private val pageStore: PageStore,
     private val siteStore: SiteStore,
     private val uploadActionUseCase: UploadActionUseCase,
     private val tracker: AnalyticsTrackerWrapper,
@@ -141,8 +144,11 @@ class UploadStarter @Inject constructor(
      */
     @Synchronized
     private suspend fun upload(site: SiteModel) = coroutineScope {
-        postStore.getPostsWithLocalChanges(site)
-                .asSequence()
+        val posts = async { postStore.getPostsWithLocalChanges(site) }
+        val pages = async { pageStore.getPagesWithLocalChanges(site) }
+        val list = posts.await() + pages.await()
+
+        list.asSequence()
                 .map { post ->
                     val action = uploadActionUseCase.getAutoUploadAction(post, site)
                     Pair(post, action)
@@ -152,10 +158,10 @@ class UploadStarter @Inject constructor(
                 }
                 .toList()
                 .forEach { (post, action) ->
-                    trackAutoUploadAction(action, post.status)
+                    trackAutoUploadAction(action, post.status, post.isPage)
                     AppLog.d(
                             AppLog.T.POSTS,
-                            "UploadStarter for post title: ${post.title}, action: $action"
+                            "UploadStarter for post (isPage: ${post.isPage}) title: ${post.title}, action: $action"
                     )
                     dispatcher.dispatch(
                             UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(
@@ -170,9 +176,13 @@ class UploadStarter @Inject constructor(
                 }
     }
 
-    private fun trackAutoUploadAction(action: UploadAction, status: String) {
+    private fun trackAutoUploadAction(
+        action: UploadAction,
+        status: String,
+        isPage: Boolean
+    ) {
         tracker.track(
-                Stat.AUTO_UPLOAD_POST_INVOKED,
+                if (isPage) Stat.AUTO_UPLOAD_PAGE_INVOKED else Stat.AUTO_UPLOAD_POST_INVOKED,
                 mapOf(
                         "upload_action" to action.toString(),
                         "post_status" to status

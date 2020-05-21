@@ -14,9 +14,7 @@ import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScre
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM.SiteCreationScreenTitle.ScreenTitleStepCount
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.DOMAINS
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SEGMENTS
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_INFO
 import org.wordpress.android.ui.sitecreation.SiteCreationStep.SITE_PREVIEW
-import org.wordpress.android.ui.sitecreation.SiteCreationStep.VERTICALS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -36,9 +34,6 @@ const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 @SuppressLint("ParcelCreator")
 data class SiteCreationState(
     val segmentId: Long? = null,
-    val verticalId: String? = null,
-    val siteTitle: String? = null,
-    val siteTagLine: String? = null,
     val domain: String? = null
 ) : WizardState, Parcelable
 
@@ -124,34 +119,14 @@ class SiteCreationMainVM @Inject constructor(
         when (wizardStep) {
             SEGMENTS -> siteCreationState.segmentId?.let {
                 siteCreationState = siteCreationState.copy(segmentId = null) }
-            VERTICALS -> siteCreationState.verticalId?.let {
-                siteCreationState = siteCreationState.copy(verticalId = null) }
-            SITE_INFO -> {
-                siteCreationState.siteTitle?.let { siteCreationState = siteCreationState.copy(siteTitle = null) }
-                siteCreationState.siteTagLine?.let { siteCreationState = siteCreationState.copy(siteTagLine = null) }
-            }
             DOMAINS -> siteCreationState.domain?.let {
                 siteCreationState = siteCreationState.copy(domain = null) }
             SITE_PREVIEW -> {} // intentionally left empty
         }
     }
 
-    fun onVerticalsScreenFinished(verticalId: String) {
-        siteCreationState = siteCreationState.copy(verticalId = verticalId)
-        wizardManager.showNextStep()
-    }
-
     fun onDomainsScreenFinished(domain: String) {
         siteCreationState = siteCreationState.copy(domain = domain)
-        wizardManager.showNextStep()
-    }
-
-    fun onInfoScreenFinished(siteTitle: String, tagLine: String?) {
-        siteCreationState = siteCreationState.copy(siteTitle = siteTitle, siteTagLine = tagLine)
-        wizardManager.showNextStep()
-    }
-
-    fun onSkipClicked() {
         wizardManager.showNextStep()
     }
 
@@ -160,10 +135,12 @@ class SiteCreationMainVM @Inject constructor(
         val stepCount = wizardManager.stepsCount
         val firstStep = stepPosition == 1
         val lastStep = stepPosition == stepCount
+        val singleInBetweenStepDomains = wizardManager.stepsCount == 3 && step.name == DOMAINS.name
 
         return when {
             firstStep -> ScreenTitleGeneral(R.string.new_site_creation_screen_title_general)
             lastStep -> ScreenTitleEmpty
+            singleInBetweenStepDomains -> ScreenTitleGeneral(R.string.my_site_select_domains_page_title)
             else -> ScreenTitleStepCount(
                     R.string.new_site_creation_screen_title_step_count,
                     stepCount - 2, // -2 -> first = general title (Create Site), last item = empty title

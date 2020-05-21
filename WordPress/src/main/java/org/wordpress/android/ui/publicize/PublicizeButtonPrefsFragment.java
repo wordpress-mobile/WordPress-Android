@@ -9,9 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,7 +98,7 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
     }
@@ -110,14 +108,14 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
                              @Nullable Bundle savedInstanceState) {
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.publicize_button_prefs_fragment, container, false);
 
-        mPrefButtonStyle = (WPPrefView) view.findViewById(R.id.pref_button_style);
-        mPrefSharingButtons = (WPPrefView) view.findViewById(R.id.pref_sharing_buttons);
-        mPrefMoreButtons = (WPPrefView) view.findViewById(R.id.pref_more_button);
-        mPrefLabel = (WPPrefView) view.findViewById(R.id.pref_label);
-        mPrefShowReblog = (WPPrefView) view.findViewById(R.id.pref_show_reblog);
-        mPrefShowLike = (WPPrefView) view.findViewById(R.id.pref_show_like);
-        mPrefAllowCommentLikes = (WPPrefView) view.findViewById(R.id.pref_allow_comment_likes);
-        mPrefTwitterName = (WPPrefView) view.findViewById(R.id.pref_twitter_name);
+        mPrefButtonStyle = view.findViewById(R.id.pref_button_style);
+        mPrefSharingButtons = view.findViewById(R.id.pref_sharing_buttons);
+        mPrefMoreButtons = view.findViewById(R.id.pref_more_button);
+        mPrefLabel = view.findViewById(R.id.pref_label);
+        mPrefShowReblog = view.findViewById(R.id.pref_show_reblog);
+        mPrefShowLike = view.findViewById(R.id.pref_show_like);
+        mPrefAllowCommentLikes = view.findViewById(R.id.pref_allow_comment_likes);
+        mPrefTwitterName = view.findViewById(R.id.pref_twitter_name);
 
         if (!mSite.isWPCom() && mSite.isJetpackConnected()) {
             mPrefShowLike.setHeading(getString(R.string.site_settings_like_header));
@@ -202,17 +200,9 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
         }
 
         WordPress.getRestClientUtilsV1_1()
-                 .setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject, new RestRequest.Listener() {
-                     @Override
-                     public void onResponse(JSONObject response) {
-                         configureSharingButtonsFromResponse(response);
-                     }
-                 }, new RestRequest.ErrorListener() {
-                     @Override
-                     public void onErrorResponse(VolleyError error) {
-                         AppLog.e(AppLog.T.SETTINGS, error.getMessage());
-                     }
-                 });
+                 .setSharingButtons(Long.toString(mSite.getSiteId()), jsonObject,
+                         this::configureSharingButtonsFromResponse,
+                         error -> AppLog.e(AppLog.T.SETTINGS, error.getMessage()));
     }
 
     /*
@@ -225,15 +215,15 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
 
         View view = getView();
         if (view != null) {
-            View twitterCard = view.findViewById(R.id.card_view_twitter);
+            View twitterContainer = view.findViewById(R.id.twitter_container);
             for (int i = 0; i < mPublicizeButtons.size(); i++) {
                 PublicizeButton publicizeButton = mPublicizeButtons.get(i);
                 if (publicizeButton.getId().equals(TWITTER_ID) && publicizeButton.isEnabled()) {
-                    twitterCard.setVisibility(View.VISIBLE);
+                    twitterContainer.setVisibility(View.VISIBLE);
                     return;
                 }
             }
-            twitterCard.setVisibility(View.GONE);
+            twitterContainer.setVisibility(View.GONE);
         }
     }
 
@@ -242,17 +232,9 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
      */
     private void configureSharingButtons() {
         WordPress.getRestClientUtilsV1_1()
-                 .getSharingButtons(Long.toString(mSite.getSiteId()), new RestRequest.Listener() {
-                     @Override
-                     public void onResponse(JSONObject response) {
-                         configureSharingButtonsFromResponse(response);
-                     }
-                 }, new RestRequest.ErrorListener() {
-                     @Override
-                     public void onErrorResponse(VolleyError error) {
-                         AppLog.e(AppLog.T.SETTINGS, error);
-                     }
-                 });
+                 .getSharingButtons(Long.toString(mSite.getSiteId()),
+                         this::configureSharingButtonsFromResponse,
+                         error -> AppLog.e(AppLog.T.SETTINGS, error));
     }
 
     private void configureSharingButtonsFromResponse(JSONObject response) {
@@ -324,12 +306,7 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
         mSiteSettings.init(false);
 
         if (shouldFetchSettings) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mSiteSettings.init(true);
-                }
-            }, FETCH_DELAY);
+            new Handler().postDelayed(() -> mSiteSettings.init(true), FETCH_DELAY);
         }
     }
 

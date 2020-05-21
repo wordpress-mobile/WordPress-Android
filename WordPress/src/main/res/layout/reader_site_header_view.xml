@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_blog_info"
     android:layout_width="match_parent"
@@ -11,63 +10,59 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:elevation="@dimen/card_elevation"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_large"
-        android:paddingEnd="@dimen/reader_card_content_padding"
         android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large" >
+        android:paddingTop="@dimen/margin_large"
+        android:paddingEnd="@dimen/reader_card_content_padding"
+        android:paddingBottom="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/image_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:layout_centerVertical="true"
-            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
             android:layout_marginEnd="@dimen/reader_card_avatar_margin_end"
-            android:contentDescription="@null"/>
+            android:contentDescription="@null"
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
         <org.wordpress.android.widgets.WPTextView
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/text_blog_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_large"
-            tools:text="Loading..."
             android:layout_toStartOf="@+id/follow_button"
-            android:layout_toEndOf="@+id/image_blavatar"/>
+            android:layout_toEndOf="@+id/image_blavatar"
+            android:gravity="start"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="Loading..." />
 
         <org.wordpress.android.widgets.WPTextView
-            android:textAlignment="viewStart"
-            android:gravity="start"
             android:id="@+id/text_domain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_blog_name"
-            android:textColor="@color/neutral_50"
-            android:textSize="@dimen/text_sz_small"
-            tools:text="text_domain"
             android:layout_toStartOf="@+id/follow_button"
-            android:layout_toEndOf="@+id/image_blavatar"/>
+            android:layout_toEndOf="@+id/image_blavatar"
+            android:gravity="start"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="text_domain" />
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/follow_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:padding="@dimen/reader_follow_button_padding"
             android:visibility="gone"
-            tools:visibility="visible"
-            android:layout_alignParentEnd="true"/>
+            tools:visibility="visible" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/neutral_0"
         android:orientation="vertical"
         android:paddingTop="@dimen/margin_extra_large">
 
@@ -75,16 +70,15 @@
             android:id="@+id/text_blog_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/reader_card_content_padding"
+            android:layout_marginEnd="@dimen/reader_card_content_padding"
             android:layout_marginBottom="@dimen/margin_large"
             android:ellipsize="end"
+            android:fontFamily="serif"
             android:gravity="center"
             android:maxLines="3"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_medium"
-            android:fontFamily="serif"
-            tools:text="text_description"
-            android:layout_marginStart="@dimen/reader_card_content_padding"
-            android:layout_marginEnd="@dimen/reader_card_content_padding"/>
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:text="text_description" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -97,14 +91,13 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/neutral_10" />
+                android:background="?android:attr/listDivider" />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_blog_follow_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/neutral_50"
-                android:textSize="@dimen/text_sz_small"
+                android:textAppearance="?attr/textAppearanceCaption"
                 tools:text="12 followers" />
 
             <View
@@ -112,7 +105,7 @@
                 android:layout_height="1dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@color/neutral_10" />
+                android:background="?android:attr/listDivider" />
         </LinearLayout>
 
     </LinearLayout>

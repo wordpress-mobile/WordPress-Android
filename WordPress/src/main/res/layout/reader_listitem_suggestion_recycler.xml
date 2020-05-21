@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    tools:ignore="UnusedAttribute">
+
+    <ImageView
+        android:id="@+id/image_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_history_white_24dp"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_suggestion"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:textAppearance="?attr/textAppearanceBody1"
+        tools:text="Suggestion" />
+
+    <ImageView
+        android:id="@+id/image_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_extra_large"
+        android:background="?android:selectableItemBackground"
+        android:contentDescription="@string/reader_list_item_suggestion_remove_desc"
+        android:src="@drawable/ic_cross_white_24dp"
+        app:tint="?attr/wpColorOnSurfaceMedium" />
+</LinearLayout>

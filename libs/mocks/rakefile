@@ -1,0 +1,85 @@
+require 'json'
+require 'jsonlint'
+require 'git'
+
+desc "Re-format all JSON files to be pretty-printed"
+task :format do
+	
+	forEachMockFile { |file|
+
+		begin
+			json = JSON.parse(open(file).read)
+			File.write(file, JSON.pretty_generate(json))
+		rescue
+			linter = JsonLint::Linter.new
+			linter.check(file)
+			linter.display_errors
+
+			abort("Invalid JSON. See errors above.")
+		end
+	}
+end
+
+desc "Check that all files are properly formatted in CI"
+task :checkformat do
+	repo = Git.open(".")
+
+	abort("Repo is dirty – unable to verify JSON files are correctly formatted") unless repo.diff.lines == 0
+	Rake::Task["format"].execute
+
+	if repo.diff.lines > 0
+		repo.reset_hard
+		abort("Repo contains unformatted JSON files – run `rake format` then commit your changes.")
+	end
+end
+
+desc "Ensure all JSON files are valid and don't contain common mistakes"
+task :lint do
+
+	file_errors = {}
+
+	forEachMockFile { |file|
+
+		## Ensure the file is valid JSON
+		linter = JsonLint::Linter.new
+		linter.check(file)
+		if linter.errors_count > 0
+			linter.errors.map { |key, value| value}.each { |error|
+				append_error(file, file_errors, "Invalid JSON: #{error}}")
+			}
+		end
+
+		## Ensure there are no references to the actual API location – we should use the mocks
+		# base URL – this ensures that any requests made based on the contents of other
+		# requests won't fail.
+		if File.open(file).each_line.any?{ |line| line.include?('public-api.wordpress.com') }
+			append_error(file, file_errors, "Contains references to `https://public-api.wordpress.com`. Replace them with `{{request.requestLine.baseUrl}}`.")
+		end
+	}
+
+	# Output file errors in a pretty way
+	puts "There are errors in #{file_errors.count} files:\n" unless file_errors.empty?
+	file_errors.each { |file, errors|
+		puts "=== #{file}"
+		errors.each{ |e|
+			puts "    #{e}"
+		}
+	}
+
+	abort unless file_errors.empty?
+	puts "Lint Complete. Everything looks good."
+end
+
+def forEachMockFile
+	Dir.glob("WordPressMocks/**/*.json").each { |file|
+		yield(File.expand_path(file))
+	}
+end
+
+def append_error(file, errors, message)
+	if errors[file] == nil
+		errors[file] = Array.new
+	end
+
+	errors[file].append(message)
+end

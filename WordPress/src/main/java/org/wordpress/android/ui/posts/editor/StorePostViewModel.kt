@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState.SAVED_LOCALLY
@@ -88,7 +89,7 @@ class StorePostViewModel
     fun updatePostObjectWithUIAsync(
         postRepository: EditPostRepository,
         getUpdatedTitleAndContent: (currentContent: String) -> UpdateFromEditor,
-        onSuccess: ((PostImmutableModel) -> Unit)? = null
+        onCompleted: ((PostImmutableModel, UpdatePostResult) -> Unit)? = null
     ) {
         postRepository.updateAsync({ postModel ->
             updatePostObjectWithUI(
@@ -96,7 +97,7 @@ class StorePostViewModel
                     postModel,
                     postRepository
             )
-        }, onSuccess)
+        }, onCompleted)
     }
 
     private fun updatePostObjectWithUI(

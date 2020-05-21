@@ -601,11 +601,15 @@ public class UploadService extends Service {
     }
     private static synchronized PostModel updatePostWithMediaUrl(PostModel post, MediaModel media,
                                                                  MediaUploadReadyListener processor) {
-        if (media != null && post != null && processor != null) {
+        if (media != null && post != null && processor != null && sInstance != null) {
             boolean changesConfirmed = post.contentHashcode() == post.getChangesConfirmedContentHashcode();
+
+            // obtain site url used to generate attachment page url
+            SiteModel site = sInstance.mSiteStore.getSiteByLocalId(media.getLocalSiteId());
+
             // actually replace the media ID with the media uri
             processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media));
+                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
@@ -1013,8 +1017,7 @@ public class UploadService extends Service {
                                 new PostEvents.PostUploadCanceled(postModel));
                     } else {
                         // Do not re-enqueue a post that has already failed
-                        if (isError != null && isError && post.getId() == updatedPost.getId() && mUploadStore
-                                .isFailedPost(post)) {
+                        if (isError != null && isError && mUploadStore.isFailedPost(updatedPost)) {
                             continue;
                         }
                         // TODO Should do some extra validation here

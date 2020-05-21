@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/categoryRow"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/category_parent_spinner_row_height"
     android:clickable="false"
     android:orientation="horizontal">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/categoryRowText"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="?attr/wpColorTextSubtle"
         android:paddingStart="4dp"
-        android:paddingEnd="4dp"/>
+        android:paddingEnd="4dp"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>

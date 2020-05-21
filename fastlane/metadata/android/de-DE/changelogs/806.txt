@@ -1,5 +1,0 @@
-13.8:
-* Verbesserungen am Block-Editor: Der Abstandshalter-Block wurde hinzugefügt, damit du Leerräume zwischen Inhalten erstellen kannst.
-* Die Suche nach Blogbeiträgen wurde verändert, um Beiträge unter allen Kategorien einzuschließen.
-* Die gesamte App wurde hinter den Kulissen an zahlreichen Stellen verbessert. Insgesamt wurden 26 Fehler, die zu Abstürzen und Problemen führten, behoben.
-

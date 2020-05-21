@@ -9,22 +9,20 @@
         android:id="@+id/number_picker_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_large"
-        android:textColor="@color/neutral_70_neutral_20_selector"
-        android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="start"
         android:textAlignment="viewStart"
-        android:theme="@style/SwitchBlueMedium"
-        android:gravity="start"/>
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:theme="@style/SwitchBlueMedium" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/number_picker_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/neutral_40"
         android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"/>
+        android:layout_marginEnd="24dp"
+        android:textAppearance="?attr/textAppearanceCaption" />
 
     <LinearLayout
         android:id="@+id/number_picker_toggleable"
@@ -36,30 +34,30 @@
             android:id="@+id/number_picker_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:duplicateParentState="true"
-            android:textSize="@dimen/text_sz_large"
-            android:textColor="@color/neutral_70_neutral_20_selector"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"/>
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="@color/on_surface_disabled_selector" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/neutral_0" />
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider" />
 
         <NumberPicker
             android:id="@+id/number_picker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:duplicateParentState="true"
-            android:theme="@style/NumberPickerTheme"/>
+            android:theme="@style/NumberPickerTheme" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/neutral_0" />
+            android:layout_height="@dimen/divider_size"
+            android:background="?android:attr/listDivider" />
 
     </LinearLayout>
 

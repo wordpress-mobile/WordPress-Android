@@ -16,6 +16,7 @@ import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
 import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Tap;
+import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
@@ -36,13 +37,17 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeLeft;
+import static androidx.test.espresso.action.ViewActions.swipeRight;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.core.internal.deps.guava.base.Preconditions.checkNotNull;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -55,8 +60,12 @@ import static org.hamcrest.Matchers.is;
 public class WPSupportUtils {
     // HIGH-LEVEL METHODS
 
+    public static ViewInteraction visibleElementWithId(Integer elementID) {
+        return onView(allOf(withId(elementID), withEffectiveVisibility(Visibility.VISIBLE)));
+    }
+
     public static boolean isElementDisplayed(Integer elementID) {
-        return isElementDisplayed(onView(withId(elementID)));
+        return isElementDisplayed(visibleElementWithId(elementID));
     }
 
     public static boolean isElementDisplayed(ViewInteraction element) {
@@ -79,7 +88,7 @@ public class WPSupportUtils {
 
     public static void scrollToThenClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(scrollTo());
         clickOn(elementID);
     }
@@ -92,7 +101,7 @@ public class WPSupportUtils {
 
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        clickOn(onView(withId(elementID)));
+        clickOn(visibleElementWithId(elementID));
         idleFor(500); // allow for transitions
     }
 
@@ -151,7 +160,7 @@ public class WPSupportUtils {
 
     public static void longClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID)).perform(longClick());
+        visibleElementWithId(elementID).perform(longClick());
     }
 
     public static void longClickOn(ViewInteraction element) {
@@ -183,9 +192,20 @@ public class WPSupportUtils {
 
     public static void populateTextField(Integer elementID, String text) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
+    }
+
+    public static void populateTextFieldWithin(Integer elementID, String text) {
+        waitForElementToBeDisplayed(elementID);
+
+        onView(allOf(
+                isDescendantOfA(withId(elementID)),
+                withId(R.id.input)
+        ))
+        .perform(replaceText(text))
+        .perform(closeSoftKeyboard());
     }
 
     public static void populateTextField(ViewInteraction element, String text) {
@@ -208,6 +228,22 @@ public class WPSupportUtils {
                                           );
         scrollToThenClickOn(postTitle);
         moveCaretToEndAndDisplayIn(postTitle);
+    }
+
+    public static Boolean dialogExistsWithTitle(String title) {
+        ViewInteraction view = onView(withText(title));
+
+        if (!isElementDisplayed(view)) {
+            return false;
+        }
+
+        ViewInteraction dialog = view.inRoot(isDialog());
+        return isElementDisplayed(dialog);
+    }
+
+    public static void tapButtonInDialogWithTitle(String title) {
+        ViewInteraction dialogButton = onView(withText(title)).inRoot(isDialog());
+        clickOn(dialogButton);
     }
 
     private static void moveCaretToEndAndDisplayIn(ViewInteraction element) {
@@ -244,6 +280,28 @@ public class WPSupportUtils {
         clickOn(view);
     }
 
+    public static void scrollToTopOfRecyclerView(final RecyclerView recyclerView) {
+        // Prevent java.lang.IllegalStateException:
+        // Cannot call this method while RecyclerView is computing a layout or scrolling
+        waitForConditionToBeTrue(new Supplier<Boolean>() {
+            @Override public Boolean get() {
+                return !recyclerView.isComputingLayout();
+            }
+        });
+
+        // Let the layout settle down before attempting to scroll
+        idleFor(100);
+
+        getCurrentActivity().runOnUiThread(new Runnable() {
+            @Override public void run() {
+                recyclerView.scrollToPosition(0);
+            }
+        });
+
+        // Let the layout settle down after scrolling
+        idleFor(100);
+    }
+
     public static void selectItemAtIndexInSpinner(Integer index, Integer spinnerElementID) {
         clickOn(spinnerElementID);
         clickOnSpinnerItemAtIndex(index);
@@ -255,12 +313,32 @@ public class WPSupportUtils {
     }
 
     public static void selectItemWithTitleInTabLayout(String string, Integer elementID) {
-        clickOn(onView(
+        Integer tries = 0;
+        Integer maxTries = 10;
+
+        for (Integer i = 0; i < 10; i++) {
+            visibleElementWithId(elementID).perform(swipeRight());
+        }
+
+        while (!tabLayoutHasTextDisplayed(elementID, string) && tries < maxTries) {
+            visibleElementWithId(elementID).perform(swipeLeft());
+            tries++;
+        }
+
+        clickOn(tabItemInTabLayoutWithTitle(elementID, string));
+    }
+
+    private static Boolean tabLayoutHasTextDisplayed(Integer elementID, String text) {
+        return isElementCompletelyDisplayed(tabItemInTabLayoutWithTitle(elementID, text));
+    }
+
+    private static ViewInteraction tabItemInTabLayoutWithTitle(Integer tabLayoutElement, String title) {
+        return onView(
                 allOf(
-                        withText(string),
-                        isDescendantOfA(withId(R.id.tabLayout))
-                     )
-              ));
+                   withText(title),
+                   isDescendantOfA(withId(tabLayoutElement))
+                )
+        );
     }
 
     // WAITERS
@@ -565,5 +643,9 @@ public class WPSupportUtils {
         });
 
         return mCurrentActivity;
+    }
+
+    public static String getTranslatedString(Integer resourceID) {
+        return getCurrentActivity().getResources().getString(resourceID);
     }
 }

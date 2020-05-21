@@ -1,21 +1,19 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.WPPrefUtils;
 import org.wordpress.android.widgets.WPTextView;
 
 public class ProfileInputDialogFragment extends DialogFragment {
@@ -48,18 +46,17 @@ public class ProfileInputDialogFragment extends DialogFragment {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
         View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder alertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         alertDialogBuilder.setView(promptView);
 
-        final WPTextView textView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_label);
-        final EditText editText = (EditText) promptView.findViewById(R.id.my_profile_dialog_input);
-        final WPTextView hintView = (WPTextView) promptView.findViewById(R.id.my_profile_dialog_hint);
+        final WPTextView textView = promptView.findViewById(R.id.my_profile_dialog_label);
+        final EditText editText = promptView.findViewById(R.id.my_profile_dialog_input);
+        final WPTextView hintView = promptView.findViewById(R.id.my_profile_dialog_hint);
 
         Bundle args = getArguments();
         String title = args.getString(TITLE_TAG);
         String hint = args.getString(HINT_TAG);
-        Boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
+        boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
         String initialText = args.getString(INITIAL_TEXT_TAG);
         final int callbackId = args.getInt(CALLBACK_ID_TAG);
 
@@ -79,39 +76,19 @@ public class ProfileInputDialogFragment extends DialogFragment {
         }
 
         alertDialogBuilder.setCancelable(true)
-                          .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                              public void onClick(DialogInterface dialog, int id) {
-                                  if (getTargetFragment() instanceof Callback) {
-                                      ((Callback) getTargetFragment())
-                                              .onSuccessfulInput(editText.getText().toString(), callbackId);
-                                  } else {
-                                      AppLog.e(AppLog.T.UTILS,
-                                               "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
-                                  }
+                          .setPositiveButton(android.R.string.ok, (dialog, id) -> {
+                              if (getTargetFragment() instanceof Callback) {
+                                  ((Callback) getTargetFragment())
+                                          .onSuccessfulInput(editText.getText().toString(), callbackId);
+                              } else {
+                                  AppLog.e(AppLog.T.UTILS,
+                                           "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
                               }
                           })
                           .setNegativeButton(R.string.cancel,
-                                             new DialogInterface.OnClickListener() {
-                                                 public void onClick(DialogInterface dialog, int id) {
-                                                     dialog.cancel();
-                                                 }
-                                             });
+                                  (dialog, id) -> dialog.cancel());
 
         return alertDialogBuilder.create();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        AlertDialog dialog = (AlertDialog) getDialog();
-        Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) {
-            WPPrefUtils.layoutAsFlatButton(positive);
-        }
-        if (negative != null) {
-            WPPrefUtils.layoutAsFlatButton(negative);
-        }
     }
 
     public interface Callback {

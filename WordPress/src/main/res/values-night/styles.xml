@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
+        <item name="colorPrimary">@color/blue_30</item>
+        <item name="colorPrimaryVariant">@color/blue_50</item>
+        <item name="colorSecondary">@color/pink_30</item>
+        <item name="colorSecondaryVariant">@color/pink_50</item>
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="colorSurface">@color/background_dark</item>
+        <item name="colorError">@color/red_30</item>
+        <item name="colorOnPrimary">@android:color/black</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorOnBackground">@android:color/white</item>
+        <item name="colorOnSurface">@android:color/white</item>
+        <item name="colorOnError">@android:color/black</item>
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
+
+        <item name="wpColorText">@android:color/white</item>
+        <item name="wpColorTextSubtle">@color/neutral_50</item>
+        <item name="wpColorError">@color/error_50</item>
+        <item name="wpColorSuccess">@color/green_30</item>
+        <item name="wpColorWarningDark">@color/warning_50</item>
+        <item name="wpColorWarningLight">@color/yellow_20</item>
+        <item name="wpColorAppBar">?attr/colorSurface</item>
+        <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
+        <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+
+        <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
+        <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest</item>
+
+        <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
+        <item name="tabStyle">@style/WordPress.TabLayout</item>
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="listPopupWindowStyle">
+            @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
+        </item>
+
+        <item name="actionOverflowMenuStyle">
+            @style/Widget.MaterialComponents.PopupMenu.Overflow
+        </item>
+
+         <item name="bottomSheetDialogTheme">
+             @style/WordPress.BottomSheetDialogTheme
+         </item>
+
+        <item name="toolbarStyle">@style/WordPress.ToolBar</item>
+        <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+
+        <!-- we can remove it after moving away from Bridge version of theme -->
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
+
+        <item name="android:statusBarColor">?attr/colorSurface</item>
+
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
+
+        <item name="actionModeStyle">@style/WordPress.ActionMode</item>
+        <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
+        <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
+    </style>
+
+    <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="subtitleTextStyle">@style/WordPress.ActionMode.SubtitleTextStyle</item>
+        <item name="titleTextStyle">@style/WordPress.ActionMode.TitleTextStyle</item>
+        <item name="theme">@style/WordPress.ActionMode.Theme</item>
+    </style>
+
+    <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.SubtitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.CloseButton" parent="Widget.AppCompat.Light.ActionButton.CloseMode">
+        <item name="tint">?attr/colorPrimary</item>
+    </style>
+
+    <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:textColorSecondary">?attr/colorPrimary</item>
+        <item name="colorControlActivated">@android:color/transparent</item>
+    </style>
+
+    <style name="WordPress" parent="Base.Wordpress">
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+    </style>
+
+    <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface" />
+
+    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="android:elevation">@dimen/appbar_elevation</item>
+    </style>
+
+    <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">?attr/colorSecondaryVariant</item>
+        <item name="tint">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
+        <item name="android:textColor">@color/on_surface_disabled_selector</item>
+    </style>
+
+    <style name="DividerVertical">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="DividerSourceView">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <style name="DividerHorizontal">
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+</resources>

@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/neutral_0"
     android:orientation="vertical">
 
     <include
         layout="@layout/site_creation_error_with_retry"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
     <include
-        layout="@layout/progress_layout"
-        tools:visibility="gone"/>
+        layout="@layout/site_creation_progress_creating_site"
+        tools:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/content_layout"
@@ -26,10 +24,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/margin_extra_medium_large"
-            android:layout_marginEnd="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
-            android:layout_marginTop="@dimen/margin_extra_medium_large"/>
+            android:layout_marginTop="@dimen/margin_extra_medium_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginBottom="@dimen/margin_extra_medium_large" />
 
         <include
             android:id="@+id/webviewContainer"
@@ -38,29 +36,29 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/sitePreviewOkButtonContainer"
             android:layout_below="@id/sitePreviewHeaderLayout"
-            android:layout_marginBottom="@dimen/negative_margin_medium"
             android:layout_marginLeft="@dimen/site_creation_preview_web_view_side_margin"
-            android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin"/>
+            android:layout_marginRight="@dimen/site_creation_preview_web_view_side_margin"
+            android:layout_marginBottom="@dimen/negative_margin_medium" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/sitePreviewOkButtonContainer"
+            style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/site_creation_preview_ok_button_container_height"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="@dimen/margin_medium"
-            app:cardBackgroundColor="@color/neutral_0"
             app:cardElevation="@dimen/site_creation_container_elevation"
             tools:ignore="InconsistentLayout">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/okButton"
+                style="@style/WordPress.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
-                android:text="@string/dialog_button_ok"
-                android:theme="@style/WordPress.Button.Primary"/>
-        </androidx.cardview.widget.CardView>
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:text="@string/dialog_button_ok" />
+        </com.google.android.material.card.MaterialCardView>
     </RelativeLayout>
 </RelativeLayout>

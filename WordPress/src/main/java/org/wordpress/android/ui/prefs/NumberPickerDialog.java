@@ -2,7 +2,6 @@ package org.wordpress.android.ui.prefs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -10,20 +9,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPPrefUtils;
 
 public class NumberPickerDialog extends DialogFragment
         implements DialogInterface.OnClickListener,
@@ -56,8 +55,11 @@ public class NumberPickerDialog extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        int topOffset = getResources().getDimensionPixelOffset(R.dimen.settings_fragment_dialog_vertical_inset);
+
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity())
+                .setBackgroundInsetTop(topOffset)
+                .setBackgroundInsetBottom(topOffset);
         View view = View.inflate(getActivity(), R.layout.number_picker_dialog, null);
         TextView switchText = view.findViewById(R.id.number_picker_text);
         mSwitch = view.findViewById(R.id.number_picker_switch);
@@ -112,21 +114,6 @@ public class NumberPickerDialog extends DialogFragment
         builder.setView(view);
 
         return builder.create();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        AlertDialog dialog = (AlertDialog) getDialog();
-        Button positive = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negative = dialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) {
-            WPPrefUtils.layoutAsFlatButton(positive);
-        }
-        if (negative != null) {
-            WPPrefUtils.layoutAsFlatButton(negative);
-        }
     }
 
     @Override

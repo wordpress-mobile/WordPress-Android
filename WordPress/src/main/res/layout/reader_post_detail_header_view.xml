@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/frame_avatar"
@@ -19,7 +18,7 @@
             android:layout_height="@dimen/reader_detail_header_blavatar"
             android:layout_gravity="top|start"
             android:contentDescription="@null"
-            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp"/>
+            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
 
         <ImageView
             android:id="@+id/image_header_avatar"
@@ -27,9 +26,9 @@
             android:layout_height="@dimen/reader_detail_header_avatar"
             android:layout_gravity="bottom|end"
             android:background="@drawable/bg_oval_neutral_0_stroke_white"
+            android:contentDescription="@null"
             android:padding="2dp"
-            tools:src="@drawable/bg_rectangle_neutral_10_user_32dp"
-            android:contentDescription="@null"/>
+            tools:src="@drawable/bg_rectangle_placeholder_user_32dp" />
     </FrameLayout>
 
 
@@ -38,14 +37,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:orientation="vertical"
-        android:layout_toEndOf="@+id/frame_avatar">
+        android:layout_toEndOf="@+id/frame_avatar"
+        android:orientation="vertical">
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/link_reader"
+            android:alpha="@dimen/material_emphasis_high_type"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="@dimen/text_sz_large"
             android:textStyle="bold"
             tools:text="text_header_author_name" />
@@ -54,8 +55,9 @@
             android:id="@+id/text_header_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/link_reader"
-            android:textSize="@dimen/text_sz_medium"
+            android:alpha="@dimen/material_emphasis_high_type"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurface"
             tools:text="text_header_blog_name" />
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton

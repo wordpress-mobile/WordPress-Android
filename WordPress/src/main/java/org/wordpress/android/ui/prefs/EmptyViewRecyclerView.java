@@ -58,6 +58,25 @@ public class EmptyViewRecyclerView extends RecyclerView {
         toggleEmptyView();
     }
 
+    @Override
+    public void swapAdapter(Adapter adapter, boolean removeAndRecycleExistingViews) {
+        final RecyclerView.Adapter adapterOld = getAdapter();
+
+        if (adapterOld != null) {
+            adapterOld.unregisterAdapterDataObserver(mObserver);
+        }
+
+        super.swapAdapter(adapter, removeAndRecycleExistingViews);
+
+        final RecyclerView.Adapter adapterNew = getAdapter();
+
+        if (adapterNew != null) {
+            adapterNew.registerAdapterDataObserver(mObserver);
+        }
+
+        toggleEmptyView();
+    }
+
     public void setEmptyView(View emptyView) {
         mEmptyView = emptyView;
         toggleEmptyView();

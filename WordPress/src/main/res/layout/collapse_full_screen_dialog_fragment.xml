@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:clickable="true"
     android:descendantFocusability="afterDescendants"
-    android:focusable="true"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent" >
+    android:focusable="true">
 
-    <androidx.appcompat.widget.Toolbar
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/full_screen_dialog_fragment_toolbar"
-        android:background="?android:attr/colorBackground"
-        android:elevation="@dimen/appbar_elevation"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/appbar_elevation"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/FullScreenDialog.Toolbar.Light"
+        android:theme="@style/WordPress.ActionBar.LightDark"
         app:contentInsetStart="@dimen/keyline_second"
         app:navigationContentDescription="@string/description_expand"
         app:navigationIcon="@drawable/ic_chevron_down_white_24dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        tools:title="Comment" >
-    </androidx.appcompat.widget.Toolbar>
+        tools:title="Comment" />
 
     <FrameLayout
         android:id="@+id/full_screen_dialog_fragment_content"
-        android:inflatedId="@+id/full_screen_dialog_fragment_content"
-        android:layout_below="@id/full_screen_dialog_fragment_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent" >
-    </FrameLayout>
+        android:layout_below="@id/full_screen_dialog_fragment_toolbar"
+        android:inflatedId="@+id/full_screen_dialog_fragment_content" />
 
 </RelativeLayout>

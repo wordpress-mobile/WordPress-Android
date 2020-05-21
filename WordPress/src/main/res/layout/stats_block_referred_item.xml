@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_extra_large"
-    android:layout_marginEnd="@dimen/margin_extra_large"
     android:layout_marginStart="@dimen/margin_extra_large"
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_extra_large"
     android:background="?selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
     android:minHeight="56dp"
     android:orientation="vertical">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
         style="@style/StatsReferredItemLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/showing_stats_for"/>
+        android:text="@string/showing_stats_for" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/title"
         style="@style/StatsReferredItemTitle"
         android:layout_width="match_parent"
@@ -28,6 +27,6 @@
         android:layout_gravity="center_vertical"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
 </LinearLayout>

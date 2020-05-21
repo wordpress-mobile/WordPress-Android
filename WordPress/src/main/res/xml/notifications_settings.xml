@@ -1,55 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:key="@string/wp_pref_notifications_root" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/wp_pref_notifications_root">
 
     <PreferenceCategory
         android:key="@string/pref_notification_blogs"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_your_sites" />
 
     <PreferenceCategory
         android:key="@string/pref_notification_blogs_followed"
-        android:layout="@layout/wp_preference_category"
         android:title="@string/notification_settings_category_followed_sites" />
 
     <PreferenceCategory
         android:key="@string/pref_notification_other_category"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/notification_settings_category_other" >
+        android:title="@string/notification_settings_category_other">
 
         <PreferenceScreen
             android:key="@string/pref_notification_other_blogs"
             android:title="@string/notification_settings_item_other_comments_other_blogs" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:key="@string/pref_key_notification_pending_drafts"
             android:defaultValue="true"
+            android:key="@string/pref_key_notification_pending_drafts"
             android:title="@string/notification_settings_item_other_pending_drafts" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/pref_notification_sights_sounds"
-        android:layout="@layout/wp_preference_category"
-        android:title="@string/notification_settings_category_sights_and_sounds" >
+        android:title="@string/notification_settings_category_sights_and_sounds">
 
         <RingtonePreference
-            android:key="@string/wp_pref_custom_notification_sound"
             android:defaultValue="@string/notification_settings_item_sights_and_sounds_choose_sound_default"
+            android:key="@string/wp_pref_custom_notification_sound"
             android:ringtoneType="notification"
             android:showDefault="true"
             android:title="@string/notification_settings_item_sights_and_sounds_choose_sound" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:key="@string/wp_pref_notification_vibrate"
             android:defaultValue="false"
+            android:key="@string/wp_pref_notification_vibrate"
             android:title="@string/notification_settings_item_sights_and_sounds_vibrate_device" />
 
         <org.wordpress.android.ui.prefs.WPSwitchPreference
-            android:key="@string/wp_pref_notification_light"
             android:defaultValue="true"
+            android:key="@string/wp_pref_notification_light"
             android:title="@string/notification_settings_item_sights_and_sounds_blink_light" />
 
     </PreferenceCategory>

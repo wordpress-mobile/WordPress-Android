@@ -2,7 +2,6 @@ package org.wordpress.android.ui.sitecreation.domains
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -22,8 +21,6 @@ import org.wordpress.android.ui.sitecreation.misc.OnHelpClickedListener
 import org.wordpress.android.ui.sitecreation.misc.SearchInputWithHeader
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
-
-private const val KEY_LIST_STATE = "list_state"
 
 class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private lateinit var nonNullActivity: FragmentActivity
@@ -87,16 +84,8 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (nonNullActivity.application as WordPress).component().inject(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(KEY_LIST_STATE, linearLayoutManager.onSaveInstanceState())
-    }
-
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
-            linearLayoutManager.onRestoreInstanceState(it)
-        }
         // we need to set the `onTextChanged` after the viewState has been restored otherwise the viewModel.updateQuery
         // is called when the system sets the restored value to the EditText which results in an unnecessary request
         searchInputWithHeader.onTextChanged = { viewModel.updateQuery(it) }
@@ -136,7 +125,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         viewModel.onHelpClicked.observe(this, Observer {
             helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         })
-        viewModel.start(getSiteTitleFromArguments(), getSegmentIdFromArguments())
+        viewModel.start(getSegmentIdFromArguments())
     }
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
@@ -147,10 +136,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         (recyclerView.adapter as SiteCreationDomainsAdapter).update(contentState.items)
     }
 
-    private fun getSiteTitleFromArguments(): String? {
-        return arguments?.getString(EXTRA_SITE_TITLE)
-    }
-
     private fun getSegmentIdFromArguments(): Long {
         return requireNotNull(arguments?.getLong(EXTRA_SEGMENT_ID)) {
             "SegmentId is missing. Have you created the fragment using SiteCreationDomainsFragment.newInstance(..)?"
@@ -159,15 +144,13 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     companion object {
         const val TAG = "site_creation_domains_fragment_tag"
-        const val EXTRA_SITE_TITLE = "extra_site_title"
         private const val EXTRA_SEGMENT_ID = "extra_segment_id"
 
-        fun newInstance(screenTitle: String, siteTitle: String?, segmentId: Long): SiteCreationDomainsFragment {
+        fun newInstance(screenTitle: String, segmentId: Long): SiteCreationDomainsFragment {
             val fragment = SiteCreationDomainsFragment()
             val bundle = Bundle()
             bundle.putString(EXTRA_SCREEN_TITLE, screenTitle)
             bundle.putLong(EXTRA_SEGMENT_ID, segmentId)
-            siteTitle?.let { bundle.putString(EXTRA_SITE_TITLE, siteTitle) }
             fragment.arguments = bundle
             return fragment
         }

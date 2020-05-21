@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,8 +22,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.wordpress.android.R;
-import org.wordpress.android.util.WPPrefUtils;
 
 import java.util.Locale;
 
@@ -86,13 +86,8 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void onBindView(@NonNull View view) {
         super.onBindView(view);
 
-        TextView titleView = (TextView) view.findViewById(android.R.id.title);
-        TextView summaryView = (TextView) view.findViewById(android.R.id.summary);
-
-        if (titleView != null) WPPrefUtils.layoutAsSubhead(titleView);
-
+        TextView summaryView = view.findViewById(android.R.id.summary);
         if (summaryView != null) {
-            WPPrefUtils.layoutAsBody1(summaryView);
             summaryView.setEllipsize(TextUtils.TruncateAt.END);
             summaryView.setInputType(getEditText().getInputType());
             if (mLines != -1) summaryView.setLines(mLines);
@@ -109,14 +104,14 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
     protected void showDialog(Bundle state) {
         Context context = getContext();
         Resources res = context.getResources();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Calypso_Dialog_Alert);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         View titleView = View.inflate(getContext(), R.layout.detail_list_preference_title, null);
         mWhichButtonClicked = DialogInterface.BUTTON_NEGATIVE;
 
         builder.setPositiveButton(android.R.string.ok, this);
         builder.setNegativeButton(res.getString(android.R.string.cancel).toUpperCase(Locale.getDefault()), this);
         if (titleView != null) {
-            TextView titleText = (TextView) titleView.findViewById(R.id.title);
+            TextView titleText = titleView.findViewById(R.id.title);
             if (titleText != null) {
                 titleText.setText(getDialogTitle());
             }
@@ -136,7 +131,7 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
             builder.setView(view);
         }
 
-        if ((mDialog = builder.create()) == null) return;
+        mDialog = builder.create();
 
         if (state != null) {
             mDialog.onRestoreInstanceState(state);
@@ -144,11 +139,6 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         mDialog.setOnDismissListener(this);
         mDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         mDialog.show();
-
-        Button positive = mDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        Button negative = mDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (positive != null) WPPrefUtils.layoutAsFlatButton(positive);
-        if (negative != null) WPPrefUtils.layoutAsFlatButton(negative);
     }
 
     @Override
@@ -159,21 +149,19 @@ public class SummaryEditTextPreference extends EditTextPreference implements Pre
         EditText editText = getEditText();
         ViewParent oldParent = editText.getParent();
         if (oldParent != view) {
-            if (oldParent != null && oldParent instanceof ViewGroup) {
+            if (oldParent instanceof ViewGroup) {
                 ViewGroup groupParent = (ViewGroup) oldParent;
                 groupParent.removeView(editText);
                 ViewCompat.setPaddingRelative(groupParent, ViewCompat.getPaddingStart(groupParent), 0,
-                                              ViewCompat.getPaddingEnd(groupParent), groupParent.getPaddingBottom());
+                        ViewCompat.getPaddingEnd(groupParent), groupParent.getPaddingBottom());
             }
             onAddEditTextToDialogView(view, editText);
         }
-        WPPrefUtils.layoutAsInput(editText);
         editText.setSelection(editText.getText().length());
         // RtL language support
         editText.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
 
-        TextView message = (TextView) view.findViewById(android.R.id.message);
-        WPPrefUtils.layoutAsDialogMessage(message);
+        TextView message = view.findViewById(android.R.id.message);
 
         // Dialog message has some extra bottom margin we don't want
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) message.getLayoutParams();

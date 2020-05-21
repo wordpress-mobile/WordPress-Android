@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content"
-                                                   android:background="?android:attr/selectableItemBackground"
-                                                   android:minHeight="@dimen/one_line_list_item_height">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="@dimen/one_line_list_item_height">
 
     <View
         android:id="@+id/top_margin"
         android:layout_width="0dp"
         android:layout_height="@dimen/margin_medium_large"
-        android:background="@color/transparent"
+        android:background="@android:color/transparent"
         android:importantForAccessibility="no"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/text"
@@ -19,15 +19,15 @@
         app:layout_constraintStart_toStartOf="@+id/text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         style="@style/StatsBlockItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/stats_list_item_left_margin"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:ellipsize="end"
         android:lines="1"
         android:minHeight="@dimen/margin_extra_large"
@@ -44,15 +44,15 @@
         app:layout_goneMarginBottom="@dimen/margin_large"
         app:layout_goneMarginStart="@dimen/margin_extra_large"
         app:layout_goneMarginTop="@dimen/margin_large"
-        tools:text="@string/unknown"/>
+        tools:text="@string/unknown" />
 
     <LinearLayout
         android:id="@+id/icon_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="@dimen/margin_extra_large"
         android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginBottom="8dp"
         android:importantForAccessibility="no"
         android:orientation="vertical"
         android:visibility="gone"
@@ -68,7 +68,8 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_share_white_24dp"/>
+            android:tintMode="src_in"
+            android:src="@drawable/ic_share_white_24dp" />
 
         <ImageView
             android:id="@+id/avatar"
@@ -76,11 +77,11 @@
             android:layout_height="@dimen/avatar_sz_small"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/bg_rectangle_neutral_10_globe_32dp"
-            android:visibility="gone"/>
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
+            android:visibility="gone" />
     </LinearLayout>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/value"
         style="@style/StatsBlockValue"
         android:layout_width="wrap_content"
@@ -92,32 +93,32 @@
         app:layout_constraintStart_toEndOf="@+id/text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_goneMarginEnd="@dimen/margin_extra_large"
-        tools:text="@string/unknown"/>
+        tools:text="@string/unknown" />
 
     <ImageView
         android:id="@+id/expand_button"
         android:layout_width="16dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_medium"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:contentDescription="@string/stats_expand_content_description"
         android:src="@drawable/ic_chevron_down_white_16dp"
-        android:tint="@color/neutral_50"
+        app:tint="?attr/wpColorOnSurfaceMedium"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/value"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="5dp"
-        android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_key"
+        android:layout_marginBottom="@dimen/margin_large"
         android:importantForAccessibility="no"
         android:progressDrawable="@drawable/stats_bar_background"
         android:text="@string/unknown"
@@ -129,16 +130,16 @@
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed"
         tools:progress="75"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/neutral_0"
+        android:layout_height="@dimen/divider_size"
+        android:background="?android:attr/listDivider"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text"/>
+        app:layout_constraintStart_toStartOf="@+id/text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

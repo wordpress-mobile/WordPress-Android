@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<org.wordpress.android.ui.ActionableEmptyView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.ui.ActionableEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/actionable_empty_view"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/toolbar_height"
-    android:layout_width="match_parent"
     android:visibility="gone"
     app:aevButton="@string/reader_empty_followed_blogs_button_discover"
-    app:aevImage="@drawable/img_illustration_empty_results_216dp"
+    app:aevImage="@drawable/img_illustration_following_empty_results_196dp"
     app:aevSubtitle="@string/reader_empty_followed_blogs_description"
     app:aevTitle="@string/reader_empty_followed_blogs_title"
-    tools:visibility="visible" >
-</org.wordpress.android.ui.ActionableEmptyView>
+    tools:visibility="visible" />

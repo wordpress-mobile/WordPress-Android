@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              style="@style/StatsBlockLine"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/stats_header_height"
-              android:importantForAccessibility="no"
-              android:orientation="horizontal"
-              android:paddingEnd="@dimen/margin_extra_large"
-              android:paddingStart="@dimen/margin_extra_large">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/stats_header_height"
+    android:importantForAccessibility="no"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/start_label"
         style="@style/StatsBlockLabel"
         android:layout_width="wrap_content"
@@ -17,15 +17,15 @@
         android:layout_gravity="center_vertical"
         android:importantForAccessibility="no"
         android:text="@string/unknown"
-        tools:text="First item"/>
+        tools:text="First item" />
 
     <View
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:importantForAccessibility="no"/>
+        android:importantForAccessibility="no" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/end_label"
         style="@style/StatsBlockLabel"
         android:layout_width="wrap_content"
@@ -33,6 +33,6 @@
         android:layout_gravity="center_vertical"
         android:importantForAccessibility="no"
         android:text="@string/unknown"
-        tools:text="Second item"/>
+        tools:text="Second item" />
 
 </LinearLayout>

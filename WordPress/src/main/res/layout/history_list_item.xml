@@ -1,116 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_layout"
-    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:layout_height="wrap_content"
-    android:layout_width="match_parent"
     android:minHeight="?attr/listPreferredItemHeight"
     tools:layout_height="?attr/listPreferredItemHeightLarge">
 
-    <RelativeLayout
-        android:background="?attr/selectableItemBackground"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" >
+    <ImageView
+        android:id="@+id/item_avatar"
+        android:layout_width="@dimen/activity_log_icon_size"
+        android:layout_height="@dimen/activity_log_icon_size"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/activity_log_icon_margin"
+        android:contentDescription="@string/description_user"
+        android:src="@drawable/bg_oval_placeholder_user_32dp" />
 
-        <ImageView
-            android:id="@+id/item_avatar"
-            android:contentDescription="@string/description_user"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_height="@dimen/activity_log_icon_size"
-            android:layout_margin="@dimen/activity_log_icon_margin"
-            android:layout_width="@dimen/activity_log_icon_size"
-            android:src="@drawable/bg_oval_neutral_30_user_32dp" >
-        </ImageView>
+    <LinearLayout
+        android:id="@+id/diff_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_small"
+        android:paddingTop="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingBottom="@dimen/margin_extra_large">
 
-        <LinearLayout
-            android:id="@+id/diff_layout"
-            android:gravity="center"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/diff_additions"
             android:layout_width="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_extra_large"
-            android:paddingStart="@dimen/margin_small"
-            android:paddingTop="@dimen/margin_extra_large" >
-
-            <TextView
-                android:id="@+id/diff_additions"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_primary_50_plus_white_16dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_width="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                tools:text="3" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/diff_deletions"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_error_50_minus_white_16dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_large"
-                android:layout_width="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                tools:text="1" >
-            </TextView>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_log_icon_margin"
-            android:layout_toEndOf="@id/item_avatar"
-            android:layout_toStartOf="@id/diff_layout"
-            android:layout_width="fill_parent"
-            android:orientation="vertical" >
+            android:layout_marginStart="@dimen/margin_large"
+            android:drawableStart="@drawable/bg_oval_primary_plus_white_16dp"
+            android:drawablePadding="@dimen/margin_small"
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:text="3" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/item_title"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-                android:textColor="?attr/wpColorText"
-                tools:text="1d ago" >
-            </org.wordpress.android.widgets.WPTextView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/diff_deletions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            android:drawableStart="@drawable/bg_oval_error_minus_white_16dp"
+            android:drawablePadding="@dimen/margin_small"
+            android:textAppearance="?attr/textAppearanceBody2"
+            tools:text="1" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/item_subtitle"
-                android:ellipsize="end"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:singleLine="true"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                tools:text="Draft" >
-            </org.wordpress.android.widgets.WPTextView>
+    </LinearLayout>
 
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/activity_log_icon_margin"
+        android:layout_toStartOf="@id/diff_layout"
+        android:layout_toEndOf="@id/item_avatar"
+        android:orientation="vertical">
 
-        <View
-            android:background="@drawable/notifications_list_divider_full_width"
-            android:layout_alignParentBottom="true"
-            android:layout_height="@dimen/list_divider_height"
-            android:layout_width="match_parent" >
-        </View>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="1d ago" />
 
-    </RelativeLayout>
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/item_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAppearance="?attr/textAppearanceCaption"
+            tools:text="Draft" />
 
-</FrameLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/listDivider" />
+
+
+</RelativeLayout>

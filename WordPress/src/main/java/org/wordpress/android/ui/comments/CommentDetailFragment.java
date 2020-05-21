@@ -1,21 +1,20 @@
 package org.wordpress.android.ui.comments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.ContextThemeWrapper;
 import android.view.HapticFeedbackConstants;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -26,15 +25,22 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -62,8 +68,6 @@ import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnCollapseListener;
-import org.wordpress.android.ui.CollapseFullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.CommentFullScreenDialogFragment;
 import org.wordpress.android.ui.comments.CommentActions.OnCommentActionListener;
 import org.wordpress.android.ui.comments.CommentActions.OnNoteCommentActionListener;
@@ -82,6 +86,7 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GravatarUtils;
@@ -95,17 +100,13 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
-
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.Companion;
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_REPLY;
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
-import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 
 /**
  * comment detail displayed from both the notification list and the comment list
@@ -139,18 +140,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private ImageView mBtnLikeIcon;
     private TextView mBtnLikeTextView;
     private View mBtnModerateComment;
-    private View mBtnEditComment;
     private ImageView mBtnModerateIcon;
     private TextView mBtnModerateTextView;
     private View mBtnSpamComment;
     private TextView mBtnSpamCommentText;
-    private View mBtnTrashComment;
-    private TextView mBtnTrashCommentText;
+    private View mBtnMoreComment;
+    private View mSnackbarAnchor;
     private String mRestoredReplyText;
     private String mRestoredNoteId;
     private boolean mIsUsersBlog = false;
     private boolean mShouldFocusReplyField;
     private String mPreviousStatus;
+    private float mNormalOpacity = 1f;
+    private float mMediumOpacity;
 
     @Inject Dispatcher mDispatcher;
     @Inject AccountStore mAccountStore;
@@ -229,7 +231,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mComment != null) {
             outState.putLong(KEY_COMMENT_ID, mComment.getRemoteCommentId());
@@ -255,6 +257,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.comment_detail_fragment, container, false);
 
+        mMediumOpacity = ResourcesCompat.getFloat(getResources(), R.dimen.material_emphasis_medium);
+
         mTxtStatus = view.findViewById(R.id.text_status);
         mTxtContent = view.findViewById(R.id.text_content);
 
@@ -266,11 +270,10 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
         mBtnModerateIcon = mLayoutButtons.findViewById(R.id.btn_moderate_icon);
         mBtnModerateTextView = mLayoutButtons.findViewById(R.id.btn_moderate_text);
-        mBtnEditComment = mLayoutButtons.findViewById(R.id.btn_edit);
         mBtnSpamComment = mLayoutButtons.findViewById(R.id.btn_spam);
         mBtnSpamCommentText = mLayoutButtons.findViewById(R.id.btn_spam_text);
-        mBtnTrashComment = mLayoutButtons.findViewById(R.id.btn_trash);
-        mBtnTrashCommentText = mLayoutButtons.findViewById(R.id.btn_trash_text);
+        mBtnMoreComment = mLayoutButtons.findViewById(R.id.btn_more);
+        mSnackbarAnchor = view.findViewById(R.id.layout_bottom);
 
         // As we are using CommentDetailFragment in a ViewPager, and we also use nested fragments within
         // CommentDetailFragment itself:
@@ -283,17 +286,21 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutReply = view.findViewById(R.id.layout_comment_box);
 
+        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(view.getContext());
+        float appbarElevation = getResources().getDimension(R.dimen.appbar_elevation);
+        int elevatedColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(appbarElevation);
+
+        mLayoutReply.setBackgroundColor(elevatedColor);
+
         mSubmitReplyBtn = mLayoutReply.findViewById(R.id.btn_submit_reply);
         mSubmitReplyBtn.setEnabled(false);
-        mSubmitReplyBtn.setOnLongClickListener(new OnLongClickListener() {
-            @Override public boolean onLongClick(View view) {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(view.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
-                return true;
+        mSubmitReplyBtn.setOnLongClickListener(view1 -> {
+            if (view1.isHapticFeedbackEnabled()) {
+                view1.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(view1.getContext(), R.string.send, Toast.LENGTH_SHORT).show();
+            return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(mSubmitReplyBtn);
 
@@ -309,61 +316,52 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
             @Override
             public void afterTextChanged(Editable s) {
-                mSubmitReplyBtn.setEnabled(s.length() > 0);
+                mSubmitReplyBtn.setEnabled(!TextUtils.isEmpty(s.toString().trim()));
             }
         });
 
         ImageView buttonExpand = mLayoutReply.findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = Companion.newBundle(
+                v -> {
+                    Bundle bundle = CommentFullScreenDialogFragment.Companion.newBundle(
                             mEditReply.getText().toString(),
                             mEditReply.getSelectionStart(),
                             mEditReply.getSelectionEnd(),
                             mSite.getSiteId()
-                                                       );
+                    );
 
                     new Builder(requireContext())
-                        .setTitle(R.string.comment)
-                        .setOnCollapseListener(new OnCollapseListener() {
-                            @Override
-                            public void onCollapse(@Nullable Bundle result) {
+                            .setTitle(R.string.comment)
+                            .setOnCollapseListener(result -> {
                                 if (result != null) {
-                                    mEditReply.setText(result.getString(RESULT_REPLY));
-                                    mEditReply.setSelection(result.getInt(RESULT_SELECTION_START),
-                                            result.getInt(RESULT_SELECTION_END));
+                                    mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
+                                    mEditReply.setSelection(result.getInt(
+                                            CommentFullScreenDialogFragment.RESULT_SELECTION_START),
+                                            result.getInt(CommentFullScreenDialogFragment.RESULT_SELECTION_END));
                                     mEditReply.requestFocus();
                                 }
-                            }
-                        })
-                        .setOnConfirmListener(new OnConfirmListener() {
-                            @Override
-                            public void onConfirm(@Nullable Bundle result) {
+                            })
+                            .setOnConfirmListener(result -> {
                                 if (result != null) {
-                                    mEditReply.setText(result.getString(RESULT_REPLY));
+                                    mEditReply.setText(result.getString(CommentFullScreenDialogFragment.RESULT_REPLY));
                                     submitReply();
                                 }
-                            }
-                        })
-                        .setContent(CommentFullScreenDialogFragment.class, bundle)
-                        .setAction(R.string.send)
-                        .setHideActivityBar(true)
-                        .build()
-                        .show(requireActivity().getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
+                            })
+                            .setContent(CommentFullScreenDialogFragment.class, bundle)
+                            .setAction(R.string.send)
+                            .setHideActivityBar(true)
+                            .build()
+                            .show(requireActivity().getSupportFragmentManager(),
+                                    CollapseFullScreenDialogFragment.TAG);
                 }
-            }
         );
-        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
-            @Override public boolean onLongClick(View view) {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-                return true;
+        buttonExpand.setOnLongClickListener(v -> {
+            if (v.isHapticFeedbackEnabled()) {
+                v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(v.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+            return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
         setReplyUniqueId();
@@ -379,14 +377,11 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mTxtContent.setMovementMethod(WPLinkMovementMethod.getInstance());
 
         mEditReply.setHint(R.string.reader_hint_comment_on_comment);
-        mEditReply.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
-                    submitReply();
-                }
-                return false;
+        mEditReply.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND) {
+                submitReply();
             }
+            return false;
         });
 
         if (!TextUtils.isEmpty(mRestoredReplyText)) {
@@ -394,76 +389,25 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             mRestoredReplyText = null;
         }
 
-        mSubmitReplyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitReply();
+        mSubmitReplyBtn.setOnClickListener(v -> submitReply());
+
+        mBtnSpamComment.setOnClickListener(v -> {
+            if (mComment == null) {
+                return;
+            }
+
+            if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
+                moderateComment(CommentStatus.APPROVED);
+                announceCommentStatusChangeForAccessibility(CommentStatus.UNSPAM);
+            } else {
+                moderateComment(CommentStatus.SPAM);
+                announceCommentStatusChangeForAccessibility(CommentStatus.SPAM);
             }
         });
 
-        mBtnSpamComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mComment == null) {
-                    return;
-                }
+        mBtnLikeComment.setOnClickListener(v -> likeComment(false));
 
-                if (CommentStatus.fromString(mComment.getStatus()) == CommentStatus.SPAM) {
-                    moderateComment(CommentStatus.APPROVED);
-                    announceCommentStatusChangeForAccessibility(CommentStatus.UNSPAM);
-                } else {
-                    moderateComment(CommentStatus.SPAM);
-                    announceCommentStatusChangeForAccessibility(CommentStatus.SPAM);
-                }
-            }
-        });
-
-        mBtnTrashComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mComment == null) {
-                    return;
-                }
-
-                CommentStatus status = CommentStatus.fromString(mComment.getStatus());
-                // If the comment status is trash or spam, next deletion is a permanent deletion.
-                if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
-                            new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
-                    dialogBuilder.setTitle(getResources().getText(R.string.delete));
-                    dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
-                    dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    moderateComment(CommentStatus.DELETED);
-                                announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
-                                }
-                            });
-                    dialogBuilder.setNegativeButton(
-                            getResources().getText(R.string.no),
-                            null);
-                    dialogBuilder.setCancelable(true);
-                    dialogBuilder.create().show();
-                } else {
-                    moderateComment(CommentStatus.TRASH);
-                    announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
-                }
-            }
-        });
-
-        mBtnLikeComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                likeComment(false);
-            }
-        });
-
-        mBtnEditComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editComment();
-            }
-        });
+        mBtnMoreComment.setOnClickListener(v -> showMoreMenu(v));
 
         setupSuggestionServiceAndAdapter();
 
@@ -488,7 +432,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSite, getActivity(),
-                                                              mSuggestionServiceConnectionManager);
+                mSuggestionServiceConnectionManager);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }
@@ -593,7 +537,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     @SuppressWarnings("deprecation") // TODO: Remove when minSdkVersion >= 23
-    public void onAttach(Activity activity) {
+    public void onAttach(@NotNull Activity activity) {
         super.onAttach(activity);
         if (activity instanceof OnPostClickListener) {
             mOnPostClickListener = (OnPostClickListener) activity;
@@ -735,7 +679,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         txtName.setText(mComment.getAuthorName() == null ? getString(R.string.anonymous) : mComment.getAuthorName());
         txtDate.setText(DateTimeUtils.javaDateToTimeSpan(DateTimeUtils.dateFromIso8601(mComment.getDatePublished()),
-                                                         WordPress.getContext()));
+                WordPress.getContext()));
 
         int maxImageSz = getResources().getDimensionPixelSize(R.dimen.reader_comment_max_image_size);
         CommentUtils.displayHtmlComment(mTxtContent, mComment.getContent(), maxImageSz);
@@ -753,17 +697,14 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         // navigate to author's blog when avatar or name clicked
         if (mComment.getAuthorUrl() != null) {
-            View.OnClickListener authorListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
-                }
-            };
+            View.OnClickListener authorListener =
+                    v -> ReaderActivityLauncher.openUrl(getActivity(), mComment.getAuthorUrl());
             imgAvatar.setOnClickListener(authorListener);
             txtName.setOnClickListener(authorListener);
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.link_reader));
+            txtName.setTextColor(ContextExtensionsKt.getColorFromAttribute(txtName.getContext(), R.attr.colorPrimary));
         } else {
-            txtName.setTextColor(ContextCompat.getColor(getActivity(), R.color.neutral_60));
+            txtName.setTextColor(
+                    ContextExtensionsKt.getColorFromAttribute(txtName.getContext(), R.attr.colorOnSurface));
         }
 
         showPostTitle(mSite, mComment.getRemotePostId());
@@ -801,7 +742,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         // display "on [Post Title]..."
         if (isHyperlink) {
             String html = getString(R.string.on)
-                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(), R.color.link_reader)
+                          + " <font color=" + HtmlUtils.colorResToHtmlColor(getActivity(),
+                    ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorPrimary))
                           + ">"
                           + postTitle.trim()
                           + "</font>";
@@ -879,18 +821,15 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 });
             }
 
-            txtPostTitle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnPostClickListener != null) {
-                        mOnPostClickListener.onPostClicked(getNote(), site.getSiteId(),
-                                                           (int) mComment.getRemotePostId());
-                    } else {
-                        // right now this will happen from notifications
-                        AppLog.i(T.COMMENTS, "comment detail > no post click listener");
-                        ReaderActivityLauncher.showReaderPostDetail(getActivity(), site.getSiteId(),
-                                                                    mComment.getRemotePostId());
-                    }
+            txtPostTitle.setOnClickListener(v -> {
+                if (mOnPostClickListener != null) {
+                    mOnPostClickListener.onPostClicked(getNote(), site.getSiteId(),
+                            (int) mComment.getRemotePostId());
+                } else {
+                    // right now this will happen from notifications
+                    AppLog.i(T.COMMENTS, "comment detail > no post click listener");
+                    ReaderActivityLauncher.showReaderPostDetail(getActivity(), site.getSiteId(),
+                            mComment.getRemotePostId());
                 }
             });
         }
@@ -985,8 +924,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         reply.setContent(replyText);
 
         mDispatcher.dispatch(CommentActionBuilder.newCreateNewCommentAction(new RemoteCreateCommentPayload(mSite,
-                                                                                                           mComment,
-                                                                                                           reply)));
+                mComment,
+                reply)));
     }
 
     /*
@@ -1006,20 +945,20 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         switch (commentStatus) {
             case APPROVED:
                 statusTextResId = R.string.comment_status_approved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_60);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.wpColorWarningDark);
                 break;
             case UNAPPROVED:
                 statusTextResId = R.string.comment_status_unapproved;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.warning_60);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.wpColorWarningDark);
                 break;
             case SPAM:
                 statusTextResId = R.string.comment_status_spam;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.colorError);
                 break;
             case TRASH:
             default:
                 statusTextResId = R.string.comment_status_trash;
-                statusColor = ContextCompat.getColor(getActivity(), R.color.error);
+                statusColor = ContextExtensionsKt.getColorFromAttribute(getActivity(), R.attr.colorError);
                 break;
         }
 
@@ -1047,12 +986,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         if (canModerate()) {
             setModerateButtonForStatus(commentStatus);
-            mBtnModerateComment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    performModerateAction();
-                }
-            });
+            mBtnModerateComment.setOnClickListener(v -> performModerateAction());
             mBtnModerateComment.setVisibility(View.VISIBLE);
         } else {
             mBtnModerateComment.setVisibility(View.GONE);
@@ -1070,21 +1004,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         if (canTrash()) {
-            mBtnTrashComment.setVisibility(View.VISIBLE);
             if (commentStatus == CommentStatus.TRASH) {
                 ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_undo_white_24dp,
-                        R.color.neutral);
+                        ContextExtensionsKt
+                                .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface));
                 mBtnModerateTextView.setText(R.string.mnu_comment_untrash);
-                mBtnTrashCommentText.setText(R.string.mnu_comment_delete_permanently);
-            } else {
-                mBtnTrashCommentText.setText(R.string.mnu_comment_trash);
             }
-        } else {
-            mBtnTrashComment.setVisibility(View.GONE);
-        }
-
-        if (canEdit()) {
-            mBtnEditComment.setVisibility(View.VISIBLE);
         }
 
         mLayoutButtons.setVisibility(View.VISIBLE);
@@ -1113,11 +1038,17 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int color;
 
         if (status == CommentStatus.APPROVED) {
-            color = R.color.accent;
+            color = ContextExtensionsKt
+                    .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorSecondary);
             mBtnModerateTextView.setText(R.string.comment_status_approved);
+            mBtnModerateTextView.setAlpha(mNormalOpacity);
+            mBtnModerateIcon.setAlpha(mNormalOpacity);
         } else {
-            color = R.color.neutral;
+            color = ContextExtensionsKt
+                    .getColorResIdFromAttribute(mBtnModerateTextView.getContext(), R.attr.colorOnSurface);
             mBtnModerateTextView.setText(R.string.mnu_comment_approve);
+            mBtnModerateTextView.setAlpha(mMediumOpacity);
+            mBtnModerateIcon.setAlpha(mMediumOpacity);
         }
 
         ColorUtils.INSTANCE.setImageResourceWithTint(mBtnModerateIcon, R.drawable.ic_checkmark_white_24dp, color);
@@ -1243,15 +1174,19 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         int drawable;
 
         if (isLiked) {
-            color = R.color.accent;
+            color = ContextExtensionsKt.getColorResIdFromAttribute(mBtnLikeIcon.getContext(), R.attr.colorSecondary);
             drawable = R.drawable.ic_star_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.mnu_comment_liked));
             mBtnLikeComment.setActivated(true);
+            mBtnLikeTextView.setAlpha(mNormalOpacity);
+            mBtnLikeIcon.setAlpha(mNormalOpacity);
         } else {
-            color = R.color.neutral;
+            color = ContextExtensionsKt.getColorResIdFromAttribute(mBtnLikeIcon.getContext(), R.attr.colorOnSurface);
             drawable = R.drawable.ic_star_outline_white_24dp;
             mBtnLikeTextView.setText(getResources().getString(R.string.reader_label_like));
             mBtnLikeComment.setActivated(false);
+            mBtnLikeTextView.setAlpha(mMediumOpacity);
+            mBtnLikeIcon.setAlpha(mMediumOpacity);
         }
 
         ColorUtils.INSTANCE.setImageResourceWithTint(mBtnLikeIcon, drawable, color);
@@ -1398,5 +1333,111 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         if (resId != -1 && getView() != null) {
             getView().announceForAccessibility(getText(resId));
         }
+    }
+
+    // Handle More Menu
+    private void showMoreMenu(View view) {
+        androidx.appcompat.widget.PopupMenu morePopupMenu =
+                new androidx.appcompat.widget.PopupMenu(requireContext(), view);
+        morePopupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_edit) {
+                editComment();
+                return true;
+            }
+            if (item.getItemId() == R.id.action_trash) {
+                trashComment();
+                return true;
+            }
+            if (item.getItemId() == R.id.action_copy_link_address) {
+                copyCommentLinkAddress();
+                return true;
+            }
+            return false;
+        });
+
+        morePopupMenu.inflate(R.menu.menu_comment_more);
+
+        MenuItem trashMenuItem = morePopupMenu.getMenu().findItem(R.id.action_trash);
+        MenuItem copyLinkAddress = morePopupMenu.getMenu().findItem(R.id.action_copy_link_address);
+        if (canTrash()) {
+            CommentStatus commentStatus = CommentStatus.fromString(mComment.getStatus());
+            if (commentStatus == CommentStatus.TRASH) {
+                copyLinkAddress.setVisible(false);
+                trashMenuItem.setTitle(R.string.mnu_comment_delete_permanently);
+            } else {
+                trashMenuItem.setTitle(R.string.mnu_comment_trash);
+                if (commentStatus == CommentStatus.SPAM) {
+                    copyLinkAddress.setVisible(false);
+                } else {
+                    copyLinkAddress.setVisible(true);
+                }
+            }
+        } else {
+            trashMenuItem.setVisible(false);
+            copyLinkAddress.setVisible(false);
+        }
+
+        MenuItem editMenuItem = morePopupMenu.getMenu().findItem(R.id.action_edit);
+        if (canEdit()) {
+            editMenuItem.setVisible(true);
+        }
+        morePopupMenu.show();
+    }
+
+    private void trashComment() {
+        if (mComment == null) {
+            return;
+        }
+
+        CommentStatus status = CommentStatus.fromString(mComment.getStatus());
+        // If the comment status is trash or spam, next deletion is a permanent deletion.
+        if (status == CommentStatus.TRASH || status == CommentStatus.SPAM) {
+            AlertDialog.Builder dialogBuilder = new MaterialAlertDialogBuilder(getActivity());
+            dialogBuilder.setTitle(getResources().getText(R.string.delete));
+            dialogBuilder.setMessage(getResources().getText(R.string.dlg_sure_to_delete_comment));
+            dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
+                    (dialog, whichButton) -> {
+                        moderateComment(CommentStatus.DELETED);
+                        announceCommentStatusChangeForAccessibility(CommentStatus.DELETED);
+                    });
+            dialogBuilder.setNegativeButton(
+                    getResources().getText(R.string.no),
+                    null);
+            dialogBuilder.setCancelable(true);
+            dialogBuilder.create().show();
+        } else {
+            moderateComment(CommentStatus.TRASH);
+            announceCommentStatusChangeForAccessibility(CommentStatus.TRASH);
+        }
+    }
+
+    private void copyCommentLinkAddress() {
+        try {
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("CommentLinkAddress", mComment.getUrl()));
+            showSnackBar(getString(R.string.comment_q_action_copied_url));
+        } catch (Exception e) {
+            AppLog.e(T.UTILS, e);
+            showSnackBar(getString(R.string.error_copy_to_clipboard));
+        }
+    }
+
+    private void showSnackBar(String message) {
+        WPSnackbar snackBar = WPSnackbar.make(getView(), message, Snackbar.LENGTH_LONG)
+                                        .setAction(getString(R.string.share_action),
+                                                v -> {
+                                                    try {
+                                                        Intent intent = new Intent(Intent.ACTION_SEND);
+                                                        intent.setType("text/plain");
+                                                        intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                        startActivity(Intent.createChooser(intent,
+                                                                getString(R.string.comment_share_link_via)));
+                                                    } catch (ActivityNotFoundException exception) {
+                                                        ToastUtils.showToast(getContext(),
+                                                                R.string.comment_toast_err_share_intent);
+                                                    }
+                                                })
+                                        .setAnchorView(mSnackbarAnchor);
+        snackBar.show();
     }
 }

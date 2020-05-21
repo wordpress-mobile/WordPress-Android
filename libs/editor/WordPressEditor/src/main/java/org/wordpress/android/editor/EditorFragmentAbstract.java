@@ -90,6 +90,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
     protected EditorImagePreviewListener mEditorImagePreviewListener;
+    protected EditorEditMediaListener mEditorEditMediaListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
@@ -191,11 +192,14 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onMediaDeleted(String mediaId);
         void onUndoMediaCheck(String undoedContent);
         void onVideoPressInfoRequested(String videoId);
-        String onAuthHeaderRequested(String url);
+        Map<String, String> onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
-        void onPerformFetch(String path, Consumer<String> onResult, Consumer<String> onError);
+        void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
+        void onGutenbergEditorSessionTemplateApplyTracked(String template);
+        void onGutenbergEditorSessionTemplatePreviewTracked(String template);
+        void getMention(Consumer<String> onResult);
     }
 
     /**

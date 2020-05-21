@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: th
 -->
 <resources>
@@ -284,10 +284,7 @@ Language: th
     <string name="add_new_category">เพิ่มหมวดหมู่ใหม่</string>
     <string name="category_name">ชื่อหมวดหมู่</string>
     <string name="dlg_confirm_trash_comments">ต้องการส่งไปถังขยะ?</string>
-    <string name="trash_yes">ถังขยะ</string>
-    <string name="trash_no">เอาออกจากถังขยะ</string>
     <string name="trash">ถังขยะ</string>
-    <string name="hint_comment_content">ความเห็น</string>
     <string name="saving_changes">บันทึกการเปลี่ยนแปลง</string>
     <string name="sure_to_cancel_edit_comment">ต้องการยกเลิกการแก้ไขความเห็นนี้?</string>
     <string name="content_required">ต้องการความเห็น</string>
@@ -393,7 +390,6 @@ Language: th
     <string name="anonymous">นิรนาม</string>
     <string name="no_network_title">ไม่มีเครือข่ายใช้งานได้</string>
     <string name="ok">ตกลง</string>
-    <string name="blogusername">บล็อกชื่อผู้ใช้</string>
     <string name="link_enter_url">URL</string>
     <string name="version">รุ่น</string>
     <string name="tos">เงื่อนไขบริการ</string>
@@ -405,7 +401,6 @@ Language: th
     <string name="immediately">ทันที</string>
     <string name="quickpress_add_alert_title">ตั้งชื่อทางลัด</string>
     <string name="settings">ตั้งค่า</string>
-    <string name="quickpress_window_title">เลือกบล็อกจากทางลัด QuickPress</string>
     <string name="quickpress_add_error">ชื่อปุ่มลัดไม่สามารถเว้นว่างได้</string>
     <string name="title">หัวข้อ</string>
     <string name="categories">หมวดหมู่</string>

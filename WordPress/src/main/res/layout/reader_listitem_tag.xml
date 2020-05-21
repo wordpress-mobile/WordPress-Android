@@ -4,28 +4,27 @@
     list item which shows a followed tag - see ReaderTagAdapter
  -->
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/margin_medium"
+    android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_medium"
     android:paddingEnd="@dimen/margin_extra_large"
-    android:paddingStart="@dimen/margin_extra_large">
+    android:paddingBottom="@dimen/margin_medium">
 
     <org.wordpress.android.widgets.WPTextView
-        android:textAlignment="viewStart"
-        android:gravity="start"
         android:id="@+id/text_topic"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:textColor="?attr/wpColorText"
-        android:textSize="@dimen/text_sz_large"
+        android:gravity="start"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
         tools:text="text_topic" />
 
     <ImageButton
@@ -33,9 +32,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:background="?android:selectableItemBackground"
-        android:padding="@dimen/margin_small"
+        android:background="?attr/selectableItemBackground"
         android:contentDescription="@string/remove"
+        android:padding="@dimen/margin_small"
         android:src="@drawable/ic_cross_white_24dp"
-        android:tint="@color/gray_60"/>
+        app:tint="?attr/wpColorOnSurfaceMedium" />
 </LinearLayout>

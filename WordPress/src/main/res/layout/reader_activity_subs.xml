@@ -3,25 +3,24 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
-            android:background="@color/primary"
-            app:tabIndicatorColor="@android:color/white" />
+            android:layout_height="wrap_content" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <org.wordpress.android.widgets.WPViewPager
@@ -34,44 +33,48 @@
     <View
         android:id="@+id/divider_list"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/layout_bottom"
+        android:layout_height="@dimen/divider_size"
         android:layout_alignWithParentIfMissing="true"
-        android:background="@color/divider" />
+        android:layout_above="@+id/layout_bottom"
+        android:background="?android:attr/listDivider" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
-        <EditText
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_add"
+            style="@style/ReaderEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/btn_add"
+            android:hint="@string/reader_hint_add_tag_or_url"
+            android:minHeight="@dimen/min_touch_target_sz"
             android:paddingStart="@dimen/margin_large"
             android:paddingEnd="@dimen/margin_medium"
-            android:textSize="@dimen/text_sz_medium"
-            android:textAlignment="viewStart"
-            android:id="@+id/edit_add"
-            style="@style/ReaderEditText.Topic"
-            android:layout_width="0dp"
-            android:minHeight="@dimen/min_touch_target_sz"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/reader_hint_add_tag_or_url" />
+            android:textAlignment="viewStart" />
 
         <ImageButton
             android:id="@+id/btn_add"
-            android:padding="@dimen/margin_extra_medium_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/edit_add"
+            android:layout_alignBottom="@+id/edit_add"
+            android:layout_alignParentEnd="true"
             android:background="?android:selectableItemBackground"
             android:contentDescription="@string/add"
+            android:paddingStart="@dimen/margin_extra_medium_large"
+            android:paddingEnd="@dimen/margin_extra_medium_large"
             android:src="@drawable/ic_reader_follow_white_24dp"
-            android:tint="@color/primary_40" />
+            app:tint="?attr/colorPrimary" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <ProgressBar
         android:id="@+id/progress_follow"

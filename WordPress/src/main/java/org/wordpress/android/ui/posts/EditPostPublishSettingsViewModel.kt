@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -139,8 +140,10 @@ class EditPostPublishSettingsViewModel
             val scheduledTime = postSchedulingNotificationStore.getSchedulingReminderPeriod(postRepository.id)
             updateNotifications(postRepository, scheduledTime)
             true
-        }, onSuccess = { postModel ->
-            updateUiModel(postModel = postModel)
+        }, onCompleted = { postModel, result ->
+            if (result == UpdatePostResult.Updated) {
+                updateUiModel(postModel = postModel)
+            }
         })
     }
 

@@ -5,11 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:tabGravity="fill"
-    app:tabIndicatorColor="@android:color/white"
     app:tabMaxWidth="0dp"
-    app:tabMode="fixed"
-    app:tabSelectedTextColor="@android:color/white"
-    app:tabTextColor="@color/primary_30">
+    app:tabMode="fixed">
 
     <com.google.android.material.tabs.TabItem
         android:layout_width="wrap_content"

@@ -26,8 +26,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetUpdater
 import org.wordpress.android.ui.stats.refresh.utils.trackWithWidgetType
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.merge
 import javax.inject.Inject
@@ -108,8 +108,10 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
 
         colorSelectionViewModel.dialogOpened.observe(this, Observer { event ->
             event?.applyIfNotHandled {
-                StatsWidgetColorSelectionDialogFragment().show(requireFragmentManager(),
-                        "stats_view_mode_selection_fragment")
+                StatsWidgetColorSelectionDialogFragment().show(
+                        requireFragmentManager(),
+                        "stats_view_mode_selection_fragment"
+                )
             }
         })
 

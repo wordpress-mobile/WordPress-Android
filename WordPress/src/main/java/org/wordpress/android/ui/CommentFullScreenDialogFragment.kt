@@ -3,6 +3,7 @@ package org.wordpress.android.ui
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +12,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import dagger.android.support.AndroidSupportInjection
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogContent
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScreenDialogController
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
@@ -22,14 +25,13 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
-import org.wordpress.android.fluxc.store.SiteStore
 
 class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogContent {
     @Inject lateinit var viewModel: CommentFullScreenDialogViewModel
     @Inject lateinit var siteStore: SiteStore
     private lateinit var dialogController: CollapseFullScreenDialogController
     private lateinit var reply: SuggestionAutoCompleteText
-    private lateinit var siteModel: SiteModel
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,13 +47,13 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-                dialogController.setConfirmEnabled(s.isNotEmpty())
+                dialogController.setConfirmEnabled(!TextUtils.isEmpty(s.toString().trim()))
             }
         })
 
         viewModel.onKeyboardOpened.observe(this, Observer {
             it?.applyIfNotHandled {
-                GlobalScope.launch {
+                coroutineScope.launch {
                     val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                     imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
                 }
@@ -63,8 +65,13 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             reply.setSelection(it.getInt(EXTRA_SELECTION_START), it.getInt(EXTRA_SELECTION_END))
             viewModel.init()
 
-            siteModel = siteStore.getSiteBySiteId(it.getLong(EXTRA_SITE_ID))
-            setupSuggestionServiceAndAdapter(siteModel)
+            // Allow @username suggestion in full screen comment Editor on the Reader,
+            // but only on sites in the siteStore (i.e: current user's site).
+            // No suggestion is available for external sites that the user follows in the Reader.
+            val siteModel: SiteModel? = siteStore.getSiteBySiteId(it.getLong(EXTRA_SITE_ID))
+            if (siteModel != null) {
+                setupSuggestionServiceAndAdapter(siteModel)
+            }
         }
 
         return layout

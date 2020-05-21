@@ -6,6 +6,7 @@ import android.widget.TextView
 import org.wordpress.android.R
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.Link
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.util.getColorResIdFromAttribute
 
 class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
         parent,
@@ -16,7 +17,11 @@ class LinkViewHolder(parent: ViewGroup) : BlockListItemViewHolder(
 
     fun bind(item: Link) {
         if (item.icon != null) {
-            val drawable = ColorUtils.applyTintToDrawable(text.context, item.icon, R.color.primary_40)
+            val drawable = ColorUtils.applyTintToDrawable(
+                    text.context,
+                    item.icon,
+                    text.context.getColorResIdFromAttribute(R.attr.colorPrimary)
+            )
             text.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         } else {
             text.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)

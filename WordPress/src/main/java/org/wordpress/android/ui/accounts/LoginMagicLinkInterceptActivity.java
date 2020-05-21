@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.accounts;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.JetpackConnectionSource;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
  * Deep link receiver for magic links. Starts {@link WPMainActivity} where flow is routed to login
  * or signup based on deep link scheme, host, and parameters.
  */
-public class LoginMagicLinkInterceptActivity extends Activity {
+public class LoginMagicLinkInterceptActivity extends LocaleAwareActivity {
     private static final String PARAMETER_FLOW = "flow";
     private static final String PARAMETER_FLOW_JETPACK = "jetpack";
     private static final String PARAMETER_SOURCE = "source";

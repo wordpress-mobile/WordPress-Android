@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,36 +8,34 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/empty_view"
-        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:padding="@dimen/margin_extra_large"
         android:text="@string/site_settings_list_editor_no_items_text"
-        android:textColor="@color/neutral_20"
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/list_editor_header_text"
-        android:layout_marginTop="?android:attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:padding="@dimen/margin_extra_large"
-        android:textSize="@dimen/text_sz_small"
-        android:textColor="@color/neutral_40" />
+        android:textAppearance="?attr/textAppearanceCaption" />
 
     <View
-        android:background="@color/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_size"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@+id/list_editor_header_text"
-        android:layout_height="@dimen/list_divider_height"
-        android:layout_width="match_parent" />
+        android:background="?android:attr/listDivider" />
 
     <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-        android:id="@android:id/list"
-        android:layout_below="@+id/list_editor_header_text"
+        android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/list_editor_header_text" />
 
     <!-- CoordinatorLayout required: https://code.google.com/p/android/issues/detail?id=175330 -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -51,10 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
-            android:layout_marginBottom="@dimen/fab_margin"
             android:layout_marginEnd="@dimen/fab_margin"
-            android:src="@drawable/ic_plus_white_24dp"
+            android:layout_marginBottom="@dimen/fab_margin"
             android:contentDescription="@string/add"
+            android:src="@drawable/ic_plus_white_24dp"
             app:borderWidth="0dp" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

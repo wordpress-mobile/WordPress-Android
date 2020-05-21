@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/theme_grid_card_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/theme_grid_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/theme_browser_cardview_margin_large"
-        card_view:cardCornerRadius="@dimen/default_cardview_radius"
-        card_view:cardElevation="@dimen/card_elevation"
-        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"
-        android:layout_marginEnd="@dimen/theme_browser_cardview_margin_large">
+        android:layout_marginStart="@dimen/content_margin_normal"
+        android:layout_marginTop="@dimen/content_margin_normal"
+        android:layout_marginEnd="@dimen/content_margin_normal">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_cardview_radius">
+            android:layout_margin="@dimen/margin_extra_small">
 
             <FrameLayout
                 android:id="@+id/theme_grid_item_image_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:importantForAccessibility="noHideDescendants"
-                android:foreground="?android:attr/selectableItemBackground">
+                android:foreground="?attr/selectableItemBackground"
+                android:importantForAccessibility="noHideDescendants">
 
                 <ImageView
                     android:id="@+id/theme_grid_item_image"
@@ -35,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/theme_image_desc"
-                    tools:src="@drawable/bg_rectangle_neutral_10_themes_100dp"/>
+                    tools:src="@drawable/bg_rectangle_placeholder_themes_100dp" />
 
             </FrameLayout>
 
@@ -47,62 +44,66 @@
                 android:layout_marginTop="@dimen/default_cardview_radius">
 
                 <LinearLayout
+                    android:id="@+id/theme_metadata"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignStart="@+id/theme_action_controller"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/theme_browser_cardview_header_margin"/>
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:textStyle="bold" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_price"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/success"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"/>
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:textColor="?attr/wpColorSuccess"
+                        android:textStyle="bold" />
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/theme_grid_item_active"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:alpha="@dimen/material_emphasis_medium"
                         android:text="@string/active"
                         android:textAllCaps="true"
-                        android:textColor="@color/primary_5"
-                        android:textSize="@dimen/text_sz_extra_small"
+                        android:textAppearance="?attr/textAppearanceCaption"
+                        android:textColor="?attr/colorOnPrimarySurface"
                         android:textStyle="bold"
-                        android:visibility="gone"
-                        android:layout_marginStart="@dimen/theme_browser_cardview_margin_large"/>
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/theme_action_controller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true">
 
                     <View
                         android:id="@+id/divider"
-                        android:layout_width="@dimen/theme_browser_separator_thickness"
+                        android:layout_width="@dimen/divider_size"
                         android:layout_height="match_parent"
-                        android:background="@color/divider" />
+                        android:background="?android:attr/listDivider" />
 
                     <ImageButton
                         android:id="@+id/theme_grid_item_image_button"
                         android:layout_width="@dimen/theme_browser_more_button_width"
                         android:layout_height="@dimen/theme_browser_more_button_height"
                         android:adjustViewBounds="true"
-                        android:background="?android:attr/selectableItemBackground"
+                        android:background="?attr/selectableItemBackground"
                         android:contentDescription="@string/button_more"
                         android:padding="@dimen/theme_browser_more_button_padding"
                         android:src="@drawable/ic_ellipsis_white_24dp"
-                        android:tint="@color/neutral_20" />
+                        app:tint="?attr/wpColorOnSurfaceMedium" />
 
                 </LinearLayout>
 
@@ -110,6 +111,6 @@
 
         </RelativeLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ sealed class MainActionListItem {
     abstract val actionType: ActionType
 
     enum class ActionType {
+        NO_ACTION,
         CREATE_NEW_PAGE,
         CREATE_NEW_POST
     }
@@ -15,6 +16,6 @@ sealed class MainActionListItem {
         override val actionType: ActionType,
         @DrawableRes val iconRes: Int,
         @StringRes val labelRes: Int,
-        val onClickAction: (actionType: ActionType) -> Unit
+        val onClickAction: ((actionType: ActionType) -> Unit)?
     ) : MainActionListItem()
 }

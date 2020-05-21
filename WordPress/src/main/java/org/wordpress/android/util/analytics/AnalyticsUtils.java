@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +38,7 @@ import org.wordpress.android.util.VideoUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -58,6 +60,9 @@ public class AnalyticsUtils {
     private static final String COMMENT_ID_KEY = "comment_id";
     private static final String FEED_ID_KEY = "feed_id";
     private static final String FEED_ITEM_ID_KEY = "feed_item_id";
+    private static final String SOURCE_BLOG_ID_KEY = "source_blog_id";
+    private static final String SOURCE_POST_ID_KEY = "source_post_id";
+    private static final String TARGET_BLOG_ID_KEY = "target_blog_id";
     private static final String IS_JETPACK_KEY = "is_jetpack";
     private static final String INTENT_ACTION = "intent_action";
     private static final String INTENT_HOST = "intent_host";
@@ -74,7 +79,8 @@ public class AnalyticsUtils {
         VIA_SITE_SETTINGS,
         ON_SITE_CREATION,
         ON_BLOCK_POST_OPENING,
-        ON_PROGRESSIVE_ROLLOUT;
+        ON_PROGRESSIVE_ROLLOUT_PHASE_1,
+        ON_PROGRESSIVE_ROLLOUT_PHASE_2;
 
         public Map<String, Object> asPropertyMap() {
             Map<String, Object> properties = new HashMap<>();
@@ -118,14 +124,21 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        for (SiteModel currentSite : siteStore.getSites()) {
-            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
-                metadata.setGutenbergEnabled(true);
-                break;
-            }
+        if (siteStore.hasSite()) {
+            metadata.setGutenbergEnabled(isGutenbergEnabledOnAnySite(siteStore.getSites()));
         }
 
         AnalyticsTracker.refreshMetadata(metadata);
+    }
+
+    @VisibleForTesting
+    protected static boolean isGutenbergEnabledOnAnySite(List<SiteModel> sites) {
+        for (SiteModel currentSite : sites) {
+            if (SiteUtils.GB_EDITOR_NAME.equals(currentSite.getMobileEditor())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -334,6 +347,21 @@ public class AnalyticsUtils {
         Map<String, Object> properties = new HashMap<>();
         properties.put(FEED_ID_KEY, feedId);
         properties.put(FEED_ITEM_ID_KEY, feedItemId);
+
+        AnalyticsTracker.track(stat, properties);
+    }
+
+    public static void trackWithReblogDetails(
+            AnalyticsTracker.Stat stat,
+            long sourceBlogId,
+            long sourcePostId,
+            long targetSiteId
+    ) {
+        Map<String, Object> properties = new HashMap<>();
+
+        properties.put(SOURCE_BLOG_ID_KEY, sourceBlogId);
+        properties.put(SOURCE_POST_ID_KEY, sourcePostId);
+        properties.put(TARGET_BLOG_ID_KEY, targetSiteId);
 
         AnalyticsTracker.track(stat, properties);
     }

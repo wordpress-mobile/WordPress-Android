@@ -40,7 +40,6 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.JetpackConnectionWebViewActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
-import org.wordpress.android.ui.main.MainToolbarFragment;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter;
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS;
@@ -61,7 +60,7 @@ import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 import static org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION;
 import static org.wordpress.android.ui.stats.StatsConnectJetpackActivity.FAQ_URL;
 
-public class NotificationsListFragment extends Fragment implements MainToolbarFragment {
+public class NotificationsListFragment extends Fragment {
     public static final String NOTE_ID_EXTRA = "noteId";
     public static final String NOTE_INSTANT_REPLY_EXTRA = "instantReply";
     public static final String NOTE_PREFILLED_REPLY_EXTRA = "prefilledReplyText";
@@ -78,7 +77,6 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
 
     private static final String KEY_LAST_TAB_POSITION = "lastTabPosition";
 
-    private String mToolbarTitle;
     private TabLayout mTabLayout;
     private ViewGroup mConnectJetpackView;
     private boolean mShouldRefreshNotifications;
@@ -116,7 +114,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
         mConnectJetpackView = view.findViewById(R.id.connect_jetpack);
 
         mToolbar = view.findViewById(R.id.toolbar_main);
-        mToolbar.setTitle(mToolbarTitle);
+        mToolbar.setTitle(R.string.notifications_screen_title);
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
 
         mTabLayout = view.findViewById(R.id.tab_layout);
@@ -210,15 +208,6 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt(KEY_LAST_TAB_POSITION, mLastTabPosition);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void setTitle(@NonNull String title) {
-        mToolbarTitle = title;
-
-        if (mToolbar != null) {
-            mToolbar.setTitle(mToolbarTitle);
-        }
     }
 
     private void clearToolbarScrollFlags() {
@@ -339,7 +328,7 @@ public class NotificationsListFragment extends Fragment implements MainToolbarFr
                 case TAB_POSITION_LIKE:
                     return getString(R.string.notifications_tab_title_likes);
                 case TAB_POSITION_UNREAD:
-                    return getString(R.string.notifications_tab_title_unread);
+                    return getString(R.string.notifications_tab_title_unread_notifications);
                 default:
                     return super.getPageTitle(position);
             }

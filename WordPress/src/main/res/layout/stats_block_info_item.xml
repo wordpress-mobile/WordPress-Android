@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              style="@style/StatsBlockLine"
-              android:paddingStart="@dimen/margin_extra_large"
-              android:paddingEnd="@dimen/margin_extra_large"
-              android:orientation="horizontal">
+    style="@style/StatsBlockLine"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
-        android:layout_gravity="center_vertical"
         style="@style/StatsBlockText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:gravity="center_horizontal"
-        android:text="@string/unknown"/>
+        android:text="@string/unknown" />
 
 </LinearLayout>

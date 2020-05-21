@@ -6,11 +6,9 @@ import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import org.wordpress.android.R.style
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
@@ -23,8 +21,7 @@ class PostTimePickerDialogFragment : DialogFragment() {
                 .get(EditPostPublishSettingsViewModel::class.java)
 
         val is24HrFormat = DateFormat.is24HourFormat(activity)
-        val timePickerDialog = TimePickerDialog(
-                ContextThemeWrapper(activity, style.Calypso_Dialog_Alert),
+        val timePickerDialog = TimePickerDialog(activity,
                 OnTimeSetListener { _, selectedHour, selectedMinute ->
                     viewModel.onTimeSelected(selectedHour, selectedMinute)
                 },

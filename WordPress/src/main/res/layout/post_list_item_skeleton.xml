@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/post_list_content_margin_standard"
     android:layout_marginStart="@dimen/post_list_content_margin_standard"
-    android:background="@color/white">
+    android:layout_marginEnd="@dimen/post_list_content_margin_standard">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:shimmer_base_alpha="@dimen/skeleton_shimmer_base_alpha"
+        app:shimmer_highlight_alpha="@dimen/skeleton_shimmer_highlight_alpha">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/skeleton_container"
@@ -22,44 +22,44 @@
                 android:id="@+id/skeleton_title"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/post_list_row_skeleton_view_title_height"
-                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:background="@color/neutral_5"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:background="@color/gray_30"
                 app:layout_constraintBottom_toTopOf="@+id/skeleton_excerpt"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.60"/>
+                app:layout_constraintWidth_percent="0.60" />
 
             <View
                 android:id="@+id/skeleton_excerpt"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/post_list_row_skeleton_view_excerpt_height"
-                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:background="@color/neutral_5"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:background="@color/gray_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/skeleton_title"
-                app:layout_constraintWidth_percent="0.85"/>
+                app:layout_constraintWidth_percent="0.85" />
 
             <View
                 android:id="@+id/skeleton_date_and_author"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/post_list_row_skeleton_view_date_height"
-                android:layout_marginEnd="@dimen/margin_extra_large"
                 android:layout_marginStart="@dimen/margin_extra_large"
                 android:layout_marginTop="@dimen/margin_medium"
-                android:background="@color/neutral_5"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:background="@color/gray_30"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/skeleton_excerpt"
-                app:layout_constraintWidth_percent="0.75"/>
+                app:layout_constraintWidth_percent="0.75" />
 
             <LinearLayout
                 android:id="@+id/skeleton_layout_buttons"
@@ -74,31 +74,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/skeleton_date_and_author">
 
                 <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_edit"
-                    wp:wpPostButtonType="edit"/>
+                    style="@style/PostListRowSkeletonButton"
+                    wp:wpPostButtonType="edit" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_view"
-                    wp:wpPostButtonType="view"/>
+                    style="@style/PostListRowSkeletonButton"
+                    wp:wpPostButtonType="view" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_more"
-                    wp:wpPostButtonType="more"/>
+                    style="@style/PostListRowSkeletonButton"
+                    wp:wpPostButtonType="more" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_move_to_draft"
+                    style="@style/PostListRowSkeletonButton"
                     android:visibility="gone"
-                    wp:wpPostButtonType="moveToDraft"/>
+                    wp:wpPostButtonType="moveToDraft" />
 
                 <org.wordpress.android.widgets.PostListButton
-                    style="@style/PostListRowSkeletonButton"
                     android:id="@+id/skeleton_button_delete_permanently"
+                    style="@style/PostListRowSkeletonButton"
                     android:visibility="gone"
-                    wp:wpPostButtonType="deletePermanently"/>
+                    wp:wpPostButtonType="deletePermanently" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>

@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.stats.refresh.utils
 
+import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem.BarChartItem.Bar
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.text.DecimalFormat
@@ -131,6 +133,36 @@ class StatsUtils
         } else {
             number
         }
+    }
+
+    fun getBarChartEntryContentDescriptions(
+        @StringRes entryType: Int,
+        entries: List<Bar>,
+        @StringRes overlappingEntryType: Int? = null,
+        overlappingEntries: List<Bar>? = null
+    ): List<String> {
+        val contentDescriptions = mutableListOf<String>()
+        entries.forEachIndexed { index, bar ->
+            var contentDescription = resourceProvider.getString(
+                    R.string.stats_bar_chart_accessibility_entry,
+                    bar.label,
+                    bar.value,
+                    resourceProvider.getString(entryType)
+            )
+
+            overlappingEntries?.getOrNull(index)?.let { overlappingBar ->
+                overlappingEntryType?.let {
+                    contentDescription += resourceProvider.getString(
+                            R.string.stats_bar_chart_accessibility_overlapping_entry,
+                            overlappingBar.value,
+                            resourceProvider.getString(overlappingEntryType)
+                    )
+                }
+            }
+
+            contentDescriptions.add(contentDescription)
+        }
+        return contentDescriptions
     }
 }
 

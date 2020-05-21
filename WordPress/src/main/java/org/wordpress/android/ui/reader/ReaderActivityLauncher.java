@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -181,11 +182,27 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    /**
+     * Presents the [ReaderPostNoSiteToReblog] activity
+     *
+     * @param activity the calling activity
+     */
+    public static void showNoSiteToReblog(Activity activity) {
+        Intent intent = new Intent(activity, NoSiteToReblogActivity.class);
+        activity.startActivityForResult(intent, RequestCodes.NO_REBLOG_SITE);
+    }
+
     /*
      * show followed tags & blogs
      */
     public static void showReaderSubs(Context context) {
         Intent intent = new Intent(context, ReaderSubsActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void showReaderSubs(Context context, int selectPosition) {
+        Intent intent = new Intent(context, ReaderSubsActivity.class);
+        intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
         context.startActivity(intent);
     }
 

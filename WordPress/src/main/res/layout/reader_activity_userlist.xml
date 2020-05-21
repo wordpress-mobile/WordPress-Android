@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+        layout="@layout/toolbar_main" />
 
     <org.wordpress.android.ui.reader.views.ReaderRecyclerView
         android:id="@+id/recycler_view"

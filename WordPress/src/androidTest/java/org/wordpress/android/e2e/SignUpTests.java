@@ -17,7 +17,7 @@ import static org.wordpress.android.BuildConfig.E2E_SIGNUP_USERNAME;
 public class SignUpTests extends BaseTest {
     @Rule
     public ActivityTestRule<LoginMagicLinkInterceptActivity> mMagicLinkActivityTestRule =
-            new ActivityTestRule<>(LoginMagicLinkInterceptActivity.class);
+            new ActivityTestRule<>(LoginMagicLinkInterceptActivity.class, true, false);
 
     @Before
     public void setUp() {
@@ -25,15 +25,15 @@ public class SignUpTests extends BaseTest {
     }
 
     @Test
-    public void signUpWithEmail() {
-        SignupFlow signupFlow = new SignupFlow();
-        signupFlow.chooseSignupWithEmail();
-        signupFlow.enterEmail(E2E_SIGNUP_EMAIL, mMagicLinkActivityTestRule);
-        signupFlow.checkEpilogue(
-                E2E_SIGNUP_DISPLAY_NAME,
-                E2E_SIGNUP_USERNAME);
-        signupFlow.enterPassword(E2E_SIGNUP_PASSWORD);
-        signupFlow.dismissInterstitial();
-        signupFlow.confirmSignup();
+    public void signUpWithMagicLink() {
+        new SignupFlow().chooseSignupWithEmail()
+                        .enterEmail(E2E_SIGNUP_EMAIL)
+                        .openMagicLink(mMagicLinkActivityTestRule)
+                        .checkEpilogue(
+                                E2E_SIGNUP_DISPLAY_NAME,
+                                E2E_SIGNUP_USERNAME)
+                        .enterPassword(E2E_SIGNUP_PASSWORD)
+                        .dismissInterstitial()
+                        .confirmSignup();
     }
 }

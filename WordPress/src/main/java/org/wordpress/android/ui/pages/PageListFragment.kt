@@ -11,10 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
@@ -26,6 +28,7 @@ import javax.inject.Inject
 class PageListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var imageManager: ImageManager
+    @Inject internal lateinit var uiHelper: UiHelpers
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
 
@@ -89,17 +92,22 @@ class PageListFragment : Fragment() {
 
     private fun setupObservers() {
         viewModel.pages.observe(this, Observer { data ->
-            data?.let { setPages(data.first, data.second) }
+            data?.let { setPages(data.first, data.second, data.third) }
         })
 
         viewModel.scrollToPosition.observe(this, Observer { position ->
             position?.let {
-                recyclerView.smoothScrollToPosition(position)
+                val smoothScroller = object : LinearSmoothScroller(context) {
+                    override fun getVerticalSnapPreference(): Int {
+                        return SNAP_TO_START
+                    }
+                }.apply { targetPosition = position }
+                recyclerView.layoutManager?.startSmoothScroll(smoothScroller)
             }
         })
     }
 
-    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean) {
+    private fun setPages(pages: List<PageItem>, isSitePhotonCapable: Boolean, isSitePrivateAt: Boolean) {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
@@ -107,7 +115,9 @@ class PageListFragment : Fragment() {
                     { page -> viewModel.onItemTapped(page) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,
-                    imageManager
+                    isSitePrivateAt,
+                    imageManager,
+                    uiHelper
             )
             recyclerView.adapter = adapter
         } else {
@@ -116,7 +126,7 @@ class PageListFragment : Fragment() {
         adapter.update(pages)
     }
 
-    fun scrollToPage(remotePageId: Long) {
-        viewModel.onScrollToPageRequested(remotePageId)
+    fun scrollToPage(localPageId: Int) {
+        viewModel.onScrollToPageRequested(localPageId)
     }
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image"
-        android:src="@drawable/insights_management_feature_resource"
-        android:layout_marginBottom="@dimen/margin_medium"
         android:layout_width="220dp"
         android:layout_height="189dp"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/stats_manage_your_stats"/>
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:contentDescription="@string/stats_manage_your_stats"
+        android:src="@drawable/insights_management_feature_resource" />
 
 </FrameLayout>

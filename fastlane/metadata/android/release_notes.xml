@@ -1,118 +1,96 @@
 <ar>
-13.8:
-* تحسينات محرِّر المكوّن: تمت إضافة مكوّن المباعد لإنشاء مسافة بيضاء بين المحتوى.
-* تم تعديل البحث عن المقالات لتضمين المقالات أسفل كل التصنيفات.
-* الكثير من التحسينات التي أجريت في الخلفية عبر التطبيق بالكامل – 26 من الإصلاحات الفريدة للأخطاء والأعطال إجمالاً.
-
+14.8:
+<b>إضافات محرِّر المكوِّن:</b> يعرض مكوِّن الأزرار أزرارًا متعددة في صف واحد؛ وتقوم مكوِّنات الصورة بملء التسميات التوضيحية سابقًا عند توافرها؛ وتسمح مكوِّنات الغلاف بالرفع؛ ويمكن قص الصور المدرجة أو تكبيرها/تصغيرها أو تدويرها؛ ويتضمن مكوِّن العنوان خيارات المحاذاة.
+<b>تحسينات محرِّر المكوِّن:</b> تم تغيير موقع شريط الأدوات العائم، وإصلاح الخطأ الذي أدى إلى ظهور مسافات بيضاء في مكوِّنات النص، وإصلاح أيقونات شريط الأدوات مختلفة المحاذاة في وضع "من اليمين إلى اليسار".
+<b>تحديثات عامة</b> تمت إضافة وظيفة إعادة التدوين.
 </ar>
 <de-DE>
-13.8:
-* Verbesserungen am Block-Editor: Der Abstandshalter-Block wurde hinzugefügt, damit du Leerräume zwischen Inhalten erstellen kannst.
-* Die Suche nach Blogbeiträgen wurde verändert, um Beiträge unter allen Kategorien einzuschließen.
-* Die gesamte App wurde hinter den Kulissen an zahlreichen Stellen verbessert. Insgesamt wurden 26 Fehler, die zu Abstürzen und Problemen führten, behoben.
-
+14.8:
+<b>Zum Block-Editor hinzugefügt:</b> Buttons-Block zeigt mehrere Buttons in einer Zeile an; Bild-Blöcke füllen Bildunterschriften automatisch aus, falls verfügbar; Überschriften-Block beinhaltet Ausrichtungs-Optionen.
+<b>Block-Editor-Verbesserungen:</b> Schwebende Werkzeugleiste neu platziert, Fehler behoben, wodurch es zu zusätzlichen Leerzeichen in Textblöcken kam, fehlerhaft ausgerichtete Icons in der Werkzeugleiste behoben im RTL-Modus.
+<b>Allgemeine Aktualisierungen:</b> Reblog-Funktionalität hinzugefügt.
 </de-DE>
 <en-US>
-13.8:
-* Block editor improvements: Added Spacer block for creating white space between content.
-* Modified Blog Post Search to include posts under all categories.
-* Lots of under-the-hood improvements across the entire app –26 unique crash and bug fixes in all.
-
+14.8:
+<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.
+<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.
+<b>General updates:</b> Added reblog functionality.
 </en-US>
 <es-ES>
-13.8:
-* Mejoras en el editor de bloques: Añadido bloque espaciador para crear espacios vacíos entre contenidos.
-* Modificada la búsqueda de entradas del blog para incluir entradas en todas las categorías.
-* Montones de mejoras bajo el capó en toda la aplicación  26 correcciones de errores y problemas en total.
-
+14.8:
+<b>Añadidos al editor de bloques:</b> El bloque de botones muestra varios botones en una sola fila. Los bloques de imágenes llenan los subtítulos cuando están disponibles. Los bloques de cubierta permiten la subida. Las imágenes insertadas pueden ser recortadas, ampliadas o rotadas. El bloque de encabezado incluye opciones de alineación.
+<b>Mejoras en el editor de bloques:</b> Reubicación de la barra de herramientas flotante, corrección del fallo del espacio blanco que afecta a los bloques de texto, corrección de la alineación de los iconos de la barra de herramientas en el modo RTL.
+<b>Actualizaciones generales:</b> Añadida la funcionalidad de reblog.
 </es-ES>
 <fr-CA>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
+14.8 :
+<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
+<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
+<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
 </fr-CA>
 <fr-FR>
-13.8 :
-* Améliorations de l'éditeur de blocs : un bloc d'espacement a été ajouté pour créer un espace blanc entre le contenu.
-* Modification de la recherche d'articles de blog pour inclure les articles appartenant à toutes les catégories.
-* Nombreuses améliorations en arrière-plan dans toute l'application. Résolution de 26 bugs ou pannes uniques.
-
+14.8 :
+<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
+<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
+<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
 </fr-FR>
 <iw-IL>
-13.8:
-* שיפורים בעורך הבלוקים: הוספנו את בלוק המרווח כדי ליצור רווח ריק בין התכנים.
-* שינינו את חיפוש הפוסטים כדי לכלול פוסטים שמשויכים לכל הקטגוריות.
-* ביצענו המון שיפורים מתחת למכסה המנוע ברחבי האפליקציה – תיקנו 26 מקרים ייחודיים של קריסות ובאגים סך הכול.
-
+14.8:
+<b>תוספות לעורך הבלוקים:</b> בלוק הכפתורים מציג מספר כפתורים בשורה אחת; בלוג התמונה ממלא מראש את התיאורים כאשר אלה זמינים; בלוק הכיסוי מאפשר העלאה; אפשר לחתוך, להגדיל את מרחק התצוגה או לסובב תמונות שנוספו; בלוק הכותרת כולל אפשרויות יישור.
+<b>שיפורים בעורך הבלוקים:</b> שינינו את המיקום של סרגל הכלים הצף, תיקנו באגים שהשפיעו על הרווחים הלבנים בבלוקים של טקסט ותיקנו את היישור העקום של הסמלים בסרגל הכלים בתצוגה מימין לשמאל.
+<b>עדכונים כלליים:</b> נוספה פונקציולניות לפרסום בלוג מחדש.
 </iw-IL>
 <id>
-13.8:
-* Peningkatan penyunting blok: Menambahkan blok Spacer untuk membuat spasi putih di antara konten.
-* Memodifikasi Pencarian Pos Blog untuk menyertakan pos di semua kategori.
-* Banyak peningkatan di seluruh aplikasi – Memperbaiki 26 crash dan bug unik.
-
+14.8:
+<b>Tambahan pada penyunting blok:</b> Blok Tombol menampilkan beberapa tombol dalam satu baris, blok Gambar menuliskan keterangan jika ada, blok Sampul mengizinkan untuk mengunggah; gambar yang disisipkan dapat dipotong, diperbesar/diperkecil, atau diputar; blok Heading menyertakan pilihan penyelarasan.
+<b>Peningkatan pada penyunting blok:</b> Memindahkan bilah peralatan melayang, memperbaiki bug yang memengaruhi spasi putih di blok Teks, memperbaiki ikon bilah peralatan yang tidak selaras di mode RTL.
+<b>Pembaruan umum:</b> Menambahkan fungsionalitas reblog.
 </id>
 <it-IT>
-13.8:
-*Miglioramenti all'editor dei blocchi: blocco Spazio vuoto aggiunto per la creazione di spazio bianco tra i contenuti.
-*Ricerca dell'articolo del blog modificata per includere gli articoli presenti in tutte le categorie.
-*Molti miglioramenti sotto controllo nell'intera app, 26 arresti univoci e correzioni di bug in tutti.
-
+14.8:
+<b>Aggiunte all'editor a blocchi:</b> più pulsanti su una riga per il blocco Pulsanti; didascalie precompilate nei blocchi Immagine; caricamento nei blocchi Copertina; ritaglio, zoom o rotazione delle immagini; opzioni di allineamento per il blocco Titolo.
+<b>Miglioramenti all'editor a blocchi:</b> barra mobile riposizionata, corretto bug dello spazio bianco nei blocchi Testo, corrette icone della barra disallineate in modalità RTL.
+<b>Aggiornamenti generali:</b> aggiunta funzione di ripubblicazione.
 </it-IT>
 <ja-JP>
-13.8 :
-* ブロックエディターの改善 :コンテンツ間に空白を作成するためのスペーサーブロックが追加されました。
-* すべてのカテゴリーの投稿を含めるようにブログ投稿検索が変更されました。
-* アプリ全体でさまざまな改善がなされ、合計26個の固有のクラッシュとバグが修正されました。
-
+14.8:
+<b>ブロックエディターの追加機能:</b> ボタンブロックで、複数のボタンを1行に表示できます。画像ブロックで、キャプションがある場合自動で情報を追加します。カバーブロックのアップロードができます。挿入画像は、切り抜き、ズーム、回転できます。 見出しブロックに配置オプションが含まれています。
+<b>ブロックエディターの改善:</b> フローティングツールバーの再配置、テキストブロックのバグの影響による空白の修正、RTL モードでのツールバーアイコンの整列不良の修正。
+<b>一般的な更新:</b> リブログ機能を追加しました。
 </ja-JP>
-<ko-KR>
-13.8:
-* 블록 편집기 개선 사항: 콘텐츠 사이에 공백을 만들기 위한 스페이서 블록을 추가했습니다.
-* 모든 카테고리에 글을 포함하도록 블로그 글 검색을 수정했습니다.
-* 앱 내부 전체에서 많은 부분이 개선되었습니다(고유한 충돌 및 버그 수정 총 26개).
-
-</ko-KR>
 <nl-NL>
-13.8:
-* Verbeteringen aan de blok-editor: Vulelementblok toegevoegd voor het creëren van lege ruimte tussen content.
-* De zoekfunctie voor blogberichten is aangepast en bevat nu berichten onder alle categorieën.
-* Veel onopvallende verbeteringen in de gehele app: in totaal 26 unieke crash-oplossingen en bugverwijderingen.
-
+14.8:
+<b>Aanvullingen op de blokeditor:</b> Knopblokken geven meerdere knoppen op één rij weer; Afbeeldingenblokken vullen ondertitels in wanneer beschikbaar; Omslagblokken staan uploads toe; ingevoegde afbeeldingen kunnen bijgesneden, gezoomd of gedraaid worden; Kopblokken bevatten uitlijningsopties.
+<b>Verbeteringen aan de blokeditor:</b> Zwevende werkbalk verplaatst, bug die lege ruimte veranderde in Tekstblokken verwijderd, verkeerde uitlijning van werkbalkpictogrammen opgelost in RTL-modus.
+<b>Algemene updates:</b> Reblog-functionaliteit toegevoegd.
 </nl-NL>
 <ru-RU>
-13.8:
-* Улучшения в редакторе блоков: добавлен блок-заполнитель, для добавления пустого места между содержимым.
-* Поиск по записям в блоге будут включать записи во всех рубриках.
-* Целая куча исправлений ошибок и падений (26).
+14.8:
+<b>Добавления к редактору блоков:</b> Блок кнопок может показывать несколько кнопок в один ряд. Блок обложки позволяет загрузку файла. Вставленные изображения могут быть обрезаны, увеличены или повернуты. Блок заголовка включает возможности выравнивания.
+<b>Улучшения блоков:</b> Перемещена плавающая панель инструментов, исправлено пустое место в блоках текста, исправлены значки панели инструментов для RTL-языков.
+<b>Общее:</b> Добавлена возможность перепубликации (реблог).
 </ru-RU>
 <sv-SE>
-13.8:
-* Förbättringar i blockredigeraren: Nytt distanselement som kan skapa avstånd mellan olika innehållsblock.
-* Sökfunktionen för blogginlägg har modifierats så att den söker inom alla kategorier.
-* En rad förbättringar ”under motorhuven” i hela appen. Totalt 26 avhjälpta kraschorsaker och andra fel.
-
+14.8:
+<b>Nyheter i blockredigeraren:</b> Knappblock visar flera knappar i samma rad, Bildblock fyller i bildtexter automatiskt om det går, Cover-block tillåter uppladdning, bilder kan beskäras, zoomas och roteras, Rubrikblock hanterar textjustering.
+<b>Förbättringar i blockredigeraren:</b> Flytande verktygsfält flyttat, rättat fel med romrum i textblock, rättat justering av verktygsknappar i RTL-läge.
+<b>Allmänna uppdateringar:</b> Ny reblog-funktion.
 </sv-SE>
 <tr-TR>
-13.8:
-* Blok düzenleyici iyileştirmeleri: İçerik arasında beyaz boşluk oluşturmak için Spacer bloğu eklendi.
-* Blog Gönderi Arama tüm kategorilerin altındaki gönderileri içerecek şekilde değiştirildi.
-* Tüm uygulama içinde görünmeyen bir çok iyileştirme yapıldı -26 benzersiz kapanma ve hata düzeltmeleri.
-
+14.8:
+<b> Blok düzenleyici eklemeleri: </b> Düğme bloğu, tek bir satırda birden fazla düğme görüntüler; Görüntü blokları altyazıları mevcut olduğunda doldurur; Kapak blokları yüklemeye izin verir; eklenen görüntüler kırpılabilir, yakınlaştırılabilir veya döndürülebilir; Başlık bloğu hizalama seçeneklerini içerir.
+<b> Blok düzenleyici geliştirmeleri: </b> Yeniden yerleştirilmiş kayan araç çubuğu, metin bloklarında sabit hata etkisi beyaz alanı, RTL modunda sabit yanlış hizalanmış araç çubuğu simgeleri.
+<b> Genel güncellemeler: </b> Yeniden bloglama işlevi eklendi.
 </tr-TR>
 <zh-CN>
-13.8：
-* 区块编辑器改进：添加了用于在内容之间创建空白的空白区块。
-* 修改了博文搜索，将文章包含在所有类别下。
-* 在整个应用程序中进行了许多改进，包括全部 26 个独特的崩溃和错误修复。
-
+14.8：
+<b>区块编辑器添加内容：</b>按钮区块可在单个行中显示多个按钮；图片区块可预填充标题（如果有）；封面区块支持上传；插入的图片可以裁剪、缩放或旋转；标题区块包括对齐选项。
+<b>区块编辑器改进：</b>重新定位了浮动工具栏，修复了文本区块中影响空格的错误，修复了 RTL 模式中工具栏图标未对齐的问题。
+<b>常规更新：</b>添加了转载功能。
 </zh-CN>
 <zh-TW>
-13.8：
-* 改善區塊編輯器：新增空白間隔區塊，你現可在內容之間建立空白字元。
-* 修改網誌文章搜尋功能，納入所有類別底下的文章。
-* 應用程式整體內部改善，一共修正 26 個不同的當機問題和錯誤。
-
+14.8：
+<b>區塊編輯器新增功能：</b>按鈕區塊可於單一列中顯示多個按鈕；圖片區塊會在有標題可用時預先填入標題內容；封面區塊提供上傳功能；插入的圖片可裁切、縮放或旋轉；標題包含對齊選項。
+<b>改善區塊編輯器：</b>重新調整浮動工具列的位置、修正導致文字區塊空白字元的錯誤，也已修復 RTL 模式中工具列圖示不一致的問題。
+<b>一般更新：</b>新增轉發文章功能。
 </zh-TW>

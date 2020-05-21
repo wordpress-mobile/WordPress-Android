@@ -2,9 +2,7 @@ package org.wordpress.android.ui.people;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -15,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -41,7 +42,7 @@ public class RoleChangeDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         String role = mRoleListAdapter.getSelectedRole();
         outState.putSerializable(ROLE_TAG, role);
@@ -63,20 +64,16 @@ public class RoleChangeDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final SiteModel site = (SiteModel) getArguments().getSerializable(WordPress.SITE);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(R.string.role);
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String role = mRoleListAdapter.getSelectedRole();
-                Bundle args = getArguments();
-                if (args != null) {
-                    long personID = args.getLong(PERSON_ID_TAG);
-                    if (site != null) {
-                        EventBus.getDefault().post(new RoleChangeEvent(personID, site.getId(), role));
-                    }
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            String role = mRoleListAdapter.getSelectedRole();
+            Bundle args = getArguments();
+            if (args != null) {
+                long personID = args.getLong(PERSON_ID_TAG);
+                if (site != null) {
+                    EventBus.getDefault().post(new RoleChangeEvent(personID, site.getId(), role));
                 }
             }
         });
@@ -115,20 +112,10 @@ public class RoleChangeDialogFragment extends DialogFragment {
                 convertView = View.inflate(getContext(), R.layout.role_list_row, null);
             }
 
-            TextView mainText = (TextView) convertView.findViewById(R.id.role_label);
-            final RadioButton radioButton = (RadioButton) convertView.findViewById(R.id.radio);
-            radioButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeSelection(position);
-                }
-            });
-            convertView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeSelection(position);
-                }
-            });
+            TextView mainText = convertView.findViewById(R.id.role_label);
+            final RadioButton radioButton = convertView.findViewById(R.id.radio);
+            radioButton.setOnClickListener(v -> changeSelection(position));
+            convertView.setOnClickListener(v -> changeSelection(position));
 
             RoleModel role = getItem(position);
             if (role != null) {
@@ -167,15 +154,15 @@ public class RoleChangeDialogFragment extends DialogFragment {
             mNewRole = newRole;
         }
 
-        public long getPersonID() {
+        long getPersonID() {
             return mPersonID;
         }
 
-        public int getLocalTableBlogId() {
+        int getLocalTableBlogId() {
             return mLocalTableBlogId;
         }
 
-        public String getNewRole() {
+        String getNewRole() {
             return mNewRole;
         }
     }

@@ -19,9 +19,14 @@ import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderRecommendedBlog;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
+import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -31,6 +36,9 @@ import java.util.Comparator;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 /*
  * adapter which shows either recommended or followed blogs - used by ReaderBlogFragment
@@ -151,6 +159,11 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         blogHolder.mTxtUrl.setText("");
                     }
                     mImageManager.load(blogHolder.mImgBlog, ImageType.BLAVATAR, blogInfo.getImageUrl());
+                    blogHolder.mFollowButton.setIsFollowed(blogInfo.isFollowing);
+                    blogHolder.mFollowButton.setOnClickListener(v -> toggleFollow(
+                            blogHolder.itemView.getContext(),
+                            blogHolder.mFollowButton,
+                            blogInfo));
                     break;
             }
 
@@ -159,6 +172,9 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override
                     public void onClick(View v) {
                         int clickedPosition = blogHolder.getAdapterPosition();
+                        if (clickedPosition == RecyclerView.NO_POSITION) {
+                            return;
+                        }
                         switch (getBlogType()) {
                             case RECOMMENDED:
                                 mClickListener.onBlogClicked(mRecommendedBlogs.get(clickedPosition));
@@ -181,6 +197,7 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final TextView mTxtDescription;
         private final TextView mTxtUrl;
         private final ImageView mImgBlog;
+        private final ReaderFollowButton mFollowButton;
 
         BlogViewHolder(View view) {
             super(view);
@@ -189,20 +206,59 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtDescription = view.findViewById(R.id.text_description);
             mTxtUrl = view.findViewById(R.id.text_url);
             mImgBlog = view.findViewById(R.id.image_blog);
+            mFollowButton = view.findViewById(R.id.follow_button);
 
             // followed blogs don't have a description
+            // recommended blogs don't have a follow button
             switch (getBlogType()) {
                 case FOLLOWED:
-                    mTxtDescription.setVisibility(View.GONE);
+                    mTxtDescription.setVisibility(GONE);
+                    mFollowButton.setVisibility(VISIBLE);
                     break;
                 case RECOMMENDED:
-                    mTxtDescription.setVisibility(View.VISIBLE);
+                    mTxtDescription.setVisibility(VISIBLE);
+                    mFollowButton.setVisibility(GONE);
                     break;
             }
         }
     }
 
     private boolean mIsTaskRunning = false;
+
+    private void toggleFollow(Context context, ReaderFollowButton followButton, ReaderBlog blog) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !blog.isFollowing;
+
+        // disable follow button until API call returns
+        followButton.setEnabled(false);
+
+        final ActionListener listener = succeeded -> {
+            followButton.setEnabled(true);
+            if (!succeeded) {
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_follow_blog
+                        : R.string.reader_toast_err_unfollow_blog;
+                ToastUtils.showToast(context, errResId);
+                followButton.setIsFollowed(!isAskingToFollow);
+                blog.isFollowing = !isAskingToFollow;
+            }
+        };
+
+        final boolean result;
+
+        if (blog.feedId != 0) {
+            result = ReaderBlogActions.followFeedById(blog.feedId, isAskingToFollow, listener);
+        } else {
+            result = ReaderBlogActions.followBlogById(blog.blogId, isAskingToFollow, listener);
+        }
+
+        if (result) {
+            followButton.setIsFollowedAnimated(isAskingToFollow);
+            blog.isFollowing = isAskingToFollow;
+        }
+    }
 
     private class LoadBlogsTask extends AsyncTask<Void, Void, Boolean> {
         private ReaderRecommendBlogList mTmpRecommendedBlogs;

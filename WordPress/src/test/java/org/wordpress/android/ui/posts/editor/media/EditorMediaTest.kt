@@ -121,7 +121,7 @@ class EditorMediaTest : BaseUnitTest() {
     }
 
     @Test
-    fun `addMediaFromGiphyToPostAsync invokes addLocalMediaToEditorAsync with all media`() = test {
+    fun `addGifMediaToPostAsync invokes addLocalMediaToEditorAsync with all media`() = test {
         // Arrange
         val localIdArray = listOf(1, 2, 3).toIntArray()
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase()
@@ -130,7 +130,7 @@ class EditorMediaTest : BaseUnitTest() {
         createEditorMedia(
                 addLocalMediaToPostUseCase = addLocalMediaToPostUseCase
         )
-                .addMediaFromGiphyToPostAsync(localIdArray)
+                .addGifMediaToPostAsync(localIdArray)
         // Assert
         verify(addLocalMediaToPostUseCase).addLocalMediaToEditorAsync(
                 eq(localIdArray.toList()),
@@ -345,6 +345,28 @@ class EditorMediaTest : BaseUnitTest() {
         verify(retryFailedMediaUploadUseCase).retryFailedMediaAsync(anyOrNull(), eq(expectedIds))
     }
 
+    @Test
+    fun `reattachUploadingMedia is called for Aztec editor`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), true, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
+    @Test
+    fun `reattachUploadingMedia is NOT called for other editors`() {
+        // Arrange
+        val reattachUploadingMediaUseCase = mock<ReattachUploadingMediaUseCase>()
+        // Act
+        createEditorMedia(reattachUploadingMediaUseCase = reattachUploadingMediaUseCase)
+                .reattachUploadingMediaForAztec(mock(), false, mock())
+        // Assert
+        verify(reattachUploadingMediaUseCase, never()).reattachUploadingMediaForAztec(anyOrNull(), anyOrNull())
+    }
+
     private companion object Fixtures {
         private val VIDEO_URI = mock<Uri>()
         private val IMAGE_URI = mock<Uri>()
@@ -363,7 +385,8 @@ class EditorMediaTest : BaseUnitTest() {
             siteModel: SiteModel = mock(),
             editorMediaListener: EditorMediaListener = mock(),
             removeMediaUseCase: RemoveMediaUseCase = mock(),
-            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock()
+            cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock(),
+            reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase = mock()
         ): EditorMedia {
             val editorMedia = EditorMedia(
                     updateMediaModelUseCase,
@@ -376,6 +399,7 @@ class EditorMediaTest : BaseUnitTest() {
                     retryFailedMediaUploadUseCase,
                     cleanUpMediaToPostAssociationUseCase,
                     removeMediaUseCase,
+                    reattachUploadingMediaUseCase,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener)

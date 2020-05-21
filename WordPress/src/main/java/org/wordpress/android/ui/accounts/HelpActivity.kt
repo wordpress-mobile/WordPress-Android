@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.help_activity.*
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -18,13 +18,13 @@ import org.wordpress.android.support.ZendeskExtraTags
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.AppLogViewerActivity
+import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.SiteUtils
 import java.util.ArrayList
 import javax.inject.Inject
 
-class HelpActivity : AppCompatActivity() {
+class HelpActivity : LocaleAwareActivity() {
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var supportHelper: SupportHelper
@@ -40,15 +40,13 @@ class HelpActivity : AppCompatActivity() {
         intent.extras?.get(WordPress.SITE) as SiteModel?
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase))
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
 
         setContentView(R.layout.help_activity)
+
+        setSupportActionBar(toolbar_main)
 
         val actionBar = supportActionBar
         if (actionBar != null) {
@@ -57,11 +55,11 @@ class HelpActivity : AppCompatActivity() {
             actionBar.elevation = 0f // remove shadow
         }
 
-        contactUsButton.setOnClickListener { createNewZendeskTicket() }
-        faqButton.setOnClickListener { showZendeskFaq() }
-        myTicketsButton.setOnClickListener { showZendeskTickets() }
+        contact_us_button.setOnClickListener { createNewZendeskTicket() }
+        faq_button.setOnClickListener { showZendeskFaq() }
+        my_tickets_button.setOnClickListener { showZendeskTickets() }
         applicationVersion.text = getString(R.string.version_with_name_param, WordPress.versionName)
-        applicationLogButton.setOnClickListener { v ->
+        application_log_button.setOnClickListener { v ->
             startActivity(Intent(v.context, AppLogViewerActivity::class.java))
         }
 

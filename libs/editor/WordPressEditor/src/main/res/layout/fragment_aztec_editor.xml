@@ -2,25 +2,23 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aztec="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <org.wordpress.aztec.toolbar.AztecToolbar
         android:id="@+id/formatting_toolbar"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         aztec:advanced="true"
-        aztec:mediaToolbarAvailable="true">
-    </org.wordpress.aztec.toolbar.AztecToolbar>
+        aztec:mediaToolbarAvailable="true" />
 
     <ScrollView
-        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/formatting_toolbar"
         android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" >
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,55 +26,50 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent" >
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <org.wordpress.android.editor.EditTextWithKeyBackListener
                     android:id="@+id/title"
-                    android:hint="@string/post_title"
-                    android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
-                    android:background="@null"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:padding="@dimen/margin_extra_large"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
                     android:fontFamily="serif"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/aztec_title_size"
+                    android:hint="@string/post_title"
                     android:imeOptions="flagNoExtractUi"
+                    android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                     android:lineSpacingExtra="@dimen/spacing_extra_title"
-                    android:textColor="@color/grey_dark"
-                    android:textColorHint="@color/hint_text">
-                </org.wordpress.android.editor.EditTextWithKeyBackListener>
+                    android:padding="@dimen/margin_extra_large"
+                    android:textColor="@color/title_color"
+                    android:textColorHint="@color/hint_text"
+                    android:textSize="@dimen/aztec_title_size"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
             <View
                 android:id="@+id/sourceview_horizontal_divider"
+                style="@style/DividerSourceView"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/format_bar_horizontal_divider_height"
                 android:layout_marginLeft="@dimen/sourceview_side_margin"
-                android:layout_marginRight="@dimen/sourceview_side_margin"
-                style="@style/DividerSourceView"/>
+                android:layout_marginRight="@dimen/sourceview_side_margin" />
 
             <FrameLayout
                 android:id="@+id/aztec_content_and_source_container"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <org.wordpress.aztec.AztecText
                     android:id="@+id/aztec"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="serif"
                     android:gravity="top|start"
                     android:hint="@string/editor_content_hint"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:layout_height="match_parent"
-                    android:layout_width="match_parent"
-                    android:paddingEnd="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingStart="16dp"
-                    android:paddingTop="16dp"
-                    android:scrollbars="vertical"
-                    android:fontFamily="serif"
                     android:imeOptions="flagNoExtractUi"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:padding="@dimen/margin_extra_large"
+                    android:scrollbars="vertical"
                     aztec:bulletColor="@color/bullet"
                     aztec:bulletMargin="@dimen/bullet_margin"
                     aztec:bulletPadding="@dimen/bullet_padding"
@@ -87,7 +80,7 @@
                     aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
                     aztec:historyEnable="true"
                     aztec:historySize="10"
-                    aztec:linkColor="@color/link"
+                    aztec:linkColor="?attr/colorPrimary"
                     aztec:linkUnderline="true"
                     aztec:quoteBackground="@color/quote_background"
                     aztec:quoteColor="@color/quote"
@@ -95,27 +88,24 @@
                     aztec:quotePadding="@dimen/quote_padding"
                     aztec:quoteWidth="@dimen/quote_width"
                     aztec:textColor="@color/text"
-                    aztec:textColorHint="@color/hint_text" >
-                </org.wordpress.aztec.AztecText>
+                    aztec:textColorHint="@color/hint_text" />
 
                 <org.wordpress.aztec.source.SourceViewEditText
                     android:id="@+id/source"
-                    android:gravity="top|start"
-                    android:inputType="textNoSuggestions|textMultiLine"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:paddingTop="16dp"
-                    android:paddingLeft="16dp"
-                    android:paddingStart="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingEnd="16dp"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:fontFamily="monospace"
+                    android:gravity="top|start"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="textNoSuggestions|textMultiLine"
+                    android:padding="@dimen/margin_extra_large"
                     android:scrollbars="vertical"
                     android:textColorHint="@color/hint_text"
-                    android:background="@null"
                     android:textSize="14sp"
                     android:visibility="gone"
-                    android:fontFamily="monospace"
-                    android:imeOptions="flagNoExtractUi" />
+                    aztec:tagColor="?attr/colorPrimary"
+                    aztec:textColor="@color/text" />
 
             </FrameLayout>
 

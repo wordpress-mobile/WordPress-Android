@@ -181,4 +181,16 @@ public class ReaderBlog {
                && this.getFeedUrl().equals(blogInfo.getFeedUrl())
                && this.getImageUrl().equals(blogInfo.getImageUrl());
     }
+
+    public boolean isSameBlogOrFeedAs(ReaderBlog blogInfo) {
+        boolean areBothValidFeeds = this.blogId == this.feedId
+                                    && blogInfo.blogId == blogInfo.feedId
+                                    && this.hasFeedUrl()
+                                    && blogInfo.hasFeedUrl();
+
+        return blogInfo != null
+               && this.blogId == blogInfo.blogId
+               && this.getUrl().equals(blogInfo.getUrl())
+               && (!areBothValidFeeds || this.getFeedUrl().equals(blogInfo.getFeedUrl()));
+    }
 }

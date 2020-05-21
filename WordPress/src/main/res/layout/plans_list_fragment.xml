@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,16 +8,13 @@
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar">
+        android:layout_height="match_parent">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/empty_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="vertical">
-        </org.wordpress.android.ui.prefs.EmptyViewRecyclerView>
-
+            android:scrollbars="vertical" />
     </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView
@@ -30,7 +26,6 @@
         app:aevImage="@drawable/img_illustration_empty_results_216dp"
         app:aevSubtitle="@string/plans_loading_error_no_plans_subtitle"
         app:aevTitle="@string/plans_loading_error_no_plans_title"
-        tools:visibility="visible">
-    </org.wordpress.android.ui.ActionableEmptyView>
+        tools:visibility="visible" />
 
 </RelativeLayout>

@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_extra_large"
-    android:paddingEnd="@dimen/margin_extra_large"
     android:paddingStart="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_extra_large">
+    android:paddingTop="@dimen/margin_extra_large"
+    android:paddingEnd="@dimen/margin_extra_large"
+    android:paddingBottom="@dimen/margin_extra_large">
 
     <ImageView
         android:id="@+id/plugin_icon"
@@ -24,18 +24,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_toEndOf="@id/plugin_icon"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_toStartOf="@+id/plugin_status_container"
+        android:layout_toEndOf="@id/plugin_icon"
         android:orientation="vertical">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/plugin_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/wpColorText"
-            android:textSize="@dimen/text_sz_medium"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
             tools:text="plugin_name" />
 
         <TextView
@@ -45,8 +44,7 @@
             android:layout_marginTop="@dimen/margin_extra_small"
             android:ellipsize="end"
             android:lines="1"
-            android:textColor="@color/neutral_40"
-            android:textSize="@dimen/text_sz_small"
+            android:textAppearance="?attr/textAppearanceCaption"
             tools:text="plugin_author" />
     </LinearLayout>
 
@@ -67,7 +65,7 @@
             tools:src="@drawable/ic_sync_white_24dp"
             tools:tint="@color/warning_50" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/plugin_status_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

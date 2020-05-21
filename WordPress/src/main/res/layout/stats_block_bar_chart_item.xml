@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:id="@+id/link_wrapper"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="24dp"
-              android:contentDescription="@string/stats_bar_chart_content_description"
-              android:orientation="vertical"
-              android:paddingEnd="@dimen/margin_extra_large"
-              android:paddingStart="@dimen/margin_key">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/link_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="24dp"
+    android:importantForAccessibility="no"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/margin_key"
+    android:paddingEnd="@dimen/margin_extra_large">
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/stats_bar_chart_height"/>
+        android:layout_height="@dimen/stats_bar_chart_height" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="-10dp"
         android:layoutDirection="ltr"
-        android:paddingEnd="15dp"
-        android:paddingStart="33dp">
+        android:paddingStart="33dp"
+        android:paddingEnd="15dp">
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label_start"
             style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            tools:text="January 2019"/>
+            tools:text="January 2019" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label_end"
             style="@style/StatsGraphLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            tools:text="December 2019"/>
+            tools:text="December 2019" />
     </LinearLayout>
 </LinearLayout>

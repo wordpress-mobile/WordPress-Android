@@ -5,7 +5,7 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -35,11 +35,12 @@ class ItemPopupMenuHandler
     private val statsSiteProvider: StatsSiteProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val coroutineScope = CoroutineScope(bgDispatcher)
     private val mutableTypeMoved = MutableLiveData<Event<StatsType>>()
     val typeMoved: LiveData<Event<StatsType>> = mutableTypeMoved
 
     fun onMenuClick(view: View, statsType: StatsType) {
-        GlobalScope.launch(bgDispatcher) {
+        coroutineScope.launch {
             val type = statsType as InsightType
             val insights = statsStore.getAddedInsights(statsSiteProvider.siteModel)
 
@@ -48,7 +49,7 @@ class ItemPopupMenuHandler
             val showDownAction = indexOfBlock < insights.size - 1
 
             withContext(mainDispatcher) {
-                val popup = ListPopupWindow(view.context)
+                val popup = ListPopupWindow(view.context, null, R.attr.listPopupWindowStyle)
                 val adapter = InsightsMenuAdapter(view.context, showUpAction, showDownAction)
                 popup.setAdapter(adapter)
                 popup.width = view.context.resources.getDimensionPixelSize(R.dimen.stats_insights_menu_item_width)
@@ -61,13 +62,13 @@ class ItemPopupMenuHandler
                                     Stat.STATS_INSIGHTS_TYPE_MOVED_UP,
                                     statsType
                             )
-                            GlobalScope.launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 statsStore.moveTypeUp(statsSiteProvider.siteModel, type)
                                 mutableTypeMoved.postValue(Event(type))
                             }
                         }
                         DOWN -> {
-                            GlobalScope.launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_MOVED_DOWN,
                                         statsType
@@ -77,7 +78,7 @@ class ItemPopupMenuHandler
                             }
                         }
                         REMOVE -> {
-                            GlobalScope.launch(bgDispatcher) {
+                            coroutineScope.launch {
                                 analyticsTrackerWrapper.trackWithType(
                                         Stat.STATS_INSIGHTS_TYPE_REMOVED,
                                         statsType

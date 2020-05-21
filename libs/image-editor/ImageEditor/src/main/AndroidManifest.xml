@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.wordpress.android.imageeditor">
+    <application>
+        <activity
+            android:name=".EditImageActivity"
+            android:theme="@style/Base.ImageEditorTheme">
+        </activity>
+    </application>
+</manifest>

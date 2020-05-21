@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
@@ -31,6 +30,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.SiteUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageManager.RequestListener;
 import org.wordpress.android.util.image.ImageType;
@@ -83,9 +83,11 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
      */
     public static MediaPreviewFragment newInstance(
             @Nullable SiteModel site,
-            @NonNull String contentUri) {
+            @NonNull String contentUri,
+            boolean autoPlay) {
         Bundle args = new Bundle();
         args.putString(ARG_MEDIA_CONTENT_URI, contentUri);
+        args.putBoolean(ARG_AUTOPLAY, autoPlay);
         if (site != null) {
             args.putSerializable(WordPress.SITE, site);
         }
@@ -195,11 +197,15 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
         if (mFragmentWasPaused) {
             mFragmentWasPaused = false;
-        } else if (mIsAudio || mIsVideo) {
+        } else if (mIsAudio) {
             if (mAutoPlay) {
                 playMedia();
-            } else if (mIsVideo && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
+            }
+        } else if (mIsVideo) {
+            if (!mAutoPlay && !TextUtils.isEmpty(mVideoThumbnailUrl)) {
                 loadImage(mVideoThumbnailUrl);
+            } else {
+                playMedia();
             }
         } else {
             loadImage(mContentUri);
@@ -278,26 +284,27 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         }
 
         mImageView.setVisibility(View.VISIBLE);
-        if (mSite == null || SiteUtils.isPhotonCapable(mSite)) {
+        if ((mSite == null || SiteUtils.isPhotonCapable(mSite)) && !UrlUtils.isContentUri(mediaUri)) {
             int maxWidth = Math.max(DisplayUtils.getDisplayPixelWidth(getActivity()),
                     DisplayUtils.getDisplayPixelHeight(getActivity()));
-            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0);
+
+            boolean isPrivateAtomicSite = mSite != null && mSite.isPrivateWPComAtomic();
+            mediaUri = PhotonUtils.getPhotonImageUrl(mediaUri, maxWidth, 0, isPrivateAtomicSite);
         }
         showProgress(true);
-        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, mediaUri, ScaleType.CENTER, null,
+
+        mImageManager.loadWithResultListener(mImageView, ImageType.IMAGE, Uri.parse(mediaUri), ScaleType.CENTER, null,
                 new RequestListener<Drawable>() {
                     @Override
-                    public void onResourceReady(@NotNull Drawable resource) {
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
                         if (isAdded()) {
-                            // assign the photo attacher to enable pinch/zoom - must come before setImageBitmap
+                            // assign the photo attacher to enable pinch/zoom - must come before
+                            // setImageBitmap
                             // for it to be correctly resized upon loading
                             PhotoViewAttacher attacher = new PhotoViewAttacher(mImageView);
-                            attacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-                                @Override
-                                public void onViewTap(View view, float x, float y) {
-                                    if (mMediaTapListener != null) {
-                                        mMediaTapListener.onMediaTapped();
-                                    }
+                            attacher.setOnViewTapListener((view, x, y) -> {
+                                if (mMediaTapListener != null) {
+                                    mMediaTapListener.onMediaTapped();
                                 }
                             });
                             showProgress(false);
@@ -305,7 +312,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                     }
 
                     @Override
-                    public void onLoadFailed(@Nullable Exception e) {
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
                         if (isAdded()) {
                             if (e != null) {
                                 AppLog.e(T.MEDIA, e);
@@ -346,7 +353,9 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
                 if (isAdded()) {
                     showProgress(false);
                     mImageView.setVisibility(View.GONE);
-                    mp.start();
+                    if (mAutoPlay) {
+                        mp.start();
+                    }
                     if (position > 0) {
                         mp.seekTo(position);
                     }

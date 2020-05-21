@@ -26,7 +26,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
     private String mTagTitle; // title, used for default tags
     private String mEndpoint; // endpoint for updating posts with this tag
 
-    private boolean mIsDefaultTag;
+    private boolean mIsDefaultInMemoryTag;
 
     public final ReaderTagType tagType;
 
@@ -43,7 +43,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
                      String title,
                      String endpoint,
                      ReaderTagType tagType,
-                     boolean isDefaultTag) {
+                     boolean isDefaultInMemoryTag) {
         // we need a slug since it's used to uniquely ID the tag (including setting it as the
         // primary key in the tag table)
         if (TextUtils.isEmpty(slug)) {
@@ -62,14 +62,14 @@ public class ReaderTag implements Serializable, FilterCriteria {
         setTagTitle(title);
         setEndpoint(endpoint);
         this.tagType = tagType;
-        mIsDefaultTag = isDefaultTag;
+        mIsDefaultInMemoryTag = isDefaultInMemoryTag;
     }
 
     public String getEndpoint() {
         return StringUtils.notNullStr(mEndpoint);
     }
 
-    private void setEndpoint(String endpoint) {
+    public void setEndpoint(String endpoint) {
         this.mEndpoint = StringUtils.notNullStr(endpoint);
     }
 
@@ -77,7 +77,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return StringUtils.notNullStr(mTagTitle);
     }
 
-    private void setTagTitle(String title) {
+    public void setTagTitle(String title) {
         this.mTagTitle = StringUtils.notNullStr(title);
     }
 
@@ -174,8 +174,8 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return tagType == ReaderTagType.DEFAULT && getEndpoint().endsWith(FOLLOWING_PATH);
     }
 
-    public boolean isDefaultTag() {
-        return tagType == ReaderTagType.DEFAULT && mIsDefaultTag;
+    public boolean isDefaultInMemoryTag() {
+        return tagType == ReaderTagType.DEFAULT && mIsDefaultInMemoryTag;
     }
 
     public boolean isBookmarked() {

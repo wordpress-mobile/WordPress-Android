@@ -16,7 +16,6 @@ import android.view.animation.Animation;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
@@ -33,9 +32,9 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
 import org.wordpress.android.widgets.WPViewPagerTransformer.TransformType;
@@ -44,8 +43,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-
-public class MediaPreviewActivity extends AppCompatActivity implements MediaPreviewFragment.OnMediaTappedListener {
+public class MediaPreviewActivity extends LocaleAwareActivity implements MediaPreviewFragment.OnMediaTappedListener {
     private static final String ARG_ID_OR_URL_LIST = "id_list";
     private static final String ARG_PREVIEW_TYPE = "preview_type";
 
@@ -168,11 +166,6 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
     }
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleManager.setLocale(newBase));
-    }
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
@@ -278,7 +271,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
         if (media != null) {
             fragment = MediaPreviewFragment.newInstance(mSite, media, true);
         } else {
-            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri);
+            fragment = MediaPreviewFragment.newInstance(mSite, mContentUri, true);
         }
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment, MediaPreviewFragment.TAG)
@@ -430,7 +423,7 @@ public class MediaPreviewActivity extends AppCompatActivity implements MediaPrev
                     break;
                 case MULTI_IMAGE_URLS:
                     String imageUrl = mMediaIdOrUrlList.get(position);
-                    fragment = MediaPreviewFragment.newInstance(null, imageUrl);
+                    fragment = MediaPreviewFragment.newInstance(null, imageUrl, false);
                     break;
                 default:
                     // should never get here

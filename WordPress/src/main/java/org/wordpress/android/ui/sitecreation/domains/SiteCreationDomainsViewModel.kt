@@ -22,7 +22,6 @@ import org.wordpress.android.models.networkresource.ListState.Ready
 import org.wordpress.android.models.networkresource.ListState.Success
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.TitleQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainSuggestionsQuery.UserQuery
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsFetchSuggestionsErrorUiState
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel.DomainsListItemUiState.DomainsModelUiState
@@ -61,7 +60,6 @@ class SiteCreationDomainsViewModel @Inject constructor(
         get() = bgDispatcher + job
     private var isStarted = false
     private var segmentId by Delegates.notNull<Long>()
-    private var siteTitle: String? = null
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -92,20 +90,14 @@ class SiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(siteTitle: String?, segmentId: Long) {
+    fun start(segmentId: Long) {
         if (isStarted) {
             return
         }
         this.segmentId = segmentId
-        this.siteTitle = siteTitle
         isStarted = true
         tracker.trackDomainsAccessed()
-        // isNullOrBlank not smart-casting for some reason..
-        if (siteTitle == null || siteTitle.isBlank()) {
-            resetUiState()
-        } else {
-            updateQueryInternal(TitleQuery(siteTitle))
-        }
+        resetUiState()
     }
 
     fun createSiteBtnClicked() {
@@ -125,12 +117,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     }
 
     fun updateQuery(query: String) {
-        val siteTitle: String? = this.siteTitle
-        if (query.isBlank() && !siteTitle.isNullOrBlank()) {
-            updateQueryInternal(TitleQuery(siteTitle))
-        } else {
-            updateQueryInternal(UserQuery(query))
-        }
+        updateQueryInternal(UserQuery(query))
     }
 
     private fun updateQueryInternal(query: DomainSuggestionsQuery?) {
@@ -392,10 +379,5 @@ class SiteCreationDomainsViewModel @Inject constructor(
          * User initiated search.
          */
         class UserQuery(value: String) : DomainSuggestionsQuery(value)
-
-        /**
-         * Automatic search initiated for the site title.
-         */
-        class TitleQuery(value: String) : DomainSuggestionsQuery(value)
     }
 }

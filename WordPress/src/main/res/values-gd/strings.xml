@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
-Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n > 2 && n < 20) ? 2 : 3;
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
+Generator: GlotPress/3.0.0-alpha
 Language: gd_GB
 -->
 <resources>
@@ -171,14 +171,11 @@ Language: gd_GB
     <string name="add_new_category">Cuir roinn-seòrsa ùr ris</string>
     <string name="view_in_browser">Seall sa bhrabhsair</string>
     <string name="remove_account">Thoir air falbh an làrach</string>
-    <string name="hint_comment_content">Beachd</string>
     <string name="saving_changes">A’ sàbhaladh nan atharrachadh</string>
     <string name="sure_to_cancel_edit_comment">A bheil thu airson sgur de dheasachadh a’ bheachd seo?</string>
     <string name="content_required">Tha feum air beachd</string>
     <string name="toast_comment_unedited">Cha deach am beachd atharrachadh</string>
     <string name="trash">An sgudal</string>
-    <string name="trash_no">Na cuir</string>
-    <string name="trash_yes">Cuir</string>
     <string name="dlg_confirm_trash_comments">Cuir dhan sgudal?</string>
     <string name="dlg_trashing_comments">’Ga chur dhan sgudal</string>
     <string name="dlg_approving_comments">’Ga aontachadh</string>
@@ -274,7 +271,6 @@ Language: gd_GB
     <string name="pages">Duilleagan</string>
     <string name="posts">Puist</string>
     <string name="anonymous">Gun urra</string>
-    <string name="blogusername">ainm cleachdaiche a\' bhloga</string>
     <string name="ok">Ceart ma-thà</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Tionndadh</string>
@@ -287,7 +283,6 @@ Language: gd_GB
     <string name="immediately">Sa bhad</string>
     <string name="quickpress_add_alert_title">Suidhich ainm na h-ath-ghoirid</string>
     <string name="settings">Roghainnean</string>
-    <string name="quickpress_window_title">Tagh bloga airson ath-ghoirid QuickPress</string>
     <string name="quickpress_add_error">Chan fhaod ainm na h-ath-ghoirid a bhith bàn</string>
     <string name="title">Tiotal</string>
     <string name="categories">Roinnean-seòrsa</string>

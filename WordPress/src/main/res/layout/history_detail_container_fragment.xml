@@ -1,102 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aztec="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/post_history_underlying_background">
 
-    <RelativeLayout
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_bar"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white">
+        aztec:cardCornerRadius="0dp"
+        aztec:cardElevation="@dimen/appbar_elevation">
 
-        <ImageView
-            android:id="@+id/previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="@string/history_detail_button_previous"
-            android:focusable="true"
-            android:minHeight="@dimen/min_touch_target_sz"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:padding="@dimen/margin_extra_large"
-            android:src="@drawable/ic_chevron_left_white_24dp"
-            android:tint="@color/neutral_70_neutral_20_selector" >
-        </ImageView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/diff_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/previous"
-            android:layout_toStartOf="@+id/next"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="@dimen/margin_extra_large">
-
-            <TextView
-                android:id="@+id/diff_additions"
+            <ImageButton
+                android:id="@+id/previous"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_small_medium"
-                android:layout_marginStart="@dimen/margin_small_medium"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_primary_50_plus_white_16dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                android:visibility="gone"
-                tools:text="3"
-                tools:visibility="visible">
-            </TextView>
+                android:layout_alignParentStart="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/history_detail_button_previous"
+                android:focusable="true"
+                android:minWidth="@dimen/min_touch_target_sz"
+                android:minHeight="@dimen/min_touch_target_sz"
+                android:padding="@dimen/margin_extra_large"
+                android:src="@drawable/ic_chevron_left_white_24dp"
+                aztec:tint="@color/on_surface_disabled_selector"
+                android:tintMode="src_in" />
 
-            <TextView
-                android:id="@+id/diff_deletions"
+            <LinearLayout
+                android:id="@+id/diff_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_small_medium"
-                android:layout_marginStart="@dimen/margin_small_medium"
-                android:drawablePadding="@dimen/margin_small"
-                android:drawableStart="@drawable/bg_oval_error_50_minus_white_16dp"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                android:textColor="@color/neutral_40"
-                android:visibility="gone"
-                tools:text="1"
-                tools:visibility="visible">
-            </TextView>
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/next"
+                android:layout_toEndOf="@+id/previous"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/margin_extra_large">
 
-        </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/diff_additions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small_medium"
+                    android:layout_marginEnd="@dimen/margin_small_medium"
+                    android:drawableStart="@drawable/bg_oval_primary_plus_white_16dp"
+                    android:drawablePadding="@dimen/margin_small"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:visibility="gone"
+                    tools:text="3"
+                    tools:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="@string/history_detail_button_next"
-            android:focusable="true"
-            android:minHeight="@dimen/min_touch_target_sz"
-            android:minWidth="@dimen/min_touch_target_sz"
-            android:padding="@dimen/margin_extra_large"
-            android:src="@drawable/ic_chevron_right_white_24dp"
-            android:tint="@color/neutral_70_neutral_20_selector" >
-        </ImageView>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/diff_deletions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_small_medium"
+                    android:layout_marginEnd="@dimen/margin_small_medium"
+                    android:drawableStart="@drawable/bg_oval_error_minus_white_16dp"
+                    android:drawablePadding="@dimen/margin_small"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    android:visibility="gone"
+                    tools:text="1"
+                    tools:visibility="visible" />
 
-    </RelativeLayout>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/history_detail_button_next"
+                android:focusable="true"
+                android:minWidth="@dimen/min_touch_target_sz"
+                android:minHeight="@dimen/min_touch_target_sz"
+                android:padding="@dimen/margin_extra_large"
+                android:src="@drawable/ic_chevron_right_white_24dp"
+                aztec:tint="@color/on_surface_disabled_selector"
+                android:tintMode="src_in" />
+
+        </RelativeLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <org.wordpress.android.widgets.WPViewPager
         android:id="@+id/diff_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_bar">
-    </org.wordpress.android.widgets.WPViewPager>
+        android:layout_above="@+id/bottom_bar" />
 
     <ScrollView
         android:id="@+id/visual_preview_container"
@@ -104,34 +108,34 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_bar"
         android:layout_alignParentTop="true"
-        android:background="@android:color/white"
         android:fillViewport="true"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/visual_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
                 android:fontFamily="serif"
                 android:freezesText="true"
                 android:lineSpacingExtra="@dimen/spacing_extra_title"
                 android:padding="@dimen/margin_extra_large"
-                android:textColor="?attr/wpColorText"
+                android:textAppearance="?attr/textAppearanceHeadline5"
                 android:textSize="@dimen/aztec_title_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="Visual Title" />
 
             <View
-                style="@style/DividerSourceView"
-                android:layout_width="fill_parent"
-                android:layout_height="@dimen/format_bar_horizontal_divider_height"
+               android:background="?android:attr/listDivider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
                 android:layout_marginLeft="@dimen/sourceview_side_margin"
-                android:layout_marginRight="@dimen/sourceview_side_margin"/>
+                android:layout_marginRight="@dimen/sourceview_side_margin" />
 
             <org.wordpress.aztec.AztecText
                 android:id="@+id/visual_content"
@@ -149,23 +153,21 @@
                 aztec:codeColor="@color/code"
                 aztec:drawableFailed="@drawable/ic_image_failed_grey_a_40_48dp"
                 aztec:drawableLoading="@drawable/ic_image_loading_grey_a_40_48dp"
-                aztec:linkColor="@color/link"
+                aztec:linkColor="?attr/colorPrimary"
                 aztec:linkUnderline="true"
                 aztec:quoteBackground="@color/quote_background"
                 aztec:quoteColor="@color/quote"
                 aztec:quoteMargin="@dimen/quote_margin"
                 aztec:quotePadding="@dimen/quote_padding"
                 aztec:quoteWidth="@dimen/quote_width"
-                aztec:textColor="@color/text">
-            </org.wordpress.aztec.AztecText>
+                aztec:textColor="@color/text" />
         </LinearLayout>
     </ScrollView>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_divider_height"
+        android:layout_height="@dimen/divider_size"
         android:layout_above="@+id/bottom_bar"
-        android:background="@color/neutral_0">
-    </View>
+        android:background="?android:attr/listDivider" />
 
 </RelativeLayout>

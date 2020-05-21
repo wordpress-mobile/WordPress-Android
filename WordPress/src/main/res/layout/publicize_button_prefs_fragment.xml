@@ -1,191 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:wp="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
         android:id="@+id/sharing_disabled_notification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/content_margin"
+        android:layout_marginBottom="@dimen/margin_large"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/margin_large"
+        android:paddingEnd="@dimen/margin_large"
         android:visibility="gone">
 
-        <LinearLayout
+        <org.wordpress.android.widgets.WPTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:text="@string/sharing_disabled"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorPrimary" />
+
+        <org.wordpress.android.widgets.WPTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            android:layout_marginEnd="@dimen/content_margin"
-            android:layout_marginTop="@dimen/margin_large"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/margin_medium"
-            android:paddingStart="@dimen/margin_medium">
+            android:text="@string/sharing_disabled_description"
+            android:textAppearance="?attr/textAppearanceCaption" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_medium"
-                android:text="@string/sharing_disabled"
-                android:textColor="@color/primary_50"
-                android:textSize="@dimen/text_sz_medium"
-                android:textStyle="bold" />
-
-            <org.wordpress.android.widgets.WPTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sharing_disabled_description"
-                android:textColor="@color/neutral_30"
-                android:textSize="@dimen/text_sz_medium" />
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
     <ScrollView
+        android:id="@+id/sharing_settings_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/sharing_settings_wrapper">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_marginBottom="@dimen/margin_large"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_sharing_buttons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:orientation="vertical">
+                    wp:wpHeading="@string/buttons"
+                    wp:wpPrefType="checklist"
+                    wp:wpShowDivider="true"
+                    wp:wpSummary="@string/sharing_sharing_buttons_description"
+                    wp:wpTitle="@string/sharing_buttons" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_sharing_buttons"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpHeading="@string/buttons"
-                        wp:wpPrefType="checklist"
-                        wp:wpShowDivider="true"
-                        wp:wpSummary="@string/sharing_sharing_buttons_description"
-                        wp:wpTitle="@string/sharing_buttons" />
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_more_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    wp:wpPrefType="checklist"
+                    wp:wpShowDivider="true"
+                    wp:wpSummary="@string/sharing_more_description"
+                    wp:wpTitle="@string/sharing_edit_more_buttons" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_more_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpPrefType="checklist"
-                        wp:wpShowDivider="true"
-                        wp:wpSummary="@string/sharing_more_description"
-                        wp:wpTitle="@string/sharing_edit_more_buttons" />
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    wp:wpPrefType="text"
+                    wp:wpShowDivider="true"
+                    wp:wpTextDialogSubtitle="@string/sharing_label_message"
+                    wp:wpTitle="@string/label" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_label"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpPrefType="text"
-                        wp:wpShowDivider="true"
-                        wp:wpTextDialogSubtitle="@string/sharing_label_message"
-                        wp:wpTitle="@string/label" />
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_button_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    wp:wpPrefType="radiolist"
+                    wp:wpShowDivider="false"
+                    wp:wpTitle="@string/button_style" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_button_style"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpPrefType="radiolist"
-                        wp:wpShowDivider="false"
-                        wp:wpTitle="@string/button_style" />
+            </LinearLayout>
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_show_reblog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:orientation="vertical">
+                    wp:wpHeading="@string/site_settings_reblog_and_like_header"
+                    wp:wpPrefType="toggle"
+                    wp:wpShowDivider="true"
+                    wp:wpTitle="@string/site_settings_reblog" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_show_reblog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpHeading="@string/site_settings_reblog_and_like_header"
-                        wp:wpPrefType="toggle"
-                        wp:wpShowDivider="true"
-                        wp:wpTitle="@string/site_settings_reblog" />
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_show_like"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    wp:wpPrefType="toggle"
+                    wp:wpShowDivider="false"
+                    wp:wpTitle="@string/site_settings_like" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_show_like"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpPrefType="toggle"
-                        wp:wpShowDivider="false"
-                        wp:wpTitle="@string/site_settings_like" />
+            </LinearLayout>
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_allow_comment_likes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:orientation="vertical">
+                    wp:wpHeading="@string/likes"
+                    wp:wpPrefType="toggle"
+                    wp:wpShowDivider="false"
+                    wp:wpSummary="@string/sharing_comment_likes_description"
+                    wp:wpTitle="@string/sharing_comment_likes" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_allow_comment_likes"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpHeading="@string/likes"
-                        wp:wpPrefType="toggle"
-                        wp:wpShowDivider="false"
-                        wp:wpSummary="@string/sharing_comment_likes_description"
-                        wp:wpTitle="@string/sharing_comment_likes" />
+            </LinearLayout>
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_view_twitter"
+            <LinearLayout
+                android:id="@+id/twitter_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_large"
-                card_view:cardBackgroundColor="@android:color/white"
-                card_view:cardCornerRadius="@dimen/default_cardview_radius">
+                android:layout_marginBottom="@dimen/margin_large"
+                android:orientation="vertical">
 
-                <LinearLayout
+                <org.wordpress.android.widgets.WPPrefView
+                    android:id="@+id/pref_twitter_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_extra_large"
-                    android:orientation="vertical">
+                    wp:wpHeading="@string/twitter"
+                    wp:wpPrefType="text"
+                    wp:wpShowDivider="false"
+                    wp:wpTextDialogSubtitle="@string/sharing_twitter_message"
+                    wp:wpTitle="@string/twitter_username" />
 
-                    <org.wordpress.android.widgets.WPPrefView
-                        android:id="@+id/pref_twitter_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        wp:wpHeading="@string/twitter"
-                        wp:wpPrefType="text"
-                        wp:wpShowDivider="false"
-                        wp:wpTextDialogSubtitle="@string/sharing_twitter_message"
-                        wp:wpTitle="@string/twitter_username" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

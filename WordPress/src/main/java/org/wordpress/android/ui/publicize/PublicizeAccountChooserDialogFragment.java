@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -50,8 +51,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         //noinspection InflateParams
         View view = inflater.inflate(R.layout.publicize_account_chooser_dialog, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(
-                new ContextThemeWrapper(getActivity(), R.style.Calypso_Dialog_Alert));
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
         configureAlertDialog(view, builder);
         configureRecyclerViews(view);
 
@@ -71,7 +71,7 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         PublicizeAccountChooserListAdapter notConnectedAdapter =
                 new PublicizeAccountChooserListAdapter(getActivity(), mNotConnectedAccounts, this, false);
         notConnectedAdapter.setHasStableIds(true);
-        mNotConnectedRecyclerView = (RecyclerView) view.findViewById(R.id.not_connected_recyclerview);
+        mNotConnectedRecyclerView = view.findViewById(R.id.not_connected_recyclerview);
         mNotConnectedRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mNotConnectedRecyclerView.setAdapter(notConnectedAdapter);
 
@@ -83,12 +83,12 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
     }
 
     private void hideConnectedView(View view) {
-        LinearLayout connectedHeader = (LinearLayout) view.findViewById(R.id.connected_header);
+        LinearLayout connectedHeader = view.findViewById(R.id.connected_header);
         connectedHeader.setVisibility(View.GONE);
     }
 
     private void populateConnectedListView(View view) {
-        RecyclerView listViewConnected = (RecyclerView) view.findViewById(R.id.connected_recyclerview);
+        RecyclerView listViewConnected = view.findViewById(R.id.connected_recyclerview);
         PublicizeAccountChooserListAdapter connectedAdapter =
                 new PublicizeAccountChooserListAdapter(getActivity(), mConnectedAccounts, null, true);
 
@@ -100,35 +100,19 @@ public class PublicizeAccountChooserDialogFragment extends DialogFragment
         builder.setView(view);
         builder.setTitle(getString(R.string.connecting_social_network, mConnectionName));
         builder.setMessage(getString(R.string.connection_chooser_message));
-        builder.setPositiveButton(R.string.share_btn_connect, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-                int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
-                String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
-                String externalUserId = mNotConnectedAccounts.get(mSelectedIndex).getExternalId();
-                EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
-                        service, externalUserId));
-            }
+        builder.setPositiveButton(R.string.share_btn_connect, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
+            int keychainId = mNotConnectedAccounts.get(mSelectedIndex).connectionId;
+            String service = mNotConnectedAccounts.get(mSelectedIndex).getService();
+            String externalUserId = mNotConnectedAccounts.get(mSelectedIndex).getExternalId();
+            EventBus.getDefault().post(new PublicizeEvents.ActionAccountChosen(mSite.getSiteId(), keychainId,
+                    service, externalUserId));
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                ToastUtils.showToast(getActivity(),
-                                     getActivity().getString(R.string.cannot_connect_account_error, mConnectionName));
-            }
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+            dialogInterface.cancel();
+            ToastUtils.showToast(getActivity(),
+                                 getActivity().getString(R.string.cannot_connect_account_error, mConnectionName));
         });
-    }
-
-    private boolean containsSiteId(long[] array) {
-        for (long a : array) {
-            if (a == mSite.getSiteId()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void retrieveCurrentSiteFromArgs() {
