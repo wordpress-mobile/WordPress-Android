@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
@@ -37,8 +36,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
-    private val _onSubmitButtonClicked = MutableLiveData<Event<Pair<LocalId, PublishPost>>>()
-    val onSubmitButtonClicked: LiveData<Event<Pair<LocalId, PublishPost>>> = _onSubmitButtonClicked
+    private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
+    val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
@@ -82,7 +81,7 @@ class PrepublishingHomeViewModel @Inject constructor(
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
-                _onSubmitButtonClicked.postValue(Event(Pair(LocalId(editPostRepository.id), publishPost)))
+                _onSubmitButtonClicked.postValue(Event(publishPost))
             })
         }.toList()
 

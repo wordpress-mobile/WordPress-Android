@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -567,7 +566,7 @@ class PostsListActivity : LocaleAwareActivity(),
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onSubmitButtonClicked(postId: LocalId, publishPost: PublishPost) {
-        viewModel.onBottomSheetPublishButtonClicked(postId)
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        viewModel.onBottomSheetPublishButtonClicked()
     }
 }

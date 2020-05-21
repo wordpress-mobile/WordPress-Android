@@ -10,7 +10,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.TaxonomyActionBuilder
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
@@ -34,8 +33,8 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
     val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
 
-    private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<Pair<LocalId, PublishPost>>>()
-    val triggerOnSubmitButtonClickedListener: LiveData<Event<Pair<LocalId, PublishPost>>> = _triggerOnSubmitButtonClickedListener
+    private val _triggerOnSubmitButtonClickedListener = MutableLiveData<Event<PublishPost>>()
+    val triggerOnSubmitButtonClickedListener: LiveData<Event<PublishPost>> = _triggerOnSubmitButtonClickedListener
 
     init {
         dispatcher.register(this)
@@ -95,9 +94,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         navigateToScreen(screen)
     }
 
-    fun onSubmitButtonClicked(postId: LocalId, publishPost: PublishPost) {
+    fun onSubmitButtonClicked(publishPost: PublishPost) {
         onCloseClicked()
-        _triggerOnSubmitButtonClickedListener.postValue(Event(Pair(postId,publishPost)))
+        _triggerOnSubmitButtonClickedListener.postValue(Event(publishPost))
     }
 
     /**
