@@ -129,8 +129,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             event.applyIfNotHandled { dismiss() }
         })
 
-        viewModel.triggerOnPublishButtonClickedListener.observe(this, Observer { event ->
-            event.applyIfNotHandled { prepublishingBottomSheetListener?.onPublishButtonClicked() }
+        viewModel.triggerOnSubmitButtonClickedListener.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { publishPost ->
+                prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
+            }
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
@@ -180,20 +182,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    companion object {
-        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
-        const val SITE = "prepublishing_bottom_sheet_site_model"
-        const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
-
-        @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) = PrepublishingBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(SITE, site)
-                putBoolean(IS_PAGE, isPage)
-            }
-        }
-    }
-
     override fun onCloseClicked() {
         viewModel.onCloseClicked()
     }
@@ -206,7 +194,21 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onActionClicked(actionType)
     }
 
-    override fun onPublishButtonClicked() {
-        viewModel.onPublishButtonClicked()
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        viewModel.onSubmitButtonClicked(publishPost)
+    }
+
+    companion object {
+        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
+        const val SITE = "prepublishing_bottom_sheet_site_model"
+        const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+
+        @JvmStatic
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) = PrepublishingBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(SITE, site)
+                putBoolean(IS_PAGE, isPage)
+            }
+        }
     }
 }

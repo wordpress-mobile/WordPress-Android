@@ -58,7 +58,6 @@
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="keep_editing">Keep editing</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="removed">Removed</string>
@@ -112,6 +111,7 @@
     <string name="local_draft">Local draft</string>
     <string name="local_changes">Local changes</string>
     <string name="publish_now">Publish Now</string>
+    <string name="update_now">Update Now</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -333,12 +333,7 @@
     <string name="pages_fetching">Fetching pages…</string>
     <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
     <string name="dialog_confirm_publish_yes" translatable="false">@string/publish_now</string>
-    <string name="dialog_confirm_update_title">Ready to Update?</string>
-    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
-    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
-    <string name="dialog_confirm_update_yes">Update now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- scheduled post sync confirmation dialog -->
@@ -2749,6 +2744,7 @@
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
+    <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -15,10 +16,11 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.PublishButtonUiState
-import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishButtonLabelUseCase
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -31,7 +33,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
-    @Mock lateinit var getPublishButtonLabelUseCase: GetPublishButtonLabelUseCase
+    @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
     @Mock lateinit var site: SiteModel
 
     @Before
@@ -40,9 +42,18 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getPostTagsUseCase,
                 getPostVisibilityUseCase,
                 postSettingsUtils,
-                getPublishButtonLabelUseCase,
+                getButtonUiStateUseCase,
                 mock()
         )
+        whenever(
+                getButtonUiStateUseCase.getUiState(
+                        any(),
+                        any(),
+                        any()
+                )
+        ).doAnswer {
+            PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
+        }
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
         whenever(editPostRepository.getPost()).thenReturn(PostModel())
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(PUBLIC)
@@ -125,7 +136,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(mock(), site)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.size).isEqualTo(
+        assertThat(viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.size).isEqualTo(
                 expectedActionsAmount
         )
     }
@@ -257,17 +268,17 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that tapping publish button will invoke onPublishButtonClicked`() {
+    fun `verify that tapping submit button will invoke onSubmitButtonClicked`() {
         // arrange
-        var event: Event<Unit>? = null
-        viewModel.onPublishButtonClicked.observeForever {
+        var event: Event<PublishPost>? = null
+        viewModel.onSubmitButtonClicked.observeForever {
             event = it
         }
 
         // act
         viewModel.start(editPostRepository, site)
         val buttonUiState = getButtonUiState()
-        buttonUiState?.onButtonClicked?.invoke()
+        buttonUiState?.onButtonClicked?.invoke(true)
 
         // assert
         assertThat(event).isNotNull
@@ -275,8 +286,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
 
-    private fun getButtonUiState(): PublishButtonUiState? {
-        return viewModel.uiState.value?.filterIsInstance(PublishButtonUiState::class.java)?.first()
+    private fun getButtonUiState(): SubmitButtonUiState? {
+        return viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.first()
     }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {
