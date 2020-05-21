@@ -631,7 +631,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean shouldShowFollowButton() {
         return mCurrentTag != null
-               && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
+               && mCurrentTag.isTagTopic()
                && !mIsLoggedOutReader;
     }
 
