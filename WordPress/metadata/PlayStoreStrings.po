@@ -11,22 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_149"
+msgid ""
+"14.9:\n"
+"<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.\n"
+"\n"
+"<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.\n"
+msgstr ""
+
 msgctxt "release_note_148"
 msgid ""
 "14.8:\n"
 "<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.\n"
 "<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.\n"
 "<b>General updates:</b> Added reblog functionality.\n"
-msgstr ""
-
-msgctxt "release_note_147"
-msgid ""
-"14.7:\n"
-"Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.\n"
-"\n"
-"Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.\n"
-"\n"
-"UI improvements: Added your Gravatar to the Me menu in My Site.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
