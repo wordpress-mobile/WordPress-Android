@@ -635,15 +635,6 @@ public class ReaderPostListFragment extends Fragment
             if (getPostListType() == ReaderPostListType.SEARCH_RESULTS) {
                 return;
             }
-            ReaderTag discoverTag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-            ReaderTag readerTag = AppPrefs.getReaderTag();
-
-            if (discoverTag != null && discoverTag.equals(readerTag)) {
-                setCurrentTag(readerTag);
-                updateCurrentTag();
-            } else if (discoverTag == null) {
-                AppLog.w(T.READER, "Discover tag not found; ReaderTagTable returned null");
-            }
         }
 
         if (shouldShowEmptyViewForSelfHostedCta()) {
