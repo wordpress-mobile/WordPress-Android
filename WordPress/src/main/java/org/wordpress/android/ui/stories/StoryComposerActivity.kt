@@ -231,7 +231,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     // NotificationIntentLoader
-    override fun loadIntentForErrorNotification() : Intent {
+    override fun loadIntentForErrorNotification(): Intent {
         val notificationIntent = Intent(applicationContext, StoryComposerActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
