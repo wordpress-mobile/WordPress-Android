@@ -12,6 +12,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TA
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.editor.SecondaryEditorAction
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -39,11 +40,15 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
+    fun start(editPostRepository: EditPostRepository, site: SiteModel, isPublishSecondaryEditorAction: Boolean) {
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site)
+        if (isPublishSecondaryEditorAction) {
+
+        } else {
+            setupHomeUiState(editPostRepository, site)
+        }
     }
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {

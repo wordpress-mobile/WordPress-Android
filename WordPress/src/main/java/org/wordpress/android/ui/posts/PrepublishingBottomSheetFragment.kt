@@ -142,9 +142,13 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
+        val isPublishSecondaryAction = checkNotNull(arguments?.getBoolean(IS_PUBLISH_SECONDARY_ACTION)) {
+            "arguments can't be null since it's a requirement that this value is passed."
+        }
+
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(),
+                    PrepublishingHomeFragment.newInstance(isPublishSecondaryAction),
                     PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> Pair(
@@ -202,13 +206,16 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+        const val IS_PUBLISH_SECONDARY_ACTION = "prepublishing_bottom_sheet_is_publish_secondary_action"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) = PrepublishingBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(SITE, site)
-                putBoolean(IS_PAGE, isPage)
-            }
-        }
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isPublishSecondaryAction: Boolean = false) =
+                PrepublishingBottomSheetFragment().apply {
+                    arguments = Bundle().apply {
+                        putSerializable(SITE, site)
+                        putBoolean(IS_PAGE, isPage)
+                        putBoolean(IS_PUBLISH_SECONDARY_ACTION, isPublishSecondaryAction)
+                    }
+                }
     }
 }
