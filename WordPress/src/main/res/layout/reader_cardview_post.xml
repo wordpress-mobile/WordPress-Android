@@ -9,6 +9,7 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -209,8 +210,7 @@
             android:layout_marginTop="@dimen/margin_extra_large"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@id/image_featured"
-            app:layout_constraintBottom_toBottomOf="@id/image_featured"
+            app:layout_constraintTop_toBottomOf="@id/layout_post_header"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -223,7 +223,7 @@
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
-            app:layout_constraintTop_toBottomOf="@+id/thumbnail_strip"
+            app:layout_constraintTop_toBottomOf="@+id/frame_photo"
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
