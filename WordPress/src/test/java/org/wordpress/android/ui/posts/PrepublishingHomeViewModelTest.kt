@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
@@ -270,7 +271,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that tapping submit button will invoke onSubmitButtonClicked`() {
         // arrange
-        var event: Event<PublishPost>? = null
+        var event: Event<Pair<LocalId, PublishPost>>? = null
         viewModel.onSubmitButtonClicked.observeForever {
             event = it
         }

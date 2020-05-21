@@ -52,7 +52,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when started, it uploads all local drafts`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
@@ -60,7 +60,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is available for wpcom and jetpack sites`() {
         site.origin = SiteModel.ORIGIN_WPCOM_REST
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         var isSearchAvailable = false
         viewModel.isSearchAvailable.observeForever {
@@ -73,7 +73,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is not available for xmlrpc sites`() {
         site.origin = SiteModel.ORIGIN_XMLRPC
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         var isSearchAvailable = true
         viewModel.isSearchAvailable.observeForever {
@@ -86,7 +86,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -100,7 +100,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `expanding and collapsing search triggers isSearchExpanded`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         var isSearchExpanded = false
         viewModel.isSearchExpanded.observeForever {
@@ -118,7 +118,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `expanding search after configuration change preserves search query`() {
         val testSearch = "keyword"
 
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -141,7 +141,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE)
+        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
         assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
 
         var viewLayoutType: PostListViewLayoutType? = null

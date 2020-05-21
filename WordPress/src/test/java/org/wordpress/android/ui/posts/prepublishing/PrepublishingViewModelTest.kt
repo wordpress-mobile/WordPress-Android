@@ -139,7 +139,7 @@ class PrepublishingViewModelTest : BaseUnitTest() {
     fun `when onSubmitButtonClicked is triggered then bottom sheet should close and listener is triggered`() {
         viewModel.start(mock(), mock())
 
-        viewModel.onSubmitButtonClicked(true)
+        viewModel.onSubmitButtonClicked(mock(), true)
 
         assertThat(viewModel.dismissBottomSheet.value?.peekContent()).isNotNull()
         assertThat(viewModel.triggerOnSubmitButtonClickedListener.value?.peekContent()).isNotNull()
