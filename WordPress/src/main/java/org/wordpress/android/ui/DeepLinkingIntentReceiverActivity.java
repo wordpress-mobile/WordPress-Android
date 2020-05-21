@@ -11,8 +11,10 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
+import org.wordpress.android.fluxc.store.PostStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.util.AppLog;
@@ -54,6 +56,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject PostStore mPostStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,7 +151,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
         SiteModel site;
         
-        Long lBlogId = parseBlogId(blogId);
+        Long lBlogId = parseAsLongOrNull(blogId);
         if (lBlogId != null) {
             // Blog id is a number so we check for it as site id
             site = mSiteStore.getSiteBySiteId(lBlogId);
@@ -163,17 +166,29 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             ActivityLauncher.openEditorInNewStack(getContext());
             return;
         }
+
+        Long lPostId = parseAsLongOrNull(postId);
         
-        if (postId == null) {
+        if (lPostId == null) {
             // Open new post editor for given site
             ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+            return;
         }
-    
-        // TODO: 21/05/2020 Open editor with post id
-        ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+
+        // Check if post is available for opening
+        PostModel post = mPostStore.getPostByRemotePostId(lPostId, site);
+
+        if (post == null) {
+            // Post not found. Open new post editor for given site.
+            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+            return;
+        }
+
+        // Open editor with post
+        ActivityLauncher.openEditorForPostInNewStack(getContext(), site, post.getId());
     }
 
-    private Long parseBlogId(String blogString) {
+    private Long parseAsLongOrNull(String blogString) {
         try {
             return Long.valueOf(blogString);
         } catch (NumberFormatException nfe) {

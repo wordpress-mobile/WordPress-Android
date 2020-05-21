@@ -2,11 +2,11 @@
 
 [X] Separate URI parsing for deep-linked POST intents from generic deep-link intent URIs
 
-[ ] Parse blogId and postId from deep link query parameters
+[X] Parse blogId and postId from deep link query parameters
     [X] If no parameter is given, open empty editor in current site (current default)
     [X] If post id is given without blog id, ignore both and open empty editor in current site
     [X] If blog id is given, open editor for that blog
-    [ ] If post id is also given, open editor with that post
+    [X] If post id is also given, open editor with that post
 
     [ ] Parse blogId and postId from deep link query parameters
         [X] If no parameter is given, open empty editor in current site (current default)
@@ -14,13 +14,18 @@
         [ ] If post id is also given, open editor with that post
         [ ] If post id is given without blog id, ignore both and open empty editor in current site
 
+[ ] If remote post id not found in mPostStore, try to refresh posts from server and try again.
+    [ ] If post is still not found, show toast? and open empty post
 
+> Note: cd to /WordPress-Android/lib/gutenberg-mobile and run `yarn start` to start the react server before opening post editor
 
 ## Test
 
-### Site ids
+### Site & Post ids
 
 Test site: 177737282
+Post id: 37
+
 Other test site: 177737315
 
 ### Deep link
@@ -30,7 +35,7 @@ Other test site: 177737315
 adb shell am start \
  -W -a android.intent.action.VIEW \
  -c android.intent.category.BROWSABLE \
- -d "wordpress://post?blogId=177737282\&postId=1194"
+ -d "wordpress://post?blogId=177737282\&postId=37"
 
 ### New post on blog
 
@@ -44,7 +49,7 @@ adb shell am start \
 adb shell am start \
  -W -a android.intent.action.VIEW \
  -c android.intent.category.BROWSABLE \
- -d "wordpress://post?postId=1194"
+ -d "wordpress://post?postId=37"
 
 adb shell am start \
  -W -a android.intent.action.VIEW \
