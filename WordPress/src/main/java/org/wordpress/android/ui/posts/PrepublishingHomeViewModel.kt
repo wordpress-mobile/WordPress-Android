@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
@@ -34,8 +35,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
-    private val _onPublishButtonClicked = MutableLiveData<Event<Unit>>()
-    val onPublishButtonClicked: LiveData<Event<Unit>> = _onPublishButtonClicked
+    private val _onPublishButtonClicked = MutableLiveData<Event<LocalId>>()
+    val onPublishButtonClicked: LiveData<Event<LocalId>> = _onPublishButtonClicked
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
@@ -71,7 +72,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         onActionClicked = ::onActionClicked
                 ),
                 PublishButtonUiState(UiStringRes(getPublishButtonLabelUseCase.getLabel(editPostRepository))) {
-                    _onPublishButtonClicked.postValue(Event(Unit))
+                    _onPublishButtonClicked.postValue(Event(LocalId(editPostRepository.id)))
                 }
         )
 

@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
@@ -184,8 +185,8 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onActionClicked(actionType)
     }
 
-    override fun onPublishButtonClicked() {
+    override fun onPublishButtonClicked(postId: LocalId) {
         viewModel.onCloseClicked()
-        prepublishingBottomSheetListener?.onPublishButtonClicked()
+        prepublishingBottomSheetListener?.onPublishButtonClicked(postId)
     }
 }

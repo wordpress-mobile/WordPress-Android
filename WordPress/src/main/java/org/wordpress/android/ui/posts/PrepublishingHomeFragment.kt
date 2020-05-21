@@ -70,8 +70,8 @@ class PrepublishingHomeFragment : Fragment() {
         })
 
         viewModel.onPublishButtonClicked.observe(this, Observer { event ->
-            event.applyIfNotHandled {
-                actionClickedListener?.onPublishButtonClicked()
+            event.getContentIfNotHandled()?.let { postId ->
+                actionClickedListener?.onPublishButtonClicked(postId)
             }
         })
 
