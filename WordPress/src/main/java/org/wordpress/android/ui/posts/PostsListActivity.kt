@@ -325,8 +325,11 @@ class PostsListActivity : LocaleAwareActivity(),
         })
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled {
-                val prepublishingFragment = newInstance(site, editPostRepository.isPage)
-                prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
+                val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
+                if (fragment == null) {
+                    val prepublishingFragment = newInstance(site, editPostRepository.isPage)
+                    prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
+                }
             }
         })
     }
