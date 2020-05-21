@@ -5,5 +5,5 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 
 interface PrepublishingActionClickedListener {
     fun onActionClicked(actionType: ActionType)
-    fun onPublishButtonClicked(postId: LocalId)
+    fun onSubmitButtonClicked(postId: LocalId, publishPost: PublishPost)
 }

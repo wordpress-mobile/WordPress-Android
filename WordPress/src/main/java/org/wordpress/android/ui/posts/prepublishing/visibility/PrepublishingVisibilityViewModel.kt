@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
@@ -13,15 +14,18 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostPasswordUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase
+import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class PrepublishingVisibilityViewModel @Inject constructor(
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val updatePostPasswordUseCase: UpdatePostPasswordUseCase,
-    private val updatePostStatusUseCase: UpdatePostStatusUseCase
+    private val updatePostStatusUseCase: UpdatePostStatusUseCase,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var editPostRepository: EditPostRepository
@@ -95,10 +99,12 @@ class PrepublishingVisibilityViewModel @Inject constructor(
     }
 
     private fun updatePostStatus(visibility: Visibility) {
+        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_VISIBILITY_CHANGED)
         updatePostStatusUseCase.updatePostStatus(visibility, editPostRepository, ::updateUiState)
     }
 
     fun onPostPasswordChanged(password: String) {
+        analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PASSWORD_CHANGED)
         updatePostPasswordUseCase.updatePassword(password, editPostRepository, ::updateUiState)
     }
 

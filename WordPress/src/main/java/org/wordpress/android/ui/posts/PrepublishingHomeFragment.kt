@@ -69,9 +69,9 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        viewModel.onPublishButtonClicked.observe(this, Observer { event ->
-            event.getContentIfNotHandled()?.let { postId ->
-                actionClickedListener?.onPublishButtonClicked(postId)
+        viewModel.onSubmitButtonClicked.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { (postId, publishPost) ->
+                actionClickedListener?.onSubmitButtonClicked(postId, publishPost)
             }
         })
 
@@ -87,8 +87,10 @@ class PrepublishingHomeFragment : Fragment() {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
-                "called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "This is possibly null because it's " +
+                    "called during config changes."
+        }
 
         return editPostActivityHook.editPostRepository
     }

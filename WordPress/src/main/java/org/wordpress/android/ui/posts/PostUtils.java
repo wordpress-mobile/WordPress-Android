@@ -337,11 +337,12 @@ public class PostUtils {
         return pubDate != null && pubDate.after(currentDate);
     }
 
-    public static boolean isPublishDateInThePast(String dateCreated) {
+    public static boolean isPublishDateInThePast(String dateCreated, Date currentDate) {
         Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
 
-        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
         Calendar cal = Calendar.getInstance();
+        cal.setTime(currentDate);
+        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
         cal.add(Calendar.MINUTE, -30);
         Date halfHourBack = cal.getTime();
         return pubDate != null && pubDate.before(halfHourBack);
@@ -352,8 +353,8 @@ public class PostUtils {
         return PostStatus.fromPost(postModel) == PostStatus.DRAFT;
     }
 
-    public static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
-        return postStatus == PostStatus.DRAFT;
+    static boolean shouldPublishImmediatelyOptionBeAvailable(PostStatus postStatus) {
+        return postStatus == PostStatus.DRAFT || postStatus == PostStatus.PRIVATE;
     }
 
     static boolean shouldPublishImmediatelyOptionBeAvailable(String postStatus) {

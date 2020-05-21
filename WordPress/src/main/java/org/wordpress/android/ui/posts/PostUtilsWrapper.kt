@@ -41,4 +41,10 @@ class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvide
 
     fun isPublishDateInTheFuture(dateCreated: String) =
             PostUtils.isPublishDateInTheFuture(dateCreated, dateProvider.getCurrentDate())
+
+    fun isPublishDateInThePast(dateCreated: String) =
+            PostUtils.isPublishDateInThePast(dateCreated, dateProvider.getCurrentDate())
+
+    fun shouldPublishImmediatelyOptionBeAvailable(status: PostStatus?) =
+            PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
 }

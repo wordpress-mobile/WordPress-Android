@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
@@ -98,6 +99,21 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                 behavior.peekHeight = metrics.heightPixels / 2
             }
         }
+        setupMinimumHeightForFragmentContainer()
+    }
+
+    private fun setupMinimumHeightForFragmentContainer() {
+        val isPage = checkNotNull(arguments?.getBoolean(IS_PAGE)) {
+            "arguments can't be null."
+        }
+
+        if (isPage) {
+            prepublishing_content_fragment.minimumHeight =
+                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height_for_page)
+        } else {
+            prepublishing_content_fragment.minimumHeight =
+                    resources.getDimensionPixelSize(R.dimen.prepublishing_fragment_container_min_height)
+        }
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
@@ -112,6 +128,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         viewModel.dismissBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled { dismiss() }
+        })
+
+        viewModel.triggerOnSubmitButtonClickedListener.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { (postId, publishPost) ->
+                prepublishingBottomSheetListener?.onSubmitButtonClicked(postId, publishPost)
+            }
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
@@ -161,18 +183,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    companion object {
-        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
-        const val SITE = "prepublishing_bottom_sheet_site_model"
-
-        @JvmStatic
-        fun newInstance(@NonNull site: SiteModel) = PrepublishingBottomSheetFragment().apply {
-            arguments = Bundle().apply {
-                putSerializable(SITE, site)
-            }
-        }
-    }
-
     override fun onCloseClicked() {
         viewModel.onCloseClicked()
     }
@@ -185,8 +195,21 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.onActionClicked(actionType)
     }
 
-    override fun onPublishButtonClicked(postId: LocalId) {
-        viewModel.onCloseClicked()
-        prepublishingBottomSheetListener?.onPublishButtonClicked(postId)
+    override fun onSubmitButtonClicked(postId: LocalId, publishPost: PublishPost) {
+        viewModel.onSubmitButtonClicked(postId, publishPost)
+    }
+
+    companion object {
+        const val TAG = "prepublishing_bottom_sheet_fragment_tag"
+        const val SITE = "prepublishing_bottom_sheet_site_model"
+        const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+
+        @JvmStatic
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) = PrepublishingBottomSheetFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(SITE, site)
+                putBoolean(IS_PAGE, isPage)
+            }
+        }
     }
 }

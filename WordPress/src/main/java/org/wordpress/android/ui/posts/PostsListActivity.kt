@@ -326,7 +326,7 @@ class PostsListActivity : LocaleAwareActivity(),
         })
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled {
-                val prepublishingFragment = newInstance(site)
+                val prepublishingFragment = newInstance(site, editPostRepository.isPage)
                 prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
             }
         })
@@ -567,7 +567,7 @@ class PostsListActivity : LocaleAwareActivity(),
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onPublishButtonClicked(postId: LocalId) {
+    override fun onSubmitButtonClicked(postId: LocalId, publishPost: PublishPost) {
         viewModel.onBottomSheetPublishButtonClicked(postId)
     }
 }
