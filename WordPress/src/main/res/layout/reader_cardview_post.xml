@@ -105,10 +105,10 @@
 
         <org.wordpress.android.ui.reader.views.ReaderFollowButton
             android:id="@+id/follow_button"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/reader_follow_button_padding"
-            app:layout_constraintStart_toEndOf="@id/text_author_and_blog_name"
+            android:layout_marginEnd="@dimen/reader_follow_button_padding"
             app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
