@@ -8,17 +8,16 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.reader_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
@@ -35,9 +34,16 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private lateinit var viewModel: ReaderViewModel
     private lateinit var newsCardViewModel: NewsCardViewModel
 
-    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+    private val viewPagerCallback = object : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {
+            // noop
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            // noop
+        }
+
         override fun onPageSelected(position: Int) {
-            super.onPageSelected(position)
             viewModel.uiState.value?.let {
                 val selectedTag = it.readerTagList[position]
                 newsCardViewModel.onTagChanged(selectedTag)
@@ -87,7 +93,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     }
 
     private fun initViewPager() {
-        view_pager.registerOnPageChangeCallback(viewPagerCallback)
+        view_pager.addOnPageChangeListener(viewPagerCallback)
     }
 
     private fun initViewModel() {
@@ -135,19 +141,29 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     }
 
     private fun updateTabs(uiState: ReaderUiState) {
-        val adapter = TabsAdapter(this, uiState.readerTagList)
+        val adapter = TabsAdapter(childFragmentManager, uiState)
         view_pager.adapter = adapter
-
-        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
-            tab.text = uiState.tabTitles[position]
-        }.attach()
+        tab_layout.setupWithViewPager(view_pager)
     }
 
-    private class TabsAdapter(parent: Fragment, private val tags: ReaderTagList) : FragmentStateAdapter(parent) {
-        override fun getItemCount(): Int = tags.size
+    private class TabsAdapter(parent: FragmentManager, private val uiState: ReaderUiState) : FragmentStatePagerAdapter(
+            parent,
+            BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+    ) {
+        override fun getItem(position: Int): Fragment {
+            return ReaderPostListFragment.newInstanceForTag(
+                    uiState.readerTagList[position],
+                    ReaderPostListType.TAG_FOLLOWED,
+                    true
+            )
+        }
 
-        override fun createFragment(position: Int): Fragment {
-            return ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
+        override fun getCount(): Int {
+            return uiState.readerTagList.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return uiState.tabTitles[position]
         }
     }
 }
