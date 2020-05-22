@@ -63,7 +63,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
-import org.wordpress.android.editor.GutenbergEditorFragment;
+import org.wordpress.android.editor.onGutenbergEditorSetStarterPageTemplatesTooltipShownEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -2861,7 +2861,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
     }
 
-    @Override public boolean onGutenbergEditorGetStarterPageTemplatesTooltipShown() {
+    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
         return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
     }
 

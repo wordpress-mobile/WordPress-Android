@@ -396,8 +396,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                     
                     @Override
-                    public boolean onGetStarterPageTemplatesTooltipShown() {
-                        return mEditorFragmentListener.onGutenbergEditorGetStarterPageTemplatesTooltipShown();
+                    public boolean onRequestStarterPageTemplatesTooltipShown() {
+                        return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
                     }
                 });
 
@@ -494,7 +494,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateFailedMediaState() {
         for (String mediaId : mFailedMediaIds) {
-            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
+            getGutenbergContainerFragment().onSetStarterPageTemplatesTooltipShown(Integer.valueOf(mediaId));
         }
     }
 

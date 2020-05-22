@@ -200,7 +200,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
         void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
-        boolean onGutenbergEditorGetStarterPageTemplatesTooltipShown();
+        boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
     }
 
     /**
