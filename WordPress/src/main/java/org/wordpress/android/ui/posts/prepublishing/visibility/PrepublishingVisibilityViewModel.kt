@@ -7,9 +7,11 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostPasswordUseCase
@@ -62,18 +64,28 @@ class PrepublishingVisibilityViewModel @Inject constructor(
         val currentVisibility = getPostVisibilityUseCase.getVisibility(editPostRepository)
         val items = listOf(
                 VisibilityUiState(
-                        visibility = PUBLIC,
-                        checked = currentVisibility == PUBLIC,
+                        visibility = PUBLISH,
+                        checked = currentVisibility == PUBLISH,
+                        onItemTapped = ::onVisibilityItemTapped
+                ),
+                VisibilityUiState(
+                        visibility = PENDING_REVIEW,
+                        checked = currentVisibility == PENDING_REVIEW,
+                        onItemTapped = ::onVisibilityItemTapped
+                ),
+                VisibilityUiState(
+                        visibility = DRAFT,
+                        checked = currentVisibility == DRAFT,
+                        onItemTapped = ::onVisibilityItemTapped
+                ),
+                VisibilityUiState(
+                        visibility = PRIVATE,
+                        checked = currentVisibility == DRAFT,
                         onItemTapped = ::onVisibilityItemTapped
                 ),
                 VisibilityUiState(
                         visibility = PASSWORD_PROTECTED,
                         checked = currentVisibility == PASSWORD_PROTECTED,
-                        onItemTapped = ::onVisibilityItemTapped
-                ),
-                VisibilityUiState(
-                        visibility = PRIVATE,
-                        checked = currentVisibility == PRIVATE,
                         onItemTapped = ::onVisibilityItemTapped
                 )
         )
@@ -121,8 +133,10 @@ sealed class PrepublishingVisibilityItemUiState {
     ) : PrepublishingVisibilityItemUiState()
 
     enum class Visibility(val textRes: UiStringRes) {
-        PUBLIC(UiStringRes(R.string.prepublishing_nudges_visibility_public)),
-        PASSWORD_PROTECTED(UiStringRes(R.string.prepublishing_nudges_visibility_password)),
-        PRIVATE(UiStringRes(R.string.prepublishing_nudges_visibility_private))
+        PUBLISH(UiStringRes(R.string.post_status_publish_post)),
+        DRAFT(UiStringRes(R.string.post_status_draft)),
+        PENDING_REVIEW(UiStringRes(R.string.post_status_pending_review)),
+        PRIVATE(UiStringRes(R.string.post_status_post_private)),
+        PASSWORD_PROTECTED(UiStringRes(R.string.prepublishing_nudges_visibility_password))
     }
 }
