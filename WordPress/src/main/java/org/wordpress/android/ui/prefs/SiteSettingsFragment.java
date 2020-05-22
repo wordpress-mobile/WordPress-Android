@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -48,6 +49,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,6 +65,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -147,6 +151,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
     private static final int TIMEZONE_REQUEST_CODE = 10;
+    private static final int HOMEPAGE_SETTINGS_REQUEST_CODE = 11;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
@@ -177,6 +182,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPref;
     private DetailListPreference mPrivacyPref;
     private DetailListPreference mLanguagePref;
+
+    // Homepage settings
+    private WPPreference mHomepagePref;
 
     // Account settings (NOTE: only for WP.org)
     private EditTextPreference mUsernamePref;
@@ -519,6 +527,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
             showTimezoneDialog();
+        } else if (preference == mHomepagePref) {
+            showHomepageSettings();
         }
 
         return false;
@@ -905,6 +915,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
+        mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
@@ -951,6 +962,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeNonWPComPreferences();
         }
 
+        if (!mSite.isUsingWpComRestApi()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
+        }
+
         // hide Admin options depending of capabilities on this site
         if ((!isAccessedViaWPComRest && !mSite.isSelfHostedAdmin())
             || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
@@ -991,7 +1006,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
-                mGutenbergDefaultForNewPosts
+                mGutenbergDefaultForNewPosts, mHomepagePref
         };
 
         for (Preference preference : editablePreference) {
@@ -1094,6 +1109,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
         dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
         dialog.show(getFragmentManager(), "timezone-dialog-tag");
+    }
+
+    private void showHomepageSettings() {
+        HomepageSettingsDialog homepageSettingsDialog = HomepageSettingsDialog.Companion.newInstance(mSite);
+        homepageSettingsDialog
+                .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "homepage-settings-dialog-tag");
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
@@ -1979,6 +2000,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                     getAdapter().getItemsSelected().size())
             );
             return true;
+        }
+
+        @SuppressWarnings("unused")
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void onSiteChanged(OnSiteChanged event) {
+            if (!event.isError()) {
+                mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            }
         }
     }
 
