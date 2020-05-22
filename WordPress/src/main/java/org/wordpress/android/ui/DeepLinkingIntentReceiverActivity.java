@@ -151,10 +151,10 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
         SiteModel site;
         
-        Long lBlogId = parseAsLongOrNull(blogId);
-        if (lBlogId != null) {
+        Long siteId = parseAsLongOrNull(blogId);
+        if (siteId != null) {
             // Blog id is a number so we check for it as site id
-            site = mSiteStore.getSiteBySiteId(lBlogId);
+            site = mSiteStore.getSiteBySiteId(siteId);
         } else {
             // Blog id is not a number so we check for it as blog name or url
             List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(blogId);
@@ -163,22 +163,24 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         
         if (site == null) {
             // Site not found. Open a blank editor with the current selected site
+            ToastUtils.showToast(getContext(), R.string.blog_not_found);
             ActivityLauncher.openEditorInNewStack(getContext());
             return;
         }
 
-        Long lPostId = parseAsLongOrNull(postId);
+        Long remotePostId = parseAsLongOrNull(postId);
         
-        if (lPostId == null) {
+        if (remotePostId == null) {
             // Open new post editor for given site
             ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
             return;
         }
 
         // Check if post is available for opening
-        PostModel post = mPostStore.getPostByRemotePostId(lPostId, site);
+        PostModel post = mPostStore.getPostByRemotePostId(remotePostId, site);
 
         if (post == null) {
+            ToastUtils.showToast(getContext(), R.string.post_not_found);
             // Post not found. Open new post editor for given site.
             ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
             return;
@@ -189,6 +191,10 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private Long parseAsLongOrNull(String blogString) {
+        if (blogString == null || blogString.isEmpty()) {
+            return null;
+        }
+
         try {
             return Long.valueOf(blogString);
         } catch (NumberFormatException nfe) {
@@ -197,9 +203,19 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void handleOpenEditor(@NonNull Uri uri) {
-        // TODO: 21/05/2020 Also check for post id in path/query
-        String urlPathSegment = uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
-        openEditorForSite(urlPathSegment);
+        List<String> pathSegments = uri.getPathSegments();
+
+        if (pathSegments.size() < 3) {
+            // No postId in path, open new post editor for site
+            String urlPathSegment = uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
+            openEditorForSite(urlPathSegment);
+            return;
+        }
+
+        // Match: https://wordpress.com/post/blogNameOrUrl/postId
+        String targetHost = pathSegments.get(1);
+        String targetPostId = pathSegments.get(2);
+        openEditorForSiteAndPost(targetHost, targetPostId);
     }
 
     private void openEditorForSite(@NonNull String targetHost) {
@@ -216,6 +232,46 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             // In other cases, open the editor with the current selected site.
             ActivityLauncher.openEditorInNewStack(getContext());
         }
+    }
+
+    private void openEditorForSiteAndPost(@NonNull String targetHost, @NonNull String targetPostId) {
+        // Check if a site is available with given targetHost
+        List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(targetHost);
+        SiteModel site = matchedSites.isEmpty() ? null : matchedSites.get(0);
+        String host = null;
+        if (site != null && site.getUrl() != null) {
+            host = Uri.parse(site.getUrl()).getHost();
+        }
+
+        if (site == null || host == null || !StringUtils.equals(host, targetHost)) {
+            // Site not found, or host of site doesn't match the host in url
+            ToastUtils.showToast(getContext(), R.string.blog_not_found);
+            // Open a new post editor with current selected site
+            ActivityLauncher.openEditorInNewStack(getContext());
+            return;
+        }
+
+        Long remotePostId = parseAsLongOrNull(targetPostId);
+
+        if (remotePostId == null) {
+            // No post id provided; open new post editor for given site
+            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+            return;
+        }
+
+        // Check if post with given id is available for opening
+        PostModel post = mPostStore.getPostByRemotePostId(remotePostId, site);
+
+        if (post == null) {
+            // Post not found
+            ToastUtils.showToast(getContext(), R.string.post_not_found);
+            // Open new post editor for given site
+            ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
+            return;
+        }
+
+        // Open editor with post
+        ActivityLauncher.openEditorForPostInNewStack(getContext(), site, post.getId());
     }
 
     private boolean shouldViewPost(String host) {
