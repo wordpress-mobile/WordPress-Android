@@ -106,6 +106,7 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.SuggestUsersActivity;
 import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -314,6 +315,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mIsPage;
     private boolean mHasSetPostContent;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
+
+    @Nullable Consumer<String> mOnGetMentionResult;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -2021,8 +2024,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         boolean isWpCom = getSite().isWPCom() && !getSite().isPrivate();
-
-                        return GutenbergEditorFragment.newInstance("",
+                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+                        return GutenbergEditorFragment.newInstance(
+                                "",
                                 "",
                                 postType,
                                 mIsNewPost,
@@ -2033,7 +2037,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mAccountStore.getAccount().getUserId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
-                                mAccountStore.getAccessToken());
+                                mAccountStore.getAccessToken(),
+                                isSiteUsingWpComRestApi);
+
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2333,9 +2339,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
-                    } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
-                               == RequestCodes.TAKE_VIDEO) {
-                        mEditorMedia.addFreshlyTakenVideoToEditor();
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
@@ -2396,6 +2399,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mImageEditorTracker.trackAddPhoto(uris);
                     for (Uri item : uris) {
                         mEditorMedia.addNewMediaToEditorAsync(item, false);
+                    }
+                    break;
+                case RequestCodes.SELECTED_USER_MENTION:
+                    if (mOnGetMentionResult != null) {
+                        String selectedMention = data.getStringExtra(SuggestUsersActivity.SELECTED_USER_ID);
+                        mOnGetMentionResult.accept(selectedMention);
+                        // Clear the callback once we have gotten a result
+                        mOnGetMentionResult = null;
                     }
                     break;
             }
@@ -2863,6 +2874,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onGutenbergEditorSessionTemplatePreviewTracked(String template) {
         mPostEditorAnalyticsSession.previewTemplate(template);
+    }
+
+    @Override public void getMention(Consumer<String> onResult) {
+        mOnGetMentionResult = onResult;
+        ActivityLauncher.viewSuggestUsersForResult(this, mSite);
     }
 
     @Override
