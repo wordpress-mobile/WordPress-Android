@@ -80,7 +80,7 @@ class SubfilterPageFragment : DaggerFragment() {
         subFilterViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(SubFilterViewModel::class.java)
 
-        subFilterViewModel.subFilters.observe(this, Observer {
+        subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 var items = it?.filter { it.type == category.type } ?: listOf()
 
@@ -99,7 +99,7 @@ class SubfilterPageFragment : DaggerFragment() {
             }
         })
 
-        viewModel.emptyState.observe(this, Observer { uiState ->
+        viewModel.emptyState.observe(viewLifecycleOwner, Observer { uiState ->
             if (isAdded) {
                 when (uiState) {
                     HiddenEmptyUiState -> emptyStateContainer.visibility = View.GONE

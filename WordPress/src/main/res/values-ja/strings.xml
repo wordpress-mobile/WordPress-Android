@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-30 08:54:12+0000
+Translation-Revision-Date: 2020-05-13 08:54:14+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">詳細</string>
+    <string name="feature_announcement_dialog_label">WordPress の新機能</string>
+    <string name="insert_label_with_count">%d を挿入</string>
+    <string name="crop">切り取り</string>
+    <string name="error_failed_to_load_into_file">ファイルに読み込めませんでした。もう一度お試しください。</string>
+    <string name="preview_image_thumbnail_description">プレビュー画像のサムネイル</string>
+    <string name="photo_picker_use_media">このメディアを使用</string>
+    <string name="photo_picker_use_video">この動画を使用</string>
+    <string name="photo_picker_photo_or_video_title">メディアを選択</string>
+    <string name="photo_picker_video_title">動画を選択</string>
+    <string name="site_picker_ask_site_select">サイトを選択できませんでした。もう一度お試しください。</string>
+    <string name="sitepicker_continue_flow">次へ</string>
+    <string name="reader_reblog_error">リブログに失敗しました</string>
+    <string name="reader_no_site_to_reblog_action">サイトの管理</string>
+    <string name="reader_no_site_to_reblog_detail">WordPress.com サイトの作成後は、お気に入りのコンテンツを自分のサイトにリブログできます。</string>
+    <string name="reader_no_site_to_reblog_title">利用可能な WordPress.com サイトがありません</string>
+    <string name="whats_new_in_version_title">新機能</string>
+    <string name="comment_q_action_copied_url">リンクアドレスをコピーしました</string>
+    <string name="copy_link_address">リンクアドレスをコピー</string>
+    <string name="comment_share_link_via">次で共有</string>
+    <string name="comment_toast_err_share_intent">共有に失敗しました</string>
+    <string name="button_insert">挿入</string>
+    <string name="continue_label">次へ</string>
+    <string name="copy_text">コピー</string>
     <string name="gutenberg_native_subscribe">購読</string>
     <string name="gutenberg_native_number_of_columns">カラム数</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
@@ -40,7 +64,7 @@ Language: ja_JP
     <string name="media_accessing_failed">非公開サイトのコンテンツにアクセスできませんでした。一部のメディアは利用できない場合があります</string>
     <string name="media_accessing_progress">非公開サイトのコンテンツへのアクセス</string>
     <string name="error_failed_to_crop_and_save_image">画像の切り抜きと保存に失敗しました。もう一度お試しください。</string>
-    <string name="failed_to_insert_image_tap_to_retry">画像を挿入できませんでした。\nタップして再試行してください。</string>
+    <string name="failed_to_load_image_tap_to_retry">画像の読み込みに失敗しました。\nタップして再試行してください。</string>
     <string name="preview_image_description">画像をプレビュー</string>
     <string name="error_unknown_page_type">ページのフォーマットが不明です</string>
     <string name="error_page_not_submitted">この操作を完了できなかったため、この確認用のページは送信されていません。</string>
@@ -124,7 +148,7 @@ Language: ja_JP
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">個人的経歴、主な業績、興味深い事実を織り込んだ簡単な自己紹介。</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">提示したプロジェクトや作品の説明。</string>
-    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
     <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
@@ -1318,7 +1342,6 @@ Language: ja_JP
     <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
-    <string name="copy_text">コピー</string>
     <string name="connect_site">サイトを連携</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">点滅</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>

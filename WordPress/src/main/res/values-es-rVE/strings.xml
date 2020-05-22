@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 15:46:52+0000
+Translation-Revision-Date: 2020-05-09 16:33:31+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: es_VE
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Saber más</string>
+    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
+    <string name="insert_label_with_count">Insertar %d</string>
+    <string name="crop">recortar</string>
+    <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
+    <string name="preview_image_thumbnail_description">Vista previa de la miniatura de la imagen</string>
+    <string name="photo_picker_use_media">Usar este medio</string>
+    <string name="photo_picker_use_video">Usar este video</string>
+    <string name="photo_picker_photo_or_video_title">Elegir el medio</string>
+    <string name="photo_picker_video_title">Elegir el video</string>
+    <string name="site_picker_ask_site_select">No se ha podido seleccionar el sitio. Por favor, inténtalo de nuevo.</string>
+    <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_reblog_error">Ha fallado reblog</string>
+    <string name="reader_no_site_to_reblog_action">Gestionar los sitios</string>
+    <string name="reader_no_site_to_reblog_detail">Una vez que crees un sitio en WordPress.com, puedes volver a publicar el contenido que te gusta en tu propio sitio.</string>
+    <string name="reader_no_site_to_reblog_title">No hay disponibles sitios WordPress.com</string>
+    <string name="whats_new_in_version_title">Qué hay de nuevo</string>
+    <string name="comment_q_action_copied_url">Copiada la dirección del enlace</string>
+    <string name="copy_link_address">Copiar la dirección del enlace</string>
+    <string name="comment_share_link_via">Compartir en</string>
+    <string name="comment_toast_err_share_intent">No se ha podido compartir</string>
+    <string name="button_insert">Insertar</string>
+    <string name="continue_label">Continuar</string>
+    <string name="copy_text">Copiar</string>
     <string name="gutenberg_native_subscribe">Suscribirse</string>
     <string name="gutenberg_native_number_of_columns">Número de columnas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover el bloque a la derecha desde la posición %1$s a la posición %2$s</string>
@@ -40,7 +64,7 @@ Language: es_VE
     <string name="media_accessing_failed">Ha fallado el acceso al contenido de un sitio privado. Algunos medios pueden no estar disponibles</string>
     <string name="media_accessing_progress">Accediendo al contenido de un sitio privado</string>
     <string name="error_failed_to_crop_and_save_image">No se pudo recortar y guardar la imagen, inténtalo de nuevo</string>
-    <string name="failed_to_insert_image_tap_to_retry">Fallo al insertar la imagen.\nPor favor, toca para volver a intentarlo.</string>
+    <string name="failed_to_load_image_tap_to_retry">Fallo al cargar la imagen.\nPor favor, toca para volver a intentarlo.</string>
     <string name="preview_image_description">Previsualizar la imagen</string>
     <string name="error_unknown_page_type">Formato de página desconocido</string>
     <string name="error_page_not_submitted">No hemos podido completar esta acción y no se ha enviado esta página a revisión.</string>
@@ -1322,7 +1346,6 @@ Language: es_VE
     <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy_text">Copiar</string>
     <string name="connect_site">Conectar el sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración del dispositivo</string>
@@ -2187,6 +2210,7 @@ Language: es_VE
     <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_share">Compartir</string>
+    <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">Sin título</string>
     <string name="comments_empty_list">No hay comentarios aún</string>
     <string name="empty_list_default">Esta lista esta vacía</string>
