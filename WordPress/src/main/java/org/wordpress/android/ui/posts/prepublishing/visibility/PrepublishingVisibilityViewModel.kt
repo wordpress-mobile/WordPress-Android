@@ -69,18 +69,18 @@ class PrepublishingVisibilityViewModel @Inject constructor(
                         onItemTapped = ::onVisibilityItemTapped
                 ),
                 VisibilityUiState(
-                        visibility = PENDING_REVIEW,
-                        checked = currentVisibility == PENDING_REVIEW,
-                        onItemTapped = ::onVisibilityItemTapped
-                ),
-                VisibilityUiState(
                         visibility = DRAFT,
                         checked = currentVisibility == DRAFT,
                         onItemTapped = ::onVisibilityItemTapped
                 ),
                 VisibilityUiState(
+                        visibility = PENDING_REVIEW,
+                        checked = currentVisibility == PENDING_REVIEW,
+                        onItemTapped = ::onVisibilityItemTapped
+                ),
+                VisibilityUiState(
                         visibility = PRIVATE,
-                        checked = currentVisibility == DRAFT,
+                        checked = currentVisibility == PRIVATE,
                         onItemTapped = ::onVisibilityItemTapped
                 ),
                 VisibilityUiState(
