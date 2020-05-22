@@ -1,3 +1,7 @@
+15.0
+-----
+* [*] Fix wrong icon is used when a Password is visible
+ 
 14.9
 -----
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post

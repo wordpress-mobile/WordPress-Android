@@ -199,6 +199,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
+        void getMention(Consumer<String> onResult);
         void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
         boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
     }
