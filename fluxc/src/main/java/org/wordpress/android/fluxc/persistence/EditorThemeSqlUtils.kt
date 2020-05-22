@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.persistence
 
-import com.wellsql.generated.ActivityLogTable
 import com.wellsql.generated.EditorThemeElementTable
 import com.wellsql.generated.EditorThemeTable
 import com.yarolegovich.wellsql.WellSql
@@ -12,11 +11,11 @@ import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.EditorThemeElement
 import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils.ActivityLogBuilder
 
 class EditorThemeSqlUtils {
-    fun replaceEditorThemeForSite(site: SiteModel, editorTheme: EditorTheme) {
+    fun replaceEditorThemeForSite(site: SiteModel, editorTheme: EditorTheme?) {
         deleteEditorThemeForSite(site)
+        if (editorTheme == null) return
         makeEditorTheme(site, editorTheme)
     }
 
@@ -31,14 +30,14 @@ class EditorThemeSqlUtils {
 
         if (editorTheme == null ) return null
 
-        val colors: List<EditorThemeElementBuilder>? = WellSql.select(EditorThemeElementBuilder::class.java)
+        val colors = WellSql.select(EditorThemeElementBuilder::class.java)
                 .where()
                 .equals(EditorThemeElementTable.THEME_ID, editorTheme.id)
                 .equals(EditorThemeElementTable.IS_COLOR, true)
                 .endWhere()
                 .asModel
 
-        val gradients: List<EditorThemeElementBuilder>? = WellSql.select(EditorThemeElementBuilder::class.java)
+        val gradients = WellSql.select(EditorThemeElementBuilder::class.java)
                 .where()
                 .equals(EditorThemeElementTable.THEME_ID, editorTheme.id)
                 .equals(EditorThemeElementTable.IS_COLOR, false)
@@ -48,7 +47,7 @@ class EditorThemeSqlUtils {
         return editorTheme.toEditorTheme(colors, gradients)
     }
 
-    private fun deleteEditorThemeForSite(site: SiteModel) {
+    fun deleteEditorThemeForSite(site: SiteModel) {
         WellSql.delete(EditorThemeBuilder::class.java)
                 .where()
                 .equals(EditorThemeTable.LOCAL_SITE_ID, site.id)
@@ -61,11 +60,12 @@ class EditorThemeSqlUtils {
         val items = (editorTheme.themeSupport.colors ?: emptyList()) +
                 (editorTheme.themeSupport.gradients ?: emptyList())
 
+        WellSql.insert(editorThemeBuilder).execute()
+
         val elements = items.map {
             it.toBuilder(editorThemeBuilder.id)
         }
 
-        WellSql.insert(editorThemeBuilder).execute()
         WellSql.insert(elements).asSingleTransaction(true).execute()
     }
 
