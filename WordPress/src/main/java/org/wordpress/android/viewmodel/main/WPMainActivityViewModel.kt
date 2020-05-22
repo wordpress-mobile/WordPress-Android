@@ -2,9 +2,11 @@ package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -17,15 +19,18 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
+import javax.inject.Named
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val analyticsTracker: AnalyticsTrackerWrapper
-) : ViewModel() {
+    private val analyticsTracker: AnalyticsTrackerWrapper,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
+) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
@@ -166,24 +171,26 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun checkForFeatureAnnouncements() {
-        val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-        val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+        launch {
+            val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+            val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
 
-        // only proceed to feature announcement logic if we are upgrading the app
-        if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
-            if (canShowFeatureAnnouncement()) {
-                analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
-                _onFeatureAnnouncementRequested.call()
-            }
+            // only proceed to feature announcement logic if we are upgrading the app
+            if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                if (canShowFeatureAnnouncement()) {
+                    analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+                    _onFeatureAnnouncementRequested.call()
+                }
 //          else {
 //              // request feature announcement from endpoint to be used on next app start
 //          }
-        } else {
-            appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+            } else {
+                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+            }
         }
     }
 
-    private fun canShowFeatureAnnouncement(): Boolean {
+    private suspend fun canShowFeatureAnnouncement(): Boolean {
         return featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable() &&
                 appPrefsWrapper.featureAnnouncementShownVersion <
                 featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
