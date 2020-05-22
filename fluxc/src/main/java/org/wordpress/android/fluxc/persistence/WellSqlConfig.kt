@@ -27,7 +27,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 104
+        return 105
     }
 
     override fun getDbName(): String {
@@ -1078,6 +1078,26 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
+                }
+                104 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT" +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE EditorThemeElement(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "THEME_ID INTEGER," +
+                                    "IS_COLOR BOOLEAN," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "VALUE TEXT NOT NULL" +
+                                    "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
+                    )
                 }
             }
         }

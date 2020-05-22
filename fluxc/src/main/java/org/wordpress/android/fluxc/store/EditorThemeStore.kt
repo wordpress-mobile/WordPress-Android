@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.EditorTheme
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Error
 import org.wordpress.android.fluxc.store.ReactNativeFetchResponse.Success
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -18,10 +19,6 @@ import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.net.URI
-
-private fun editorThemeKeyForSite(site: SiteModel): String {
-    return URI(site.url).getHost()
-}
 
 @Singleton
 class EditorThemeStore
@@ -31,7 +28,7 @@ class EditorThemeStore
     dispatcher: Dispatcher
 ): Store(dispatcher) {
     private val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
-    private var editorThemes = HashMap<String, EditorTheme>()
+    private val editorThemeSqlUtils = EditorThemeSqlUtils()
 
     class FetchEditorThemePayload(val site: SiteModel): Payload<BaseNetworkError>() {
         constructor(
@@ -43,22 +40,18 @@ class EditorThemeStore
     }
 
     data class OnEditorThemeChanged(
-        private val editorThemes: Map<String, EditorTheme>,
-        var causeOfChange: EditorThemeAction
+        val editorTheme: EditorTheme?,
+        val causeOfChange: EditorThemeAction
     ) : Store.OnChanged<EditorThemeError>() {
         constructor(error: EditorThemeError, causeOfChange: EditorThemeAction):
-                this(editorThemes = HashMap<String, EditorTheme>(), causeOfChange = causeOfChange) {
+                this(editorTheme = null, causeOfChange = causeOfChange) {
             this.error = error
         }
-
-        fun getEditorThemeForSite(site: SiteModel): EditorTheme? {
-            return editorThemes.getValue(editorThemeKeyForSite(site))
-        }
     }
-    class EditorThemeError(var message: String? = null) : Store.OnChangedError
+    class EditorThemeError(var message: String? = null) : OnChangedError
 
     fun getEditorThemeForSite(site: SiteModel): EditorTheme? {
-        return editorThemes.getValue(editorThemeKeyForSite(site))
+        return editorThemeSqlUtils.getEditorThemeForSite(site)
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -83,12 +76,11 @@ class EditorThemeStore
         when (response) {
             is Success -> {
                 val responseTheme = response.result.asJsonArray.first() ?: return
-                val key = editorThemeKeyForSite(site)
                 val newTheme = Gson().fromJson(responseTheme, EditorTheme::class.java)
-
-                if (newTheme != null) {
-                    editorThemes.set(key, newTheme)
-                    val onChanged = OnEditorThemeChanged(editorThemes, action)
+                val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
+                if (newTheme != existingTheme) {
+                    editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
+                    val onChanged = OnEditorThemeChanged(newTheme, action)
                     emitChange(onChanged)
                 }
             }
