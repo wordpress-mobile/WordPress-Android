@@ -181,6 +181,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
             // In other cases, launch stats with the current selected site.
             ActivityLauncher.viewStatsInNewStack(getContext());
         }
+        finish();
     }
 
     private void handleAppBanner(@NonNull String host) {
