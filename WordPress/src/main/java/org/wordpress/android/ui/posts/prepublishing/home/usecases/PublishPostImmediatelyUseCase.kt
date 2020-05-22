@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
+package org.wordpress.android.ui.posts.prepublishing.home.usecases
 
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
