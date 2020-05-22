@@ -1,11 +1,9 @@
 package org.wordpress.android.util
 
 import android.content.Context
-import android.text.TextUtils
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Test
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncements
@@ -23,8 +21,6 @@ class FeatureAnnouncementJsonValidityTest {
         } catch (fileNotFound: FileNotFoundException) {
             fail("FEATURE_ANNOUNCEMENTS.json is missing")
         }
-
-        assertEquals(TextUtils.isEmpty(featureAnnouncementFileContent), false)
 
         try {
             Gson().fromJson(
