@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toEndOf="@id/image_avatar_or_blavatar"
-            app:layout_constraintEnd_toStartOf="@+id/follow_button"
+            app:layout_constraintEnd_toStartOf="@+id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top"
             tools:text="text_blog_nametext_blog_name text_blog_name" />
 
@@ -99,19 +99,10 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/dot_separator"
-            app:layout_constraintEnd_toStartOf="@id/follow_button"
+            app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"
             app:layout_constraintWidth_default="wrap"
             tools:text="text_dateline"/>
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_follow_button_padding"
-            android:layout_marginEnd="@dimen/reader_follow_button_padding"
-            app:layout_constraintEnd_toStartOf="@id/image_more"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
         <ImageView
             android:id="@+id/image_more"
@@ -135,7 +126,7 @@
             android:visibility="visible"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-            app:layout_constraintEnd_toStartOf="@id/follow_button"
+            app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
         <!-- post header end -->
 
