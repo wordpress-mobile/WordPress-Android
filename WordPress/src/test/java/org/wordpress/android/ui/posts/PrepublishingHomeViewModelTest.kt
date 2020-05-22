@@ -2,7 +2,10 @@ package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -285,6 +288,32 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `if isPublishSecondaryEditorAction is true then PublishPostImmediatelyUseCase should be called`() {
+        // arrange
+        val isPublishSecondaryEditorAction = true
+        val isNewPost = false
+
+        // act
+        viewModel.start(mock(), site, isPublishSecondaryEditorAction, isNewPost)
+
+        // assert
+        verify(publishPostImmediatelyUseCase).updatePostToPublishImmediately(any(), eq(isNewPost), any())
+    }
+
+    @Test
+    fun `if isPublishSecondaryEditorAction is false then PublishPostImmediatelyUseCase shouldn't be called`() {
+        // arrange
+        val isPublishSecondaryEditorAction = false
+        val isNewPost = false
+
+        // act
+        viewModel.start(mock(), site, isPublishSecondaryEditorAction, isNewPost)
+
+        // assert
+        verify(publishPostImmediatelyUseCase, times(0)).updatePostToPublishImmediately(any(), any(), any())
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
