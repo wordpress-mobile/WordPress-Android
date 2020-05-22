@@ -1085,7 +1085,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                     "LOCAL_SITE_ID INTEGER," +
                                     "STYLESHEET TEXT," +
-                                    "VERSION TEXT" +
+                                    "VERSION TEXT," +
                                     "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
                     )
                     db.execSQL(
@@ -1095,7 +1095,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "IS_COLOR BOOLEAN," +
                                     "NAME TEXT NOT NULL," +
                                     "SLUG TEXT NOT NULL," +
-                                    "VALUE TEXT NOT NULL" +
+                                    "VALUE TEXT NOT NULL," +
                                     "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
                     )
                 }
