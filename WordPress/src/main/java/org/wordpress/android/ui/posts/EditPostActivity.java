@@ -75,6 +75,7 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
+import org.wordpress.android.fluxc.model.EditorTheme;
 import org.wordpress.android.fluxc.model.EditorThemeSupport;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
@@ -87,6 +88,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.EditorThemeStore;
 import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload;
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -3066,11 +3068,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    public void onEditorThemeChanged(EditorThemeStore.OnEditorThemeChanged event) {
-        if (mEditorFragment instanceof EditorThemeUpdateListener) {
-            EditorThemeSupport editorTheme = event.getEditorThemeForSite(mSite).getThemeSupport();
-            ((EditorThemeUpdateListener) mEditorFragment).onEditorThemeUpdated(editorTheme.toBundle());
-        }
+    public void onEditorThemeChanged(OnEditorThemeChanged event) {
+        if (!(mEditorFragment instanceof EditorThemeUpdateListener)) return;
+
+        if (mSite.getId() != event.getSiteId()) return;
+        EditorTheme editorTheme = event.getEditorTheme();
+
+        if (editorTheme == null) return;
+        EditorThemeSupport editorThemeSupport = editorTheme.getThemeSupport();
+        ((EditorThemeUpdateListener) mEditorFragment)
+                    .onEditorThemeUpdated(editorThemeSupport.toBundle());
     }
     // EditPostActivityHook methods
 
