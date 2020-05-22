@@ -208,7 +208,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final Group mFramePhoto;
         private final TextView mTxtPhotoTitle;
 
-        private final Group mLayoutDiscover;
+        private final View mLayoutDiscover;
         private final ImageView mImgDiscoverAvatar;
         private final TextView mTxtDiscover;
 
@@ -662,16 +662,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
-                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
-                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mPostSelectedListener != null) {
-                                mPostSelectedListener.onPostSelected(post);
-                            }
+                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPostSelectedListener != null) {
+                            mPostSelectedListener.onPostSelected(post);
                         }
-                    });
-                }
+                    }
+                });
                 break;
 
             case SITE_PICK:
@@ -680,18 +678,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
-                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
-                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (discoverData.getBlogId() != 0) {
-                                ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
-                            } else if (discoverData.hasBlogUrl()) {
-                                ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
-                            }
+                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (discoverData.getBlogId() != 0) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                        } else if (discoverData.hasBlogUrl()) {
+                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
                         }
-                    });
-                }
+                    }
+                });
                 break;
 
             case OTHER:
