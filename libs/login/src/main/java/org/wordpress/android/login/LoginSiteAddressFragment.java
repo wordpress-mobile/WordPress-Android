@@ -141,12 +141,12 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
 
         mLoginSiteAddressValidator = new LoginSiteAddressValidator();
 
-        mLoginSiteAddressValidator.getIsValid().observe(this, new Observer<Boolean>() {
+        mLoginSiteAddressValidator.getIsValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override public void onChanged(Boolean enabled) {
                 getPrimaryButton().setEnabled(enabled);
             }
         });
-        mLoginSiteAddressValidator.getErrorMessageResId().observe(this, new Observer<Integer>() {
+        mLoginSiteAddressValidator.getErrorMessageResId().observe(getViewLifecycleOwner(), new Observer<Integer>() {
             @Override public void onChanged(Integer resId) {
                 if (resId != null) {
                     showError(resId);
