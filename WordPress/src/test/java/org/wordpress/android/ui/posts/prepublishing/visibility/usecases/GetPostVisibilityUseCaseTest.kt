@@ -88,7 +88,6 @@ class GetPostVisibilityUseCaseTest : BaseUnitTest() {
         assertThat(visibility).isEqualTo(PENDING_REVIEW)
     }
 
-
     @Test
     fun `If PostStatus is PRIVATE then PRIVATE should be the visibility`() {
         // arrange

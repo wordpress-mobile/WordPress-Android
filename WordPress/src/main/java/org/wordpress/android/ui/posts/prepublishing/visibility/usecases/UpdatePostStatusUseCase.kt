@@ -24,7 +24,9 @@ class UpdatePostStatusUseCase @Inject constructor() {
             DRAFT -> PostStatus.DRAFT
             PENDING_REVIEW -> PostStatus.PENDING
             PRIVATE -> PostStatus.PRIVATE
-            PASSWORD_PROTECTED -> throw IllegalStateException("$visibility shouldn't be persisted because does map to a PostStatus.")
+            PASSWORD_PROTECTED -> {
+                throw IllegalStateException("$visibility shouldn't be persisted. It does  not map to a PostStatus.")
+            }
         }
 
         editPostRepository.updateAsync({ postModel: PostModel ->

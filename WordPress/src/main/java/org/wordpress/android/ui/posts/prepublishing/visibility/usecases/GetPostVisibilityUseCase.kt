@@ -18,6 +18,8 @@ class GetPostVisibilityUseCase @Inject constructor() {
         editPostRepository.status == PENDING -> PENDING_REVIEW
         editPostRepository.status == DRAFT -> Visibility.DRAFT
         editPostRepository.status == PostStatus.PRIVATE -> Visibility.PRIVATE
-        else -> throw IllegalStateException("${editPostRepository.status} wasn't resolved by any case in this when clause.")
+        else -> {
+            throw IllegalStateException("${editPostRepository.status} wasn't resolved by any case in this when clause.")
+        }
     }
 }
