@@ -100,6 +100,7 @@ import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
@@ -499,6 +500,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(FeatureAnnouncementDialogFragment object);
 
     void inject(FeatureAnnouncementListAdapter object);
+
+    void inject(HomepageSettingsDialog object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
