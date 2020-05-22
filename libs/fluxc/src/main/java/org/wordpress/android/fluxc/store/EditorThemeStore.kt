@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import java.net.URI
 
 @Singleton
 class EditorThemeStore
@@ -41,10 +40,11 @@ class EditorThemeStore
 
     data class OnEditorThemeChanged(
         val editorTheme: EditorTheme?,
+        val siteId: Int,
         val causeOfChange: EditorThemeAction
     ) : Store.OnChanged<EditorThemeError>() {
         constructor(error: EditorThemeError, causeOfChange: EditorThemeAction):
-                this(editorTheme = null, causeOfChange = causeOfChange) {
+                this(editorTheme = null, siteId = -1, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -80,7 +80,7 @@ class EditorThemeStore
                 val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
                 if (newTheme != existingTheme) {
                     editorThemeSqlUtils.replaceEditorThemeForSite(site, newTheme)
-                    val onChanged = OnEditorThemeChanged(newTheme, action)
+                    val onChanged = OnEditorThemeChanged(newTheme, site.id, action)
                     emitChange(onChanged)
                 }
             }
