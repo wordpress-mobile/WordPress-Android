@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toEndOf="@id/image_avatar_or_blavatar"
-            app:layout_constraintEnd_toStartOf="@+id/follow_button"
+            app:layout_constraintEnd_toStartOf="@+id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top"
             tools:text="text_blog_nametext_blog_name text_blog_name" />
 
@@ -99,19 +99,10 @@
             android:layout_marginBottom="@dimen/margin_small"
             android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/dot_separator"
-            app:layout_constraintEnd_toStartOf="@id/follow_button"
+            app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"
             app:layout_constraintWidth_default="wrap"
             tools:text="text_dateline"/>
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_follow_button_padding"
-            android:layout_marginEnd="@dimen/reader_follow_button_padding"
-            app:layout_constraintEnd_toStartOf="@id/image_more"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
         <ImageView
             android:id="@+id/image_more"
@@ -135,7 +126,7 @@
             android:visibility="visible"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-            app:layout_constraintEnd_toStartOf="@id/follow_button"
+            app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
         <!-- post header end -->
 
@@ -246,11 +237,11 @@
             android:background="?android:selectableItemBackground"
             android:importantForAccessibility="no"
             android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
-            android:layout_marginTop="@dimen/margin_extra_large"
             android:layout_marginEnd="@dimen/margin_large"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toStartOf="@id/text_discover"
-            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
+            app:layout_constraintTop_toTopOf="@id/text_discover"
+            app:layout_constraintBottom_toBottomOf="@id/text_discover"
             tools:ignore="RtlSymmetry" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -265,9 +256,10 @@
             android:textColor="?attr/wpColorOnSurfaceMedium"
             android:textAlignment="viewStart"
             android:gravity="center_vertical|start"
+            android:layout_marginTop="@dimen/margin_extra_large"
             app:layout_constraintStart_toEndOf="@id/image_discover_avatar"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toTopOf="@id/image_discover_avatar"
+            app:layout_constraintTop_toBottomOf="@id/text_excerpt"
             tools:text="text_attribution"
             tools:ignore="RtlSymmetry" />
 
@@ -276,9 +268,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="gone"
+            android:background="?android:selectableItemBackground"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toTopOf="@id/image_discover_avatar"
+            app:layout_constraintTop_toTopOf="@id/text_discover"
             app:layout_constraintBottom_toBottomOf="@id/text_discover"
             app:constraint_referenced_ids="image_discover_avatar,text_discover"
             tools:visibility="visible" />

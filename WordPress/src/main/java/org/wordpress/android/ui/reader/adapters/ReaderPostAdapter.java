@@ -51,7 +51,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -203,12 +202,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final ImageView mImgFeatured;
         private final ImageView mImgAvatarOrBlavatar;
 
-        private final ReaderFollowButton mFollowButton;
-
         private final Group mFramePhoto;
         private final TextView mTxtPhotoTitle;
 
-        private final Group mLayoutDiscover;
+        private final View mLayoutDiscover;
         private final ImageView mImgDiscoverAvatar;
         private final TextView mTxtDiscover;
 
@@ -248,7 +245,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
 
             View postHeaderView = itemView.findViewById(R.id.layout_post_header);
-            mFollowButton = itemView.findViewById(R.id.follow_button);
 
             ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
             ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
@@ -585,19 +581,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mImgMore.setOnClickListener(null);
         }
 
-        if (shouldShowFollowButton()) {
-            holder.mFollowButton.setIsFollowed(post.isFollowedByCurrentUser);
-            holder.mFollowButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleFollow(view.getContext(), view, post);
-                }
-            });
-            holder.mFollowButton.setVisibility(View.VISIBLE);
-        } else {
-            holder.mFollowButton.setVisibility(View.GONE);
-        }
-
         // attribution section for discover posts
         if (post.isDiscoverPost()) {
             showDiscoverData(holder, post);
@@ -622,16 +605,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mRenderedIds.add(post.getPseudoId());
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
-    }
-
-    /*
-     * follow button only shows for tags and "Posts I Like" - it doesn't show for Followed Sites,
-     * Discover, lists, etc.
-     */
-    private boolean shouldShowFollowButton() {
-        return mCurrentTag != null
-               && mCurrentTag.isTagTopic()
-               && !mIsLoggedOutReader;
     }
 
     /*
@@ -662,16 +635,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // tapping an editor pick opens the source post, which is handled by the existing
                 // post selection handler
-                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
-                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mPostSelectedListener != null) {
-                                mPostSelectedListener.onPostSelected(post);
-                            }
+                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mPostSelectedListener != null) {
+                            mPostSelectedListener.onPostSelected(post);
                         }
-                    });
-                }
+                    }
+                });
                 break;
 
             case SITE_PICK:
@@ -680,18 +651,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
                 // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
                 // we have the blogId, if not show blog in internal webView
-                for (int id : postHolder.mLayoutDiscover.getReferencedIds()) {
-                    postHolder.itemView.findViewById(id).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (discoverData.getBlogId() != 0) {
-                                ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
-                            } else if (discoverData.hasBlogUrl()) {
-                                ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
-                            }
+                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (discoverData.getBlogId() != 0) {
+                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
+                        } else if (discoverData.hasBlogUrl()) {
+                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
                         }
-                    });
-                }
+                    }
+                });
                 break;
 
             case OTHER:
