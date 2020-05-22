@@ -83,11 +83,6 @@ public class WPLoginInputRow extends RelativeLayout {
                     mTextInputLayout.setEndIconDrawable(R.drawable.selector_password_visibility);
                 }
 
-                if (a.hasValue(R.styleable.wpLoginInputRow_passwordToggleTint)) {
-                    mTextInputLayout.setEndIconTintList(
-                            a.getColorStateList(R.styleable.wpLoginInputRow_passwordToggleTint));
-                }
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     if (a.hasValue(R.styleable.wpLoginInputRow_android_textAlignment)) {
                         mEditText.setTextAlignment(
