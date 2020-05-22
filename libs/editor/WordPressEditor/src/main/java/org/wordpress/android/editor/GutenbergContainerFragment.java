@@ -97,8 +97,11 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
 
         Consumer<Exception> exceptionLogger = null;
+        Consumer<String> breadcrumbLogger = null;
         if (getActivity() instanceof ExceptionLogger) {
-            exceptionLogger = ((ExceptionLogger) getActivity()).getExceptionLogger();
+            ExceptionLogger exceptionLoggingActivity = ((ExceptionLogger) getActivity());
+            exceptionLogger = exceptionLoggingActivity.getExceptionLogger();
+            breadcrumbLogger = exceptionLoggingActivity.getBreadcrumbLogger();
         }
 
         mWPAndroidGlueCode = new WPAndroidGlueCode();
@@ -116,7 +119,8 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
                 isSiteUsingWpComRestApi,
-                exceptionLogger);
+                exceptionLogger,
+                breadcrumbLogger);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;

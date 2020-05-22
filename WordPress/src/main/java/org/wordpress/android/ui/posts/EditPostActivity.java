@@ -3108,6 +3108,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return (Exception e) -> CrashLoggingUtils.logException(e, T.EDITOR);
     }
 
+    @Override
+    public Consumer<String> getBreadcrumbLogger() {
+        return CrashLoggingUtils::log;
+    }
+
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
         mAddingMediaToEditorProgressDialog = mProgressDialogHelper
                 .updateProgressDialogState(this, mAddingMediaToEditorProgressDialog, uiState, mUiHelpers);
