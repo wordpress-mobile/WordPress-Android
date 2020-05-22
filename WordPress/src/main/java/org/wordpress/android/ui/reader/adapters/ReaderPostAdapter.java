@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,6 +88,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
+    private final int mMarginExtraLarge;
 
     private boolean mCanRequestMorePosts;
     private final boolean mIsLoggedOutReader;
@@ -179,6 +182,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         final View mPostContainer;
 
+        private final ConstraintLayout mRootLayout;
+        private final ConstraintSet mRootLayoutConstraintSet = new ConstraintSet();
+
         private final TextView mTxtTitle;
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
@@ -208,11 +214,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip mThumbnailStrip;
 
-
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             mPostContainer = itemView.findViewById(R.id.post_container);
+            mRootLayout = itemView.findViewById(R.id.root_layout);
+            mRootLayoutConstraintSet.clone(mRootLayout);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -402,7 +409,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR,
+        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR_CIRCULAR,
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -441,6 +448,18 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        // Set title below thumbnail strip if card type is GALLERY
+        View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
+                ? holder.mThumbnailStrip : holder.mImgFeatured;
+        holder.mRootLayoutConstraintSet.connect(
+                holder.mTxtTitle.getId(),
+                ConstraintSet.TOP,
+                txtTitlePreviousView.getId(),
+                ConstraintSet.BOTTOM,
+                mMarginExtraLarge
+        );
+        holder.mRootLayoutConstraintSet.applyTo(holder.mRootLayout);
+
         String urlString = "";
         if (post.hasBlogUrl()) {
             urlString = UrlUtils.removeScheme(post.getBlogUrl());
@@ -456,7 +475,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
-            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
+            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR_CIRCULAR, imageUrl);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
@@ -611,7 +630,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      */
     private boolean shouldShowFollowButton() {
         return mCurrentTag != null
-               && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
+               && mCurrentTag.isTagTopic()
                && !mIsLoggedOutReader;
     }
 
@@ -698,6 +717,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
+        mMarginExtraLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
 
