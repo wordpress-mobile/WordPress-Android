@@ -1,3 +1,3 @@
-<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.
-<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.
-<b>General updates:</b> Added reblog functionality.
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
+
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
