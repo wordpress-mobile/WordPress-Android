@@ -41,12 +41,17 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    fun start(editPostRepository: EditPostRepository, site: SiteModel, isPublishSecondaryEditorAction: Boolean) {
+    fun start(
+        editPostRepository: EditPostRepository,
+        site: SiteModel,
+        isPublishSecondaryEditorAction: Boolean,
+        isNewPost: Boolean
+    ) {
         if (isStarted) return
         isStarted = true
 
         if (isPublishSecondaryEditorAction) {
-            publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository) {
+            publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, isNewPost) {
                 setupHomeUiState(editPostRepository, site)
             }
         } else {

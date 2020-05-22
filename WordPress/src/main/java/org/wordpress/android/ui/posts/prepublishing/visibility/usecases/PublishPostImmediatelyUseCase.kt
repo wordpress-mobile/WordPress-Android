@@ -10,11 +10,17 @@ import javax.inject.Inject
 class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
     fun updatePostToPublishImmediately(
         editPostRepository: EditPostRepository,
+        isNewPost: Boolean,
         onPostUpdated: () -> Unit
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
             postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
-            postModel.setStatus(PostStatus.PUBLISHED.toString())
+
+            if (isNewPost) {
+                postModel.setStatus(PostStatus.DRAFT.toString())
+            } else {
+                postModel.setStatus(PostStatus.PUBLISHED.toString())
+            }
             true
         }, { _, result ->
             if (result == UpdatePostResult.Updated) {

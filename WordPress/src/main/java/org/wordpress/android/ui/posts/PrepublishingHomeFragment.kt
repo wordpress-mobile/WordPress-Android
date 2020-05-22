@@ -79,7 +79,11 @@ class PrepublishingHomeFragment : Fragment() {
             "arguments can't be null since it's a requirement that this value is passed."
         }
 
-        viewModel.start(getEditPostRepository(), getSite(), isPublishSecondaryAction)
+        val isNewPost = checkNotNull(arguments?.getBoolean(IS_NEW_POST)) {
+            "arguments can't be null since it's a requirement that this value is passed."
+        }
+
+        viewModel.start(getEditPostRepository(), getSite(), isPublishSecondaryAction, isNewPost)
     }
 
     private fun getSite(): SiteModel {
@@ -111,10 +115,12 @@ class PrepublishingHomeFragment : Fragment() {
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
         const val IS_PUBLISH_SECONDARY_ACTION = "prepublishing_bottom_sheet_is_publish_secondary_action"
+        const val IS_NEW_POST = "prepublishing_bottom_sheet_is_new_post"
 
-        fun newInstance(isPublishSecondaryAction: Boolean) = PrepublishingHomeFragment().apply {
+        fun newInstance(isPublishSecondaryAction: Boolean, isNewPost: Boolean) = PrepublishingHomeFragment().apply {
             arguments = Bundle().apply {
                 putBoolean(IS_PUBLISH_SECONDARY_ACTION, isPublishSecondaryAction)
+                putBoolean(IS_NEW_POST, isNewPost)
             }
         }
     }

@@ -1739,7 +1739,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
             PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage, isPublishSecondaryAction);
+                    PrepublishingBottomSheetFragment
+                            .newInstance(getSite(), mIsPage, isPublishSecondaryAction, mIsNewPost);
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }
