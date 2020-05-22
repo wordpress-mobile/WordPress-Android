@@ -23,6 +23,10 @@ class LoadReaderTabsUseCase @Inject constructor(
         return withContext(bgDispatcher) {
             val tagList = ReaderTagTable.getDefaultTags()
 
+            /* Creating custom tag lists isn't supported anymore. However, we need to keep the support here
+            for users who created custom lists in the past.*/
+            tagList.addAll(ReaderTagTable.getCustomListTags())
+
             tagList.addAll(ReaderTagTable.getBookmarkTags()) // Add "Saved" tab manually
 
             // Add "Following" tab manually when on self-hosted site
