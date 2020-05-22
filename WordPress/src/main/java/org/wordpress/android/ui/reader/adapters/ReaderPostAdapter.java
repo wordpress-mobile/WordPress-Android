@@ -219,6 +219,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             mPostContainer = itemView.findViewById(R.id.post_container);
             mRootLayout = itemView.findViewById(R.id.root_layout);
+            mRootLayoutConstraintSet.clone(mRootLayout);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -448,7 +449,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // Set title below thumbnail strip if card type is GALLERY
-        holder.mRootLayoutConstraintSet.clone(holder.mRootLayout);
         View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
                 ? holder.mThumbnailStrip : holder.mImgFeatured;
         holder.mRootLayoutConstraintSet.connect(
