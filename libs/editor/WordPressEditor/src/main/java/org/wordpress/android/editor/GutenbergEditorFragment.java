@@ -468,7 +468,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private void updateFailedMediaState() {
         for (String mediaId : mFailedMediaIds) {
-            getGutenbergContainerFragment().onSetStarterPageTemplatesTooltipShown(Integer.valueOf(mediaId));
+            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(mediaId));
         }
     }
 
