@@ -168,7 +168,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'androidx.core:core:1.1.0'
+    implementation 'androidx.core:core:1.0.2'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.1.0'
 
