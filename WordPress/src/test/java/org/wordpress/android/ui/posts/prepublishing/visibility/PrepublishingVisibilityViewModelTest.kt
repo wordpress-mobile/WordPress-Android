@@ -16,9 +16,11 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLIC
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostPasswordUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase
@@ -59,9 +61,9 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if current VISIBILITY is PUBLIC then it is checked in the uiState`() {
+    fun `if current VISIBILITY is PUBLISH then it is checked in the uiState`() {
         // arrange
-        val expectedVisibility = PUBLIC
+        val expectedVisibility = PUBLISH
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(expectedVisibility)
 
         // act
@@ -72,9 +74,22 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if current VISIBILITY is PASSWORD_PROTECTED then it is checked in the uiState`() {
+    fun `if current VISIBILITY is DRAFT then it is checked in the uiState`() {
         // arrange
-        val expectedVisibility = PASSWORD_PROTECTED
+        val expectedVisibility = DRAFT
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(expectedVisibility)
+
+        // act
+        viewModel.start(editPostRepository)
+
+        // assert
+        assertThat(getCheckedVisibilityUiState()?.visibility).isEqualTo(expectedVisibility)
+    }
+
+    @Test
+    fun `if current VISIBILITY is PENDING_REVIEW then it is checked in the uiState`() {
+        // arrange
+        val expectedVisibility = PENDING_REVIEW
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(expectedVisibility)
 
         // act
@@ -88,6 +103,19 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
     fun `if current VISIBILITY is PRIVATE then it is checked in the uiState`() {
         // arrange
         val expectedVisibility = PRIVATE
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(expectedVisibility)
+
+        // act
+        viewModel.start(editPostRepository)
+
+        // assert
+        assertThat(getCheckedVisibilityUiState()?.visibility).isEqualTo(expectedVisibility)
+    }
+
+    @Test
+    fun `if current VISIBILITY is PASSWORD_PROTECTED then it is checked in the uiState`() {
+        // arrange
+        val expectedVisibility = PASSWORD_PROTECTED
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(expectedVisibility)
 
         // act
