@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="?attr/dialogPreferredPadding">
 
     <com.google.android.material.textfield.TextInputLayout
-        app:theme="@style/LoginTheme.EditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:theme="@style/LoginTheme.EditText">
 
         <!-- use singleLine (even if deprecated) to have a scrolling single line. -->
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_http_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="@string/httpuser"/>
+            android:hint="@string/httpuser"
+            android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        app:theme="@style/LoginTheme.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/login_input_password_icon_color">
+        app:theme="@style/LoginTheme.EditText">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_http_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:hint="@string/httppassword"/>
+            android:hint="@string/httppassword"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

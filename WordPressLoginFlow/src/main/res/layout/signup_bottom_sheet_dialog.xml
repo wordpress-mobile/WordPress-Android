@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/grey_lighten_30"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_extra_large"
+    android:fitsSystemWindows="true"
     android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium"
     android:paddingRight="@dimen/margin_extra_large"
-    android:paddingTop="@dimen/margin_medium" >
+    android:paddingBottom="@dimen/margin_extra_large">
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_tos"
+        style="@style/LoginTheme.Button.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:padding="@dimen/margin_extra_large"
-        android:text="@string/signup_terms_of_service_text"
-        style="@style/LoginTheme.Button.Secondary" >
-    </androidx.appcompat.widget.AppCompatButton>
+        android:text="@string/signup_terms_of_service_text" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_email"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:layout_marginTop="@dimen/margin_extra_small"
+        style="@style/LoginTheme.Button.SignUp"
         android:layout_width="match_parent"
-        android:text="@string/signup_with_email_button"
-        android:theme="@style/LoginTheme.Button" >
-    </androidx.appcompat.widget.AppCompatButton>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_small"
+        android:layout_marginBottom="@dimen/margin_medium"
+        android:text="@string/signup_with_email_button" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/signup_google"
+        style="@style/LoginTheme.Button.SignUp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_small"
-        android:layout_width="match_parent"
-        android:text="@string/signup_with_google_button"
-        android:theme="@style/LoginTheme.Button" >
-    </androidx.appcompat.widget.AppCompatButton>
+        android:text="@string/signup_with_google_button" />
 
 </LinearLayout>

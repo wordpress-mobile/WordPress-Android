@@ -22,7 +22,7 @@
     <string name="open_mail">Open mail</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials</string>
+    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
@@ -68,6 +68,7 @@
     <string name="login_error_sms_throttled">We\'ve made too many attempts to send an SMS verification code — take a break, and request a new one in a minute.</string>
     <string name="login_error_generic_start">Google login could not be started.</string>
     <string name="login_error_suffix">\nMaybe try a different account?</string>
+    <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>

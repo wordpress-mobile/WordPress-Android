@@ -22,9 +22,18 @@ public class SiteUtils {
 
     @Nullable
     public static SiteModel getXMLRPCSiteByUrl(SiteStore siteStore, String url) {
-        List<SiteModel> selfhostedSites = siteStore.getSitesAccessedViaXMLRPC();
-        if (selfhostedSites != null && !selfhostedSites.isEmpty()) {
-            for (SiteModel siteModel : selfhostedSites) {
+        return getSiteByMatchingUrl(siteStore.getSitesAccessedViaXMLRPC(), url);
+    }
+
+    @Nullable
+    public static SiteModel getSiteByMatchingUrl(SiteStore siteStore, String url) {
+        return getSiteByMatchingUrl(siteStore.getSites(), url);
+    }
+
+    @Nullable
+    private static SiteModel getSiteByMatchingUrl(List<SiteModel> siteModelList, String url) {
+        if (siteModelList != null && !siteModelList.isEmpty()) {
+            for (SiteModel siteModel : siteModelList) {
                 String storedSiteUrl = UrlUtils.removeScheme(siteModel.getUrl()).replace("/", "");
                 String incomingSiteUrl = UrlUtils.removeScheme(url).replace("/", "");
                 if (storedSiteUrl.equalsIgnoreCase(incomingSiteUrl)) {
