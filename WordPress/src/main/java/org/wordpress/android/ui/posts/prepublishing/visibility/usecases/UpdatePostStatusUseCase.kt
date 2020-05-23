@@ -10,10 +10,11 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.lang.IllegalStateException
 import javax.inject.Inject
 
-class UpdatePostStatusUseCase @Inject constructor() {
+class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
     fun updatePostStatus(
         visibility: Visibility,
         editPostRepository: EditPostRepository,
@@ -31,6 +32,12 @@ class UpdatePostStatusUseCase @Inject constructor() {
 
         editPostRepository.updateAsync({ postModel: PostModel ->
             postModel.setStatus(postStatus.toString())
+
+            // since PRIVATE posts always have to be immediate then we set the current date when updating to be sure.
+            if (visibility == PRIVATE) {
+                postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
+            }
+
             true
         }, { _, result ->
             if (result == UpdatePostResult.Updated) {
