@@ -10,6 +10,7 @@ sealed class PrepublishingHomeItemUiState {
     data class HomeUiState(
         val actionType: ActionType,
         var actionResult: UiString? = null,
+        val actionEnabled : Boolean,
         val onActionClicked: (actionType: ActionType) -> Unit
     ) : PrepublishingHomeItemUiState()
 

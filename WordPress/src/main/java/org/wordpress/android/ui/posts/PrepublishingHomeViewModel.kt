@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
@@ -53,6 +54,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             add(HomeUiState(
                     actionType = VISIBILITY,
                     actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                    actionEnabled = false,
                     onActionClicked = ::onActionClicked
             ))
 
@@ -66,6 +68,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                             UiStringRes(R.string.immediately)
                         }
                     },
+                    actionEnabled = editPostRepository.status == PostStatus.PRIVATE,
                     onActionClicked = ::onActionClicked
             ))
 
@@ -74,6 +77,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                        actionEnabled = false,
                         onActionClicked = ::onActionClicked
                 )
                 )
