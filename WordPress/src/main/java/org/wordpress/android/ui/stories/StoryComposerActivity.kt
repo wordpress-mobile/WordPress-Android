@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.webkit.URLUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaS
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
@@ -46,6 +48,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         SnackbarProvider,
         MediaPickerProvider,
         EditorMediaListener,
+        AuthenticationHeadersProvider,
         NotificationIntentLoader {
     private var site: SiteModel? = null
 
@@ -53,6 +56,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
+    @Inject lateinit var authenticationUtils: AuthenticationUtils
+
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
     companion object {
@@ -76,6 +81,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         (application as WordPress).component().inject(this)
         setSnackbarProvider(this)
         setMediaPickerProvider(this)
+        setAuthenticationProvider(this)
+        setNotificationExtrasLoader(this)
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -83,7 +90,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        setNotificationExtrasLoader(this)
         editorMedia.start(site!!, this, STORY_EDITOR)
         startObserving()
     }
@@ -228,6 +234,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
+    }
+
+    override fun getAuthHeaders(url: String): Map<String, String> {
+        return authenticationUtils.getAuthHeaders(url)
     }
 
     // NotificationIntentLoader
