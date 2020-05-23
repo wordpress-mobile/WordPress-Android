@@ -54,7 +54,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             add(HomeUiState(
                     actionType = VISIBILITY,
                     actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                    actionEnabled = false,
+                    actionEnabled = true,
                     onActionClicked = ::onActionClicked
             ))
 
@@ -68,7 +68,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                             UiStringRes(R.string.immediately)
                         }
                     },
-                    actionEnabled = editPostRepository.status == PostStatus.PRIVATE,
+                    actionEnabled = editPostRepository.status != PostStatus.PRIVATE,
                     onActionClicked = ::onActionClicked
             ))
 
@@ -77,7 +77,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                        actionEnabled = false,
+                        actionEnabled = true,
                         onActionClicked = ::onActionClicked
                 )
                 )
