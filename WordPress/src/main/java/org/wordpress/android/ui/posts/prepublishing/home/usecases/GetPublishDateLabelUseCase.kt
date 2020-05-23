@@ -8,6 +8,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import java.lang.Exception
+import java.lang.NullPointerException
 import javax.inject.Inject
 
 class GetPublishDateLabelUseCase @Inject constructor(private val postSettingsUtils: PostSettingsUtils) {
@@ -23,7 +24,7 @@ class GetPublishDateLabelUseCase @Inject constructor(private val postSettingsUti
                     UiStringRes(R.string.immediately)
                 }
             } ?: run {
-                throw Exception("Post can't be null")
+                throw NullPointerException("Post can't be null")
             }
         }
     }
