@@ -12,14 +12,15 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
@@ -282,6 +283,39 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `verify that PUBLISH action is disabled if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(PUBLISH)
+
+        assertThat(uiState?.actionEnabled).isFalse()
+    }
+
+    @Test
+    fun `verify that TAGS action is enabled if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(TAGS)
+
+        assertThat(uiState?.actionEnabled).isTrue()
+    }
+
+    @Test
+    fun `verify that VISIBILITY action is disabled if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(VISIBILITY)
+
+        assertThat(uiState?.actionEnabled).isTrue()
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
