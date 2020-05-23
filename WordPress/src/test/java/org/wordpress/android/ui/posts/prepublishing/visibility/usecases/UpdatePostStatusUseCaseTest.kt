@@ -5,6 +5,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
@@ -15,16 +16,19 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.lang.IllegalStateException
 
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
 
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        updatePostStatusUseCase = UpdatePostStatusUseCase()
+        updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper)
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { PostModel() }
     }
