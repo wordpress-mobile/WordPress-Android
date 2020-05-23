@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -79,6 +80,18 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
+    }
+
+    @Test
+    fun `verify that when updatePostStatus is called with PRIVATE Visibility dateTimeUtilsWrapper is used`() {
+        // arrange
+        val expectedPostStatus = PostStatus.PRIVATE
+
+        // act
+        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+
+        // assert
+        verify(dateTimeUtilsWrapper).currentTimeInIso8601()
     }
 
     @Test(expected = IllegalStateException::class)
