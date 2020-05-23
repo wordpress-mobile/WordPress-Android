@@ -15,6 +15,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
+import java.lang.IllegalStateException
 
 class GetPostVisibilityUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
@@ -101,5 +102,44 @@ class GetPostVisibilityUseCaseTest : BaseUnitTest() {
 
         // assert
         assertThat(visibility).isEqualTo(PRIVATE)
+    }
+
+    @Test
+    fun `If PostStatus is SCHEDULED then PUBLISH should be the visibility`() {
+        // arrange
+        val post = PostModel().apply {
+            setStatus(PostStatus.SCHEDULED.toString())
+        }
+        editPostRepository.set { post }
+
+        // act
+        val visibility = getPostVisibilityUseCase.getVisibility(editPostRepository)
+
+        // assert
+        assertThat(visibility).isEqualTo(PUBLISH)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `If PostStatus is TRASHED then IllegalStateException should be thrown`() {
+        // arrange
+        val post = PostModel().apply {
+            setStatus(PostStatus.TRASHED.toString())
+        }
+        editPostRepository.set { post }
+
+        // act
+        getPostVisibilityUseCase.getVisibility(editPostRepository)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `If PostStatus is UNKNOWN then IllegalStateException should be thrown`() {
+        // arrange
+        val post = PostModel().apply {
+            setStatus(PostStatus.UNKNOWN.toString())
+        }
+        editPostRepository.set { post }
+
+        // act
+        getPostVisibilityUseCase.getVisibility(editPostRepository)
     }
 }
