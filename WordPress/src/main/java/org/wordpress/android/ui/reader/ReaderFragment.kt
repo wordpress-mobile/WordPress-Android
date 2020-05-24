@@ -48,7 +48,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
