@@ -367,6 +367,12 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+    public static void viewStatsInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        context.startActivity(intent);
+    }
+
     private static Intent getMainActivityInNewStack(Context context) {
         Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
