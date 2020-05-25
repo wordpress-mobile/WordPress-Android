@@ -4,7 +4,6 @@
  
 14.9
 -----
-* [**] Block editor: Avoid crash when editor gets into invalid state
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post
 * [***] Block Editor: New block: Pullquote
 * [**] Block Editor: Add support for changing background and text color in Buttons block
