@@ -1,9 +1,7 @@
-GIT
-  remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 4ae6fbdc229d760e47c4b15faf2eb33f162170b3
-  tag: 0.9.3
+PATH
+  remote: ../release-toolkit
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.9.3)
+    fastlane-plugin-wpmreleasetoolkit (0.9.4)
       activesupport (~> 4)
       chroma (= 0.2.0)
       diffy (~> 3.3)
@@ -20,7 +18,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (3.0.2)
-    activesupport (4.2.11.1)
+    activesupport (4.2.11.3)
       i18n (~> 0.7)
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
@@ -154,7 +152,7 @@ GEM
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.14.0)
+    minitest (5.14.1)
     multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
