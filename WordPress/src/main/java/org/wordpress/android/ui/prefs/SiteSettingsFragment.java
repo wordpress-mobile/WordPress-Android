@@ -61,6 +61,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
@@ -373,6 +374,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDestroyView() {
         removeMoreScreenToolbar();
         removeJetpackSecurityScreenToolbar();
+        mDispatcher.unregister(this);
         super.onDestroyView();
     }
 
@@ -461,6 +463,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (view != null) {
             setupPreferenceList(view.findViewById(android.R.id.list), getResources());
         }
+        mDispatcher.register(this);
 
         return view;
     }
@@ -917,6 +920,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
         mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
+        updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
@@ -981,6 +985,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
+        }
+    }
+
+    private void updateHomepageSummary() {
+        if (mSite.getShowOnFront().equals(ShowOnFront.POSTS.getValue())) {
+            mHomepagePref.setSummary(R.string.site_settings_classic_blog);
+        } else {
+            mHomepagePref.setSummary(R.string.site_settings_static_homepage);
         }
     }
 
@@ -1943,6 +1955,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         }
 
         return mAdapter;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            updateHomepageSummary();
+        }
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {

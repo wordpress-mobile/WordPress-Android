@@ -10,6 +10,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -28,6 +29,7 @@ class HomepageSettingsViewModel
 @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val dispatcher: Dispatcher,
     private val homepageSettingsDataLoader: HomepageSettingsDataLoader,
     private val siteStore: SiteStore,
     private val siteOptionsStore: SiteOptionsStore
@@ -140,6 +142,7 @@ class HomepageSettingsViewModel
     }
 
     fun start(siteId: Int, savedClassicBlogValue: Boolean?, savedPageForPostsId: Long?, savedPageOnFrontId: Long?) {
+        dispatcher.register(this)
         launch {
             val siteModel = siteStore.getSiteByLocalId(siteId)
                     ?: throw IllegalStateException("SiteModel has to be present")
@@ -165,6 +168,11 @@ class HomepageSettingsViewModel
                         }
             }
         }
+    }
+
+    override fun onCleared() {
+        dispatcher.unregister(this)
+        super.onCleared()
     }
 
     private fun List<PageModel>.isValid(
