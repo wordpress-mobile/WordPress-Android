@@ -57,7 +57,6 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
         whenever(getPublishDateLabelUseCase.getLabel(any())).thenReturn(UiStringText(""))
-//        whenever(editPostRepository.getPost()).thenReturn(PostModel())
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
     }

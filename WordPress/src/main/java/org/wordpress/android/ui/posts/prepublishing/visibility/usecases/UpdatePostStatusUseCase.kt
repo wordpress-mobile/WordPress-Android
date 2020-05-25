@@ -33,7 +33,7 @@ class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapp
         editPostRepository.updateAsync({ postModel: PostModel ->
             postModel.setStatus(postStatus.toString())
 
-            // since PRIVATE posts always have to be immediate then we set the current date when updating to be sure.
+            // since PRIVATE posts always have to be immediate we set the current date when updating to be sure.
             if (visibility == PRIVATE) {
                 postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
             }
