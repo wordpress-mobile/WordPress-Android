@@ -11,16 +11,11 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.HomepageSettingsDataLoader.LoadingResult
-import org.wordpress.android.ui.prefs.HomepageSettingsDataLoader.LoadingResult.Error
-import org.wordpress.android.ui.prefs.HomepageSettingsDataLoader.LoadingResult.Loading
-import org.wordpress.android.ui.prefs.HomepageSettingsDataLoader.LoadingResult.Success
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -34,17 +29,17 @@ class HomepageSettingsViewModel
     private val siteStore: SiteStore,
     private val siteOptionsStore: SiteOptionsStore
 ) : ScopedViewModel(mainDispatcher) {
-    private val _uiState = MutableLiveData<UiState>()
-    val uiState: LiveData<UiState> = _uiState
+    private val _uiState = MutableLiveData<HomepageSettingsUiState>()
+    val uiState: LiveData<HomepageSettingsUiState> = _uiState
     private val _dismissDialogEvent = MutableLiveData<Event<Unit>>()
     val dismissDialogEvent: LiveData<Event<Unit>> = _dismissDialogEvent
 
     fun classicBlogSelected() {
-        _uiState.value = _uiState.value?.copy(isClassicBlogState = true)
+        updateUiState { it.copy(isClassicBlogState = true) }
     }
 
     fun staticHomepageSelected() {
-        _uiState.value = _uiState.value?.copy(isClassicBlogState = false)
+        updateUiState { it.copy(isClassicBlogState = false) }
     }
 
     fun onPageOnFrontSelected(id: Int): Boolean {
@@ -83,6 +78,46 @@ class HomepageSettingsViewModel
         }
     }
 
+    fun onAcceptClicked() {
+        val currentUiState = _uiState.value
+        if (currentUiState == null) {
+            updateUiState { it.updateWithError(R.string.site_settings_failed_to_save_homepage_settings) }
+            return
+        }
+        _uiState.value = currentUiState.copy(isDisabled = true, isLoading = true)
+        launch {
+            val siteHomepageSettings = if (currentUiState.isClassicBlogState) {
+                SiteHomepageSettings.Posts
+            } else {
+                val pageForPostsModel = currentUiState.pageForPostsModel
+                val pageOnFrontModel = currentUiState.pageOnFrontModel
+                if (pageForPostsModel == null || pageOnFrontModel == null) {
+                    updateUiState {
+                        it.updateWithError(R.string.site_settings_cannot_save_homepage_settings_before_pages_loaded)
+                    }
+                    return@launch
+                }
+
+                SiteHomepageSettings.StaticPage(
+                        pageForPostsId = pageForPostsModel.getSelectedItemRemoteId() ?: 0,
+                        pageOnFrontId = pageOnFrontModel.getSelectedItemRemoteId() ?: 0
+                )
+            }
+            val updateResult = siteOptionsStore.updateHomepage(currentUiState.siteModel, siteHomepageSettings)
+            _uiState.value = currentUiState.copy(isDisabled = false, isLoading = false)
+            when (updateResult.isError) {
+                true -> {
+                    updateUiState { it.updateWithError(R.string.site_settings_failed_update_homepage_settings) }
+                }
+                false -> _dismissDialogEvent.value = Event(Unit)
+            }
+        }
+    }
+
+    fun onDismissClicked() {
+        _dismissDialogEvent.value = Event(Unit)
+    }
+
     fun getSelectedPageOnFrontId(): Long? {
         return (_uiState.value?.pageOnFrontModel)?.getSelectedItemRemoteId()
     }
@@ -95,70 +130,15 @@ class HomepageSettingsViewModel
         return _uiState.value?.isClassicBlogState
     }
 
-    private fun updatePageForPostsState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
-        return updateUiState { uiState ->
-            uiState.copy(pageForPostsModel = copyFunction(uiState.pageForPostsModel))
-        }
-    }
-
-    private fun updatePageOnFrontState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
-        return updateUiState { uiState ->
-            uiState.copy(pageOnFrontModel = copyFunction(uiState.pageOnFrontModel))
-        }
-    }
-
-    private fun updateUiState(copyFunction: (UiState) -> UiState): Boolean {
-        val currentState = _uiState.value
-        return if (currentState != null) {
-            _uiState.value = copyFunction(currentState)
-            true
-        } else {
-            false
-        }
-    }
-
-    fun onAcceptClicked() {
-        val currentUiState = _uiState.value
-        if (currentUiState == null) {
-            _uiState.updateWithError(R.string.site_settings_failed_to_save_homepage_settings)
-            return
-        }
-        _uiState.value = currentUiState.copy(isDisabled = true, isLoading = true)
-        launch {
-            val siteHomepageSettings = if (currentUiState.isClassicBlogState) {
-                SiteHomepageSettings.Posts
-            } else {
-                val pageForPostsModel = currentUiState.pageForPostsModel
-                val pageOnFrontModel = currentUiState.pageOnFrontModel
-                if (pageForPostsModel == null || pageOnFrontModel == null) {
-                    _uiState.updateWithError(R.string.site_settings_cannot_save_homepage_settings_before_pages_are_loaded)
-                    return@launch
-                }
-
-                SiteHomepageSettings.StaticPage(
-                        pageForPostsId = pageForPostsModel.getSelectedItemRemoteId() ?: 0,
-                        pageOnFrontId = pageOnFrontModel.getSelectedItemRemoteId() ?: 0
-                )
-            }
-            val updateResult = siteOptionsStore.updateHomepage(currentUiState.siteModel, siteHomepageSettings)
-            _uiState.value = currentUiState.copy(isDisabled = false, isLoading = false)
-            when (updateResult.isError) {
-                true -> _uiState.updateWithError(R.string.site_settings_failed_update_homepage_settings)
-                false -> _dismissDialogEvent.value = Event(Unit)
-            }
-        }
-    }
-
-    fun onDismissClicked() {
-        _dismissDialogEvent.value = Event(Unit)
-    }
-
     fun start(siteId: Int, savedClassicBlogValue: Boolean?, savedPageForPostsId: Long?, savedPageOnFrontId: Long?) {
         launch {
             val siteModel = siteStore.getSiteByLocalId(siteId)
                     ?: throw IllegalStateException("SiteModel has to be present")
             val isClassicBlog = savedClassicBlogValue ?: siteModel.showOnFront == ShowOnFront.POSTS.value
-            _uiState.value = UiState(isClassicBlogState = isClassicBlog, siteModel = siteModel)
+            _uiState.value = HomepageSettingsUiState(
+                    isClassicBlogState = isClassicBlog,
+                    siteModel = siteModel
+            )
             val pageOnFrontId = savedPageOnFrontId ?: siteModel.pageOnFront
             val pageForPostsId = savedPageForPostsId ?: siteModel.pageForPosts
             val loadPagesFlow = homepageSettingsDataLoader.loadPages(
@@ -169,7 +149,9 @@ class HomepageSettingsViewModel
 
             withContext(bgDispatcher) {
                 loadPagesFlow.collect { loadingResult ->
-                    updateUiStateWithLoadingResult(loadingResult, pageOnFrontId, pageForPostsId)
+                    updateUiState { currentValue ->
+                        currentValue.updateWithLoadingResult(loadingResult, pageForPostsId, pageOnFrontId)
+                    }
                 }
             }
         }
@@ -190,39 +172,25 @@ class HomepageSettingsViewModel
         }
     }
 
-    private fun updateUiStateWithLoadingResult(
-        loadingResult: LoadingResult,
-        pageOnFrontId: Long?,
-        pageForPostsId: Long?
-    ) {
-        updateUiState { currentValue ->
-            when (loadingResult) {
-                is Loading -> {
-                    currentValue.copy(isLoading = true, error = null)
-                }
-                is Error -> currentValue.copy(isLoading = false, error = loadingResult.message)
-                is Success -> currentValue.copy(
-                        isLoading = false,
-                        error = null,
-                        pageForPostsModel = PageSelectorUiModel.build(loadingResult.pages, pageForPostsId),
-                        pageOnFrontModel = PageSelectorUiModel.build(loadingResult.pages, pageOnFrontId)
-                )
-            }
+    private fun updatePageForPostsState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
+        return updateUiState { uiState ->
+            uiState.copy(pageForPostsModel = copyFunction(uiState.pageForPostsModel))
         }
     }
 
-    private fun MutableLiveData<UiState>.updateWithError(message: Int) {
-        this.postValue(this.value?.copy(error = message, isLoading = false))
+    private fun updatePageOnFrontState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
+        return updateUiState { uiState ->
+            uiState.copy(pageOnFrontModel = copyFunction(uiState.pageOnFrontModel))
+        }
     }
 
-    data class UiState(
-        val isClassicBlogState: Boolean,
-        val siteModel: SiteModel,
-        val isDisabled: Boolean = false,
-        val isLoading: Boolean = false,
-        val error: Int? = null,
-        val pageOnFrontModel: PageSelectorUiModel? = null,
-        val pageForPostsModel: PageSelectorUiModel? = null,
-        val retryAction: (() -> Unit)? = null
-    )
+    private fun updateUiState(copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState): Boolean {
+        val currentState = _uiState.value
+        return if (currentState != null) {
+            _uiState.value = copyFunction(currentState)
+            true
+        } else {
+            false
+        }
+    }
 }

@@ -627,7 +627,7 @@
     <string name="site_settings_failed_to_load_pages">Loading of pages failed</string>
     <string name="site_settings_accept_homepage">Accept</string>
     <string name="site_settings_failed_to_save_homepage_settings">Cannot save homepage settings</string>
-    <string name="site_settings_cannot_save_homepage_settings_before_pages_are_loaded">Cannot save homepage settings before pages are loaded</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Cannot save homepage settings before pages are loaded</string>
     <string name="site_settings_failed_update_homepage_settings">Homepage settings update failed, check your internet connection</string>
 
     <!-- Media -->
