@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs
+package org.wordpress.android.ui.prefs.homepage
 
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -6,21 +6,21 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
-data class PageSelectorUiModel(
+data class HomepageSettingsSelectorUiState(
     val data: List<PageUiModel>,
     val selectedItem: UiString,
     val selectedItemId: Int,
     val isHighlighted: Boolean = true,
-    val isClicked: Boolean = false
+    val isExpanded: Boolean = false
 ) {
-    fun selectItem(updatedItemId: Int): PageSelectorUiModel {
+    fun selectItem(updatedItemId: Int): HomepageSettingsSelectorUiState {
         val selectedItem = data.find { it.id == updatedItemId }
         val (title, id, isHighlighted) = selectedItem.buildUiProperties()
         return this.copy(
                 selectedItem = title,
                 selectedItemId = id,
                 isHighlighted = isHighlighted,
-                isClicked = false
+                isExpanded = false
         )
     }
 
@@ -34,17 +34,23 @@ data class PageSelectorUiModel(
         fun build(
             pages: List<PageModel>,
             remoteId: Long?
-        ): PageSelectorUiModel {
-            val data = pages.map { PageUiModel(it.pageId, it.remoteId, it.title) }
+        ): HomepageSettingsSelectorUiState {
+            val data = pages.map {
+                PageUiModel(
+                        it.pageId,
+                        it.remoteId,
+                        it.title
+                )
+            }
             val selectedItem = data
                     .find { it.remoteId == remoteId }
             val (title, id, isHighlighted) = selectedItem.buildUiProperties()
-            return PageSelectorUiModel(
+            return HomepageSettingsSelectorUiState(
                     data,
                     title,
                     id,
                     isHighlighted,
-                    isClicked = false
+                    isExpanded = false
             )
         }
 

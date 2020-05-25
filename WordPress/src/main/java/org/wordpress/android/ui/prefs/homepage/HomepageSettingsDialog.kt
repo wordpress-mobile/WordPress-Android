@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs
+package org.wordpress.android.ui.prefs.homepage
 
 import android.app.Dialog
 import android.content.Context
@@ -91,17 +91,17 @@ class HomepageSettingsDialog : DialogFragment() {
                         }
                         false -> {
                             homepage_settings_radio_group.checkIfNotChecked(R.id.static_homepage)
-                            if (uiState.pageForPostsModel != null && uiState.pageOnFrontModel != null) {
+                            if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
                                 enablePositiveButton(true)
                                 dropdown_container.visibility = View.VISIBLE
                                 setupDropdownItem(
-                                        uiState.pageOnFrontModel,
+                                        uiState.pageOnFrontState,
                                         selected_homepage,
                                         viewModel::onPageOnFrontDialogOpened,
                                         viewModel::onPageOnFrontSelected
                                 )
                                 setupDropdownItem(
-                                        uiState.pageForPostsModel,
+                                        uiState.pageForPostsState,
                                         selected_posts_page,
                                         viewModel::onPageForPostsDialogOpened,
                                         viewModel::onPageForPostsSelected
@@ -151,14 +151,14 @@ class HomepageSettingsDialog : DialogFragment() {
     }
 
     private fun setupDropdownItem(
-        selectorUiModel: PageSelectorUiModel,
+        selectorUiModel: HomepageSettingsSelectorUiState,
         textView: TextView,
         onClickAction: () -> Unit,
         onPageSelectedAction: (id: Int) -> Boolean
     ) {
         uiHelpers.setTextOrHide(textView, selectorUiModel.selectedItem)
         textView.isSelected = selectorUiModel.isHighlighted
-        if (selectorUiModel.isClicked) {
+        if (selectorUiModel.isExpanded) {
             val popupMenu = PopupMenu(requireContext(), textView, Gravity.END)
             for (page in selectorUiModel.data) {
                 popupMenu.menu.add(Menu.NONE, page.id, Menu.NONE, page.title)

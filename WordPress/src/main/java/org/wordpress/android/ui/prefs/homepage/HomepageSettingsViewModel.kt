@@ -1,9 +1,10 @@
-package org.wordpress.android.ui.prefs
+package org.wordpress.android.ui.prefs.homepage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
@@ -11,11 +12,13 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
+import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.LoadingResult.Data
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -43,11 +46,11 @@ class HomepageSettingsViewModel
     }
 
     fun onPageOnFrontSelected(id: Int): Boolean {
-        return updatePageOnFrontState { requireNotNull(it).selectItem(id) }
+        return updateUiState { it.updateWithPageOnFront(id) }
     }
 
     fun onPageForPostsSelected(id: Int): Boolean {
-        return updatePageForPostsState { requireNotNull(it).selectItem(id) }
+        return updateUiState { it.updateWithPageForPosts(id) }
     }
 
     fun onPageOnFrontDialogOpened() {
@@ -68,11 +71,11 @@ class HomepageSettingsViewModel
     ) {
         updateUiState { pagesUiState ->
             pagesUiState.copy(
-                    pageOnFrontModel = pagesUiState.pageOnFrontModel?.copy(
-                            isClicked = pageOnFrontDialogOpened
+                    pageOnFrontState = pagesUiState.pageOnFrontState?.copy(
+                            isExpanded = pageOnFrontDialogOpened
                     ),
-                    pageForPostsModel = pagesUiState.pageForPostsModel?.copy(
-                            isClicked = pageForPostsDialogOpened
+                    pageForPostsState = pagesUiState.pageForPostsState?.copy(
+                            isExpanded = pageForPostsDialogOpened
                     )
             )
         }
@@ -84,13 +87,13 @@ class HomepageSettingsViewModel
             updateUiState { it.updateWithError(R.string.site_settings_failed_to_save_homepage_settings) }
             return
         }
-        _uiState.value = currentUiState.copy(isDisabled = true, isLoading = true)
+        updateUiState { it.copy(isDisabled = true, isLoading = true) }
         launch {
             val siteHomepageSettings = if (currentUiState.isClassicBlogState) {
                 SiteHomepageSettings.Posts
             } else {
-                val pageForPostsModel = currentUiState.pageForPostsModel
-                val pageOnFrontModel = currentUiState.pageOnFrontModel
+                val pageForPostsModel = currentUiState.pageForPostsState
+                val pageOnFrontModel = currentUiState.pageOnFrontState
                 if (pageForPostsModel == null || pageOnFrontModel == null) {
                     updateUiState {
                         it.updateWithError(R.string.site_settings_cannot_save_homepage_settings_before_pages_loaded)
@@ -104,7 +107,7 @@ class HomepageSettingsViewModel
                 )
             }
             val updateResult = siteOptionsStore.updateHomepage(currentUiState.siteModel, siteHomepageSettings)
-            _uiState.value = currentUiState.copy(isDisabled = false, isLoading = false)
+            updateUiState { it.copy(isDisabled = false, isLoading = false) }
             when (updateResult.isError) {
                 true -> {
                     updateUiState { it.updateWithError(R.string.site_settings_failed_update_homepage_settings) }
@@ -119,11 +122,11 @@ class HomepageSettingsViewModel
     }
 
     fun getSelectedPageOnFrontId(): Long? {
-        return (_uiState.value?.pageOnFrontModel)?.getSelectedItemRemoteId()
+        return _uiState.value?.pageOnFrontState?.getSelectedItemRemoteId()
     }
 
     fun getSelectedPageForPostsId(): Long? {
-        return (_uiState.value?.pageForPostsModel)?.getSelectedItemRemoteId()
+        return _uiState.value?.pageForPostsState?.getSelectedItemRemoteId()
     }
 
     fun isClassicBlog(): Boolean? {
@@ -142,19 +145,31 @@ class HomepageSettingsViewModel
             val pageOnFrontId = savedPageOnFrontId ?: siteModel.pageOnFront
             val pageForPostsId = savedPageForPostsId ?: siteModel.pageForPosts
             val loadPagesFlow = homepageSettingsDataLoader.loadPages(
-                    siteModel,
-                    pageOnFrontId,
-                    pageForPostsId
+                    siteModel
             )
 
             withContext(bgDispatcher) {
-                loadPagesFlow.collect { loadingResult ->
-                    updateUiState { currentValue ->
-                        currentValue.updateWithLoadingResult(loadingResult, pageForPostsId, pageOnFrontId)
-                    }
+                loadPagesFlow.filter { loadingResult ->
+                    loadingResult !is Data || loadingResult.pages.isValid(pageOnFrontId, pageForPostsId)
                 }
+                        .collect { loadingResult ->
+                            updateUiState { currentValue ->
+                                currentValue.updateWithLoadingResult(loadingResult, pageForPostsId, pageOnFrontId)
+                            }
+                        }
             }
         }
+    }
+
+    private fun List<PageModel>.isValid(
+        pageOnFrontRemoteId: Long?,
+        pageForPostsRemoteId: Long?
+    ): Boolean {
+        return this.isNotEmpty() && this.hasPage(pageOnFrontRemoteId) && this.hasPage(pageForPostsRemoteId)
+    }
+
+    private fun List<PageModel>.hasPage(remoteId: Long?): Boolean {
+        return remoteId == null || this.any { it.remoteId == remoteId }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -169,18 +184,6 @@ class HomepageSettingsViewModel
                     updatedSite.pageForPosts != siteModel.pageForPosts) {
                 updateUiState { it.copy(siteModel = updatedSite) }
             }
-        }
-    }
-
-    private fun updatePageForPostsState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
-        return updateUiState { uiState ->
-            uiState.copy(pageForPostsModel = copyFunction(uiState.pageForPostsModel))
-        }
-    }
-
-    private fun updatePageOnFrontState(copyFunction: (PageSelectorUiModel?) -> PageSelectorUiModel): Boolean {
-        return updateUiState { uiState ->
-            uiState.copy(pageOnFrontModel = copyFunction(uiState.pageOnFrontModel))
         }
     }
 
