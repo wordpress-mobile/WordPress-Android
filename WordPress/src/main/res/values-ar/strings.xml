@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-29 15:54:11+0000
-Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-14 08:54:08+0000
+Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
+Generator: GlotPress/3.0.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
+    <string name="feature_announcement_dialog_label">ما الجديد في ووردبريس</string>
+    <string name="insert_label_with_count">إدراج%d</string>
+    <string name="crop">قص</string>
+    <string name="error_failed_to_load_into_file">فشل التحميل إلى الملف، يرجى المحاولة مرة أخرى.</string>
+    <string name="preview_image_thumbnail_description">معاينة الصورة المصغَّرة</string>
+    <string name="photo_picker_use_media">استخدام هذه الوسائط</string>
+    <string name="photo_picker_use_video">استخدام هذا الفيديو</string>
+    <string name="photo_picker_photo_or_video_title">اختيار الوسائط</string>
+    <string name="photo_picker_video_title">اختيار مقطع فيديو</string>
+    <string name="site_picker_ask_site_select">تعذر تحديد الموقع. يُرجى المحاولة مرة أخرى.</string>
+    <string name="sitepicker_continue_flow">المتابعة</string>
+    <string name="reader_reblog_error">فشلت إعادة التدوين</string>
+    <string name="reader_no_site_to_reblog_action">إدارة المواقع</string>
+    <string name="reader_no_site_to_reblog_detail">بمجرد إنشاء موقع ووردبريس.كوم، يمكنك إعادة تدوين المحتوى الذي أعجبك على موقعك الخاص.</string>
+    <string name="reader_no_site_to_reblog_title">لا تتوافر مواقع ووردبريس.كوم</string>
+    <string name="whats_new_in_version_title">الجديد</string>
+    <string name="comment_q_action_copied_url">تم نسخ عنوان الرابط</string>
+    <string name="copy_link_address">نسخ عنوان الرابط</string>
+    <string name="comment_share_link_via">مشاركة عبر</string>
+    <string name="comment_toast_err_share_intent">تعذرت المشاركة</string>
+    <string name="button_insert">إدراج</string>
+    <string name="continue_label">المتابعة</string>
+    <string name="copy_text">نسخ</string>
     <string name="gutenberg_native_subscribe">اشترك</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع%2$s</string>
@@ -40,7 +64,7 @@ Language: ar
     <string name="media_accessing_failed">فشل الوصول إلى محتوى الموقع الخاص. قد تصبح بعض الوسائط غير متاحة</string>
     <string name="media_accessing_progress">الوصول إلى محتوى الموقع الخاص</string>
     <string name="error_failed_to_crop_and_save_image">فشل اقتصاص الصورة وحفظها، يرجى المحاولة مرة أخرى.</string>
-    <string name="failed_to_insert_image_tap_to_retry">فشلت عملية إدراج وسائط.\nيرجى النقر لإعادة المحاولة.</string>
+    <string name="failed_to_load_image_tap_to_retry">فشل تحميل الصورة.\nيرجى النقر لإعادة المحاولة.</string>
     <string name="preview_image_description">صورة المعاينة</string>
     <string name="error_unknown_page_type">تنسيق الصفحة غير معروف</string>
     <string name="error_page_not_submitted">لم نتمكن من إكمال هذا الإجراء، ولم نرسل هذه الصفحة للمراجعة.</string>
@@ -1322,7 +1346,6 @@ Language: ar
     <string name="media_edit_filename_caption">اسم الملف</string>
     <string name="media_edit_url_caption">عنوان URL</string>
     <string name="media_edit_alttext_text">النص البديل</string>
-    <string name="copy_text">نسخ</string>
     <string name="connect_site">الاتصال بالموقع</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">ضوء وميض</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">جهاز الاهتزاز</string>
@@ -2187,6 +2210,7 @@ Language: ar
     <string name="reader_btn_unfollow">متابع</string>
     <string name="reader_btn_follow">تابع</string>
     <string name="reader_btn_share">مشاركة</string>
+    <string name="reader_view_reblog">إعادة التدوين</string>
     <string name="reader_untitled_post">( بدون اسم )</string>
     <string name="comments_empty_list">لا توجد تعليقات حتى الآن</string>
     <string name="empty_list_default">هذه القائمة فارغة.</string>

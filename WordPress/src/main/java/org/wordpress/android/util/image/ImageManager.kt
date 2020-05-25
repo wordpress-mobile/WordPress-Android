@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Base64
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
@@ -151,6 +152,31 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
+     * Loads a base64 string without prefix (data:image/png;base64,) into the ImageView and applies circle
+     * transformation. Adds placeholder and error placeholder depending on the ImageType.
+     */
+    @JvmOverloads
+    fun loadBase64IntoCircle(
+        imageView: ImageView,
+        imageType: ImageType,
+        base64ImageData: String,
+        requestListener: RequestListener<Drawable>? = null,
+        version: Int? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(Base64.decode(base64ImageData, Base64.DEFAULT))
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .circleCrop()
+                .attachRequestListener(requestListener)
+                .addSignature(version)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
      * Loads an image from the "imgUrl" into the ImageView with a corner radius. Adds placeholder and
      * error placeholder depending on the ImageType.
      */
@@ -248,16 +274,16 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
         GlideApp.with(context)
-            .asFile()
-            .load(imgUri)
-            .attachRequestListener(requestListener)
-            .into(
-                // Used just to invoke asFile() and ignored thereafter.
-                object : CustomTarget<File>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                    override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
-                }
-            )
+                .asFile()
+                .load(imgUri)
+                .attachRequestListener(requestListener)
+                .into(
+                        // Used just to invoke asFile() and ignored thereafter.
+                        object : CustomTarget<File>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {}
+                            override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
+                        }
+                )
     }
 
     /**
