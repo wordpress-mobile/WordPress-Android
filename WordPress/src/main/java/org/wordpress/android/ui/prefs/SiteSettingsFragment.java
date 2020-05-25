@@ -153,7 +153,6 @@ public class SiteSettingsFragment extends PreferenceFragment
     private static final int TIME_FORMAT_REQUEST_CODE = 8;
     private static final int POSTS_PER_PAGE_REQUEST_CODE = 9;
     private static final int TIMEZONE_REQUEST_CODE = 10;
-    private static final int HOMEPAGE_SETTINGS_REQUEST_CODE = 11;
 
     private static final String DELETE_SITE_TAG = "delete-site";
     private static final String PURCHASE_ORIGINAL_RESPONSE_KEY = "originalResponse";
