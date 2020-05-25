@@ -27,6 +27,15 @@ msgid ""
 "<b>General updates:</b> Added reblog functionality.\n"
 msgstr ""
 
+#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_148"
+msgid ""
+"14.8:\n"
+"<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.\n"
+"<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.\n"
+"<b>General updates:</b> Added reblog functionality.\n"
+msgstr ""
+
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
