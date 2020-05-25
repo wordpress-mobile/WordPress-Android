@@ -22,6 +22,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishDateLabelUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -30,7 +31,7 @@ import org.wordpress.android.viewmodel.Event
 
 class PrepublishingHomeViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PrepublishingHomeViewModel
-    @Mock lateinit var postSettingsUtils: PostSettingsUtils
+    @Mock lateinit var getPublishDateLabelUseCase: GetPublishDateLabelUseCase
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
@@ -42,7 +43,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel = PrepublishingHomeViewModel(
                 getPostTagsUseCase,
                 getPostVisibilityUseCase,
-                postSettingsUtils,
+                getPublishDateLabelUseCase,
                 getButtonUiStateUseCase,
                 mock()
         )
@@ -55,8 +56,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         ).doAnswer {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
-        whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
-        whenever(editPostRepository.getPost()).thenReturn(PostModel())
+        whenever(getPublishDateLabelUseCase.getLabel(any())).thenReturn(UiStringText(""))
+//        whenever(editPostRepository.getPost()).thenReturn(PostModel())
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
     }
@@ -188,7 +189,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     fun `verify that publish action result is propagated from postSettingsUtils`() {
         // arrange
         val expectedLabel = "test data"
-        whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(expectedLabel)
+        whenever(getPublishDateLabelUseCase.getLabel(any())).thenReturn(UiStringText(expectedLabel))
 
         // act
         viewModel.start(editPostRepository, site)
