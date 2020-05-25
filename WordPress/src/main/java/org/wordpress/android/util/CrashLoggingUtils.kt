@@ -1,5 +1,6 @@
 package org.wordpress.android.util
 
+import android.content.Context
 import android.preference.PreferenceManager
 import io.sentry.core.Sentry
 import org.wordpress.android.BuildConfig
@@ -18,9 +19,10 @@ class CrashLoggingUtils {
         }
 
         // TODO: Update Sentry DSN in mobile-secrets
-        @JvmStatic fun startCrashLogging() {
+        @JvmStatic fun startCrashLogging(context: Context) {
             Sentry.init { options ->
                 options.dsn = BuildConfig.SENTRY_DSN
+                options.cacheDirPath = context.cacheDir.absolutePath
             }
             Sentry.setTag("version", BuildConfig.VERSION_NAME)
         }

@@ -231,7 +231,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         setWebViewDataDirectorySuffixOnAndroidP();
 
         if (CrashLoggingUtils.shouldEnableCrashLogging(getContext())) {
-            CrashLoggingUtils.startCrashLogging();
+            CrashLoggingUtils.startCrashLogging(getContext());
         }
 
         initWellSql();
