@@ -8,6 +8,7 @@ import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
+import org.wordpress.android.fluxc.BuildConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -1115,6 +1116,14 @@ open class WellSqlConfig : DefaultWellConfig {
             db.execSQL("PRAGMA foreign_keys=ON")
         }
     }
+
+    /**
+     * For debug builds we want a cursor window size of 5MB so we can test for any problems caused by
+     * a larger size. Once we're confident this works we'll return 5MB in release builds to hopefully
+     * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
+     * above since earlier versions don't allow adjusting the cursor window size.
+     */
+    override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
 
     /**
      * Drop and create all tables
