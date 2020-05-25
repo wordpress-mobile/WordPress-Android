@@ -77,7 +77,10 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.reader_home, menu)
-        searchMenuItem = menu.findItem(R.id.menu_search)
+        menu.findItem(R.id.menu_search).apply {
+            searchMenuItem = this
+            this.isVisible = viewModel.uiState.value?.searchIconVisible ?: false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
