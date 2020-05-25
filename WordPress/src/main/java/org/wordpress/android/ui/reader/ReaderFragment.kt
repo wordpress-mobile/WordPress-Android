@@ -35,6 +35,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private lateinit var viewModel: ReaderViewModel
     private lateinit var newsCardViewModel: NewsCardViewModel
 
+    private var searchMenuItem: MenuItem? = null
+
     private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
@@ -58,6 +60,11 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         initViewModel()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchMenuItem = null
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.onScreenInForeground()
@@ -70,6 +77,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.reader_home, menu)
+        searchMenuItem = menu.findItem(R.id.menu_search)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -101,6 +109,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
                 updateTabs(uiState)
+                searchMenuItem?.isVisible = uiState.searchIconVisible
             }
         })
 

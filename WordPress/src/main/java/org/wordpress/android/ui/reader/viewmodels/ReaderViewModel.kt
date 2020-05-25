@@ -8,6 +8,8 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.wordpress.android.BuildConfig
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
@@ -34,7 +36,8 @@ class ReaderViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dateProvider: DateProvider,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
 
@@ -66,7 +69,8 @@ class ReaderViewModel @Inject constructor(
             if (tagList.isNotEmpty()) {
                 _uiState.value = ReaderUiState(
                         tagList.map { it.label },
-                        tagList
+                        tagList,
+                        searchIconVisible = isSearchSupported()
                 )
                 if (!initialized) {
                     initialized = true
@@ -97,7 +101,11 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.setReaderTag(selectedTag)
     }
 
-    data class ReaderUiState(val tabTitles: List<String>, val readerTagList: ReaderTagList)
+    data class ReaderUiState(
+        val tabTitles: List<String>,
+        val readerTagList: ReaderTagList,
+        val searchIconVisible: Boolean
+    )
 
     override fun onCleared() {
         super.onCleared()
@@ -118,7 +126,11 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onSearchActionClicked() {
-        _showSearch.value = Event(Unit)
+        if (isSearchSupported()) {
+            _showSearch.value = Event(Unit)
+        } else if (BuildConfig.DEBUG) {
+            throw IllegalStateException("Search should be hidden when isSearchSupported returns false.")
+        }
     }
 
     private fun ReaderTag.isDefaultSelectedTab(): Boolean = this.isDiscover
@@ -135,4 +147,6 @@ class ReaderViewModel @Inject constructor(
     fun onScreenInBackground() {
         readerTracker.stop(MAIN_READER)
     }
+
+    private fun isSearchSupported() = accountStore.hasAccessToken()
 }
