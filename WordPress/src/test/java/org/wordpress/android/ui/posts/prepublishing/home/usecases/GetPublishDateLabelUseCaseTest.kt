@@ -17,8 +17,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 class GetPublishDateLabelUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetPublishDateLabelUseCase
-    @Mock lateinit var editPostRepository: EditPostRepository
 
+    @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
 
     @Before
