@@ -1,7 +1,8 @@
 15.0
 -----
 * [*] Fix wrong icon is used when a Password is visible
- 
+* [*] Reader: Improved UI of the post card in the post feeds.
+
 14.9
 -----
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post
