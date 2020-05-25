@@ -28,14 +28,17 @@ data class HomepageSettingsUiState(
             is Data -> this.copy(
                     isLoading = false,
                     error = null,
-                    pageForPostsState = HomepageSettingsSelectorUiState.build(loadingResult.pages, pageForPostsId),
-                    pageOnFrontState = HomepageSettingsSelectorUiState.build(loadingResult.pages, pageOnFrontId)
+                    pageForPostsState = HomepageSettingsSelectorUiState.Builder.build(
+                            loadingResult.pages,
+                            pageForPostsId
+                    ),
+                    pageOnFrontState = HomepageSettingsSelectorUiState.Builder.build(loadingResult.pages, pageOnFrontId)
             )
         }
     }
 
     fun updateWithError(message: Int): HomepageSettingsUiState {
-        return this.copy(error = message, isLoading = false)
+        return this.copy(error = message, isLoading = false, isDisabled = false)
     }
 
     fun updateWithPageForPosts(pageForPostsId: Int): HomepageSettingsUiState {

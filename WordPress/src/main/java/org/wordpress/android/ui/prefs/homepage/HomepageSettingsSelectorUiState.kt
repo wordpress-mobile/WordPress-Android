@@ -1,6 +1,6 @@
 package org.wordpress.android.ui.prefs.homepage
 
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -15,7 +15,7 @@ data class HomepageSettingsSelectorUiState(
 ) {
     fun selectItem(updatedItemId: Int): HomepageSettingsSelectorUiState {
         val selectedItem = data.find { it.id == updatedItemId }
-        val (title, id, isHighlighted) = selectedItem.buildUiProperties()
+        val (title, id, isHighlighted) = Builder.buildUiProperties(selectedItem)
         return this.copy(
                 selectedItem = title,
                 selectedItemId = id,
@@ -30,7 +30,7 @@ data class HomepageSettingsSelectorUiState(
 
     data class PageUiModel(val id: Int, val remoteId: Long, val title: String)
 
-    companion object {
+    object Builder {
         fun build(
             pages: List<PageModel>,
             remoteId: Long?
@@ -44,7 +44,7 @@ data class HomepageSettingsSelectorUiState(
             }
             val selectedItem = data
                     .find { it.remoteId == remoteId }
-            val (title, id, isHighlighted) = selectedItem.buildUiProperties()
+            val (title, id, isHighlighted) = buildUiProperties(selectedItem)
             return HomepageSettingsSelectorUiState(
                     data,
                     title,
@@ -54,11 +54,11 @@ data class HomepageSettingsSelectorUiState(
             )
         }
 
-        fun PageUiModel?.buildUiProperties(): Triple<UiString, Int, Boolean> {
-            return if (this != null) {
-                Triple(UiStringText(this.title), this.id, true)
+        fun buildUiProperties(pageUiModel: PageUiModel?): Triple<UiString, Int, Boolean> {
+            return if (pageUiModel != null) {
+                Triple(UiStringText(pageUiModel.title), pageUiModel.id, true)
             } else {
-                Triple(UiStringRes(string.site_settings_select_page), 0, false)
+                Triple(UiStringRes(R.string.site_settings_select_page), 0, false)
             }
         }
     }

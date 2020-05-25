@@ -58,13 +58,14 @@
         </RadioGroup>
 
         <LinearLayout
+            android:id="@+id/dropdown_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dropdown_container"
             android:layout_margin="@dimen/margin_medium"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/homepage_spinner_label"
                 android:layout_width="match_parent"
                 style="@style/SettingsDialogHeader"
@@ -120,7 +121,8 @@
             android:layout_marginStart="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium"
             style="@style/SettingsDialogError"
-            android:id="@+id/loading_error"/>
+            android:id="@+id/loading_error"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </ScrollView>

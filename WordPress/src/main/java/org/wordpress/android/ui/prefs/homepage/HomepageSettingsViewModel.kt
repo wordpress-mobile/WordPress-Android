@@ -38,19 +38,19 @@ class HomepageSettingsViewModel
     val dismissDialogEvent: LiveData<Event<Unit>> = _dismissDialogEvent
 
     fun classicBlogSelected() {
-        updateUiState { it.copy(isClassicBlogState = true) }
+        updateUiStateFromMainThread { it.copy(isClassicBlogState = true) }
     }
 
     fun staticHomepageSelected() {
-        updateUiState { it.copy(isClassicBlogState = false) }
+        updateUiStateFromMainThread { it.copy(isClassicBlogState = false) }
     }
 
     fun onPageOnFrontSelected(id: Int): Boolean {
-        return updateUiState { it.updateWithPageOnFront(id) }
+        return updateUiStateFromMainThread { it.updateWithPageOnFront(id) }
     }
 
     fun onPageForPostsSelected(id: Int): Boolean {
-        return updateUiState { it.updateWithPageForPosts(id) }
+        return updateUiStateFromMainThread { it.updateWithPageForPosts(id) }
     }
 
     fun onPageOnFrontDialogOpened() {
@@ -69,7 +69,7 @@ class HomepageSettingsViewModel
         pageOnFrontDialogOpened: Boolean = false,
         pageForPostsDialogOpened: Boolean = false
     ) {
-        updateUiState { pagesUiState ->
+        updateUiStateFromMainThread { pagesUiState ->
             pagesUiState.copy(
                     pageOnFrontState = pagesUiState.pageOnFrontState?.copy(
                             isExpanded = pageOnFrontDialogOpened
@@ -84,10 +84,10 @@ class HomepageSettingsViewModel
     fun onAcceptClicked() {
         val currentUiState = _uiState.value
         if (currentUiState == null) {
-            updateUiState { it.updateWithError(R.string.site_settings_failed_to_save_homepage_settings) }
+            updateUiStateFromMainThread { it.updateWithError(R.string.site_settings_failed_to_save_homepage_settings) }
             return
         }
-        updateUiState { it.copy(isDisabled = true, isLoading = true) }
+        updateUiStateFromMainThread { it.copy(isDisabled = true, isLoading = true) }
         launch {
             val siteHomepageSettings = if (currentUiState.isClassicBlogState) {
                 SiteHomepageSettings.Posts
@@ -97,6 +97,12 @@ class HomepageSettingsViewModel
                 if (pageForPostsModel == null || pageOnFrontModel == null) {
                     updateUiState {
                         it.updateWithError(R.string.site_settings_cannot_save_homepage_settings_before_pages_loaded)
+                    }
+                    return@launch
+                }
+                if (pageForPostsModel == pageOnFrontModel) {
+                    updateUiState {
+                        it.updateWithError(R.string.site_settings_page_for_posts_and_homepage_cannot_be_equal)
                     }
                     return@launch
                 }
@@ -162,14 +168,14 @@ class HomepageSettingsViewModel
     }
 
     private fun List<PageModel>.isValid(
-        pageOnFrontRemoteId: Long?,
-        pageForPostsRemoteId: Long?
+        pageOnFrontRemoteId: Long,
+        pageForPostsRemoteId: Long
     ): Boolean {
         return this.isNotEmpty() && this.hasPage(pageOnFrontRemoteId) && this.hasPage(pageForPostsRemoteId)
     }
 
-    private fun List<PageModel>.hasPage(remoteId: Long?): Boolean {
-        return remoteId == null || this.any { it.remoteId == remoteId }
+    private fun List<PageModel>.hasPage(remoteId: Long): Boolean {
+        return remoteId <= 0 || this.any { it.remoteId == remoteId }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -182,12 +188,18 @@ class HomepageSettingsViewModel
             if (updatedSite.showOnFront != siteModel.showOnFront ||
                     updatedSite.pageOnFront != siteModel.pageOnFront ||
                     updatedSite.pageForPosts != siteModel.pageForPosts) {
-                updateUiState { it.copy(siteModel = updatedSite) }
+                updateUiStateFromMainThread { it.copy(siteModel = updatedSite) }
             }
         }
     }
 
-    private fun updateUiState(copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState): Boolean {
+    private suspend fun updateUiState(copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState): Boolean {
+        return withContext(mainDispatcher) {
+            updateUiStateFromMainThread { copyFunction(it) }
+        }
+    }
+
+    private fun updateUiStateFromMainThread(copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState): Boolean {
         val currentState = _uiState.value
         return if (currentState != null) {
             _uiState.value = copyFunction(currentState)
