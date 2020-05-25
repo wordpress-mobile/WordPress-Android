@@ -14,6 +14,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VI
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishDateLabelUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
-    private val postSettingsUtils: PostSettingsUtils,
+    private val publishDateLabelUseCase: GetPublishDateLabelUseCase,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
@@ -60,14 +61,7 @@ class PrepublishingHomeViewModel @Inject constructor(
 
             add(HomeUiState(
                     actionType = PUBLISH,
-                    actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                        val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                        if (label.isNotEmpty()) {
-                            UiStringText(label)
-                        } else {
-                            UiStringRes(R.string.immediately)
-                        }
-                    },
+                    actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
                     actionEnabled = editPostRepository.status != PostStatus.PRIVATE,
                     onActionClicked = ::onActionClicked
             ))
