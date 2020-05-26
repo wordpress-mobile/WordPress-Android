@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/avatar_container"
+        android:layout_width="@dimen/blavatar_sz"
+        android:layout_height="@dimen/blavatar_sz">
+
+        <ImageView
+            android:id="@+id/gravatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no" />
+
+        <ProgressBar
+            android:id="@+id/avatar_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/shape_oval_translucent"
+            android:indeterminate="true"
+            android:padding="@dimen/margin_large" />
+    </FrameLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/email"
+        style="@style/Widget.LoginFlow.TextView.Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        tools:text="pamelanguyen@gmail.com" />
+</LinearLayout>
