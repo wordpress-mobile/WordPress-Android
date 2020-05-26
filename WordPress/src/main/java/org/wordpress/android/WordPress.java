@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,6 +39,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.wordpress.stories.compose.frame.StorySaveEvents;
+import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveResult;
+import com.wordpress.stories.compose.story.StoryFrameItem;
+import com.wordpress.stories.compose.story.StoryRepository;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,6 +49,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
 import org.wordpress.android.analytics.Tracker;
 import org.wordpress.android.datasets.NotificationsTable;
 import org.wordpress.android.datasets.ReaderDatabase;
@@ -52,9 +57,11 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
+import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
+import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -111,6 +118,7 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -599,14 +607,31 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (event.getMetadata() != null) {
                 Bundle metadata = event.getMetadata();
                 SiteModel site = (SiteModel) metadata.getSerializable(WordPress.SITE);
-                // val storyIndex = it.getInt(KEY_STORY_INDEX)
-            }
-            // TODO WPSTORIES add TRACKS
-            // lets add an EVENT for START UPLOADING MEDIA
-            // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
 
+                ArrayList<MediaModel> mediaModels = new ArrayList<>();
+                // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
+                for (StoryFrameItem item : StoryRepository.getStoryAtIndex(event.getStoryIndex()).getFrames()) {
+                    // Uri fileUri = Uri.fromFile(item.getComposedFrameFile());
+                    Uri fileUri = new Uri.Builder().path(item.getComposedFrameFile().getPath()).build();
+                    String mimeType = getContentResolver().getType(fileUri);
+                    MediaModel media =
+                            FluxCUtils.mediaModelFromLocalUri(this, fileUri, mimeType, mMediaStore, site.getId());
+                    if (media != null) {
+                        mediaModels.add(media);
+                        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
+                    }
+                }
+
+                if (!mediaModels.isEmpty()) {
+                    UploadService.uploadMedia(this, mediaModels);
+                    AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
+                }
+                // TODO WPSTORIES add TRACKS
+                // lets add an EVENT for START UPLOADING MEDIA
+                // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
+            }
         } else {
-            // TODO WPSTORIES add TRACKS
+            // TODO WPSTORIES add TRACKS for ERROR
             // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         }
     }
