@@ -28,7 +28,7 @@ class EditorThemeSqlUtils {
                 .asModel
                 .firstOrNull()
 
-        if (editorTheme == null ) return null
+        if (editorTheme == null) return null
 
         val colors = WellSql.select(EditorThemeElementBuilder::class.java)
                 .where()
@@ -85,7 +85,10 @@ class EditorThemeSqlUtils {
 
         override fun getId() = mId
 
-        fun toEditorTheme(storedColors: List<EditorThemeElementBuilder>?, storedGradients: List<EditorThemeElementBuilder>?): EditorTheme {
+        fun toEditorTheme(
+            storedColors: List<EditorThemeElementBuilder>?,
+            storedGradients: List<EditorThemeElementBuilder>?
+        ): EditorTheme {
             val colors = storedColors?.map { it.toEditorThemeElement() }
             val gradients = storedGradients?.map { it.toEditorThemeElement() }
             val editorThemeSupport = EditorThemeSupport(colors, gradients)
