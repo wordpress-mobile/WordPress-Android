@@ -25,11 +25,11 @@ class EditorThemeStore
     private val reactNativeStore: ReactNativeStore,
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
-): Store(dispatcher) {
+) : Store(dispatcher) {
     private val THEME_REQUEST_PATH = "/wp/v2/themes?status=active"
     private val editorThemeSqlUtils = EditorThemeSqlUtils()
 
-    class FetchEditorThemePayload(val site: SiteModel): Payload<BaseNetworkError>() {
+    class FetchEditorThemePayload(val site: SiteModel) : Payload<BaseNetworkError>() {
         constructor(
             error: BaseNetworkError,
             site: SiteModel
@@ -43,7 +43,7 @@ class EditorThemeStore
         val siteId: Int,
         val causeOfChange: EditorThemeAction
     ) : Store.OnChanged<EditorThemeError>() {
-        constructor(error: EditorThemeError, causeOfChange: EditorThemeAction):
+        constructor(error: EditorThemeError, causeOfChange: EditorThemeAction) :
                 this(editorTheme = null, siteId = -1, causeOfChange = causeOfChange) {
             this.error = error
         }
@@ -59,7 +59,11 @@ class EditorThemeStore
         val actionType = action.type as? EditorThemeAction ?: return
         when (actionType) {
             FETCH_EDITOR_THEME -> {
-            coroutineEngine.launch(AppLog.T.API, this, TransactionsStore::class.java.simpleName + ": On FETCH_EDITOR_THEME") {
+            coroutineEngine.launch(
+                    AppLog.T.API,
+                    this,
+                    TransactionsStore::class.java.simpleName + ": On FETCH_EDITOR_THEME"
+            ) {
                 handleFetchEditorTheme((action.payload as FetchEditorThemePayload).site, actionType)
             }
         }
