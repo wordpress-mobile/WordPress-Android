@@ -15,9 +15,8 @@
     </style>
 
     <style name="ReaderCardView" parent="Widget.MaterialComponents.CardView">
-        <item name="cardElevation">0dp</item>
+        <item name="cardElevation">@dimen/reader_card_elevation</item>
         <item name="cardCornerRadius">0dp</item>
-        <item name="cardBackgroundColor">@color/reader_card_background</item>
     </style>
 
     <!-- TextViews -->
