@@ -2319,8 +2319,8 @@
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
-    <string name="login_text_otp">Text me a code instead.</string>
-    <string name="login_text_otp_another">Text me another code instead.</string>
+    <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
