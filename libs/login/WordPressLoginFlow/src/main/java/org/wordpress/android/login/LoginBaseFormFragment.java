@@ -3,8 +3,6 @@ package org.wordpress.android.login;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextWatcher;
@@ -27,7 +25,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -52,7 +49,6 @@ import javax.inject.Inject;
 public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment implements TextWatcher {
     private static final String KEY_IN_PROGRESS = "KEY_IN_PROGRESS";
     private static final String KEY_LOGIN_FINISHED = "KEY_LOGIN_FINISHED";
-    static final String ARG_UNIFIED_LOGIN_ENABLED = "ARG_UNIFIED_LOGIN_ENABLED";
 
     private Button mPrimaryButton;
     private Button mSecondaryButton;
@@ -62,7 +58,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
     private boolean mInProgress;
     private boolean mLoginFinished;
-    boolean mIsUnifiedLoginEnabled;
 
     @Inject protected Dispatcher mDispatcher;
     @Inject protected SiteStore mSiteStore;
@@ -99,12 +94,6 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-        Bundle args = getArguments();
-        if (savedInstanceState != null) {
-            mIsUnifiedLoginEnabled = savedInstanceState.getBoolean(ARG_UNIFIED_LOGIN_ENABLED);
-        } else if (args != null) {
-            mIsUnifiedLoginEnabled = args.getBoolean(ARG_UNIFIED_LOGIN_ENABLED, false);
-        }
     }
 
     protected ViewGroup createMainView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -209,24 +198,11 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         outState.putBoolean(KEY_IN_PROGRESS, mInProgress);
         outState.putBoolean(KEY_LOGIN_FINISHED, mLoginFinished);
-        outState.putBoolean(ARG_UNIFIED_LOGIN_ENABLED, mIsUnifiedLoginEnabled);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_login, menu);
-        Context context = getContext();
-        if (context != null) {
-            for (int i = 0; i < menu.size(); i++) {
-                Drawable drawable = menu.getItem(i).getIcon();
-                if (drawable != null) {
-                    drawable.mutate();
-                    drawable.setColorFilter(
-                            ContextCompat.getColor(context, R.color.material_on_surface_emphasis_high_type),
-                            PorterDuff.Mode.SRC_ATOP);
-                }
-            }
-        }
     }
 
     @Override
