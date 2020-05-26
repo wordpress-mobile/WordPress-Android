@@ -118,9 +118,9 @@ public class GutenbergContainerFragment extends Fragment {
                 translations,
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
-                isSiteUsingWpComRestApi,
                 exceptionLogger,
-                breadcrumbLogger);
+                breadcrumbLogger,
+                isSiteUsingWpComRestApi);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
