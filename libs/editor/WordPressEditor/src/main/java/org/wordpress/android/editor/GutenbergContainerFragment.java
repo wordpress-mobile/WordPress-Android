@@ -107,14 +107,6 @@ public class GutenbergContainerFragment extends Fragment {
             breadcrumbLogger = exceptionLoggingActivity.getBreadcrumbLogger();
         }
 
-        Consumer<Exception> exceptionLogger = null;
-        Consumer<String> breadcrumbLogger = null;
-        if (getActivity() instanceof ExceptionLogger) {
-            ExceptionLogger exceptionLoggingActivity = ((ExceptionLogger) getActivity());
-            exceptionLogger = exceptionLoggingActivity.getExceptionLogger();
-            breadcrumbLogger = exceptionLoggingActivity.getBreadcrumbLogger();
-        }
-
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
