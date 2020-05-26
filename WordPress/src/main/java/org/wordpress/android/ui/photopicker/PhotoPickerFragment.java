@@ -354,7 +354,8 @@ public class PhotoPickerFragment extends Fragment {
                 }
             });
 
-            if (BuildConfig.TENOR_AVAILABLE) {
+            // only show GIF picker from Tenor if this is NOT the WPStories picker
+            if (BuildConfig.TENOR_AVAILABLE && !mBrowserType.isWPStoriesPicker()) {
                 MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
                 itemGif.setOnMenuItemClickListener(item -> {
                     doIconClicked(PhotoPickerIcon.GIF);
