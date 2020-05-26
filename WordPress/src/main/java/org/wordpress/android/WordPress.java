@@ -37,6 +37,7 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
+import com.wordpress.stories.compose.frame.StorySaveEvents;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
@@ -584,6 +585,24 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
     }
+
+    @SuppressWarnings("unused")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(StorySaveEvents.StorySaveResult event) {
+        if (event.isSuccess()) {
+            // only remove it if it was successful - we want to keep it and show a snackbar once when the user
+            // comes back to the app if it wasn't, see MySiteFrament for details.
+            EventBus.getDefault().removeStickyEvent(event);
+            // TODO WPSTORIES add TRACKS
+            // lets add an EVENT for START UPLOADING MEDIA
+            // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
+
+        } else {
+            // TODO WPSTORIES add TRACKS
+            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+        }
+    }
+
 
     public void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses

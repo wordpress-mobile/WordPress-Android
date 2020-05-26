@@ -1083,15 +1083,6 @@ public class MySiteFragment extends Fragment implements
         if (event.isSuccess()) {
             // TODO WPSTORIES add TRACKS
             // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
-            // TODO WPSTORIES probably we want to remove this snackbar given we want to immediately start uploading it
-            String snackbarMessage = String.format(
-                    getString(R.string.story_saving_snackbar_finished_successfully),
-                    StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()
-            );
-            mUploadUtilsWrapper.showSnackbar(
-                    requireActivity().findViewById(R.id.coordinator),
-                    snackbarMessage
-            );
         } else {
             // TODO WPSTORIES add TRACKS
             // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
