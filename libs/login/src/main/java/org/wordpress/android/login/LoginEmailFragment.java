@@ -5,13 +5,12 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -57,9 +56,9 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.app.Activity.RESULT_OK;
+
+import dagger.android.support.AndroidSupportInjection;
 
 public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> implements TextWatcher,
         OnEditorCommitListener, ConnectionCallbacks, OnConnectionFailedListener {
@@ -77,6 +76,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private static final String ARG_LOGIN_SITE_URL = "ARG_LOGIN_SITE_URL";
     private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
     private static final String ARG_SITE_LOGIN_ENABLED = "ARG_SITE_LOGIN_ENABLED";
+    private static final String ARG_SHOULD_USE_NEW_LAYOUT = "ARG_SHOULD_USE_NEW_LAYOUT";
 
     public static final String TAG = "login_email_fragment_tag";
     public static final int MAX_EMAIL_LENGTH = 100;
@@ -89,6 +89,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     private Integer mCurrentEmailErrorRes = null;
     private boolean mIsSignupFromLoginEnabled;
     private boolean mIsSiteLoginEnabled;
+    private boolean mShouldUseNewLayout;
 
     protected WPLoginInputRow mEmailInput;
     protected boolean mHasDismissedEmailHints;
@@ -103,19 +104,20 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         return fragment;
     }
 
-    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled, boolean isUnifiedLoginEnabled) {
+    public static LoginEmailFragment newInstance(boolean isSignupFromLoginEnabled, boolean isSiteLoginEnabled,
+                                                 boolean shouldUseNewLayout) {
         LoginEmailFragment fragment = new LoginEmailFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
         args.putBoolean(ARG_SITE_LOGIN_ENABLED, isSiteLoginEnabled);
-        args.putBoolean(ARG_UNIFIED_LOGIN_ENABLED, isUnifiedLoginEnabled);
+        args.putBoolean(ARG_SHOULD_USE_NEW_LAYOUT, shouldUseNewLayout);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return R.layout.login_email_screen;
+        return mShouldUseNewLayout ? R.layout.login_email_screen : R.layout.login_email_screen_old;
     }
 
     @Override
@@ -134,7 +136,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 break;
             case FULL:
             case WPCOM_LOGIN_ONLY:
-                if (mIsUnifiedLoginEnabled) {
+                if (mShouldUseNewLayout) {
                     label.setText(R.string.enter_email_to_continue_wordpress_com);
                 } else {
                     label.setText(R.string.enter_email_wordpress_com);
@@ -156,7 +158,24 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     protected void setupContent(ViewGroup rootView) {
         // important for accessibility - talkback
         getActivity().setTitle(R.string.email_address_login_title);
-        mEmailInput = rootView.findViewById(R.id.login_email_row);
+
+        setupEmailInput((WPLoginInputRow) rootView.findViewById(R.id.login_email_row));
+
+        if (mShouldUseNewLayout) {
+            setupContinueButton((Button) rootView.findViewById(R.id.login_continue_button));
+            setupTosButtons(
+                    (Button) rootView.findViewById(R.id.continue_tos),
+                    (Button) rootView.findViewById(R.id.continue_with_google_tos));
+            setupSocialButtons((Button) rootView.findViewById(R.id.continue_with_google));
+        } else {
+            setupAlternativeButtons(
+                    (LinearLayout) rootView.findViewById(R.id.login_google_button),
+                    (LinearLayout) rootView.findViewById(R.id.login_site_button));
+        }
+    }
+
+    private void setupEmailInput(WPLoginInputRow emailInput) {
+        mEmailInput = emailInput;
         if (BuildConfig.DEBUG) {
             mEmailInput.getEditText().setText(BuildConfig.DEBUG_WPCOM_LOGIN_EMAIL);
         }
@@ -185,8 +204,43 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 }
             }
         });
+    }
 
-        LinearLayout googleLoginButton = rootView.findViewById(R.id.login_google_button);
+    private void setupContinueButton(Button continueButton) {
+        continueButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View view) {
+                onContinueClicked();
+            }
+        });
+    }
+
+    private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
+        OnClickListener onClickListener = new OnClickListener() {
+            public void onClick(View view) {
+                Context context = getContext();
+                if ((context instanceof SignupSheetListener)) {
+                    ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
+                }
+            }
+        };
+
+        continueTosButton.setOnClickListener(onClickListener);
+        continueTosButton.setText(formatUnderlinedText(R.string.continue_terms_of_service_text));
+
+        continueWithGoogleTosButton.setOnClickListener(onClickListener);
+        continueWithGoogleTosButton.setText(formatUnderlinedText(R.string.continue_with_google_terms_of_service_text));
+    }
+
+    private void setupSocialButtons(Button continueWithGoogleButton) {
+        continueWithGoogleButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onGoogleSigninClicked();
+            }
+        });
+    }
+
+    private void setupAlternativeButtons(LinearLayout googleLoginButton, LinearLayout siteLoginButton) {
         googleLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,7 +248,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             }
         });
 
-        LinearLayout siteLoginButton = rootView.findViewById(R.id.login_site_button);
         siteLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -211,8 +264,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             }
         });
 
-        ImageView siteLoginButtonIcon = rootView.findViewById(R.id.login_site_button_icon);
-        TextView siteLoginButtonText = rootView.findViewById(R.id.login_site_button_text);
+        ImageView siteLoginButtonIcon = siteLoginButton.findViewById(R.id.login_site_button_icon);
+        TextView siteLoginButtonText = siteLoginButton.findViewById(R.id.login_site_button_text);
 
         switch (mLoginListener.getLoginMode()) {
             case WOO_LOGIN_MODE:
@@ -237,28 +290,21 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         }
     }
 
-    private void onGoogleSigninClicked() {
-        mAnalyticsListener.trackSocialButtonClick();
-        ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
-
-        if (NetworkUtils.checkConnection(getActivity())) {
-            if (isAdded()) {
-                mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
-                mIsSocialLogin = true;
-                mLoginListener.addGoogleLoginFragment();
-            } else {
-                AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
-                showErrorDialog(getString(R.string.login_error_generic_start));
-            }
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        if (mShouldUseNewLayout) {
+            secondaryButton.setVisibility(View.GONE);
+            primaryButton.setVisibility(View.GONE);
+        } else {
+            setupSecondaryButton(secondaryButton);
+            setupPrimaryButton(primaryButton);
         }
     }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+    private void setupSecondaryButton(Button secondaryButton) {
         // Show Sign-Up button if login mode is Jetpack and signup from login is not enabled
         if (mLoginListener.getLoginMode() == LoginMode.JETPACK_STATS && !mIsSignupFromLoginEnabled) {
-            secondaryButton.setText(Html.fromHtml(String.format(getResources().getString(
-                    R.string.login_email_button_signup), "<u>", "</u>")));
+            secondaryButton.setText(formatUnderlinedText(R.string.login_email_button_signup));
             secondaryButton.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     mLoginListener.doStartSignup();
@@ -279,12 +325,38 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         } else {
             secondaryButton.setVisibility(View.GONE);
         }
+    }
 
+    private void setupPrimaryButton(Button primaryButton) {
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View view) {
-                next(getCleanedEmail());
+                onContinueClicked();
             }
         });
+    }
+
+    private Spanned formatUnderlinedText(int stringResId) {
+        return Html.fromHtml(String.format(getString(stringResId), "<u>", "</u>"));
+    }
+
+    private void onContinueClicked() {
+        next(getCleanedEmail());
+    }
+
+    private void onGoogleSigninClicked() {
+        mAnalyticsListener.trackSocialButtonClick();
+        ActivityUtils.hideKeyboardForced(mEmailInput.getEditText());
+
+        if (NetworkUtils.checkConnection(getActivity())) {
+            if (isAdded()) {
+                mOldSitesIDs = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+                mIsSocialLogin = true;
+                mLoginListener.addGoogleLoginFragment();
+            } else {
+                AppLog.e(T.NUX, "Google login could not be started.  LoginEmailFragment was not attached.");
+                showErrorDialog(getString(R.string.login_error_generic_start));
+            }
+        }
     }
 
     @Override
@@ -315,6 +387,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             mLoginSiteUrl = args.getString(ARG_LOGIN_SITE_URL, "");
             mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
             mIsSiteLoginEnabled = args.getBoolean(ARG_SITE_LOGIN_ENABLED, true);
+            mShouldUseNewLayout = args.getBoolean(ARG_SHOULD_USE_NEW_LAYOUT, false);
         }
     }
 
@@ -374,58 +447,8 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        if (mIsUnifiedLoginEnabled && rootView != null) {
-            // Hide all unused views
-            rootView.findViewById(R.id.bottom_buttons).setVisibility(View.GONE);
-            rootView.findViewById(R.id.login_alternatively_label).setVisibility(View.GONE);
-            rootView.findViewById(R.id.login_google_button).setVisibility(View.GONE);
-            // Show the new UX
-            rootView.findViewById(R.id.third_party_buttons).setVisibility(View.VISIBLE);
-            Button continueButton = rootView.findViewById(R.id.login_continue_button);
-            continueButton.setVisibility(View.VISIBLE);
-            continueButton.setOnClickListener(new OnClickListener() {
-                public void onClick(View view) {
-                    next(getCleanedEmail());
-                }
-            });
-            Button continueTos = rootView.findViewById(R.id.continue_tos);
-            Button continueWithGoogleTosText = rootView.findViewById(R.id.continue_with_google_tos);
-            continueTos.setVisibility(View.VISIBLE);
-
-            OnClickListener onClickListener = new OnClickListener() {
-                public void onClick(View view) {
-                    Context context = getContext();
-                    if ((context instanceof SignupSheetListener)) {
-                        ((SignupSheetListener) context).onSignupSheetTermsOfServiceClicked();
-                    }
-                }
-            };
-            continueTos.setOnClickListener(onClickListener);
-            continueWithGoogleTosText.setOnClickListener(onClickListener);
-            Resources resources = rootView
-                    .getContext()
-                    .getResources();
-            continueTos.setText(Html.fromHtml(
-                    String.format(resources.getString(R.string.continue_terms_of_service_text), "<u>", "</u>")));
-            continueWithGoogleTosText.setText(Html.fromHtml(
-                    String.format(resources.getString(R.string.continue_with_google_terms_of_service_text), "<u>",
-                            "</u>")));
-            Button continueWithGoogleButton = rootView.findViewById(R.id.continue_with_google);
-            continueWithGoogleButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    onGoogleSigninClicked();
-                }
-            });
-        }
-        return rootView;
-    }
-
-    @Override
     protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
-        if (mIsUnifiedLoginEnabled) {
+        if (mShouldUseNewLayout) {
             actionBar.setTitle(R.string.get_started);
         } else {
             super.buildToolbar(toolbar, actionBar);
