@@ -9,7 +9,7 @@ import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDataLoader.Loadin
 data class HomepageSettingsUiState(
     val isClassicBlogState: Boolean,
     val siteModel: SiteModel,
-    val isDisabled: Boolean = false,
+    val isEditingEnabled: Boolean = true,
     val isLoading: Boolean = false,
     val error: Int? = null,
     val pageOnFrontState: HomepageSettingsSelectorUiState? = null,
@@ -38,7 +38,11 @@ data class HomepageSettingsUiState(
     }
 
     fun updateWithError(message: Int): HomepageSettingsUiState {
-        return this.copy(error = message, isLoading = false, isDisabled = false)
+        return this.copy(error = message, isLoading = false, isEditingEnabled = true)
+    }
+
+    fun updateWithLoading(): HomepageSettingsUiState {
+        return this.copy(error = null, isLoading = true, isEditingEnabled = false)
     }
 
     fun updateWithPageForPosts(pageForPostsId: Int): HomepageSettingsUiState {

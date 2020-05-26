@@ -89,7 +89,7 @@ class HomepageSettingsViewModel
             updateUiStateFromMainThread { it.updateWithError(R.string.site_settings_failed_to_save_homepage_settings) }
             return
         }
-        updateUiStateFromMainThread { it.copy(isDisabled = true, isLoading = true) }
+        updateUiStateFromMainThread { it.updateWithLoading() }
         launch {
             val siteHomepageSettings = if (currentUiState.isClassicBlogState) {
                 SiteHomepageSettings.Posts
@@ -115,7 +115,6 @@ class HomepageSettingsViewModel
                 )
             }
             val updateResult = siteOptionsStore.updateHomepage(currentUiState.siteModel, siteHomepageSettings)
-            updateUiState { it.copy(isDisabled = false, isLoading = false) }
             when (updateResult.isError) {
                 true -> {
                     updateUiState { it.updateWithError(R.string.site_settings_failed_update_homepage_settings) }

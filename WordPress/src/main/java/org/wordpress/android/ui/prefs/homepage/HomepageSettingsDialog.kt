@@ -65,17 +65,10 @@ class HomepageSettingsDialog : DialogFragment() {
             uiState?.let {
                 view.apply {
                     loading_pages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
-                    if (uiState.isDisabled) {
-                        enablePositiveButton(false)
-                        homepage_settings_radio_group.isEnabled = false
-                        selected_homepage.isEnabled = false
-                        selected_posts_page.isEnabled = false
-                    } else {
-                        enablePositiveButton(true)
-                        homepage_settings_radio_group.isEnabled = true
-                        selected_homepage.isEnabled = true
-                        selected_posts_page.isEnabled = true
-                    }
+                    enablePositiveButton(uiState.isEditingEnabled)
+                    homepage_settings_radio_group.isEnabled = uiState.isEditingEnabled
+                    selected_homepage.isEnabled = uiState.isEditingEnabled
+                    selected_posts_page.isEnabled = uiState.isEditingEnabled
                     if (uiState.error != null) {
                         loading_error.visibility = View.VISIBLE
                         loading_error.setText(uiState.error)
@@ -87,12 +80,10 @@ class HomepageSettingsDialog : DialogFragment() {
                         true -> {
                             homepage_settings_radio_group.checkIfNotChecked(R.id.classic_blog)
                             dropdown_container.visibility = View.GONE
-                            enablePositiveButton(true)
                         }
                         false -> {
                             homepage_settings_radio_group.checkIfNotChecked(R.id.static_homepage)
                             if (uiState.pageForPostsState != null && uiState.pageOnFrontState != null) {
-                                enablePositiveButton(true)
                                 dropdown_container.visibility = View.VISIBLE
                                 setupDropdownItem(
                                         uiState.pageOnFrontState,
@@ -107,7 +98,6 @@ class HomepageSettingsDialog : DialogFragment() {
                                         viewModel::onPageForPostsSelected
                                 )
                             } else {
-                                enablePositiveButton(false)
                                 dropdown_container.visibility = View.GONE
                             }
                         }

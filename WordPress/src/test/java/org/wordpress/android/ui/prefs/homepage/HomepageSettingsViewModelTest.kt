@@ -14,6 +14,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,6 +38,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
     @Mock lateinit var homepageSettingsDataLoader: HomepageSettingsDataLoader
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var siteOptionsStore: SiteOptionsStore
+    @Mock lateinit var dispatcher: Dispatcher
     private val siteModel = SiteModel()
     private val siteId = 1
     private val remoteId = 2L
@@ -54,6 +56,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
         viewModel = HomepageSettingsViewModel(
                 Dispatchers.Unconfined,
                 Dispatchers.Unconfined,
+                dispatcher,
                 homepageSettingsDataLoader,
                 siteStore,
                 siteOptionsStore
@@ -308,7 +311,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithoutSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isDisabled = true
+                        isEditingEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = true,
@@ -347,7 +350,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isDisabled = true
+                        isEditingEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
@@ -384,7 +387,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithSelection(),
                         isLoading = true,
-                        isDisabled = true
+                        isEditingEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
@@ -427,7 +430,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isDisabled = true
+                        isEditingEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
