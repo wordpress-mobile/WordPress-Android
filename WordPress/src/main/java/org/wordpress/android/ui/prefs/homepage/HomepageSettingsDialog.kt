@@ -65,10 +65,7 @@ class HomepageSettingsDialog : DialogFragment() {
             uiState?.let {
                 view.apply {
                     loading_pages.visibility = if (uiState.isLoading) View.VISIBLE else View.GONE
-                    enablePositiveButton(uiState.isEditingEnabled)
-                    homepage_settings_radio_group.isEnabled = uiState.isEditingEnabled
-                    selected_homepage.isEnabled = uiState.isEditingEnabled
-                    selected_posts_page.isEnabled = uiState.isEditingEnabled
+                    enablePositiveButton(uiState.isSaveEnabled)
                     if (uiState.error != null) {
                         loading_error.visibility = View.VISIBLE
                         loading_error.setText(uiState.error)

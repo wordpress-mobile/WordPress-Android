@@ -40,11 +40,11 @@ class HomepageSettingsViewModel
     val dismissDialogEvent: LiveData<Event<Unit>> = _dismissDialogEvent
 
     fun classicBlogSelected() {
-        updateUiStateFromMainThread { it.copy(isClassicBlogState = true) }
+        updateUiStateFromMainThread { it.updateClassicBlogState(isClassicBlogState = true) }
     }
 
     fun staticHomepageSelected() {
-        updateUiStateFromMainThread { it.copy(isClassicBlogState = false) }
+        updateUiStateFromMainThread { it.updateClassicBlogState(isClassicBlogState = false) }
     }
 
     fun onPageOnFrontSelected(id: Int): Boolean {

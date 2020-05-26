@@ -311,7 +311,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithoutSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isEditingEnabled = false
+                        isSaveEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = true,
@@ -350,7 +350,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isEditingEnabled = false
+                        isSaveEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
@@ -387,7 +387,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithSelection(),
                         isLoading = true,
-                        isEditingEnabled = false
+                        isSaveEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
@@ -430,7 +430,7 @@ class HomepageSettingsViewModelTest : BaseUnitTest() {
                         pageOnFrontState = selectorWithSelection(),
                         pageForPostsState = selectorWithoutSelection(),
                         isLoading = true,
-                        isEditingEnabled = false
+                        isSaveEnabled = false
                 ),
                 HomepageSettingsUiState(
                         isClassicBlogState = false,
