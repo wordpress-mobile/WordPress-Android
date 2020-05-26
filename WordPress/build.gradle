@@ -68,7 +68,6 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
-        buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -101,7 +100,6 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
-            buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -170,9 +168,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'androidx.core:core:1.0.2'
+    implementation 'androidx.core:core:1.2.0'
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
-    implementation 'androidx.fragment:fragment:1.0.0'
+    implementation 'androidx.fragment:fragment:1.2.4'
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

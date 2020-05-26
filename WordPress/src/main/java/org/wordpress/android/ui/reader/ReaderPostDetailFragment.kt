@@ -210,7 +210,7 @@ class ReaderPostDetailFragment : Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
             postHistory.restoreInstance(savedInstanceState)
         }
@@ -353,7 +353,7 @@ class ReaderPostDetailFragment : Fragment(),
                             interceptedUri
                     )
                     ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
-                    activity!!.finish()
+                    requireActivity().finish()
                 }
                 return true
             }
@@ -595,7 +595,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        WPSnackbar.make(view!!, R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+        WPSnackbar.make(requireView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
                 .setAction(
                         R.string.reader_bookmark_snack_btn
                 ) {
@@ -616,7 +616,7 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(post)) {
-            val likeCount = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
+            val likeCount = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
             likeCount.isSelected = isAskingToLike
             ReaderAnim.animateLikeButton(likeCount.imageView, isAskingToLike)
 
@@ -878,9 +878,9 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
-        val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
-        val reblogButton = view!!.findViewById<ReaderIconCountView>(R.id.reblog)
+        val countLikes = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
+        val countComments = requireView().findViewById<ReaderIconCountView>(R.id.count_comments)
+        val reblogButton = requireView().findViewById<ReaderIconCountView>(R.id.reblog)
 
         if (canBeReblogged()) {
             reblogButton.setCount(0)
@@ -960,7 +960,7 @@ class ReaderPostDetailFragment : Fragment(),
 
         if (!accountStore.hasAccessToken()) {
             WPSnackbar.make(
-                    view!!, R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                    requireView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
                     Snackbar.LENGTH_INDEFINITE
             ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
@@ -1063,7 +1063,7 @@ class ReaderPostDetailFragment : Fragment(),
      * called when the post doesn't exist in local db, need to get it from server
      */
     private fun requestPost() {
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
         progress.visibility = View.VISIBLE
         progress.bringToFront()
 
@@ -1104,7 +1104,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
         progress.visibility = View.GONE
 
         if (event.statusCode == 200) {
@@ -1160,7 +1160,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val txtError = view!!.findViewById<TextView>(R.id.text_error)
+        val txtError = requireView().findViewById<TextView>(R.id.text_error)
         txtError.text = errorMessage
 
         context?.let {
@@ -1210,7 +1210,7 @@ class ReaderPostDetailFragment : Fragment(),
                     "Failed to load private AT cookie. $event.error.type - $event.error.message"
             )
             WPSnackbar.make(
-                    view!!,
+                    requireView(),
                     string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
@@ -1232,7 +1232,7 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         WPSnackbar.make(
-                view!!,
+                requireView(),
                 string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
         ).show()
@@ -1450,7 +1450,7 @@ class ReaderPostDetailFragment : Fragment(),
      */
     override fun onRequestCustomView(): ViewGroup? {
         return if (isAdded) {
-            view!!.findViewById<View>(R.id.layout_custom_view_container) as ViewGroup
+            requireView().findViewById<View>(R.id.layout_custom_view_container) as ViewGroup
         } else {
             null
         }
@@ -1461,7 +1461,7 @@ class ReaderPostDetailFragment : Fragment(),
      */
     override fun onRequestContentView(): ViewGroup? {
         return if (isAdded) {
-            view!!.findViewById<View>(R.id.layout_post_detail_container) as ViewGroup
+            requireView().findViewById<View>(R.id.layout_post_detail_container) as ViewGroup
         } else {
             null
         }

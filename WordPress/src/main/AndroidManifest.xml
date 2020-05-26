@@ -395,6 +395,11 @@
             android:theme="@style/WordPress.NoActionBar">
         </activity>
         <activity
+            android:name=".ui.reader.ReaderSearchActivity"
+            android:label="@string/reader"
+            android:theme="@style/WordPress.NoActionBar">
+        </activity>
+        <activity
             android:name=".ui.reader.ReaderPostPagerActivity"
             android:excludeFromRecents="true"
             android:label="@string/reader_title_deeplink"
@@ -482,6 +487,13 @@
             android:name=".ui.reader.ReaderVideoViewerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/ReaderMediaViewerTheme" />
+
+        <!-- Gutenberg activities -->
+        <activity
+            android:name=".ui.SuggestUsersActivity"
+            android:theme="@style/WordPressNoDisplay"
+            android:windowSoftInputMode="adjustResize"
+            />
 
         <!-- Other activities -->
         <activity
