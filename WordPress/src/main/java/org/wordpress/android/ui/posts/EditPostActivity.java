@@ -1734,7 +1734,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showPrepublishingNudgeBottomSheet() {
+        mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
