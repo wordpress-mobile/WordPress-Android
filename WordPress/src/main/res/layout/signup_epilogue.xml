@@ -23,52 +23,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/margin_extra_large">
 
-                <FrameLayout
-                    android:id="@+id/signup_epilogue_header_avatar_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:clickable="true"
-                    android:contentDescription="@string/content_description_add_avatar"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:id="@+id/signup_epilogue_header_avatar"
-                        android:layout_width="@dimen/avatar_sz_login_epilogue"
-                        android:layout_height="@dimen/avatar_sz_login_epilogue"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
-
-                    <ImageView
-                        android:id="@+id/signup_epilogue_header_avatar_add"
-                        android:layout_width="@dimen/add_avatar_button_size"
-                        android:layout_height="@dimen/add_avatar_button_size"
-                        android:layout_gravity="top|end"
-                        android:background="@drawable/bg_oval_surface"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_add_white_24dp"
-                        android:visibility="gone"
-                        app:tint="?attr/colorPrimary"
-                        tools:visibility="visible" />
-                </FrameLayout>
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/signup_epilogue_header_display"
-                    style="@style/LoginTheme.Headline"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_extra_large"
-                    tools:text="Pamela Nguyen" />
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/signup_epilogue_header_email"
-                    style="@style/LoginTheme.Username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_small"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    tools:text="pamelanguyen@gmail.com" />
+                <include layout="@layout/login_include_epilogue_header" />
 
                 <org.wordpress.android.login.widgets.WPLoginInputRow
                     android:id="@+id/signup_epilogue_input_display"

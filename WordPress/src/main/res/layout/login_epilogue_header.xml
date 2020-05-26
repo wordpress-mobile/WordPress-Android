@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,37 +7,8 @@
     android:paddingStart="@dimen/margin_extra_large"
     android:paddingTop="@dimen/margin_extra_large">
 
-    <ImageView
-        android:id="@+id/avatar"
-        android:layout_width="@dimen/avatar_sz_login_epilogue"
-        android:layout_height="@dimen/avatar_sz_login_epilogue"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_user_circle_no_padding_grey_24dp" />
+    <include layout="@layout/login_include_epilogue_header" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/display_name"
-        style="@style/LoginTheme.Headline"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        tools:text="Pamela Nguyen" />
+    <include layout="@layout/login_include_epilogue_sites_subheader" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/username"
-        style="@style/LoginTheme.Username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_medium"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        tools:text="pamelanguyen" />
-
-    <TextView
-        android:id="@+id/my_sites_heading"
-        style="@style/LoginTheme.Heading"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/margin_extra_large"
-        android:text="@string/login_epilogue_mysites_other" />
 </LinearLayout>

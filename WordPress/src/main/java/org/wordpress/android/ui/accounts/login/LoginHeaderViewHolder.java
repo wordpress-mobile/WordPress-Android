@@ -28,10 +28,10 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
 
     LoginHeaderViewHolder(View view) {
         super(view);
-        mAvatarImageView = view.findViewById(R.id.avatar);
-        mDisplayNameTextView = view.findViewById(R.id.display_name);
-        mUsernameTextView = view.findViewById(R.id.username);
-        mMySitesHeadingTextView = view.findViewById(R.id.my_sites_heading);
+        mAvatarImageView = view.findViewById(R.id.login_epilogue_header_avatar);
+        mDisplayNameTextView = view.findViewById(R.id.login_epilogue_header_title);
+        mUsernameTextView = view.findViewById(R.id.login_epilogue_header_subtitle);
+        mMySitesHeadingTextView = view.findViewById(R.id.login_epilogue_header_sites_subheader);
     }
 
     void updateLoggedInAsHeading(Context context, ImageManager imageManager, AccountModel account) {

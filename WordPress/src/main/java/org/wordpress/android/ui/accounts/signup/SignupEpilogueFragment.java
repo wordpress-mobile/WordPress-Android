@@ -170,7 +170,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        final FrameLayout headerAvatarLayout = rootView.findViewById(R.id.signup_epilogue_header_avatar_layout);
+        final FrameLayout headerAvatarLayout = rootView.findViewById(R.id.login_epilogue_header_avatar_layout);
         headerAvatarLayout.setEnabled(mIsEmailSignup);
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,12 +189,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
-        mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
+        mHeaderAvatarAdd = rootView.findViewById(R.id.login_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
-        mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
-        mHeaderDisplayName = rootView.findViewById(R.id.signup_epilogue_header_display);
+        mHeaderAvatar = rootView.findViewById(R.id.login_epilogue_header_avatar);
+        mHeaderDisplayName = rootView.findViewById(R.id.login_epilogue_header_title);
         mHeaderDisplayName.setText(mDisplayName);
-        mHeaderEmailAddress = rootView.findViewById(R.id.signup_epilogue_header_email);
+        mHeaderEmailAddress = rootView.findViewById(R.id.login_epilogue_header_subtitle);
         mHeaderEmailAddress.setText(mEmailAddress);
         WPLoginInputRow inputDisplayName = rootView.findViewById(R.id.signup_epilogue_input_display);
         mEditTextDisplayName = inputDisplayName.getEditText();
