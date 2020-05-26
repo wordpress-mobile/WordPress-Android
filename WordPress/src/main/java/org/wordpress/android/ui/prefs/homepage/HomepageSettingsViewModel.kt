@@ -206,7 +206,9 @@ class HomepageSettingsViewModel
         }
     }
 
-    private fun updateUiStateFromMainThread(copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState): Boolean {
+    private fun updateUiStateFromMainThread(
+        copyFunction: (HomepageSettingsUiState) -> HomepageSettingsUiState
+    ): Boolean {
         val currentState = _uiState.value
         return if (currentState != null) {
             _uiState.value = copyFunction(currentState)
