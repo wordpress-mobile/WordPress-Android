@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.widgets.WPTextView
@@ -39,7 +38,7 @@ class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
 
-    private lateinit var readerViewModel: ReaderPostListViewModel
+    private lateinit var subFilterViewModel: SubFilterViewModel
     private lateinit var viewModel: SubfilterPageViewModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyStateContainer: LinearLayout
@@ -78,14 +77,14 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        readerViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(ReaderPostListViewModel::class.java)
+        subFilterViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(SubFilterViewModel::class.java)
 
-        readerViewModel.subFilters.observe(viewLifecycleOwner, Observer {
+        subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 var items = it?.filter { it.type == category.type } ?: listOf()
 
-                val currentFilter = readerViewModel.getCurrentSubfilterValue()
+                val currentFilter = subFilterViewModel.getCurrentSubfilterValue()
 
                 if (items.isNotEmpty() && (currentFilter is Site || currentFilter is Tag)) {
                     items = items.map {
@@ -96,7 +95,7 @@ class SubfilterPageFragment : DaggerFragment() {
 
                 viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                readerViewModel.onSubfilterPageUpdated(category, items.size)
+                subFilterViewModel.onSubfilterPageUpdated(category, items.size)
             }
         })
 
@@ -109,7 +108,7 @@ class SubfilterPageFragment : DaggerFragment() {
                         title.setText(uiState.title.stringRes)
                         actionButton.setText(uiState.buttonText.stringRes)
                         actionButton.setOnClickListener {
-                            readerViewModel.onBottomSheetActionClicked(uiState.action)
+                            subFilterViewModel.onBottomSheetActionClicked(uiState.action)
                         }
                     }
                 }

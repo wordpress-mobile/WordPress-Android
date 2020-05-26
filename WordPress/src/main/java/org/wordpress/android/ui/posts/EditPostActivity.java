@@ -2873,6 +2873,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.viewSuggestUsersForResult(this, mSite);
     }
 
+    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
+    }
+
+    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
+        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
+    }
+
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();
