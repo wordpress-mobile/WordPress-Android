@@ -12,7 +12,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
-        style="@style/LoginTheme.TextLabel"
+        style="@style/Widget.LoginFlow.TextView.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"

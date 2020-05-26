@@ -18,7 +18,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
-        style="@style/LoginTheme.TextLabel"
+        style="@style/Widget.LoginFlow.TextView.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -27,7 +27,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_open_email_client"
-        style="@style/LoginTheme.Button.Primary"
+        style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
@@ -35,7 +35,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login_enter_password"
-        style="@style/LoginTheme.Button.Secondary"
+        style="@style/Widget.LoginFlow.Button.Tertiary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_extra_extra_large"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shape Appearance for small components like chips, buttons, text fields and FABs -->
+    <style name="ShapeAppearance.LoginFlow.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent" />
+
+    <!-- Shape Appearance for medium components like cards, alert dialogs -->
+    <style name="ShapeAppearance.LoginFlow.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent" />
+
+    <!-- Shape Appearance for large components like side and bottom navigation drawers -->
+    <style name="ShapeAppearance.LoginFlow.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent" />
+</resources>

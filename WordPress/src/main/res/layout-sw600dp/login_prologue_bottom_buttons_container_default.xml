@@ -12,7 +12,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/first_button"
-        style="@style/LoginTheme.Button.SignUp"
+        style="@style/Widget.LoginFlow.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_small"
@@ -20,7 +20,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/second_button"
-        style="@style/LoginTheme.Button.Primary"
+        style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"

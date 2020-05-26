@@ -55,7 +55,7 @@
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/signup_epilogue_input_password_detail"
-                    style="@style/LoginTheme.Footnote"
+                    style="@style/Widget.LoginFlow.TextView.Footnote"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_extra_large"
@@ -78,7 +78,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/primary_button"
-        style="@style/LoginTheme.Button.Primary"
+        style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_medium_large"

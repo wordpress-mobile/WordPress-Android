@@ -41,7 +41,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_title"
-        style="@style/LoginTheme.PromoTitle"
+        style="@style/Widget.LoginFlow.TextView.PromoTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/prologue_promo_title_margin_vertical"
@@ -56,7 +56,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/promo_text"
-        style="@style/LoginTheme.PromoText"
+        style="@style/Widget.LoginFlow.TextView.PromoSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/prologue_promo_text_margin_vertical"
