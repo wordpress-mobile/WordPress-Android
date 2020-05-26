@@ -19,6 +19,7 @@
     <string name="get_started">Get Started</string>
     <string name="next">Next</string>
     <string name="open_mail">Open mail</string>
+    <string name="check_email">Check email</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="enter_site_credentials_instead">Log in with site credentials</string>
@@ -32,8 +33,9 @@
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
     <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
-    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
