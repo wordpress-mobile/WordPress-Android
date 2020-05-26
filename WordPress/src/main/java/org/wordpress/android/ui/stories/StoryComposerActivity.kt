@@ -29,6 +29,7 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
@@ -61,6 +62,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
+    @Inject lateinit var editPostRepository: EditPostRepository
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -68,16 +70,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
         // See https://wordpress.org/support/article/post-formats/
         private val POST_FORMAT_WP_STORY_KEY = "wpstory"
-        private var testPost: PostModel? = null
-        // TODO CHANGE THIS so we obtain the Post fromm the StoryRepository
-        fun getTestPost(postStore: PostStore, site: SiteModel): PostModel {
-            if (testPost == null) {
-                testPost = postStore.instantiatePostModel(site, false, null, POST_FORMAT_WP_STORY_KEY)
-                // WARNING!: Stories are published by default, (these are different than normal posts)
-                testPost?.setStatus(PUBLISHED.toString())
-            }
-            return testPost!!
-        }
+        private const val STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,8 +84,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            // Create a new post
+            editPostRepository.set {
+                val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
+                post.setStatus(PUBLISHED.toString())
+                post
+            }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+                editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
+            }
         }
 
         editorMedia.start(site!!, this, STORY_EDITOR)
@@ -102,6 +104,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
+        outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -148,8 +151,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 this,
                 MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                 site,
-                getTestPost(postStore, site!!).id // TODO obtain the local PostId when integrating with FluxC model
-                // mEditPostRepository.id
+                null // this is not required, only used for featured image in normal Posts
         )
     }
 
@@ -224,7 +226,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun getImmutablePost(): PostImmutableModel {
-        return Objects.requireNonNull(getTestPost(postStore, site!!))
+        return Objects.requireNonNull(editPostRepository.getPost()!!)
     }
 
     override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
