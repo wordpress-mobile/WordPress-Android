@@ -108,7 +108,7 @@
             android:id="@+id/image_more"
             android:layout_width="@dimen/reader_more_icon"
             android:layout_height="@dimen/reader_more_icon"
-            android:src="@drawable/ic_ellipsis_white_24dp"
+            android:src="@drawable/ic_more_vert_white_24dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/show_more_desc"
             android:paddingTop="@dimen/margin_medium"
