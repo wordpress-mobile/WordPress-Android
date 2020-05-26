@@ -124,6 +124,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int NEWS_CARD_POSITION = 0;
 
+    private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
+
     private boolean mIsMainReader = false;
 
     @Inject AccountStore mAccountStore;
@@ -693,7 +695,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         mPhotonWidth = displayWidth - (cardMargin * 2);
-        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height_cardview);
+        mPhotonHeight = (int) (mPhotonWidth / READER_FEATURED_IMAGE_ASPECT_RATIO);
 
         setHasStableIds(true);
     }
