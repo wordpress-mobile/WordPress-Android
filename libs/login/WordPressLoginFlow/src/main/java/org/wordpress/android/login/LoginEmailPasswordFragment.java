@@ -1,6 +1,7 @@
 package org.wordpress.android.login;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,11 +11,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -26,6 +38,7 @@ import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListene
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutoForeground;
+import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
@@ -145,16 +158,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     protected void setupContent(ViewGroup rootView) {
         // important for accessibility - talkback
         getActivity().setTitle(R.string.selfhosted_site_login_title);
-        ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.forgot_password);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_reset_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -162,6 +170,48 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 }
             }
         });
+
+        final ProgressBar avatarProgressBar = rootView.findViewById(R.id.avatar_progress);
+        final ImageView avatarView = rootView.findViewById(R.id.gravatar);
+        final TextView emailView = rootView.findViewById(R.id.email);
+
+        emailView.setText(mEmailAddress);
+
+        Glide.with(this)
+             .load(GravatarUtils.gravatarFromEmail(mEmailAddress,
+                     getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
+             .apply(RequestOptions.circleCropTransform())
+             .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
+             .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
+             .listener(new RequestListener<Drawable>() {
+                 @Override
+                 public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target,
+                                             boolean b) {
+                     avatarProgressBar.setVisibility(View.GONE);
+                     return false;
+                 }
+
+                 @Override
+                 public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
+                                                DataSource dataSource, boolean b) {
+                     avatarProgressBar.setVisibility(View.GONE);
+                     return false;
+                 }
+             })
+             .into(avatarView);
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        if (secondaryButton != null) {
+            secondaryButton.setVisibility(View.GONE);
+        }
+
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();

@@ -1806,6 +1806,7 @@
     <string name="verification_code">Verification code</string>
     <string name="auth_required">Log in again to continue.</string>
     <string name="logging_in">Logging in</string>
+    <string name="reset_your_password">Reset your password</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="checking_email">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
@@ -1815,7 +1816,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
-    <string name="forgot_password">Lost your password?</string>
+    <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
