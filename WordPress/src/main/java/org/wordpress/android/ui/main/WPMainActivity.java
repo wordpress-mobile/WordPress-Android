@@ -162,6 +162,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_EDITOR = "show_editor";
     public static final String ARG_SHOW_ZENDESK_NOTIFICATIONS = "show_zendesk_notifications";
     public static final String ARG_STATS = "show_stats";
+    public static final String ARG_PAGES = "show_pages";
 
     // Track the first `onResume` event for the current session so we can use it for Analytics tracking
     private static boolean mFirstResume = true;
@@ -529,6 +530,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         initSelectedSite();
                     }
                     ActivityLauncher.viewBlogStats(this, mSelectedSite);
+                    break;
+                case ARG_PAGES:
+                    if (mSelectedSite == null) {
+                        initSelectedSite();
+                    }
+                    ActivityLauncher.viewCurrentBlogPages(this, mSelectedSite);
                     break;
             }
         } else {
