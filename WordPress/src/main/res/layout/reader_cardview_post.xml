@@ -61,7 +61,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_blog_url"
             style="@style/ReaderTextView.Label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:maxLines="1"
@@ -70,7 +70,7 @@
             app:layout_constraintStart_toStartOf="@id/text_author_and_blog_name"
             app:layout_constraintEnd_toStartOf="@id/dot_separator"
             app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="packed"
             tools:text="text_blog_url"/>
@@ -78,7 +78,7 @@
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/dot_separator"
             style="@style/ReaderTextView.Label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:text="@string/reader_dot_separator"
@@ -86,22 +86,20 @@
             app:layout_constraintStart_toEndOf="@id/text_blog_url"
             app:layout_constraintEnd_toStartOf="@id/text_dateline"
             app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"
-            app:layout_constraintWidth_default="wrap"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constrainedWidth="true"
             tools:text="text_blog_url"/>
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_dateline"
             style="@style/ReaderTextView.Label"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_small"
             android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/dot_separator"
             app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toBottomOf="@id/text_author_and_blog_name"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             tools:text="text_dateline"/>
 
         <ImageView
@@ -124,7 +122,6 @@
             android:layout_height="@dimen/reader_post_header_height"
             android:background="?android:selectableItemBackground"
             android:visibility="visible"
-            android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toStartOf="@id/image_more"
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
@@ -280,7 +277,7 @@
         <!-- footer start -->
         <ImageView
             android:id="@+id/bookmark"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/reader_button_minimum_height"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="@string/reader_add_bookmark"
@@ -292,12 +289,12 @@
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
             app:tint="@color/on_surface_primary_selector"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_chainStyle="spread_inside"/>
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/reblog"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/reader_view_reblog"
             android:layout_marginTop="@dimen/margin_small"
@@ -305,12 +302,12 @@
             app:layout_constraintEnd_toStartOf="@id/count_comments"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:readerIcon="reblog" />
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/count_comments"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/reader_view_comments"
             android:layout_marginTop="@dimen/margin_small"
@@ -318,12 +315,12 @@
             app:layout_constraintEnd_toStartOf="@id/count_likes"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:readerIcon="comment"/>
 
         <org.wordpress.android.ui.reader.views.ReaderIconCountView
             android:id="@+id/count_likes"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/likes_on_my_comments"
             android:layout_marginTop="@dimen/margin_small"
@@ -331,7 +328,7 @@
             app:layout_constraintEnd_toStartOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@id/layout_discover"
             app:layout_constraintBottom_toTopOf="@id/guideline_bottom"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constrainedWidth="true"
             app:readerIcon="like" />
         <!-- footer end -->
 
