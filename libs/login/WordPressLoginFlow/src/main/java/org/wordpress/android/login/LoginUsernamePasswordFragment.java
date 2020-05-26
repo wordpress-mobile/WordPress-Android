@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -72,7 +72,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     public static final String TAG = "login_username_password_fragment_tag";
 
-    private ScrollView mScrollView;
+    private NestedScrollView mScrollView;
     private WPLoginInputRow mUsernameInput;
     private WPLoginInputRow mPasswordInput;
 

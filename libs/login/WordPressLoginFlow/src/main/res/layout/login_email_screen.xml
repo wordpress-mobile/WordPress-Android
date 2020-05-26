@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_extra_large"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
@@ -26,7 +25,8 @@
         android:hint="@string/email_address"
         android:imeOptions="actionNext"
         android:importantForAutofill="noExcludeDescendants"
-        android:inputType="textEmailAddress" />
+        android:inputType="textEmailAddress"
+        tools:ignore="UnusedAttribute" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/continue_tos"
@@ -46,6 +46,11 @@
         android:layout_marginStart="@dimen/margin_extra_large"
         android:text="@string/login_continue" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_gravity="center_vertical"
-            android:alpha="@dimen/material_emphasis_low"
+            android:alpha="0.12"
             android:background="?attr/colorOnSurface" />
 
         <TextView
@@ -74,8 +79,8 @@
         style="@style/Widget.LoginFlow.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:text="@string/continue_google_button_suffix"
         android:visibility="visible"
         app:icon="@drawable/ic_google_60dp"
@@ -89,9 +94,8 @@
         style="@style/Widget.LoginFlow.Button.Tertiary.Small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
         android:layout_marginStart="@dimen/margin_extra_large"
+        android:layout_marginEnd="@dimen/margin_extra_large"
         android:text="@string/continue_with_google_terms_of_service_text" />
 
 </LinearLayout>
