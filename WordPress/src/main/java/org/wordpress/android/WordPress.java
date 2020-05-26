@@ -330,6 +330,8 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
+
+        EventBus.getDefault().register(this);
     }
 
     protected void initWorkManager() {
@@ -593,6 +595,12 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             // only remove it if it was successful - we want to keep it and show a snackbar once when the user
             // comes back to the app if it wasn't, see MySiteFrament for details.
             EventBus.getDefault().removeStickyEvent(event);
+
+            if (event.getMetadata() != null) {
+                Bundle metadata = event.getMetadata();
+                SiteModel site = (SiteModel) metadata.getSerializable(WordPress.SITE);
+                // val storyIndex = it.getInt(KEY_STORY_INDEX)
+            }
             // TODO WPSTORIES add TRACKS
             // lets add an EVENT for START UPLOADING MEDIA
             // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);

@@ -10,8 +10,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
+import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
+import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.util.KEY_STORY_INDEX
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -49,7 +52,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         MediaPickerProvider,
         EditorMediaListener,
         AuthenticationHeadersProvider,
-        NotificationIntentLoader {
+        NotificationIntentLoader,
+        MetadataProvider {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -83,6 +87,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMediaPickerProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
+        setMetadataProvider(this)
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -251,5 +256,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
 //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
+    }
+
+    override fun loadMetadataForStory(index: StoryIndex): Bundle? {
+        val bundle = Bundle()
+        bundle.putSerializable(WordPress.SITE, site)
+        bundle.putInt(KEY_STORY_INDEX, index)
+        return bundle
     }
 }
