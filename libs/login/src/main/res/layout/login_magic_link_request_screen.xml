@@ -39,7 +39,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/label"
-                style="@style/LoginTheme.TextLabel"
+                style="@style/Widget.LoginFlow.TextView.Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/avatar_container"
@@ -49,18 +49,17 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_request_magic_link"
-                style="@style/LoginTheme.Button.Primary"
+                style="@style/Widget.LoginFlow.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/label"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_extra_large"
-                android:text="@string/send_link"
-                android:theme="@style/LoginTheme.Button.Primary" />
+                android:text="@string/send_link" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_enter_password"
-                style="@style/LoginTheme.Button.Secondary"
+                style="@style/Widget.LoginFlow.Button.Tertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_request_magic_link"

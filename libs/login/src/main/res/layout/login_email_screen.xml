@@ -12,7 +12,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/label"
-        style="@style/LoginTheme.TextLabel"
+        style="@style/Widget.LoginFlow.TextView.Label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
@@ -34,7 +34,7 @@
         tools:ignore="UnusedAttribute" />
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/LoginTheme.TextLabel"
+        style="@style/Widget.LoginFlow.TextView.Label"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/margin_extra_large"
@@ -89,7 +89,6 @@
 
         <ImageView
             android:id="@+id/login_site_button_icon"
-            style="@style/LoginTheme.TextLabel.Icon"
             android:layout_width="@dimen/google_button_icon_sz"
             android:layout_height="@dimen/google_button_icon_sz"
             android:layout_marginEnd="@dimen/margin_medium"

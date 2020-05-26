@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base parent theme that can be overridden by the client -->
+    <style name="Base.Theme.LoginFlow.Parent" parent="Theme.MaterialComponents.DayNight.NoActionBar" />
+
+    <!-- Base theme containing attributes that are shared by both light and dark theme variants -->
+    <style name="Base.Theme.LoginFlow.Shared" parent="Base.Theme.LoginFlow.Parent">
+        <!-- Type attributes -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.LoginFlow.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.LoginFlow.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.LoginFlow.Headline3</item>
+        <item name="textAppearanceHeadline4">@style/TextAppearance.LoginFlow.Headline4</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.LoginFlow.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.LoginFlow.Headline6</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.LoginFlow.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.LoginFlow.Subtitle2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.LoginFlow.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.LoginFlow.Body2</item>
+        <item name="textAppearanceButton">@style/TextAppearance.LoginFlow.Button</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.LoginFlow.Caption</item>
+        <item name="textAppearanceOverline">@style/TextAppearance.LoginFlow.Overline</item>
+
+        <!-- Shape attributes -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.LoginFlow.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.LoginFlow.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.LoginFlow.LargeComponent</item>
+
+        <!-- Component styles -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.Dialog.Alert</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.LoginFlow.BottomSheetDialog</item>
+        <item name="appBarLayoutStyle">@style/Widget.LoginFlow.AppBarLayout</item>
+        <item name="toolbarStyle">@style/Widget.LoginFlow.Toolbar</item>
+    </style>
+
+    <!-- Base theme containing attributes that are overridden by the dark theme variant -->
+    <style name="Base.Theme.LoginFlow" parent="Base.Theme.LoginFlow.Shared">
+        <item name="colorPrimary">@color/wp_blue_50</item>
+        <item name="colorPrimaryVariant">@color/wp_blue_70</item>
+        <item name="colorSecondary">@color/wp_pink_50</item>
+        <item name="colorSecondaryVariant">@color/wp_pink_70</item>
+
+        <item name="android:colorBackground">@color/material_white_50</item>
+        <item name="colorSurface">@color/material_white_50</item>
+        <item name="colorError">@color/wp_red_50</item>
+
+        <item name="colorOnPrimary">@color/material_white_50</item>
+        <item name="colorOnSecondary">@color/material_white_50</item>
+        <item name="colorOnBackground">@color/material_black_900</item>
+        <item name="colorOnSurface">@color/material_black_900</item>
+        <item name="colorOnError">@color/material_white_50</item>
+    </style>
+
+    <!-- Top-level theme containing attributes that are overridden by API version variants -->
+    <!-- This is the theme that will be used and possibly extended by the client -->
+    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow">
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
+</resources>

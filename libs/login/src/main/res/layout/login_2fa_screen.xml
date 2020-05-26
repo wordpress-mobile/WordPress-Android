@@ -10,7 +10,7 @@
     android:layout_marginBottom="@dimen/margin_extra_large">
 
     <com.google.android.material.textview.MaterialTextView
-        style="@style/LoginTheme.TextLabel"
+        style="@style/Widget.LoginFlow.TextView.Label"
         android:id="@+id/label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
