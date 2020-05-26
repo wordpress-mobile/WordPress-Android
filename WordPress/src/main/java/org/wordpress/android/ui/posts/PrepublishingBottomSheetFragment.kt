@@ -94,8 +94,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
             bottomSheet?.let {
                 val behavior = BottomSheetBehavior.from(it)
-                val metrics = resources.displayMetrics
-                behavior.peekHeight = metrics.heightPixels / 2
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
         setupMinimumHeightForFragmentContainer()
