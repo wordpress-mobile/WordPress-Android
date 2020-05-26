@@ -15,6 +15,7 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTag.DISCOVER_PATH
 import org.wordpress.android.models.ReaderTag.FOLLOWING_PATH
@@ -45,6 +46,7 @@ class ReaderViewModelTest {
     @Mock lateinit var dateProvider: DateProvider
     @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
     @Mock lateinit var readerTracker: ReaderTracker
+    @Mock lateinit var accountStore: AccountStore
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = ReaderTagList().apply {
@@ -62,7 +64,8 @@ class ReaderViewModelTest {
                 appPrefsWrapper,
                 dateProvider,
                 loadReaderTabsUseCase,
-                readerTracker
+                readerTracker,
+                accountStore
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -214,6 +217,7 @@ class ReaderViewModelTest {
     @Test
     fun `OnSearchActionClicked emits showSearch event`() {
         // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
         var event: Event<Unit>? = null
         viewModel.showSearch.observeForever {
             event = it
@@ -223,6 +227,36 @@ class ReaderViewModelTest {
 
         // Assert
         assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `Search is disabled for self-hosted login`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(state!!.searchIconVisible).isFalse()
+    }
+
+    @Test
+    fun `Search is enabled for dot com login`() = testWithNonEmptyTags {
+        // Arrange
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(state!!.searchIconVisible).isTrue()
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
