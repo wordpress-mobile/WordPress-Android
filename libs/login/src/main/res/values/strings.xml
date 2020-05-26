@@ -102,6 +102,7 @@
     <string name="error_user_username_instead_of_email">Please log in using your WordPress.com username instead of your email address.</string>
     <string name="logging_in">Logging in</string>
     <string name="forgot_password">Lost your password?</string>
+    <string name="reset_your_password">Reset your password</string>
     <string name="error_generic">An error occurred</string>
     <string name="no_site_error">The site at this address is not a WordPress site. For us to connect to it, the site must use WordPress.</string>
     <string name="invalid_site_url_message">Check that the site URL entered is valid</string>
