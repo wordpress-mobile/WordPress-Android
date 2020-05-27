@@ -71,7 +71,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return R.layout.signup_email_fragment;
+        return R.layout.signup_email_screen;
     }
 
     @Override
