@@ -63,6 +63,7 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -227,7 +228,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener,
+        ExceptionLogger {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -3117,6 +3119,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
+    }
+
+    @Override
+    public Consumer<Exception> getExceptionLogger() {
+        return (Exception e) -> CrashLoggingUtils.logException(e, T.EDITOR);
+    }
+
+    @Override
+    public Consumer<String> getBreadcrumbLogger() {
+        return CrashLoggingUtils::log;
     }
 
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {
