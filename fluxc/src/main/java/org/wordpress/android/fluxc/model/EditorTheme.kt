@@ -45,11 +45,12 @@ data class EditorThemeSupport(
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
-        colors?.map { it.toBundle() }.let {
+
+        colors?.map { it.toBundle() }?.let {
             bundle.putParcelableArrayList("colors", ArrayList<Bundle>(it))
         }
 
-        gradients?.map { it.toBundle() }.let {
+        gradients?.map { it.toBundle() }?.let {
             bundle.putParcelableArrayList("gradients", ArrayList<Bundle>(it))
         }
 
