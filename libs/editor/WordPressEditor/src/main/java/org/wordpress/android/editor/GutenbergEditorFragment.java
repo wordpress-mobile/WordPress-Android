@@ -45,16 +45,10 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
-import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
@@ -456,16 +450,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         String sitePassword = getArguments().getString(ARG_SITE_PASSWORD);
         String siteToken = getArguments().getString(ARG_SITE_TOKEN);
 
-        Intent intent = new Intent(getActivity(), GutenbergWebViewActivity.class);
-        intent.putExtra(GutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
-        intent.putExtra(GutenbergWebViewActivity.ARG_BLOCK_NAME, blockName);
-        intent.putExtra(GutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
-        intent.putExtra(GutenbergWebViewActivity.ARG_URL_TO_LOAD, siteUrl);
-        intent.putExtra(GutenbergWebViewActivity.ARG_IS_SITE_PRIVATE, isSitePrivate);
-        intent.putExtra(GutenbergWebViewActivity.ARG_USER_ID, userId);
-        intent.putExtra(GutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
-        intent.putExtra(GutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
-        intent.putExtra(GutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
+        Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_NAME, blockName);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_URL_TO_LOAD, siteUrl);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_IS_SITE_PRIVATE, isSitePrivate);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_ID, userId);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
 
         startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
     }
@@ -476,8 +470,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (requestCode == UNSUPPORTED_BLOCK_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                String blockId = data.getStringExtra(GutenbergWebViewActivity.RESULT_BLOCK_ID);
-                String content = data.getStringExtra(GutenbergWebViewActivity.RESULT_SAVED_CONTENT);
+                String blockId = data.getStringExtra(WPGutenbergWebViewActivity.RESULT_BLOCK_ID);
+                String content = data.getStringExtra(WPGutenbergWebViewActivity.RESULT_SAVED_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
             }
         }

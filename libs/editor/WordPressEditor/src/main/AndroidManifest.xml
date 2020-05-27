@@ -5,7 +5,7 @@
 
     <application>
         <activity
-            android:name=".GutenbergWebViewActivity"
+            android:name=".WPGutenbergWebViewActivity"
             android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar" />
     </application>
 
