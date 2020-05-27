@@ -80,7 +80,7 @@ public class SignupMagicLinkFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.signup_magic_link, container, false);
+        View layout = inflater.inflate(R.layout.signup_magic_link_screen, container, false);
 
         mOpenMailButton = layout.findViewById(R.id.signup_magic_link_button);
         mOpenMailButton.setOnClickListener(new View.OnClickListener() {
