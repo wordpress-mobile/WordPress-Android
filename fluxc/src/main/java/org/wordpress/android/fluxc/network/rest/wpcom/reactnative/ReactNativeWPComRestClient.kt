@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.reactnative
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.android.volley.RequestQueue
 import com.google.gson.JsonElement
 import org.wordpress.android.fluxc.Dispatcher
@@ -25,6 +26,8 @@ class ReactNativeWPComRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
+    @VisibleForTesting var enableCaching: Boolean = true
+
     suspend fun fetch(
         url: String,
         params: Map<String, String>,
@@ -32,7 +35,7 @@ class ReactNativeWPComRestClient @Inject constructor(
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse
     ): ReactNativeFetchResponse {
         val response =
-                wpComGsonRequestBuilder.syncGetRequest(this, url, params, JsonElement::class.java, true)
+                wpComGsonRequestBuilder.syncGetRequest(this, url, params, JsonElement::class.java, enableCaching)
         return when (response) {
             is Success -> successHandler(response.data)
             is Error -> errorHandler(response.error)
