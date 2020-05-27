@@ -75,7 +75,7 @@ class EditorThemeStore
     }
 
     private suspend fun handleFetchEditorTheme(site: SiteModel, action: EditorThemeAction) {
-        val response = reactNativeStore.executeRequest(site, THEME_REQUEST_PATH)
+        val response = reactNativeStore.executeRequest(site, THEME_REQUEST_PATH, false)
 
         when (response) {
             is Success -> {
