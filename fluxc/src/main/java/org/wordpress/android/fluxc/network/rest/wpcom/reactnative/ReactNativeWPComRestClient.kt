@@ -26,13 +26,12 @@ class ReactNativeWPComRestClient @Inject constructor(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    @VisibleForTesting var enableCaching: Boolean = true
-
     suspend fun fetch(
         url: String,
         params: Map<String, String>,
         successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
-        errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse
+        errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
+        enableCaching: Boolean = true
     ): ReactNativeFetchResponse {
         val response =
                 wpComGsonRequestBuilder.syncGetRequest(this, url, params, JsonElement::class.java, enableCaching)
