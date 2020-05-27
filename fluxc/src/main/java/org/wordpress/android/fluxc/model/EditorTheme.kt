@@ -94,7 +94,7 @@ class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElemen
         typeOfT: Type?,
         context: JsonDeserializationContext?
     ): List<EditorThemeElement>? {
-        if(context != null && json != null && json.isJsonArray()) {
+        if (context != null && json != null && json.isJsonArray()) {
             val editorThemeElementListType = object : TypeToken<List<EditorThemeElement>>() { }.getType()
             return context.deserialize(json, editorThemeElementListType)
         } else {
