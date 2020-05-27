@@ -79,7 +79,7 @@
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
+    <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
