@@ -68,6 +68,7 @@ android {
 
         buildConfigField "boolean", "OFFER_GUTENBERG", "true"
         buildConfigField "boolean", "TENOR_AVAILABLE", "true"
+        buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -89,12 +90,14 @@ android {
             versionCode 869
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
+            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
         }
 
         zalpha { // alpha version - enable experimental features
             applicationId "org.wordpress.android"
             dimension "buildType"
             buildConfigField "boolean", "VIDEO_OPTIMIZATION_AVAILABLE", "true"
+            buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
         }
 
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
