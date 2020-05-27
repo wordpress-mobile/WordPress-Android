@@ -2385,6 +2385,7 @@
     <string name="verification_2fa_screen_title">Code verification</string>
 
     <!-- Signup -->
+    <string name="sign_up_label">Sign Up</string>
     <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
