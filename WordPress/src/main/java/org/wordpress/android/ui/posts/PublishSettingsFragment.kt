@@ -68,7 +68,7 @@ abstract class PublishSettingsFragment : Fragment() {
             }
         })
         viewModel.onPublishedDateChanged.observe(this, Observer {
-            it?.let { date ->
+            it.getContentIfNotHandled()?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
                 trackPostScheduled()
             }
