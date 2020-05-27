@@ -2032,8 +2032,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
-//                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
-                        Bundle editorTheme = new Bundle();
+                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+                        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
@@ -2041,7 +2042,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mIsNewPost,
                                 wpcomLocaleSlug,
                                 isSiteUsingWpComRestApi,
-                                editorTheme);
+                                themeBundle);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
