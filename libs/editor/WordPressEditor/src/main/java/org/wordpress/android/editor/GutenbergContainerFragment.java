@@ -70,7 +70,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
-                                  OnGutenbergDidRequestUnsupportedBlockFallbackListener onGutenbergDidRequestUnsupportedBlockFallbackListener,
+                                  OnGutenbergDidRequestUnsupportedBlockFallbackListener
+                                          onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
                                   boolean isDarkMode) {

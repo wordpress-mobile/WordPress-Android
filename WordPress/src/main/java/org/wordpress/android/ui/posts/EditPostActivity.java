@@ -2041,7 +2041,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi);
-
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
