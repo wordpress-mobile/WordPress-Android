@@ -113,7 +113,7 @@ public class SignupMagicLinkFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.sign_up_label);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
