@@ -1,9 +1,15 @@
 package org.wordpress.android.fluxc.model
 
 import android.os.Bundle
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeBuilder
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeElementBuilder
+import java.lang.reflect.Type
 
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
@@ -30,8 +36,12 @@ data class EditorTheme(
 }
 
 data class EditorThemeSupport(
-    @SerializedName("editor-color-palette") val colors: List<EditorThemeElement>?,
-    @SerializedName("editor-gradient-presets") val gradients: List<EditorThemeElement>?
+    @JsonAdapter(EditorThemeElementListSerializer::class)
+    @SerializedName("editor-color-palette")
+    val colors: List<EditorThemeElement>?,
+    @JsonAdapter(EditorThemeElementListSerializer::class)
+    @SerializedName("editor-gradient-presets")
+    val gradients: List<EditorThemeElement>?
 ) {
     fun toBundle(): Bundle {
         val bundle = Bundle()
@@ -75,5 +85,20 @@ data class EditorThemeElement(
         element.themeId = themeId
 
         return element
+    }
+}
+
+class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElement>> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): List<EditorThemeElement>? {
+        if(context != null && json != null && json.isJsonArray()) {
+            val editorThemeElementListType = object : TypeToken<List<EditorThemeElement>>() { }.getType()
+            return context.deserialize(json, editorThemeElementListType)
+        } else {
+            return null
+        }
     }
 }
