@@ -135,7 +135,8 @@ class EditorMediaTest : BaseUnitTest() {
         // Assert
         verify(addLocalMediaToPostUseCase).addLocalMediaToEditorAsync(
                 eq(localIdArray.toList()),
-                anyOrNull()
+                anyOrNull(),
+                anyBoolean()
         )
     }
 
