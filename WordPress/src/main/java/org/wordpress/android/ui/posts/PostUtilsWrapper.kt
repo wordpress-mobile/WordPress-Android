@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import javax.inject.Inject
@@ -37,4 +38,7 @@ class PostUtilsWrapper @Inject constructor() {
 
     fun trackSavePostAnalytics(post: PostImmutableModel?, site: SiteModel) =
             PostUtils.trackSavePostAnalytics(post, site)
+
+    fun preparePostForPublish(post: PostModel, site: SiteModel) =
+            PostUtils.preparePostForPublish(post, site)
 }

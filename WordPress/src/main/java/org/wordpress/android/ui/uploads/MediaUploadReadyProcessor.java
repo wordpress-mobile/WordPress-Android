@@ -50,4 +50,13 @@ public class MediaUploadReadyProcessor implements MediaUploadReadyListener {
 
         return post;
     }
+
+    @Override public PostModel replaceMediaLocalIdWithRemoteMediaIdInPost(@Nullable PostModel post, String localMediaId,
+                                                                          String remoteMediaId) {
+        post.setContent(
+                PostUtils.replaceMediaLocalIdWithMediaRemoteIdInStoryPost(
+                        post.getContent(), localMediaId, remoteMediaId)
+        );
+        return post;
+    }
 }

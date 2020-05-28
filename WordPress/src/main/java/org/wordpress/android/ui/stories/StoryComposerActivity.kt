@@ -20,6 +20,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.ActivityLauncher
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListen
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
+import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
@@ -63,14 +65,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
     companion object {
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
         // See https://wordpress.org/support/article/post-formats/
-        private val POST_FORMAT_WP_STORY_KEY = "wpstory"
-        private const val STATE_KEY_POST_LOCAL_ID = "stateKeyPostModelLocalId"
+        const val POST_FORMAT_WP_STORY_KEY = "wpstory"
+        private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,11 +88,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            // Create a new post
-            editPostRepository.set {
-                val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-                post.setStatus(PUBLISHED.toString())
-                post
+            var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
+            if (localPostId == 0) {
+                // Create a new post
+                saveInitialPost()
+            } else {
+                editPostRepository.loadPostByLocalPostId(localPostId)
             }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
@@ -209,6 +214,22 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
     }
 
+    private fun saveInitialPost() {
+        editPostRepository.set {
+            val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
+            post.setStatus(DRAFT.toString())
+            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
+            post
+        }
+        editPostRepository.savePostSnapshot()
+        // this is an artifact to be able to call savePostToDb()
+        // also, Story posts are always PUBLISHED
+        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
+        site?.let {
+            savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
+        }
+    }
+
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
         val uriList = ArrayList<Uri>()
@@ -232,6 +253,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
         // TODO will implement when we support StoryPost editing
         // updateAndSavePostAsync(listener)
+        // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
+        listener?.onPostUpdatedFromUI()
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
@@ -264,6 +287,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         val bundle = Bundle()
         bundle.putSerializable(WordPress.SITE, site)
         bundle.putInt(KEY_STORY_INDEX, index)
+        bundle.putInt(KEY_POST_LOCAL_ID, editPostRepository.id)
         return bundle
     }
 }

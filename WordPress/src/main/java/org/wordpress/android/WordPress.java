@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
-import android.net.Uri;
 import android.net.http.HttpResponseCache;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,9 +38,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
 import com.wordpress.stories.compose.frame.StorySaveEvents;
-import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveResult;
-import com.wordpress.stories.compose.story.StoryFrameItem;
-import com.wordpress.stories.compose.story.StoryRepository;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,11 +53,9 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
-import org.wordpress.android.fluxc.generated.MediaActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
-import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
@@ -90,6 +84,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
+import org.wordpress.android.ui.stories.StoryMediaSaveUploadBridge;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
@@ -118,7 +113,6 @@ import org.wordpress.android.widgets.AppRatingDialog;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -170,6 +164,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject ImageManager mImageManager;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject StoryMediaSaveUploadBridge mStoryMediaSaveUploadBridge;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -340,6 +335,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
 
         EventBus.getDefault().register(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
     protected void initWorkManager() {
@@ -595,47 +591,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public void onUnexpectedError(OnUnexpectedError event) {
         AppLog.d(T.API, "Receiving OnUnexpectedError event, message: " + event.exception.getMessage());
     }
-
-    @SuppressWarnings("unused")
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(StorySaveEvents.StorySaveResult event) {
-        if (event.isSuccess()) {
-            // only remove it if it was successful - we want to keep it and show a snackbar once when the user
-            // comes back to the app if it wasn't, see MySiteFrament for details.
-            EventBus.getDefault().removeStickyEvent(event);
-
-            if (event.getMetadata() != null) {
-                Bundle metadata = event.getMetadata();
-                SiteModel site = (SiteModel) metadata.getSerializable(WordPress.SITE);
-
-                ArrayList<MediaModel> mediaModels = new ArrayList<>();
-                // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
-                for (StoryFrameItem item : StoryRepository.getStoryAtIndex(event.getStoryIndex()).getFrames()) {
-                    // Uri fileUri = Uri.fromFile(item.getComposedFrameFile());
-                    Uri fileUri = new Uri.Builder().path(item.getComposedFrameFile().getPath()).build();
-                    String mimeType = getContentResolver().getType(fileUri);
-                    MediaModel media =
-                            FluxCUtils.mediaModelFromLocalUri(this, fileUri, mimeType, mMediaStore, site.getId());
-                    if (media != null) {
-                        mediaModels.add(media);
-                        mDispatcher.dispatch(MediaActionBuilder.newUpdateMediaAction(media));
-                    }
-                }
-
-                if (!mediaModels.isEmpty()) {
-                    UploadService.uploadMedia(this, mediaModels);
-                    AppRatingDialog.INSTANCE.incrementInteractions(APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA);
-                }
-                // TODO WPSTORIES add TRACKS
-                // lets add an EVENT for START UPLOADING MEDIA
-                // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
-            }
-        } else {
-            // TODO WPSTORIES add TRACKS for ERROR
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
-        }
-    }
-
 
     public void removeWpComUserRelatedData(Context context) {
         // cancel all Volley requests - do this before unregistering push since that uses

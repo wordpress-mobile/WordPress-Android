@@ -59,6 +59,7 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:image {\"id\":%s";
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
     private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
+    public static final String WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER = "placeholderLocalId";
 
     public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
                                                                        Map<String, Object> properties) {
@@ -456,6 +457,13 @@ public class PostUtils {
 
         Matcher matcher = Pattern.compile(sb.toString()).matcher(postContent);
         return matcher.find();
+    }
+
+    public static String replaceMediaLocalIdWithMediaRemoteIdInStoryPost(@NonNull String postContent,
+                                                                String localMediaId, String remoteMediaId) {
+        // replace the contents
+        postContent = postContent.replace(WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER + localMediaId, remoteMediaId);
+        return postContent;
     }
 
     public static boolean isPostInConflictWithRemote(PostImmutableModel post) {
