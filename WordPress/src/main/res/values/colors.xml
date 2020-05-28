@@ -40,7 +40,6 @@
     <color name="color_primary">@color/primary</color>
     <color name="promo_indicator_color_default">@color/black_translucent_20</color>
     <color name="login_promo_footer_background_color">#eff3f7</color>
-    <color name="login_avatar_placeholder_color">@color/material_on_surface_disabled</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
