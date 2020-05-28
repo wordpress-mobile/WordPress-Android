@@ -332,7 +332,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mSystemNotificationsTracker.checkSystemNotificationsState();
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
 
-        EventBus.getDefault().register(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
