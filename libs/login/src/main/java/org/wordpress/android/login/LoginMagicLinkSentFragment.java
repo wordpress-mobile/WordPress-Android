@@ -1,7 +1,6 @@
 package org.wordpress.android.login;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,14 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.login.util.AvatarHelper;
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 
 import javax.inject.Inject;
 
@@ -88,27 +81,11 @@ public class LoginMagicLinkSentFragment extends Fragment {
         TextView emailView = view.findViewById(R.id.email);
         emailView.setText(mEmail);
 
-        Glide.with(this)
-             .load(GravatarUtils.gravatarFromEmail(mEmail,
-                     getContext().getResources().getDimensionPixelSize(R.dimen.avatar_sz_login)))
-             .apply(RequestOptions.circleCropTransform())
-             .apply(RequestOptions.placeholderOf(R.drawable.ic_gridicons_user_circle_100dp))
-             .apply(RequestOptions.errorOf(R.drawable.ic_gridicons_user_circle_100dp))
-             .listener(new RequestListener<Drawable>() {
-                 @Override
-                 public boolean onLoadFailed(@Nullable GlideException e, Object o, Target<Drawable> target, boolean b) {
-                     avatarProgressBar.setVisibility(View.GONE);
-                     return false;
-                 }
-
-                 @Override
-                 public boolean onResourceReady(Drawable drawable, Object o, Target<Drawable> target,
-                                                DataSource dataSource, boolean b) {
-                     avatarProgressBar.setVisibility(View.GONE);
-                     return false;
-                 }
-             })
-             .into(avatarView);
+        AvatarHelper.loadAvatarFromEmail(this, mEmail, avatarView, new AvatarRequestListener() {
+            @Override public void onRequestFinished() {
+                avatarProgressBar.setVisibility(View.GONE);
+            }
+        });
 
         return view;
     }
