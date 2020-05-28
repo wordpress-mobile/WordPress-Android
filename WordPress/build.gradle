@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-224"
+            versionName "alpha-225"
         }
-        versionCode 870
+        versionCode 872
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -85,9 +85,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "14.9-rc-2"
+                versionName "14.9-rc-3"
             }
-            versionCode 869
+            versionCode 871
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
