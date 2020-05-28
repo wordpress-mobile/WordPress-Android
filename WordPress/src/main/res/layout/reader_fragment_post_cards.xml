@@ -2,16 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/sub_filter_component_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        android:elevation="@dimen/card_elevation"/>
 
     <org.wordpress.android.ui.FilteredRecyclerView
         android:id="@+id/reader_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/sub_filter_component_container"
         app:wpSpinnerItemView="@layout/toolbar_main_spinner_item"
         app:wpToolbarDisableScrollGestures="true"
-        app:wpUseTabsForFiltering="true" />
+        app:wpHideAppBarLayout="true" />
 
     <include
         android:id="@+id/empty_custom_view"
@@ -20,6 +29,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/layout_new_posts"
+        android:layout_below="@+id/sub_filter_component_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

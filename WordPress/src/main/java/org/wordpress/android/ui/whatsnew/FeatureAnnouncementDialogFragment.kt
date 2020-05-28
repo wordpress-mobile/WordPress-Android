@@ -94,7 +94,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity!!.applicationContext as WordPress).component().inject(this)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     override fun onPause() {

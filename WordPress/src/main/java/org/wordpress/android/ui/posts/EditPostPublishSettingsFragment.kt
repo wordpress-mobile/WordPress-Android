@@ -33,8 +33,8 @@ class EditPostPublishSettingsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
     }
 
@@ -53,24 +53,24 @@ class EditPostPublishSettingsFragment : Fragment() {
 
         dateAndTimeContainer.setOnClickListener { showPostDateSelectionDialog() }
 
-        viewModel.onDatePicked.observe(this, Observer {
+        viewModel.onDatePicked.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 showPostTimeSelectionDialog()
             }
         })
-        viewModel.onPublishedDateChanged.observe(this, Observer {
+        viewModel.onPublishedDateChanged.observe(viewLifecycleOwner, Observer {
             it?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
             }
         })
-        viewModel.onNotificationTime.observe(this, Observer {
+        viewModel.onNotificationTime.observe(viewLifecycleOwner, Observer {
             it?.let { notificationTime ->
                 getPostRepository()?.let { postRepository ->
                     viewModel.scheduleNotification(postRepository, notificationTime)
                 }
             }
         })
-        viewModel.onUiModel.observe(this, Observer {
+        viewModel.onUiModel.observe(viewLifecycleOwner, Observer {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
                 publishNotificationTitle.isEnabled = uiModel.notificationEnabled
@@ -98,12 +98,12 @@ class EditPostPublishSettingsFragment : Fragment() {
                 addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
-        viewModel.onShowNotificationDialog.observe(this, Observer {
+        viewModel.onShowNotificationDialog.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { notificationTime ->
                 showNotificationTimeSelectionDialog(notificationTime)
             }
         })
-        viewModel.onToast.observe(this, Observer {
+        viewModel.onToast.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 ToastUtils.showToast(
                         context,
@@ -113,7 +113,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 )
             }
         })
-        viewModel.onNotificationAdded.observe(this, Observer { event ->
+        viewModel.onNotificationAdded.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { notification ->
                 activity?.let {
                     NotificationManagerCompat.from(it).cancel(notification.id)
@@ -135,7 +135,7 @@ class EditPostPublishSettingsFragment : Fragment() {
                 }
             }
         })
-        viewModel.onAddToCalendar.observe(this, Observer {
+        viewModel.onAddToCalendar.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { calendarEvent ->
                 val calIntent = Intent(Intent.ACTION_INSERT)
                 calIntent.data = Events.CONTENT_URI
@@ -156,7 +156,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostDatePickerDialogFragment.newInstance()
-        fragment.show(activity!!.supportFragmentManager, PostDatePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
     private fun showPostTimeSelectionDialog() {
@@ -165,7 +165,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostTimePickerDialogFragment.newInstance()
-        fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
     private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
@@ -174,7 +174,7 @@ class EditPostPublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostNotificationScheduleTimeDialogFragment.newInstance(schedulingReminderPeriod)
-        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPostRepository(): EditPostRepository? {
