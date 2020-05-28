@@ -8,6 +8,7 @@ import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.WellTableManager
+import org.wordpress.android.fluxc.BuildConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.annotation.AnnotationRetention.SOURCE
@@ -27,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 105
+        return 107
     }
 
     override fun getDbName(): String {
@@ -1080,6 +1081,42 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
                 }
                 104 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCShippingLabelModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "LOCAL_ORDER_ID INTEGER," +
+                                    "REMOTE_SHIPPING_LABEL_ID INTEGER," +
+                                    "CARRIER_ID TEXT NOT NULL," +
+                                    "PRODUCT_NAMES TEXT NULL," +
+                                    "TRACKING_NUMBER TEXT NOT NULL," +
+                                    "SERVICE_NAME TEXT NOT NULL," +
+                                    "STATUS TEXT NOT NULL," +
+                                    "PACKAGE_NAME TEXT NOT NULL," +
+                                    "RATE REAL NOT NULL," +
+                                    "REFUNDABLE_AMOUNT REAL NOT NULL," +
+                                    "CURRENCY TEXT NOT NULL," +
+                                    "PAPER_SIZE TEXT NOT NULL," +
+                                    "FORM_DATA TEXT NOT NULL," +
+                                    "STORE_OPTIONS TEXT NOT NULL," +
+                                    "REFUND TEXT NULL)"
+                    )
+                }
+                105 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCProductCategoryModel (" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_CATEGORY_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "PARENT INTEGER," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (REMOTE_CATEGORY_ID, LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
+                    )
+                }
+                106 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
                     db.execSQL("CREATE TABLE WCProductVariationModel (" +
                             "LOCAL_SITE_ID INTEGER," +
@@ -1126,6 +1163,14 @@ open class WellSqlConfig : DefaultWellConfig {
             db.execSQL("PRAGMA foreign_keys=ON")
         }
     }
+
+    /**
+     * For debug builds we want a cursor window size of 5MB so we can test for any problems caused by
+     * a larger size. Once we're confident this works we'll return 5MB in release builds to hopefully
+     * reduce the number of SQLiteBlobTooBigExceptions. Note that this is only called on API 28 and
+     * above since earlier versions don't allow adjusting the cursor window size.
+     */
+    override fun getCursorWindowSize() = if (BuildConfig.DEBUG) (1024L * 1024L * 5L) else 0L
 
     /**
      * Drop and create all tables
