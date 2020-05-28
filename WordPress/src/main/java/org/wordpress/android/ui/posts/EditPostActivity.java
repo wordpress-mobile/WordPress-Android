@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -2025,7 +2026,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
-                        boolean isWpCom = getSite().isWPCom() && !getSite().isPrivate();
+                        boolean isWpCom = getSite().isWPCom();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance(
                                 "",
