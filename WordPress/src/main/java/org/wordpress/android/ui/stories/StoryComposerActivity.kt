@@ -14,8 +14,11 @@ import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StorySaveEvents.SaveResultReason.SaveSuccess
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.util.KEY_STORY_INDEX
+import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -94,7 +97,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
+            var localPostId = getBackingPostIdFromIntent()
             if (localPostId == 0) {
                 // Create a new post
                 saveInitialPost()
@@ -142,6 +145,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onDestroy() {
         editorMedia.cancelAddMediaToEditorActions()
         super.onDestroy()
+    }
+
+    private fun getBackingPostIdFromIntent(): Int {
+        var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
+        if (localPostId == 0) {
+            if (intent.hasExtra(KEY_STORY_SAVE_RESULT)) {
+                val storySaveResult =
+                        intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+                storySaveResult?.let {
+                    localPostId = it.metadata?.getInt(KEY_POST_LOCAL_ID, 0) ?: 0
+                }
+            }
+        }
+        return localPostId
     }
 
     override fun showProvidedSnackbar(message: String, actionLabel: String?, callback: () -> Unit) {
