@@ -1733,14 +1733,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void showPrepublishingNudgeBottomSheet(boolean isPublishSecondaryAction) {
+    private void showPrepublishingNudgeBottomSheet(boolean isPrimaryEditorAction) {
         ActivityUtils.hideKeyboard(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
             PrepublishingBottomSheetFragment prepublishingFragment =
                     PrepublishingBottomSheetFragment
-                            .newInstance(getSite(), mIsPage, isPublishSecondaryAction, mIsNewPost);
+                            .newInstance(getSite(), mIsPage, isPrimaryEditorAction);
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }

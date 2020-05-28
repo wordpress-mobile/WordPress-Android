@@ -44,43 +44,40 @@ class PrepublishingHomeViewModel @Inject constructor(
     fun start(
         editPostRepository: EditPostRepository,
         site: SiteModel,
-        isPublishSecondaryEditorAction: Boolean,
-        isNewPost: Boolean
+        isPrimaryEditorAction: Boolean
     ) {
         if (isStarted) return
         isStarted = true
 
-        if (isPublishSecondaryEditorAction) {
-            publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, isNewPost) {
-                setupHomeUiState(editPostRepository, site)
-            }
-        } else {
-            setupHomeUiState(editPostRepository, site)
-        }
+        setupHomeUiState(editPostRepository, site)
     }
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
-            add(HomeUiState(
-                    actionType = VISIBILITY,
-                    actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                    onActionClicked = ::onActionClicked
-            ))
+            add(
+                    HomeUiState(
+                            actionType = VISIBILITY,
+                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                            onActionClicked = ::onActionClicked
+                    )
+            )
 
-            add(HomeUiState(
-                    actionType = PUBLISH,
-                    actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                        val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                        if (label.isNotEmpty()) {
-                            UiStringText(label)
-                        } else {
-                            UiStringRes(R.string.immediately)
-                        }
-                    },
-                    onActionClicked = ::onActionClicked
-            ))
+            add(
+                    HomeUiState(
+                            actionType = PUBLISH,
+                            actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
+                                val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                                if (label.isNotEmpty()) {
+                                    UiStringText(label)
+                                } else {
+                                    UiStringRes(R.string.immediately)
+                                }
+                            },
+                            onActionClicked = ::onActionClicked
+                    )
+            )
 
             if (!editPostRepository.isPage) {
                 add(HomeUiState(
