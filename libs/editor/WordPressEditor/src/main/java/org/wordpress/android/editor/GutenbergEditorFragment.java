@@ -47,6 +47,7 @@ import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -368,6 +369,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 mEditorFragmentListener::getMention,
+                new OnStarterPageTemplatesTooltipShownEventListener() {
+                    @Override
+                    public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+                        mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
+                    }
+                    
+                    @Override
+                    public boolean onRequestStarterPageTemplatesTooltipShown() {
+                        return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+                    }
+                },
                 isDarkMode());
 
         // request dependency injection. Do this after setting min/max dimensions

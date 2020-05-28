@@ -1,5 +1,6 @@
 15.0
 -----
+* [*] Fix wrong icon is used when a Password is visible
  
 14.9
 -----

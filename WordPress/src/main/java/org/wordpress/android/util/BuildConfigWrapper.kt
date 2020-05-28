@@ -7,8 +7,4 @@ class BuildConfigWrapper @Inject constructor() {
     fun getAppVersionCode(): Int {
         return BuildConfig.VERSION_CODE
     }
-
-    fun isFeatureAnnouncementEnabled(): Boolean {
-        return BuildConfig.FEATURE_ANNOUNCEMENT_AVAILABLE
-    }
 }

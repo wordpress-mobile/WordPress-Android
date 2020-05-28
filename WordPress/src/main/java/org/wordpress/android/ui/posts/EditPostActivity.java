@@ -64,6 +64,7 @@ import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
+import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
@@ -234,7 +235,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
         EditPostSettingsCallback,
-        PrivateAtCookieProgressDialogOnDismissListener {
+        PrivateAtCookieProgressDialogOnDismissListener,
+        ExceptionLogger {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -2342,9 +2344,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
                         mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
-                    } else if (data.getIntExtra(PhotoPickerActivity.CHILD_REQUEST_CODE, -1)
-                               == RequestCodes.TAKE_VIDEO) {
-                        mEditorMedia.addFreshlyTakenVideoToEditor();
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
@@ -2888,6 +2887,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.viewSuggestUsersForResult(this, mSite);
     }
 
+    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
+    }
+
+    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
+        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
+    }
+
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();
@@ -3134,6 +3141,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void advertiseImageOptimization(@NotNull Function0<Unit> listener) {
         WPMediaUtils.advertiseImageOptimization(this, listener::invoke);
+    }
+
+    @Override
+    public Consumer<Exception> getExceptionLogger() {
+        return (Exception e) -> CrashLoggingUtils.logException(e, T.EDITOR);
+    }
+
+    @Override
+    public Consumer<String> getBreadcrumbLogger() {
+        return CrashLoggingUtils::log;
     }
 
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {

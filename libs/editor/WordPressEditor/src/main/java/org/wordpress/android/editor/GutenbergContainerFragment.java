@@ -3,6 +3,7 @@ package org.wordpress.android.editor;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
@@ -15,6 +16,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListene
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
@@ -70,6 +72,7 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
                                   AddMentionUtil addMentionUtil,
+                                  OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
                                   boolean isDarkMode) {
             mWPAndroidGlueCode.attachToContainer(
                     viewGroup,
@@ -83,6 +86,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
                     addMentionUtil,
+                    onSPTTooltipShownEventListener,
                     isDarkMode);
     }
 
@@ -98,6 +102,14 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
 
+        Consumer<Exception> exceptionLogger = null;
+        Consumer<String> breadcrumbLogger = null;
+        if (getActivity() instanceof ExceptionLogger) {
+            ExceptionLogger exceptionLoggingActivity = ((ExceptionLogger) getActivity());
+            exceptionLogger = exceptionLoggingActivity.getExceptionLogger();
+            breadcrumbLogger = exceptionLoggingActivity.getBreadcrumbLogger();
+        }
+
         mWPAndroidGlueCode = new WPAndroidGlueCode();
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
@@ -112,9 +124,10 @@ public class GutenbergContainerFragment extends Fragment {
                 translations,
                 getContext().getResources().getColor(R.color.background_color),
                 isDarkMode,
-                isSiteUsingWpComRestApi,
-                editorTheme
-        );
+                exceptionLogger,
+                breadcrumbLogger,
+                                        isSiteUsingWpComRestApi,
+                                        editorTheme);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
