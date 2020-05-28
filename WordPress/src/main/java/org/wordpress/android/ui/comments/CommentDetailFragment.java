@@ -1401,7 +1401,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void trashComment() {
-        if (mComment == null) {
+        if (!isAdded() && mComment == null) {
             return;
         }
 
