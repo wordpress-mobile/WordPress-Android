@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -63,7 +63,7 @@ sealed class PrepublishingHomeViewHolder(
         private val button: Button = itemView.findViewById(R.id.publish_button)
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
-            uiState as SubmitButtonUiState
+            uiState as ButtonUiState
 
             button.text = uiHelpers.getTextOfUiString(itemView.context, uiState.buttonText)
             button.setOnClickListener {

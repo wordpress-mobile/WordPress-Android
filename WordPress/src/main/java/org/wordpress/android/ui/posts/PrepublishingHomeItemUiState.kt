@@ -16,25 +16,31 @@ sealed class PrepublishingHomeItemUiState {
     data class HeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
             PrepublishingHomeItemUiState()
 
-    sealed class SubmitButtonUiState(
+    sealed class ButtonUiState(
         val buttonText: UiStringRes,
         val publishPost: PublishPost,
         open val onButtonClicked: (PublishPost) -> Unit
     ) : PrepublishingHomeItemUiState() {
-        data class PublishButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : SubmitButtonUiState(
+        data class PublishButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_publish_button),
                 true,
                 onButtonClicked
         )
 
-        data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : SubmitButtonUiState(
+        data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
                 false,
                 onButtonClicked
         )
 
-        data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : SubmitButtonUiState(
+        data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_update_button),
+                false,
+                onButtonClicked
+        )
+
+        data class SubmitButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
+                UiStringRes(R.string.prepublishing_nudges_home_submit_button),
                 false,
                 onButtonClicked
         )

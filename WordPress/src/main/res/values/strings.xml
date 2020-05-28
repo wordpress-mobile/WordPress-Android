@@ -112,6 +112,7 @@
     <string name="local_changes">Local changes</string>
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
+    <string name="submit_now">Submit Now</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -2744,6 +2745,7 @@
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
+    <string name="prepublishing_nudges_home_submit_button">Submit Now</string>
     <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
