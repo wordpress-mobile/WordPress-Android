@@ -988,10 +988,16 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     private void updateHomepageSummary() {
-        if (mSite.getShowOnFront().equals(ShowOnFront.POSTS.getValue())) {
-            mHomepagePref.setSummary(R.string.site_settings_classic_blog);
+        if (mSite.isUsingWpComRestApi()) {
+            if (mSite.getShowOnFront() != null) {
+                if (mSite.getShowOnFront().equals(ShowOnFront.POSTS.getValue())) {
+                    mHomepagePref.setSummary(R.string.site_settings_classic_blog);
+                } else {
+                    mHomepagePref.setSummary(R.string.site_settings_static_homepage);
+                }
+            }
         } else {
-            mHomepagePref.setSummary(R.string.site_settings_static_homepage);
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_homepage_settings);
         }
     }
 
