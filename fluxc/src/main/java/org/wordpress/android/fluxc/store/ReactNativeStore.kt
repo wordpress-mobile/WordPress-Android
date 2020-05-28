@@ -54,7 +54,11 @@ class ReactNativeStore
 
     private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
 
-    suspend fun executeRequest(site: SiteModel, pathWithParams: String, enableCaching: Boolean = true): ReactNativeFetchResponse =
+    suspend fun executeRequest(
+        site: SiteModel,
+        pathWithParams: String,
+        enableCaching: Boolean = true
+    ): ReactNativeFetchResponse =
             coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeRequest") {
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
                     executeWPComRequest(site, pathWithParams, enableCaching)
@@ -66,7 +70,7 @@ class ReactNativeStore
     private suspend fun executeWPComRequest(
         site: SiteModel,
         path: String,
-        enableCaching:Boolean
+        enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
         return wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
