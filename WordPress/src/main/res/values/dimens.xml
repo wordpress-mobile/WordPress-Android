@@ -134,6 +134,7 @@
 
     <dimen name="reader_card_gutters">6dp</dimen>
     <dimen name="reader_card_avatar_margin_end">18dp</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
 
     <dimen name="reader_video_overlay_size">56dp</dimen>
 
@@ -175,8 +176,6 @@
     <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
     <dimen name="reader_image_featured_border_width">1dp</dimen>
-
-    <dimen name="reader_featured_image_height_cardview">150dp</dimen>
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
