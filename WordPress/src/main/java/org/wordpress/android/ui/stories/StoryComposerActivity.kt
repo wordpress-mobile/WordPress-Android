@@ -13,10 +13,13 @@ import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
+import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -56,7 +59,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         EditorMediaListener,
         AuthenticationHeadersProvider,
         NotificationIntentLoader,
-        MetadataProvider {
+        MetadataProvider,
+        StoryDiscardListener {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -66,6 +70,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
+    @Inject lateinit var dispatcher: Dispatcher
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -85,6 +90,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
         setMetadataProvider(this)
+        setStoryDiscardListener(this)
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -289,5 +295,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         bundle.putInt(KEY_STORY_INDEX, index)
         bundle.putInt(KEY_POST_LOCAL_ID, editPostRepository.id)
         return bundle
+    }
+
+    override fun onStoryDiscarded() {
+        // delete empty post from database
+        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+        // TODO WPSTORIES add TRACKS LOOK BELOW LINE!!!
+        // mPostEditorAnalyticsSession.setOutcome(CANCEL)
     }
 }
