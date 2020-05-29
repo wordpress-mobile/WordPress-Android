@@ -75,11 +75,7 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        val isPrimaryEditorAction = checkNotNull(arguments?.getBoolean(IS_PRIMARY_EDITOR_ACTION)) {
-            "arguments can't be null since it's a requirement that this value is passed."
-        }
-
-        viewModel.start(getEditPostRepository(), getSite(), isPrimaryEditorAction)
+        viewModel.start(getEditPostRepository(), getSite())
     }
 
     private fun getSite(): SiteModel {
@@ -110,12 +106,7 @@ class PrepublishingHomeFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
-        const val IS_PRIMARY_EDITOR_ACTION = "prepublishing_bottom_sheet_is_primary_editor_action"
 
-        fun newInstance(isPrimaryEditorAction: Boolean) = PrepublishingHomeFragment().apply {
-            arguments = Bundle().apply {
-                putBoolean(IS_PRIMARY_EDITOR_ACTION, isPrimaryEditorAction)
-            }
-        }
+        fun newInstance() = PrepublishingHomeFragment()
     }
 }

@@ -41,20 +41,16 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     fun start(
         editPostRepository: EditPostRepository,
-        site: SiteModel,
-        isPrimaryEditorAction: Boolean
-    ) {
+        site: SiteModel) {
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site, isPrimaryEditorAction)
+        setupHomeUiState(editPostRepository, site)
     }
 
     private fun setupHomeUiState(
         editPostRepository: EditPostRepository,
-        site: SiteModel,
-        isPrimaryEditorAction: Boolean
-    ) {
+        site: SiteModel) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
@@ -91,7 +87,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 )
             }
 
-            add(getButtonUiStateUseCase.getUiState(editPostRepository, site, isPrimaryEditorAction) { publishPost ->
+            add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
                 analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
                 _onSubmitButtonClicked.postValue(Event(publishPost))
             })

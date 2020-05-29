@@ -142,13 +142,9 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
-        val isPrimaryEditorAction = checkNotNull(arguments?.getBoolean(IS_PRIMARY_EDITOR_ACTION)) {
-            "arguments can't be null since it's a requirement that this value is passed."
-        }
-
         val (fragment, tag) = when (navigationTarget.targetScreen) {
             HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(isPrimaryEditorAction),
+                    PrepublishingHomeFragment.newInstance(),
                     PrepublishingHomeFragment.TAG
             )
             PrepublishingScreen.PUBLISH -> Pair(
@@ -206,7 +202,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
-        const val IS_PRIMARY_EDITOR_ACTION = "prepublishing_bottom_sheet_is_primary_editor_action"
 
         @JvmStatic
         fun newInstance(
@@ -218,7 +213,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
                         putBoolean(IS_PAGE, isPage)
-                        putBoolean(IS_PRIMARY_EDITOR_ACTION, isPrimaryEditorAction)
                     }
                 }
     }
