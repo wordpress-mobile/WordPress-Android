@@ -36,7 +36,7 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.DRAFT
 
         // act
-        useCase.updatePostToPublishImmediately(editPostRepository, isNewPost) {}
+        useCase.updatePostToPublishImmediately(editPostRepository, isNewPost)
 
         assertThat(editPostRepository.status.toString()).isEqualTo(expectedPostStatus.toString())
     }
@@ -48,7 +48,7 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.PUBLISHED
 
         // act
-        useCase.updatePostToPublishImmediately(editPostRepository, isNewPost) {}
+        useCase.updatePostToPublishImmediately(editPostRepository, isNewPost)
 
         assertThat(editPostRepository.status.toString()).isEqualTo(expectedPostStatus.toString())
     }
@@ -60,7 +60,7 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
         whenever(dateTimeUtilsWrapper.currentTimeInIso8601()).thenReturn(currentDate)
 
         // act
-        useCase.updatePostToPublishImmediately(editPostRepository, false) {}
+        useCase.updatePostToPublishImmediately(editPostRepository, false)
 
         assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
     }
