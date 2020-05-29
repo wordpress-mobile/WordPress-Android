@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-05 11:31:52+0000
+Translation-Revision-Date: 2020-05-19 10:16:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Välkommen till vår nya blogg</string>
+    <string name="gutenberg_native_select_a_color">Välj en färg</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
+    <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
     <string name="feature_announcement_dialog_label">Nyheter i WordPress</string>
     <string name="insert_label_with_count">Infoga %d</string>
@@ -30,18 +34,14 @@ Language: sv_SE
     <string name="button_insert">Infoga</string>
     <string name="continue_label">Fortsätt</string>
     <string name="copy_text">Kopiera</string>
-    <string name="gutenberg_native_subscribe">Prenumerera</string>
     <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
     <string name="gutenberg_native_move_block_right">Flytta blocket åt höger</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytta blocket åt vänster från position %1$s till position %2$s</string>
     <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
-    <string name="gutenberg_native_latest_blog_posts">Senaste blogginläggen</string>
-    <string name="gutenberg_native_follow_our_blog">Följ vår blogg</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
     <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Inställningar för färger kommer att läggas till snart.</string>
     <string name="gutenberg_native_blog">Blogg</string>
     <string name="new_site_creation_creating_site_loading_4">Skapar adminpanel</string>
     <string name="new_site_creation_creating_site_loading_3">Konfigurerar temat</string>
@@ -121,7 +121,6 @@ Language: sv_SE
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
     <string name="gutenberg_native_link_to">Länk till</string>
-    <string name="gutenberg_native_link_settings">Länkalternativ</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Låt oss skapa något tillsammans.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Låt oss skapa något tillsammans</string>
@@ -139,10 +138,6 @@ Language: sv_SE
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
     <string name="gutenberg_native_customize">ANPASSA</string>
     <string name="gutenberg_native_city_10100">Staden, 10100</string>
-    <string name="gutenberg_native_button_link_url">URL för knapp-länk</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Inställningar för knappfärger kommer att läggas till snart.</string>
-    <string name="gutenberg_native_border_settings">Kantinställningar</string>
-    <string name="gutenberg_native_border_radius">Kantradie</string>
     <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
@@ -276,7 +271,6 @@ Language: sv_SE
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Ta bort block från rad %s</string>
     <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
     <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
     <string name="gutenberg_native_problem_displaying_block">Problem med att visa block</string>
@@ -307,7 +301,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Dubbeltryck för att välja ett videoklipp</string>
     <string name="gutenberg_native_double_tap_to_select">Dubbeltryck för att välja</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Dubbeltryck för att ta bort blocket</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Dubbeltryck för att göra om senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dubbeltryck för att flytta blocket uppåt</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dubbeltryck för att flytta blocket nedåt</string>
@@ -888,7 +881,6 @@ Language: sv_SE
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
     <string name="reader_empty_followed_blogs_button_discover">Hitta webbplatser</string>
-    <string name="reader_empty_followed_blogs_description">Du följer inte någre webbplatser än. Du kanske vill följa någon nu?</string>
     <string name="reader_empty_followed_blogs_title">Inga följda webbplatser</string>
     <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
     <string name="notifications_empty_followers">Inga följare än</string>

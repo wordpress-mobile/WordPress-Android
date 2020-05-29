@@ -186,7 +186,6 @@ Language: el_GR
     <string name="people_empty_list_filtered_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
     <string name="people_empty_list_filtered_users">Δεν υπάρχουν χρήστες ακόμη</string>
     <string name="reader_empty_followed_blogs_button_discover">Ανακαλύψτε ιστοτόπους</string>
-    <string name="reader_empty_followed_blogs_description">Δεν ακολουθείτε ιστότοπους ακόμα. Γιατί να μην ξεκινήσετε τώρα;</string>
     <string name="reader_empty_followed_blogs_title">Δεν υπάρχουν ακολουθούμενοι ιστότοποι</string>
     <string name="notifications_empty_likes">Κανένα Like ακόμα</string>
     <string name="notifications_empty_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
