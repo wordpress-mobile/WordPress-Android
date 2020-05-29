@@ -4,7 +4,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.SaveButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.ScheduleButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.UpdateButtonUiState
 import org.wordpress.android.ui.posts.PublishPost
@@ -51,8 +50,7 @@ class GetButtonUiStateUseCase @Inject constructor(
 
             return when (editorAction) {
                 SecondaryEditorAction.PUBLISH_NOW -> PublishButtonUiState(onButtonClicked)
-                SecondaryEditorAction.SAVE -> SaveButtonUiState(onButtonClicked)
-                SAVE_AS_DRAFT, NONE -> {
+                SAVE_AS_DRAFT, SecondaryEditorAction.SAVE, NONE -> {
                     throw IllegalStateException("The $editorAction action shouldn't be available in this bottom sheet.")
                 }
             }
