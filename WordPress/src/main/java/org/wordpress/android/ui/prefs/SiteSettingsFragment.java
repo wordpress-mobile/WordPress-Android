@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -48,6 +49,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,16 +61,19 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.DeleteSiteError;
+import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextUtilsKt;
 import org.wordpress.android.util.HtmlUtils;
@@ -177,6 +183,9 @@ public class SiteSettingsFragment extends PreferenceFragment
     private EditTextPreference mAddressPref;
     private DetailListPreference mPrivacyPref;
     private DetailListPreference mLanguagePref;
+
+    // Homepage settings
+    private WPPreference mHomepagePref;
 
     // Account settings (NOTE: only for WP.org)
     private EditTextPreference mUsernamePref;
@@ -364,6 +373,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDestroyView() {
         removeMoreScreenToolbar();
         removeJetpackSecurityScreenToolbar();
+        mDispatcher.unregister(this);
         super.onDestroyView();
     }
 
@@ -452,6 +462,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (view != null) {
             setupPreferenceList(view.findViewById(android.R.id.list), getResources());
         }
+        mDispatcher.register(this);
 
         return view;
     }
@@ -519,6 +530,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
             showTimezoneDialog();
+        } else if (preference == mHomepagePref) {
+            showHomepageSettings();
         }
 
         return false;
@@ -905,6 +918,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         mTimeFormatPref = (WPPreference) getChangePref(R.string.pref_key_site_time_format);
         mPostsPerPagePref = getClickPref(R.string.pref_key_site_posts_per_page);
         mTimezonePref = getClickPref(R.string.pref_key_site_timezone);
+        mHomepagePref = (WPPreference) getChangePref(R.string.pref_key_homepage_settings);
+        updateHomepageSummary();
         mAmpPref = (WPSwitchPreference) getChangePref(R.string.pref_key_site_amp);
         mSiteQuotaSpacePref = (EditTextPreference) getChangePref(R.string.pref_key_site_quota_space);
         sortLanguages();
@@ -951,6 +966,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             removeNonWPComPreferences();
         }
 
+        if (!mSite.isUsingWpComRestApi()) {
+            WPPrefUtils.removePreference(this, R.string.pref_key_homepage, R.string.pref_key_homepage_settings);
+        }
+
         // hide Admin options depending of capabilities on this site
         if ((!isAccessedViaWPComRest && !mSite.isSelfHostedAdmin())
             || (isAccessedViaWPComRest && !mSite.getHasCapabilityManageOptions())) {
@@ -965,6 +984,20 @@ public class SiteSettingsFragment extends PreferenceFragment
         if (!mSite.isJetpackConnected() || (mSite.getPlanId() != PlansConstants.JETPACK_BUSINESS_PLAN_ID
                                             && mSite.getPlanId() != PlansConstants.JETPACK_PREMIUM_PLAN_ID)) {
             removeJetpackMediaSettings();
+        }
+    }
+
+    private void updateHomepageSummary() {
+        if (mSite.isUsingWpComRestApi()) {
+            if (mSite.getShowOnFront() != null) {
+                if (mSite.getShowOnFront().equals(ShowOnFront.POSTS.getValue())) {
+                    mHomepagePref.setSummary(R.string.site_settings_classic_blog);
+                } else {
+                    mHomepagePref.setSummary(R.string.site_settings_static_homepage);
+                }
+            }
+        } else {
+            WPPrefUtils.removePreference(this, R.string.pref_key_site_screen, R.string.pref_key_homepage_settings);
         }
     }
 
@@ -991,7 +1024,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpWhitelistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
-                mGutenbergDefaultForNewPosts
+                mGutenbergDefaultForNewPosts, mHomepagePref
         };
 
         for (Preference preference : editablePreference) {
@@ -1094,6 +1127,12 @@ public class SiteSettingsFragment extends PreferenceFragment
         SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
         dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
         dialog.show(getFragmentManager(), "timezone-dialog-tag");
+    }
+
+    private void showHomepageSettings() {
+        HomepageSettingsDialog homepageSettingsDialog = HomepageSettingsDialog.Companion.newInstance(mSite);
+        homepageSettingsDialog
+                .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "homepage-settings-dialog-tag");
     }
 
     private void dismissProgressDialog(ProgressDialog progressDialog) {
@@ -1923,6 +1962,14 @@ public class SiteSettingsFragment extends PreferenceFragment
         return mAdapter;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSiteChanged(OnSiteChanged event) {
+        if (!event.isError()) {
+            mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            updateHomepageSummary();
+        }
+    }
+
     private final class ActionModeCallback implements ActionMode.Callback {
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
@@ -1979,6 +2026,14 @@ public class SiteSettingsFragment extends PreferenceFragment
                     getAdapter().getItemsSelected().size())
             );
             return true;
+        }
+
+        @SuppressWarnings("unused")
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void onSiteChanged(OnSiteChanged event) {
+            if (!event.isError()) {
+                mSite = mSiteStore.getSiteByLocalId(mSite.getId());
+            }
         }
     }
 

@@ -1,5 +1,7 @@
 15.0
 -----
+* [**] Add homepage settings to pages list and to site settings. Now it's possible to change your posts page and your homepage.
+ 
 * [*] Fix wrong icon is used when a Password is visible
 * [*] Reader: Improved UI of the post card in the post feeds.
 
