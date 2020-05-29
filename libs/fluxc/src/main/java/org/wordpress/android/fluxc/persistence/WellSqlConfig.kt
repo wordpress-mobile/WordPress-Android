@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 106
+        return 107
     }
 
     override fun getDbName(): String {
@@ -1115,6 +1115,11 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "UNIQUE (REMOTE_CATEGORY_ID, LOCAL_SITE_ID) " +
                                     "ON CONFLICT REPLACE)"
                     )
+                }
+                106 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
                 }
             }
         }
