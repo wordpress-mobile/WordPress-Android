@@ -14,11 +14,6 @@
       "encrypt": true
     },
     {
-      "file": "android/WPAndroid/sentry.properties",
-      "destination": "sentry.properties",
-      "encrypt": true
-    },
-    {
       "file": "android/debug.keystore",
       "destination": "~/.android/debug_a8c.keystore",
       "encrypt": true
