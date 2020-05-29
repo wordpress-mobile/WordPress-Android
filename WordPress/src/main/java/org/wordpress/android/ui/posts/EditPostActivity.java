@@ -131,6 +131,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -331,6 +332,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
 
     private StorePostViewModel mViewModel;
 
@@ -1246,7 +1248,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return true;
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet(true);
+                mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
+                showPrepublishingNudgeBottomSheet(false);
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1345,7 +1348,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case UPDATE:
             case SCHEDULE:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet(false);
+                showPrepublishingNudgeBottomSheet(true);
                 return;
             case SUBMIT_FOR_REVIEW:
             case SAVE:
