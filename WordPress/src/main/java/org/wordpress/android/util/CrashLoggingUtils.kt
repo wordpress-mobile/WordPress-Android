@@ -2,13 +2,14 @@ package org.wordpress.android.util
 
 import android.content.Context
 import android.preference.PreferenceManager
+import io.sentry.android.core.SentryAndroid
 import io.sentry.core.Sentry
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 
 class CrashLoggingUtils {
     companion object {
-        @JvmStatic fun shouldEnableCrashLogging(context: android.content.Context): Boolean {
+        @JvmStatic fun shouldEnableCrashLogging(context: Context): Boolean {
             if (PackageUtils.isDebugBuild()) {
                 return false
             }
@@ -18,11 +19,11 @@ class CrashLoggingUtils {
             return !hasUserOptedOut
         }
 
-        // TODO: Update Sentry DSN in mobile-secrets
         @JvmStatic fun startCrashLogging(context: Context) {
-            Sentry.init { options ->
+            SentryAndroid.init(context) { options ->
                 options.dsn = BuildConfig.SENTRY_DSN
                 options.cacheDirPath = context.cacheDir.absolutePath
+                options.isEnableSessionTracking = true // Release Health tracking
             }
             Sentry.setTag("version", BuildConfig.VERSION_NAME)
         }
