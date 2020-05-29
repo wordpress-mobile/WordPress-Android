@@ -1249,7 +1249,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
-                showPrepublishingNudgeBottomSheet(false);
+                showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1348,7 +1348,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case UPDATE:
             case SCHEDULE:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet(true);
+                showPrepublishingNudgeBottomSheet();
                 return;
             case SUBMIT_FOR_REVIEW:
             case SAVE:
@@ -1736,14 +1736,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
-    private void showPrepublishingNudgeBottomSheet(boolean isPrimaryEditorAction) {
+    private void showPrepublishingNudgeBottomSheet() {
         ActivityUtils.hideKeyboard(this);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {
             PrepublishingBottomSheetFragment prepublishingFragment =
                     PrepublishingBottomSheetFragment
-                            .newInstance(getSite(), mIsPage, isPrimaryEditorAction);
+                            .newInstance(getSite(), mIsPage);
             prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
         }
     }

@@ -204,11 +204,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
 
         @JvmStatic
-        fun newInstance(
-            @NonNull site: SiteModel,
-            isPage: Boolean,
-            isPrimaryEditorAction: Boolean
-        ) =
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) =
                 PrepublishingBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
