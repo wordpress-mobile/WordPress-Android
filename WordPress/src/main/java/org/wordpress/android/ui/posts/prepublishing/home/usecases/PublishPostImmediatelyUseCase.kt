@@ -14,6 +14,8 @@ class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtil
         editPostRepository.updateAsync({ postModel: PostModel ->
             postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
 
+            // when the post is a Draft, Publish Now is shown as the Primary Action but if it's already Published then
+            // Update Now is shown.
             if (isNewPost) {
                 postModel.setStatus(PostStatus.DRAFT.toString())
             } else {
