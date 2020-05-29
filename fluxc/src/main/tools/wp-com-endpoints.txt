@@ -127,6 +127,8 @@
 /sites/$site/post/$post_ID/diffs
 /sites/$site/page/$post_ID/diffs
 
+/sites/$site/homepage
+
 /users/new/
 /users/social/new
 

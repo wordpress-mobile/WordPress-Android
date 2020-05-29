@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 107
+        return 108
     }
 
     override fun getDbName(): String {
@@ -1116,7 +1116,12 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "ON CONFLICT REPLACE)"
                     )
                 }
-                106 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                106 -> migrate(version) {
+                    db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
+                    db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
+                }
+                107 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
                     db.execSQL("CREATE TABLE WCProductVariationModel (" +
                             "LOCAL_SITE_ID INTEGER," +
