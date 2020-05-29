@@ -51,22 +51,22 @@ class PrepublishingHomeViewModel @Inject constructor(
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
             add(HomeUiState(
-                            actionType = VISIBILITY,
-                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                            onActionClicked = ::onActionClicked
+                    actionType = VISIBILITY,
+                    actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                    onActionClicked = ::onActionClicked
             ))
 
             add(HomeUiState(
-                            actionType = PUBLISH,
-                            actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                                val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                                if (label.isNotEmpty()) {
-                                    UiStringText(label)
-                                } else {
-                                    UiStringRes(R.string.immediately)
-                                }
-                            },
-                            onActionClicked = ::onActionClicked
+                    actionType = PUBLISH,
+                    actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
+                        val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
+                        if (label.isNotEmpty()) {
+                            UiStringText(label)
+                        } else {
+                            UiStringRes(R.string.immediately)
+                        }
+                    },
+                    onActionClicked = ::onActionClicked
             ))
 
             if (!editPostRepository.isPage) {
