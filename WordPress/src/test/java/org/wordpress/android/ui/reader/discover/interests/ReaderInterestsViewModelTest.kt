@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover.interests
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 
@@ -17,4 +18,7 @@ class ReaderInterestsViewModelTest {
     fun setUp() {
         viewModel = ReaderInterestsViewModel()
     }
+
+    @Test
+    fun `sample test`() {} // TODO:
 }
