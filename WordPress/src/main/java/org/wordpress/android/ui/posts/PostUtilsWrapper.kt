@@ -2,7 +2,6 @@ package org.wordpress.android.ui.posts
 
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.reader.utils.DateProvider

@@ -39,18 +39,14 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    fun start(
-        editPostRepository: EditPostRepository,
-        site: SiteModel) {
+    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
         if (isStarted) return
         isStarted = true
 
         setupHomeUiState(editPostRepository, site)
     }
 
-    private fun setupHomeUiState(
-        editPostRepository: EditPostRepository,
-        site: SiteModel) {
+    private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
