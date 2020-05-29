@@ -1,0 +1,4 @@
+14.9:
+<b>Mejoras en el editor de bloques:</b> Nuevo bloque de párrafo de cita, opciones de color del bloque de botón, actualizadas las plantillas de páginas.
+
+<b>Correcciones del editor de bloques:</b> Fallo en la biblioteca de fotos gratuita que insertaba imágenes individuales incluso si eran seleccionadas varias, fallo en la vista previa al cambiar al editor clásico. Eliminado de la plantilla del blog un botón de suscripción no funcional.
