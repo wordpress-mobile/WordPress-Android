@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 106
+        return 107
     }
 
     override fun getDbName(): String {
@@ -1102,7 +1102,21 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "REFUND TEXT NULL)"
                     )
                 }
-                105 -> migrate(version) {
+                105 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL(
+                            "CREATE TABLE WCProductCategoryModel (" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_CATEGORY_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "PARENT INTEGER," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (REMOTE_CATEGORY_ID, LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
+                    )
+                }
+                106 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
