@@ -48,7 +48,4 @@ class PostUtilsWrapper @Inject constructor(private val dateProvider: DateProvide
 
     fun shouldPublishImmediatelyOptionBeAvailable(status: PostStatus?) =
             PostUtils.shouldPublishImmediatelyOptionBeAvailable(status)
-
-    fun updatePublishDateIfShouldBePublishedImmediately(postModel: PostModel) =
-            PostUtils.updatePublishDateIfShouldBePublishedImmediately(postModel)
 }
