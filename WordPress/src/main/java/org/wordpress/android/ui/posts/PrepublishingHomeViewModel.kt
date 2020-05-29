@@ -14,7 +14,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
-import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
@@ -27,7 +26,6 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
-    private val publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
@@ -49,10 +47,14 @@ class PrepublishingHomeViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site)
+        setupHomeUiState(editPostRepository, site, isPrimaryEditorAction)
     }
 
-    private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
+    private fun setupHomeUiState(
+        editPostRepository: EditPostRepository,
+        site: SiteModel,
+        isPrimaryEditorAction: Boolean
+    ) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
@@ -89,7 +91,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                 )
             }
 
-            add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
+            add(getButtonUiStateUseCase.getUiState(editPostRepository, site, isPrimaryEditorAction) { publishPost ->
                 analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_PUBLISH_NOW_TAPPED)
                 _onSubmitButtonClicked.postValue(Event(publishPost))
             })
