@@ -113,7 +113,6 @@
     <string name="button_not_now">Not now</string>
 
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
     <!-- CAB -->
@@ -1282,6 +1281,7 @@
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
+    <string name="reader_dot_separator">\u0020\u2022\u0020</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1704,7 +1704,7 @@
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
-    <string name="reader_label_visit">Visit</string>
+    <string name="reader_label_visit">Visit site</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
