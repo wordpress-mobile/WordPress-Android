@@ -41,6 +41,7 @@ import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
+import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
@@ -455,6 +456,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
             slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
         }
+    }
+
+    @Override
+    public void gotUnregisteredEmail(String email) {
+        SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
+        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
     }
 
     @Override
