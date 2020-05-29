@@ -46,7 +46,8 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private static final String REGULAR_TRACKING_PATH = "bar";
     private static final String POST_PATH = "post";
     private static final String REDIRECT_TO_PARAM = "redirect_to";
-
+    private static final String STATS_PATH = "stats";
+    private static final String PAGES_PATH = "pages";
 
     private String mInterceptedUri;
     private String mBlogId;
@@ -71,7 +72,6 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         // check if this intent is started via custom scheme link
         if (Intent.ACTION_VIEW.equals(action) && uri != null) {
             mInterceptedUri = uri.toString();
-
             if (shouldOpenEditor(uri)) {
                 handleOpenEditor(uri);
             } else if (shouldHandleTrackingUrl(uri)) {
@@ -81,6 +81,10 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 handleAppBanner(host);
             } else if (shouldViewPost(host)) {
                 handleViewPost(uri);
+            } else if (shouldShowStats(uri)) {
+                handleShowStats(uri);
+            } else if (shouldShowPages(uri)) {
+                handleShowPages(uri);
             } else {
                 // not handled
                 finish();
@@ -92,8 +96,7 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
 
     private boolean shouldOpenEditor(@NonNull Uri uri) {
         // Match: https://wordpress.com/post/
-        return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
-               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), POST_PATH));
+        return shouldShow(uri, POST_PATH);
     }
 
     private @Nullable Uri getRedirectUri(@NonNull Uri uri) {
@@ -131,17 +134,12 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     }
 
     private void handleOpenEditor(@NonNull Uri uri) {
-        String urlPathSegment = uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
-        openEditorForSite(urlPathSegment);
+        openEditorForSite(extractTargetHost(uri));
     }
 
     private void openEditorForSite(@NonNull String targetHost) {
-        List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(targetHost);
-        SiteModel site = matchedSites.isEmpty() ? null : matchedSites.get(0);
-        String host = null;
-        if (site != null && site.getUrl() != null) {
-            host = Uri.parse(site.getUrl()).getHost();
-        }
+        SiteModel site = extractSiteModelFromTargetHost(targetHost);
+        String host = extractHostFromSite(site);
         if (site != null && host != null && StringUtils.equals(host, targetHost)) {
             // if we found the site with the matching url, open the editor for this site.
             ActivityLauncher.openEditorForSiteInNewStack(getContext(), site);
@@ -169,6 +167,42 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
         }
     }
 
+    private boolean shouldShowStats(@NonNull Uri uri) {
+        // Match: https://wordpress.com/stats/
+        return shouldShow(uri, STATS_PATH);
+    }
+
+    private void handleShowStats(@NonNull Uri uri) {
+        String targetHost = extractTargetHost(uri);
+        SiteModel site = extractSiteModelFromTargetHost(targetHost);
+        String host = extractHostFromSite(site);
+        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
+            ActivityLauncher.viewStatsInNewStack(getContext(), site);
+        } else {
+            // In other cases, launch stats with the current selected site.
+            ActivityLauncher.viewStatsInNewStack(getContext());
+        }
+        finish();
+    }
+
+    private boolean shouldShowPages(@NonNull Uri uri) {
+        // Match: https://wordpress.com/pages/
+        return shouldShow(uri, PAGES_PATH);
+    }
+
+    private void handleShowPages(@NonNull Uri uri) {
+        String targetHost = extractTargetHost(uri);
+        SiteModel site = extractSiteModelFromTargetHost(targetHost);
+        String host = extractHostFromSite(site);
+        if (site != null && host != null && StringUtils.equals(host, targetHost)) {
+            ActivityLauncher.viewPagesInNewStack(getContext(), site);
+        } else {
+            // In other cases, launch pages with the current selected site.
+            ActivityLauncher.viewPagesInNewStack(getContext());
+        }
+        finish();
+    }
+
     private void handleAppBanner(@NonNull String host) {
         switch (host) {
             case DEEP_LINK_HOST_NOTIFICATIONS:
@@ -191,9 +225,9 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     private boolean isFromAppBanner(String host) {
         return (host != null
                 && (host.equals(DEEP_LINK_HOST_NOTIFICATIONS)
-                || host.equals(DEEP_LINK_HOST_POST)
-                || host.equals(DEEP_LINK_HOST_READ)
-                || host.equals(DEEP_LINK_HOST_STATS)));
+                    || host.equals(DEEP_LINK_HOST_POST)
+                    || host.equals(DEEP_LINK_HOST_READ)
+                    || host.equals(DEEP_LINK_HOST_STATS)));
     }
 
     @Override
@@ -214,10 +248,10 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
                 final long postId = Long.parseLong(mPostId);
 
                 AnalyticsUtils.trackWithBlogPostDetails(AnalyticsTracker.Stat.READER_VIEWPOST_INTERCEPTED,
-                                                        blogId, postId);
+                        blogId, postId);
 
                 ReaderActivityLauncher.showReaderPostDetail(this, false, blogId, postId, null, 0, false,
-                                                            mInterceptedUri);
+                        mInterceptedUri);
             } catch (NumberFormatException e) {
                 AppLog.e(T.READER, e);
             }
@@ -230,5 +264,27 @@ public class DeepLinkingIntentReceiverActivity extends LocaleAwareActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    // Helper Methods
+    private String extractTargetHost(@NonNull Uri uri) {
+        return uri.getLastPathSegment() == null ? "" : uri.getLastPathSegment();
+    }
+
+    private @Nullable SiteModel extractSiteModelFromTargetHost(String host) {
+        List<SiteModel> matchedSites = mSiteStore.getSitesByNameOrUrlMatching(host);
+        return matchedSites.isEmpty() ? null : matchedSites.get(0);
+    }
+
+    private @Nullable String extractHostFromSite(SiteModel site) {
+        if (site != null && site.getUrl() != null) {
+            return Uri.parse(site.getUrl()).getHost();
+        }
+        return null;
+    }
+
+    private boolean shouldShow(@NonNull Uri uri, @NonNull String path) {
+        return StringUtils.equals(uri.getHost(), HOST_WORDPRESS_COM)
+               && (!uri.getPathSegments().isEmpty() && StringUtils.equals(uri.getPathSegments().get(0), path));
     }
 }

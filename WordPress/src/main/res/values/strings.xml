@@ -113,7 +113,6 @@
     <string name="button_not_now">Not now</string>
 
     <string name="latitude_longitude">%1$f, %2$f</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="at_username">\@%s</string>
 
     <!-- CAB -->
@@ -243,6 +242,13 @@
     <string name="page_moved_to_scheduled">Page has been scheduled</string>
     <string name="page_permanently_deleted">Page has been permanently deleted</string>
     <string name="page_parent_changed">Page parent has been changed</string>
+
+    <string name="page_cannot_set_homepage">To set Homepage enable \"Static Homepage\" in Site Settings</string>
+    <string name="page_cannot_set_posts_page">To set Posts page enable \"Static Homepage\" in Site Settings</string>
+    <string name="page_homepage_successfully_updated">Homepage successfully updated</string>
+    <string name="page_homepage_update_failed">Homepage update failed</string>
+    <string name="page_posts_page_successfully_updated">Posts Page successfully updated</string>
+    <string name="page_posts_page_update_failed">Homepage update failed</string>
 
     <!-- posts tab -->
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
@@ -557,6 +563,7 @@
     <string name="site_settings_advanced_header">Advanced</string>
     <string name="site_settings_traffic_header">Traffic</string>
     <string name="site_settings_performance">Performance</string>
+    <string name="site_settings_homepage">Homepage</string>
 
     <!-- Preference Titles -->
     <string name="site_settings_title_title">Site Title</string>
@@ -613,6 +620,15 @@
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the block editor</string>
     <string name="site_settings_password_updated">Password updated</string>
     <string name="site_settings_update_password_message">To reconnect the app to your self-hosted site, enter the site\'s new password here.</string>
+    <string name="site_settings_homepage_settings">Homepage Settings</string>
+    <string name="site_settings_homepage_settings_description">Choose from a homepage that displays your latest posts (classic blog) or a fixed/static page.</string>
+
+    <string name="site_settings_failed_to_load_pages">Loading of pages failed</string>
+    <string name="site_settings_accept_homepage">Accept</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Cannot save homepage settings</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Cannot save homepage settings before pages are loaded</string>
+    <string name="site_settings_failed_update_homepage_settings">Homepage settings update failed, check your internet connection</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Selected homepage and page for posts cannot be the same.</string>
 
     <!-- Media -->
     <string name="site_settings_quota_header">Media</string>
@@ -649,6 +665,12 @@
 
     <string name="site_settings_more">More</string>
     <string name="site_settings_performance_and_speed">Performance and Speed</string>
+
+    <!-- Homepage settings -->
+    <string name="site_settings_classic_blog">Classic Blog</string>
+    <string name="site_settings_static_homepage">Static Homepage</string>
+    <string name="site_settings_posts_page">Posts Page</string>
+    <string name="site_settings_select_page">Select Page</string>
 
     <!-- tag list and detail -->
     <string name="tag_name_hint">Tag</string>
@@ -1282,6 +1304,7 @@
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
+    <string name="reader_dot_separator">\u0020\u2022\u0020</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1704,7 +1727,7 @@
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
-    <string name="reader_label_visit">Visit</string>
+    <string name="reader_label_visit">Visit site</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
@@ -2627,6 +2650,8 @@
     <string name="pages_private">Private</string>
     <string name="pages_view">View</string>
     <string name="pages_set_parent">Set parent</string>
+    <string name="pages_set_as_homepage">Set as Homepage</string>
+    <string name="pages_set_as_posts_page">Set as Posts Page</string>
     <string name="pages_publish_now">Publish Now</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
@@ -2639,7 +2664,7 @@
     <string name="pages_empty_trashed">You don\'t have any trashed pages</string>
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
-
+    <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
