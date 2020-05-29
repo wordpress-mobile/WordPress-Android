@@ -120,10 +120,12 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
+import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
 import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.ReaderSearchActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -500,6 +502,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(FeatureAnnouncementDialogFragment object);
 
     void inject(FeatureAnnouncementListAdapter object);
+
+    void inject(ReaderFragment object);
+
+    void inject(ReaderSearchActivity object);
 
     void inject(HomepageSettingsDialog object);
 

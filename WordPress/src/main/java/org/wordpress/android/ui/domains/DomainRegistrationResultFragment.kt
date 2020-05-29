@@ -51,8 +51,9 @@ class DomainRegistrationResultFragment : Fragment() {
         continue_button.setOnClickListener {
             val intent = Intent()
             intent.putExtra(RESULT_REGISTERED_DOMAIN_EMAIL, email)
-            activity!!.setResult(RESULT_OK, intent)
-            activity!!.finish()
+            val nonNullActivity = requireActivity()
+            nonNullActivity.setResult(RESULT_OK, intent)
+            nonNullActivity.finish()
         }
 
         domain_registration_result_message.text = HtmlCompat.fromHtml(

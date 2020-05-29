@@ -54,7 +54,7 @@ class StatsFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
         initializeViews(nonNullActivity)
@@ -104,13 +104,13 @@ class StatsFragment : DaggerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
@@ -123,7 +123,7 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.toolbarHasShadow.observe(this, Observer { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
@@ -139,7 +139,7 @@ class StatsFragment : DaggerFragment() {
             )
         })
 
-        viewModel.siteChanged.observe(this, Observer { siteChangedEvent ->
+        viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
             siteChangedEvent?.applyIfNotHandled {
                 when (this) {
                     is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
@@ -148,13 +148,13 @@ class StatsFragment : DaggerFragment() {
             }
         })
 
-        viewModel.hideToolbar.observe(this, Observer { event ->
+        viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { hideToolbar ->
                 app_bar_layout.setExpanded(!hideToolbar, true)
             }
         })
 
-        viewModel.selectedSection.observe(this, Observer { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner, Observer { selectedSection ->
             selectedSection?.let {
                 val position = when (selectedSection) {
                     INSIGHTS -> 0
