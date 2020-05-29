@@ -284,7 +284,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> if (BuildConfig.READER_IMPROVEMENTS_PHASE_2) {
+                READER -> if (AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     ReaderInterestsFragment() // TODO: Temporary entry point
                 } else {
                     ReaderFragment()
