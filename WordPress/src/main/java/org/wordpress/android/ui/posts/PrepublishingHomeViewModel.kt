@@ -50,16 +50,13 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
-            add(
-                    HomeUiState(
+            add(HomeUiState(
                             actionType = VISIBILITY,
                             actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
                             onActionClicked = ::onActionClicked
-                    )
-            )
+            ))
 
-            add(
-                    HomeUiState(
+            add(HomeUiState(
                             actionType = PUBLISH,
                             actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
                                 val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
@@ -70,8 +67,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                                 }
                             },
                             onActionClicked = ::onActionClicked
-                    )
-            )
+            ))
 
             if (!editPostRepository.isPage) {
                 add(HomeUiState(
@@ -79,8 +75,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
-                )
-                )
+                ))
             }
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
