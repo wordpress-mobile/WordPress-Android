@@ -4,17 +4,17 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
-import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import javax.inject.Inject
 
-class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
+class PublishPostImmediatelyUseCase @Inject constructor(private val postUtilsWrapper: PostUtilsWrapper) {
     fun updatePostToPublishImmediately(
         editPostRepository: EditPostRepository,
         isNewPost: Boolean,
         onPostUpdated: () -> Unit
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
-            postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
+            postUtilsWrapper.updatePublishDateIfShouldBePublishedImmediately(postModel)
 
             if (isNewPost) {
                 postModel.setStatus(PostStatus.DRAFT.toString())
