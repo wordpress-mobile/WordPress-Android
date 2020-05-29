@@ -26,6 +26,9 @@ public class SiteWPComRestResponse implements Response {
         public String wp_memory_limit;
         public String jetpack_version;
         public String software_version;
+        public String show_on_front;
+        public long page_on_front;
+        public long page_for_posts;
     }
 
     public class Plan {
