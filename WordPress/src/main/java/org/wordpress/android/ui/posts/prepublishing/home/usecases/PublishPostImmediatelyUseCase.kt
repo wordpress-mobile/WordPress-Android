@@ -3,18 +3,16 @@ package org.wordpress.android.ui.posts.prepublishing.home.usecases
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
-import org.wordpress.android.ui.posts.PostUtilsWrapper
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 
-class PublishPostImmediatelyUseCase @Inject constructor(private val postUtilsWrapper: PostUtilsWrapper) {
+class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
     fun updatePostToPublishImmediately(
         editPostRepository: EditPostRepository,
-        isNewPost: Boolean,
-        onPostUpdated: () -> Unit
+        isNewPost: Boolean
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
-            postUtilsWrapper.updatePublishDateIfShouldBePublishedImmediately(postModel)
+            postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
 
             if (isNewPost) {
                 postModel.setStatus(PostStatus.DRAFT.toString())
@@ -22,10 +20,6 @@ class PublishPostImmediatelyUseCase @Inject constructor(private val postUtilsWra
                 postModel.setStatus(PostStatus.PUBLISHED.toString())
             }
             true
-        }, { _, result ->
-            if (result == UpdatePostResult.Updated) {
-                onPostUpdated.invoke()
-            }
         })
     }
 }
