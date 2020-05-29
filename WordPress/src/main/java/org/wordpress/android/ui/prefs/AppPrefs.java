@@ -1169,7 +1169,7 @@ public class AppPrefs {
      * BuildTime feature flag is used to make sure we never enable the feature in production builds - even when the
      * user manually overrides the shared preferences record using adb.
      *
-     * RunTime feature flag is used for us to enable the feature during development and when testing PRs on CI builds.
+     * RunTime feature flag is used for us to enable the feature during development.
      */
     public static boolean isReaderImprovementsPhase2Enabled() {
         return BuildConfig.READER_IMPROVEMENTS_PHASE_2 && getBoolean(UndeletablePrefKey.FF_READER_IMPROVEMENTS_PHASE_2,
