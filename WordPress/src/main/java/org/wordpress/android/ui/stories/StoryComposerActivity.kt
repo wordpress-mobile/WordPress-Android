@@ -82,6 +82,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -171,6 +172,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
         requestCodes.EXTRA_MEDIA_URIS = PhotoPickerActivity.EXTRA_MEDIA_URIS
+        requestCodes.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID = BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
     }
 
     override fun showProvidedMediaPicker() {

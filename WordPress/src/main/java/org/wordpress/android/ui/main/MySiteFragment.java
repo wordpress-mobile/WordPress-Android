@@ -1109,7 +1109,9 @@ public class MySiteFragment extends Fragment implements
                         // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
                         // errored story but the error notification will remain existing in the system dashboard)
                         intent.setAction(
-                                FrameSaveNotifier.getNotificationIdForError(event.getStoryIndex()) + ""
+                                FrameSaveNotifier.getNotificationIdForError(
+                                        StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                                        event.getStoryIndex()) + ""
                         );
 
                         // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
