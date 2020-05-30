@@ -175,7 +175,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         requestCodes.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED =
                 PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED
         requestCodes.EXTRA_MEDIA_URIS = PhotoPickerActivity.EXTRA_MEDIA_URIS
-        requestCodes.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID = BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
     }
 
     override fun showProvidedMediaPicker() {
@@ -317,6 +316,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 notificationId,
                 NotificationType.STORY_FRAME_SAVE_ERROR
             )
+    }
+
+    override fun setupErrorNotificationBaseId(): Int {
+        return BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
     }
 
     override fun loadMetadataForStory(index: StoryIndex): Bundle? {
