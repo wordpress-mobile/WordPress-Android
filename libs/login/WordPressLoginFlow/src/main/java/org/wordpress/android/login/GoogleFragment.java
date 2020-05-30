@@ -55,7 +55,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     protected String mIdToken;
     protected String mPhotoUrl;
 
-    protected static final String SERVICE_TYPE_GOOGLE = "google";
+    public static final String SERVICE_TYPE_GOOGLE = "google";
 
     @Inject protected Dispatcher mDispatcher;
     @Inject protected SiteStore mSiteStore;
