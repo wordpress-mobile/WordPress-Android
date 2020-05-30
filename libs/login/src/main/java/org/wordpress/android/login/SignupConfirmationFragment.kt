@@ -16,17 +16,26 @@ import kotlinx.android.synthetic.main.signup_confirmation_screen.*
 import kotlinx.android.synthetic.main.toolbar_login.*
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromEmail
+import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
 
 class SignupConfirmationFragment : Fragment() {
     private var mLoginListener: LoginListener? = null
 
     private var mEmail: String? = null
+    private var mDisplayName: String? = null
+    private var mIdToken: String? = null
+    private var mPhotoUrl: String? = null
+    private var mService: String? = null
     private var mIsSocialSignup: Boolean = false
 
     companion object {
         const val TAG = "signup_confirmation_fragment_tag"
 
         private const val ARG_EMAIL = "ARG_EMAIL"
+        private const val ARG_SOCIAL_DISPLAY_NAME = "ARG_SOCIAL_DISPLAY_NAME"
+        private const val ARG_SOCIAL_ID_TOKEN = "ARG_SOCIAL_ID_TOKEN"
+        private const val ARG_SOCIAL_PHOTO_URL = "ARG_SOCIAL_PHOTO_URL"
+        private const val ARG_SOCIAL_SERVICE = "ARG_SOCIAL_SERVICE"
         private const val ARG_IS_SOCIAL_SIGNUP = "ARG_IS_SOCIAL_SIGNUP"
 
         @JvmStatic fun newInstance(email: String?): SignupConfirmationFragment {
@@ -34,6 +43,25 @@ class SignupConfirmationFragment : Fragment() {
                 arguments = Bundle().apply {
                     putString(ARG_EMAIL, email)
                     putBoolean(ARG_IS_SOCIAL_SIGNUP, false)
+                }
+            }
+        }
+
+        @JvmStatic fun newInstance(
+            email: String?,
+            displayName: String?,
+            idToken: String?,
+            photoUrl: String?,
+            service: String?
+        ): SignupConfirmationFragment {
+            return SignupConfirmationFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_EMAIL, email)
+                    putString(ARG_SOCIAL_DISPLAY_NAME, displayName)
+                    putString(ARG_SOCIAL_ID_TOKEN, idToken)
+                    putString(ARG_SOCIAL_PHOTO_URL, photoUrl)
+                    putString(ARG_SOCIAL_SERVICE, service)
+                    putBoolean(ARG_IS_SOCIAL_SIGNUP, true)
                 }
             }
         }
@@ -52,6 +80,10 @@ class SignupConfirmationFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             mEmail = it.getString(ARG_EMAIL)
+            mDisplayName = it.getString(ARG_SOCIAL_DISPLAY_NAME)
+            mIdToken = it.getString(ARG_SOCIAL_ID_TOKEN)
+            mPhotoUrl = it.getString(ARG_SOCIAL_PHOTO_URL)
+            mService = it.getString(ARG_SOCIAL_SERVICE)
             mIsSocialSignup = it.getBoolean(ARG_IS_SOCIAL_SIGNUP)
         }
         setHasOptionsMenu(true)
@@ -83,7 +115,12 @@ class SignupConfirmationFragment : Fragment() {
         }
 
         if (mIsSocialSignup) {
-            // TODO Implement social signup confirmation
+            loadAvatarFromUrl(this, mPhotoUrl, gravatar, avatarRequestListener)
+            label.setText(R.string.signup_confirmation_message)
+            signup_confirmation_button.setText(R.string.create_account)
+            signup_confirmation_button.setOnClickListener {
+                mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
+            }
         } else {
             loadAvatarFromEmail(this, mEmail, gravatar, avatarRequestListener)
             label.setText(R.string.signup_confirmation_magic_link_message)
