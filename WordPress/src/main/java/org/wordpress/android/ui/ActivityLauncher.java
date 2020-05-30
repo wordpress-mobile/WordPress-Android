@@ -382,6 +382,12 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+    public static void viewStatsInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        context.startActivity(intent);
+    }
+
     private static Intent getMainActivityInNewStack(Context context) {
         Intent mainActivityIntent = new Intent(context, WPMainActivity.class);
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1054,5 +1060,26 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, EditImageActivity.class);
         intent.putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, input);
         activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
+    }
+
+    public static void viewPagesInNewStack(Context context, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.pages_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        Intent pagesIntent = new Intent(context, PagesActivity.class);
+        pagesIntent.putExtra(WordPress.SITE, site);
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(pagesIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    public static void viewPagesInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
+        context.startActivity(intent);
     }
 }
