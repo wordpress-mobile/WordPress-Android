@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
@@ -305,6 +308,15 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
 //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
+    }
+
+    override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
+        return NotificationsProcessingService
+            .getPendingIntentForNotificationDismiss(
+                applicationContext,
+                notificationId,
+                NotificationType.STORY_FRAME_SAVE_ERROR
+            )
     }
 
     override fun loadMetadataForStory(index: StoryIndex): Bundle? {
