@@ -314,7 +314,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             .getPendingIntentForNotificationDismiss(
                 applicationContext,
                 notificationId,
-                NotificationType.STORY_FRAME_SAVE_ERROR
+                NotificationType.STORY_SAVE_ERROR
             )
     }
 
