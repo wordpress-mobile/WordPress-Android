@@ -39,6 +39,10 @@ public abstract class BaseWPAPIRestClient {
         return mRequestQueue.add(setRequestAuthParams(request));
     }
 
+    protected Request add(WPAPIEncodedBodyRequest request) {
+        return mRequestQueue.add(setRequestAuthParams(request));
+    }
+
     private BaseRequest setRequestAuthParams(BaseRequest request) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
         request.setUserAgent(mUserAgent.getUserAgent());

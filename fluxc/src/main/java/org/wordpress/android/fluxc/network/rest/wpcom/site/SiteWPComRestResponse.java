@@ -13,6 +13,7 @@ public class SiteWPComRestResponse implements Response {
         public boolean videopress_enabled;
         public boolean featured_images_enabled;
         public boolean is_automated_transfer;
+        public boolean is_wpcom_atomic;
         public boolean is_wpcom_store;
         public boolean woocommerce_is_active;
         public String admin_url;
@@ -25,6 +26,9 @@ public class SiteWPComRestResponse implements Response {
         public String wp_memory_limit;
         public String jetpack_version;
         public String software_version;
+        public String show_on_front;
+        public long page_on_front;
+        public long page_for_posts;
     }
 
     public class Plan {
@@ -81,6 +85,7 @@ public class SiteWPComRestResponse implements Response {
     public boolean jetpack;
     public boolean visible;
     public boolean is_private;
+    public boolean is_coming_soon;
     public Options options;
     public Capabilities capabilities;
     public Plan plan;

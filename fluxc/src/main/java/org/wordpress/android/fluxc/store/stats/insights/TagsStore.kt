@@ -1,34 +1,33 @@
 package org.wordpress.android.fluxc.store.stats.insights
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
-import org.wordpress.android.fluxc.model.stats.TagsModel
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.TagsRestClient
 import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.TagsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class TagsStore @Inject constructor(
     private val restClient: TagsRestClient,
     private val sqlUtils: TagsSqlUtils,
     private val insightsMapper: InsightsMapper,
-    private val coroutineContext: CoroutineContext
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchTags(siteModel: SiteModel, limitMode: Top, forced: Boolean = false) =
-            withContext(coroutineContext) {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchTags") {
                 if (!forced && sqlUtils.hasFreshRequest(siteModel, limitMode.limit)) {
-                    return@withContext OnStatsFetched(getTags(siteModel, limitMode), cached = true)
+                    return@withDefaultContext OnStatsFetched(getTags(siteModel, limitMode), cached = true)
                 }
                 val response = restClient.fetchTags(siteModel, max = limitMode.limit + 1, forced = forced)
-                return@withContext when {
+                return@withDefaultContext when {
                     response.isError -> {
                         OnStatsFetched(response.error)
                     }
@@ -42,7 +41,7 @@ class TagsStore @Inject constructor(
                 }
             }
 
-    fun getTags(site: SiteModel, cacheMode: LimitMode): TagsModel? {
-        return sqlUtils.select(site)?.let { insightsMapper.map(it, cacheMode) }
+    fun getTags(site: SiteModel, cacheMode: LimitMode) = coroutineEngine.run(STATS, this, "getTags") {
+        sqlUtils.select(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 }

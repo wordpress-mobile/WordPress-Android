@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom
 
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
@@ -7,7 +8,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class WPComGsonRequestBuilder
@@ -45,12 +45,13 @@ class WPComGsonRequestBuilder
         enableCaching: Boolean = false,
         cacheTimeToLive: Int = BaseRequest.DEFAULT_CACHE_LIFETIME,
         forced: Boolean = false
-    ) = suspendCoroutine<Response<T>> { cont ->
+    ) = suspendCancellableCoroutine<Response<T>> { cont ->
         val request = WPComGsonRequest.buildGetRequest(url, params, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
         })
+        cont.invokeOnCancellation { request.cancel() }
         if (enableCaching) {
             request.enableCaching(cacheTimeToLive)
         }
@@ -90,12 +91,14 @@ class WPComGsonRequestBuilder
         url: String,
         body: Map<String, Any>,
         clazz: Class<T>
-    ) = suspendCoroutine<Response<T>> { cont ->
-        restClient.add(WPComGsonRequest.buildPostRequest(url, body, clazz, {
+    ) = suspendCancellableCoroutine<Response<T>> { cont ->
+        val request = WPComGsonRequest.buildPostRequest(url, body, clazz, {
             cont.resume(Success(it))
         }, {
             cont.resume(Error(it))
-        }))
+        })
+        cont.invokeOnCancellation { request.cancel() }
+        restClient.add(request)
     }
 
     sealed class Response<T> {

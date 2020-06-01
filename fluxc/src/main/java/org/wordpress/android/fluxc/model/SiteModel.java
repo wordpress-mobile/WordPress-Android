@@ -24,6 +24,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Table
 @RawConstraints({"UNIQUE (SITE_ID, URL)"})
 public class SiteModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -7641813766771796252L;
+
     @Retention(SOURCE)
     @IntDef({ORIGIN_UNKNOWN, ORIGIN_WPCOM_REST, ORIGIN_XMLRPC})
     public @interface SiteOrigin {}
@@ -43,6 +45,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private String mName;
     @Column private String mDescription;
     @Column private boolean mIsWPCom;
+    @Column private boolean mIsWPComAtomic;
     @Column private boolean mIsFeaturedImageSupported;
     @Column private String mDefaultCommentStatus = "open";
     @Column private String mTimezone; // Expressed as an offset relative to GMT (e.g. '-8')
@@ -51,12 +54,17 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mMemoryLimit; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
+    @Column private String mShowOnFront;
+    @Column private long mPageOnFront = -1;
+    @Column private long mPageForPosts = -1;
+
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
     @Column private long mSelfHostedSiteId;
     @Column private String mUsername;
     @Column private String mPassword;
     @Column(name = "XMLRPC_URL") private String mXmlRpcUrl;
+    @Column private String mWpApiRestUrl;
     @Column private String mSoftwareVersion;
     @Column private boolean mIsSelfHostedAdmin;
 
@@ -70,6 +78,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // mIsJetpackConnected is true if Jetpack is installed, activated and connected to a WordPress.com account.
     @Column private boolean mIsJetpackConnected;
     @Column private String mJetpackVersion;
+    @Column private String mJetpackUserEmail;
     @Column private boolean mIsAutomatedTransfer;
     @Column private boolean mIsWpComStore;
     @Column private boolean mHasWooCommerce;
@@ -77,6 +86,7 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     // WPCom specifics
     @Column private boolean mIsVisible = true;
     @Column private boolean mIsPrivate;
+    @Column private boolean mIsComingSoon;
     @Column private boolean mIsVideoPressSupported;
     @Column private long mPlanId;
     @Column private String mPlanShortName;
@@ -201,6 +211,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public void setXmlRpcUrl(String xmlRpcUrl) {
         mXmlRpcUrl = xmlRpcUrl;
+    }
+
+    public String getWpApiRestUrl() {
+        return mWpApiRestUrl;
+    }
+
+    public void setWpApiRestUrl(String wpApiRestEndpoint) {
+        mWpApiRestUrl = wpApiRestEndpoint;
     }
 
     public long getSelfHostedSiteId() {
@@ -555,6 +573,14 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
         mJetpackVersion = jetpackVersion;
     }
 
+    public String getJetpackUserEmail() {
+        return mJetpackUserEmail;
+    }
+
+    public void setJetpackUserEmail(String jetpackUserEmail) {
+        mJetpackUserEmail = jetpackUserEmail;
+    }
+
     public boolean isAutomatedTransfer() {
         return mIsAutomatedTransfer;
     }
@@ -626,5 +652,49 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean hasDiskSpaceQuotaInformation() {
         return mSpaceAllowed > 0;
+    }
+
+    public boolean isWPComAtomic() {
+        return mIsWPComAtomic;
+    }
+
+    public void setIsWPComAtomic(boolean isWPComAtomic) {
+        mIsWPComAtomic = isWPComAtomic;
+    }
+
+    public boolean isComingSoon() {
+        return mIsComingSoon;
+    }
+
+    public void setIsComingSoon(boolean isComingSoon) {
+        mIsComingSoon = isComingSoon;
+    }
+
+    public boolean isPrivateWPComAtomic() {
+        return isWPComAtomic() && (isPrivate() || isComingSoon());
+    }
+
+    public String getShowOnFront() {
+        return mShowOnFront;
+    }
+
+    public void setShowOnFront(String showOnFront) {
+        mShowOnFront = showOnFront;
+    }
+
+    public long getPageOnFront() {
+        return mPageOnFront;
+    }
+
+    public void setPageOnFront(long pageOnFront) {
+        mPageOnFront = pageOnFront;
+    }
+
+    public long getPageForPosts() {
+        return mPageForPosts;
+    }
+
+    public void setPageForPosts(long pageForPosts) {
+        mPageForPosts = pageForPosts;
     }
 }

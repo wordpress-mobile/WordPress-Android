@@ -80,6 +80,7 @@ public class AccountStore extends Store {
         public AuthEmailPayloadFlow flow;
         public AuthEmailPayloadSource source;
         public String emailOrUsername;
+        public String signupFlowName;
         public boolean isSignup;
 
         public AuthEmailPayload(String emailOrUsername, boolean isSignup, AuthEmailPayloadFlow flow,
@@ -911,6 +912,9 @@ public class AccountStore extends Store {
     }
 
     private void handleAuthenticateError(AuthenticateErrorPayload payload) {
+        if (payload.error.type == AuthenticationErrorType.INVALID_TOKEN) {
+            clearAccountAndAccessToken();
+        }
         OnAuthenticationChanged event = new OnAuthenticationChanged();
         event.error = payload.error;
         emitChange(event);
@@ -1045,6 +1049,7 @@ public class AccountStore extends Store {
     private void handlePushUsernameCompleted(AccountPushUsernameResponsePayload payload) {
         if (!payload.isError()) {
             AccountSqlUtils.updateUsername(getAccount(), payload.username);
+            getAccount().setUserName(payload.username);
         }
 
         OnUsernameChanged onUsernameChanged = new OnUsernameChanged();
@@ -1109,15 +1114,19 @@ public class AccountStore extends Store {
         mAccountRestClient.pushUsername(payload.username, payload.actionType);
     }
 
-    private void signOut() {
+    private void clearAccountAndAccessToken() {
         // Remove Account
         AccountSqlUtils.deleteAccount(mAccount);
         mAccount.init();
+        // Remove authentication token
+        mAccessToken.set(null);
+    }
+
+    private void signOut() {
+        clearAccountAndAccessToken();
         OnAccountChanged accountChanged = new OnAccountChanged();
         accountChanged.accountInfosChanged = true;
         emitChange(accountChanged);
-        // Remove authentication token
-        mAccessToken.set(null);
         emitChange(new OnAuthenticationChanged());
     }
 

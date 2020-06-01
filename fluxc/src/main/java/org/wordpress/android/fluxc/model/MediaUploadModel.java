@@ -25,6 +25,8 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Table
 @RawConstraints({"FOREIGN KEY(_id) REFERENCES MediaModel(_id) ON DELETE CASCADE"})
 public class MediaUploadModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -2575578916186403789L;
+
     @Retention(SOURCE)
     @IntDef({UPLOADING, COMPLETED, FAILED})
     public @interface UploadState {}

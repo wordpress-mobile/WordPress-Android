@@ -14,6 +14,8 @@ import java.io.Serializable;
 
 @Table
 public class MediaModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = -1396457338496002846L;
+
     public enum MediaUploadState {
         QUEUED, UPLOADING, DELETING, DELETED, FAILED, UPLOADED;
 

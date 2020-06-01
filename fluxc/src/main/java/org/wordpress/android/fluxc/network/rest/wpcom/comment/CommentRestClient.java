@@ -280,6 +280,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setDatePublished(response.date);
         comment.setContent(response.content);
         comment.setILike(response.i_like);
+        comment.setUrl(response.URL);
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);

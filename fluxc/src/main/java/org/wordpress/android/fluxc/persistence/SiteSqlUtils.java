@@ -26,6 +26,7 @@ import java.util.List;
 
 public class SiteSqlUtils {
     public static class DuplicateSiteException extends Exception {
+        private static final long serialVersionUID = -224883903136726226L;
     }
 
     public static SelectQuery<SiteModel> getSitesWith(String field, Object value) {

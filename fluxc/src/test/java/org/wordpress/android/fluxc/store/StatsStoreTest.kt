@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,12 +16,15 @@ import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWERS
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
 import org.wordpress.android.fluxc.store.StatsStore.ManagementType
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -32,15 +34,17 @@ class StatsStoreTest {
     @Mock lateinit var preferenceUtilsWrapper: PreferenceUtilsWrapper
     @Mock lateinit var sharedPreferences: SharedPreferences
     @Mock lateinit var sharedPreferencesEditor: SharedPreferences.Editor
+    @Mock lateinit var statsSqlUtils: StatsSqlUtils
     private lateinit var store: StatsStore
 
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         store = StatsStore(
-                Unconfined,
+                initCoroutineEngine(),
                 insightTypesSqlUtils,
-                preferenceUtilsWrapper
+                preferenceUtilsWrapper,
+                statsSqlUtils
         )
         whenever(preferenceUtilsWrapper.getFluxCPreferences()).thenReturn(sharedPreferences)
         whenever(sharedPreferences.edit()).thenReturn(sharedPreferencesEditor)
@@ -207,5 +211,41 @@ class StatsStoreTest {
         val insightsManagementNewsCardShowing = store.isInsightsManagementNewsCardShowing()
 
         assertThat(insightsManagementNewsCardShowing).isEqualTo(prefsValue)
+    }
+
+    @Test
+    fun `deletes all stats`() = test {
+        store.deleteAllData()
+
+        verify(statsSqlUtils).deleteAllStats()
+    }
+
+    @Test
+    fun `deletes all stats for a site`() = test {
+        val site = SiteModel()
+
+        store.deleteSiteData(site)
+
+        verify(statsSqlUtils).deleteSiteStats(site)
+    }
+
+    @Test
+    fun `filters out file downloads on Jetpack site`() = test {
+        val site = SiteModel()
+        site.setIsJetpackConnected(true)
+
+        val timeStatsTypes = store.getTimeStatsTypes(site)
+
+        assertThat(timeStatsTypes).doesNotContain(FILE_DOWNLOADS)
+    }
+
+    @Test
+    fun `does not filter out file downloads on non-Jetpack site`() = test {
+        val site = SiteModel()
+        site.setIsJetpackConnected(false)
+
+        val timeStatsTypes = store.getTimeStatsTypes(site)
+
+        assertThat(timeStatsTypes).contains(FILE_DOWNLOADS)
     }
 }

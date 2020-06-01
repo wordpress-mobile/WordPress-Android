@@ -99,6 +99,7 @@ enum class FormattableRangeType {
     LIKE,
     MATCH,
     MEDIA,
+    B,
     UNKNOWN;
 
     companion object {
@@ -116,6 +117,7 @@ enum class FormattableRangeType {
                 "like" -> LIKE
                 "match" -> MATCH
                 "media" -> MEDIA
+                "b" -> B
                 else -> UNKNOWN
             }
         }

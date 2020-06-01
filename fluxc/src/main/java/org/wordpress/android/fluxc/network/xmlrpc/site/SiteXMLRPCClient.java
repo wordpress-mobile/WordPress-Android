@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.network.xmlrpc.site;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.Listener;
@@ -23,6 +24,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.XMLRPCUtils;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsError;
 import org.wordpress.android.fluxc.store.SiteStore.PostFormatsErrorType;
+import org.wordpress.android.fluxc.utils.SiteUtils;
 import org.wordpress.android.util.MapUtils;
 
 import java.util.ArrayList;
@@ -104,7 +106,7 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         params.add(site.getPassword());
         params.add(new String[] {
                 "software_version", "post_thumbnail", "default_comment_status", "jetpack_client_id",
-                "blog_public", "home_url", "admin_url", "login_url", "blog_title", "time_zone" });
+                "blog_public", "home_url", "admin_url", "login_url", "blog_title", "time_zone", "jetpack_user_email" });
         final XMLRPCRequest request = new XMLRPCRequest(
                 site.getXmlRpcUrl(), XMLRPC.GET_OPTIONS, params,
                 new Listener<Object>() {
@@ -261,6 +263,13 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         } else {
             oldModel.setSiteId(0);
         }
+
+        // * Jetpack not installed: field "jetpack_user_email" not included in the response
+        // * Jetpack installed but not activated: field "jetpack_user_email" not included in the response
+        // * Jetpack installed, activated but not connected: field "jetpack_user_email" not included in the response
+        // * Jetpack installed, activated and connected: field "jetpack_user_email" included and is correctly
+        //   set to the email of the jetpack connected user
+        oldModel.setJetpackUserEmail(XMLRPCUtils.safeGetNestedMapValue(siteOptions, "jetpack_user_email", ""));
     }
 
     private SiteModel updateSiteFromOptions(Object response, SiteModel oldModel) {
@@ -296,22 +305,12 @@ public class SiteXMLRPCClient extends BaseXMLRPCClient {
         return oldModel;
     }
 
-    private List<PostFormatModel> responseToPostFormats(Object response, SiteModel site) {
+    private @Nullable List<PostFormatModel> responseToPostFormats(Object response, SiteModel site) {
         if (!(response instanceof Map)) {
             reportParseError(response, site.getXmlRpcUrl(), Map.class);
             return null;
         }
 
-        Map<?, ?> formatsMap = (Map<?, ?>) response;
-        List<PostFormatModel> res = new ArrayList<>();
-        for (Object key : formatsMap.keySet()) {
-            if (!(key instanceof String)) continue;
-            String skey = (String) key;
-            PostFormatModel postFormat = new PostFormatModel();
-            postFormat.setSlug(skey);
-            postFormat.setDisplayName(MapUtils.getMapStr(formatsMap, skey));
-            res.add(postFormat);
-        }
-        return res;
+        return SiteUtils.getValidPostFormatsOrNull((Map) response);
     }
 }

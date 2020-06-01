@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.AUTHORIZATION_REQUIRED
@@ -18,109 +17,118 @@ import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.TIMEOUT
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.persistence.InsightTypeSqlUtils
+import org.wordpress.android.fluxc.persistence.StatsSqlUtils
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.ALL_TIME_STATS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.COMMENTS
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.MOST_POPULAR_DAY_AND_HOUR
-import org.wordpress.android.fluxc.store.StatsStore.InsightType.POSTING_ACTIVITY
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.FOLLOWER_TOTALS
+import org.wordpress.android.fluxc.store.StatsStore.InsightType.LATEST_POST_SUMMARY
 import org.wordpress.android.fluxc.store.StatsStore.InsightType.TODAY_STATS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.AVERAGE_VIEWS_PER_DAY
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.CLICKS_BY_WEEKS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.MONTHS_AND_YEARS
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.POST_HEADER
-import org.wordpress.android.fluxc.store.StatsStore.PostDetailType.POST_OVERVIEW
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.AUTHORS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.CLICKS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.COUNTRIES
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.OVERVIEW
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.POSTS_AND_PAGES
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.REFERRERS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.SEARCH_TERMS
-import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.VIDEOS
+import org.wordpress.android.fluxc.store.StatsStore.TimeStatsType.FILE_DOWNLOADS
 import org.wordpress.android.fluxc.store.Store.OnChangedError
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
+import org.wordpress.android.util.AppLog
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
-val DEFAULT_INSIGHTS = listOf(POSTING_ACTIVITY, TODAY_STATS, ALL_TIME_STATS, MOST_POPULAR_DAY_AND_HOUR, COMMENTS)
+val DEFAULT_INSIGHTS = listOf(LATEST_POST_SUMMARY, TODAY_STATS, ALL_TIME_STATS, FOLLOWER_TOTALS)
+val STATS_UNAVAILABLE_WITH_JETPACK = listOf(FILE_DOWNLOADS)
 const val INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN = "INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN"
+
 @Singleton
 class StatsStore
 @Inject constructor(
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     private val insightTypeSqlUtils: InsightTypeSqlUtils,
-    private val preferenceUtils: PreferenceUtilsWrapper
+    private val preferenceUtils: PreferenceUtilsWrapper,
+    private val statsSqlUtils: StatsSqlUtils
 ) {
-    suspend fun getInsightTypes(site: SiteModel): List<StatsType> = withContext(coroutineContext) {
-        val types = mutableListOf<StatsType>()
-        if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
-            types.add(ManagementType.NEWS_CARD)
-        }
-        types.addAll(getAddedInsights(site))
-        types.add(ManagementType.CONTROL)
-        return@withContext types
+    fun deleteAllData() {
+        statsSqlUtils.deleteAllStats()
     }
 
-    fun hideInsightsManagementNewsCard() {
+    fun deleteSiteData(site: SiteModel) {
+        statsSqlUtils.deleteSiteStats(site)
+    }
+
+    suspend fun getInsightTypes(site: SiteModel): List<StatsType> =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getInsightTypes") {
+                val types = mutableListOf<StatsType>()
+                if (!preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, false)) {
+                    types.add(ManagementType.NEWS_CARD)
+                }
+                types.addAll(getAddedInsights(site))
+                types.add(ManagementType.CONTROL)
+                return@withDefaultContext types
+            }
+
+    fun hideInsightsManagementNewsCard() = coroutineEngine.run(AppLog.T.STATS, this, "hideInsightsManagementNewsCard") {
         preferenceUtils.getFluxCPreferences().edit().putBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true).apply()
     }
 
-    fun isInsightsManagementNewsCardShowing(): Boolean {
-        return preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)
-    }
+    fun isInsightsManagementNewsCardShowing() =
+            coroutineEngine.run(AppLog.T.STATS, this, "isInsightsManagementNewsCardShowing") {
+                preferenceUtils.getFluxCPreferences().getBoolean(INSIGHTS_MANAGEMENT_NEWS_CARD_SHOWN, true)
+            }
 
-    suspend fun getAddedInsights(site: SiteModel) = withContext(coroutineContext) {
-        val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
-        val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
+    suspend fun getAddedInsights(site: SiteModel) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getAddedInsights") {
+                val addedInsights = insightTypeSqlUtils.selectAddedItemsOrderedByStatus(site)
+                val removedInsights = insightTypeSqlUtils.selectRemovedItemsOrderedByStatus(site)
 
-        return@withContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
-            DEFAULT_INSIGHTS
-        } else {
-            addedInsights
-        }
-    }
+                return@withDefaultContext if (addedInsights.isEmpty() && removedInsights.isEmpty()) {
+                    DEFAULT_INSIGHTS
+                } else {
+                    addedInsights
+                }
+            }
 
-    fun getRemovedInsights(addedInsights: List<InsightType>): List<InsightType> {
-        return InsightType.values().asList() - addedInsights
-    }
+    fun getRemovedInsights(addedInsights: List<InsightType>) =
+            coroutineEngine.run(AppLog.T.STATS, this, "getRemovedInsights") {
+                InsightType.values().asList() - addedInsights
+            }
 
-    suspend fun updateTypes(site: SiteModel, addedInsights: List<InsightType>) = withContext(coroutineContext) {
-        insertOrReplaceItems(site, addedInsights, getRemovedInsights(addedInsights))
-    }
+    suspend fun updateTypes(site: SiteModel, addedInsights: List<InsightType>) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "updateTypes") {
+                insertOrReplaceItems(site, addedInsights, getRemovedInsights(addedInsights))
+            }
 
-    suspend fun moveTypeUp(site: SiteModel, type: InsightType) {
-        val insights = getAddedInsights(site)
-        val index = insights.indexOf(type)
+    suspend fun moveTypeUp(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "moveTypeUp") {
+                val insights = getAddedInsights(site)
+                val index = insights.indexOf(type)
 
-        if (index > 0) {
-            Collections.swap(insights, index, index - 1)
-            insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
-        }
-    }
+                if (index > 0) {
+                    Collections.swap(insights, index, index - 1)
+                    insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
+                }
+            }
 
-    suspend fun moveTypeDown(site: SiteModel, type: InsightType) {
-        val insights = getAddedInsights(site)
-        val index = insights.indexOf(type)
+    suspend fun moveTypeDown(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "moveTypeDown") {
+                val insights = getAddedInsights(site)
+                val index = insights.indexOf(type)
 
-        if (index < insights.size - 1) {
-            Collections.swap(insights, index, index + 1)
-            insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
-        }
-    }
+                if (index < insights.size - 1) {
+                    Collections.swap(insights, index, index + 1)
+                    insightTypeSqlUtils.insertOrReplaceAddedItems(site, insights)
+                }
+            }
 
-    suspend fun removeType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
-        val addedItems = getAddedInsights(site) - type
-        updateTypes(site, addedItems)
-    }
+    suspend fun removeType(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "removeType") {
+                val addedItems = getAddedInsights(site) - type
+                updateTypes(site, addedItems)
+            }
 
-    suspend fun addType(site: SiteModel, type: InsightType) = withContext(coroutineContext) {
-        val addedItems = getAddedInsights(site) + type
-        updateTypes(site, addedItems)
-    }
+    suspend fun addType(site: SiteModel, type: InsightType) =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "addType") {
+                val addedItems = getAddedInsights(site) + type
+                updateTypes(site, addedItems)
+            }
 
     private fun insertOrReplaceItems(
         site: SiteModel,
@@ -131,28 +139,19 @@ class StatsStore
         insightTypeSqlUtils.insertOrReplaceRemovedItems(site, removedItems)
     }
 
-    suspend fun getTimeStatsTypes(): List<TimeStatsType> = withContext(coroutineContext) {
-        return@withContext listOf(
-                OVERVIEW,
-                POSTS_AND_PAGES,
-                REFERRERS,
-                CLICKS,
-                AUTHORS,
-                COUNTRIES,
-                SEARCH_TERMS,
-                VIDEOS
-        )
-    }
+    suspend fun getTimeStatsTypes(site: SiteModel): List<TimeStatsType> =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getTimeStatsTypes") {
+                return@withDefaultContext if (site.isJetpackConnected) {
+                    TimeStatsType.values().toList().filter { !STATS_UNAVAILABLE_WITH_JETPACK.contains(it) }
+                } else {
+                    TimeStatsType.values().toList()
+                }
+            }
 
-    suspend fun getPostDetailTypes(): List<PostDetailType> = withContext(coroutineContext) {
-        return@withContext listOf(
-                POST_HEADER,
-                POST_OVERVIEW,
-                MONTHS_AND_YEARS,
-                AVERAGE_VIEWS_PER_DAY,
-                CLICKS_BY_WEEKS
-        )
-    }
+    suspend fun getPostDetailTypes(): List<PostDetailType> =
+            coroutineEngine.withDefaultContext(AppLog.T.STATS, this, "getPostDetailTypes") {
+                return@withDefaultContext PostDetailType.values().toList()
+            }
 
     interface StatsType
 
@@ -184,7 +183,8 @@ class StatsStore
         COUNTRIES,
         SEARCH_TERMS,
         PUBLISHED,
-        VIDEOS
+        VIDEOS,
+        FILE_DOWNLOADS
     }
 
     enum class PostDetailType : StatsType {

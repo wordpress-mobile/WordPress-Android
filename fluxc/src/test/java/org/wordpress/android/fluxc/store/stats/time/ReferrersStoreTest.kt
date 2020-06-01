@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -25,6 +24,7 @@ import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -45,7 +45,7 @@ class ReferrersStoreTest {
                 restClient,
                 sqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
     }
 
@@ -79,7 +79,7 @@ class ReferrersStoreTest {
 
         assertThat(responseModel.model).isEqualTo(model)
         assertThat(responseModel.cached).isTrue()
-        verify(sqlUtils, never()).insert(any(), any(), any(), any(), isNull())
+        verify(sqlUtils, never()).insert(any(), any(), any(), any<Date>(), isNull())
     }
 
     @Test

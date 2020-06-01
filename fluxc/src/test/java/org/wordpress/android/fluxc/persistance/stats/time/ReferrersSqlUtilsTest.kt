@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistance.stats.time
 
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Before
@@ -42,7 +43,7 @@ class ReferrersSqlUtilsTest {
     @Before
     fun setUp() {
         timeStatsSqlUtils = ReferrersSqlUtils(statsSqlUtils, statsUtils, statsRequestSqlUtils)
-        whenever(statsUtils.getFormattedDate(eq(DATE))).thenReturn(DATE_VALUE)
+        whenever(statsUtils.getFormattedDate(eq(DATE), isNull())).thenReturn(DATE_VALUE)
     }
 
     @Test

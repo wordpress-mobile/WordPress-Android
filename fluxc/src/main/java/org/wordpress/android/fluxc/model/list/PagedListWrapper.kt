@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
-import org.wordpress.android.fluxc.store.ListStore.OnListItemsChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
 import kotlin.coroutines.CoroutineContext
@@ -123,19 +122,6 @@ class PagedListWrapper<T>(
     @Suppress("unused")
     fun onListChanged(event: OnListChanged) {
         if (!event.listDescriptors.contains(listDescriptor)) {
-            return
-        }
-        invalidateData()
-    }
-
-    /**
-     * Handles the [OnListItemsChanged] `ListStore` event. It'll invalidate the data, so it can be reloaded. It'll also
-     * updates whether the list is empty or not.
-     */
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    @Suppress("unused")
-    fun onListItemsChanged(event: OnListItemsChanged) {
-        if (listDescriptor.typeIdentifier != event.type) {
             return
         }
         invalidateData()

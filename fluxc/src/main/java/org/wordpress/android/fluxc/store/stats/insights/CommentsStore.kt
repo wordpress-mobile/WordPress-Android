@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.store.stats.insights
 
-import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.stats.CommentsModel
 import org.wordpress.android.fluxc.model.stats.InsightsMapper
 import org.wordpress.android.fluxc.model.stats.LimitMode
 import org.wordpress.android.fluxc.model.stats.LimitMode.Top
@@ -11,25 +9,26 @@ import org.wordpress.android.fluxc.persistence.InsightsSqlUtils.CommentsInsights
 import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.util.AppLog.T.STATS
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class CommentsStore @Inject constructor(
     private val restClient: CommentsRestClient,
     private val sqlUtils: CommentsInsightsSqlUtils,
     private val insightsMapper: InsightsMapper,
-    private val coroutineContext: CoroutineContext
+    private val coroutineEngine: CoroutineEngine
 ) {
     suspend fun fetchComments(siteModel: SiteModel, limitMode: LimitMode, forced: Boolean = false) =
-            withContext(coroutineContext) {
+            coroutineEngine.withDefaultContext(STATS, this, "fetchComments") {
                 val requestedItems = if (limitMode is Top) limitMode.limit else Int.MAX_VALUE
                 if (!forced && sqlUtils.hasFreshRequest(siteModel, requestedItems)) {
-                    return@withContext OnStatsFetched(getComments(siteModel, limitMode), cached = true)
+                    return@withDefaultContext OnStatsFetched(getComments(siteModel, limitMode), cached = true)
                 }
                 val responsePayload = restClient.fetchTopComments(siteModel, forced = forced)
-                return@withContext when {
+                return@withDefaultContext when {
                     responsePayload.isError -> {
                         OnStatsFetched(responsePayload.error)
                     }
@@ -45,7 +44,7 @@ class CommentsStore @Inject constructor(
                 }
             }
 
-    fun getComments(site: SiteModel, cacheMode: LimitMode): CommentsModel? {
-        return sqlUtils.select(site)?.let { insightsMapper.map(it, cacheMode) }
+    fun getComments(site: SiteModel, cacheMode: LimitMode) = coroutineEngine.run(STATS, this, "getComments") {
+        sqlUtils.select(site)?.let { insightsMapper.map(it, cacheMode) }
     }
 }

@@ -11,6 +11,7 @@ import com.android.volley.Response.Listener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.UploadActionBuilder;
@@ -32,6 +33,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComErrorListener;
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMeta.PostData.PostAutoSave;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostMetaData;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostWPComRestResponse.PostsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.revisions.RevisionsResponse.DiffResponse;
@@ -41,12 +44,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.taxonomy.TermWPComRestResp
 import org.wordpress.android.fluxc.store.PostStore.DeletedPostPayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostListResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostResponsePayload;
+import org.wordpress.android.fluxc.store.PostStore.FetchPostStatusResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.FetchRevisionsResponsePayload;
 import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.PostStore.PostListItem;
+import org.wordpress.android.fluxc.store.PostStore.RemoteAutoSavePostPayload;
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -71,6 +78,7 @@ public class PostRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
+        params.put("meta", "autosave");
 
         final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
                 PostWPComRestResponse.class,
@@ -100,15 +108,45 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchPostStatus(final PostModel post, final SiteModel site) {
+        String url = WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).getUrlV1_1();
+
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", "status");
+        final WPComGsonRequest<PostWPComRestResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PostWPComRestResponse.class,
+                new Listener<PostWPComRestResponse>() {
+                    @Override
+                    public void onResponse(PostWPComRestResponse response) {
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.remotePostStatus = response.getStatus();
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchPostStatusResponsePayload payload = new FetchPostStatusResponsePayload(post, site);
+                        payload.error = new PostError(error.apiError, error.message);
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(payload));
+                    }
+                }
+                                                                                                );
+        add(request);
+    }
+
     public void fetchPostList(final PostListDescriptorForRestSite listDescriptor, final long offset) {
         String url = WPCOMREST.sites.site(listDescriptor.getSite().getSiteId()).posts.getUrlV1_1();
 
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status"));
+        String fields = TextUtils.join(",", Arrays.asList("ID", "modified", "status", "meta"));
         Map<String, String> params =
                 createFetchPostListParameters(false, offset, pageSize, listDescriptor.getStatusList(),
                         listDescriptor.getAuthor(), fields, listDescriptor.getOrder().getValue(),
                         listDescriptor.getOrderBy().getValue(), listDescriptor.getSearchQuery());
+
+        // We want to fetch only the minimal data required in order to save users' data
+        params.put("meta_fields", "autosave.modified");
 
         final boolean loadedMore = offset > 0;
 
@@ -119,11 +157,18 @@ public class PostRestClient extends BaseWPComRestClient {
                     public void onResponse(PostsResponse response) {
                         List<PostListItem> postListItems = new ArrayList<>(response.getPosts().size());
                         for (PostWPComRestResponse postResponse : response.getPosts()) {
+                            String autoSaveModified = null;
+                            if (postResponse.getPostAutoSave() != null) {
+                                autoSaveModified = postResponse.getPostAutoSave().getModified();
+                            }
                             postListItems
                                     .add(new PostListItem(postResponse.getRemotePostId(), postResponse.getModified(),
-                                            postResponse.getStatus()));
+                                            postResponse.getStatus(), autoSaveModified));
                         }
-                        boolean canLoadMore = postListItems.size() == pageSize;
+                        // The API sometimes return wrong number of posts "found", so we also check if we get an empty
+                        // list in which case there would be no more posts to be fetched.
+                        boolean canLoadMore = postListItems.size() > 0
+                                              && response.getFound() > offset + postListItems.size();
                         FetchPostListResponsePayload responsePayload =
                                 new FetchPostListResponsePayload(listDescriptor, postListItems, loadedMore,
                                         canLoadMore, null);
@@ -225,6 +270,36 @@ public class PostRestClient extends BaseWPComRestClient {
         request.addQueryParameter("context", "edit");
 
         request.disableRetries();
+        add(request);
+    }
+
+    public void remoteAutoSavePost(final @NonNull PostModel post, final @NonNull SiteModel site) {
+        String url =
+                WPCOMREST.sites.site(site.getSiteId()).posts.post(post.getRemotePostId()).autosave.getUrlV1_1();
+
+        Map<String, Object> body = postModelToAutoSaveParams(post);
+
+        final WPComGsonRequest<PostRemoteAutoSaveModel> request = WPComGsonRequest.buildPostRequest(url, body,
+                PostRemoteAutoSaveModel.class,
+                new Listener<PostRemoteAutoSaveModel>() {
+                    @Override
+                    public void onResponse(PostRemoteAutoSaveModel response) {
+                        RemoteAutoSavePostPayload payload =
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), response, site);
+                        mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        // Possible non-generic errors: 404 unknown_post (invalid post ID)
+                        PostError postError = new PostError(error.apiError, error.message);
+                        RemoteAutoSavePostPayload payload =
+                                new RemoteAutoSavePostPayload(post.getId(), post.getRemotePostId(), postError);
+                        mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(payload));
+                    }
+                }
+                                                                                                   );
         add(request);
     }
 
@@ -344,7 +419,7 @@ public class PostRestClient extends BaseWPComRestClient {
 
         if (from.getAuthor() != null) {
             post.setAuthorId(from.getAuthor().getId());
-            post.setAuthorDisplayName(from.getAuthor().getName());
+            post.setAuthorDisplayName(StringEscapeUtils.unescapeHtml4(from.getAuthor().getName()));
         }
 
         if (from.getPostThumbnail() != null) {
@@ -354,6 +429,31 @@ public class PostRestClient extends BaseWPComRestClient {
         if (from.getGeo() != null) {
             post.setLatitude(from.getGeo().latitude);
             post.setLongitude(from.getGeo().longitude);
+        } else {
+            List<PostMetaData> metaDataList = from.getMetadata();
+            if (metaDataList != null) {
+                for (PostMetaData metaData : metaDataList) {
+                    String key = metaData.getKey();
+                    if (key != null && metaData.getValue() != null) {
+                        try {
+                            if (key.equals("geo_longitude")) {
+                                Object metaDataValue = metaData.getValue();
+                                if (metaDataValue instanceof String) {
+                                    post.setLongitude(Double.parseDouble(metaDataValue.toString()));
+                                }
+                            }
+                            if (key.equals("geo_latitude")) {
+                                Object metaDataValue = metaData.getValue();
+                                if (metaDataValue instanceof String) {
+                                    post.setLatitude(Double.parseDouble(metaDataValue.toString()));
+                                }
+                            }
+                        } catch (NumberFormatException nfe) {
+                            AppLog.w(T.POSTS, "Geo location found in wrong format in the post metadata.");
+                        }
+                    }
+                }
+            }
         }
 
         if (from.getCategories() != null) {
@@ -370,6 +470,17 @@ public class PostRestClient extends BaseWPComRestClient {
                 tagNames.add(value.name);
             }
             post.setTagNameList(tagNames);
+        }
+
+        if (from.getPostAutoSave() != null) {
+            PostAutoSave autoSave = from.getPostAutoSave();
+            post.setAutoSaveRevisionId(autoSave.getRevisionId());
+            post.setAutoSaveModified(autoSave.getModified());
+            post.setRemoteAutoSaveModified(autoSave.getModified());
+            post.setAutoSavePreviewUrl(autoSave.getPreviewUrl());
+            post.setAutoSaveTitle(autoSave.getTitle());
+            post.setAutoSaveContent(autoSave.getContent());
+            post.setAutoSaveExcerpt(autoSave.getExcerpt());
         }
 
         if (from.getCapabilities() != null) {
@@ -482,6 +593,14 @@ public class PostRestClient extends BaseWPComRestClient {
         return params;
     }
 
+    private Map<String, Object> postModelToAutoSaveParams(PostModel post) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("title", StringUtils.notNullStr(post.getTitle()));
+        params.put("content", StringUtils.notNullStr(post.getContent()));
+        params.put("excerpt", StringUtils.notNullStr(post.getExcerpt()));
+        return params;
+    }
+
     private RevisionsModel revisionsResponseToRevisionsModel(RevisionsResponse response) {
         ArrayList<RevisionModel> revisions = new ArrayList<>();
         for (DiffResponse diffResponse : response.getDiffs()) {
@@ -534,6 +653,7 @@ public class PostRestClient extends BaseWPComRestClient {
         Map<String, String> params = new HashMap<>();
 
         params.put("context", "edit");
+        params.put("meta", "autosave");
         params.put("number", String.valueOf(number));
 
         if (getPages) {

@@ -100,6 +100,20 @@ public class PostStoreDbIntegrationTest {
     }
 
     @Test
+    public void testUpdateChangesConfirmedForHashcode() {
+        // Arrange
+        PostModel postModel = new PostModel();
+        postModel.setChangesConfirmedContentHashcode(postModel.contentHashcode());
+
+        // Act
+        mPostSqlUtils.insertPostForResult(postModel);
+
+        // Assert
+        assertEquals(postModel.getChangesConfirmedContentHashcode(),
+                PostTestUtils.getPosts().get(0).getChangesConfirmedContentHashcode());
+    }
+
+    @Test
     public void testPushAndFetchCollision() throws InterruptedException {
         // Test uploading a post, fetching remote posts and updating the db from the fetch first
 

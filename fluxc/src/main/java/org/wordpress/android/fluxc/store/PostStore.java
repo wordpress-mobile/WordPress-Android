@@ -12,6 +12,7 @@ import com.yarolegovich.wellsql.WellSql;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
+import org.wordpress.android.fluxc.BuildConfig;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.PostAction;
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.generated.ListActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPosts;
@@ -40,20 +42,22 @@ import org.wordpress.android.fluxc.model.revisions.LocalRevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionModel;
 import org.wordpress.android.fluxc.model.revisions.RevisionsModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
+import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRemoteAutoSaveModel;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.persistence.PostSqlUtils;
 import org.wordpress.android.fluxc.store.ListStore.FetchedListItemsPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListError;
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType;
-import org.wordpress.android.fluxc.store.ListStore.ListItemsChangedPayload;
 import org.wordpress.android.fluxc.store.ListStore.ListItemsRemovedPayload;
+import org.wordpress.android.fluxc.utils.ObjectsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,11 +90,13 @@ public class PostStore extends Store {
         public Long remotePostId;
         public String lastModified;
         public String status;
+        public String autoSaveModified;
 
-        public PostListItem(Long remotePostId, String lastModified, String status) {
+        public PostListItem(Long remotePostId, String lastModified, String status, String autoSaveModified) {
             this.remotePostId = remotePostId;
             this.lastModified = lastModified;
             this.status = status;
+            this.autoSaveModified = autoSaveModified;
         }
     }
 
@@ -221,6 +227,38 @@ public class PostStore extends Store {
         }
     }
 
+    public static class RemoteAutoSavePostPayload extends Payload<PostError> {
+        public PostRemoteAutoSaveModel autoSaveModel;
+        public int localPostId;
+        public long remotePostId;
+        public SiteModel site;
+
+        public RemoteAutoSavePostPayload(int localPostId, long remotePostId,
+                                         @NonNull PostRemoteAutoSaveModel autoSaveModel, @NonNull SiteModel site) {
+            this.localPostId = localPostId;
+            this.remotePostId = remotePostId;
+            this.autoSaveModel = autoSaveModel;
+            this.site = site;
+        }
+
+        public RemoteAutoSavePostPayload(int localPostId, long remotePostId, @NonNull PostError error) {
+            this.localPostId = localPostId;
+            this.remotePostId = remotePostId;
+            this.error = error;
+        }
+    }
+
+    public static class FetchPostStatusResponsePayload extends Payload<PostError> {
+        public PostModel post;
+        public SiteModel site;
+        public String remotePostStatus;
+
+        public FetchPostStatusResponsePayload(PostModel post, SiteModel site) {
+            this.post = post;
+            this.site = site;
+        }
+    }
+
     public static class PostError implements OnChangedError {
         public PostErrorType type;
         public String message;
@@ -287,6 +325,17 @@ public class PostStore extends Store {
         }
     }
 
+    public static class OnPostStatusFetched extends OnChanged<PostError> {
+        public PostModel post;
+        public String remotePostStatus;
+
+        OnPostStatusFetched(PostModel post, String remotePostStatus, PostError error) {
+            this.post = post;
+            this.remotePostStatus = remotePostStatus;
+            this.error = error;
+        }
+    }
+
     public enum PostDeleteActionType {
         TRASH,
         DELETE
@@ -347,7 +396,7 @@ public class PostStore extends Store {
         post.setLocalSiteId(site.getId());
         post.setIsLocalDraft(true);
         post.setIsPage(isPage);
-        post.setDateLocallyChanged((DateTimeUtils.iso8601FromDate(DateTimeUtils.nowUTC())));
+        post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
         if (categoryIds != null && !categoryIds.isEmpty()) {
             post.setCategoryIdList(categoryIds);
         }
@@ -570,8 +619,14 @@ public class PostStore extends Store {
             case FETCH_POST:
                 fetchPost((RemotePostPayload) action.getPayload());
                 break;
+            case FETCH_POST_STATUS:
+                fetchPostStatus((RemotePostPayload) action.getPayload());
+                break;
             case FETCHED_POST:
                 handleFetchSinglePostCompleted((FetchPostResponsePayload) action.getPayload());
+                break;
+            case FETCHED_POST_STATUS:
+                handleFetchPostStatusCompleted((FetchPostStatusResponsePayload) action.getPayload());
                 break;
             case PUSH_POST:
                 pushPost((RemotePostPayload) action.getPayload());
@@ -599,6 +654,12 @@ public class PostStore extends Store {
                 break;
             case REMOVE_ALL_POSTS:
                 removeAllPosts();
+                break;
+            case REMOTE_AUTO_SAVE_POST:
+                remoteAutoSavePost((RemotePostPayload) action.getPayload());
+                break;
+            case REMOTE_AUTO_SAVED_POST:
+                handleRemoteAutoSavedPost((RemoteAutoSavePostPayload) action.getPayload());
                 break;
             case FETCH_REVISIONS:
                 fetchRevisions((FetchRevisionsPayload) action.getPayload());
@@ -642,6 +703,23 @@ public class PostStore extends Store {
         }
     }
 
+    private void fetchPostStatus(RemotePostPayload payload) {
+        if (payload.post.isLocalDraft()) {
+            // If the post is a local draft, it won't have a remote post status
+            FetchPostStatusResponsePayload responsePayload =
+                    new FetchPostStatusResponsePayload(payload.post, payload.site);
+            responsePayload.error = new PostError(PostErrorType.UNKNOWN_POST);
+            mDispatcher.dispatch(PostActionBuilder.newFetchedPostStatusAction(responsePayload));
+            return;
+        }
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.fetchPostStatus(payload.post, payload.site);
+        } else {
+            // TODO: check for WP-REST-API plugin and use it here
+            mPostXMLRPCClient.fetchPostStatus(payload.post, payload.site);
+        }
+    }
+
     private void handleFetchPostList(FetchPostListPayload payload) {
         if (payload.listDescriptor instanceof PostListDescriptorForRestSite) {
             PostListDescriptorForRestSite descriptor = (PostListDescriptorForRestSite) payload.listDescriptor;
@@ -673,21 +751,52 @@ public class PostStore extends Store {
                     // Post doesn't exist in the DB, nothing to do.
                     continue;
                 }
-                // Check if the post's last modified date or status has changed. We need to check status separately
-                // because when a scheduled post is published, its modified date will not be updated.
+
+                boolean isAutoSaveChanged = !ObjectsUtils.equals(post.getAutoSaveModified(), item.autoSaveModified);
+
+                // Check if the post's last modified date or status have changed.
+                // We need to check status separately because when a scheduled post is published, its modified date
+                // will not be updated.
                 boolean isPostChanged =
-                        !post.getLastModified().equals(item.lastModified) || !post.getStatus().equals(item.status);
-                if (isPostChanged) {
+                        !post.getLastModified().equals(item.lastModified)
+                        || !post.getStatus().equals(item.status);
+
+                /*
+                 * This is a hacky workaround. When `/autosave` endpoint is invoked on a draft, the server
+                 * automatically updates the post content and clears autosave object instead of just updating the
+                 * autosave object. This results in a false-positive conflict as the PostModel.lastModified date field
+                 * gets updated and on the next post list fetch the app thinks the post has been changed both in remote
+                 * and locally.
+                 *
+                 * Since the app doesn't know the current status in the remote, it can't assume what
+                  * was updated. However, if we know the last modified date is equal to the date we have in local
+                  * autosave object we are sure that our invocation of /autosave updated the post directly.
+                 */
+                if (isPostChanged && item.lastModified.equals(post.getAutoSaveModified())
+                    && item.autoSaveModified == null) {
+                    isPostChanged = false;
+                    isAutoSaveChanged = false;
+                }
+
+                if (isPostChanged || isAutoSaveChanged) {
                     // Dispatch a fetch action for the posts that are changed, but not for posts with local changes
                     // as we'd otherwise overwrite and lose these local changes forever
                     if (!post.isLocallyChanged()) {
                         mDispatcher.dispatch(PostActionBuilder.newFetchPostAction(new RemotePostPayload(post, site)));
-                    } else {
+                    } else if (isPostChanged) {
                         // at this point we know there's a potential version conflict (the post has been modified
                         // both locally and on the remote), so flag the local version of the Post so the
                         // hosting app can inform the user and the user can decide and take action
                         post.setRemoteLastModified(item.lastModified);
                         mDispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post));
+                    } else if (isAutoSaveChanged) {
+                        // We currently don't want to do anything - we can't fetch the post from the remote as we'd
+                        // override the local changes. The plan is to introduce improved conflict resolution on the
+                        // UI and handle even the scenario for cases when the only thing that has changed is the
+                        // autosave object. We'll probably need to introduce something like `remoteAutoSaveModified`
+                        // field.
+                        // Btw we'll also need to add `else if (isPostChanged && isAutoSaveChanged) case in front of
+                        // `else if (isPostChanged)` in v2.
                     }
                 }
             }
@@ -827,6 +936,10 @@ public class PostStore extends Store {
         }
     }
 
+    private void handleFetchPostStatusCompleted(FetchPostStatusResponsePayload payload) {
+        emitChange(new OnPostStatusFetched(payload.post, payload.remotePostStatus, payload.error));
+    }
+
     private void handlePushPostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
             OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
@@ -883,15 +996,15 @@ public class PostStore extends Store {
 
     private void updatePost(PostModel post, boolean changeLocalDate) {
         if (changeLocalDate) {
-            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(DateTimeUtils.nowUTC())));
+            post.setDateLocallyChanged((DateTimeUtils.iso8601UTCFromDate(new Date())));
         }
         int rowsAffected = mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(post);
         CauseOfOnPostChanged causeOfChange = new CauseOfOnPostChanged.UpdatePost(post.getId(), post.getRemotePostId());
         OnPostChanged onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
         emitChange(onPostChanged);
 
-        mDispatcher.dispatch(ListActionBuilder.newListItemsChangedAction(
-                new ListItemsChangedPayload(PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId()))));
+        mDispatcher.dispatch(ListActionBuilder.newListDataInvalidatedAction(
+                PostListDescriptor.calculateTypeIdentifier(post.getLocalSiteId())));
     }
 
     private void removePost(PostModel post) {
@@ -923,6 +1036,42 @@ public class PostStore extends Store {
 
         mDispatcher.dispatch(ListActionBuilder
                 .newListRequiresRefreshAction(PostListDescriptor.calculateTypeIdentifier(postModel.getLocalSiteId())));
+    }
+
+    private void remoteAutoSavePost(RemotePostPayload payload) {
+        if (payload.site.isUsingWpComRestApi()) {
+            mPostRestClient.remoteAutoSavePost(payload.post, payload.site);
+        } else {
+            PostError postError = new PostError(
+                    PostErrorType.UNSUPPORTED_ACTION,
+                    "Remote-auto-save not support on self-hosted sites."
+            );
+            RemoteAutoSavePostPayload response =
+                    new RemoteAutoSavePostPayload(payload.post.getId(), payload.post.getRemotePostId(), postError);
+            mDispatcher.dispatch(UploadActionBuilder.newRemoteAutoSavedPostAction(response));
+        }
+    }
+
+    private void handleRemoteAutoSavedPost(RemoteAutoSavePostPayload payload) {
+        CauseOfOnPostChanged causeOfChange =
+                new CauseOfOnPostChanged.RemoteAutoSavePost(payload.localPostId, payload.remotePostId);
+        OnPostChanged onPostChanged;
+
+        if (payload.isError()) {
+            onPostChanged = new OnPostChanged(causeOfChange, 0);
+            onPostChanged.error = payload.error;
+        } else {
+            int rowsAffected = mPostSqlUtils.updatePostsAutoSave(payload.site, payload.autoSaveModel);
+            if (rowsAffected != 1) {
+                String errorMsg = "Updating fields of a single post affected: " + rowsAffected + " rows";
+                AppLog.e(AppLog.T.API, errorMsg);
+                if (BuildConfig.DEBUG) {
+                    throw new RuntimeException(errorMsg);
+                }
+            }
+            onPostChanged = new OnPostChanged(causeOfChange, rowsAffected);
+        }
+        emitChange(onPostChanged);
     }
 
     public void setLocalRevision(RevisionModel model, SiteModel site, PostModel post) {

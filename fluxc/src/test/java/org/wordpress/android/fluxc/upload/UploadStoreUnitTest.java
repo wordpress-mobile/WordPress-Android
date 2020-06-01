@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.generated.UploadActionBuilder;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaUploadModel;
 import org.wordpress.android.fluxc.model.PostModel;
@@ -208,5 +209,31 @@ public class UploadStoreUnitTest {
         assertNull(uploadError.postError);
         assertNotNull(uploadError.mediaError);
         assertEquals(MediaErrorType.EXCEEDS_MEMORY_LIMIT, uploadError.mediaError.type);
+    }
+
+    @Test
+    public void testNumberOfAutoUploadsAttemptsCounter() {
+        // Create a PostModel and add it to the PostStore
+        PostModel postModel = UploadTestUtils.getTestPost();
+        postModel.setId(55);
+        mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(postModel);
+        postModel = mPostStore.getPostByLocalPostId(postModel.getId());
+        assertNotNull(postModel);
+
+        // Register the PostModel with the UploadStore
+        mUploadStore.registerPostModel(postModel, new ArrayList<MediaModel>());
+
+        assertEquals(0, UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId())
+                                      .getNumberOfAutoUploadAttempts());
+
+        mUploadStore.onAction(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(postModel));
+
+        assertEquals(1, UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId())
+                                      .getNumberOfAutoUploadAttempts());
+
+        mUploadStore.onAction(UploadActionBuilder.newIncrementNumberOfAutoUploadAttemptsAction(postModel));
+
+        assertEquals(2, UploadSqlUtils.getPostUploadModelForLocalId(postModel.getId())
+                                      .getNumberOfAutoUploadAttempts());
     }
 }
