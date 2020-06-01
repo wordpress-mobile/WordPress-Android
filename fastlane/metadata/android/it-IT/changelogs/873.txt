@@ -1,0 +1,4 @@
+14.9:
+<b>Miglioramenti all'editor a blocchi:</b> nuovo blocco Citazione evidenziata, opzioni del colore nel blocco Pulsante, modelli di pagina aggiornati.
+
+<b>Correzioni all'editor a blocchi:</b> bug della libreria di foto gratuita tramite il quale venivano inserite singole immagini anche se ne erano state selezionate differenti, anteprima dell'errore quando si passava all'editor classico. Pulsante abbonamento non funzionale rimosso dal modello Blog.

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-14 15:47:57+0000
+Translation-Revision-Date: 2020-05-26 19:50:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Velkommen til vår nye blogg</string>
+    <string name="gutenberg_native_select_a_color">Velg en farge</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
+    <string name="reader_empty_followed_blogs_description">Når du følger nettsteder vil du se innholdet her</string>
     <string name="feature_announcement_find_out_mode">Finn ut mer</string>
     <string name="feature_announcement_dialog_label">Hva er nytt i WordPress?</string>
     <string name="insert_label_with_count">Sett inn %d</string>
     <string name="crop">klipp</string>
+    <string name="preview_image_thumbnail_description">Forhåndsvis miniatyrbilde</string>
     <string name="photo_picker_use_media">Bruk denne mediafilen</string>
     <string name="photo_picker_use_video">Bruk denne videoen</string>
     <string name="photo_picker_photo_or_video_title">Velg mediafil</string>
@@ -26,14 +31,11 @@ Language: nb_NO
     <string name="button_insert">Sett inn</string>
     <string name="continue_label">Fortsett</string>
     <string name="copy_text">Kopier</string>
-    <string name="gutenberg_native_subscribe">Abonner</string>
     <string name="gutenberg_native_number_of_columns">Antall kolonner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytt blokken mot høyre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_right">Flytt blokken mot høyre</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytt blokken mot venstre fra posisjon %1$s til posisjon %2$s</string>
     <string name="gutenberg_native_move_block_left">Flytt blokken mot venstre</string>
-    <string name="gutenberg_native_latest_blog_posts">Siste blogginnlegg</string>
-    <string name="gutenberg_native_follow_our_blog">Følg vår blogg</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dobbelttrykk for å flytte blokken mot høyre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dobbelttrykk for å flytte blokken mot venstre</string>
     <string name="gutenberg_native_columns_settings">Kolonneinnstillinger</string>
@@ -105,7 +107,6 @@ Language: nb_NO
     <string name="gutenberg_native_portfolio">Portefølje</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
-    <string name="gutenberg_native_link_settings">Lenkeinnstillinger</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">La oss bygge noe sammen.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">La oss bygge noe sammen</string>
     <string name="gutenberg_native_let_s_build_something_together">La oss bygge noe sammen</string>
@@ -115,6 +116,7 @@ Language: nb_NO
     <string name="gutenberg_native_excerpt_length_words">Lengde på utdrag (ord)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Send meg e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_add_paragraph_block">Legg til avsnittsblokk</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_555_555_1234">98765432</string>
     <string name="gutenberg_native_10_street_road">Gateveien 10</string>
@@ -224,7 +226,6 @@ Language: nb_NO
     <string name="gutenberg_native_show_section">Vis seksjon</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_reset_block">Tilbakestill blokk</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Fjern blokk på rad %s</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem under åpning av videoen</string>
     <string name="gutenberg_native_problem_displaying_block">Problem ved visning av blokk</string>
     <string name="gutenberg_native_post_title_s">Overskrift innlegg. %s</string>
@@ -254,7 +255,6 @@ Language: nb_NO
     <string name="gutenberg_native_double_tap_to_select_an_image">Dobbelttrykk for å velge et bilde</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Dobbelttrykk for å velge en video</string>
     <string name="gutenberg_native_double_tap_to_select">Dobbelttrykk for å velge</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Dobbelttrykk for å fjerne blokken</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Dobbelttrykk for å gjenta siste endring</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dobbelttrykk for å flytte blokken opp</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dobbelttrykk for å flytte blokken ned</string>
@@ -830,7 +830,6 @@ Language: nb_NO
     <string name="reader_empty_posts_liked_title">Ingen likt ennå</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå til fulgte</string>
     <string name="reader_empty_followed_blogs_button_discover">Oppdag nettsteder</string>
-    <string name="reader_empty_followed_blogs_description">Du følger ingen nettsteder ennå. Hvorfor ikke følge en nå?</string>
     <string name="reader_empty_followed_blogs_title">Ingen fulgte nettsteder</string>
     <string name="notifications_empty_likes">Ingen likinger ennå</string>
     <string name="notifications_empty_followers">Ingen følgere ennå</string>

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-08 11:10:53+0000
+Translation-Revision-Date: 2020-05-27 13:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">欢迎访问我们的新博客</string>
+    <string name="gutenberg_native_select_a_color">选择一种颜色</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">点击两下以进入颜色设置</string>
+    <string name="reader_empty_followed_blogs_description">在您关注站点时，您会在这里看到其内容</string>
     <string name="feature_announcement_find_out_mode">了解更多</string>
     <string name="feature_announcement_dialog_label">WordPress 的新变化</string>
     <string name="insert_label_with_count">插入 %d</string>
@@ -30,18 +34,14 @@ Language: zh_CN
     <string name="button_insert">插入</string>
     <string name="continue_label">继续</string>
     <string name="copy_text">复制</string>
-    <string name="gutenberg_native_subscribe">订阅</string>
     <string name="gutenberg_native_number_of_columns">栏目数</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向右移动到位置 %2$s</string>
     <string name="gutenberg_native_move_block_right">向右移动区块</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向左移动到位置 %2$s</string>
     <string name="gutenberg_native_move_block_left">向左移动区块</string>
-    <string name="gutenberg_native_latest_blog_posts">最新博文</string>
-    <string name="gutenberg_native_follow_our_blog">关注我们的博客</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">轻按两下以向右移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">轻按两下以向左移动区块</string>
     <string name="gutenberg_native_columns_settings">栏目设置</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">即将推出颜色设置。</string>
     <string name="gutenberg_native_blog">博客</string>
     <string name="new_site_creation_creating_site_loading_4">正在创建控制面板</string>
     <string name="new_site_creation_creating_site_loading_3">正在设置主题</string>
@@ -121,7 +121,6 @@ Language: zh_CN
     <string name="gutenberg_native_only_show_excerpt">仅显示摘录</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的作品集展示了我职业生涯中完成的各种项目。请在下面查看我的联系信息并与我联系。</string>
     <string name="gutenberg_native_link_to">链接到</string>
-    <string name="gutenberg_native_link_settings">链接设置</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">我们来交流一下 👋 您可以随时通过以下联系信息联系我们，或者使用表单发送消息。</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">让我们共同创造精彩内容。</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">让我们共同创造精彩内容</string>
@@ -139,10 +138,6 @@ Language: zh_CN
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">不要为结束而哭泣，要为曾经拥有而微笑。</string>
     <string name="gutenberg_native_customize">定制</string>
     <string name="gutenberg_native_city_10100">北京，100000</string>
-    <string name="gutenberg_native_button_link_url">按钮链接 URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">即将提供按钮颜色设置。</string>
-    <string name="gutenberg_native_border_settings">边框设置</string>
-    <string name="gutenberg_native_border_radius">边框半径</string>
     <string name="gutenberg_native_add_paragraph_block">添加段落区块</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">简要介绍您提供的服务。</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">简短的个人简介，包括个人经历、主要成就或有趣的体验。</string>
@@ -276,7 +271,6 @@ Language: zh_CN
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 区块。此区块包含无效内容</string>
     <string name="gutenberg_native_s_block_empty">%s 区块。空白</string>
     <string name="gutenberg_native_reset_block">重置区块</string>
-    <string name="gutenberg_native_remove_block_at_row_s">删除第 %s 行的区块</string>
     <string name="gutenberg_native_remove_annotations">删除注释</string>
     <string name="gutenberg_native_problem_opening_the_video">打开视频时出现问题</string>
     <string name="gutenberg_native_problem_displaying_block">显示区块时出现问题</string>
@@ -307,7 +301,6 @@ Language: zh_CN
     <string name="gutenberg_native_double_tap_to_select_an_image">轻按两下以选择图片</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">轻按两下以选择视频</string>
     <string name="gutenberg_native_double_tap_to_select">轻按两下以选择</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">轻按两下以删除区块</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">轻按两下以恢复上次的更改</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">轻按两下以向上移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">轻按两下以向下移动区块</string>
@@ -888,7 +881,6 @@ Language: zh_CN
     <string name="reader_empty_posts_liked_title">尚无点赞内容</string>
     <string name="reader_empty_followed_blogs_button_followed">去关注</string>
     <string name="reader_empty_followed_blogs_button_discover">发现站点</string>
-    <string name="reader_empty_followed_blogs_description">您尚未关注任何站点。现在要关注站点吗？</string>
     <string name="reader_empty_followed_blogs_title">无关注的站点</string>
     <string name="notifications_empty_likes">尚无人点赞</string>
     <string name="notifications_empty_followers">尚无粉丝</string>

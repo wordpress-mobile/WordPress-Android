@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-08 21:25:35+0000
+Translation-Revision-Date: 2020-05-23 19:47:04+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Yeni blogumuza hoşgeldiniz</string>
+    <string name="gutenberg_native_select_a_color">Bir renk seçin</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
+    <string name="reader_empty_followed_blogs_description">Siteleri takip ettiğinizde, içeriklerini burada görürsünüz</string>
     <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
     <string name="feature_announcement_dialog_label">WordPress\'de neler yeni</string>
     <string name="insert_label_with_count">%d ekle</string>
@@ -30,18 +34,14 @@ Language: tr
     <string name="button_insert">Ekle</string>
     <string name="continue_label">Devam</string>
     <string name="copy_text">Kopyala</string>
-    <string name="gutenberg_native_subscribe">Abone Ol</string>
     <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
     <string name="gutenberg_native_move_block_right">Bloğu sağa taşı</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
     <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
-    <string name="gutenberg_native_latest_blog_posts">Son Blog Yazıları</string>
-    <string name="gutenberg_native_follow_our_blog">Blogumuzu takip edin</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Renk ayarları çok yakında.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Pano oluşturma</string>
     <string name="new_site_creation_creating_site_loading_3">Tema ayarlama</string>
@@ -121,7 +121,6 @@ Language: tr
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
-    <string name="gutenberg_native_link_settings">Bağlantı Ayarları</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Hadi birlikte bir şeyler oluşturalım.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Hadi Birlikte Bir Şeyler Oluşturalım</string>
@@ -139,10 +138,6 @@ Language: tr
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Bitti diye ağlama, gerçekleştiği için gülümse.</string>
     <string name="gutenberg_native_customize">ÖZELLEŞTİR</string>
     <string name="gutenberg_native_city_10100">Şehir, 10100</string>
-    <string name="gutenberg_native_button_link_url">Düğme Bağlantı URL\'si</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Düğme rengi ayarları çok yakında kullanıma sunulacak.</string>
-    <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
-    <string name="gutenberg_native_border_radius">Kenarlık Yarıçapı</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraf bloku ekle</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Sunduğunuz hizmetlerin kısa bir tanımı.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Kişisel geçmişinizi, önemli başarılarınızı veya ilginç bir gerçeği içeren kısa bir biyografi.</string>
@@ -276,7 +271,6 @@ Language: tr
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
-    <string name="gutenberg_native_remove_block_at_row_s">%s. satırdaki bloğu kaldır</string>
     <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
     <string name="gutenberg_native_problem_displaying_block">Blok görüntülenirken bir sorun oluştu</string>
@@ -307,7 +301,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_an_image">Bir görsel seçmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Bir video seçmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select">Seçmek için çift dokunun</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Bloğu kaldırmak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Son değişikliği yinelemek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Bloğu yukarı taşımak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Bloğu aşağı taşımak için çift dokunun</string>
@@ -888,7 +881,6 @@ Language: tr
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
     <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
     <string name="reader_empty_followed_blogs_button_discover">Siteleri keşfet</string>
-    <string name="reader_empty_followed_blogs_description">Henüz herhangi bir siteyi takip etmiyorsunuz. Hemen bir tanesini takip etmeye ne dersiniz?</string>
     <string name="reader_empty_followed_blogs_title">Takip edilen site yok</string>
     <string name="notifications_empty_likes">Henüz beğeni yok</string>
     <string name="notifications_empty_followers">Henüz takipçi yok</string>
