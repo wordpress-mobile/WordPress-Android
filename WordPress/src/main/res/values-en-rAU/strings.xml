@@ -558,7 +558,6 @@ Language: en_AU
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
-    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
