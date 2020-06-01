@@ -7,14 +7,14 @@
 
 /sites/$site/gutenberg
 
+/sites/$site/atomic-auth-proxy/read-access-cookies
+
 /sites/$site/stats/orders/
 /sites/$site/stats/top-earners
 
 /users/username/suggestions/
 
 /segments
-/verticals
-/verticals/prompt
 
 /plans/mobile
 

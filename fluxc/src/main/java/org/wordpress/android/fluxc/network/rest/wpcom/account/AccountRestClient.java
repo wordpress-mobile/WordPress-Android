@@ -1093,6 +1093,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         account.setNewEmail(from.new_user_email);
         account.setAvatarUrl(from.avatar_URL);
         account.setPendingEmailChange(from.user_email_change_pending);
+        account.setUsernameCanBeChanged(from.user_login_can_be_changed);
         account.setTracksOptOut(from.tracks_opt_out);
         account.setWebAddress(from.user_URL);
         account.setPrimarySiteId(from.primary_site_ID);

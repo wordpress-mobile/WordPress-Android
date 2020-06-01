@@ -16,7 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.stats.time.StatsUtils
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.fluxc.store.StatsStore.FetchStatsPayload
 import org.wordpress.android.fluxc.store.toStatsError
-import java.util.Date
+import org.wordpress.android.fluxc.utils.SiteUtils
 import javax.inject.Singleton
 
 @Singleton
@@ -33,7 +33,6 @@ constructor(
     suspend fun fetchTimePeriodStats(
         site: SiteModel,
         period: StatsGranularity,
-        date: Date,
         forced: Boolean
     ): FetchStatsPayload<VisitResponse> {
         val url = WPCOMREST.sites.site(site.siteId).stats.visits.urlV1_1
@@ -41,7 +40,7 @@ constructor(
         val params = mapOf(
                 "unit" to period.toString(),
                 "quantity" to "1",
-                "date" to statsUtils.getFormattedDate(date)
+                "date" to statsUtils.getFormattedDate(timeZone = SiteUtils.getNormalizedTimezone(site.timezone))
         )
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,

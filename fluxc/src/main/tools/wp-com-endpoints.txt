@@ -80,6 +80,7 @@
 
 /sites/$site/posts/
 /sites/$site/posts/$post_ID/
+/sites/$site/posts/$post_ID/autosave/
 /sites/$site/posts/$post_ID/delete/
 /sites/$site/posts/$post_ID/restore/
 /sites/$site/posts/$post_ID/replies/new
@@ -121,9 +122,12 @@
 /sites/$site/stats/posts
 /sites/$site/stats/post/$post_ID
 /sites/$site/stats/streak
+/sites/$site/stats/file-downloads
 
 /sites/$site/post/$post_ID/diffs
 /sites/$site/page/$post_ID/diffs
+
+/sites/$site/homepage
 
 /users/new/
 /users/social/new

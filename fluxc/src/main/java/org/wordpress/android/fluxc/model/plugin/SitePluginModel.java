@@ -11,6 +11,8 @@ import java.io.Serializable;
 @Table
 @RawConstraints({"UNIQUE (SLUG, LOCAL_SITE_ID)"})
 public class SitePluginModel implements Identifiable, Serializable {
+    private static final long serialVersionUID = -7687371389928982877L;
+
     @PrimaryKey @Column private int mId;
     @Column private int mLocalSiteId;
     @Column private String mName;

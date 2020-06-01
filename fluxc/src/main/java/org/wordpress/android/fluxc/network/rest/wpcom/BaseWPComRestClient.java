@@ -62,7 +62,7 @@ public abstract class BaseWPComRestClient {
         };
     }
 
-    protected Request add(WPComGsonRequest request) {
+    public Request add(WPComGsonRequest request) {
         // Add "locale=xx_XX" query parameter to all request by default
         return add(request, true);
     }
@@ -83,7 +83,6 @@ public abstract class BaseWPComRestClient {
     protected Request addUnauthedRequest(AccountSocialRequest request, boolean addLocaleParameter) {
         if (addLocaleParameter) {
             addLocaleToRequest(request);
-            request.setOnParseErrorListener(mOnParseErrorListener);
             request.setUserAgent(mUserAgent.getUserAgent());
         }
         return addRequest(request);
@@ -107,7 +106,6 @@ public abstract class BaseWPComRestClient {
 
     private WPComGsonRequest setRequestAuthParams(WPComGsonRequest request, boolean shouldAuth) {
         request.setOnAuthFailedListener(mOnAuthFailedListener);
-        request.setOnParseErrorListener(mOnParseErrorListener);
         request.setOnJetpackTunnelTimeoutListener(mOnJetpackTunnelTimeoutListener);
         request.setUserAgent(mUserAgent.getUserAgent());
         request.setAccessToken(shouldAuth ? mAccessToken.get() : null);
@@ -115,6 +113,7 @@ public abstract class BaseWPComRestClient {
     }
 
     private Request addRequest(BaseRequest request) {
+        request.setOnParseErrorListener(mOnParseErrorListener);
         if (request.shouldCache() && request.shouldForceUpdate()) {
             mRequestQueue.getCache().invalidate(request.mUri.toString(), true);
         }

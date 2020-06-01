@@ -37,6 +37,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferEligibilityCheckResponse.EligibilityError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
+import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
+import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferError;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferStatusResponsePayload;
@@ -57,6 +59,7 @@ import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedCountriesRespo
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesError;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.DomainSupportedStatesResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedPrivateAtomicCookiePayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedEditorsPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPlansPayload;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedPostFormatsPayload;
@@ -80,6 +83,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
+import org.wordpress.android.fluxc.utils.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -210,13 +214,12 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void newSite(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                        @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
-                        @Nullable String tagLine, final boolean dryRun) {
+    public void newSite(@NonNull String siteName, @NonNull String language,
+                        @NonNull SiteVisibility visibility, @Nullable Long segmentId,
+                        final boolean dryRun) {
         String url = WPCOMREST.sites.new_.getUrlV1_1();
         Map<String, Object> body = new HashMap<>();
         body.put("blog_name", siteName);
-        body.put("blog_title", siteTitle);
         body.put("lang_id", language);
         body.put("public", visibility.toString());
         body.put("validate", dryRun ? "1" : "0");
@@ -225,16 +228,8 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         // Add site options if available
         Map<String, Object> options = new HashMap<>();
-        if (verticalId != null) {
-            options.put("site_vertical", verticalId);
-        }
         if (segmentId != null) {
             options.put("site_segment", segmentId);
-        }
-        if (tagLine != null) {
-            Map<String, Object> siteInformation = new HashMap<>();
-            siteInformation.put("site_tagline", tagLine);
-            options.put("site_information", siteInformation);
         }
         if (options.size() > 0) {
             body.put("options", options);
@@ -332,12 +327,17 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void designateMobileEditorForAllSites(final String mobileEditorName) {
+    public void designateMobileEditorForAllSites(final String mobileEditorName, final boolean setOnlyIfEmpty) {
         Map<String, Object> params = new HashMap<>();
         String url = WPCOMV2.me.gutenberg.getUrl();
         params.put("editor", mobileEditorName);
         params.put("platform", "mobile");
-        params.put("set_only_if_empty", "true");
+        if (setOnlyIfEmpty) {
+            params.put("set_only_if_empty", "true");
+        }
+        // Else, omit the "set_only_if_empty" parameters.
+        // There is an issue in the API implementation. It only checks
+        // for "set_only_if_empty" presence but don't check for its value.
 
         add(WPComGsonRequest
                 .buildPostRequest(url, params, Map.class,
@@ -370,17 +370,17 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<PostFormatsResponse>() {
                     @Override
                     public void onResponse(PostFormatsResponse response) {
-                        List<PostFormatModel> postFormats = new ArrayList<>();
-                        if (response.formats != null) {
-                            for (String key : response.formats.keySet()) {
-                                PostFormatModel postFormat = new PostFormatModel();
-                                postFormat.setSlug(key);
-                                postFormat.setDisplayName(response.formats.get(key));
-                                postFormats.add(postFormat);
-                            }
+                        List<PostFormatModel> postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats);
+
+                        if (postFormats != null) {
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                    FetchedPostFormatsPayload(site, postFormats)));
+                        } else {
+                            FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
+                                    Collections.<PostFormatModel>emptyList());
+                            payload.error = new PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
-                                FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
                 new WPComErrorListener() {
@@ -688,7 +688,7 @@ public class SiteRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to v1.1 /domains/$domainName/is-available/ endpoint. Upon receiving a response
+     * Performs an HTTP GET call to v1.3 /domains/$domainName/is-available/ endpoint. Upon receiving a response
      * (success or error) a {@link SiteAction#CHECKED_DOMAIN_AVAILABILITY} action is dispatched with a
      * payload of type {@link DomainAvailabilityResponsePayload}.
      *
@@ -934,6 +934,42 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchAccessCookie(final SiteModel site) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(site.getSiteId()).atomic_auth_proxy.read_access_cookies.getUrl();
+        final WPComGsonRequest<PrivateAtomicCookieResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                PrivateAtomicCookieResponse.class,
+                new Listener<PrivateAtomicCookieResponse>() {
+                    @Override
+                    public void onResponse(PrivateAtomicCookieResponse response) {
+                        if (response != null) {
+                            mDispatcher.dispatch(SiteActionBuilder
+                                    .newFetchedPrivateAtomicCookieAction(
+                                            new FetchedPrivateAtomicCookiePayload(site, response)));
+                        } else {
+                            AppLog.e(T.API, "Failed to fetch private atomic cookie for " + site.getUrl());
+                            FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(
+                                    site, null);
+                            payload.error = new PrivateAtomicCookieError(
+                                    AccessCookieErrorType.INVALID_RESPONSE, "Empty response");
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                                AccessCookieErrorType.GENERIC_ERROR, error.message);
+                        FetchedPrivateAtomicCookiePayload payload = new FetchedPrivateAtomicCookiePayload(site, null);
+                        payload.error = cookieError;
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPrivateAtomicCookieAction(payload));
+                    }
+                }
+                                                                                                      );
+        add(request);
+    }
+
     // Utils
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
@@ -946,6 +982,7 @@ public class SiteRestClient extends BaseWPComRestClient {
         site.setIsJetpackInstalled(from.jetpack);
         site.setIsVisible(from.visible);
         site.setIsPrivate(from.is_private);
+        site.setIsComingSoon(from.is_coming_soon);
         // Depending of user's role, options could be "hidden", for instance an "Author" can't read site options.
         if (from.options != null) {
             site.setIsFeaturedImageSupported(from.options.featured_images_enabled);
@@ -960,6 +997,10 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setUnmappedUrl(from.options.unmapped_url);
             site.setJetpackVersion(from.options.jetpack_version);
             site.setSoftwareVersion(from.options.software_version);
+            site.setIsWPComAtomic(from.options.is_wpcom_atomic);
+            site.setShowOnFront(from.options.show_on_front);
+            site.setPageOnFront(from.options.page_on_front);
+            site.setPageForPosts(from.options.page_for_posts);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));

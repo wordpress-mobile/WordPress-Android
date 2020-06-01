@@ -227,6 +227,10 @@ public class Authenticator {
             params.put("source", payload.source.toString());
         }
 
+        if (payload.signupFlowName != null && !TextUtils.isEmpty(payload.signupFlowName)) {
+            params.put("signup_flow_name", payload.signupFlowName);
+        }
+
         WPComGsonRequest request = WPComGsonRequest.buildPostRequest(url, params, AuthEmailWPComRestResponse.class,
                 new Response.Listener<AuthEmailWPComRestResponse>() {
                     @Override

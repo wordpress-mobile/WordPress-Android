@@ -24,6 +24,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.SitesModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.DomainSuggestionResponse;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.AtomicCookie;
+import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookieResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.DeleteSiteResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient.ExportSiteResponsePayload;
@@ -76,29 +79,22 @@ public class SiteStore extends Store {
     @SuppressWarnings("WeakerAccess")
     public static class NewSitePayload extends Payload<BaseNetworkError> {
         @NonNull public String siteName;
-        @NonNull public String siteTitle;
         @NonNull public String language;
         @NonNull public SiteVisibility visibility;
-        @Nullable public String verticalId;
         @Nullable public Long segmentId;
-        @Nullable public String tagLine;
         @NonNull public boolean dryRun;
 
-        public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
+        public NewSitePayload(@NonNull String siteName, @NonNull String language,
                               @NonNull SiteVisibility visibility, boolean dryRun) {
-            this(siteName, siteTitle, language, visibility, null, null, null, dryRun);
+            this(siteName, language, visibility, null, dryRun);
         }
 
-        public NewSitePayload(@NonNull String siteName, @NonNull String siteTitle, @NonNull String language,
-                              @NonNull SiteVisibility visibility, @Nullable String verticalId, @Nullable Long segmentId,
-                              @Nullable String tagLine, boolean dryRun) {
+        public NewSitePayload(@NonNull String siteName, @NonNull String language,
+                              @NonNull SiteVisibility visibility, @Nullable Long segmentId, boolean dryRun) {
             this.siteName = siteName;
-            this.siteTitle = siteTitle;
             this.language = language;
             this.visibility = visibility;
-            this.verticalId = verticalId;
             this.segmentId = segmentId;
-            this.tagLine = tagLine;
             this.dryRun = dryRun;
         }
     }
@@ -115,9 +111,16 @@ public class SiteStore extends Store {
 
     public static class DesignateMobileEditorForAllSitesPayload extends Payload<SiteEditorsError> {
         public String editor;
+        public boolean setOnlyIfEmpty;
 
         public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName) {
             this.editor = editorName;
+            this.setOnlyIfEmpty = true;
+        }
+
+        public DesignateMobileEditorForAllSitesPayload(@NonNull String editorName, boolean setOnlyIfEmpty) {
+            this.editor = editorName;
+            this.setOnlyIfEmpty = setOnlyIfEmpty;
         }
     }
 
@@ -145,6 +148,7 @@ public class SiteStore extends Store {
 
     public static class DesignateMobileEditorForAllSitesResponsePayload extends Payload<SiteEditorsError> {
         public Map<String, String> editors;
+
         public DesignateMobileEditorForAllSitesResponsePayload(Map<String, String> editors) {
             this.editors = editors;
         }
@@ -172,6 +176,24 @@ public class SiteStore extends Store {
         public FetchedPlansPayload(SiteModel site, @NonNull PlansError error) {
             this.site = site;
             this.error = error;
+        }
+    }
+
+    public static class FetchedPrivateAtomicCookiePayload extends Payload<PrivateAtomicCookieError> {
+        public SiteModel site;
+        @Nullable public PrivateAtomicCookieResponse cookie;
+
+        public FetchedPrivateAtomicCookiePayload(SiteModel site, @Nullable PrivateAtomicCookieResponse cookie) {
+            this.site = site;
+            this.cookie = cookie;
+        }
+    }
+
+    public static class FetchPrivateAtomicCookiePayload {
+        public long siteId;
+
+        public FetchPrivateAtomicCookiePayload(long siteId) {
+            this.siteId = siteId;
         }
     }
 
@@ -203,7 +225,7 @@ public class SiteStore extends Store {
             this.includeVendorDot = includeVendorDot;
         }
 
-         public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
+        public SuggestDomainsPayload(@NonNull String query, int quantity, String tlds) {
             this.query = query;
             this.quantity = quantity;
             this.tlds = tlds;
@@ -614,6 +636,18 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class OnPrivateAtomicCookieFetched extends OnChanged<PrivateAtomicCookieError> {
+        public SiteModel site;
+        public boolean success;
+
+        public OnPrivateAtomicCookieFetched(@Nullable SiteModel site, boolean success,
+                                            @Nullable PrivateAtomicCookieError error) {
+            this.site = site;
+            this.success = success;
+            this.error = error;
+        }
+    }
+
     public static class OnURLChecked extends OnChanged<SiteError> {
         public String url;
         public boolean isWPCom;
@@ -748,6 +782,16 @@ public class SiteStore extends Store {
 
         public PlansError(@NonNull PlansErrorType type) {
             this.type = type;
+        }
+    }
+
+    public static class PrivateAtomicCookieError implements OnChangedError {
+        @NonNull public AccessCookieErrorType type;
+        @Nullable public String message;
+
+        public PrivateAtomicCookieError(@NonNull AccessCookieErrorType type, @NonNull String message) {
+            this.type = type;
+            this.message = message;
         }
     }
 
@@ -897,6 +941,13 @@ public class SiteStore extends Store {
             }
             return GENERIC_ERROR;
         }
+    }
+
+    public enum AccessCookieErrorType {
+        GENERIC_ERROR,
+        INVALID_RESPONSE,
+        SITE_MISSING_FROM_STORE,
+        NON_PRIVATE_AT_SITE
     }
 
     public enum UserRolesErrorType {
@@ -1050,14 +1101,16 @@ public class SiteStore extends Store {
     private SiteRestClient mSiteRestClient;
     private SiteXMLRPCClient mSiteXMLRPCClient;
     private PostSqlUtils mPostSqlUtils;
+    private PrivateAtomicCookie mPrivateAtomicCookie;
 
     @Inject
     public SiteStore(Dispatcher dispatcher, PostSqlUtils postSqlUtils, SiteRestClient siteRestClient,
-                     SiteXMLRPCClient siteXMLRPCClient) {
+                     SiteXMLRPCClient siteXMLRPCClient, PrivateAtomicCookie privateAtomicCookie) {
         super(dispatcher);
         mSiteRestClient = siteRestClient;
         mSiteXMLRPCClient = siteXMLRPCClient;
         mPostSqlUtils = postSqlUtils;
+        mPrivateAtomicCookie = privateAtomicCookie;
     }
 
     @Override
@@ -1073,17 +1126,10 @@ public class SiteStore extends Store {
     }
 
     /**
-     * Returns all sites in the store as a {@link Cursor}.
-     */
-    public Cursor getSitesCursor() {
-        return WellSql.select(SiteModel.class).getAsCursor();
-    }
-
-    /**
      * Returns the number of sites of any kind in the store.
      */
     public int getSitesCount() {
-        return getSitesCursor().getCount();
+        return (int) WellSql.select(SiteModel.class).count();
     }
 
     /**
@@ -1108,7 +1154,7 @@ public class SiteStore extends Store {
      * Checks whether the store contains a site matching the given (local) id.
      */
     public boolean hasSiteWithLocalId(int id) {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).getAsCursor().getCount() > 0;
+        return SiteSqlUtils.getSitesWith(SiteModelTable.ID, id).exists();
     }
 
     /**
@@ -1130,7 +1176,7 @@ public class SiteStore extends Store {
      * via WPCom REST API).
      */
     public int getSitesAccessedViaWPComRestCount() {
-        return SiteSqlUtils.getSitesAccessedViaWPComRest().getAsCursor().getCount();
+        return (int) SiteSqlUtils.getSitesAccessedViaWPComRest().count();
     }
 
     /**
@@ -1145,7 +1191,7 @@ public class SiteStore extends Store {
      * Returns the number of .COM sites in the store.
      */
     public int getWPComSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).getAsCursor().getCount();
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_WPCOM, true).count();
     }
 
     /**
@@ -1183,7 +1229,7 @@ public class SiteStore extends Store {
      * Returns the number of sites accessed via XMLRPC (self-hosted sites or Jetpack sites accessed via XMLRPC).
      */
     public int getSitesAccessedViaXMLRPCCount() {
-        return SiteSqlUtils.getSitesAccessedViaXMLRPC().getAsCursor().getCount();
+        return (int) SiteSqlUtils.getSitesAccessedViaXMLRPC().count();
     }
 
     /**
@@ -1205,7 +1251,7 @@ public class SiteStore extends Store {
      * Returns the number of visible sites. All self-hosted sites over XML-RPC are visible by default.
      */
     public int getVisibleSitesCount() {
-        return SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).getAsCursor().getCount();
+        return (int) SiteSqlUtils.getSitesWith(SiteModelTable.IS_VISIBLE, true).count();
     }
 
     /**
@@ -1219,7 +1265,7 @@ public class SiteStore extends Store {
      * Returns the number of visible .COM sites.
      */
     public int getVisibleSitesAccessedViaWPComCount() {
-        return SiteSqlUtils.getVisibleSitesAccessedViaWPCom().getAsCursor().getCount();
+        return (int) SiteSqlUtils.getVisibleSitesAccessedViaWPCom().count();
     }
 
     /**
@@ -1232,7 +1278,7 @@ public class SiteStore extends Store {
                       .equals(SiteModelTable.IS_WPCOM, true)
                       .equals(SiteModelTable.IS_VISIBLE, true)
                       .endGroup().endWhere()
-                      .getAsCursor().getCount() > 0;
+                      .exists();
     }
 
     /**
@@ -1516,6 +1562,12 @@ public class SiteStore extends Store {
             case DESIGNATED_PRIMARY_DOMAIN:
                 handleDesignatedPrimaryDomain((DesignatedPrimaryDomainPayload) action.getPayload());
                 break;
+            case FETCH_PRIVATE_ATOMIC_COOKIE:
+                fetchPrivateAtomicCookie((FetchPrivateAtomicCookiePayload) action.getPayload());
+                break;
+            case FETCHED_PRIVATE_ATOMIC_COOKIE:
+                handleFetchedPrivateAtomicCookie((FetchedPrivateAtomicCookiePayload) action.getPayload());
+                break;
         }
     }
 
@@ -1690,8 +1742,8 @@ public class SiteStore extends Store {
     }
 
     private void createNewSite(NewSitePayload payload) {
-        mSiteRestClient.newSite(payload.siteName, payload.siteTitle, payload.language, payload.visibility,
-                payload.verticalId, payload.segmentId, payload.tagLine, payload.dryRun);
+        mSiteRestClient.newSite(payload.siteName, payload.language, payload.visibility,
+                payload.segmentId, payload.dryRun);
     }
 
     private void handleCreateNewSiteCompleted(NewSiteResponsePayload payload) {
@@ -1761,7 +1813,7 @@ public class SiteStore extends Store {
         }
 
         if (wpcomPostRequestRequired) {
-            mSiteRestClient.designateMobileEditorForAllSites(payload.editor);
+            mSiteRestClient.designateMobileEditorForAllSites(payload.editor, payload.setOnlyIfEmpty);
             event.isNetworkResponse = false;
         } else {
             event.isNetworkResponse = true;
@@ -1893,6 +1945,42 @@ public class SiteStore extends Store {
             event.error = payload.error;
         }
         emitChange(event);
+    }
+
+    private void fetchPrivateAtomicCookie(FetchPrivateAtomicCookiePayload payload) {
+        SiteModel site = getSiteBySiteId(payload.siteId);
+
+        if (site == null) {
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                    AccessCookieErrorType.SITE_MISSING_FROM_STORE,
+                    "Requested site is missing from the store.");
+            emitChange(new OnPrivateAtomicCookieFetched(null, false, cookieError));
+            return;
+        }
+
+        if (!site.isPrivateWPComAtomic()) {
+            PrivateAtomicCookieError cookieError = new PrivateAtomicCookieError(
+                    AccessCookieErrorType.NON_PRIVATE_AT_SITE,
+                    "Cookie can only be requested for private atomic site.");
+            emitChange(new OnPrivateAtomicCookieFetched(site, false, cookieError));
+            return;
+        }
+
+        mSiteRestClient.fetchAccessCookie(site);
+    }
+
+    private void handleFetchedPrivateAtomicCookie(FetchedPrivateAtomicCookiePayload payload) {
+        if (payload.cookie == null || payload.cookie.getCookies().isEmpty()) {
+            emitChange(new OnPrivateAtomicCookieFetched(payload.site, false,
+                    new PrivateAtomicCookieError(AccessCookieErrorType.INVALID_RESPONSE,
+                            "Cookie is missing from response.")));
+             mPrivateAtomicCookie.set(null);
+            return;
+        }
+
+        AtomicCookie siteCookie = payload.cookie.getCookies().get(0);
+        mPrivateAtomicCookie.set(siteCookie);
+        emitChange(new OnPrivateAtomicCookieFetched(payload.site, true, payload.error));
     }
 
     private void fetchPlans(SiteModel siteModel) {

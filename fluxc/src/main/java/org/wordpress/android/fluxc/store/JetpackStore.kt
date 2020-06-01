@@ -1,9 +1,7 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -15,30 +13,35 @@ import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
-import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class JetpackStore
 @Inject constructor(
     private val jetpackRestClient: JetpackRestClient,
     private val siteStore: SiteStore,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     private var siteContinuation: Continuation<Unit>? = null
+
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? JetpackAction ?: return
         when (actionType) {
-            JetpackAction.INSTALL_JETPACK -> {
-                GlobalScope.launch(coroutineContext) { install(action.payload as SiteModel, actionType) }
+            INSTALL_JETPACK -> {
+                coroutineEngine.launch(T.SETTINGS, this, "JetpackAction.INSTALL_JETPACK") {
+                    install(
+                            action.payload as SiteModel,
+                            actionType
+                    )
+                }
             }
         }
     }
@@ -50,11 +53,11 @@ class JetpackStore
     suspend fun install(
         site: SiteModel,
         action: JetpackAction = INSTALL_JETPACK
-    ) = withContext(coroutineContext) {
+    ) = coroutineEngine.withDefaultContext(T.SETTINGS, this, "install") {
         val installedPayload = jetpackRestClient.installJetpack(site)
         reloadSite(site)
         val reloadedSite = siteStore.getSiteByLocalId(site.id)
-        return@withContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
+        return@withDefaultContext if (!installedPayload.isError || reloadedSite.isJetpackInstalled) {
             val onJetpackInstall = OnJetpackInstalled(
                     installedPayload.success ||
                             reloadedSite.isJetpackInstalled, action
@@ -68,15 +71,19 @@ class JetpackStore
         }
     }
 
-    private suspend fun reloadSite(site: SiteModel) = suspendCoroutine<Unit> { cont ->
+    private suspend fun reloadSite(site: SiteModel) = suspendCancellableCoroutine<Unit> { cont ->
         siteStore.onAction(SiteActionBuilder.newFetchSiteAction(site))
         siteContinuation = cont
-        GlobalScope.launch(coroutineContext) {
+        val job = coroutineEngine.launch(T.SETTINGS, this, "reloadSite") {
             delay(5000)
             if (siteContinuation != null && siteContinuation == cont) {
                 siteContinuation?.resume(Unit)
                 siteContinuation = null
             }
+        }
+        cont.invokeOnCancellation {
+            siteContinuation = null
+            job.cancel()
         }
     }
 
