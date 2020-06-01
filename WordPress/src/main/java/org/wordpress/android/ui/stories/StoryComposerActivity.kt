@@ -13,8 +13,10 @@ import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
+import com.wordpress.stories.compose.NotificationTrackerProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StoryNotificationType
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.util.KEY_STORY_INDEX
@@ -31,10 +33,12 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
@@ -76,6 +80,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -97,6 +102,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationExtrasLoader(this)
         setMetadataProvider(this)
         setStoryDiscardListener(this)
+        setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -106,6 +112,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 saveInitialPost()
             } else {
                 editPostRepository.loadPostByLocalPostId(localPostId)
+            }
+
+            if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+                val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                systemNotificationsTracker.trackTappedNotification(notificationType)
             }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
@@ -296,16 +307,15 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return authenticationUtils.getAuthHeaders(url)
     }
 
-    // NotificationIntentLoader
+    // region NotificationIntentLoader
     override fun loadIntentForErrorNotification(): Intent {
         val notificationIntent = Intent(applicationContext, StoryComposerActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         notificationIntent.putExtra(WordPress.SITE, site)
-        // TODO WPSTORIES add TRACKS
-        // add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-//        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-//        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+        // setup tracks NotificationType for Notification tracking. Note this doesn't use our interface.
+        val notificationType = NotificationType.STORY_FRAME_SAVE_ERROR
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
     }
 
@@ -321,6 +331,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun setupErrorNotificationBaseId(): Int {
         return BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
     }
+    // endregion
 
     override fun loadMetadataForStory(index: StoryIndex): Bundle? {
         val bundle = Bundle()

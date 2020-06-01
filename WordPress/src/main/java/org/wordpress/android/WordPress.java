@@ -41,11 +41,14 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
+import com.wordpress.stories.compose.NotificationTrackerProvider;
+import com.wordpress.stories.compose.frame.StoryNotificationType;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.Tracker;
@@ -76,6 +79,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -147,6 +151,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     private static Context mContext;
     private static BitmapLruCache mBitmapCache;
     private static ApplicationLifecycleMonitor mApplicationLifecycleMonitor;
+    private static StoryNotificationTrackerProvider mStoryNotificationTrackerProvider;
 
     private static GoogleApiClient mCredentialsClient;
 
@@ -337,6 +342,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
 
         initEmojiCompat();
+        mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
@@ -815,6 +821,10 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         EmojiCompat.init(config);
     }
 
+    public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
+        return mStoryNotificationTrackerProvider;
+    }
+
     @Override
     public AndroidInjector<Service> serviceInjector() {
         return mServiceDispatchingAndroidInjector;
@@ -993,6 +1003,34 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (evictBitmaps && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
+        }
+    }
+
+    private class StoryNotificationTrackerProvider implements NotificationTrackerProvider {
+        private NotificationType translateNotificationTypes(StoryNotificationType storyNotificationType) {
+            switch (storyNotificationType) {
+                case STORY_SAVE_SUCCESS:
+                    return NotificationType.STORY_SAVE_SUCCESS;
+                case STORY_SAVE_ERROR:
+                    return NotificationType.STORY_SAVE_ERROR;
+                case STORY_FRAME_SAVE_SUCCESS:
+                    return NotificationType.STORY_FRAME_SAVE_SUCCESS;
+                case STORY_FRAME_SAVE_ERROR:
+                    return NotificationType.STORY_FRAME_SAVE_ERROR;
+            }
+            return NotificationType.STORY_FRAME_SAVE_ERROR; // shouldn't reach this
+        }
+
+        @Override public void trackShownNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
+        }
+
+        @Override public void trackTappedNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
+        }
+
+        @Override public void trackDismissedNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
         }
     }
 }
