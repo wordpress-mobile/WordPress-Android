@@ -52,6 +52,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.FullScreenDialogFragment;
@@ -110,6 +111,7 @@ import static com.wordpress.stories.compose.frame.StorySaveEvents.allErrorsInRes
 import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE;
 import static org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.plans.PlanUtilsKt.isDomainCreditAvailable;
 import static org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment.RESULT_TASK;
 import static org.wordpress.android.util.DomainRegistrationUtilsKt.requestEmailValidation;
@@ -1114,11 +1116,7 @@ public class MySiteFragment extends Fragment implements
                                         event.getStoryIndex()) + ""
                         );
 
-                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
-                        // is meant to be used for tracking purposes. Use it!
-                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+                        intent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.STORY_SAVE_ERROR);
                         startActivity(intent);
                     }
             );

@@ -312,7 +312,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         notificationIntent.putExtra(WordPress.SITE, site)
         // setup tracks NotificationType for Notification tracking. Note this doesn't use our interface.
-        val notificationType = NotificationType.STORY_FRAME_SAVE_ERROR
+        val notificationType = NotificationType.STORY_SAVE_ERROR
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
     }
