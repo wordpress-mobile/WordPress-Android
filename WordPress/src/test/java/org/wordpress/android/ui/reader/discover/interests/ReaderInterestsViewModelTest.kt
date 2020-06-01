@@ -5,7 +5,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
@@ -14,9 +16,11 @@ class ReaderInterestsViewModelTest {
 
     private lateinit var viewModel: ReaderInterestsViewModel
 
+    @Mock lateinit var readerTagRepository: ReaderTagRepository
+
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel()
+        viewModel = ReaderInterestsViewModel(readerTagRepository)
     }
 
     @Test
