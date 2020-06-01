@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -22,9 +21,10 @@ import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PLAN_OFFER_MODE
 import org.wordpress.android.fluxc.network.rest.wpcom.planoffers.PlanOffersRestClient
 import org.wordpress.android.fluxc.persistence.PlanOffersSqlUtils
 import org.wordpress.android.fluxc.store.PlanOffersStore.PlanOffersErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.PlanOffersStore.PlansFetchError
 import org.wordpress.android.fluxc.store.PlanOffersStore.PlanOffersFetchedPayload
+import org.wordpress.android.fluxc.store.PlanOffersStore.PlansFetchError
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
 @RunWith(MockitoJUnitRunner::class)
 class PlanOffersStoreTest {
@@ -36,7 +36,7 @@ class PlanOffersStoreTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        planOffersStore = PlanOffersStore(planOffersRestClient, planOffersSqlUtils, Unconfined, dispatcher)
+        planOffersStore = PlanOffersStore(planOffersRestClient, planOffersSqlUtils, initCoroutineEngine(), dispatcher)
     }
 
     @Test

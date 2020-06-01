@@ -12,6 +12,8 @@ import java.io.Serializable;
 
 @Table
 public class CommentModel extends Payload<BaseNetworkError> implements Identifiable, Serializable {
+    private static final long serialVersionUID = 3454722213760369852L;
+
     // Ids
     @PrimaryKey
     @Column private int mId;
@@ -32,6 +34,7 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
     @Column private String mStatus;
     @Column private String mDatePublished;
     @Column private String mContent;
+    @Column private String mUrl;
 
     // WPCOM only
     @Column private boolean mILike; // current user likes this comment
@@ -156,5 +159,13 @@ public class CommentModel extends Payload<BaseNetworkError> implements Identifia
 
     public void setILike(boolean iLike) {
         mILike = iLike;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public void setUrl(String url) {
+        mUrl = url;
     }
 }

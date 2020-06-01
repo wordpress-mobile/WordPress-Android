@@ -59,6 +59,7 @@ public class AccountModelTest {
         copyAccount.setNewEmail("copyNewEmail");
         copyAccount.setPendingEmailChange(!testAccount.getPendingEmailChange());
         copyAccount.setTracksOptOut(!testAccount.getTracksOptOut());
+        copyAccount.setUsernameCanBeChanged(!testAccount.getUsernameCanBeChanged());
         copyAccount.setWebAddress("copyWebAddress");
         copyAccount.setUserId(testAccount.getUserId() + 1);
         Assert.assertFalse(copyAccount.equals(testAccount));

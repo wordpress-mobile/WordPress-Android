@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -40,6 +39,7 @@ import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.TRASH
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
 import java.util.Date
 
@@ -82,7 +82,7 @@ class PageStoreTest {
         actionCaptor = argumentCaptor()
         val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
         whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-        store = PageStore(postStore, PostSqlUtils(), dispatcher, Dispatchers.Unconfined)
+        store = PageStore(postStore, PostSqlUtils(), dispatcher, initCoroutineEngine())
     }
 
     @Test
@@ -152,7 +152,7 @@ class PageStoreTest {
         val post = pageHierarchy[0]
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(post)
         val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId, TRASH), 0)
-        val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
+        val page = PageModel(post, site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
                 post.remotePostId, null, post.featuredImageId)
         var result: OnPostChanged? = null
         launch {
@@ -176,7 +176,7 @@ class PageStoreTest {
         whenever(postStore.getPostByLocalPostId(post.id)).thenReturn(null)
         val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId, TRASH), 0)
         event.error = PostError(UNKNOWN_POST)
-        val page = PageModel(site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
+        val page = PageModel(post, site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
             post.remotePostId, null, post.featuredImageId)
         var result: OnPostChanged? = null
         launch {
@@ -275,17 +275,17 @@ class PageStoreTest {
         remoteId: Long = id.toLong()
     ): PostModel {
         val page = PostModel()
-        page.id = id
+        page.setId(id)
         parentId?.let {
-            page.parentId = parentId
+            page.setParentId(parentId)
         }
         title?.let {
-            page.title = it
+            page.setTitle(it)
         }
         status?.let {
-            page.status = status
+            page.setStatus(status)
         }
-        page.remotePostId = remoteId
+        page.setRemotePostId(remoteId)
         return page
     }
 }

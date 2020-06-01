@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store.stats
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -61,7 +60,7 @@ import org.wordpress.android.fluxc.store.stats.insights.PublicizeStore
 import org.wordpress.android.fluxc.store.stats.insights.TagsStore
 import org.wordpress.android.fluxc.store.stats.insights.TodayInsightsStore
 import org.wordpress.android.fluxc.test
-import org.wordpress.android.fluxc.utils.CurrentTimeProvider
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -91,7 +90,6 @@ class InsightsStoreTest {
     @Mock lateinit var tagsSqlUtils: TagsSqlUtils
     @Mock lateinit var todaySqlUtils: TodayInsightsSqlUtils
     @Mock lateinit var mapper: InsightsMapper
-    @Mock lateinit var timeProvider: CurrentTimeProvider
     private lateinit var allTimeStore: AllTimeInsightsStore
     private lateinit var commentsStore: CommentsStore
     private lateinit var followersStore: FollowersStore
@@ -99,55 +97,52 @@ class InsightsStoreTest {
     private lateinit var publicizeStore: PublicizeStore
     private lateinit var tagsStore: TagsStore
     private lateinit var todayStore: TodayInsightsStore
-    private val currentDate = Date(10)
     @Before
     fun setUp() {
         allTimeStore = AllTimeInsightsStore(
                 allTimeInsightsRestClient,
                 allTimeSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         commentsStore = CommentsStore(
                 commentsRestClient,
                 commentInsightsSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         followersStore = FollowersStore(
                 followersRestClient,
                 wpComFollowersSqlUtils,
                 emailFollowersSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         latestPostStore = LatestPostInsightsStore(
                 latestPostInsightsRestClient,
                 latestPostDetailSqlUtils,
                 detailedPostStatsSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         publicizeStore = PublicizeStore(
                 publicizeRestClient,
                 publicizeSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         tagsStore = TagsStore(
                 tagsRestClient,
                 tagsSqlUtils,
                 mapper,
-                Unconfined
+                initCoroutineEngine()
         )
         todayStore = TodayInsightsStore(
                 todayInsightsRestClient,
                 todaySqlUtils,
                 mapper,
-                timeProvider,
-                Unconfined
+                initCoroutineEngine()
         )
-        whenever(timeProvider.currentDate).thenReturn(currentDate)
     }
 
     @Test
@@ -288,7 +283,7 @@ class InsightsStoreTest {
                 VISITS_RESPONSE
         )
         val forced = true
-        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, forced)).thenReturn(
                 fetchInsightsPayload
         )
         val model = mock<VisitsModel>()
@@ -317,7 +312,7 @@ class InsightsStoreTest {
         val message = "message"
         val errorPayload = FetchStatsPayload<VisitResponse>(StatsError(type, message))
         val forced = true
-        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, currentDate, forced)).thenReturn(errorPayload)
+        whenever(todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, forced)).thenReturn(errorPayload)
 
         val responseModel = todayStore.fetchTodayInsights(site, forced)
 

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -254,10 +255,9 @@ class InsightsRestClientTest {
     fun `returns visits per time period`() = test {
         initVisitResponse(VISITS_RESPONSE)
 
-        val date = Date(10)
         val formattedDate = "2019-01-17"
-        whenever(statsUtils.getFormattedDate(date)).thenReturn(formattedDate)
-        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+        whenever(statsUtils.getFormattedDate(isNull(), any())).thenReturn(formattedDate)
+        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, false)
 
         assertThat(responseModel.response).isNotNull
         assertThat(responseModel.response).isEqualTo(VISITS_RESPONSE)
@@ -285,7 +285,7 @@ class InsightsRestClientTest {
         )
 
         val date = Date()
-        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, date, false)
+        val responseModel = todayInsightsRestClient.fetchTimePeriodStats(site, DAYS, false)
 
         assertThat(responseModel.error).isNotNull
         assertThat(responseModel.error.type).isEqualTo(API_ERROR)

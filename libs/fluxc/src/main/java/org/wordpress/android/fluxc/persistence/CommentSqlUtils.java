@@ -132,6 +132,6 @@ public class CommentSqlUtils {
             return 0;
         }
 
-        return getCommentsQueryForSite(site, statuses).getAsCursor().getCount();
+        return (int) getCommentsQueryForSite(site, statuses).count();
     }
 }
