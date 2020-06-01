@@ -9,10 +9,10 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import javax.inject.Inject
 
 class ReaderInterestsViewModel @Inject constructor() : ViewModel() {
-    private var initialized: Boolean = false
+    var initialized: Boolean = false
 
-    private val _uiState = MutableLiveData<ReaderInterestsUiState>()
-    val uiState: LiveData<ReaderInterestsUiState> = _uiState
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
 
     fun start() {
         if (initialized) return
@@ -23,15 +23,32 @@ class ReaderInterestsViewModel @Inject constructor() : ViewModel() {
         // TODO: get list from tags repository once available
         val tagList = getMockInterests()
         if (tagList.isNotEmpty()) {
-            _uiState.value = ReaderInterestsUiState(tagList)
+            updateUiState(UiState(transformToInterestsUiState(tagList), tagList))
             if (!initialized) {
                 initialized = true
             }
         }
     }
 
-    data class ReaderInterestsUiState(
+    private fun transformToInterestsUiState(interests: ReaderTagList) =
+            interests.mapIndexed { index, interestTag -> // TODO: use index to know checked status
+                InterestUiState(
+                    interestTag.tagTitle
+                )
+            }
+
+    private fun updateUiState(uiState: UiState) {
+        _uiState.value = uiState
+    }
+
+    data class UiState(
+        val interestsUiState: List<InterestUiState>,
         val interests: ReaderTagList
+    )
+
+    data class InterestUiState(
+        val title: String,
+        val isChecked: Boolean = false
     )
 
     private fun getMockInterests() =
