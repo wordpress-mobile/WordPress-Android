@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:07:26+0000
-Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-05 11:19:46+0000
+Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Подробнее</string>
+    <string name="feature_announcement_dialog_label">Что нового в WordPress</string>
+    <string name="insert_label_with_count">Вставить %d</string>
+    <string name="crop">обрезать</string>
+    <string name="error_failed_to_load_into_file">Ошибка загрузки в файл, повторите попытку.</string>
+    <string name="preview_image_thumbnail_description">Предварительный просмотр миниатюры</string>
+    <string name="photo_picker_use_media">Использовать этот медиафайл</string>
+    <string name="photo_picker_use_video">Использовать это видео</string>
+    <string name="photo_picker_photo_or_video_title">Выбрать медиафайл</string>
+    <string name="photo_picker_video_title">Выбрать видео</string>
+    <string name="site_picker_ask_site_select">Не удалось выбрать сайт. Повторите попытку.</string>
+    <string name="sitepicker_continue_flow">Продолжить</string>
+    <string name="reader_reblog_error">Перепубликация не удалась</string>
+    <string name="reader_no_site_to_reblog_action">Управление сайтами</string>
+    <string name="reader_no_site_to_reblog_detail">После создания сайта на WordPress.com вы сможете сделать перепубликацию понравившегося содержимого на своем сайте.</string>
+    <string name="reader_no_site_to_reblog_title">Нет доступных сайтов на WordPress.com</string>
+    <string name="whats_new_in_version_title">Что нового</string>
+    <string name="comment_q_action_copied_url">Адрес ссылки скопирован</string>
+    <string name="copy_link_address">Скопировать адрес ссылки</string>
+    <string name="comment_share_link_via">Поделиться в</string>
+    <string name="comment_toast_err_share_intent">Нельзя поделиться</string>
+    <string name="button_insert">Вставить</string>
+    <string name="continue_label">Продолжить</string>
+    <string name="copy_text">Копировать</string>
     <string name="gutenberg_native_subscribe">Подписка</string>
     <string name="gutenberg_native_number_of_columns">Число столбцов</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Переместить блок вправо из позиции %1$s в позицию %2$s</string>
@@ -40,7 +64,7 @@ Language: ru
     <string name="media_accessing_failed">Доступ к содержимому личного сайта не удался, некоторые медиафайлы могут быть недоступны.</string>
     <string name="media_accessing_progress">Доступ к содержимому личного сайта</string>
     <string name="error_failed_to_crop_and_save_image">Ошибка обрезки и сохранения изображения, попробуйте снова.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Невозможно вставить изображение.\nНажмите для выбора вариантов.</string>
+    <string name="failed_to_load_image_tap_to_retry">Невозможно загрузить изображение.\nНажмите для повтора.</string>
     <string name="preview_image_description">Предварительный просмотр изображения</string>
     <string name="error_unknown_page_type">Неизвестный формат страницы</string>
     <string name="error_page_not_submitted">Невозможно завершить это действие и отправить страницу на одобрение.</string>
@@ -1322,7 +1346,6 @@ Language: ru
     <string name="media_edit_filename_caption">Имя файла</string>
     <string name="media_edit_url_caption">URL-адрес</string>
     <string name="media_edit_alttext_text">Атрибут Alt</string>
-    <string name="copy_text">Копировать</string>
     <string name="connect_site">Подключить сайт</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Мигание светом</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Вибрация устройства</string>
@@ -2187,6 +2210,7 @@ Language: ru
     <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
+    <string name="reader_view_reblog">Реблог</string>
     <string name="reader_untitled_post">(Без названия)</string>
     <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>

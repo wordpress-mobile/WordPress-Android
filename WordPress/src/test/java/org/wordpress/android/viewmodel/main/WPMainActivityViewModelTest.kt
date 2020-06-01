@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
@@ -22,6 +23,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest {
@@ -34,23 +36,25 @@ class WPMainActivityViewModelTest {
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
             2,
             "https://wordpress.org/",
+            true,
             emptyList()
     )
 
     @Before
     fun setUp() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
-        whenever(buildConfigWrapper.isFeatureAnnouncementEnabled()).thenReturn(true)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
                 buildConfigWrapper,
-                appPrefsWrapper
+                appPrefsWrapper,
+                analyticsTrackerWrapper
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
@@ -183,11 +187,12 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
+        verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
     }
 
     @Test
@@ -197,11 +202,12 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
+        verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
     }
 
     @Test
@@ -217,7 +223,7 @@ class WPMainActivityViewModelTest {
     @Test
     fun `don't show feature announcement when it's not available`() {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(false)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(false)
 
         startViewModelWithDefaultParameters()
 
@@ -231,7 +237,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
@@ -245,7 +251,7 @@ class WPMainActivityViewModelTest {
         whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isFeatureAnnouncementAvailable()).thenReturn(true)
+        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 

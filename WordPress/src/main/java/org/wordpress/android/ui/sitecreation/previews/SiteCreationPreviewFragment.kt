@@ -178,7 +178,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             }
         })
 
-        viewModel.start(arguments!![ARG_DATA] as SiteCreationState)
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {

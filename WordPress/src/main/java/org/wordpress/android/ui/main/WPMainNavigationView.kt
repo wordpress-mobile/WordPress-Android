@@ -26,7 +26,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.reader.ReaderPostListFragment
+import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.getColorStateListFromAttribute
@@ -94,7 +94,6 @@ class WPMainNavigationView @JvmOverloads constructor(
             itemView.addView(customView)
         }
 
-        navAdapter.init()
         currentPosition = AppPrefs.getMainPageIndex(numPages() - 1)
     }
 
@@ -167,9 +166,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
             if (previousFragment != null) {
-                fragmentManager.beginTransaction().hide(previousFragment).show(fragment).commit()
+                fragmentManager.beginTransaction().detach(previousFragment).attach(fragment).commit()
             } else {
-                fragmentManager.beginTransaction().show(fragment).commit()
+                fragmentManager.beginTransaction().attach(fragment).commit()
             }
         }
         prevPosition = position
@@ -238,7 +237,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         return itemView?.findViewById(R.id.nav_icon)
     }
 
-    fun getFragment(pageType: PageType) = navAdapter.getFragment(getPosition(pageType))
+    fun getFragment(pageType: PageType) = navAdapter.getFragmentIfExists(getPosition(pageType))
 
     private fun getItemView(position: Int): BottomNavigationItemView? {
         if (isValidPosition(position)) {
@@ -283,29 +282,25 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderPostListFragment.newInstance(true)
+                READER -> ReaderFragment()
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
             fragmentManager.beginTransaction()
                     .add(R.id.fragment_container, fragment, getTagForPageType(pageType))
-                    .hide(fragment)
-                    .commit()
+                    .commitNow()
             return fragment
         }
 
-        internal fun init() {
-            for (pageType in pages()) {
-                if (fragmentManager.findFragmentByTag(getTagForPageType(pageType)) == null) {
-                    createFragment(pageType)
-                }
+        internal fun getFragment(position: Int): Fragment? {
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 
-        internal fun getFragment(position: Int): Fragment? {
-            val pageType = pages().getOrElse(position) {
-                return null
+        internal fun getFragmentIfExists(position: Int): Fragment? {
+            return pages().getOrNull(position)?.let { pageType ->
+                fragmentManager.findFragmentByTag(getTagForPageType(pageType))
             }
-            return fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
         }
     }
 
