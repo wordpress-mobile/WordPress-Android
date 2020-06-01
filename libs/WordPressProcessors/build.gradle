@@ -10,11 +10,12 @@ kapt {
 sourceSets {
     main {
         java {
-            srcDirs += "${buildDir.absolutePath}/res/kotlinGenerated/"
+            srcDirs += "${buildDir.absolutePath}/rit"
         }
         kotlin {
-            srcDirs += "${buildDir.absolutePath}/res/kotlinGenerated/"
+            srcDirs += "${buildDir.absolutePath}/hovno"
         }
+        project.buildDir = "${buildDir.absolutePath}/build/generated/res/resValues/"
     }
 }
 

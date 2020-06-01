@@ -1,13 +1,11 @@
 package org.wordpress.android.util.config
 
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.annotation.Experiment
 import javax.inject.Inject
 
 /**
- * Configuration of the Tenor gif selection.
+ * Configuration of the Tenor gif selection. This is an example of a local only feature.
  */
-@Experiment(remoteField = "pokus", defaultVariant = "control")
 class TenorFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
