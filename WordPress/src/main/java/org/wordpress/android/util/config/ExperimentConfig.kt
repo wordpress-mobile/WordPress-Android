@@ -5,7 +5,6 @@ package org.wordpress.android.util.config
  * To add an experiment don't forget to update the `remote_config_defaults.xml` file.
  * @param appConfig class that loads the feature configuration
  * @param remoteField is the key of the feature flag in the remote config file
- * @param defaultValue default value should match the value in `remote_config_defaults.xml` file
  */
 abstract class ExperimentConfig(
     private val appConfig: AppConfig,
