@@ -19,7 +19,7 @@ sourceSets {
 }
 
 dependencies {
-    implementation project(':WordPressAnnotations')
+    implementation project(':libs:WordPressAnnotations')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.google.auto.service:auto-service:1.0-rc6"
     kapt "com.google.auto.service:auto-service:1.0-rc6"
