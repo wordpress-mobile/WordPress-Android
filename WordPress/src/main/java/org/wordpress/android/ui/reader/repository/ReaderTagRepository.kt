@@ -12,12 +12,13 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
+import javax.inject.Inject
 
 /**
  * ReaderTagRepository is middleware that encapsulates data related business related data logic
  * Handle communicate with ReaderServices and Actions
  */
-class ReaderTagRepository() {
+class ReaderTagRepository @Inject constructor() {
     private val mutableTopics = MutableLiveData<List<ReaderTag>>()
     val topics: LiveData<List<ReaderTag>> = mutableTopics
 
