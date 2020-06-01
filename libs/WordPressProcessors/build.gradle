@@ -7,18 +7,6 @@ kapt {
     generateStubs = true
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs += "${buildDir.absolutePath}/rit"
-        }
-        kotlin {
-            srcDirs += "${buildDir.absolutePath}/hovno"
-        }
-        project.buildDir = "${buildDir.absolutePath}/build/generated/res/resValues/"
-    }
-}
-
 dependencies {
     implementation project(':libs:WordPressAnnotations')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
