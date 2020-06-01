@@ -12,6 +12,11 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "com.google.auto.service:auto-service:1.0-rc6"
     kapt "com.google.auto.service:auto-service:1.0-rc6"
+
+    testImplementation "junit:junit:4.13"
+    testImplementation 'org.mockito:mockito-core:2.28.2'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation "org.assertj:assertj-core:3.11.1"
 }
 
 sourceCompatibility = "7"
