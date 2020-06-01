@@ -1,6 +1,23 @@
-15.0
+15.1
 -----
  
+15.0
+-----
+* [*] Fix wrong icon is used when a Password is visible
+* [***] Block Editor: New block: Verse
+* [***] Block Editor: Trash icon that is used to remove blocks is moved to the new menu reachable via ellipsis button in the block toolbar
+* [**] Block Editor: Add support for changing overlay color settings in Cover block
+* [**] Block Editor: Add enter/exit animation in FloatingToolbar
+* [**] Block Editor: Block toolbar can now collapse when the block width is smaller than the toolbar content
+* [**] Block Editor: Creating undo levels less frequently
+* [**] Block Editor: Tooltip for page template selection buttons
+* [*] Block Editor: Fix merging of text blocks when text had active formatting (bold, italic, strike, link)
+* [*] Block Editor: Fix button alignment in page templates and make strings consistent
+* [*] Block Editor: Add support for displaying radial gradients in Buttons and Cover blocks
+* [**] Add homepage settings to pages list and to site settings. Now it's possible to change your posts page and your homepage.
+* [*] Fix wrong icon is used when a Password is visible
+* [*] Reader: Improved UI of the post card in the post feeds.
+
 14.9
 -----
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post
