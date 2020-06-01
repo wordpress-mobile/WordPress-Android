@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
@@ -21,7 +23,8 @@ import javax.inject.Inject
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
     private val buildConfigWrapper: BuildConfigWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -51,9 +54,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         loadMainActions()
 
-        if (buildConfigWrapper.isFeatureAnnouncementEnabled()) {
-            checkForFeatureAnnouncements()
-        }
+        checkForFeatureAnnouncements()
     }
 
     private fun loadMainActions() {
@@ -171,9 +172,7 @@ class WPMainActivityViewModel @Inject constructor(
         // only proceed to feature announcement logic if we are upgrading the app
         if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
             if (canShowFeatureAnnouncement()) {
-                appPrefsWrapper.featureAnnouncementShownVersion =
-                        featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
-                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+                analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                 _onFeatureAnnouncementRequested.call()
             }
 //          else {
@@ -185,7 +184,7 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun canShowFeatureAnnouncement(): Boolean {
-        return featureAnnouncementProvider.isFeatureAnnouncementAvailable() &&
+        return featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable() &&
                 appPrefsWrapper.featureAnnouncementShownVersion <
                 featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
     }

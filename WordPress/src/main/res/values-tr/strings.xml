@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-28 08:54:12+0000
-Plural-Forms: nplurals=2; plural=(n > 1);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-05-08 21:25:35+0000
+Plural-Forms: nplurals=2; plural=n > 1;
+Generator: GlotPress/3.0.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
+    <string name="feature_announcement_dialog_label">WordPress\'de neler yeni</string>
+    <string name="insert_label_with_count">%d ekle</string>
+    <string name="crop">kırp</string>
+    <string name="error_failed_to_load_into_file">Dosyaya yüklenemedi, lütfen tekrar deneyin.</string>
+    <string name="preview_image_thumbnail_description">Önizleme görseli küçük resmi</string>
+    <string name="photo_picker_use_media">Bu ortamı kullan</string>
+    <string name="photo_picker_use_video">Bu videoyu kullan</string>
+    <string name="photo_picker_photo_or_video_title">Ortam seç</string>
+    <string name="photo_picker_video_title">Video seç</string>
+    <string name="site_picker_ask_site_select">Site seçilemedi. Lütfen yeniden deneyin.</string>
+    <string name="sitepicker_continue_flow">Devam</string>
+    <string name="reader_reblog_error">Yeniden bloglama başarısız</string>
+    <string name="reader_no_site_to_reblog_action">Siteleri yönet</string>
+    <string name="reader_no_site_to_reblog_detail">Bir WordPress.com sitesi oluşturduktan sonra, beğendiğiniz içeriği kendi sitenize yeniden bloglayabilirsiniz.</string>
+    <string name="reader_no_site_to_reblog_title">Kullanılabilir WordPress.com sitesi yok</string>
+    <string name="whats_new_in_version_title">Neler yeni</string>
+    <string name="comment_q_action_copied_url">Bağlantı kopyalandı</string>
+    <string name="copy_link_address">Bağlantıyı kopyala</string>
+    <string name="comment_share_link_via">Paylaş</string>
+    <string name="comment_toast_err_share_intent">Paylaşılamadı</string>
+    <string name="button_insert">Ekle</string>
+    <string name="continue_label">Devam</string>
+    <string name="copy_text">Kopyala</string>
     <string name="gutenberg_native_subscribe">Abone Ol</string>
     <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
@@ -40,7 +64,7 @@ Language: tr
     <string name="media_accessing_failed">Özel bir sitenin içeriğine erişilemedi. Bazı ortamlar kullanılamayabilir</string>
     <string name="media_accessing_progress">Özel bir sitenin içeriğine erişiliyor.</string>
     <string name="error_failed_to_crop_and_save_image">Görsel kırpılamadı ve kaydedilemedi, lütfen tekrar deneyin.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Görsel ekleme başarısız.\nYeniden denemek için dokunun.</string>
+    <string name="failed_to_load_image_tap_to_retry">Görsel yükleme başarısız.\nYeniden denemek için dokunun.</string>
     <string name="preview_image_description">Görseli ön izle</string>
     <string name="error_unknown_page_type">Bilinmeyen sayfa formatı</string>
     <string name="error_page_not_submitted">Bu eylemi tamamlayamadık ve bu sayfayı inceleme için göndermedik.</string>
@@ -679,6 +703,7 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="gif_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
     <string name="gif_picker_empty_search_list">Aramanızla eşleşen ortam yok</string>
     <string name="gif_picker_initial_empty_text">Medya Kitaplığınıza eklemek için GIF\'ler arayın!</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
@@ -1321,7 +1346,6 @@ Language: tr
     <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternatif metin</string>
-    <string name="copy_text">Kopyala</string>
     <string name="connect_site">Site bağla</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>
@@ -2186,6 +2210,7 @@ Language: tr
     <string name="reader_btn_unfollow">Takipte</string>
     <string name="reader_btn_follow">Takip et</string>
     <string name="reader_btn_share">Paylaş</string>
+    <string name="reader_view_reblog">Yeniden blogla</string>
     <string name="reader_untitled_post">(Başlıksız)</string>
     <string name="comments_empty_list">Henüz yorum yok</string>
     <string name="empty_list_default">Bu liste boş</string>

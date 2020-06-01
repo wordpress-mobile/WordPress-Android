@@ -64,6 +64,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/com_google_android_geo_api_key"/>
 
+        <meta-data android:name="io.sentry.auto-init" android:value="false" />
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -384,6 +386,27 @@
                     android:host="wordpress.com"
                     android:pathPattern="/post/..*"
                     android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/stats/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/stats/..*"
+                    android:scheme="http" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/pages/..*"
+                    android:scheme="https" />
+
+                <data
+                    android:host="wordpress.com"
+                    android:pathPattern="/pages/..*"
+                    android:scheme="http" />
+
             </intent-filter>
 
         </activity>
@@ -391,6 +414,11 @@
         <!-- Reader Activities -->
         <activity
             android:name=".ui.reader.ReaderPostListActivity"
+            android:label="@string/reader"
+            android:theme="@style/WordPress.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.reader.ReaderSearchActivity"
             android:label="@string/reader"
             android:theme="@style/WordPress.NoActionBar">
         </activity>
@@ -482,6 +510,13 @@
             android:name=".ui.reader.ReaderVideoViewerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/ReaderMediaViewerTheme" />
+
+        <!-- Gutenberg activities -->
+        <activity
+            android:name=".ui.SuggestUsersActivity"
+            android:theme="@style/WordPressNoDisplay"
+            android:windowSoftInputMode="adjustResize"
+            />
 
         <!-- Other activities -->
         <activity

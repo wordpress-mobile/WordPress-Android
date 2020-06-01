@@ -1,0 +1,4 @@
+14.8:
+<b> Blok düzenleyici eklemeleri: </b> Düğme bloğu, tek bir satırda birden fazla düğme görüntüler; Görüntü blokları altyazıları mevcut olduğunda doldurur; Kapak blokları yüklemeye izin verir; eklenen görüntüler kırpılabilir, yakınlaştırılabilir veya döndürülebilir; Başlık bloğu hizalama seçeneklerini içerir.
+<b> Blok düzenleyici geliştirmeleri: </b> Yeniden yerleştirilmiş kayan araç çubuğu, metin bloklarında sabit hata etkisi beyaz alanı, RTL modunda sabit yanlış hizalanmış araç çubuğu simgeleri.
+<b> Genel güncellemeler: </b> Yeniden bloglama işlevi eklendi.

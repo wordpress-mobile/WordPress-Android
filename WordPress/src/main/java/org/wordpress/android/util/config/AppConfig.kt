@@ -29,7 +29,6 @@ class AppConfig
      * remote value. The correct approach is to disable a feature flag for a release version and only enable it remotely.
      * Once the feature is ready to be fully released, we can enable the BuildConfig value.
      * @param feature feature which we're checking remotely
-     * @param remoteField remote field to be checked
      */
     fun isEnabled(feature: FeatureConfig): Boolean {
         if (feature.remoteField == null) {

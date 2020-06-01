@@ -38,7 +38,7 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
 
         if (VERSION.SDK_INT >= VERSION_CODES.M) {
@@ -65,13 +65,14 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.feature_list)
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
-        val featureAdapter = FeatureAnnouncementListAdapter(requireActivity())
+        val featureAdapter = FeatureAnnouncementListAdapter(this)
         recyclerView.adapter = featureAdapter
 
         viewModel.uiModel.observe(this, Observer {
             it?.let { uiModel ->
                 progressIndicator.visibility = if (uiModel.isProgressVisible) View.VISIBLE else View.GONE
                 versionLabel.text = getString(R.string.version_with_name_param, uiModel.appVersion)
+                featureAdapter.toggleFooterVisibility(uiModel.isFindOutMoreVisible)
             }
         })
 
@@ -93,6 +94,21 @@ class FeatureAnnouncementDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity!!.applicationContext as WordPress).component().inject(this)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.onSessionPaused()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onSessionEnded()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.onSessionStarted()
     }
 }

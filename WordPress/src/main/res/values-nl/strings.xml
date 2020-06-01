@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-29 13:54:11+0000
+Translation-Revision-Date: 2020-05-13 08:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: nl
 -->
 <resources>
@@ -40,7 +40,7 @@ Language: nl
     <string name="media_accessing_failed">Openen van content van privésite mislukt. Sommige media zijn mogelijk niet beschikbaar</string>
     <string name="media_accessing_progress">Content van privésite wordt geopend</string>
     <string name="error_failed_to_crop_and_save_image">Afbeelding bijsnijden en opslaan mislukt. Probeer opnieuw.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Invoegen van afbeelding mislukt.\nTik om het opnieuw te proberen.</string>
+    <string name="failed_to_load_image_tap_to_retry">Afbeelding laden mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="preview_image_description">Voorbeeldweergave afbeelding</string>
     <string name="error_unknown_page_type">Onbekende pagina-indeling</string>
     <string name="error_page_not_submitted">We konden deze handeling niet voltooien en hebben de pagina niet verzonden voor beoordeling.</string>
@@ -124,7 +124,7 @@ Language: nl
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Een beschrijving van het project en het uiteindelijke resultaat.</string>
-    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">012–3456789</string>
     <string name="gutenberg_native_10_street_road">Dorpsstraat 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
@@ -1220,7 +1220,6 @@ Language: nl
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt. tekst</string>
-    <string name="copy_text">Kopieer</string>
     <string name="connect_site">Site koppelen</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
@@ -2072,6 +2071,7 @@ Language: nl
     <string name="reader_btn_unfollow">Volgend</string>
     <string name="reader_btn_follow">Volg</string>
     <string name="reader_btn_share">Delen</string>
+    <string name="reader_view_reblog">Rebloggen</string>
     <string name="reader_untitled_post">(geen titel)</string>
     <string name="comments_empty_list">Nog geen reacties</string>
     <string name="empty_list_default">Deze lijst is leeg</string>
