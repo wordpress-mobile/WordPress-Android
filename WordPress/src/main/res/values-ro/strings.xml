@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-06 06:12:52+0000
+Translation-Revision-Date: 2020-05-27 11:18:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Bine ai venit la noul nostru blog</string>
+    <string name="gutenberg_native_select_a_color">Selectează o culoare</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Atinge de două ori pentru a merge la setări culori</string>
+    <string name="reader_empty_followed_blogs_description">Când urmărești situri, vei vedea conținutul lor aici</string>
     <string name="feature_announcement_find_out_mode">Află mai mult</string>
     <string name="feature_announcement_dialog_label">Care sunt noutățile din WordPress</string>
     <string name="insert_label_with_count">Inserează %d</string>
@@ -30,18 +34,14 @@ Language: ro
     <string name="button_insert">Inserează</string>
     <string name="continue_label">Continuă</string>
     <string name="copy_text">Copiază</string>
-    <string name="gutenberg_native_subscribe">Abonează-te</string>
     <string name="gutenberg_native_number_of_columns">Număr de coloane</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mută blocul în dreapta din poziția %1$s în poziția %2$s</string>
     <string name="gutenberg_native_move_block_right">Mută blocul în dreapta</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mută blocul în stânga din poziția %1$s în poziția %2$s</string>
     <string name="gutenberg_native_move_block_left">Mută blocul în stânga</string>
-    <string name="gutenberg_native_latest_blog_posts">Ultimele articole pe de blog</string>
-    <string name="gutenberg_native_follow_our_blog">Urmărește blogul nostru</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Atinge de două ori pentru a muta blocul în dreapta</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Atinge de două ori pentru a muta blocul în stânga</string>
     <string name="gutenberg_native_columns_settings">Setări coloane</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Setările de culoare vor fi disponibile în curând.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Creez panoul de control</string>
     <string name="new_site_creation_creating_site_loading_3">Inițializez tema</string>
@@ -121,7 +121,6 @@ Language: ro
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoliul meu prezintă diferite proiecte create de-a lungul carierei mele. Vezi informațiile mele de contact de mai jos și intrăm în legătură.</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
-    <string name="gutenberg_native_link_settings">Setări legătură</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hai să vorbim 👋 Nu ezita să mă contactezi, ai mai jos informațiile mele de contact, sau să-mi trimiți un mesaj folosind formularul.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Hai să construim ceva împreună.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Hai să construim ceva împreună</string>
@@ -139,10 +138,6 @@ Language: ro
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nu plânge pentru că s-a terminat, zâmbește pentru că s-a întâmplat.</string>
     <string name="gutenberg_native_customize">PERSONALIZEAZĂ</string>
     <string name="gutenberg_native_city_10100">City, 10100</string>
-    <string name="gutenberg_native_button_link_url">URL legătură buton</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Setările pentru culoarea butoanelor vor fi disponibile în curând.</string>
-    <string name="gutenberg_native_border_settings">Setări chenar</string>
-    <string name="gutenberg_native_border_radius">Rotunjire chenar</string>
     <string name="gutenberg_native_add_paragraph_block">Adaugă un bloc Paragraf</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">O scurtă descriere a serviciilor pe care le oferi.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">O biografie scurtă, ca un istoric personal, realizări importante sau fapte interesante.</string>
@@ -219,7 +214,7 @@ Language: ro
     <string name="post_signup_interstitial_not_right_now">Nu chiar acum</string>
     <string name="post_signup_interstitial_subtitle">Indiferent dacă vrei să creezi sau să partajezi, te vom ajuta să o faci chiar aici.</string>
     <string name="post_signup_interstitial_title">Bun venit la WordPress</string>
-    <string name="stock_media_picker_list_content_description">Bibliotecă fotografii</string>
+    <string name="stock_media_picker_list_content_description">Bibliotecă de fotografii</string>
     <string name="photo_picker_image_thumbnail_unselected">Imagine neselectată</string>
     <string name="photo_picker_image_selected">, selectată</string>
     <string name="photo_picker_image_thumbnail_selected">Imagine selectată</string>
@@ -276,7 +271,6 @@ Language: ro
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
     <string name="gutenberg_native_reset_block">Resetează blocul</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Înlătură blocul de pe rândul %s</string>
     <string name="gutenberg_native_remove_annotations">Înlătură adnotările</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
     <string name="gutenberg_native_problem_displaying_block">Problemă la afișarea blocului</string>
@@ -307,7 +301,6 @@ Language: ro
     <string name="gutenberg_native_double_tap_to_select_an_image">Atinge de două ori pentru a selecta o imagine</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Atinge de două ori pentru a selecta un video</string>
     <string name="gutenberg_native_double_tap_to_select">Atinge de două ori pentru a selecta</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Atinge de două ori pentru a înlătura blocul</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Atinge de două ori pentru a reface ultima modificare</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Atinge de două ori pentru a muta blocul în sus</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Atinge de două ori pentru a muta blocul în jos</string>
@@ -888,7 +881,6 @@ Language: ro
     <string name="reader_empty_posts_liked_title">Nu ai apreciat nimic până acum</string>
     <string name="reader_empty_followed_blogs_button_followed">Du-te la urmărire</string>
     <string name="reader_empty_followed_blogs_button_discover">Descoperă situri</string>
-    <string name="reader_empty_followed_blogs_description">În prezent nu urmărești niciun sit. Nu vrei să urmărești unul acum?</string>
     <string name="reader_empty_followed_blogs_title">Niciun sit urmărit</string>
     <string name="notifications_empty_likes">Nicio apreciere până acum</string>
     <string name="notifications_empty_followers">Niciun urmăritor până acum</string>
@@ -1317,7 +1309,7 @@ Language: ro
     <string name="jetpack_allow_wpcom_sign_in_title">Permite autentificarea WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Autentificare WordPress.com</string>
     <string name="jetpack_brute_force_whitelist_title">Adrese IP din lista albă</string>
-    <string name="jetpack_prevent_brute_force_title">Blochează încercări de autentificare rău intenționate</string>
+    <string name="jetpack_prevent_brute_force_title">Blochează încercările de autentificare rău intenționate</string>
     <string name="jetpack_prevent_brute_force_category_title">Protecție împotriva atacurilor cu forță-brută</string>
     <string name="jetpack_send_wp_notifications_title">Trimite notificări imediate</string>
     <string name="jetpack_send_email_notifications_title">Trimite notificări prin email</string>
@@ -1507,7 +1499,7 @@ Language: ro
     <string name="button_style">Stil buton</string>
     <string name="label">Etichetă</string>
     <string name="sharing_buttons">Butoane de partajare</string>
-    <string name="site_settings_like">Arată buton de apreciere</string>
+    <string name="site_settings_like">Arată butonul de apreciere</string>
     <string name="site_settings_reblog">Arată buton de republicare</string>
     <string name="site_settings_reblog_and_like_header">Republicare și apreciere</string>
     <string name="official_buttons_display">Butoane oficiale</string>
@@ -1973,7 +1965,7 @@ Language: ro
     <string name="notifications_disabled">Notificările aplicației au fost dezactivate. Apăsați aici pentru a le activa în Setări.</string>
     <string name="notification_types">Tipuri notificare</string>
     <string name="error_loading_notifications">N-am putut încărca setările de notificare</string>
-    <string name="comment_likes">Aprecieri comentariu</string>
+    <string name="comment_likes">Aprecieri la comentarii</string>
     <string name="email">Email</string>
     <string name="notifications_tab">Filă notificări</string>
     <string name="app_notifications">Notificări aplicație</string>

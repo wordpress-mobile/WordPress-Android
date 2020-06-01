@@ -1,4 +1,0 @@
-14.8 :
-<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
-<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
-<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.

@@ -9,6 +9,7 @@ import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
@@ -305,6 +306,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(NewsCardViewModel.class)
     abstract ViewModel newsCardViewModel(NewsCardViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomepageSettingsViewModel.class)
+    abstract ViewModel homepageSettingsDialogViewModel(HomepageSettingsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
