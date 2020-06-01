@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
   "branch": "master",
-  "pinned_hash": "cd32efdfc986278472a637841dedac3d5e665555",
+  "pinned_hash": "fd13936be5a6b9bcf30e537791d7de6aedba8523",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
@@ -11,6 +11,11 @@
     {
       "file": "android/WPAndroid/google-services.json",
       "destination": "WordPress/google-services.json",
+      "encrypt": true
+    },
+    {
+      "file": "android/WPAndroid/sentry.properties",
+      "destination": "sentry.properties",
       "encrypt": true
     },
     {
