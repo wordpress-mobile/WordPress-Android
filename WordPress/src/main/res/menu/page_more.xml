@@ -18,6 +18,16 @@
         android:title="@string/pages_set_parent"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/set_as_homepage"
+        android:orderInCategory="100"
+        android:title="@string/pages_set_as_homepage"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/set_as_posts_page"
+        android:orderInCategory="100"
+        android:title="@string/pages_set_as_posts_page"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/publish_now"
         android:orderInCategory="100"
         android:title="@string/pages_publish_now"

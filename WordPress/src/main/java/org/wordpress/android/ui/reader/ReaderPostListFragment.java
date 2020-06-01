@@ -2609,6 +2609,7 @@ public class ReaderPostListFragment extends Fragment
         }
 
         menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
+        menuItems.add(ReaderMenuAdapter.ITEM_VISIT);
 
         if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
             menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
@@ -2654,6 +2655,10 @@ public class ReaderPostListFragment extends Fragment
                     case ReaderMenuAdapter.ITEM_SHARE:
                         AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
                         sharePost(post);
+                        break;
+                    case ReaderMenuAdapter.ITEM_VISIT:
+                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                        ReaderActivityLauncher.openPost(view.getContext(), post);
                         break;
                 }
             }

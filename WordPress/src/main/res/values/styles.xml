@@ -1131,4 +1131,39 @@
         <item name="android:backgroundTintMode">src_in</item>
     </style>
 
+    <!-- Homepage settings -->
+    <style name="SettingsDialogTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    </style>
+
+    <style name="SettingsDialogText">
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="SettingsDialogError">
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="SettingsDialogHeader">
+        <item name="android:textColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="SettingsDialogDropDownField">
+        <item name="android:textColor">@color/on_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:drawableEnd">@drawable/ic_dropdown_primary_30_24dp</item>
+        <item name="android:drawableTint">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:drawablePadding">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_small_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+    </style>
+
 </resources>
