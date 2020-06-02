@@ -5,7 +5,7 @@ import org.wordpress.android.annotation.Experiment
 import org.wordpress.android.annotation.Feature
 import org.wordpress.android.annotation.RemoteConfig
 import java.io.File
-import java.net.URI
+import java.lang.Exception
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
@@ -13,6 +13,7 @@ import javax.annotation.processing.SupportedAnnotationTypes
 import javax.annotation.processing.SupportedSourceVersion
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
+import javax.tools.Diagnostic.Kind
 
 @AutoService(Processor::class) // For registering the service
 @SupportedSourceVersion(SourceVersion.RELEASE_8) // to support Java 8
@@ -45,37 +46,25 @@ class RemoteConfigProcessor : AbstractProcessor() {
         remoteConfigFile: String,
         remoteConfigDefaults: Map<String, String>
     ) {
-        val fileContent = RemoteConfigDefaultsBuilder(remoteConfigDefaults).getContent()
-        val resFile = getResPath()
+        try {
+            val fileContent = RemoteConfigDefaultsBuilder(remoteConfigDefaults).getContent()
 
-        val file = File(resFile, "$remoteConfigFile.xml")
-        if (file.exists()) {
-            file.delete()
+            val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
+            val resFile = File(kaptKotlinGeneratedDir, "../../../res/xml/")
+            resFile.mkdirs()
+
+            val file = File(resFile, "$remoteConfigFile.xml")
+            if (file.exists()) {
+                file.delete()
+            }
+            val newFile = File(resFile, "$remoteConfigFile.xml")
+            newFile.writeText(fileContent)
+        } catch (e: Exception) {
+            processingEnv.messager.printMessage(Kind.ERROR, "Failed to generate remote_config_defaults")
         }
-        val newFile = File(resFile, "$remoteConfigFile.xml")
-        newFile.writeText(fileContent)
     }
 
-    @Throws(Exception::class)
-    private fun getResPath(): File? {
-        val filer = processingEnv.filer
-        val dummySourceFile = filer.createSourceFile("dummy" + System.currentTimeMillis())
-        var dummySourceFilePath = dummySourceFile.toUri().toString()
-        if (dummySourceFilePath.startsWith("file:")) {
-            if (!dummySourceFilePath.startsWith("file://")) {
-                dummySourceFilePath = "file://" + dummySourceFilePath.substring("file:".length)
-            }
-        } else {
-            dummySourceFilePath = "file://$dummySourceFilePath"
-        }
-        val cleanURI = URI(dummySourceFilePath)
-        val dummyFile = File(cleanURI)
-        val projectRoot: File = dummyFile.parentFile
-                .parentFile
-                .parentFile
-                .parentFile
-                .parentFile
-                .parentFile
-        return File(projectRoot.absolutePath + "/src/main/res/xml")
+    companion object {
+        const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
     }
 }

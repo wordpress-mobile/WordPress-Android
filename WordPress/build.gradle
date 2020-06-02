@@ -159,6 +159,12 @@ android {
             enableSplit = false
         }
     }
+
+    sourceSets {
+        main {
+            res.srcDirs += "${buildDir.absolutePath}/generated/res/"
+        }
+    }
 }
 
 // allows us to use cool things like @Parcelize annotations
