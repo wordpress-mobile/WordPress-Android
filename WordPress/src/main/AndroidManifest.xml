@@ -64,8 +64,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/com_google_android_geo_api_key"/>
 
-        <meta-data android:name="io.sentry.auto-init" android:value="false" />
-
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

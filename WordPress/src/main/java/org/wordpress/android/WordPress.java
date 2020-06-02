@@ -230,9 +230,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // This call needs be made before accessing any methods in android.webkit package
         setWebViewDataDirectorySuffixOnAndroidP();
 
-        if (CrashLoggingUtils.shouldEnableCrashLogging(getContext())) {
-            CrashLoggingUtils.startCrashLogging(getContext());
-        }
+        CrashLoggingUtils.startCrashLogging(getContext());
 
         initWellSql();
 

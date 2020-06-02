@@ -1,35 +1,39 @@
 package org.wordpress.android.util
 
-import android.content.Context
 import android.preference.PreferenceManager
-import io.sentry.android.core.SentryAndroid
-import io.sentry.core.Sentry
+import io.sentry.Sentry
+import io.sentry.android.AndroidSentryClientFactory
+import io.sentry.event.BreadcrumbBuilder
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 
 class CrashLoggingUtils {
-    companion object {
-        @JvmStatic fun shouldEnableCrashLogging(context: Context): Boolean {
-            if (PackageUtils.isDebugBuild()) {
-                return false
-            }
-
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_crash), true)
-            return !hasUserOptedOut
+    fun shouldEnableCrashLogging(context: android.content.Context): Boolean {
+        if (PackageUtils.isDebugBuild()) {
+            return false
         }
 
-        @JvmStatic fun startCrashLogging(context: Context) {
-            SentryAndroid.init(context) { options ->
-                options.dsn = BuildConfig.SENTRY_DSN
-                options.cacheDirPath = context.cacheDir.absolutePath
-                options.isEnableSessionTracking = true // Release Health tracking
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val hasUserOptedOut = !prefs.getBoolean(context.getString(R.string.pref_key_send_crash), true)
+        return !hasUserOptedOut
+    }
+
+    fun enableCrashLogging(context: android.content.Context) {
+        Sentry.init(BuildConfig.SENTRY_DSN, AndroidSentryClientFactory(context))
+        Sentry.getContext().addTag("version", BuildConfig.VERSION_NAME)
+    }
+
+    companion object {
+        @JvmStatic fun startCrashLogging(context: android.content.Context) {
+            val obj = CrashLoggingUtils()
+
+            if (obj.shouldEnableCrashLogging(context)) {
+                obj.enableCrashLogging(context)
             }
-            Sentry.setTag("version", BuildConfig.VERSION_NAME)
         }
 
         @JvmStatic fun stopCrashLogging() {
-            Sentry.clearBreadcrumbs()
+            Sentry.clearContext()
             Sentry.close()
         }
 
@@ -38,11 +42,13 @@ class CrashLoggingUtils {
                 return
             }
 
-            Sentry.addBreadcrumb(message)
+            Sentry.getContext().recordBreadcrumb(
+                    BreadcrumbBuilder().setMessage(message).build()
+            )
         }
 
         @JvmStatic fun log(exception: Throwable) {
-            Sentry.captureException(exception)
+            Sentry.capture(exception)
         }
 
         @JvmStatic fun logException(tr: Throwable, tag: AppLog.T) {
