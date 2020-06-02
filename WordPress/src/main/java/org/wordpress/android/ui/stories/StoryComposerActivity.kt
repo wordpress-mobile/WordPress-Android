@@ -39,7 +39,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
-import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
@@ -140,7 +139,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         editorMedia.start(site!!, this, STORY_EDITOR)
-        postEditorAnalyticsSession?.start(null);
+        postEditorAnalyticsSession?.start(null)
         startObserving()
     }
 
