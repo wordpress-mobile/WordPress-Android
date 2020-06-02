@@ -25,6 +25,7 @@ class StoriesTrackerHelper @Inject constructor() {
         val properties: HashMap<String, Any> = HashMap()
         properties.put("is_retry", event.isRetry)
         properties.put("frame_qty", event.frameSaveResult.size)
+        properties.put("elapsed_time", event.elapsedTime)
         return properties
     }
 
