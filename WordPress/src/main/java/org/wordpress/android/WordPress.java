@@ -1026,11 +1026,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         @Override public void trackTappedNotification(@NotNull StoryNotificationType storyNotificationType) {
-            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
+            mSystemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType));
         }
 
         @Override public void trackDismissedNotification(@NotNull StoryNotificationType storyNotificationType) {
-            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
+            mSystemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType));
         }
     }
 }
