@@ -248,7 +248,7 @@
     <string name="page_homepage_successfully_updated">Homepage successfully updated</string>
     <string name="page_homepage_update_failed">Homepage update failed</string>
     <string name="page_posts_page_successfully_updated">Posts Page successfully updated</string>
-    <string name="page_posts_page_update_failed">Homepage update failed</string>
+    <string name="page_posts_page_update_failed">Posts Page update failed</string>
 
     <!-- posts tab -->
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
