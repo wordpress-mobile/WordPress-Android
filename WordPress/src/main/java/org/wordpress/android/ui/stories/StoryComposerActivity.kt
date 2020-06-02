@@ -39,8 +39,11 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
+import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
@@ -80,6 +83,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -88,6 +92,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // See https://wordpress.org/support/article/post-formats/
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        private const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
@@ -119,6 +124,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             } else {
                 editPostRepository.loadPostByLocalPostId(localPostId)
             }
+            createPostEditorAnalyticsSessionTracker(editPostRepository.getPost(), site)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
                 val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
@@ -129,9 +135,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
             }
+            postEditorAnalyticsSession =
+                    savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
         editorMedia.start(site!!, this, STORY_EDITOR)
+        postEditorAnalyticsSession?.start(null);
         startObserving()
     }
 
@@ -139,6 +148,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
+        outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -164,6 +174,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onDestroy() {
         editorMedia.cancelAddMediaToEditorActions()
+        postEditorAnalyticsSession?.end()
         super.onDestroy()
     }
 
@@ -350,7 +361,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onStoryDiscarded() {
         // delete empty post from database
         dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-        // TODO WPSTORIES add TRACKS LOOK BELOW LINE!!!
-        // mPostEditorAnalyticsSession.setOutcome(CANCEL)
+        postEditorAnalyticsSession?.setOutcome(CANCEL)
+    }
+
+    private fun createPostEditorAnalyticsSessionTracker(
+        post: PostImmutableModel?,
+        site: SiteModel?
+    ) {
+        if (postEditorAnalyticsSession == null) {
+            postEditorAnalyticsSession = PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
+                    PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
+                    post, site, true
+            )
+        }
     }
 }
