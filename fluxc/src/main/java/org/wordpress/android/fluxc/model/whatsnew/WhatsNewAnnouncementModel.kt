@@ -9,7 +9,8 @@ import kotlinx.android.parcel.Parcelize
 data class WhatsNewAnnouncementModel(
     val appVersionName: String,
     val announcementVersion: Int,
-    val minimumAppVersionCode: Int,
+    val minimumAppVersion: String,
+    val maximumAppVersion: String,
     val detailsUrl: String?,
     val isLocalized: Boolean,
     val responseLocale: String,
