@@ -52,19 +52,27 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
-            add(HomeUiState(
-                    actionType = VISIBILITY,
-                    actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                    actionEnabled = true,
-                    onActionClicked = ::onActionClicked
-            ))
+            add(
+                    HomeUiState(
+                            actionType = VISIBILITY,
+                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                            actionEnabled = true,
+                            onActionClicked = ::onActionClicked
+                    )
+            )
 
-            add(HomeUiState(
-                    actionType = PUBLISH,
-                    actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
-                    actionEnabled = editPostRepository.status != PostStatus.PRIVATE,
-                    onActionClicked = ::onActionClicked
-            ))
+            add(
+                    HomeUiState(
+                            actionType = PUBLISH,
+                            actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
+                            actionEnabled = editPostRepository.status != PostStatus.PRIVATE,
+                            onActionClicked = if (editPostRepository.status != PostStatus.PRIVATE) {
+                                ::onActionClicked
+                            } else {
+                                null
+                            }
+                    )
+            )
 
             if (!editPostRepository.isPage) {
                 add(HomeUiState(

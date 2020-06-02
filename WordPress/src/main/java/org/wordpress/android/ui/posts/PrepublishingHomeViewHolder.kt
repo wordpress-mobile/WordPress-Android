@@ -39,7 +39,7 @@ sealed class PrepublishingHomeViewHolder(
 
             if (uiState.actionEnabled) {
                 actionLayout.setOnClickListener {
-                    uiState.onActionClicked.invoke(uiState.actionType)
+                    uiState.onActionClicked?.invoke(uiState.actionType)
                 }
             } else {
                 actionType.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_20))
