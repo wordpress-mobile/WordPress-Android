@@ -108,7 +108,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
             } else {
                 // SAVED_LOCALLY
-                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site,true)
+                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, true)
                 // no op, when network is available the offline mode in WPAndroid will gather the queued Post
                 // and try to upload.
             }
