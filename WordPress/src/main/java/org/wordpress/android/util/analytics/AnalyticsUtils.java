@@ -24,7 +24,6 @@ import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
-import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
@@ -116,7 +115,7 @@ public class AnalyticsUtils {
             // Quick press
             normalizedSourceName = "quick-press";
         }
-        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
+        PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         properties.put("created_post_source", normalizedSourceName);
 
         if (intent != null
