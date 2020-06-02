@@ -53,6 +53,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -108,6 +109,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (localPostId == 0) {
                 // Create a new post
                 saveInitialPost()
+                // Bump post created analytics only once, first time the editor is opened
+                AnalyticsUtils.trackEditorCreatedPost(
+                        intent.action,
+                        intent,
+                        site,
+                        editPostRepository.getPost()
+                )
             } else {
                 editPostRepository.loadPostByLocalPostId(localPostId)
             }
