@@ -614,7 +614,9 @@ public final class AnalyticsTracker {
         MEDIA_EDITOR_SHOWN,
         MEDIA_EDITOR_USED,
         STORY_SAVE_SUCCESSFUL,
-        STORY_SAVE_ERROR
+        STORY_SAVE_ERROR,
+        STORY_POST_SAVE_LOCALLY,
+        STORY_POST_SAVE_REMOTELY
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
