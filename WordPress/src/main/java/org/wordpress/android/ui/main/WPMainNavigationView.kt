@@ -19,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderFragment
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.getColorStateListFromAttribute
@@ -282,7 +284,11 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderFragment()
+                READER -> if (BuildConfig.READER_IMPROVEMENTS_PHASE_2) {
+                    ReaderInterestsFragment() // TODO: Temporary entry point
+                } else {
+                    ReaderFragment()
+                }
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
             fragmentManager.beginTransaction()
