@@ -2,16 +2,19 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
 
 class ReaderInterestsViewModel @Inject constructor(
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     private val readerTagRepository: ReaderTagRepository
-) : ViewModel() {
+) : ScopedViewModel(mainDispatcher) {
     var initialized: Boolean = false
 
     private val _uiState = MutableLiveData<UiState>()
@@ -23,7 +26,7 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun loadInterests() {
-        viewModelScope.launch { // TODO: Might want to use ScopedViewModel with mainDispatcher for consistency
+        launch {
             val tagList = readerTagRepository.getInterests()
             if (tagList.isNotEmpty()) {
                 updateUiState(UiState(transformToInterestsUiState(tagList), tagList))
