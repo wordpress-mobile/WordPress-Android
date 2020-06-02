@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemReselectedListener
 import com.google.android.material.bottomnavigation.BottomNavigationView.OnNavigationItemSelectedListener
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
-import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.MY_SITE
@@ -284,7 +283,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> if (BuildConfig.READER_IMPROVEMENTS_PHASE_2) {
+                READER -> if (AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     ReaderInterestsFragment() // TODO: Temporary entry point
                 } else {
                     ReaderFragment()
