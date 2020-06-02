@@ -15,7 +15,7 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 1. `git submodule update --init --recursive`  to pull the submodules (optionally use `--depth=1 --recommend-shallow` flags to skip pulling full submodules' history).
 1. In Android Studio, open the project from the local repository. This will auto-generate `local.properties` with the SDK location.
 1. Go to Tools → AVD Manager and create an emulated device.
-1. Run.
+1. Run
 
 Notes:
 
