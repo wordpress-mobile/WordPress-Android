@@ -46,7 +46,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             with(chip) {
                 layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                 text = interestTagUiState.title
-                setOnCheckedChangeListener { _, _ -> // TODO: Pass index to VM
+                isChecked = interestTagUiState.isChecked
+                setOnCheckedChangeListener { _, _ ->
+                    viewModel.onInterestAtIndexToggled(index)
                 }
             }
 
