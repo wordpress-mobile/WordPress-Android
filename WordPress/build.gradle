@@ -252,8 +252,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
-    androidTestImplementation('com.github.tomakehurst:wiremock:2.23.2') {
-        exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+    androidTestImplementation('com.github.tomakehurst:wiremock:2.26.3') {
         exclude group: 'org.apache.httpcomponents', module: 'httpclient'
         exclude group: 'org.apache.commons', module: 'commons-lang3'
         exclude group: 'asm', module: 'asm'
