@@ -1732,6 +1732,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_save_successful";
             case STORY_SAVE_ERROR:
                 return "story_save_error";
+            case STORY_POST_SAVE_LOCALLY:
+                return "story_post_save_locally";
+            case STORY_POST_SAVE_REMOTELY:
+                return "story_post_save_remotely";
         }
         return null;
     }
