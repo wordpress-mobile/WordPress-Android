@@ -135,10 +135,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
+                // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
-                // TODO WPSTORIES add TRACKS
-                // lets add an EVENT for START UPLOADING MEDIA
-                // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
             }
         }
     }
