@@ -15,13 +15,14 @@ import org.wordpress.android.fluxc.persistence.WhatsNewSqlUtils.WhatsNewAnnounce
 import org.wordpress.android.fluxc.persistence.WhatsNewSqlUtils.WhatsNewAnnouncementFeatureBuilder
 
 @RunWith(RobolectricTestRunner::class)
-class QuickStartSqlUtilsTest {
+class WhatsNewSqlUtilsTest {
     private lateinit var whatsNewSqlUtils: WhatsNewSqlUtils
 
     private val firstAnnouncement = WhatsNewAnnouncementModel(
             "15.0",
             1,
-            850,
+            "14.7",
+            "14.9",
             "https://wordpress.org",
             true,
             "it",
@@ -44,7 +45,8 @@ class QuickStartSqlUtilsTest {
     private val secondAnnouncement = WhatsNewAnnouncementModel(
             "16.0",
             2,
-            855,
+            "14.9",
+            "16.0",
             "https://wordpress.org/announcement2/",
             false,
             "en",

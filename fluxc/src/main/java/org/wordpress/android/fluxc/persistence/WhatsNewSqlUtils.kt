@@ -67,19 +67,21 @@ class WhatsNewSqlUtils
     class WhatsNewAnnouncementBuilder(
         @PrimaryKey(autoincrement = false) @Column var announcementId: Int = 0,
         @Column var appVersionName: String = "",
-        @Column var minimumAppVersionCode: Int,
+        @Column var minimumAppVersion: String,
+        @Column var maximumAppVersion: String,
         @Column var localized: Boolean,
         @Column var responseLocale: String,
         @Column var detailsUrl: String? = null
     ) : Identifiable {
-        constructor() : this(-1, "", -1, false, "", "")
+        constructor() : this(-1, "", "", "", false, "", "")
 
         fun build(featuresBuilders: List<WhatsNewAnnouncementFeatureBuilder>): WhatsNewAnnouncementModel {
             val features = featuresBuilders.map { it.build() }
             return WhatsNewAnnouncementModel(
                     appVersionName,
                     announcementId,
-                    minimumAppVersionCode,
+                    minimumAppVersion,
+                    maximumAppVersion,
                     detailsUrl,
                     localized,
                     responseLocale,
@@ -134,7 +136,8 @@ class WhatsNewSqlUtils
         return WhatsNewAnnouncementBuilder(
                 announcementId = this.announcementVersion,
                 appVersionName = this.appVersionName,
-                minimumAppVersionCode = this.minimumAppVersionCode,
+                minimumAppVersion = this.minimumAppVersion,
+                maximumAppVersion = this.maximumAppVersion,
                 localized = this.isLocalized,
                 responseLocale = this.responseLocale,
                 detailsUrl = this.detailsUrl

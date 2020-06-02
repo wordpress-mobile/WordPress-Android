@@ -34,20 +34,21 @@ class WhatsNewStore @Inject constructor(
         val actionType = action.type as? WhatsNewAction ?: return
         when (actionType) {
             FETCH_WHATS_NEW -> {
-                val versionCode = (action.payload as WhatsNewFetchPayload).versionCode
+                val versionCode = (action.payload as WhatsNewFetchPayload).versionName
                 val isForced = (action.payload as WhatsNewFetchPayload).forced
-                GlobalScope.launch(coroutineContext) { emitChange(fetchWhatsNew(versionCode, isForced)) }
+                val appId = (action.payload as WhatsNewFetchPayload).appId
+                GlobalScope.launch(coroutineContext) { emitChange(fetchWhatsNew(versionCode, appId, isForced)) }
             }
         }
     }
 
-    suspend fun fetchWhatsNew(versionCode: String, forced: Boolean) =
+    suspend fun fetchWhatsNew(versionCode: String, appId: WhatsNewAppId, forced: Boolean) =
             coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
                 if (!forced && whatsNewSqlUtils.hasCachedAnnouncements()) {
                     return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements())
                 }
 
-                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(versionCode)
+                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(versionCode, appId)
 
                 return@withDefaultContext if (!fetchedWhatsNewPayload.isError) {
                     val fetchedAnnouncements = fetchedWhatsNewPayload.whatsNewItems
@@ -65,7 +66,8 @@ class WhatsNewStore @Inject constructor(
     }
 
     class WhatsNewFetchPayload(
-        val versionCode: String,
+        val versionName: String,
+        val appId: WhatsNewAppId,
         val forced: Boolean
     ) : Payload<BaseNetworkError>()
 
@@ -91,5 +93,10 @@ class WhatsNewStore @Inject constructor(
 
     enum class WhatsNewErrorType {
         GENERIC_ERROR
+    }
+
+    enum class WhatsNewAppId(val id: Int) {
+        WP_ANDROID(1),
+        WOO_ANDROID(3)
     }
 }

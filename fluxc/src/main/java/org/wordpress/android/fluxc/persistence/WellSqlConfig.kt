@@ -1084,8 +1084,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeatureModel")
                     db.execSQL(
                             "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
-                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION_CODE INTEGER," +
-                                    "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
+                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION TEXT NOT NULL," +
+                                    "MAXIMUM_APP_VERSION TEXT NOT NULL,LOCALIZED INTEGER," +
+                                    "RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
                     )
                     db.execSQL(
                             "CREATE TABLE WhatsNewAnnouncementFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
