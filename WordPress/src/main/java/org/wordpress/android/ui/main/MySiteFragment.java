@@ -1082,12 +1082,8 @@ public class MySiteFragment extends Fragment implements
     public void onEventMainThread(StorySaveEvents.StorySaveResult event) {
         EventBus.getDefault().removeStickyEvent(event);
 
-        if (event.isSuccess()) {
-            // TODO WPSTORIES add TRACKS
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
-        } else {
-            // TODO WPSTORIES add TRACKS
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+        if (!event.isSuccess()) {
+            // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
             String errorText = String.format(
                     getString(R.string.story_saving_snackbar_finished_with_error),
                     StoryRepository.getStoryAtIndex(event.getStoryIndex()).getTitle()

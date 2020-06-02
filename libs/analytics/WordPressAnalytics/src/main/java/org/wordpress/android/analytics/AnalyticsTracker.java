@@ -612,7 +612,9 @@ public final class AnalyticsTracker {
         FEATURED_IMAGE_UPLOAD_RETRY_CLICKED_POST_SETTINGS,
         FEATURED_IMAGE_REMOVE_CLICKED_POST_SETTINGS,
         MEDIA_EDITOR_SHOWN,
-        MEDIA_EDITOR_USED
+        MEDIA_EDITOR_USED,
+        STORY_SAVE_SUCCESSFUL,
+        STORY_SAVE_ERROR
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

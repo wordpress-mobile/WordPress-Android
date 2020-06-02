@@ -1728,6 +1728,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_shown";
             case MEDIA_EDITOR_USED:
                 return "media_editor_used";
+            case STORY_SAVE_SUCCESSFUL:
+                return "story_save_successful";
+            case STORY_SAVE_ERROR:
+                return "story_save_error";
         }
         return null;
     }

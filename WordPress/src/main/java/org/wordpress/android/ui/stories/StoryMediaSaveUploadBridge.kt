@@ -59,6 +59,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         get() = mainDispatcher + job
 
     @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
@@ -106,6 +107,8 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // SAVED_ONLINE
             } else {
                 // SAVED_LOCALLY
+                // no op, when network is available the offline mode in WPAndroid will gather the queued Post
+                // and try to upload.
             }
         }
     }
@@ -117,6 +120,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: StorySaveResult) {
+        // track event
+        storiesTrackerHelper.trackStorySaveResultEvent(event)
+
         // only trigger the bridge preparation and the UploadService if the Story is now complete
         // otherwise we can be receiving successful retry events for individual frames we shoulnd't care about just
         // yet.
@@ -132,9 +138,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 // lets add an EVENT for START UPLOADING MEDIA
                 // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
             }
-        } else {
-            // TODO WPSTORIES add TRACKS for ERROR
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         }
     }
 
