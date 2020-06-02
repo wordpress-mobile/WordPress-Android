@@ -10,16 +10,8 @@ import javax.inject.Inject
 
 class StoriesTrackerHelper @Inject constructor() {
     fun trackStorySaveResultEvent(event: StorySaveResult) {
-        val properties = getCommonProperties(event)
         val stat = if (event.isSuccess()) Stat.STORY_SAVE_SUCCESSFUL else Stat.STORY_SAVE_ERROR
-        var siteModel: SiteModel? = null
-        event.metadata?.let {
-            siteModel = it.getSerializable(WordPress.SITE) as SiteModel
-        }
-
-        siteModel?.let {
-            AnalyticsUtils.trackWithSiteDetails(stat, it, properties)
-        } ?: AnalyticsTracker.track(stat, properties)
+        trackStorySaveResultEvent(event, stat)
     }
 
     fun trackStoryPostSavedEvent(frameQty: Int, site: SiteModel, locallySaved: Boolean) {
@@ -32,6 +24,19 @@ class StoriesTrackerHelper @Inject constructor() {
     private fun getCommonProperties(event: StorySaveResult): HashMap<String, Any> {
         val properties: HashMap<String, Any> = HashMap()
         properties.put("is_retry", event.isRetry)
+        properties.put("frame_qty", event.frameSaveResult.size)
         return properties
+    }
+
+    fun trackStorySaveResultEvent(event: StorySaveResult, stat: Stat) {
+        val properties = getCommonProperties(event)
+        var siteModel: SiteModel? = null
+        event.metadata?.let {
+            siteModel = it.getSerializable(WordPress.SITE) as SiteModel
+        }
+
+        siteModel?.let {
+            AnalyticsUtils.trackWithSiteDetails(stat, it, properties)
+        } ?: AnalyticsTracker.track(stat, properties)
     }
 }

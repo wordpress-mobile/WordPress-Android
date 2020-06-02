@@ -78,6 +78,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails;
+import org.wordpress.android.ui.stories.StoriesTrackerHelper;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.uploads.UploadService;
@@ -189,6 +190,7 @@ public class MySiteFragment extends Fragment implements
     @Inject ImageManager mImageManager;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject MeGravatarLoader mMeGravatarLoader;
+    @Inject StoriesTrackerHelper mStoriesTrackerHelper;
 
     public static MySiteFragment newInstance() {
         return new MySiteFragment();
@@ -1112,7 +1114,10 @@ public class MySiteFragment extends Fragment implements
                                         event.getStoryIndex()) + ""
                         );
 
-                        intent.putExtra(ARG_NOTIFICATION_TYPE, NotificationType.STORY_SAVE_ERROR);
+                        mStoriesTrackerHelper.trackStorySaveResultEvent(
+                                event,
+                                Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+                        );
                         startActivity(intent);
                     }
             );

@@ -616,7 +616,8 @@ public final class AnalyticsTracker {
         STORY_SAVE_SUCCESSFUL,
         STORY_SAVE_ERROR,
         STORY_POST_SAVE_LOCALLY,
-        STORY_POST_SAVE_REMOTELY
+        STORY_POST_SAVE_REMOTELY,
+        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
