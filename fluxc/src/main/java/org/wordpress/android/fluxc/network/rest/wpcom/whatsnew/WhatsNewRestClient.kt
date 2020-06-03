@@ -27,7 +27,7 @@ class WhatsNewRestClient constructor(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchWhatsNew(versionName: String, appId: WhatsNewAppId): WhatsNewFetchedPayload {
-        val url = WPCOMV2.whats_new.mobile.url
+        val url = WPCOMV2.mobile.feature_announcements.url
 
         val params = mapOf(
                 "app_id" to appId.id.toString(),
