@@ -91,6 +91,7 @@ class PostListMainViewModel @Inject constructor(
 
     private lateinit var site: SiteModel
     private lateinit var editPostRepository: EditPostRepository
+    var currentBottomSheetPostId: LocalId? = null
 
     private val _viewState = MutableLiveData<PostListMainViewState>()
     val viewState: LiveData<PostListMainViewState> = _viewState
@@ -206,7 +207,12 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState, editPostRepository: EditPostRepository) {
+    fun start(
+        site: SiteModel,
+        initPreviewState: PostListRemotePreviewState,
+        currentBottomSheetPostId: LocalId,
+        editPostRepository: EditPostRepository
+    ) {
         this.site = site
         this.editPostRepository = editPostRepository
 
@@ -257,6 +263,12 @@ class PostListMainViewModel @Inject constructor(
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
         _previewState.value = _previewState.value ?: initPreviewState
+
+        currentBottomSheetPostId.let { postId ->
+            if (postId.value != 0) {
+                editPostRepository.loadPostByLocalPostId(postId.value)
+            }
+        }
 
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
@@ -420,6 +432,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun showPrepublishingBottomSheet(post: PostModel) {
+        currentBottomSheetPostId = LocalId(post.id)
         editPostRepository.loadPostByLocalPostId(post.id)
         _openPrepublishingBottomSheet.postValue(Event(Unit))
     }

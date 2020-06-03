@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -69,6 +70,7 @@ import javax.inject.Inject
 
 const val EXTRA_TARGET_POST_LOCAL_ID = "targetPostLocalId"
 const val STATE_KEY_PREVIEW_STATE = "stateKeyPreviewState"
+const val STATE_KEY_BOTTOMSHEET_POST_ID = "stateKeyBottomSheetPostId"
 
 class PostsListActivity : LocaleAwareActivity(),
         EditPostActivityHook,
@@ -162,9 +164,15 @@ class PostsListActivity : LocaleAwareActivity(),
             PostListRemotePreviewState.fromInt(savedInstanceState.getInt(STATE_KEY_PREVIEW_STATE, 0))
         }
 
+        val currentBottomSheetPostId = if (savedInstanceState == null) {
+            LocalId(0)
+        } else {
+            LocalId(savedInstanceState.getInt(STATE_KEY_BOTTOMSHEET_POST_ID, 0))
+        }
+
         setupActionBar()
         setupContent()
-        initViewModel(initPreviewState)
+        initViewModel(initPreviewState, currentBottomSheetPostId)
         loadIntentData(intent)
 
         quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
@@ -237,9 +245,9 @@ class PostsListActivity : LocaleAwareActivity(),
         pager.adapter = postsPagerAdapter
     }
 
-    private fun initViewModel(initPreviewState: PostListRemotePreviewState) {
+    private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState, editPostRepository)
+        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {
@@ -502,6 +510,9 @@ class PostsListActivity : LocaleAwareActivity(),
         outState.putSerializable(WordPress.SITE, site)
         viewModel.previewState.value?.let {
             outState.putInt(STATE_KEY_PREVIEW_STATE, it.value)
+        }
+        viewModel.currentBottomSheetPostId?.let {
+            outState.putInt(STATE_KEY_BOTTOMSHEET_POST_ID, it.value)
         }
     }
 
