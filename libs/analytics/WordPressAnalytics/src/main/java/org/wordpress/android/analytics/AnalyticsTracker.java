@@ -319,6 +319,7 @@ public final class AnalyticsTracker {
         CONNECT_JETPACK_FAILED,
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
+        UNIFIED_LOGIN_STEP,
         LOGIN_ACCESSED,
         LOGIN_MAGIC_LINK_EXITED,
         LOGIN_MAGIC_LINK_FAILED,
