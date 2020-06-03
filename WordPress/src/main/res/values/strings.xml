@@ -2694,8 +2694,8 @@
     <string name="web_preview_default">Default</string>
     <string name="web_preview_desktop">Desktop</string>
 
-    <string name="create_post_page_fab_tooltip">Create a post or page</string>
-    <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
+    <string name="create_post_page_fab_tooltip">Create a post, page or story</string>
+    <string name="create_post_page_fab_tooltip_contributors">Create a post or story</string>
 
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
