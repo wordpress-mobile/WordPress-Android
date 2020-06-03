@@ -11,6 +11,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
@@ -113,17 +114,19 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `bottom sheet is visualized when user has full access to content`() {
+    fun `bottom sheet is visualized when user has full access to content and has all 3 options`() {
         viewModel.onFabClicked(hasFullAccessToContent = true)
         assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test
-    fun `new post action is triggered from FAB when user has not full access to content`() {
+    fun `bottom sheet is visualized when user has partial access to content and has only 2 options`() {
         viewModel.onFabClicked(hasFullAccessToContent = false)
-        assertThat(viewModel.isBottomSheetShowing.value).isNull()
-        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test
