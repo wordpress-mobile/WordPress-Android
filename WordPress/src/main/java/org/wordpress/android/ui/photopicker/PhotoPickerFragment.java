@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +54,7 @@ import java.util.Map;
 public class PhotoPickerFragment extends Fragment {
     private static final String KEY_LAST_TAPPED_ICON = "last_tapped_icon";
     private static final String KEY_SELECTED_POSITIONS = "selected_positions";
+    private static final String KEY_SELECTED_ITEM_IS_VIDEO = "selected_item_is_video";
 
     static final int NUM_COLUMNS = 3;
     public static final String ARG_BROWSER_TYPE = "browser_type";
@@ -100,6 +102,7 @@ public class PhotoPickerFragment extends Fragment {
     private MediaBrowserType mBrowserType;
     private SiteModel mSite;
     private ArrayList<Integer> mSelectedPositions;
+    private boolean mIsSelectedItemVideo;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull MediaBrowserType browserType,
@@ -128,6 +131,9 @@ public class PhotoPickerFragment extends Fragment {
             mLastTappedIcon = savedLastTappedIconName == null ? null : PhotoPickerIcon.valueOf(savedLastTappedIconName);
             if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
                 mSelectedPositions = savedInstanceState.getIntegerArrayList(KEY_SELECTED_POSITIONS);
+            }
+            if (savedInstanceState.containsKey(KEY_SELECTED_ITEM_IS_VIDEO)) {
+                mIsSelectedItemVideo = savedInstanceState.getBoolean(KEY_SELECTED_ITEM_IS_VIDEO);
             }
         }
     }
@@ -239,7 +245,7 @@ public class PhotoPickerFragment extends Fragment {
     }
 
     private boolean canShowInsertEditBottomBar() {
-        return mBrowserType.isGutenbergPicker() && !mBrowserType.isVideoPicker();
+        return mBrowserType.isGutenbergPicker();
     }
 
     @Override
@@ -251,6 +257,7 @@ public class PhotoPickerFragment extends Fragment {
         if (hasAdapter() && getAdapter().getNumSelected() > 0) {
             ArrayList<Integer> selectedItems = getAdapter().getSelectedPositions();
             outState.putIntegerArrayList(KEY_SELECTED_POSITIONS, selectedItems);
+            outState.putBoolean(KEY_SELECTED_ITEM_IS_VIDEO, mIsSelectedItemVideo);
         }
     }
 
@@ -404,6 +411,12 @@ public class PhotoPickerFragment extends Fragment {
                 if (activity == null) {
                     return;
                 }
+
+                if (canShowInsertEditBottomBar()) {
+                    TextView editView = mInsertEditBottomBar.findViewById(R.id.text_edit);
+                    editView.setVisibility(mIsSelectedItemVideo ? View.GONE : View.VISIBLE);
+                }
+
                 if (mActionMode == null) {
                     ((AppCompatActivity) activity).startSupportActionMode(new ActionModeCallback());
                 }
@@ -423,6 +436,10 @@ public class PhotoPickerFragment extends Fragment {
                 mGridManager.onRestoreInstanceState(mRestoreState);
                 mRestoreState = null;
             }
+        }
+
+        @Override public void onItemSelected(boolean isVideo) {
+            mIsSelectedItemVideo = isVideo;
         }
     };
 
