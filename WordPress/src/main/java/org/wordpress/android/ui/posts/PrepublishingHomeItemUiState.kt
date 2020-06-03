@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import androidx.annotation.ColorRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -9,7 +10,9 @@ typealias PublishPost = Boolean
 sealed class PrepublishingHomeItemUiState {
     data class HomeUiState(
         val actionType: ActionType,
+        @ColorRes val actionTypeColor : Int = R.color.black,
         var actionResult: UiString? = null,
+        @ColorRes val actionResultColor : Int = R.color.gray_40,
         val actionEnabled: Boolean,
         val onActionClicked: ((actionType: ActionType) -> Unit)?
     ) : PrepublishingHomeItemUiState()

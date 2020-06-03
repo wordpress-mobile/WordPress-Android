@@ -61,18 +61,27 @@ class PrepublishingHomeViewModel @Inject constructor(
                     )
             )
 
-            add(
-                    HomeUiState(
-                            actionType = PUBLISH,
-                            actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
-                            actionEnabled = editPostRepository.status != PostStatus.PRIVATE,
-                            onActionClicked = if (editPostRepository.status != PostStatus.PRIVATE) {
-                                ::onActionClicked
-                            } else {
-                                null
-                            }
-                    )
-            )
+            if (editPostRepository.status != PostStatus.PRIVATE) {
+                add(
+                        HomeUiState(
+                                actionType = PUBLISH,
+                                actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
+                                actionEnabled = true,
+                                onActionClicked = ::onActionClicked
+                        )
+                )
+            } else {
+                add(
+                        HomeUiState(
+                                actionType = PUBLISH,
+                                actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
+                                actionTypeColor = R.color.gray_20,
+                                actionResultColor = R.color.gray_20,
+                                actionEnabled = false,
+                                onActionClicked = null
+                        )
+                )
+            }
 
             if (!editPostRepository.isPage) {
                 add(HomeUiState(
