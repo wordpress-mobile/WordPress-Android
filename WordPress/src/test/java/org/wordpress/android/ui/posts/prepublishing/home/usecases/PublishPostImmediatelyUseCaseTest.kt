@@ -54,14 +54,26 @@ class PublishPostImmediatelyUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `EditPostRepository's PostModel should be set with the currentDate`() {
+    fun `EditPostRepository's PostModel should be set with the currentDate if PostStatus is SCHEDULED`() {
         // arrange
         val currentDate = "2020-05-05T20:33:20+0200"
         whenever(dateTimeUtilsWrapper.currentTimeInIso8601()).thenReturn(currentDate)
+        editPostRepository.set { PostModel().apply { setStatus(PostStatus.SCHEDULED.toString()) } }
 
         // act
         useCase.updatePostToPublishImmediately(editPostRepository, false)
 
         assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
+    }
+
+    @Test
+    fun `EditPostRepository's PostModel should not be set with the currentDate if PostStatus is not SCHEDULED`() {
+        // arrange
+        editPostRepository.set { PostModel().apply { setStatus(PostStatus.DRAFT.toString()) } }
+
+        // act
+        useCase.updatePostToPublishImmediately(editPostRepository, false)
+
+        assertThat(editPostRepository.dateCreated).isEmpty()
     }
 }
