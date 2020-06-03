@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -12,7 +11,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.IO_THREAD
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
@@ -24,20 +23,20 @@ import javax.inject.Named
  */
 class ReaderTagRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(DEFAULT_SCOPE) private val defaultDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     private val mutableRecommendedInterests = MutableLiveData<ReaderTagList>()
     val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
 
     suspend fun getInterests(): ReaderTagList =
-            withContext(Dispatchers.IO) {
+            withContext(ioDispatcher) {
                 delay(SECONDS.toMillis(5))
                 getMockInterests()
             }
 
     // todo: full implementation needed
     suspend fun saveInterests(tags: List<ReaderTag>) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(ioDispatcher).launch {
             delay(TimeUnit.SECONDS.toMillis(5))
         }
     }
@@ -49,7 +48,7 @@ class ReaderTagRepository @Inject constructor(
             }
 
     private suspend fun getMockRecommendedInterests(): LiveData<ReaderTagList> {
-        return withContext(defaultDispatcher) {
+        return withContext(ioDispatcher) {
             mutableRecommendedInterests.postValue(getMockInterests())
             recommendedInterests
         }
