@@ -32,6 +32,19 @@ class UnifiedLoginTracker
         currentSource = source
     }
 
+    fun setSource(value: String) {
+        Source.values().find { it.value == value }?.let {
+            currentSource = it
+        }
+    }
+
+    fun setFlow(value: String?) {
+        currentFlow = Flow.values().find { it.value == value }
+    }
+
+    fun getSource(): Source = currentSource
+    fun getFlow(): Flow? = currentFlow
+
     enum class Source(val value: String) {
         JETPACK("jetpack"),
         SHARE("share"),
