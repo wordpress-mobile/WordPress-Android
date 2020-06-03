@@ -401,7 +401,7 @@ class PageListViewModel @Inject constructor(
                 pagesViewModel.site,
                 pageModel.remoteId
         )
-        val subtitle = when(pageModel.remoteId) {
+        val subtitle = when (pageModel.remoteId) {
             pagesViewModel.site.pageOnFront -> R.string.site_settings_homepage
             pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
             else -> null
@@ -415,6 +415,6 @@ class PageListViewModel @Inject constructor(
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
         val actions: Set<Action>,
-            val subtitle: Int? = null
+        val subtitle: Int? = null
     )
 }
