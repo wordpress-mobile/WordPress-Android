@@ -337,7 +337,7 @@ class PagesViewModelTest {
             remoteId,
             2,
             "Published page",
-            Date(),
+            date = Date(),
             actions = emptySet(),
             progressBarUiState = ProgressBarUiState.Hidden,
             showOverlay = false

@@ -148,15 +148,15 @@ class SearchListViewModelTest {
                 1,
                 1,
                 "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
         val action = VIEW_PAGE
 
@@ -171,15 +171,15 @@ class SearchListViewModelTest {
                 1,
                 1,
                 "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
 
         viewModel.onItemTapped(clickedPage)

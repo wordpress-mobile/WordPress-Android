@@ -261,11 +261,11 @@ class PageListViewModel @Inject constructor(
                         DEFAULT_INDENT
                     }
                     val itemUiStateData = createItemUiStateData(it)
-
                     PublishedPage(
                             it.remoteId,
                             it.pageId,
                             it.title,
+                            itemUiStateData.subtitle,
                             it.date,
                             itemUiStateData.labels,
                             itemUiStateData.labelsColor,
@@ -292,14 +292,14 @@ class PageListViewModel @Inject constructor(
                                 ScheduledPage(
                                         it.remoteId, it.pageId,
                                         it.title,
-                                        it.date,
-                                        itemUiStateData.labels,
-                                        itemUiStateData.labelsColor,
-                                        getFeaturedImageUrl(it.featuredImageId),
-                                        itemUiStateData.actions,
-                                        actionsEnabled,
-                                        itemUiStateData.progressBarUiState,
-                                        itemUiStateData.showOverlay
+                                        date = it.date,
+                                        labels = itemUiStateData.labels,
+                                        labelsColor = itemUiStateData.labelsColor,
+                                        imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                                        actions = itemUiStateData.actions,
+                                        actionsEnabled = actionsEnabled,
+                                        progressBarUiState = itemUiStateData.progressBarUiState,
+                                        showOverlay = itemUiStateData.showOverlay
                                 )
                             }
                 }
@@ -316,14 +316,14 @@ class PageListViewModel @Inject constructor(
                     it.remoteId,
                     it.pageId,
                     it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay
             )
         }
     }
@@ -338,14 +338,14 @@ class PageListViewModel @Inject constructor(
                     it.remoteId,
                     it.pageId,
                     it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay
             )
         }
     }
@@ -401,7 +401,12 @@ class PageListViewModel @Inject constructor(
                 pagesViewModel.site,
                 pageModel.remoteId
         )
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
+        val subtitle = when(pageModel.remoteId) {
+            pagesViewModel.site.pageOnFront -> R.string.site_settings_homepage
+            pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
+            else -> null
+        }
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle)
     }
 
     private data class ItemUiStateData(
@@ -409,6 +414,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>
+        val actions: Set<Action>,
+            val subtitle: Int? = null
     )
 }
