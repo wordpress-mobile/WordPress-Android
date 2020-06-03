@@ -10,7 +10,7 @@ import javax.inject.Inject
 class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
     fun updatePostToPublishImmediately(
         editPostRepository: EditPostRepository,
-        publishPost: Boolean
+        isNewPost: Boolean
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
             if (postModel.status == SCHEDULED.toString()) {
@@ -18,10 +18,10 @@ class PublishPostImmediatelyUseCase @Inject constructor(private val dateTimeUtil
             }
             // when the post is a Draft, Publish Now is shown as the Primary Action but if it's already Published then
             // Update Now is shown.
-            if (publishPost) {
-                postModel.setStatus(PostStatus.PUBLISHED.toString())
-            } else {
+            if (isNewPost) {
                 postModel.setStatus(PostStatus.DRAFT.toString())
+            } else {
+                postModel.setStatus(PostStatus.PUBLISHED.toString())
             }
             true
         })
