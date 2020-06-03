@@ -179,7 +179,7 @@ public class AppSettingsFragment extends PreferenceFragment
 
         removeWhatsNewPreference();
         mDispatcher.dispatch(WhatsNewActionBuilder
-                .newFetchWhatsNewAction(new WhatsNewFetchPayload("15", WhatsNewAppId.WP_ANDROID, false)));
+                .newFetchWhatsNewAction(new WhatsNewFetchPayload("14.2", WhatsNewAppId.WP_ANDROID, false)));
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
