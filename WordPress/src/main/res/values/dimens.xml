@@ -199,6 +199,10 @@
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
+
+    <dimen name="reader_chip_radius">8dp</dimen>
+    <dimen name="reader_chip_height">38dp</dimen>
+
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
