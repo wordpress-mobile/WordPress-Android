@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -68,6 +69,57 @@ class ReaderInterestsViewModelTest {
             // Then
             assertThat(viewModel.uiState.value).isNull()
         }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `done button enabled if at least one interest selected`() =
+            coroutineScope.runBlockingTest {
+                // Given
+                val mockInterests = getMockInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+                // When
+                initViewModel()
+                viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
+
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled).isEqualTo(true)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                    .isEqualTo(R.string.reader_btn_done)
+            }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `done button disabled if no interest selected`() =
+            coroutineScope.runBlockingTest {
+                // Given
+                val mockInterests = getMockInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+                // When
+                initViewModel()
+
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled).isEqualTo(false)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_select_few_interests)
+            }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `navigate to discover on done button click`() =
+            coroutineScope.runBlockingTest {
+                // Given
+                val mockInterests = getMockInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+                // When
+                initViewModel()
+                viewModel.onDoneButtonClick()
+
+                // Then
+                assertThat(requireNotNull(viewModel.navigateToDiscover.value).peekContent()).isNotNull
+            }
 
     private fun initViewModel() = viewModel.start()
 
