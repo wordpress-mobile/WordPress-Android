@@ -87,7 +87,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
+            mAnalyticsListener.trackLoginMagicLinkOpenEmailClientViewed();
         }
     }
 
