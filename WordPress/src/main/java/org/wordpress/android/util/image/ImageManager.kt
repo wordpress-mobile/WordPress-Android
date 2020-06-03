@@ -22,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.CustomTarget
@@ -175,6 +177,31 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
+     * Loads an image from the "imgUrl" into the ImageView with a corner radius. Adds placeholder and
+     * error placeholder depending on the ImageType.
+     */
+    @JvmOverloads
+    fun loadImageWithCorners(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        cornerRadius: Int,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+
+        GlideApp.with(context)
+                .load(imgUrl)
+                .transform(CenterCrop(), RoundedCorners(cornerRadius))
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .attachRequestListener(requestListener)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
      * Loads an image from the "imgUrl" into the ImageView. Adds a placeholder and an error placeholder depending
      * on the ImageType. Attaches the ResultListener so the client can manually show/hide progress and error
      * views or add a PhotoViewAttacher(adds support for pinch-to-zoom gesture). Optionally adds
@@ -247,16 +274,16 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
         GlideApp.with(context)
-            .asFile()
-            .load(imgUri)
-            .attachRequestListener(requestListener)
-            .into(
-                // Used just to invoke asFile() and ignored thereafter.
-                object : CustomTarget<File>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                    override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
-                }
-            )
+                .asFile()
+                .load(imgUri)
+                .attachRequestListener(requestListener)
+                .into(
+                        // Used just to invoke asFile() and ignored thereafter.
+                        object : CustomTarget<File>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {}
+                            override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
+                        }
+                )
     }
 
     /**

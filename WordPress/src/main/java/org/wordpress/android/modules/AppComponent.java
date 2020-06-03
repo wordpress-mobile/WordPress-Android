@@ -100,6 +100,7 @@ import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
@@ -130,6 +131,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -504,7 +507,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderFragment object);
 
+    void inject(ReaderDiscoverFragment object);
+
     void inject(ReaderSearchActivity object);
+
+    void inject(ReaderInterestsFragment object);
+
+    void inject(HomepageSettingsDialog object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

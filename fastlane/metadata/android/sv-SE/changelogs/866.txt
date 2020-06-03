@@ -1,4 +1,0 @@
-14.8:
-<b>Nyheter i blockredigeraren:</b> Knappblock visar flera knappar i samma rad, Bildblock fyller i bildtexter automatiskt om det går, Cover-block tillåter uppladdning, bilder kan beskäras, zoomas och roteras, Rubrikblock hanterar textjustering.
-<b>Förbättringar i blockredigeraren:</b> Flytande verktygsfält flyttat, rättat fel med romrum i textblock, rättat justering av verktygsknappar i RTL-läge.
-<b>Allmänna uppdateringar:</b> Ny reblog-funktion.

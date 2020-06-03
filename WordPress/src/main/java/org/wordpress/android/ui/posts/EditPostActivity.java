@@ -453,7 +453,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
-        boolean isRestarting = !RestartEditorOptions.NO_RESTART.name().equals(extras.getString(EXTRA_RESTART_EDITOR));
+        boolean isRestarting = checkToRestart(getIntent());
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                 || Intent.ACTION_SEND.equals(action)
