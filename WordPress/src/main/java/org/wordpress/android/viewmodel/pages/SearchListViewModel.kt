@@ -105,9 +105,9 @@ class SearchListViewModel
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
-                        remoteId,
-                        pageId,
-                        title,
+                        remoteId = remoteId,
+                        localId = pageId,
+                        title = title,
                         date = date,
                         labels = labels,
                         labelsColor = labelColor,
@@ -122,9 +122,9 @@ class SearchListViewModel
                         showOverlay = showOverlay
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId,
-                    pageId,
-                    title,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
                     date = date,
                     labels = labels,
                     labelsColor = labelColor,
@@ -139,9 +139,9 @@ class SearchListViewModel
                     showOverlay = showOverlay
             )
             PageStatus.TRASHED -> TrashedPage(
-                    remoteId,
-                    pageId,
-                    title,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
                     date = date,
                     labels = labels,
                     labelsColor = labelColor,
@@ -156,9 +156,9 @@ class SearchListViewModel
                     showOverlay = showOverlay
             )
             PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId,
-                    pageId,
-                    title,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
                     date = date,
                     labels = labels,
                     labelsColor = labelColor,

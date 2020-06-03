@@ -262,19 +262,19 @@ class PageListViewModel @Inject constructor(
                     }
                     val itemUiStateData = createItemUiStateData(it)
                     PublishedPage(
-                            it.remoteId,
-                            it.pageId,
-                            it.title,
-                            itemUiStateData.subtitle,
-                            it.date,
-                            itemUiStateData.labels,
-                            itemUiStateData.labelsColor,
-                            pageItemIndent,
-                            getFeaturedImageUrl(it.featuredImageId),
-                            itemUiStateData.actions,
-                            actionsEnabled,
-                            itemUiStateData.progressBarUiState,
-                            itemUiStateData.showOverlay
+                            remoteId = it.remoteId,
+                            localId = it.pageId,
+                            title = it.title,
+                            subtitle = itemUiStateData.subtitle,
+                            date = it.date,
+                            labels = itemUiStateData.labels,
+                            labelsColor = itemUiStateData.labelsColor,
+                            indent = pageItemIndent,
+                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                            actions = itemUiStateData.actions,
+                            actionsEnabled = actionsEnabled,
+                            progressBarUiState = itemUiStateData.progressBarUiState,
+                            showOverlay = itemUiStateData.showOverlay
                     )
                 }
     }
@@ -290,8 +290,8 @@ class PageListViewModel @Inject constructor(
                                 val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, it.pageId,
-                                        it.title,
+                                        it.remoteId, localId = it.pageId,
+                                        title = it.title,
                                         date = it.date,
                                         labels = itemUiStateData.labels,
                                         labelsColor = itemUiStateData.labelsColor,
@@ -313,9 +313,9 @@ class PageListViewModel @Inject constructor(
         return pages.map {
             val itemUiStateData = createItemUiStateData(it)
             DraftPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
                     date = it.date,
                     labels = itemUiStateData.labels,
                     labelsColor = itemUiStateData.labelsColor,
@@ -335,9 +335,9 @@ class PageListViewModel @Inject constructor(
         return pages.map {
             val itemUiStateData = createItemUiStateData(it)
             TrashedPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
                     date = it.date,
                     labels = itemUiStateData.labels,
                     labelsColor = itemUiStateData.labelsColor,
