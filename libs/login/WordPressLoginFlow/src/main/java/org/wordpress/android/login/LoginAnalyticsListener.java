@@ -37,6 +37,7 @@ public interface LoginAnalyticsListener {
     void trackSignupSocialButtonFailure();
     void trackSignupSocialToLogin();
     void trackSignupTermsOfServiceTapped();
+    void trackSocialButtonStart();
     void trackSocialAccountsNeedConnecting();
     void trackSocialButtonClick();
     void trackSocialButtonFailure();

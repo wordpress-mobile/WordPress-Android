@@ -52,6 +52,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
 import org.wordpress.android.ui.accounts.login.LoginPrologueListener;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -120,6 +121,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Inject DispatchingAndroidInjector<Fragment> mFragmentInjector;
     @Inject protected LoginAnalyticsListener mLoginAnalyticsListener;
     @Inject ZendeskHelper mZendeskHelper;
+    @Inject UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SiteStore mSiteStore;
 
     @Override
@@ -141,6 +143,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 case FULL:
                 case WPCOM_LOGIN_ONLY:
                     mIsSignupFromLoginEnabled = true;
+                    mUnifiedLoginTracker.setSource(Source.DEFAULT);
                     showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
                     if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                         mIsSmartLockTriggeredFromPrologue = true;
@@ -149,15 +152,24 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     }
                     break;
                 case SELFHOSTED_ONLY:
+                    mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:
                     mIsSignupFromLoginEnabled = true;
+                    mUnifiedLoginTracker.setSource(Source.JETPACK);
                     checkSmartLockPasswordAndStartLogin();
                     break;
                 case WPCOM_LOGIN_DEEPLINK:
+                    mUnifiedLoginTracker.setSource(Source.DEEPLINK);
+                    checkSmartLockPasswordAndStartLogin();
+                    break;
                 case WPCOM_REAUTHENTICATE:
+                    mUnifiedLoginTracker.setSource(Source.REAUTHENTICATION);
+                    checkSmartLockPasswordAndStartLogin();
+                    break;
                 case SHARE_INTENT:
+                    mUnifiedLoginTracker.setSource(Source.SHARE);
                     checkSmartLockPasswordAndStartLogin();
                     break;
             }

@@ -203,6 +203,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSocialButtonStart() {
+        mUnifiedLoginTracker.track(Flow.LOGIN_SOCIAL, Step.START);
+    }
+
+    @Override
     public void trackSocialAccountsNeedConnecting() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);
     }
@@ -258,7 +263,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackUsernamePasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
-        mUnifiedLoginTracker.track(Flow.LOGIN_SITE_ADDRESS, Step.USERNAME_PASSWORD);
+        mUnifiedLoginTracker.track(Step.USERNAME_PASSWORD);
     }
 
     @Override
