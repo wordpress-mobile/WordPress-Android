@@ -1,4 +1,0 @@
-14.8:
-<b>Aggiunte all'editor a blocchi:</b> più pulsanti su una riga per il blocco Pulsanti; didascalie precompilate nei blocchi Immagine; caricamento nei blocchi Copertina; ritaglio, zoom o rotazione delle immagini; opzioni di allineamento per il blocco Titolo.
-<b>Miglioramenti all'editor a blocchi:</b> barra mobile riposizionata, corretto bug dello spazio bianco nei blocchi Testo, corrette icone della barra disallineate in modalità RTL.
-<b>Aggiornamenti generali:</b> aggiunta funzione di ripubblicazione.
