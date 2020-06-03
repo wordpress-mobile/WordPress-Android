@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 
@@ -101,6 +102,14 @@ class WPMainActivityViewModelTest {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_PAGE)
+    }
+
+    @Test
+    fun `bottom sheet action is new story when new story is tapped`() {
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_STORY } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_STORY)
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_STORY)
     }
 
     @Test
