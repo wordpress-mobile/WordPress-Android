@@ -98,6 +98,7 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
     fun onFabClicked(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
+        loadMainActions(hasFullAccessToContent)
 
         _isBottomSheetShowing.value = Event(true)
     }
