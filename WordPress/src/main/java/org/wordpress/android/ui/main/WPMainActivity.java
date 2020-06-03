@@ -483,11 +483,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 return null;
             });
         });
-
-        mViewModel.start(
-                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
-                hasFullAccessToContent()
-        );
     }
 
     private @Nullable String getAuthToken() {
@@ -702,6 +697,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         // Load selected site
         initSelectedSite();
+
+        mViewModel.start(
+                mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
+                hasFullAccessToContent()
+        );
 
         // ensure the deep linking activity is enabled. We might be returning from the external-browser
         // viewing of a post
