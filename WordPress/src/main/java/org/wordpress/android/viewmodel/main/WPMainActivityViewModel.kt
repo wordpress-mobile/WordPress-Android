@@ -41,10 +41,10 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
 
         setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
-        loadMainActions()
+        loadMainActions(hasFullAccessToContent)
     }
 
-    private fun loadMainActions() {
+    private fun loadMainActions(hasFullAccessToContent: Boolean) {
         val actionsList = ArrayList<MainActionListItem>()
 
         actionsList.add(CreateAction(
@@ -59,12 +59,14 @@ class WPMainActivityViewModel @Inject constructor(private val appPrefsWrapper: A
                 labelRes = R.string.my_site_bottom_sheet_add_post,
                 onClickAction = ::onCreateActionClicked
         ))
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_PAGE,
-                iconRes = R.drawable.ic_pages_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_page,
-                onClickAction = ::onCreateActionClicked
-        ))
+        if (hasFullAccessToContent) {
+            actionsList.add(CreateAction(
+                    actionType = CREATE_NEW_PAGE,
+                    iconRes = R.drawable.ic_pages_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_page,
+                    onClickAction = ::onCreateActionClicked
+            ))
+        }
         actionsList.add(CreateAction(
                 actionType = CREATE_NEW_STORY,
                 iconRes = R.drawable.ic_story_icon_24dp,
