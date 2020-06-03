@@ -79,6 +79,7 @@ public class LoginGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: startFlow");
             mLoginRequested = true;
             Intent loginIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            mAnalyticsListener.trackSocialButtonStart();
             startActivityForResult(loginIntent, REQUEST_LOGIN);
         } else {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: startFlow called, but is already in progress");
