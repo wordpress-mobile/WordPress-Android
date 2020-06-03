@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -177,7 +178,8 @@ public class AppSettingsFragment extends PreferenceFragment
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
         removeWhatsNewPreference();
-        mDispatcher.dispatch(WhatsNewActionBuilder.newFetchWhatsNewAction(new WhatsNewFetchPayload("15", false)));
+        mDispatcher.dispatch(WhatsNewActionBuilder
+                .newFetchWhatsNewAction(new WhatsNewFetchPayload("15", WhatsNewAppId.WP_ANDROID, false)));
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();

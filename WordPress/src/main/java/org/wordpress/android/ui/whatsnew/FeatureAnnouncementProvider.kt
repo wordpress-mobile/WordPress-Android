@@ -2,6 +2,7 @@ package org.wordpress.android.ui.whatsnew
 
 import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel
 import org.wordpress.android.fluxc.store.WhatsNewStore
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId.WP_ANDROID
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.StringUtils
 import javax.inject.Inject
@@ -17,7 +18,7 @@ class FeatureAnnouncementProvider @Inject constructor(
     suspend fun getFeatureAnnouncements(): List<FeatureAnnouncement> {
         val featureAnnouncements = mutableListOf<FeatureAnnouncement>()
         val onWhatsNewFetched = whatsNewStore.fetchWhatsNew(
-                buildConfigWrapper.getAppVersionCode().toString(), false
+                buildConfigWrapper.getAppVersionCode().toString(), WP_ANDROID,false
         )
         onWhatsNewFetched.whatsNewItems?.map { featureAnnouncements.add(it.build()) }?.toList()
         return featureAnnouncements
@@ -27,7 +28,8 @@ class FeatureAnnouncementProvider @Inject constructor(
         return FeatureAnnouncement(
                 appVersionName,
                 announcementVersion,
-                minimumAppVersionCode,
+                minimumAppVersion,
+                maximumAppVersion,
                 detailsUrl,
                 isLocalized,
                 features.map { it.build() })

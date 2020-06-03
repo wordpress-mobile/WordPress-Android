@@ -5,7 +5,8 @@ data class FeatureAnnouncements(val announcements: List<FeatureAnnouncement>)
 data class FeatureAnnouncement(
     val appVersionName: String,
     val announcementVersion: Int,
-    val minAppVersion: Int,
+    val minimumAppVersion: String,
+    val maximumAppVersion: String,
     val detailsUrl: String?,
     val isLocalized: Boolean = false,
     val features: List<FeatureAnnouncementItem>
