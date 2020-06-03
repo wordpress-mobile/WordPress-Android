@@ -19,7 +19,8 @@ public interface LoginAnalyticsListener {
     void trackLoginSocial2faNeeded();
     void trackLoginSocialSuccess();
     void trackMagicLinkFailed(Map<String, ?> properties);
-    void trackMagicLinkOpenEmailClientViewed();
+    void trackSignupMagicLinkOpenEmailClientViewed();
+    void trackLoginMagicLinkOpenEmailClientViewed();
     void trackMagicLinkRequested();
     void trackMagicLinkRequestFormViewed();
     void trackPasswordFormViewed();
@@ -51,4 +52,5 @@ public interface LoginAnalyticsListener {
     void trackConnectedSiteInfoRequested(String url);
     void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType, String errorDescription);
     void trackConnectedSiteInfoSucceeded(Map<String, ?> properties);
+    void trackEmailFilled();
 }

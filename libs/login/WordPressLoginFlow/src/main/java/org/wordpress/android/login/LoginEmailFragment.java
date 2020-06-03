@@ -369,6 +369,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             startProgress();
             mRequestedEmail = email;
             mDispatcher.dispatch(AccountActionBuilder.newIsAvailableEmailAction(email));
+            mAnalyticsListener.trackEmailFilled();
         } else {
             showEmailError(R.string.email_invalid);
         }

@@ -11,12 +11,19 @@ import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_de
 import kotlinx.android.synthetic.main.login_signup_screen.*
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
+import javax.inject.Inject
 
 class LoginPrologueFragment : Fragment() {
     private lateinit var loginPrologueListener: LoginPrologueListener
+
+    @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
 
     companion object {
         const val TAG = "login_prologue_fragment_tag"
@@ -38,6 +45,9 @@ class LoginPrologueFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val nonNullActivity = checkNotNull(activity)
+        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             bottom_buttons.removeAllViews()
@@ -75,6 +85,7 @@ class LoginPrologueFragment : Fragment() {
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(LOGIN_PROLOGUE_VIEWED)
+            unifiedLoginTracker.track(Flow.GET_STARTED, PROLOGUE)
         }
     }
 
