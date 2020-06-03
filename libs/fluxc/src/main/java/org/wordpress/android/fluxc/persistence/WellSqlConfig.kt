@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 107
+        return 108
     }
 
     override fun getDbName(): String {
@@ -1016,7 +1016,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 91 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT NULL")
+                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT")
                 }
                 92 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM TEXT")
@@ -1075,7 +1075,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
                 }
                 102 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT STRING")
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT TEXT")
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
@@ -1120,6 +1120,39 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
+                }
+                107 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
+                    db.execSQL("CREATE TABLE WCProductVariationModel (" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "REMOTE_VARIATION_ID INTEGER," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "ON_SALE INTEGER,PURCHASABLE INTEGER," +
+                            "VIRTUAL INTEGER,DOWNLOADABLE INTEGER," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY INTEGER," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "IMAGE TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
                 }
             }
         }
