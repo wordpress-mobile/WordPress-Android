@@ -1696,6 +1696,7 @@
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
+    <string name="reader_btn_done">Done</string>
 
 
     <!-- accessibility content desciptions -->

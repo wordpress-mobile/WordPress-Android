@@ -1,13 +1,16 @@
 package org.wordpress.android.ui.reader.discover.interests
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderInterestsViewModel @Inject constructor(
@@ -18,11 +21,15 @@ class ReaderInterestsViewModel @Inject constructor(
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
+    val navigateToDiscover: LiveData<Event<Unit>> = _navigateToDiscover
+
     private val selectedInterests = ReaderTagList()
 
     fun start() {
         if (initialized) {
-            updateUiStateWithSelectedInterests()
+            val uiState = uiState.value as UiState
+            updateUiState(uiState.copy(interestsUiState = getInterestsUiStateWithSelectedStates()))
             return
         }
         loadInterests()
@@ -32,7 +39,7 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val tagList = readerTagRepository.getInterests()
             if (tagList.isNotEmpty()) {
-                updateUiState(UiState(transformToInterestsUiState(tagList), tagList))
+                updateUiState(UiState(transformToInterestsUiState(tagList), tagList, getDoneButtonUiState()))
                 if (!initialized) {
                     initialized = true
                 }
@@ -40,45 +47,85 @@ class ReaderInterestsViewModel @Inject constructor(
         }
     }
 
-    fun onInterestAtIndexToggled(index: Int) {
+    fun onInterestAtIndexToggled(index: Int, isChecked: Boolean) {
         uiState.value?.let {
-            val interestAtIndex = it.interests[index]
-            if (!selectedInterests.contains(interestAtIndex)) {
-                selectedInterests.add(interestAtIndex)
-            } else {
-                selectedInterests.remove(interestAtIndex)
+            val enableDoneButton = selectedInterests.isEmpty() && isChecked
+            val disableDoneButton = selectedInterests.size == 1 && !isChecked
+
+            updateSelectedInterests(it.interests[index])
+
+            if (enableDoneButton || disableDoneButton) {
+                val uiState = uiState.value as UiState
+                updateUiState(
+                    uiState.copy(
+                        interestsUiState = getInterestsUiStateWithSelectedStates(),
+                        doneButtonUiState = getDoneButtonUiState()
+                    )
+                )
             }
+        }
+    }
+
+    fun onDoneButtonClick() {
+        viewModelScope.launch {
+            readerTagRepository.saveInterests(selectedInterests)
+            _navigateToDiscover.value = Event(Unit)
+        }
+    }
+
+    private fun updateSelectedInterests(interestAtIndex: ReaderTag?) {
+        if (!selectedInterests.contains(interestAtIndex)) {
+            selectedInterests.add(interestAtIndex)
+        } else {
+            selectedInterests.remove(interestAtIndex)
         }
     }
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
-            InterestUiState(
-                interest.tagTitle
-            )
+            InterestUiState(interest.tagTitle)
         }
 
-    private fun updateUiStateWithSelectedInterests() {
+    private fun getInterestsUiStateWithSelectedStates(): List<InterestUiState> {
         val uiState = uiState.value as UiState
-        val updatedInterestsUiState = uiState.interestsUiState.mapIndexed { index, interestUiState ->
-            interestUiState.copy(isChecked = isInterestSelected(uiState.interests[index]))
+
+        return uiState.interestsUiState.mapIndexed { index, interestUiState ->
+            val interestAtIndex = uiState.interests[index]
+            val isInterestAtIndexSelected = selectedInterests.contains(interestAtIndex)
+
+            interestUiState.copy(isChecked = isInterestAtIndexSelected)
         }
-        updateUiState(uiState.copy(interestsUiState = updatedInterestsUiState))
+    }
+
+    private fun getDoneButtonUiState(): DoneButtonUiState {
+        val doneButtonEnabled = selectedInterests.isNotEmpty()
+        return DoneButtonUiState(
+            titleRes = if (doneButtonEnabled) {
+                R.string.reader_btn_done
+            } else {
+                R.string.reader_btn_select_few_interests
+            },
+            enabled = doneButtonEnabled
+        )
     }
 
     private fun updateUiState(uiState: UiState) {
         _uiState.value = uiState
     }
 
-    private fun isInterestSelected(interest: ReaderTag) = selectedInterests.contains(interest)
-
     data class UiState(
         val interestsUiState: List<InterestUiState>,
-        val interests: ReaderTagList
+        val interests: ReaderTagList,
+        val doneButtonUiState: DoneButtonUiState
     )
 
     data class InterestUiState(
         val title: String,
         val isChecked: Boolean = false
+    )
+
+    data class DoneButtonUiState(
+        @StringRes val titleRes: Int,
+        val enabled: Boolean = false
     )
 }
