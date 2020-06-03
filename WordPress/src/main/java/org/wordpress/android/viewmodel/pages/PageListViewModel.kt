@@ -290,7 +290,8 @@ class PageListViewModel @Inject constructor(
                                 val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, localId = it.pageId,
+                                        remoteId = it.remoteId,
+                                        localId = it.pageId,
                                         title = it.title,
                                         date = it.date,
                                         labels = itemUiStateData.labels,
