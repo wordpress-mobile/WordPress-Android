@@ -8,14 +8,14 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.DEFAULT_SCOPE
+import org.wordpress.android.modules.IO_THREAD
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderPostRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(DEFAULT_SCOPE) private val defaultDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     companion object {
         const val discoverJson = "{\n" +
@@ -445,7 +445,7 @@ class ReaderPostRepository @Inject constructor(
             }
 
     private suspend fun getMockDiscoverFeed(): LiveData<ReaderPostList> {
-        return withContext(defaultDispatcher) {
+        return withContext(ioDispatcher) {
             mutableDiscoveryFeed.postValue(ReaderPostList.fromJson(JSONObject(discoverJson)))
             discoveryFeed
         }
