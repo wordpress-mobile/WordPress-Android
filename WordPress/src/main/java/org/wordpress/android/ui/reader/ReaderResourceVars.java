@@ -27,6 +27,7 @@ class ReaderResourceVars {
 
     final String mLinkColorStr;
     final String mGreyMediumDarkStr;
+    final String mGreyLightStr;
     final String mGreyExtraLightStr;
     final String mTextColor;
 
@@ -56,10 +57,14 @@ class ReaderResourceVars {
                                          .blue(onSurfaceColor) + ", " + ResourcesCompat
                                          .getFloat(resources, R.dimen.material_emphasis_medium) + ")";
 
-        mGreyExtraLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
-                                   + Color.green(onSurfaceColor) + ", " + Color
+        mGreyLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
+                        + Color.green(onSurfaceColor) + ", " + Color
                                            .blue(onSurfaceColor) + ", " + ResourcesCompat
                                            .getFloat(resources, R.dimen.material_emphasis_disabled) + ")";
+
+        mGreyExtraLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
+                             + Color.green(onSurfaceColor) + ", " + Color
+                                     .blue(onSurfaceColor) + ", " + 0.2 + ")";
 
         mTextColor = onSurfaceHighType;
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,

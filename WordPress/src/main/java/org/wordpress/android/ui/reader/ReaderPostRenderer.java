@@ -393,7 +393,7 @@ public class ReaderPostRenderer {
               // add background color, fontsize and padding to pre blocks, and add overflow scrolling
               // so user can scroll the block if it's wider than the display
               .append(" pre { overflow-x: scroll;")
-              .append(" background-color: var(--color-neutral-50);")
+              .append(" background-color: var(--color-neutral-20);")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
               .append(" line-height: 1.2em; font-size: 14px; }")
               // add a left border to blockquotes
@@ -539,7 +539,8 @@ public class ReaderPostRenderer {
           .append("--color-text: ").append(mResourceVars.mTextColor).append("; ")
           .append("--color-neutral-70: ").append(mResourceVars.mTextColor).append("; ")
           .append("--color-neutral-0: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
-          .append("--color-neutral-50: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
+          .append("--color-neutral-50: ").append(mResourceVars.mGreyLightStr).append("; ")
+          .append("--color-neutral-20: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
           .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
           .append("} ");
     }
