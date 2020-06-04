@@ -19,7 +19,8 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     private SiteStore mSiteStore;
     private UnifiedLoginTracker mUnifiedLoginTracker;
 
-    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore, UnifiedLoginTracker unifiedLoginTracker) {
+    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore,
+                                 UnifiedLoginTracker unifiedLoginTracker) {
         this.mAccountStore = accountStore;
         this.mSiteStore = siteStore;
         mUnifiedLoginTracker = unifiedLoginTracker;
