@@ -362,7 +362,7 @@ public class ReaderPostRenderer {
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
               .append("<link rel=\"stylesheet\" type=\"text/css\"\n"
-                      + "          href=\"https://wordpress.com/calypso/evergreen/async-load-blocks-reader-full-post.c8fffa7882601876d9f3.min.css/">\n");
+                      + "          href=\"https://wordpress.com/calypso/evergreen/async-load-blocks-reader-full-post.c8fffa7882601876d9f3.min.css\">");
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
               .append("<style type='text/css'>");
