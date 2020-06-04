@@ -7,6 +7,10 @@ import io.sentry.core.Sentry
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 
+private const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
+private const val EVENT_BUS_EXCEPTION = "EventBusException"
+private const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"
+
 class CrashLoggingUtils {
     companion object {
         @JvmStatic fun shouldEnableCrashLogging(context: Context): Boolean {
@@ -24,6 +28,21 @@ class CrashLoggingUtils {
                 options.dsn = BuildConfig.SENTRY_DSN
                 options.cacheDirPath = context.cacheDir.absolutePath
                 options.isEnableSessionTracking = true // Release Health tracking
+                options.setBeforeSend { event, _ ->
+                    if (event.exceptions.size > 1) {
+                        event.exceptions.lastOrNull()?.let { lastException ->
+                            // Remove the "Invoking subscriber failed" exception so that the main error will show up
+                            // in Sentry. This error only means that an exception occurred during an EventBus event and
+                            // it's not particularly useful for debugging.
+                            if (lastException.module == EVENT_BUS_MODULE
+                                    && lastException.type == EVENT_BUS_EXCEPTION
+                                    && lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
+                                event.exceptions.remove(lastException)
+                            }
+                        }
+                    }
+                    event
+                }
             }
             Sentry.setTag("version", BuildConfig.VERSION_NAME)
         }
