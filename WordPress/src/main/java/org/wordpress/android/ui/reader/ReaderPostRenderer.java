@@ -368,7 +368,8 @@ public class ReaderPostRenderer {
               .append("<style type='text/css'>");
         appendMappedColors(sbHtml);
               // force font style
-        sbHtml.append(" body.reader-full-post__story-content { font-family: 'Noto Serif', serif; font-weight: 400; font-size: 16px; margin: 0px; padding: 0px; }")
+        sbHtml.append(" body.reader-full-post__story-content { font-family: 'Noto Serif', serif; font-weight: 400; ")
+              .append("font-size: 16px; margin: 0px; padding: 0px; }")
               .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
@@ -382,8 +383,9 @@ public class ReaderPostRenderer {
                       + ", dl, table { width: auto !important; height: auto !important; }")
               // make sure long strings don't force the user to scroll horizontally
               .append(" body, p, div, a { word-wrap: break-word; }")
-               // change horizontal line color
-              .append(" hr { border-color: ").append(mResourceVars.mGreyExtraLightStr).append("; }")
+              // change horizontal line color
+              .append(" .reader-full-post__story-content hr { background-color: transparent; ")
+              .append("border-color: var(--color-neutral-50); }")
               // use a consistent top/bottom margin for paragraphs, with no top margin for the first one
               .append(" p { margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }")
@@ -391,11 +393,15 @@ public class ReaderPostRenderer {
               // add background color and padding to pre blocks, and add overflow scrolling
               // so user can scroll the block if it's wider than the display
               .append(" pre { overflow-x: scroll;")
-              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append(";")
+              .append(" background-color: var(--color-neutral-50);")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; }")
-
+              // add a left border to blockquotes
+              .append(" .reader-full-post__story-content blockquote { color: var(--color-neutral-0); ")
+              .append(" padding-left: 32px; ")
+              .append(" margin-left: 0px; ")
+              .append(" border-left: 3px solid var(--color-neutral-50); }")
               // show links in the same color they are elsewhere in the app
-              .append(" a:any-link { text-decoration: none; color: var(--main-link-color); }")
+              .append(" a { text-decoration: none; color: var(--main-link-color); }")
               // make sure images aren't wider than the display, strictly enforced for images without size
               .append(" img { max-width: 100%; width: auto; height: auto; }")
               .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
@@ -403,7 +409,7 @@ public class ReaderPostRenderer {
               // so the user sees something while they're loading
               .append(" img.size-full, img.size-large, img.size-medium {")
               .append(" display: block; margin-left: auto; margin-right: auto;")
-              .append(" background-color: ").append(mResourceVars.mGreyMediumDarkStr).append(";")
+              .append(" background-color: var(--color-neutral-0);")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }");
 
         if (renderAsTiledGallery) {
