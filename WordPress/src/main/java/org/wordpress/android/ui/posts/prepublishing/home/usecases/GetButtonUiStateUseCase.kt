@@ -12,7 +12,6 @@ import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SAVE
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SUBMIT_FOR_REVIEW
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 class GetButtonUiStateUseCase @Inject constructor(

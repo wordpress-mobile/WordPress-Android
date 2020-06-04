@@ -75,8 +75,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         onActionClicked = ::onActionClicked
-                )
-                )
+                ))
             }
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
