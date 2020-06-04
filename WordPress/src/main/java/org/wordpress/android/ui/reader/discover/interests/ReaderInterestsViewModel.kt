@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -97,16 +99,10 @@ class ReaderInterestsViewModel @Inject constructor(
         }
     }
 
-    private fun getDoneButtonUiState(): DoneButtonUiState {
-        val doneButtonEnabled = selectedInterests.isNotEmpty()
-        return DoneButtonUiState(
-            titleRes = if (doneButtonEnabled) {
-                R.string.reader_btn_done
-            } else {
-                R.string.reader_btn_select_few_interests
-            },
-            enabled = doneButtonEnabled
-        )
+    private fun getDoneButtonUiState() = if (selectedInterests.isNotEmpty()) {
+        DoneButtonEnabledUiState
+    } else {
+        DoneButtonDisabledUiState
     }
 
     private fun updateUiState(uiState: UiState) {
@@ -124,8 +120,17 @@ class ReaderInterestsViewModel @Inject constructor(
         val isChecked: Boolean = false
     )
 
-    data class DoneButtonUiState(
+    sealed class DoneButtonUiState(
         @StringRes val titleRes: Int,
         val enabled: Boolean = false
-    )
+    ) {
+        object DoneButtonEnabledUiState : DoneButtonUiState(
+            titleRes =  R.string.reader_btn_done,
+            enabled = true
+        )
+        object DoneButtonDisabledUiState : DoneButtonUiState(
+            titleRes =  R.string.reader_btn_select_few_interests,
+            enabled = false
+        )
+    }
 }

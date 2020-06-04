@@ -16,6 +16,8 @@ import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
@@ -73,53 +75,68 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `done button enabled if at least one interest selected`() =
-            coroutineScope.runBlockingTest {
-                // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-                // When
-                initViewModel()
-                viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
 
-                // Then
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled).isEqualTo(true)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
+                    .isGreaterThanOrEqualTo(1)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                    .isInstanceOf(DoneButtonEnabledUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
                     .isEqualTo(R.string.reader_btn_done)
-            }
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
+                    .isEqualTo(true)
+        }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `done button disabled if no interest selected`() =
-            coroutineScope.runBlockingTest {
-                // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+    fun `done button disabled if the only selected interest is deselected`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-                // When
-                initViewModel()
+            // When
+            initViewModel()
+            // Select an interest
+            viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
+                    .isGreaterThanOrEqualTo(1)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                    .isInstanceOf(DoneButtonEnabledUiState::class.java)
 
-                // Then
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled).isEqualTo(false)
-                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                        .isEqualTo(R.string.reader_btn_select_few_interests)
-            }
+            // Deselect the only selected interest
+            viewModel.onInterestAtIndexToggled(index = 0, isChecked = false)
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
+                    .isEqualTo(0)
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                    .isInstanceOf(DoneButtonDisabledUiState::class.java)
+        }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `navigate to discover on done button click`() =
-            coroutineScope.runBlockingTest {
-                // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-                // When
-                initViewModel()
-                viewModel.onDoneButtonClick()
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
 
-                // Then
-                assertThat(requireNotNull(viewModel.navigateToDiscover.value).peekContent()).isNotNull
-            }
+            // Then
+            assertThat(requireNotNull(viewModel.navigateToDiscover.value).peekContent()).isNotNull
+        }
 
     private fun initViewModel() = viewModel.start()
 
