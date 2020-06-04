@@ -162,9 +162,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if currentBottomSheetPostId isn't 0 then set the post in editPostRepository from the postStore`(){
+    fun `if currentBottomSheetPostId isn't 0 then set the post in editPostRepository from the postStore`() {
         // arrange
-        val editPostRepository:EditPostRepository = mock()
+        val editPostRepository: EditPostRepository = mock()
         val bottomSheetPostId = LocalId(2)
 
         // act
@@ -175,9 +175,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if currentBottomSheetPostId is 0 then don't set the post in editPostRepository from the postStore`(){
+    fun `if currentBottomSheetPostId is 0 then don't set the post in editPostRepository from the postStore`() {
         // arrange
-        val editPostRepository:EditPostRepository = mock()
+        val editPostRepository: EditPostRepository = mock()
         val bottomSheetPostId = LocalId(0)
 
         // act
