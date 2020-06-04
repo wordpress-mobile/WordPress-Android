@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
@@ -20,6 +21,7 @@ import org.wordpress.android.ui.uploads.UploadStarter
 
 class PostListMainViewModelTest : BaseUnitTest() {
     lateinit var site: SiteModel
+    private val currentBottomSheetPostId = LocalId(0)
     @Mock lateinit var uploadStarter: UploadStarter
     private lateinit var viewModel: PostListMainViewModel
 
@@ -52,7 +54,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when started, it uploads all local drafts`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
@@ -60,7 +62,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is available for wpcom and jetpack sites`() {
         site.origin = SiteModel.ORIGIN_WPCOM_REST
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         var isSearchAvailable = false
         viewModel.isSearchAvailable.observeForever {
@@ -73,7 +75,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is not available for xmlrpc sites`() {
         site.origin = SiteModel.ORIGIN_XMLRPC
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         var isSearchAvailable = true
         viewModel.isSearchAvailable.observeForever {
@@ -86,7 +88,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -100,7 +102,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `expanding and collapsing search triggers isSearchExpanded`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         var isSearchExpanded = false
         viewModel.isSearchExpanded.observeForever {
@@ -118,7 +120,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `expanding search after configuration change preserves search query`() {
         val testSearch = "keyword"
 
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -141,7 +143,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
         assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
 
         var viewLayoutType: PostListViewLayoutType? = null
