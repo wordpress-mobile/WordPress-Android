@@ -14,8 +14,8 @@ class AppConfig
      * We need to keep the value of an already loaded feature flag to make sure the value is not changed while using the app.
      * We should only reload the flags when the application is created.
      */
-    private val enabledFeatures = mutableMapOf<FeatureConfig, Boolean>()
-    private val experimentValues = mutableMapOf<ExperimentConfig, String>()
+    private val enabledFeatures = mutableMapOf<String, Boolean>()
+    private val experimentValues = mutableMapOf<String, String>()
 
     /**
      * This method initialized the config and triggers refresh of remote configuration.
@@ -34,9 +34,9 @@ class AppConfig
         if (feature.remoteField == null) {
             return feature.buildConfigValue
         }
-        return enabledFeatures.getOrPut(feature) {
+        return enabledFeatures.getOrPut(feature.remoteField) {
             val loadedValue = feature.buildConfigValue || remoteConfig.isEnabled(feature.remoteField)
-            enabledFeatures[feature] = loadedValue
+            enabledFeatures[feature.remoteField] = loadedValue
             analyticsTracker.track(Stat.FEATURE_FLAG_SET, mapOf(feature.remoteField to loadedValue))
             loadedValue
         }
@@ -47,7 +47,7 @@ class AppConfig
      * for the current user (and the user is in the control group).
      */
     fun getCurrentVariant(experiment: ExperimentConfig): Variant {
-        val value = experimentValues.getOrPut(experiment) {
+        val value = experimentValues.getOrPut(experiment.remoteField) {
             val remoteValue = remoteConfig.getString(experiment.remoteField)
             analyticsTracker.track(
                     Stat.EXPERIMENT_VARIANT_SET,
