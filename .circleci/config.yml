@@ -329,7 +329,7 @@ workflows:
       - Connected Tests:
           requires:
             - gutenberg-bundle-build
-          post-to-slack: false
+          post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
             branches:
