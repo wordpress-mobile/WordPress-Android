@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -158,5 +159,31 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.onSearchCollapsed()
 
         assertThat(viewLayoutType).isEqualTo(STANDARD)
+    }
+
+    @Test
+    fun `if currentBottomSheetPostId isn't 0 then set the post in editPostRepository from the postStore`(){
+        // arrange
+        val editPostRepository:EditPostRepository = mock()
+        val bottomSheetPostId = LocalId(2)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+
+        // assert
+        verify(editPostRepository, times(1)).loadPostByLocalPostId(any())
+    }
+
+    @Test
+    fun `if currentBottomSheetPostId is 0 then don't set the post in editPostRepository from the postStore`(){
+        // arrange
+        val editPostRepository:EditPostRepository = mock()
+        val bottomSheetPostId = LocalId(0)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+
+        // assert
+        verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
     }
 }
