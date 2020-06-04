@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -156,7 +159,7 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `navigate to discover on done button click`() =
+    fun `navigation to discover triggered on done button click`() =
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
@@ -168,6 +171,24 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.navigateToDiscover.value).peekContent()).isNotNull
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `selected interests saved on done button click`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            val selectInterestAtIndex = 2
+
+            // When
+            initViewModel()
+            viewModel.onInterestAtIndexToggled(index = selectInterestAtIndex, isChecked = true)
+            viewModel.onDoneButtonClick()
+
+            // Then
+            verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
         }
 
     private fun initViewModel() = viewModel.start()
