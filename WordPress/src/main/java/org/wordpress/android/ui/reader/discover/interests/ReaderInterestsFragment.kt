@@ -13,11 +13,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
+    @Inject lateinit var uiHelpers: UiHelpers
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +63,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             isEnabled = doneButtonUiState.enabled
             text = getString(doneButtonUiState.titleRes)
         }
+        uiHelpers.updateVisibility(done_button, doneButtonUiState.visible)
     }
 
     private fun updateInterests(interestsUiState: List<InterestUiState>) {

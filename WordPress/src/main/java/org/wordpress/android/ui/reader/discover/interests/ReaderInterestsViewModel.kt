@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -20,7 +21,9 @@ class ReaderInterestsViewModel @Inject constructor(
 ) : ViewModel() {
     var initialized: Boolean = false
 
-    private val _uiState = MutableLiveData<UiState>()
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData(
+        UiState(listOf(), ReaderTagList(), DoneButtonHiddenUiState)
+    )
     val uiState: LiveData<UiState> = _uiState
 
     private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
@@ -121,16 +124,22 @@ class ReaderInterestsViewModel @Inject constructor(
     )
 
     sealed class DoneButtonUiState(
-        @StringRes val titleRes: Int,
-        val enabled: Boolean = false
+        @StringRes val titleRes: Int = R.string.reader_btn_done,
+        val enabled: Boolean = false,
+        val visible: Boolean = true
     ) {
         object DoneButtonEnabledUiState : DoneButtonUiState(
-            titleRes =  R.string.reader_btn_done,
+            titleRes = R.string.reader_btn_done,
             enabled = true
         )
+
         object DoneButtonDisabledUiState : DoneButtonUiState(
-            titleRes =  R.string.reader_btn_select_few_interests,
+            titleRes = R.string.reader_btn_select_few_interests,
             enabled = false
+        )
+
+        object DoneButtonHiddenUiState : DoneButtonUiState(
+            visible = false
         )
     }
 }

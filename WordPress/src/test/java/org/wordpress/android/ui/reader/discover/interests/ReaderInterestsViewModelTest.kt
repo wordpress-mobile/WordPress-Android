@@ -18,7 +18,9 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
 @RunWith(MockitoJUnitRunner::class)
@@ -69,7 +71,37 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(viewModel.uiState.value).isNull()
+            assertThat(viewModel.uiState.value).isEqualTo(
+                UiState(
+                    listOf(),
+                    ReaderTagList(),
+                    DoneButtonHiddenUiState
+                )
+            )
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `done button hidden on start switches to disabled state when tags received from repo`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // Pause dispatcher so we can verify done button initial state
+            coroutineScope.pauseDispatcher()
+
+            // Trigger data load
+            initViewModel()
+
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonHiddenUiState::class.java)
+
+            // Resume pending coroutines execution
+            coroutineScope.resumeDispatcher()
+
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
         }
 
     @ExperimentalCoroutinesApi
