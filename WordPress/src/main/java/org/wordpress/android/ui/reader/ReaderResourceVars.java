@@ -51,21 +51,19 @@ class ReaderResourceVars {
                                          .blue(onSurfaceColor) + ", " + ResourcesCompat
                                          .getFloat(resources, R.dimen.material_emphasis_high_type) + ")";
 
-        String onSurfaceMedium = "rgba(" + Color.red(onSurfaceColor) + ", "
+        mGreyMediumDarkStr = "rgba(" + Color.red(onSurfaceColor) + ", "
                                  + Color.green(onSurfaceColor) + ", " + Color
                                          .blue(onSurfaceColor) + ", " + ResourcesCompat
                                          .getFloat(resources, R.dimen.material_emphasis_medium) + ")";
 
-        String onSurfaceDisabled = "rgba(" + Color.red(onSurfaceColor) + ", "
+        mGreyExtraLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
                                    + Color.green(onSurfaceColor) + ", " + Color
                                            .blue(onSurfaceColor) + ", " + ResourcesCompat
-                                           .getFloat(resources, R.dimen.disabled_alpha) + ")";
+                                           .getFloat(resources, R.dimen.material_emphasis_disabled) + ")";
 
         mTextColor = onSurfaceHighType;
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,
                 ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
-        mGreyMediumDarkStr = onSurfaceMedium;
-        mGreyExtraLightStr = onSurfaceDisabled;
 
         // full-size image width must take margin into account
         mFullSizeImageWidthPx = displayWidthPx - (detailMarginWidthPx * 2);

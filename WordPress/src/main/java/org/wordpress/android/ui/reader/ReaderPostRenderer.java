@@ -361,17 +361,21 @@ public class ReaderPostRenderer {
 
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
-              // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
-              .append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
-              .append("<style type='text/css'>")
-              .append(" body { font-family: 'Noto Serif', serif; font-weight: 400; margin: 0px; padding: 0px;")
-              .append(" color: ").append(mResourceVars.mTextColor).append("; }")
+              .append("<link rel=\"stylesheet\" type=\"text/css\"\n"
+                      + "          href=\"https://wordpress.com/calypso/evergreen/async-load-blocks-reader-full-post.c8fffa7882601876d9f3.min.css/">\n");
+        // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
+        sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
+              .append("<style type='text/css'>");
+        appendMappedColors(sbHtml);
+              // force font style
+        sbHtml.append(" body.reader-full-post__story-content { font-family: 'Noto Serif', serif; font-weight: 400; font-size: 16px; margin: 0px; padding: 0px; }")
+              .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
               // gallery as those will be handled with the .tiled-gallery rules bellow.
               .append(" p, div" + (renderAsTiledGallery ? ":not(." + galleryOnlyClass + ")" : "")
                       + ", li { line-height: 1.6em; font-size: 100%; }")
-              .append(" h1, h2 { line-height: 1.2em; }")
+              .append(" h1, h2, h3 { line-height: 1.6em; }")
               // counteract pre-defined height/width styles, expect for the tiled-gallery divs when rendering as
               // tiled gallery as those will be handled with the .tiled-gallery rules bellow.
               .append(" p, div" + (renderAsTiledGallery ? ":not(.tiled-gallery.*)" : "")
@@ -387,15 +391,11 @@ public class ReaderPostRenderer {
               // add background color and padding to pre blocks, and add overflow scrolling
               // so user can scroll the block if it's wider than the display
               .append(" pre { overflow-x: scroll;")
-              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
+              .append(" background-color: ").append(mResourceVars.mGreyExtraLightStr).append(";")
               .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; }")
-              // add a left border to blockquotes
-              .append(" blockquote { color: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
-              .append(" padding-left: 32px; ")
-              .append(" margin-left: 0px; ")
-              .append(" border-left: 3px solid ").append(mResourceVars.mGreyExtraLightStr).append("; }")
+
               // show links in the same color they are elsewhere in the app
-              .append(" a { text-decoration: none; color: ").append(mResourceVars.mLinkColorStr).append("; }")
+              .append(" a:any-link { text-decoration: none; color: var(--main-link-color); }")
               // make sure images aren't wider than the display, strictly enforced for images without size
               .append(" img { max-width: 100%; width: auto; height: auto; }")
               .append(" img.size-none { max-width: 100% !important; height: auto !important; }")
@@ -405,22 +405,6 @@ public class ReaderPostRenderer {
               .append(" display: block; margin-left: auto; margin-right: auto;")
               .append(" background-color: ").append(mResourceVars.mGreyMediumDarkStr).append(";")
               .append(" margin-bottom: ").append(mResourceVars.mMarginMediumPx).append("px; }");
-
-        if (isWideDisplay) {
-            sbHtml
-                    .append(".alignleft {")
-                    .append(" max-width: 100%;")
-                    .append(" float: left;")
-                    .append(" margin-top: 12px;")
-                    .append(" margin-bottom: 12px;")
-                    .append(" margin-right: 32px;}")
-                    .append(".alignright {")
-                    .append(" max-width: 100%;")
-                    .append(" float: right;")
-                    .append(" margin-top: 12px;")
-                    .append(" margin-bottom: 12px;")
-                    .append(" margin-left: 32px;}");
-        }
 
         if (renderAsTiledGallery) {
             // tiled-gallery related styles
@@ -501,7 +485,7 @@ public class ReaderPostRenderer {
                 .append(" font-size: smaller; line-height: 1.2em; margin: 0px;")
                 .append(" text-align: center;")
                 .append(" padding: ").append(mResourceVars.mMarginMediumPx).append("px; ")
-                .append(" color: ").append(mResourceVars.mGreyMediumDarkStr).append("; }")
+                .append(" color: var(--color-neutral-0); }")
                 // attribution for Discover posts
                 .append(" div#discover { ")
                 .append(" margin-top: ").append(mResourceVars.mMarginMediumPx).append("px;")
@@ -536,11 +520,21 @@ public class ReaderPostRenderer {
             sbHtml.append("<script src=\"").append(jsUrl).append("\" type=\"text/javascript\" async></script>");
         }
 
-        sbHtml.append("</head><body>")
+        sbHtml.append("</head><body class=\"reader-full-post reader-full-post__story-content\">")
               .append(contentCustomised)
               .append("</body></html>");
 
         return sbHtml.toString();
+    }
+
+    private void appendMappedColors(StringBuilder sb) {
+        sb.append(" :root { ")
+          .append("--color-text: ").append(mResourceVars.mTextColor).append("; ")
+          .append("--color-neutral-70: ").append(mResourceVars.mTextColor).append("; ")
+          .append("--color-neutral-0: ").append(mResourceVars.mGreyMediumDarkStr).append("; ")
+          .append("--color-neutral-50: ").append(mResourceVars.mGreyExtraLightStr).append("; ")
+          .append("--main-link-color: ").append(mResourceVars.mLinkColorStr).append("; ")
+          .append("} ");
     }
 
     private ImageSize getImageSize(final String imageTag, final String imageUrl) {
