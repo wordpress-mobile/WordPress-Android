@@ -284,8 +284,4 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
         // Not used in WordPress app
     }
-
-    @Override public void trackEmailFilled() {
-        mUnifiedLoginTracker.track(Flow.GET_STARTED, Step.EMAIL_FILLED);
-    }
 }

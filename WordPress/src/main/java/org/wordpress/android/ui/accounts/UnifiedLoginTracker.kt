@@ -66,7 +66,6 @@ class UnifiedLoginTracker
     enum class Step(val value: String) {
         PROLOGUE("prologue"),
         START("start"),
-        EMAIL_FILLED("email_filled"),
         MAGIC_LINK_REQUESTED("magic_link_requested"),
         EMAIL_OPENED("email_opened"),
         USERNAME_PASSWORD("username_password"),
