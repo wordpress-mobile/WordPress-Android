@@ -67,8 +67,8 @@ abstract class PublishSettingsFragment : Fragment() {
                 showPostTimeSelectionDialog()
             }
         })
-        viewModel.onPublishedDateChanged.observe(this, Observer {
-            it?.let { date ->
+        viewModel.onPublishedDateChanged.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
                 trackPostScheduled()
             }

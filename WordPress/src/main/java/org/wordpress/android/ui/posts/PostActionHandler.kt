@@ -60,6 +60,7 @@ class PostActionHandler(
     private val hasUnhandledAutoSave: (PostModel) -> Boolean,
     private val triggerPostListAction: (PostListAction) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
+    private val triggerPublishAction: (PostModel) -> Unit,
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
@@ -78,7 +79,7 @@ class PostActionHandler(
                 moveTrashedPostToDraft(post)
             }
             BUTTON_PUBLISH -> {
-                postListDialogHelper.showPublishConfirmationDialog(post)
+                triggerPublishAction.invoke(post)
             }
             BUTTON_SYNC -> {
                 postListDialogHelper.showSyncScheduledPostConfirmationDialog(post)
@@ -148,6 +149,10 @@ class PostActionHandler(
         if (post != null) {
             triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
         }
+    }
+
+    fun publishPost(post: PostModel) {
+        triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
     }
 
     private fun moveTrashedPostToDraft(post: PostModel) {
