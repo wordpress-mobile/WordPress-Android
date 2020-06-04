@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -11,6 +10,7 @@ import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -52,7 +52,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
         viewModel.navigateToDiscover.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                Log.d("ReaderInterestsFragment", "Go to discover")
+                navigateToDiscover()
             }
         })
 
@@ -86,5 +86,14 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
             interests_chip_group.addView(chip)
         }
+    }
+
+    private fun navigateToDiscover() {
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction.setCustomAnimations(
+            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+        )
+        fragmentTransaction.replace(R.id.fragment_container, ReaderDiscoverFragment(), tag).commit()
     }
 }
