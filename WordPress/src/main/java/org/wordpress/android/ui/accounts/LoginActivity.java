@@ -155,7 +155,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     }
                     break;
                 case SELFHOSTED_ONLY:
-                    mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
+                    mUnifiedLoginTracker.setSource(Source.LOGIN_WITH_SITE);
                     showFragment(new LoginSiteAddressFragment(), LoginSiteAddressFragment.TAG);
                     break;
                 case JETPACK_STATS:

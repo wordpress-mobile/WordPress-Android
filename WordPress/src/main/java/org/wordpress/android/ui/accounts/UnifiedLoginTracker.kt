@@ -62,7 +62,7 @@ class UnifiedLoginTracker
         SHARE("share"),
         DEEPLINK("deeplink"),
         REAUTHENTICATION("reauthentication"),
-        SELF_HOSTED("self_hosted"),
+        LOGIN_WITH_SITE("login_with_site"),
         DEFAULT("default")
     }
 
