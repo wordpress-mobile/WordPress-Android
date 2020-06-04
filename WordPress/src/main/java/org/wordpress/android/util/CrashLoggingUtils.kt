@@ -34,9 +34,9 @@ class CrashLoggingUtils {
                             // Remove the "Invoking subscriber failed" exception so that the main error will show up
                             // in Sentry. This error only means that an exception occurred during an EventBus event and
                             // it's not particularly useful for debugging.
-                            if (lastException.module == EVENT_BUS_MODULE
-                                    && lastException.type == EVENT_BUS_EXCEPTION
-                                    && lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
+                            if (lastException.module == EVENT_BUS_MODULE &&
+                                    lastException.type == EVENT_BUS_EXCEPTION &&
+                                    lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
                                 event.exceptions.remove(lastException)
                             }
                         }
