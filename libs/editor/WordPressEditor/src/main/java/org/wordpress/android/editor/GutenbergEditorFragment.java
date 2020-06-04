@@ -470,8 +470,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         if (requestCode == UNSUPPORTED_BLOCK_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
-                String blockId = data.getStringExtra(WPGutenbergWebViewActivity.RESULT_BLOCK_ID);
-                String content = data.getStringExtra(WPGutenbergWebViewActivity.RESULT_SAVED_CONTENT);
+                String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
+                String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
             }
         }

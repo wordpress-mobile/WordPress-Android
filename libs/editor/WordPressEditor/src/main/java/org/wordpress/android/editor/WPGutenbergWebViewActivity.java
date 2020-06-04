@@ -25,9 +25,6 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ARG_BLOCK_NAME = "block_name";
     public static final String ARG_BLOCK_CONTENT = "block_content";
 
-    public static final String RESULT_SAVED_CONTENT = "saved_content";
-    public static final String RESULT_BLOCK_ID = "block_id";
-
     @Override
     protected void loadUrl() {
         if (getIntent() != null
@@ -58,7 +55,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
         Intent savedContentIntent = new Intent();
         String blockId = getIntent().getExtras().getString(ARG_BLOCK_ID);
         savedContentIntent.putExtra(ARG_BLOCK_ID, blockId);
-        savedContentIntent.putExtra(RESULT_SAVED_CONTENT, content);
+        savedContentIntent.putExtra(ARG_BLOCK_CONTENT, content);
         setResult(RESULT_OK, savedContentIntent);
         finish();
     }
