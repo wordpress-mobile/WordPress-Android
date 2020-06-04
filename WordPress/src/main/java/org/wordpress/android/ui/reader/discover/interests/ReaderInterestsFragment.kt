@@ -39,7 +39,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+            .get(ReaderInterestsViewModel::class.java)
         startObserving()
     }
 
@@ -69,7 +70,11 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun updateInterests(interestsUiState: List<InterestUiState>) {
         interests_chip_group.removeAllViews()
         interestsUiState.forEachIndexed { index, interestTagUiState ->
-            val chip = layoutInflater.inflate(R.layout.reader_interest_filter_chip, interests_chip_group, false) as Chip
+            val chip = layoutInflater.inflate(
+                R.layout.reader_interest_filter_chip,
+                interests_chip_group,
+                false
+            ) as Chip
             with(chip) {
                 layoutDirection = View.LAYOUT_DIRECTION_LOCALE
                 text = interestTagUiState.title

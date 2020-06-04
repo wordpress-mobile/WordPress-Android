@@ -44,7 +44,13 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val tagList = readerTagRepository.getInterests()
             if (tagList.isNotEmpty()) {
-                updateUiState(UiState(transformToInterestsUiState(tagList), tagList, getDoneButtonUiState()))
+                updateUiState(
+                    UiState(
+                        transformToInterestsUiState(tagList),
+                        tagList,
+                        getDoneButtonUiState()
+                    )
+                )
                 if (!initialized) {
                     initialized = true
                 }

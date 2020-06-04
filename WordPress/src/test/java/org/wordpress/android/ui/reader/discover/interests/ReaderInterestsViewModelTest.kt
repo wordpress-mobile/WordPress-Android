@@ -55,9 +55,9 @@ class ReaderInterestsViewModelTest {
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interests).isEqualTo(mockInterests)
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[0])
-                    .isInstanceOf(InterestUiState::class.java)
+                .isInstanceOf(InterestUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[0].title)
-                    .isEqualTo(mockInterests[0].tagTitle)
+                .isEqualTo(mockInterests[0].tagTitle)
         }
 
     @ExperimentalCoroutinesApi
@@ -118,13 +118,13 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
-                    .isGreaterThanOrEqualTo(1)
+                .isGreaterThanOrEqualTo(1)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                    .isInstanceOf(DoneButtonEnabledUiState::class.java)
+                .isInstanceOf(DoneButtonEnabledUiState::class.java)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
-                    .isEqualTo(R.string.reader_btn_done)
+                .isEqualTo(R.string.reader_btn_done)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.enabled)
-                    .isEqualTo(true)
+                .isEqualTo(true)
         }
 
     @ExperimentalCoroutinesApi
@@ -141,17 +141,17 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = 0, isChecked = true)
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
-                    .isGreaterThanOrEqualTo(1)
+                .isGreaterThanOrEqualTo(1)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                    .isInstanceOf(DoneButtonEnabledUiState::class.java)
+                .isInstanceOf(DoneButtonEnabledUiState::class.java)
 
             // Deselect the only selected interest
             viewModel.onInterestAtIndexToggled(index = 0, isChecked = false)
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState.filter { it.isChecked }.size)
-                    .isEqualTo(0)
+                .isEqualTo(0)
             assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                    .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
         }
 
     @ExperimentalCoroutinesApi
@@ -174,13 +174,13 @@ class ReaderInterestsViewModelTest {
 
     private fun getMockInterests() =
         ReaderTagList().apply {
-        for (c in 'A'..'Z')
-            (add(
-                ReaderTag(
-                    c.toString(), c.toString(), c.toString(),
-                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
-                    ReaderTagType.DEFAULT
-                )
-            ))
+            for (c in 'A'..'Z')
+                (add(
+                    ReaderTag(
+                        c.toString(), c.toString(), c.toString(),
+                        "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                        ReaderTagType.DEFAULT
+                    )
+                ))
         }
 }
