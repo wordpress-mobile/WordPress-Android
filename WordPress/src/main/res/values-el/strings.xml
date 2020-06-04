@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-02-28 09:54:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: el_GR
 -->
 <resources>
@@ -186,7 +186,6 @@ Language: el_GR
     <string name="people_empty_list_filtered_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
     <string name="people_empty_list_filtered_users">Δεν υπάρχουν χρήστες ακόμη</string>
     <string name="reader_empty_followed_blogs_button_discover">Ανακαλύψτε ιστοτόπους</string>
-    <string name="reader_empty_followed_blogs_description">Δεν ακολουθείτε ιστότοπους ακόμα. Γιατί να μην ξεκινήσετε τώρα;</string>
     <string name="reader_empty_followed_blogs_title">Δεν υπάρχουν ακολουθούμενοι ιστότοποι</string>
     <string name="notifications_empty_likes">Κανένα Like ακόμα</string>
     <string name="notifications_empty_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
@@ -438,7 +437,6 @@ Language: el_GR
     <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
-    <string name="copy_text">Αντιγραφή</string>
     <string name="connect_site">Σύνδεση ιστότοπου</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Δόνηση συσκευής</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Επιλογή ήχου</string>

@@ -17,7 +17,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
     private lateinit var viewModel: EditPostPublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
 
         val datePickerDialog = DatePickerDialog(activity,
@@ -51,7 +51,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity!!.applicationContext as WordPress).component().inject(this)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     companion object {

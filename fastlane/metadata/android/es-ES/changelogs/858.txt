@@ -1,6 +1,0 @@
-14.7:
-Editor de bloques: Añadido un bloque de columnas y una plantilla de página de inicio para blogs. Ajustados los botones de la plantilla de página de inicio para evitar la superposición con el contenido de la página. «Elegir el medio desde el dispositivo» abre un selector de medios incorporado de WordPress en lugar del selector por defecto de tu dispositivo.
-
-Corrección de fallos: Un fallo causa que aparezcan los ajustes de la URL al cambiar la orientación del dispositivo mientras se previsualizan las plantillas de página de inicio.
-
-Mejoras en la interfaz de usuario: Añadido tu Gravatar al menú «Yo» en «Mi sitio».

@@ -91,6 +91,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     files = {
       release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
+      release_note_short: prj_folder + "/WordPress/metadata/release_notes_short.txt",
       play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
       play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
       play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",

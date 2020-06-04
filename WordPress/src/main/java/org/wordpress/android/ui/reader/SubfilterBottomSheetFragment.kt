@@ -17,16 +17,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: ReaderPostListViewModel
+    private lateinit var viewModel: SubFilterViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +40,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(ReaderPostListViewModel::class.java)
+                .get(SubFilterViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)

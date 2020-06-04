@@ -395,7 +395,12 @@ class PageListViewModel @Inject constructor(
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(pageModel.post, uploadUiState)
 
         val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(uploadUiState)
-        val actions = pageListItemActionsUseCase.setupPageActions(listType, uploadUiState)
+        val actions = pageListItemActionsUseCase.setupPageActions(
+                listType,
+                uploadUiState,
+                pagesViewModel.site,
+                pageModel.remoteId
+        )
         return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
     }
 

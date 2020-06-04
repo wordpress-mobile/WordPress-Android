@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:46:19+0000
+Translation-Revision-Date: 2020-05-19 10:08:07+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: en_GB
 -->
 <resources>
-    <string name="gutenberg_native_subscribe">Subscribe</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Welcome to our new blog</string>
+    <string name="gutenberg_native_select_a_color">Select a colour</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Double tap to go to colour settings</string>
+    <string name="reader_empty_followed_blogs_description">When you follow sites, you\'ll see their content here</string>
+    <string name="feature_announcement_find_out_mode">Find out more</string>
+    <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
+    <string name="insert_label_with_count">Insert %d</string>
+    <string name="crop">crop</string>
+    <string name="error_failed_to_load_into_file">Failed to load into file, please try again.</string>
+    <string name="preview_image_thumbnail_description">Preview Image Thumbnail</string>
+    <string name="photo_picker_use_media">Use this media</string>
+    <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_photo_or_video_title">Choose media</string>
+    <string name="photo_picker_video_title">Choose video</string>
+    <string name="site_picker_ask_site_select">Couldn\'t select site. Please try again.</string>
+    <string name="sitepicker_continue_flow">Continue</string>
+    <string name="reader_reblog_error">Reblog failed</string>
+    <string name="reader_no_site_to_reblog_action">Manage Sites</string>
+    <string name="reader_no_site_to_reblog_detail">Once you create a WordPress.com site, you can reblog content that you like to your own site.</string>
+    <string name="reader_no_site_to_reblog_title">No available WordPress.com sites</string>
+    <string name="whats_new_in_version_title">What\'s New</string>
+    <string name="comment_q_action_copied_url">Link address copied</string>
+    <string name="copy_link_address">Copy link address</string>
+    <string name="comment_share_link_via">Share via</string>
+    <string name="comment_toast_err_share_intent">Unable to share</string>
+    <string name="button_insert">Insert</string>
+    <string name="continue_label">Continue</string>
+    <string name="copy_text">Copy</string>
     <string name="gutenberg_native_number_of_columns">Number of columns</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Move block right from position %1$s to position %2$s</string>
     <string name="gutenberg_native_move_block_right">Move block right</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Move block left from position %1$s to position %2$s</string>
     <string name="gutenberg_native_move_block_left">Move block left</string>
-    <string name="gutenberg_native_latest_blog_posts">Latest Blog Posts</string>
-    <string name="gutenberg_native_follow_our_blog">Follow our Blog</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Double tap to move the block to the right</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Double tap to move the block to the left</string>
     <string name="gutenberg_native_columns_settings">Columns Settings</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Colour settings are coming soon.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Creating dashboard</string>
     <string name="new_site_creation_creating_site_loading_3">Setting up theme</string>
@@ -40,7 +64,7 @@ Language: en_GB
     <string name="media_accessing_failed">Failed to access content of a private site. Some media might be unavailable</string>
     <string name="media_accessing_progress">Accessing content of a private site</string>
     <string name="error_failed_to_crop_and_save_image">Failed to crop and save image, please try again.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Failed to insert image.\nPlease tap to retry.</string>
+    <string name="failed_to_load_image_tap_to_retry">Failed to load image.\nPlease tap to retry.</string>
     <string name="preview_image_description">Preview Image</string>
     <string name="error_unknown_page_type">Unknown page format</string>
     <string name="error_page_not_submitted">We couldn\'t complete this action, and didn\'t submit this page for review.</string>
@@ -97,7 +121,6 @@ Language: en_GB
     <string name="gutenberg_native_only_show_excerpt">Only show excerpt</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
     <string name="gutenberg_native_link_to">Link To</string>
-    <string name="gutenberg_native_link_settings">Link Settings</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Let\'s talk 👋. Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Let\'s build something together.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Let’s Build Something Together</string>
@@ -115,10 +138,6 @@ Language: en_GB
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_customize">CUSTOMISE</string>
     <string name="gutenberg_native_city_10100">City, 10100</string>
-    <string name="gutenberg_native_button_link_url">Button Link URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Button colour settings are coming soon.</string>
-    <string name="gutenberg_native_border_settings">Border Settings</string>
-    <string name="gutenberg_native_border_radius">Border Radius</string>
     <string name="gutenberg_native_add_paragraph_block">Add Paragraph Block</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">A short description of the services you offer.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">A short bio with personal history, key achievements, or an interesting fact.</string>
@@ -252,7 +271,6 @@ Language: en_GB
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>
     <string name="gutenberg_native_s_block_empty">%s block. Empty</string>
     <string name="gutenberg_native_reset_block">Reset Block</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Remove block at row %s</string>
     <string name="gutenberg_native_remove_annotations">Remove annotations</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem opening the video</string>
     <string name="gutenberg_native_problem_displaying_block">Problem displaying block</string>
@@ -283,7 +301,6 @@ Language: en_GB
     <string name="gutenberg_native_double_tap_to_select_an_image">Double tap to select an image</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Double tap to select a video</string>
     <string name="gutenberg_native_double_tap_to_select">Double tap to select</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Double tap to remove the block</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Double tap to redo last change</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Double tap to move the block up</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Double tap to move the block down</string>
@@ -864,7 +881,6 @@ Language: en_GB
     <string name="reader_empty_posts_liked_title">Nothing liked yet</string>
     <string name="reader_empty_followed_blogs_button_followed">Go to following</string>
     <string name="reader_empty_followed_blogs_button_discover">Discover sites</string>
-    <string name="reader_empty_followed_blogs_description">You are not following any sites yet. Why not follow one now?</string>
     <string name="reader_empty_followed_blogs_title">No followed sites</string>
     <string name="notifications_empty_likes">No likes yet</string>
     <string name="notifications_empty_followers">No followers yet</string>
@@ -1322,7 +1338,6 @@ Language: en_GB
     <string name="media_edit_filename_caption">File Name</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt text</string>
-    <string name="copy_text">Copy</string>
     <string name="connect_site">Connect Site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blink light</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrate device</string>
@@ -2187,6 +2202,7 @@ Language: en_GB
     <string name="reader_btn_unfollow">Following</string>
     <string name="reader_btn_follow">Follow</string>
     <string name="reader_btn_share">Share</string>
+    <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">(Untitled)</string>
     <string name="comments_empty_list">No comments yet</string>
     <string name="empty_list_default">This list is empty</string>
