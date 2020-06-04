@@ -1,0 +1,1 @@
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.

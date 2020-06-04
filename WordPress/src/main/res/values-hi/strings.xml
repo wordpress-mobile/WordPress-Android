@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-02 23:45:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: hi_IN
 -->
 <resources>
@@ -23,7 +23,6 @@ Language: hi_IN
     <string name="media_edit_url_caption">यूआरएल</string>
     <string name="media_edit_filename_caption">फ़ाइल का नाम</string>
     <string name="media_edit_filetype_caption">फाइल का प्रकार</string>
-    <string name="copy_text">कापी</string>
     <string name="connect_site">साइट कनेक्ट करे</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">लाइट टिमटिमाये </string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">ध्वनि चुनें</string>

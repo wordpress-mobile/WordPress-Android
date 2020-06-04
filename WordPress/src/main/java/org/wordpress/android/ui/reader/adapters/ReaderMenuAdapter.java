@@ -31,6 +31,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
     public static final int ITEM_NOTIFICATIONS_OFF = 3;
     public static final int ITEM_NOTIFICATIONS_ON = 4;
     public static final int ITEM_SHARE = 5;
+    public static final int ITEM_VISIT = 6;
 
     public ReaderMenuAdapter(Context context, @NonNull List<Integer> menuItems) {
         super();
@@ -113,6 +114,14 @@ public class ReaderMenuAdapter extends BaseAdapter {
                 iconColorRes = ContextExtensionsKt
                         .getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorOnSurfaceMedium);
                 iconRes = R.drawable.ic_share_white_24dp;
+                break;
+            case ITEM_VISIT:
+                textRes = R.string.reader_label_visit;
+                textColorRes =
+                        ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), R.attr.colorOnSurface);
+                iconColorRes = ContextExtensionsKt
+                        .getColorResIdFromAttribute(convertView.getContext(), R.attr.wpColorOnSurfaceMedium);
+                iconRes = R.drawable.ic_external_white_24dp;
                 break;
             default:
                 return convertView;

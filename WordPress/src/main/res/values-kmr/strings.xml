@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-04-06 15:11:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ku_TR
 -->
 <resources>
@@ -487,7 +487,6 @@ Language: ku_TR
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinên xwe</string>
     <string name="reader_empty_followed_blogs_button_discover">Malperan vebibîne</string>
-    <string name="reader_empty_followed_blogs_description">Te hîn ti malper neşopandiye. Çima niha malperekê naşopînî?</string>
     <string name="reader_empty_followed_blogs_title">Malperên tu dişopîne tune</string>
     <string name="notifications_empty_likes">Hîn ecibandin tune</string>
     <string name="notifications_empty_followers">Hîna şopîner tune</string>
@@ -944,7 +943,6 @@ Language: ku_TR
     <string name="media_edit_filename_caption">Navê Pelgeyê</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
-    <string name="copy_text">Kopî bike</string>
     <string name="connect_site">Malper Girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Şewqê veke - bigire</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Amûrê biricifîne</string>

@@ -1,5 +1,3 @@
-Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
 
-Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
-
-UI improvements: Added your Gravatar to the Me menu in My Site.
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.

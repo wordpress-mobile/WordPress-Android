@@ -136,6 +136,11 @@ public class ReaderActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void showReaderSearch(Context context) {
+        Intent intent = new Intent(context, ReaderSearchActivity.class);
+        context.startActivity(intent);
+    }
+
     /*
      * show comments for the passed Ids
      */

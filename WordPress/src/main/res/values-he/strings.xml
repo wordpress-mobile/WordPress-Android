@@ -1,23 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-30 09:54:12+0000
+Translation-Revision-Date: 2020-05-26 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: he_IL
 -->
 <resources>
-    <string name="gutenberg_native_subscribe">להירשם</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">ברוך בואך אל הבלוג החדש שלנו</string>
+    <string name="gutenberg_native_select_a_color">לבחור צבע</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
+    <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
+    <string name="feature_announcement_find_out_mode">למידע נוסף</string>
+    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
+    <string name="insert_label_with_count">להוסיף %d</string>
+    <string name="crop">לחתוך</string>
+    <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
+    <string name="preview_image_thumbnail_description">להציג תצוגה מקדימה של התמונה הממוזערת</string>
+    <string name="photo_picker_use_media">להשתמש בפריט המדיה הזה</string>
+    <string name="photo_picker_use_video">להשתמש בווידאו הזה</string>
+    <string name="photo_picker_photo_or_video_title">לבחור מדיה</string>
+    <string name="photo_picker_video_title">לבחור וידאו</string>
+    <string name="site_picker_ask_site_select">לא ניתן היה לבחור אתר. יש לנסות שוב.</string>
+    <string name="sitepicker_continue_flow">המשך</string>
+    <string name="reader_reblog_error">הפרסום החדש בבלוג נכשל</string>
+    <string name="reader_no_site_to_reblog_action">ניהול אתרים</string>
+    <string name="reader_no_site_to_reblog_detail">לאחר יצירת אתר ב-WordPress.com, אפשר לפרסם מחדש בבלוג את התוכן שברצונך להציג באתר שלך.</string>
+    <string name="reader_no_site_to_reblog_title">אין אתרי WordPress.com זמינים</string>
+    <string name="whats_new_in_version_title">מה חדש</string>
+    <string name="comment_q_action_copied_url">כתובת הקישור הועתקה</string>
+    <string name="copy_link_address">להעתיק את הכתובת של הקישור</string>
+    <string name="comment_share_link_via">לשתף דרך</string>
+    <string name="comment_toast_err_share_intent">לא ניתן לשתף</string>
+    <string name="button_insert">להוסיף</string>
+    <string name="continue_label">המשך</string>
+    <string name="copy_text">להעתיק</string>
     <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
     <string name="gutenberg_native_move_block_right">להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">להזיז את הבלוק שמאלה מהמיקום %1$s למיקום %2$s</string>
     <string name="gutenberg_native_move_block_left">להזיז את הבלוק שמאלה</string>
-    <string name="gutenberg_native_latest_blog_posts">הפוסטים האחרונים בבלוג</string>
-    <string name="gutenberg_native_follow_our_blog">לעקוב אחר הבלוג שלנו</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">להקיש פעמיים כדי להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">להקיש פעמיים כדי להזיז את הבלוק שמאלה</string>
     <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">הגדרות צבע יוספו בקרוב.</string>
     <string name="gutenberg_native_blog">בלוג</string>
     <string name="new_site_creation_creating_site_loading_4">יוצר לוח בקרה</string>
     <string name="new_site_creation_creating_site_loading_3">להגדיר ערכת עיצוב</string>
@@ -40,7 +64,7 @@ Language: he_IL
     <string name="media_accessing_failed">נכשלה הגישה לתוכן באתר פרטי. חלק מפרטי המדיה עלולים להיות לא זמינים</string>
     <string name="media_accessing_progress">ניגש לתוכן של אתר פרטי</string>
     <string name="error_failed_to_crop_and_save_image">פעולת החיתוך והשמירה של התמונה נכשלה, יש לנסות שוב.</string>
-    <string name="failed_to_insert_image_tap_to_retry">ההוספה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
+    <string name="failed_to_load_image_tap_to_retry">הטעינה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
     <string name="preview_image_description">להציג תצוגה מקדימה של התמונה</string>
     <string name="error_unknown_page_type">פורמט עמוד לא ידוע</string>
     <string name="error_page_not_submitted">לא הצלחנו להשלים את הפעולה ולא שלחנו את העמוד לבדיקה.</string>
@@ -97,7 +121,6 @@ Language: he_IL
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
-    <string name="gutenberg_native_link_settings">הגדרות הקישור</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">נשמח לבנות משהו ביחד.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">נשמח לבנות משהו ביחד</string>
@@ -115,10 +138,6 @@ Language: he_IL
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">חבל לבכות כי החוויה שהסתיימה, כדאי לחייך כי החוויה התרחשה.</string>
     <string name="gutenberg_native_customize">התאמה אישית</string>
     <string name="gutenberg_native_city_10100">עיר מגורים, 10100</string>
-    <string name="gutenberg_native_button_link_url">כתובת URL לקישור של הכפתור</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">בקרוב נוסיף הגדרות לצבע הכפתורים.</string>
-    <string name="gutenberg_native_border_settings">הגדרות גבול</string>
-    <string name="gutenberg_native_border_radius">רדיוס הגבולות</string>
     <string name="gutenberg_native_add_paragraph_block">להוסיף בלוק פסקה רגילה</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">תיאור קצר של השירותים שמוצעים על ידך.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">ביוגרפיה קצרה שכוללת היסטוריה אישית, הישגים מרכזיים או עובדות מעניינות.</string>
@@ -252,7 +271,6 @@ Language: he_IL
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
     <string name="gutenberg_native_s_block_empty">הבלוק %s. ריק</string>
     <string name="gutenberg_native_reset_block">לאפס את הבלוק</string>
-    <string name="gutenberg_native_remove_block_at_row_s">להסיר את הבלוק בשורה %s</string>
     <string name="gutenberg_native_remove_annotations">להסיר את ההסברים</string>
     <string name="gutenberg_native_problem_opening_the_video">בעיה בפתיחת הווידאו</string>
     <string name="gutenberg_native_problem_displaying_block">בעיה בהצגת הבלוק</string>
@@ -283,7 +301,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_select_an_image">יש להקיש פעמיים כדי לבחור תמונה</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">יש להקיש פעמיים כדי לבחור וידאו</string>
     <string name="gutenberg_native_double_tap_to_select">יש להקיש פעמיים כדי לבחור</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">יש להקיש פעמיים כדי להסיר את הבלוק</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">יש להקיש פעמיים כדי לבצע שוב את השינוי האחרון</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">יש להקיש פעמיים כדי להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">יש להקיש פעמיים כדי להזיז את הבלוק למטה</string>
@@ -861,7 +878,6 @@ Language: he_IL
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
     <string name="reader_empty_followed_blogs_button_followed">מעבר לבא</string>
     <string name="reader_empty_followed_blogs_button_discover">עיון באתרים</string>
-    <string name="reader_empty_followed_blogs_description">עדיין לא מתבצע מעקב אחר אתרים. למה לא לעקוב אחר אתר כבר עכשיו?</string>
     <string name="reader_empty_followed_blogs_title">לא מתבצע מעקב אחר אתרים</string>
     <string name="notifications_empty_likes">עדיין אין לייקים</string>
     <string name="notifications_empty_followers">עדיין אין עוקבים</string>
@@ -1319,7 +1335,6 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="copy_text">העתק</string>
     <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>

@@ -169,6 +169,8 @@ sealed class PageItem(open val type: Type) {
         VIEW_PAGE(R.id.view_page),
         CANCEL_AUTO_UPLOAD(R.id.cancel_auto_upload),
         SET_PARENT(R.id.set_parent),
+        SET_AS_HOMEPAGE(R.id.set_as_homepage),
+        SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
         DELETE_PERMANENTLY(R.id.delete_permanently),

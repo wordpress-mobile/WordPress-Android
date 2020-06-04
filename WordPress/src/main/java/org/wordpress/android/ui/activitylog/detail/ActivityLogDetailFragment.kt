@@ -67,7 +67,7 @@ class ActivityLogDetailFragment : Fragment() {
                 else -> throw Throwable("Couldn't initialize Activity Log view model")
             }
 
-            viewModel.activityLogItem.observe(this, Observer { activityLogModel ->
+            viewModel.activityLogItem.observe(viewLifecycleOwner, Observer { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
                 uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
                 uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
@@ -97,15 +97,15 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.rewindAvailable.observe(this, Observer { available ->
+            viewModel.rewindAvailable.observe(viewLifecycleOwner, Observer { available ->
                 activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
-            viewModel.showRewindDialog.observe(this, Observer<ActivityLogDetailModel> { detailModel ->
+            viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer<ActivityLogDetailModel> { detailModel ->
                 detailModel?.let { onRewindButtonClicked(it) }
             })
 
-            viewModel.handleFormattableRangeClick.observe(this, Observer<FormattableRange> { range ->
+            viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, Observer<FormattableRange> { range ->
                 if (range != null) {
                     formattableContentClickHandler.onClick(activity, range)
                 }
