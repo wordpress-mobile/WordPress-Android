@@ -10,7 +10,7 @@ import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
+import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -97,9 +97,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun navigateToDiscover() {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         fragmentTransaction.setCustomAnimations(
-            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
+            R.anim.fragment_close_enter, R.anim.fragment_close_exit,
+            R.anim.fragment_close_enter, R.anim.fragment_close_exit
         )
-        fragmentTransaction.replace(R.id.fragment_container, ReaderDiscoverFragment(), tag).commit()
+        fragmentTransaction.replace(R.id.fragment_container, ReaderFragment(), tag).commit()
     }
 }
