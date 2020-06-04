@@ -2,21 +2,24 @@ package org.wordpress.android.ui.accounts
 
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_STEP
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source.DEFAULT
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UnifiedLoginTracker
-@Inject constructor(private val analyticsTracker: AnalyticsTrackerWrapper) {
+@Inject constructor(private val analyticsTracker: AnalyticsTrackerWrapper, private val appLog: AppLogWrapper) {
     private var currentSource: Source = DEFAULT
     private var currentFlow: Flow? = null
     fun track(step: Step) {
-        track(step = step)
+        track(flow = currentFlow, step = step)
     }
 
-    fun track(flow: Flow? = null, step: Step) {
+    fun track(flow: Flow? = currentFlow, step: Step) {
         currentFlow = flow
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             currentFlow?.let {
@@ -24,7 +27,16 @@ class UnifiedLoginTracker
                         UNIFIED_LOGIN_STEP,
                         mapOf("source" to currentSource.value, "flow" to it.value, "step" to step.value)
                 )
-            }
+            } ?: handleMissingFlow(step)
+        }
+    }
+
+    private fun handleMissingFlow(step: Step) {
+        val errorMessage = "Trying to log an event ${step.value} with a missing flow"
+        if (BuildConfig.DEBUG) {
+            throw IllegalStateException(errorMessage)
+        } else {
+            AppLog.e(MAIN, errorMessage)
         }
     }
 
