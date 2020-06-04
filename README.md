@@ -20,6 +20,7 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 Notes:
 
 * To use WordPress.com features (login to WordPress.com, access Reader and Stats, etc) you need a WordPress.com OAuth2 ID and secret. Please read the [OAuth2 Authentication](#oauth2-authentication) section.
+* While building the app in Android Studio ignore all the update plugin prompts (updating plugins may resulted in plugin conflicts and interrupt the build process).
 
 
 ## OAuth2 Authentication ##
