@@ -1138,6 +1138,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_alert_tapped";
             case UNIFIED_LOGIN_STEP:
                 return "unified_login_step";
+            case UNIFIED_LOGIN_INTERACTION:
+                return "unified_login_interaction";
+            case UNIFIED_LOGIN_FAILURE:
+                return "unified_login_failure";
             case LOGIN_ACCESSED:
                 return "login_accessed";
             case LOGIN_MAGIC_LINK_EXITED:

@@ -320,6 +320,8 @@ public final class AnalyticsTracker {
         PUSH_NOTIFICATION_RECEIVED,
         PUSH_NOTIFICATION_TAPPED, // Same of opened
         UNIFIED_LOGIN_STEP,
+        UNIFIED_LOGIN_INTERACTION,
+        UNIFIED_LOGIN_FAILURE,
         LOGIN_ACCESSED,
         LOGIN_MAGIC_LINK_EXITED,
         LOGIN_MAGIC_LINK_FAILED,

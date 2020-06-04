@@ -7,6 +7,7 @@ import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper.ErrorContext;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.Map;
@@ -45,6 +46,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackInsertedInvalidUrl() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_INSERTED_INVALID_URL);
+        mUnifiedLoginTracker.trackFailure("Inserted invalid URL");
     }
 
     @Override
@@ -65,6 +67,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginFailed(String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FAILED, errorContext, errorType, errorDescription);
+        mUnifiedLoginTracker.trackFailure(new ErrorContext(errorContext, errorType, errorDescription));
     }
 
     @Override
@@ -106,6 +109,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackMagicLinkFailed(Map<String, ?> properties) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_FAILED, properties);
+        mUnifiedLoginTracker.trackFailure("Magic link failed");
     }
 
     @Override
@@ -160,6 +164,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkFailed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_FAILED);
+        mUnifiedLoginTracker.trackFailure("Signup magic link failed");
     }
 
     @Override
@@ -191,6 +196,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupSocialButtonFailure() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_FAILURE);
+        mUnifiedLoginTracker.trackFailure("Signup failed");
     }
 
     @Override
@@ -221,11 +227,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSocialButtonFailure() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_FAILURE);
+        mUnifiedLoginTracker.trackFailure("Login failed");
     }
 
     @Override
     public void trackSocialConnectFailure() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_CONNECT_FAILURE);
+        mUnifiedLoginTracker.trackFailure("Social connect failure");
     }
 
     @Override
@@ -241,6 +249,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSocialFailure(String errorContext, String errorType, String errorDescription) {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_FAILURE, errorContext, errorType, errorDescription);
+        mUnifiedLoginTracker.trackFailure(new ErrorContext(errorContext, errorType, errorDescription));
     }
 
     @Override
@@ -284,5 +293,10 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
         // Not used in WordPress app
+    }
+
+    @Override
+    public void trackFailure(String message) {
+        mUnifiedLoginTracker.trackFailure(message);
     }
 }

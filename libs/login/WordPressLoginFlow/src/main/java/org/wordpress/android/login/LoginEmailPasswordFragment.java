@@ -289,6 +289,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case FAILURE_EMAIL_WRONG_PASSWORD:
                 onLoginFinished(false);
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showPasswordError();
                 break;
             case FAILURE_2FA:
@@ -307,10 +308,12 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case FAILURE_FETCHING_ACCOUNT:
                 onLoginFinished(false);
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.error_fetch_my_profile));
                 break;
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
                 onLoginFinished(false);
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.cannot_add_duplicate_site));
                 break;
             case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
@@ -318,11 +321,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 mLoginListener.loginViaWpcomUsernameInstead();
                 ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
 
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 // consume the state so we don't re-redirect to username login if user backs up
                 LoginWpcomService.clearLoginServiceState();
                 break;
             case FAILURE:
                 onLoginFinished(false);
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
