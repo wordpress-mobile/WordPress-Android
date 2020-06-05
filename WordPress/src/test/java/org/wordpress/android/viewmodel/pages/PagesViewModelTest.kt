@@ -334,10 +334,10 @@ class PagesViewModelTest {
     }
 
     private fun getPublishedPage(remoteId: Long): PublishedPage = PublishedPage(
-            remoteId,
-            2,
-            "Published page",
-            Date(),
+            remoteId = remoteId,
+            localId = 2,
+            title = "Published page",
+            date = Date(),
             actions = emptySet(),
             progressBarUiState = ProgressBarUiState.Hidden,
             showOverlay = false
