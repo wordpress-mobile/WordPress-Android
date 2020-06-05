@@ -22,9 +22,9 @@ repositories {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
+apply plugin: 'kotlin-kapt'
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
@@ -157,12 +157,6 @@ android {
             // Don't split language resources for App Bundles.
             // This is required to switch language in app.
             enableSplit = false
-        }
-    }
-
-    sourceSets {
-        main {
-            res.srcDirs += "${buildDir.absolutePath}/generated/res/"
         }
     }
 }

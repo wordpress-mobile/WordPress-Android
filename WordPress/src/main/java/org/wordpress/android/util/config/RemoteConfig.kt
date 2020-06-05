@@ -4,8 +4,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R
-import org.wordpress.android.annotation.RemoteConfig
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import javax.inject.Inject
@@ -13,7 +11,6 @@ import javax.inject.Inject
 /**
  * Do not use this class outside of this package. Use [AppConfig] instead
  */
-@RemoteConfig(location = "remote_config_defaults")
 class RemoteConfig
 @Inject constructor() {
     fun refresh() {
@@ -22,7 +19,7 @@ class RemoteConfig
                 .setMinimumFetchIntervalInSeconds(BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL)
                 .build()
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        firebaseRemoteConfig.setDefaultsAsync(RemoteConfigDefaults.remoteConfigDefaults)
         firebaseRemoteConfig.fetchAndActivate()
                 .addOnCompleteListener { task: Task<Boolean?> ->
                     if (task.isSuccessful) {
