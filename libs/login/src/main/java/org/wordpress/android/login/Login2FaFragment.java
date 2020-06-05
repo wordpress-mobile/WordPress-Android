@@ -368,6 +368,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void show2FaError(String message) {
+        mAnalyticsListener.trackFailure(message);
         m2FaInput.setError(message);
     }
 
@@ -389,7 +390,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 // TODO: FluxC: could be specific?
             default:
                 AppLog.e(T.NUX, "Server response: " + errorMessage);
-
+                mAnalyticsListener.trackFailure(errorMessage);
                 ToastUtils.showToast(getActivity(),
                         errorMessage == null ? getString(R.string.error_generic) : errorMessage);
                 break;
@@ -397,6 +398,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     private void showErrorDialog(String message) {
+        mAnalyticsListener.trackFailure(message);
         AlertDialog dialog = new MaterialAlertDialogBuilder(getActivity())
                 .setMessage(message)
                 .setPositiveButton(R.string.login_error_button, null)

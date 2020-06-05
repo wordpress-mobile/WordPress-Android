@@ -220,6 +220,7 @@ public class SignupMagicLinkFragment extends Fragment {
     }
 
     protected void showErrorDialog(String message) {
+        mAnalyticsListener.trackFailure(message);
         DialogInterface.OnClickListener dialogListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

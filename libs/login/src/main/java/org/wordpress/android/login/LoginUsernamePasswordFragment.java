@@ -370,6 +370,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void handleDiscoveryError(DiscoveryError error, String failedEndpoint) {
         ActivityUtils.hideKeyboard(getActivity());
+        mAnalyticsListener.trackFailure(error.name() + " - " + failedEndpoint);
         if (error == DiscoveryError.HTTP_AUTH_REQUIRED) {
             mLoginListener.helpNoJetpackScreen(mInputSiteAddress, mEndpointAddress,
                     getCleanedUsername(), mPasswordInput.getEditText().getText().toString(),
@@ -439,6 +440,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     private void showError(String errorMessage) {
         mUsernameInput.setError(errorMessage != null ? " " : null);
         mPasswordInput.setError(errorMessage);
+        mAnalyticsListener.trackFailure(errorMessage);
 
         if (errorMessage != null) {
             requestScrollToView(mPasswordInput);
