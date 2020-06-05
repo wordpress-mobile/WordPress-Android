@@ -1704,7 +1704,6 @@
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
-    <string name="reader_choose_interests_content_description">Choose your interests</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1732,8 +1731,6 @@
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
-    <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
