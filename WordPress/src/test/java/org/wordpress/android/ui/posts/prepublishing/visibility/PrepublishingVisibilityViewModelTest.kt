@@ -23,7 +23,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostPasswordUseCase
-import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdateVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 
@@ -32,7 +32,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
 
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
     @Mock lateinit var updatePostPasswordUseCase: UpdatePostPasswordUseCase
-    @Mock lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
+    @Mock lateinit var updatePostStatusUseCase: UpdateVisibilityUseCase
     private lateinit var editPostRepository: EditPostRepository
 
     @InternalCoroutinesApi
@@ -184,7 +184,7 @@ class PrepublishingVisibilityViewModelTest : BaseUnitTest() {
         invokeVisibilityOnItemTapped(PRIVATE)
 
         // assert
-        verify(updatePostStatusUseCase).updatePostStatus(any(), any(), any())
+        verify(updatePostStatusUseCase).updatePostVisibility(any(), any(), any())
     }
 
     @Test

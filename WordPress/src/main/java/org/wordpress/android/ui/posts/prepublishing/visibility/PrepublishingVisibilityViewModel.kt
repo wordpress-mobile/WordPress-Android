@@ -15,7 +15,7 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.VisibilityUiState
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostPasswordUseCase
-import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdateVisibilityUseCase
 import org.wordpress.android.ui.posts.trackPrepublishingNudges
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class PrepublishingVisibilityViewModel @Inject constructor(
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val updatePostPasswordUseCase: UpdatePostPasswordUseCase,
-    private val updatePostStatusUseCase: UpdatePostStatusUseCase,
+    private val updatePostStatusUseCase: UpdateVisibilityUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private var isStarted = false
@@ -112,7 +112,7 @@ class PrepublishingVisibilityViewModel @Inject constructor(
 
     private fun updatePostStatus(visibility: Visibility) {
         analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_VISIBILITY_CHANGED)
-        updatePostStatusUseCase.updatePostStatus(visibility, editPostRepository, ::updateUiState)
+        updatePostStatusUseCase.updatePostVisibility(visibility, editPostRepository, ::updateUiState)
     }
 
     fun onPostPasswordChanged(password: String) {

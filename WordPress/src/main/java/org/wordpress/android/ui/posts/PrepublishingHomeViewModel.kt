@@ -14,7 +14,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VI
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
-import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetPublishDateLabelUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -26,7 +25,7 @@ import javax.inject.Inject
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
-    private val publishDateLabelUseCase: GetPublishDateLabelUseCase,
+    private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ViewModel() {
@@ -65,7 +64,8 @@ class PrepublishingHomeViewModel @Inject constructor(
                 add(
                         HomeUiState(
                                 actionType = PUBLISH,
-                                actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
+                                actionResult = editPostRepository.getEditablePost()
+                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
                                 actionClickable = true,
                                 onActionClicked = ::onActionClicked
                         )
@@ -74,7 +74,8 @@ class PrepublishingHomeViewModel @Inject constructor(
                 add(
                         HomeUiState(
                                 actionType = PUBLISH,
-                                actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
+                                actionResult = editPostRepository.getEditablePost()
+                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
                                 actionTypeColor = R.color.prepublishing_publish_date_disabled,
                                 actionResultColor = R.color.prepublishing_publish_date_disabled,
                                 actionClickable = false,

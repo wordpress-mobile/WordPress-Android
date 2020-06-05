@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
 
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
@@ -17,19 +15,15 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
-import org.wordpress.android.util.DateTimeUtilsWrapper
-import java.lang.IllegalStateException
 
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
-    private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
-
-    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private lateinit var updatePostStatusUseCase: UpdateVisibilityUseCase
 
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper)
+        updatePostStatusUseCase = UpdateVisibilityUseCase(UpdatePostStatusUseCase(mock()))
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { PostModel() }
     }
@@ -40,7 +34,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.PUBLISHED
 
         // act
-        updatePostStatusUseCase.updatePostStatus(PUBLISH, editPostRepository) {}
+        updatePostStatusUseCase.updatePostVisibility(PUBLISH, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
@@ -52,7 +46,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.DRAFT
 
         // act
-        updatePostStatusUseCase.updatePostStatus(DRAFT, editPostRepository) {}
+        updatePostStatusUseCase.updatePostVisibility(DRAFT, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
@@ -64,7 +58,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.PENDING
 
         // act
-        updatePostStatusUseCase.updatePostStatus(PENDING_REVIEW, editPostRepository) {}
+        updatePostStatusUseCase.updatePostVisibility(PENDING_REVIEW, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
@@ -76,27 +70,15 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         val expectedPostStatus = PostStatus.PRIVATE
 
         // act
-        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+        updatePostStatusUseCase.updatePostVisibility(PRIVATE, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
     }
 
-    @Test
-    fun `verify that when updatePostStatus is called with PRIVATE Visibility dateTimeUtilsWrapper is used`() {
-        // arrange
-        val expectedPostStatus = PostStatus.PRIVATE
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
-
-        // assert
-        verify(dateTimeUtilsWrapper).currentTimeInIso8601()
-    }
-
     @Test(expected = IllegalStateException::class)
     fun `verify that when updatePostStatus is called with PASSWORD_PROTECTED Visibility an exception is thrown`() {
         // act
-        updatePostStatusUseCase.updatePostStatus(PASSWORD_PROTECTED, editPostRepository) {}
+        updatePostStatusUseCase.updatePostVisibility(PASSWORD_PROTECTED, editPostRepository) {}
     }
 }
