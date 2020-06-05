@@ -102,8 +102,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun navigateToDiscover() {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         fragmentTransaction.setCustomAnimations(
-            R.anim.fragment_close_enter, R.anim.fragment_close_exit,
-            R.anim.fragment_close_enter, R.anim.fragment_close_exit
+            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
         )
         fragmentTransaction.replace(R.id.fragment_container, ReaderFragment(), tag).commit()
     }
