@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.e2e.components.MasterbarComponent;
 import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
+import org.wordpress.android.e2e.pages.SiteSettingsPage;
 import org.wordpress.android.support.BaseTest;
 import org.wordpress.android.ui.WPLaunchActivity;
 
@@ -46,6 +47,16 @@ public class EditorTests extends BaseTest {
 
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();
+
+        MySitesPage mySitesPage = new MySitesPage();
+        mySitesPage.gotoSiteSettings();
+
+        // Set to Classic.
+        new SiteSettingsPage().setEditorToClassic();
+
+        // exit the Settings page
+        pressBack();
+
         mb.clickBlogPosts();
 
         new MySitesPage()
