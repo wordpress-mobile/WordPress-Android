@@ -93,6 +93,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -119,6 +120,7 @@ public class EditPostSettingsFragment extends Fragment {
     private LinearLayout mExcerptContainer;
     private LinearLayout mFormatContainer;
     private LinearLayout mTagsContainer;
+    private LinearLayout mPublishDateContainer;
     private TextView mExcerptTextView;
     private TextView mSlugTextView;
     private TextView mLocationTextView;
@@ -128,6 +130,7 @@ public class EditPostSettingsFragment extends Fragment {
     private TextView mPostFormatTextView;
     private TextView mPasswordTextView;
     private TextView mPublishDateTextView;
+    private TextView mPublishDateTitleTextView;
     private TextView mCategoriesTagsHeaderTextView;
     private TextView mFeaturedImageHeaderTextView;
     private TextView mMoreOptionsHeaderTextView;
@@ -269,10 +272,12 @@ public class EditPostSettingsFragment extends Fragment {
         mPostFormatTextView = rootView.findViewById(R.id.post_format);
         mPasswordTextView = rootView.findViewById(R.id.post_password);
         mPublishDateTextView = rootView.findViewById(R.id.publish_date);
+        mPublishDateTitleTextView = rootView.findViewById(R.id.publish_date_title);
         mCategoriesTagsHeaderTextView = rootView.findViewById(R.id.post_settings_categories_and_tags_header);
         mMoreOptionsHeaderTextView = rootView.findViewById(R.id.post_settings_more_options_header);
         mFeaturedImageHeaderTextView = rootView.findViewById(R.id.post_settings_featured_image_header);
         mPublishHeaderTextView = rootView.findViewById(R.id.post_settings_publish);
+        mPublishDateContainer = rootView.findViewById(R.id.publish_date_container);
 
         mFeaturedImageView = rootView.findViewById(R.id.post_featured_image);
         mLocalFeaturedImageView = rootView.findViewById(R.id.post_featured_image_local);
@@ -368,8 +373,7 @@ public class EditPostSettingsFragment extends Fragment {
             }
         });
 
-        final LinearLayout publishDateContainer = rootView.findViewById(R.id.publish_date_container);
-        publishDateContainer.setOnClickListener(new View.OnClickListener() {
+        mPublishDateContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentActivity activity = getActivity();
@@ -390,7 +394,8 @@ public class EditPostSettingsFragment extends Fragment {
 
         mPublishedViewModel.getOnUiModel().observe(this, new Observer<PublishUiModel>() {
             @Override public void onChanged(PublishUiModel uiModel) {
-                updatePublishDateTextView(uiModel.getPublishDateLabel());
+                updatePublishDateTextView(uiModel.getPublishDateLabel(),
+                        Objects.requireNonNull(getEditPostRepository().getPost()));
             }
         });
         mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
@@ -854,12 +859,18 @@ public class EditPostSettingsFragment extends Fragment {
         }
         if (postModel != null) {
             String labelToUse = mPostSettingsUtils.getPublishDateLabel(postModel);
-            mPublishDateTextView.setText(labelToUse);
+            updatePublishDateTextView(labelToUse, postModel);
         }
     }
 
-    private void updatePublishDateTextView(String label) {
+    private void updatePublishDateTextView(String label, PostImmutableModel postImmutableModel) {
         mPublishDateTextView.setText(label);
+
+        boolean isPrivatePost = postImmutableModel.getStatus().equals(PostStatus.PRIVATE.toString());
+
+        mPublishDateTextView.setEnabled(!isPrivatePost);
+        mPublishDateTitleTextView.setEnabled(!isPrivatePost);
+        mPublishDateContainer.setEnabled(!isPrivatePost);
     }
 
     private void updateCategoriesTextView(PostImmutableModel post) {
