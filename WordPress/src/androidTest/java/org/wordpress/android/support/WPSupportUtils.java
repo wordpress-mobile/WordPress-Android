@@ -6,10 +6,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Checkable;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.GeneralClickAction;
@@ -22,6 +24,7 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -55,6 +58,7 @@ import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
 
 
 public class WPSupportUtils {
@@ -132,6 +136,35 @@ public class WPSupportUtils {
                 InputDevice.SOURCE_MOUSE,
                 MotionEvent.ACTION_DOWN,
                 rollbackAction);
+    }
+
+    /** Sets a SwitchPreference isChecked value regardless of the current value. This is useful to ensure a checked or
+     * un-checked state where a previously toggled state may not be known.
+     * @param isChecked the value to set the preference to
+     * @return the ViewAction
+     */
+    public static ViewAction setSwitchPreferenceIsChecked(final boolean isChecked) {
+        return new ViewAction() {
+            @Override public BaseMatcher<View> getConstraints() {
+                return new BaseMatcher<View>() {
+                    @Override public boolean matches(Object item) {
+                        return isA(Checkable.class).matches(((View) item).findViewById(android.R.id.switch_widget));
+                    }
+
+                    @Override public void describeTo(Description description) {
+                        description.appendText("checkable");
+                    }
+                };
+            }
+
+            @Override public String getDescription() {
+                return "setChecked(" + isChecked + ")";
+            }
+
+            @Override public void perform(UiController uiController, View view) {
+                ((Checkable) view.findViewById(android.R.id.switch_widget)).setChecked(isChecked);
+            }
+        };
     }
 
 
