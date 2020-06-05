@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
 
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
@@ -11,7 +12,7 @@ class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapp
     fun updatePostStatus(
         postStatus: PostStatus,
         editPostRepository: EditPostRepository,
-        onPostStatusUpdated: () -> Unit
+        onPostStatusUpdated: (PostImmutableModel) -> Unit
     ) {
         editPostRepository.updateAsync({ postModel: PostModel ->
             // we set the date to immediately if it's scheduled.
@@ -23,9 +24,9 @@ class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapp
             postModel.setStatus(postStatus.toString())
 
             true
-        }, { _, result ->
+        }, { postModel, result ->
             if (result == UpdatePostResult.Updated) {
-                onPostStatusUpdated.invoke()
+                onPostStatusUpdated.invoke(postModel)
             }
         })
     }

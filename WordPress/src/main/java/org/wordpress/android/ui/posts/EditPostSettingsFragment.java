@@ -64,12 +64,13 @@ import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
-import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageData;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.FeaturedImageState;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.TrackableEvent;
 import org.wordpress.android.ui.posts.PostSettingsListDialogFragment.DialogType;
+import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel;
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener;
 import org.wordpress.android.ui.utils.UiHelpers;
@@ -152,6 +153,7 @@ public class EditPostSettingsFragment extends Fragment {
     @Inject UiHelpers mUiHelpers;
     @Inject PostSettingsUtils mPostSettingsUtils;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject UpdatePostStatusUseCase mUpdatePostStatusUseCase;
 
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private EditPostPublishSettingsViewModel mPublishedViewModel;
@@ -765,19 +767,15 @@ public class EditPostSettingsFragment extends Fragment {
         }
     }
 
-    public void updatePostStatus(PostStatus postStatus) {
+    void updatePostStatus(PostStatus postStatus) {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository != null) {
-            editPostRepository.updateAsync(postModel -> {
-                postModel.setStatus(postStatus.toString());
-                return true;
-            }, (postModel, result) -> {
-                if (result == UpdatePostResult.Updated.INSTANCE) {
-                    updatePostStatusRelatedViews(postModel);
-                    updateSaveButton();
-                }
-                return null;
-            });
+            mUpdatePostStatusUseCase.updatePostStatus(postStatus, editPostRepository,
+                    postImmutableModel -> {
+                        updatePostStatusRelatedViews(postImmutableModel);
+                        updateSaveButton();
+                        return null;
+                    });
         }
     }
 
