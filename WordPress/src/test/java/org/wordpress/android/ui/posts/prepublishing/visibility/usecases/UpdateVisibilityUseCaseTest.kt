@@ -16,69 +16,69 @@ import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisi
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
 
-class UpdatePostStatusUseCaseTest : BaseUnitTest() {
+class UpdateVisibilityUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
-    private lateinit var updatePostStatusUseCase: UpdateVisibilityUseCase
+    private lateinit var updateVisibilityUseCase: UpdateVisibilityUseCase
 
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        updatePostStatusUseCase = UpdateVisibilityUseCase(UpdatePostStatusUseCase(mock()))
+        updateVisibilityUseCase = UpdateVisibilityUseCase(UpdatePostStatusUseCase(mock()))
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { PostModel() }
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with PUBLISH Visibility the PostStatus is PUBLISHED`() {
+    fun `verify that when updatePostVisibility is called with PUBLISH Visibility the PostStatus is PUBLISHED`() {
         // arrange
         val expectedPostStatus = PostStatus.PUBLISHED
 
         // act
-        updatePostStatusUseCase.updatePostVisibility(PUBLISH, editPostRepository) {}
+        updateVisibilityUseCase.updatePostVisibility(PUBLISH, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with DRAFT Visibility the PostStatus is DRAFT`() {
+    fun `verify that when updatePostVisibility is called with DRAFT Visibility the PostStatus is DRAFT`() {
         // arrange
         val expectedPostStatus = PostStatus.DRAFT
 
         // act
-        updatePostStatusUseCase.updatePostVisibility(DRAFT, editPostRepository) {}
+        updateVisibilityUseCase.updatePostVisibility(DRAFT, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with PENDING_REVIEW Visibility the PostStatus is PENDING`() {
+    fun `verify that when updatePostVisibility is called with PENDING_REVIEW Visibility the PostStatus is PENDING`() {
         // arrange
         val expectedPostStatus = PostStatus.PENDING
 
         // act
-        updatePostStatusUseCase.updatePostVisibility(PENDING_REVIEW, editPostRepository) {}
+        updateVisibilityUseCase.updatePostVisibility(PENDING_REVIEW, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with PRIVATE Visibility the PostStatus is PRIVATE`() {
+    fun `verify that when updatePostVisibility is called with PRIVATE Visibility the PostStatus is PRIVATE`() {
         // arrange
         val expectedPostStatus = PostStatus.PRIVATE
 
         // act
-        updatePostStatusUseCase.updatePostVisibility(PRIVATE, editPostRepository) {}
+        updateVisibilityUseCase.updatePostVisibility(PRIVATE, editPostRepository) {}
 
         // assert
         assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
     }
 
     @Test(expected = IllegalStateException::class)
-    fun `verify that when updatePostStatus is called with PASSWORD_PROTECTED Visibility an exception is thrown`() {
+    fun `verify that when updatePostVisibility is called with PASSWORD_PROTECTED Visibility an exception is thrown`() {
         // act
-        updatePostStatusUseCase.updatePostVisibility(PASSWORD_PROTECTED, editPostRepository) {}
+        updateVisibilityUseCase.updatePostVisibility(PASSWORD_PROTECTED, editPostRepository) {}
     }
 }
