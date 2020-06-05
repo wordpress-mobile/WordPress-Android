@@ -286,7 +286,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that PUBLISH action is disabled if PostStatus is PRIVATE`() {
+    fun `verify that PUBLISH action is unclickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
         viewModel.start(editPostRepository, site)
@@ -297,7 +297,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that TAGS action is enabled if PostStatus is PRIVATE`() {
+    fun `verify that TAGS action is clickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
         viewModel.start(editPostRepository, site)
@@ -308,7 +308,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that VISIBILITY action is disabled if PostStatus is PRIVATE`() {
+    fun `verify that VISIBILITY action is clickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
         viewModel.start(editPostRepository, site)
