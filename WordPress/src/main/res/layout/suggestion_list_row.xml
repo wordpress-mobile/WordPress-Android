@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_large">
+    android:padding="@dimen/margin_large"
+    android:background="?attr/colorSurface">
 
     <ImageView
         android:id="@+id/suggest_list_row_avatar"
