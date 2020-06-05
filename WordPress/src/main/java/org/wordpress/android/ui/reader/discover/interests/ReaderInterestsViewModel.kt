@@ -12,6 +12,8 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentInitialUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -21,9 +23,7 @@ class ReaderInterestsViewModel @Inject constructor(
 ) : ViewModel() {
     var initialized: Boolean = false
 
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData(
-        UiState(listOf(), ReaderTagList(), DoneButtonHiddenUiState)
-    )
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData(ContentInitialUiState)
     val uiState: LiveData<UiState> = _uiState
 
     private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
@@ -33,8 +33,8 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun start() {
         if (initialized) {
-            val uiState = uiState.value as UiState
-            updateUiState(uiState.copy(interestsUiState = getInterestsUiStateWithSelectedStates()))
+            val uiState = uiState.value as ContentLoadSuccessUiState
+            updateUiState(uiState.copy(interestTagsUiState = getInterestsUiStateWithSelectedStates()))
             return
         }
         loadInterests()
@@ -45,7 +45,7 @@ class ReaderInterestsViewModel @Inject constructor(
             val tagList = readerTagRepository.getInterests()
             if (tagList.isNotEmpty()) {
                 updateUiState(
-                    UiState(
+                    ContentLoadSuccessUiState(
                         transformToInterestsUiState(tagList),
                         tagList,
                         getDoneButtonUiState()
@@ -66,11 +66,11 @@ class ReaderInterestsViewModel @Inject constructor(
             updateSelectedInterests(it.interests[index])
 
             if (enableDoneButton || disableDoneButton) {
-                val uiState = uiState.value as UiState
+                val uiState = uiState.value as ContentLoadSuccessUiState
                 updateUiState(
                     uiState.copy(
-                        interestsUiState = getInterestsUiStateWithSelectedStates(),
-                        doneButtonUiState = getDoneButtonUiState()
+                        interestTagsUiState = getInterestsUiStateWithSelectedStates(),
+                        doneBtnUiState = getDoneButtonUiState()
                     )
                 )
             }
@@ -118,11 +118,32 @@ class ReaderInterestsViewModel @Inject constructor(
         _uiState.value = uiState
     }
 
-    data class UiState(
+    sealed class UiState(
         val interestsUiState: List<InterestUiState>,
         val interests: ReaderTagList,
-        val doneButtonUiState: DoneButtonUiState
-    )
+        val doneButtonUiState: DoneButtonUiState,
+        val progressBarVisible: Boolean = false,
+        val titleVisible: Boolean = !progressBarVisible,
+        val subtitleVisible: Boolean = !progressBarVisible
+    ) {
+        object ContentInitialUiState : UiState(
+            interestsUiState = emptyList(),
+            interests = ReaderTagList(),
+            doneButtonUiState = DoneButtonHiddenUiState,
+            progressBarVisible = true
+        )
+
+        data class ContentLoadSuccessUiState(
+            val interestTagsUiState: List<InterestUiState>,
+            val interestTags: ReaderTagList,
+            val doneBtnUiState: DoneButtonUiState
+        ) : UiState(
+            interestsUiState = interestTagsUiState,
+            interests = interestTags,
+            doneButtonUiState = doneBtnUiState,
+            progressBarVisible = false
+        )
+    }
 
     data class InterestUiState(
         val title: String,

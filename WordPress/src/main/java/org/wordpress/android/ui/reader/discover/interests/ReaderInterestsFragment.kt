@@ -48,6 +48,11 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             updateInterests(uiState.interestsUiState)
             updateDoneButton(uiState.doneButtonUiState)
+            with(uiHelpers) {
+                updateVisibility(progress_bar, uiState.progressBarVisible)
+                updateVisibility(title, uiState.titleVisible)
+                updateVisibility(subtitle, uiState.subtitleVisible)
+            }
         })
 
         viewModel.navigateToDiscover.observe(viewLifecycleOwner, Observer { event ->
