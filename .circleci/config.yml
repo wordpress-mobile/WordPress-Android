@@ -16,16 +16,17 @@ commands:
       - restore_cache:
           name: Restore NPM Cache
           keys:
-            - dependencies-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}
+            - npm-i18n-v1-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/package-lock.json" }}
       - run:
           name: NPM Install
+          working_directory: libs/gutenberg-mobile
           command: npm ci --prefer-offline
       - save_cache:
           name: Save NPM Cache
-          key: dependencies-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "package-lock.json" }}
+          key: npm-i18n-v1-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/package-lock.json" }}
           paths:
             - ~/.npm
-            - i18n-cache/data
+            - libs/gutenberg-mobile/i18n-cache/data
   checkout-submodules:
     steps:
       - run:
