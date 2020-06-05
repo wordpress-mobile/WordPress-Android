@@ -98,7 +98,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -125,7 +126,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -168,7 +170,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
@@ -217,7 +220,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -260,7 +264,8 @@ jobs:
       name: android/default
       api-version: "28"
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - android/restore-gradle-cache
       - copy-gradle-properties
@@ -292,7 +297,8 @@ jobs:
     docker:
       - image: circleci/ruby:2.6.4
     steps:
-      - git/shallow-checkout
+      - git/shallow-checkout:
+          init-submodules: true
       - checkout-gutenberg-mobile-submodule-only
       - run:
           name: Install bundler

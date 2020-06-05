@@ -164,6 +164,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(path:':libs:portkey-android:stories')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -171,7 +172,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'androidx.core:core:1.2.0'
+    implementation "androidx.core:core:$coreVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 
