@@ -1,5 +1,6 @@
 package org.wordpress.android.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.database.DataSetObserver
@@ -24,11 +25,13 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.widgets.SuggestionAutoCompleteText
 
 class SuggestUsersActivity : LocaleAwareActivity() {
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
+    private var hasLoadedSuggestions = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,14 +120,18 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             }
 
             post { requestFocus() }
+            showDropdownOnTouch()
+        }
+    }
 
-            setOnTouchListener { _, _ ->
-                // Prevent touching the view from dismissing the suggestion list if it's not empty
-                if (adapter.count > 0) {
-                    showDropDown()
-                }
-                false
+    @SuppressLint("ClickableViewAccessibility")
+    private fun SuggestionAutoCompleteText.showDropdownOnTouch() {
+        setOnTouchListener { _, _ ->
+            // Prevent touching the view from dismissing the suggestion list if it's not empty
+            if (adapter.count > 0) {
+                showDropDown()
             }
+            false
         }
     }
 
@@ -142,16 +149,23 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     private fun initializeSuggestionAdapter(site: SiteModel) {
         if (!SiteUtils.isAccessedViaWPComRest(site)) {
-            AppLog.d(AppLog.T.EDITOR, "Cannot setup user suggestions for non-WPCom site")
+            AppLog.d(AppLog.T.EDITOR, "Cannot provide user suggestions for non-WPCom site")
+            hasLoadedSuggestions = true
+            updateEmptyView(true)
         } else {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
             val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
+            if (adapter?.isEmpty == true) {
+                empty_view.text = getString(R.string.loading)
+            } else {
+                hasLoadedSuggestions = true
+            }
             adapter?.registerDataSetObserver(object : DataSetObserver() {
                 override fun onChanged() {
-                    updateEmptyViewVisibility(adapter.isEmpty)
+                    updateEmptyView(adapter.isEmpty)
                 }
                 override fun onInvalidated() {
-                    updateEmptyViewVisibility(true)
+                    updateEmptyView(true)
                 }
             })
             autocompleteText.setAdapter(adapter)
@@ -161,11 +175,17 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         }
     }
 
-    private fun updateEmptyViewVisibility(isVisible: Boolean) {
-        empty_view.visibility = if (isVisible) {
-            View.VISIBLE
+    private fun updateEmptyView(isVisible: Boolean) {
+        if (isVisible) {
+            val viewText = if (hasLoadedSuggestions) {
+                R.string.suggestion_no_matching_users
+            } else {
+                R.string.loading
+            }
+            empty_view.text = getString(viewText)
+            empty_view.visibility = View.VISIBLE
         } else {
-            View.GONE
+            empty_view.visibility = View.GONE
         }
     }
 
@@ -189,6 +209,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (siteId != 0L && siteId == event.mRemoteBlogId) {
             val suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
+            hasLoadedSuggestions = true
             suggestionAdapter?.setSuggestionList(suggestions)
 
             // Calling forceFiltering is the only way I was able to force the suggestions list to immediately refresh
