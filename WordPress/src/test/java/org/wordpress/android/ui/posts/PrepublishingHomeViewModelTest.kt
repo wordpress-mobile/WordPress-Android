@@ -292,7 +292,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         val uiState = getHomeUiState(PUBLISH)
 
-        assertThat(uiState?.actionEnabled).isFalse()
+        assertThat(uiState?.actionClickable).isFalse()
     }
 
     @Test
@@ -303,7 +303,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         val uiState = getHomeUiState(TAGS)
 
-        assertThat(uiState?.actionEnabled).isTrue()
+        assertThat(uiState?.actionClickable).isTrue()
     }
 
     @Test
@@ -314,7 +314,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         val uiState = getHomeUiState(VISIBILITY)
 
-        assertThat(uiState?.actionEnabled).isTrue()
+        assertThat(uiState?.actionClickable).isTrue()
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()

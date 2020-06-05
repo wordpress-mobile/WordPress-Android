@@ -12,8 +12,8 @@ sealed class PrepublishingHomeItemUiState {
         val actionType: ActionType,
         @ColorRes val actionTypeColor : Int = R.color.black,
         var actionResult: UiString? = null,
-        @ColorRes val actionResultColor : Int = R.color.gray_40,
-        val actionEnabled: Boolean,
+        @ColorRes val actionResultColor : Int = R.color.prepublishing_publish_date_result_enabled,
+        val actionClickable: Boolean,
         val onActionClicked: ((actionType: ActionType) -> Unit)?
     ) : PrepublishingHomeItemUiState()
 

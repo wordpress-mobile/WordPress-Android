@@ -56,7 +56,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                     HomeUiState(
                             actionType = VISIBILITY,
                             actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                            actionEnabled = true,
+                            actionClickable = true,
                             onActionClicked = ::onActionClicked
                     )
             )
@@ -66,7 +66,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         HomeUiState(
                                 actionType = PUBLISH,
                                 actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
-                                actionEnabled = true,
+                                actionClickable = true,
                                 onActionClicked = ::onActionClicked
                         )
                 )
@@ -75,9 +75,9 @@ class PrepublishingHomeViewModel @Inject constructor(
                         HomeUiState(
                                 actionType = PUBLISH,
                                 actionResult = publishDateLabelUseCase.getLabel(editPostRepository),
-                                actionTypeColor = R.color.gray_20,
-                                actionResultColor = R.color.gray_20,
-                                actionEnabled = false,
+                                actionTypeColor = R.color.prepublishing_publish_date_disabled,
+                                actionResultColor = R.color.prepublishing_publish_date_disabled,
+                                actionClickable = false,
                                 onActionClicked = null
                         )
                 )
@@ -88,7 +88,7 @@ class PrepublishingHomeViewModel @Inject constructor(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
-                        actionEnabled = true,
+                        actionClickable = true,
                         onActionClicked = ::onActionClicked
                 )
                 )
