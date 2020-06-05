@@ -57,7 +57,7 @@
         errorLine1="            view.setPadding("
         errorLine2="            ^">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="550"
             column="13"/>
     </issue>
@@ -3927,7 +3927,7 @@
         errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
         errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
             line="53"
             column="48"/>
     </issue>
@@ -3943,7 +3943,7 @@
         errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
             line="53"
             column="17"/>
     </issue>
@@ -3959,7 +3959,7 @@
         errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="337"
             column="43"/>
     </issue>
@@ -3975,7 +3975,7 @@
         errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="342"
             column="43"/>
     </issue>
