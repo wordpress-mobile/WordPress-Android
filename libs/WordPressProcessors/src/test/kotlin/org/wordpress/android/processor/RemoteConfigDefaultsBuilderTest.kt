@@ -18,20 +18,21 @@ class RemoteConfigDefaultsBuilderTest {
 
         val fileContent = remoteConfigDefaultsBuilder.getContent()
 
-        assertThat(fileContent).isEqualTo(
+        assertThat(fileContent.toString()).isEqualTo(
                 """
-            <?xml version="1.0" encoding="utf-8"?>
-            <defaultsMap>
-            <!-- Automatically generated file. DO NOT MODIFY -->
-            <entry>
-                <key>$keyA</key>
-                <value>$valueA</value>
-            </entry>
-            <entry>
-                <key>$keyB</key>
-                <value>$valueB</value>
-            </entry>
-            </defaultsMap>
+            // Automatically generated file. DO NOT MODIFY
+            package org.wordpress.android.util.config
+            
+            import kotlin.Any
+            import kotlin.String
+            import kotlin.collections.Map
+            
+            object RemoteConfigDefaults {
+              val remoteConfigDefaults: Map<String, Any> = mapOf(
+                  "$keyA" to "$valueA",
+                  "$keyB" to "$valueB"
+                  )
+            }
             
         """.trimIndent()
         )
