@@ -118,7 +118,7 @@ public class SignupMagicLinkFragment extends Fragment {
         }
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
+            mAnalyticsListener.trackSignupMagicLinkOpenEmailClientViewed();
         }
     }
 

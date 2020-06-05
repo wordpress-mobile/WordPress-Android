@@ -20,6 +20,8 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
 import org.wordpress.android.util.GravatarUtils;
@@ -51,6 +53,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     private LoginEpilogueListener mLoginEpilogueListener;
 
     @Inject ImageManager mImageManager;
+    @Inject UnifiedLoginTracker mUnifiedLoginTracker;
 
     public static LoginEpilogueFragment newInstance(boolean doLoginUpdate, boolean showAndReturn,
                                                     ArrayList<Integer> oldSitesIds) {
@@ -140,6 +143,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EPILOGUE_VIEWED);
+            mUnifiedLoginTracker.track(Step.SUCCESS);
         }
     }
 

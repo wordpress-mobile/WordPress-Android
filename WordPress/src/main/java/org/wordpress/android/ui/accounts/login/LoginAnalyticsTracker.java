@@ -4,6 +4,9 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.Map;
@@ -14,9 +17,13 @@ import javax.inject.Singleton;
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     private AccountStore mAccountStore;
     private SiteStore mSiteStore;
-    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore) {
+    private UnifiedLoginTracker mUnifiedLoginTracker;
+
+    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore,
+                                 UnifiedLoginTracker unifiedLoginTracker) {
         this.mAccountStore = accountStore;
         this.mSiteStore = siteStore;
+        mUnifiedLoginTracker = unifiedLoginTracker;
     }
 
     @Override
@@ -32,6 +39,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackEmailFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.GET_STARTED, Step.START);
     }
 
     @Override
@@ -77,6 +85,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginMagicLinkOpenEmailClientClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.EMAIL_OPENED);
     }
 
     @Override
@@ -100,8 +109,15 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackMagicLinkOpenEmailClientViewed() {
+    public void trackSignupMagicLinkOpenEmailClientViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.MAGIC_LINK_REQUESTED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkOpenEmailClientViewed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.MAGIC_LINK_REQUESTED);
     }
 
     @Override
@@ -112,11 +128,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackMagicLinkRequestFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.START);
     }
 
     @Override
     public void trackPasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
     }
 
     @Override
@@ -152,6 +170,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkOpenEmailClientClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.EMAIL_OPENED);
     }
 
     @Override
@@ -182,6 +201,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupTermsOfServiceTapped() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
+    }
+
+    @Override
+    public void trackSocialButtonStart() {
+        mUnifiedLoginTracker.track(Flow.LOGIN_SOCIAL, Step.START);
     }
 
     @Override
@@ -222,21 +246,25 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackTwoFactorFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Step.TWO_FACTOR_AUTHENTICATION);
     }
 
     @Override
     public void trackUrlFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_SITE_ADDRESS, Step.START);
     }
 
     @Override
     public void trackUrlHelpScreenViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
+        mUnifiedLoginTracker.track(Step.HELP);
     }
 
     @Override
     public void trackUsernamePasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Step.USERNAME_PASSWORD);
     }
 
     @Override
