@@ -52,8 +52,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         void onSelectedCountChanged(int count);
 
         void onAdapterLoaded(boolean isEmpty);
-
-        void onItemSelected(boolean isVideo);
     }
 
     private class PhotoPickerItem {
@@ -241,9 +239,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
         if (isSelected) {
             mSelectedPositions.add(position);
-            if (mListener != null) {
-                mListener.onItemSelected(item.mIsVideo);
-            }
         } else {
             int selectedIndex = mSelectedPositions.indexOf(position);
             if (selectedIndex > -1) {
@@ -289,6 +284,16 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             return null;
         }
         return (ThumbnailViewHolder) mRecycler.findViewHolderForAdapterPosition(position);
+    }
+
+    boolean isVideoFileSelected() {
+        for (Integer position : mSelectedPositions) {
+            PhotoPickerItem item = getItemAtPosition(position);
+            if (item != null && item.mIsVideo) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @NonNull
