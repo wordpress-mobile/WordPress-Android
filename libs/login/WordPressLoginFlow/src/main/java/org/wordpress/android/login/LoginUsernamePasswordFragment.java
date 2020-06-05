@@ -277,6 +277,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     protected void next() {
+        mAnalyticsListener.trackSubmitClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }

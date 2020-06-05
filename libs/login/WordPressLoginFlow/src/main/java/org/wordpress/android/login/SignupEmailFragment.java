@@ -185,6 +185,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     protected void next(String email) {
+        mAnalyticsListener.trackSubmitClicked();
         if (NetworkUtils.checkConnection(getActivity())) {
             if (isValidEmail(email)) {
                 startProgress();

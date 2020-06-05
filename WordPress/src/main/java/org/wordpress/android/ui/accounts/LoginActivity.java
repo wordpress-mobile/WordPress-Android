@@ -52,6 +52,7 @@ import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
 import org.wordpress.android.ui.accounts.SmartLockHelper.Callback;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source;
 import org.wordpress.android.ui.accounts.login.LoginPrologueFragment;
@@ -425,6 +426,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     public void onSignupSheetEmailClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_BUTTON_TAPPED);
+        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_EMAIL);
         dismissSignupSheet();
         slideInFragment(new SignupEmailFragment(), true, SignupEmailFragment.TAG);
     }
@@ -434,6 +436,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         dismissSignupSheet();
         AnalyticsTracker.track(AnalyticsTracker.Stat.CREATE_ACCOUNT_INITIATED);
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
+        mUnifiedLoginTracker.trackClick(Click.SIGNUP_WITH_GOOGLE);
 
         if (NetworkUtils.checkConnection(this)) {
             SignupGoogleFragment signupGoogleFragment;
@@ -449,6 +452,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     @Override
     public void onSignupSheetTermsOfServiceClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_TERMS_OF_SERVICE_TAPPED);
+        mUnifiedLoginTracker.trackClick(Click.TERMS_OF_SERVICE_CLICKED);
         ActivityLauncher.openUrlExternal(this, WPUrlUtils.buildTermsOfServiceUrl(this));
     }
 
@@ -521,6 +525,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void openEmailClient(boolean isLogin) {
+        mUnifiedLoginTracker.trackClick(Click.OPEN_EMAIL_CLIENT);
         if (WPActivityUtils.isEmailClientAvailable(this)) {
             if (isLogin) {
                 mLoginAnalyticsListener.trackLoginMagicLinkOpenEmailClientClicked();

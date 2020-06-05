@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginAnalyticsListener;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -70,11 +71,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginForgotPasswordClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
+        mUnifiedLoginTracker.trackClick(Click.FORGOTTEN_PASSWORD);
     }
 
     @Override
     public void trackLoginMagicLinkExited() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
+        mUnifiedLoginTracker.trackClick(Click.USE_PASSWORD_INSTEAD);
     }
 
     @Override
@@ -216,6 +219,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSocialButtonClick() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
+        mUnifiedLoginTracker.trackClick(Click.LOGIN_WITH_GOOGLE);
     }
 
     @Override
@@ -289,5 +293,41 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackFailure(String message) {
         mUnifiedLoginTracker.trackFailure(message);
+    }
+
+    @Override
+    public void trackSendCodeWithTextClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SEND_CODE_WITH_TEXT);
+    }
+
+    @Override
+    public void trackSubmit2faCodeClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SUBMIT_2FA_CODE);
+    }
+
+    @Override
+    public void trackClickOnLoginSiteClicked() {
+        mUnifiedLoginTracker.trackClick(Click.CLICK_ON_LOGIN_SITE);
+    }
+
+    @Override
+    public void trackSubmitClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SUBMIT);
+    }
+
+    @Override
+    public void trackRequestMagicLinkClick() {
+        mUnifiedLoginTracker.trackClick(Click.REQUEST_MAGIC_LINK);
+    }
+
+    @Override
+    public void trackLoginWithPasswordClick() {
+        mUnifiedLoginTracker.trackClick(Click.LOGIN_WITH_PASSWORD);
+    }
+
+    @Override
+    public void trackShowHelpClick() {
+        mUnifiedLoginTracker.trackClick(Click.SHOW_HELP);
+        mUnifiedLoginTracker.track(Step.HELP);
     }
 }

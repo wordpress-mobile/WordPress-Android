@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts
 
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_FAILURE
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_INTERACTION
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_STEP
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source.DEFAULT
@@ -52,6 +53,23 @@ class UnifiedLoginTracker
                 }
             } else {
                 handleMissingFlow("failure: $error")
+            }
+        }
+    }
+
+    fun trackClick(click: Click) {
+        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            if (currentFlow != null && currentStep != null) {
+                currentFlow?.let {
+                    analyticsTracker.track(
+                            stat = UNIFIED_LOGIN_INTERACTION,
+                            properties = buildDefaultParams().apply {
+                                put(CLICK, click.value)
+                            }
+                    )
+                }
+            } else {
+                handleMissingFlow(click.value)
             }
         }
     }
@@ -122,10 +140,28 @@ class UnifiedLoginTracker
         TWO_FACTOR_AUTHENTICATION("2fa")
     }
 
+    enum class Click(val value: String) {
+        SUBMIT("submit"),
+        LOGIN_WITH_GOOGLE("login_with_google"),
+        FORGOTTEN_PASSWORD("forgotten_password"),
+        USE_PASSWORD_INSTEAD("use_password_instead"),
+        TERMS_OF_SERVICE_CLICKED("terms_of_service_clicked"),
+        SIGNUP_WITH_EMAIL("signup_with_email"),
+        SIGNUP_WITH_GOOGLE("signup_with_google"),
+        OPEN_EMAIL_CLIENT("open_email_client"),
+        SHOW_HELP("show_help"),
+        SEND_CODE_WITH_TEXT("send_code_with_text"),
+        SUBMIT_2FA_CODE("submit_2fa_code"),
+        CLICK_ON_LOGIN_SITE("click_on_login_site"),
+        REQUEST_MAGIC_LINK("request_magic_link"),
+        LOGIN_WITH_PASSWORD("login_with_password")
+    }
+
     companion object {
         private const val SOURCE = "source"
         private const val FLOW = "flow"
         private const val STEP = "step"
         private const val FAILURE = "failure"
+        private const val CLICK = "click"
     }
 }
