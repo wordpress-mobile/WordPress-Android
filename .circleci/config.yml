@@ -88,7 +88,7 @@ jobs:
       - npm-bundle-android
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Move bundle to assets folder
           command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle
