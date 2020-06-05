@@ -212,7 +212,9 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
     }
 
     private void showError(int messageId) {
-        mSiteAddressInput.setError(getString(messageId));
+        String message = getString(messageId);
+        mAnalyticsListener.trackFailure(message);
+        mSiteAddressInput.setError(message);
     }
 
     @Override

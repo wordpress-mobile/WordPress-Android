@@ -29,27 +29,6 @@ class AnalyticsTrackerWrapper
      * @param errorDescription The error text or other description.
      */
     fun track(stat: Stat, errorContext: String, errorType: String, errorDescription: String) {
-        track(stat, ErrorContext(errorContext, errorType, errorDescription))
-    }
-
-    fun track(stat: Stat, errorContext: ErrorContext? = null, properties: Map<String, String> = mapOf()) {
-        val props = if (errorContext == null) {
-            properties
-        } else {
-            mutableMapOf(
-                    ERROR_CONTEXT to errorContext.context,
-                    ERROR_TYPE to errorContext.type,
-                    ERROR_DESCRIPTION to errorContext.description
-            ).apply { putAll(properties) }
-        }
-        AnalyticsTracker.track(stat, props)
-    }
-
-    data class ErrorContext(val context: String, val type: String, val description: String)
-
-    companion object {
-        private const val ERROR_CONTEXT = "error_context"
-        private const val ERROR_TYPE = "error_type"
-        private const val ERROR_DESCRIPTION = "error_description"
+        AnalyticsTracker.track(stat, errorContext, errorType, errorDescription)
     }
 }

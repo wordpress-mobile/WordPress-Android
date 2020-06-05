@@ -225,6 +225,7 @@ public class GoogleFragment extends Fragment implements ConnectionCallbacks, OnC
     }
 
     protected void showError(String message) {
+        mAnalyticsListener.trackFailure(message);
         finishFlow();
         mGoogleListener.onGoogleSignupError(message);
     }

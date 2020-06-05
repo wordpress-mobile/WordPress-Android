@@ -244,10 +244,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     private void showPasswordError() {
-        mPasswordInput.setError(getString(R.string.password_incorrect));
+        String message = getString(R.string.password_incorrect);
+        mAnalyticsListener.trackFailure(message);
+        mPasswordInput.setError(message);
     }
 
     private void showError(String error) {
+        mAnalyticsListener.trackFailure(error);
         mPasswordInput.setError(error);
     }
 

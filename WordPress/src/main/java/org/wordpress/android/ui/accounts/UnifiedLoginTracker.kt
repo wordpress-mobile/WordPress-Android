@@ -8,7 +8,6 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source.DEFAULT
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper.ErrorContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,27 +17,9 @@ class UnifiedLoginTracker
     private var currentSource: Source = DEFAULT
     private var currentFlow: Flow? = null
     private var currentStep: Step? = null
-    fun track(step: Step) {
-        trackStep(step = step)
-    }
 
-    fun track(flow: Flow, step: Step) {
-        trackStep(flow = flow, step = step)
-    }
-
-    fun trackFailure() {
-        trackFailure(errorContext = null, error = null)
-    }
-
-    fun trackFailure(error: String? = null) {
-        trackFailure(errorContext = null, error = error)
-    }
-
-    fun trackFailure(errorContext: ErrorContext) {
-        trackFailure(errorContext = errorContext)
-    }
-
-    private fun trackStep(
+    @JvmOverloads
+    fun track(
         flow: Flow? = currentFlow,
         step: Step
     ) {
@@ -56,13 +37,12 @@ class UnifiedLoginTracker
         }
     }
 
-    private fun trackFailure(errorContext: ErrorContext? = null, error: String? = null) {
+    fun trackFailure(error: String?) {
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             if (currentFlow != null && currentStep != null) {
                 currentFlow?.let {
                     analyticsTracker.track(
                             stat = UNIFIED_LOGIN_FAILURE,
-                            errorContext = errorContext,
                             properties = buildDefaultParams().apply {
                                 error?.let {
                                     put(FAILURE, error)
@@ -71,7 +51,7 @@ class UnifiedLoginTracker
                     )
                 }
             } else {
-                handleMissingFlow("failure: $errorContext")
+                handleMissingFlow("failure: $error")
             }
         }
     }
