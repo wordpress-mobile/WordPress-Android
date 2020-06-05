@@ -209,6 +209,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     protected void next() {
+        mAnalyticsListener.trackSubmitClicked();
+
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }

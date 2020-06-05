@@ -54,4 +54,17 @@ public interface LoginAnalyticsListener {
     void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType, String errorDescription);
     void trackConnectedSiteInfoSucceeded(Map<String, ?> properties);
     void trackFailure(String message);
+    void trackSendCodeWithTextClicked();
+
+    void trackSubmit2faCodeClicked();
+
+    void trackClickOnLoginSiteClicked();
+
+    void trackSubmitClicked();
+
+    void trackRequestMagicLinkClick();
+
+    void trackLoginWithPasswordClick();
+
+    void trackShowHelpClick();
 }
