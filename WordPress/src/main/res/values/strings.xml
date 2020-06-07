@@ -2746,6 +2746,7 @@
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
     <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
     <string name="prepublishing_nudges_home_submit_button">Submit Now</string>
+    <string name="prepublishing_nudges_home_save_button">Save Now</string>
     <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>

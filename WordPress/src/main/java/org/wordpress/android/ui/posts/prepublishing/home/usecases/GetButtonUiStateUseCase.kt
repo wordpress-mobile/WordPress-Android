@@ -4,13 +4,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.SaveButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.ScheduleButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.SubmitButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.UpdateButtonUiState
 import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction
-import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SAVE
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import javax.inject.Inject
 
@@ -33,9 +33,7 @@ class GetButtonUiStateUseCase @Inject constructor(
             PrimaryEditorAction.SCHEDULE -> ScheduleButtonUiState(onButtonClicked)
             PrimaryEditorAction.UPDATE -> UpdateButtonUiState(onButtonClicked)
             PrimaryEditorAction.SUBMIT_FOR_REVIEW -> SubmitButtonUiState(onButtonClicked)
-            SAVE -> {
-                throw IllegalStateException("The $editorAction action shouldn't be available in this bottom sheet.")
-            }
+            PrimaryEditorAction.SAVE -> SaveButtonUiState(onButtonClicked)
         }
     }
 }

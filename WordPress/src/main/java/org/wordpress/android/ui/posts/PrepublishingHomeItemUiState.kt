@@ -44,6 +44,12 @@ sealed class PrepublishingHomeItemUiState {
                 false,
                 onButtonClicked
         )
+
+        data class SaveButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
+                UiStringRes(R.string.prepublishing_nudges_home_save_button),
+                false,
+                onButtonClicked
+        )
     }
 
     enum class ActionType(val textRes: UiStringRes) {
