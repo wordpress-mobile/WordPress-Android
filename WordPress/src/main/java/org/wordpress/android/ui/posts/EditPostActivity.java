@@ -2844,10 +2844,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void onEditorFinalTouchesBeforeShowing() {
-        refreshEditorTheme();
+        refreshEditorContent();
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
-            refreshEditorContent();
+            refreshEditorTheme();
             List<MediaModel> failedMedia =
                     mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
             if (failedMedia != null && !failedMedia.isEmpty()) {
