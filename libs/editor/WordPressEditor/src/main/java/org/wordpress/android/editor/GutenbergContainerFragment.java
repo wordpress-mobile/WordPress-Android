@@ -123,7 +123,8 @@ public class GutenbergContainerFragment extends Fragment {
                 isDarkMode,
                 exceptionLogger,
                 breadcrumbLogger,
-                isSiteUsingWpComRestApi);
+                isSiteUsingWpComRestApi,
+                null);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
