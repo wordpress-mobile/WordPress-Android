@@ -41,8 +41,6 @@
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_20</color>
-    <color name="prepublishing_publish_date_disabled">#CBCBCB</color>
-    <color name="prepublishing_publish_date_result_enabled">#85878D</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
