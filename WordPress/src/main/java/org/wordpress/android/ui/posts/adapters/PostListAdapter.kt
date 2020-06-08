@@ -15,6 +15,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
@@ -32,7 +33,8 @@ private const val VIEW_TYPE_LOADING_COMPACT = 4
 class PostListAdapter(
     context: Context,
     private val imageManager: ImageManager,
-    private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers,
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
     private val layoutInflater: LayoutInflater = LayoutInflater.from(context)
     private var itemLayoutType: PostListViewLayoutType = PostListViewLayoutType.defaultValue
@@ -70,10 +72,10 @@ class PostListAdapter(
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
-                PostListItemViewHolder.Standard(parent, imageManager, uiHelpers)
+                PostListItemViewHolder.Standard(parent, imageManager, uiHelpers, localeManagerWrapper)
             }
             VIEW_TYPE_POST_COMPACT -> {
-                PostListItemViewHolder.Compact(parent, imageManager, uiHelpers)
+                PostListItemViewHolder.Compact(parent, imageManager, uiHelpers, localeManagerWrapper)
             }
             else -> {
                 // Fail fast if a new view type is added so the we can handle it

@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.PopupMenu
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.getDrawableFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -38,11 +40,12 @@ sealed class PostListItemViewHolder(
     @LayoutRes layout: Int,
     parent: ViewGroup,
     private val imageManager: ImageManager,
-    private val uiHelpers: UiHelpers
+    private val uiHelpers: UiHelpers,
+    private val localeManagerWrapper: LocaleManagerWrapper
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     private val featuredImageView: ImageView = itemView.findViewById(R.id.image_featured)
     private val titleTextView: WPTextView = itemView.findViewById(R.id.title)
-    private val dateAndAuthorTextView: WPTextView = itemView.findViewById(R.id.date_and_author)
+    private val postInfoTextView: WPTextView = itemView.findViewById(R.id.post_info)
     private val statusesTextView: WPTextView = itemView.findViewById(R.id.statuses_label)
     private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
     private val disabledOverlay: FrameLayout = itemView.findViewById(R.id.disabled_overlay)
@@ -60,8 +63,9 @@ sealed class PostListItemViewHolder(
     class Standard(
         parent: ViewGroup,
         imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers) {
+        private val uiHelpers: UiHelpers,
+        localeManagerWrapper: LocaleManagerWrapper
+    ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers, localeManagerWrapper) {
         private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
         private val actionButtons: List<PostListButton> = listOf(
                 itemView.findViewById(R.id.btn_primary),
@@ -103,8 +107,9 @@ sealed class PostListItemViewHolder(
     class Compact(
         parent: ViewGroup,
         imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
-    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, imageManager, uiHelpers) {
+        private val uiHelpers: UiHelpers,
+        localeManagerWrapper: LocaleManagerWrapper
+    ) : PostListItemViewHolder(R.layout.post_list_item_compact, parent, imageManager, uiHelpers, localeManagerWrapper) {
         private val moreButton: ImageButton = itemView.findViewById(R.id.more_button)
 
         override fun onBind(item: PostListItemUiState) {
@@ -119,7 +124,7 @@ sealed class PostListItemViewHolder(
 
     protected fun setBasicValues(data: PostListItemUiStateData) {
         uiHelpers.setTextOrHide(titleTextView, data.title)
-        uiHelpers.setTextOrHide(dateAndAuthorTextView, data.dateAndAuthor)
+        updatePostInfoLabel(postInfoTextView, data.postInfo)
         uiHelpers.updateVisibility(statusesTextView, data.statuses.isNotEmpty())
         updateStatusesLabel(statusesTextView, data.statuses, data.statusesDelimiter, data.statusesColor)
         showFeaturedImage(data.imageUrl)
@@ -130,6 +135,13 @@ sealed class PostListItemViewHolder(
         } else {
             container.background = selectableBackground
         }
+    }
+
+    private fun updatePostInfoLabel(view: TextView, uiStrings: List<UiString>?) {
+        val concatenatedText = uiStrings?.joinToString(separator = "  ·  ") {
+            uiHelpers.getTextOfUiString(view.context, it).toLowerCase(localeManagerWrapper.getLocale())
+        }
+        uiHelpers.setTextOrHide(view, concatenatedText)
     }
 
     protected fun onMoreClicked(actions: List<PostListItemAction>, v: View) {

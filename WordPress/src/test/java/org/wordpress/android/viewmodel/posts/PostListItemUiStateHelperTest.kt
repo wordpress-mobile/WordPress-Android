@@ -841,7 +841,9 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -854,7 +856,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+        assertThat(state.data.postInfo!!.size).isEqualTo(1)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -867,7 +870,8 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+        assertThat(state.data.postInfo!!.size).isEqualTo(1)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
     }
 
     @Test
@@ -882,7 +886,9 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo("$FORMATTER_DATE  ·  $authorDisplayName")
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringText(authorDisplayName))
     }
 
     @Test
@@ -897,7 +903,23 @@ class PostListItemUiStateHelperTest {
         )
 
         // Assert
-        assertThat((state.data.dateAndAuthor as UiStringText).text).isEqualTo(FORMATTER_DATE)
+        assertThat(state.data.postInfo!!.size).isEqualTo(1)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+    }
+
+    @Test
+    fun `post status is dispalyed when isSearch == true`() {
+        // Arrange
+        val state = createPostListItemUiState(
+                post = createPostModel(status = POST_STATE_PRIVATE),
+                isSearch = true,
+                formattedDate = FORMATTER_DATE
+        )
+
+        // Assert
+        assertThat(state.data.postInfo!!.size).isEqualTo(2)
+        assertThat(state.data.postInfo!![0]).isEqualTo(UiStringText(FORMATTER_DATE))
+        assertThat(state.data.postInfo!![1]).isEqualTo(UiStringRes(R.string.post_status_post_private))
     }
 
     @Test
@@ -936,6 +958,7 @@ class PostListItemUiStateHelperTest {
         featuredImageUrl: String? = null,
         formattedDate: String = FORMATTER_DATE,
         performingCriticalAction: Boolean = false,
+        isSearch: Boolean = false,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit = { _, _, _ -> }
     ): PostListItemUiState = helper.createPostListItemUiState(
             authorFilterSelection,
@@ -949,7 +972,8 @@ class PostListItemUiStateHelperTest {
             formattedDate = formattedDate,
             onAction = onAction,
             performingCriticalAction = performingCriticalAction,
-            uploadStatusTracker = uploadStatusTracker
+            uploadStatusTracker = uploadStatusTracker,
+            isSearch = isSearch
     )
 
     private fun createFailedUploadUiState(
