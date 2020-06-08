@@ -43,15 +43,17 @@ data class EditorThemeSupport(
     @SerializedName("editor-gradient-presets")
     val gradients: List<EditorThemeElement>?
 ) {
+    private val MAP_KEY_ELEMENT_COLORS = "colors"
+    private val MAP_KEY_ELEMENT_GRADIENTS = "gradients"
     fun toBundle(): Bundle {
         val bundle = Bundle()
 
         colors?.map { it.toBundle() }?.let {
-            bundle.putParcelableArrayList("colors", ArrayList<Bundle>(it))
+            bundle.putParcelableArrayList(MAP_KEY_ELEMENT_COLORS, ArrayList<Bundle>(it))
         }
 
         gradients?.map { it.toBundle() }?.let {
-            bundle.putParcelableArrayList("gradients", ArrayList<Bundle>(it))
+            bundle.putParcelableArrayList(MAP_KEY_ELEMENT_GRADIENTS, ArrayList<Bundle>(it))
         }
 
         return bundle
@@ -64,15 +66,20 @@ data class EditorThemeElement(
     val color: String?,
     val gradient: String?
 ) {
+    private val MAP_KEY_ELEMENT_DISPLAY_NAME = "name"
+    private val MAP_KEY_ELEMENT_SLUG = "slug"
+    private val MAP_KEY_ELEMENT_COLOR_VALUE = "color"
+    private val MAP_KEY_ELEMENT_GRADIENT_VALUE = "gradient"
+
     fun toBundle(): Bundle {
         val bundle = Bundle()
-        bundle.putString("name", name)
-        bundle.putString("slug", slug)
+        bundle.putString(MAP_KEY_ELEMENT_DISPLAY_NAME, name)
+        bundle.putString(MAP_KEY_ELEMENT_SLUG, slug)
         if (color != null) {
-            bundle.putString("color", color)
+            bundle.putString(MAP_KEY_ELEMENT_COLOR_VALUE, color)
         }
         if (gradient != null) {
-            bundle.putString("gradient", gradient)
+            bundle.putString(MAP_KEY_ELEMENT_GRADIENT_VALUE, gradient)
         }
         return bundle
     }
