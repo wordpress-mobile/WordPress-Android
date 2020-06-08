@@ -251,6 +251,15 @@ public class MySiteFragment extends Fragment implements
         showQuickStartNoticeIfNecessary();
     }
 
+    @Override
+    public void onDestroy() {
+        if (mSiteSettings != null) {
+            mSiteSettings.clear();
+        }
+        mActionableEmptyView = null;
+        super.onDestroy();
+    }
+
     private void showQuickStartNoticeIfNecessary() {
         if (!QuickStartUtils.isQuickStartInProgress(mQuickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return;
