@@ -22,6 +22,7 @@ import org.wordpress.android.ui.posts.PublishSettingsViewModel.PublishUiModel
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Calendar
 import java.util.Locale
@@ -110,14 +111,14 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
 
     @Test
     fun `on publishNow updates published date`() {
-        var publishedDate: Calendar? = null
+        var publishedDate: Event<Calendar>? = null
         viewModel.onPublishedDateChanged.observeForever {
             publishedDate = it
         }
 
         viewModel.publishNow()
 
-        assertThat(publishedDate).isEqualTo(currentCalendar)
+        assertThat(publishedDate?.peekContent()).isEqualTo(currentCalendar)
     }
 
     @Test
@@ -143,7 +144,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
     fun `onTimeSelected updates time and triggers onPublishedDateChanged`() {
         viewModel.start(null)
 
-        var publishedDate: Calendar? = null
+        var publishedDate: Event<Calendar>? = null
         viewModel.onPublishedDateChanged.observeForever {
             publishedDate = it
         }
@@ -156,7 +157,7 @@ class PublishSettingsViewModelTest : BaseUnitTest() {
         assertThat(viewModel.hour).isEqualTo(updatedHour)
         assertThat(viewModel.minute).isEqualTo(updatedMinute)
 
-        assertThat(publishedDate).isNotNull()
+        assertThat(publishedDate?.peekContent()).isNotNull()
     }
 
     @Test

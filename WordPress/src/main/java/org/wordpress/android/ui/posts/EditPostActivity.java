@@ -131,6 +131,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
@@ -331,6 +332,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject ReaderUtilsWrapper mReaderUtilsWrapper;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
+    @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
 
     private StorePostViewModel mViewModel;
 
@@ -1246,6 +1248,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return true;
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
+                mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
                 showPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
@@ -1734,7 +1737,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showPrepublishingNudgeBottomSheet() {
+        mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
+
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(
                 PrepublishingBottomSheetFragment.TAG);
         if (fragment == null) {

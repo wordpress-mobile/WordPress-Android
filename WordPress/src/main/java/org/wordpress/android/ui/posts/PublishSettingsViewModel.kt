@@ -47,8 +47,8 @@ constructor(
 
     private val _onDatePicked = MutableLiveData<Event<Unit>>()
     val onDatePicked: LiveData<Event<Unit>> = _onDatePicked
-    private val _onPublishedDateChanged = MutableLiveData<Calendar>()
-    val onPublishedDateChanged: LiveData<Calendar> = _onPublishedDateChanged
+    private val _onPublishedDateChanged = MutableLiveData<Event<Calendar>>()
+    val onPublishedDateChanged: LiveData<Event<Calendar>> = _onPublishedDateChanged
     private val _onPostStatusChanged = MutableLiveData<PostStatus>()
     val onPostStatusChanged: LiveData<PostStatus> = _onPostStatusChanged
     private val _onUiModel = MutableLiveData<PublishUiModel>()
@@ -83,7 +83,7 @@ constructor(
     fun publishNow() {
         val currentCalendar = localeManagerWrapper.getCurrentCalendar()
         updateDateAndTimeFromCalendar(currentCalendar)
-        _onPublishedDateChanged.postValue(currentCalendar)
+        _onPublishedDateChanged.postValue(Event(currentCalendar))
     }
 
     fun onTimeSelected(selectedHour: Int, selectedMinute: Int) {
@@ -91,7 +91,7 @@ constructor(
         this.minute = selectedMinute
         val calendar = localeManagerWrapper.getCurrentCalendar()
         calendar.set(year!!, month!!, day!!, hour!!, minute!!)
-        _onPublishedDateChanged.postValue(calendar)
+        _onPublishedDateChanged.postValue(Event(calendar))
     }
 
     fun onDateSelected(year: Int, month: Int, dayOfMonth: Int) {

@@ -331,9 +331,6 @@
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
-    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_yes" translatable="false">@string/publish_now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- scheduled post sync confirmation dialog -->
