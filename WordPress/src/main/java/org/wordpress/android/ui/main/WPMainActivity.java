@@ -233,7 +233,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             public void onClick(View v) {
                 // slide out the bar on click, then re-check connection after a brief delay
                 AniUtils.animateBottomBar(mConnectionBar, false);
-                new Handler().postDelayed(new Runnable() {
+                v.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (!isFinishing()) {
