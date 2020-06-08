@@ -1243,7 +1243,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 return true;
             case SAVE:
                 uploadPost(false);
-                return false;
+                return true;
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
