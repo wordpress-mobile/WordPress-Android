@@ -207,6 +207,12 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return false;
     }
 
+    @Override
+    public void onDestroy() {
+        endProgress();
+        super.onDestroy();
+    }
+
     protected void startProgress() {
         startProgress(true);
     }
