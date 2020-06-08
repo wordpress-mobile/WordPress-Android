@@ -11,7 +11,7 @@ parameters:
     default: false
   translation_review_lang_id:
     type: string
-    default: en-US
+    default: all-lang
 
 commands:
   copy-gradle-properties:
@@ -336,7 +336,9 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
-            VERSION_NAME="${PREFIX}-build-${CIRCLE_BUILD_NUM}"
+            ./tools/update-translations.sh review
+
+            VERSION_NAME="${APP_VERSION_PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
             ./gradlew --stacktrace assembleJalapenoDebug -PversionName="$VERSION_NAME"
