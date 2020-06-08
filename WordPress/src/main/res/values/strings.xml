@@ -2716,6 +2716,10 @@
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Move Trashed Post To Draft</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">This is a trashed post, do you want to move it to drafts so you can edit its content?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Move to Draft</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancel</string>
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>
