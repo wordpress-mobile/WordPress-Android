@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
@@ -50,30 +51,45 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
 
-            add(HomeUiState(
-                    actionType = VISIBILITY,
-                    actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                    onActionClicked = ::onActionClicked
-            ))
+            add(
+                    HomeUiState(
+                            actionType = VISIBILITY,
+                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                            actionClickable = true,
+                            onActionClicked = ::onActionClicked
+                    )
+            )
 
-            add(HomeUiState(
-                    actionType = PUBLISH,
-                    actionResult = editPostRepository.getPost()?.let { postImmutableModel ->
-                        val label = postSettingsUtils.getPublishDateLabel(postImmutableModel)
-                        if (label.isNotEmpty()) {
-                            UiStringText(label)
-                        } else {
-                            UiStringRes(R.string.immediately)
-                        }
-                    },
-                    onActionClicked = ::onActionClicked
-            ))
+            if (editPostRepository.status != PostStatus.PRIVATE) {
+                add(
+                        HomeUiState(
+                                actionType = PUBLISH,
+                                actionResult = editPostRepository.getEditablePost()
+                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
+                                actionClickable = true,
+                                onActionClicked = ::onActionClicked
+                        )
+                )
+            } else {
+                add(
+                        HomeUiState(
+                                actionType = PUBLISH,
+                                actionResult = editPostRepository.getEditablePost()
+                                        ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
+                                actionTypeColor = R.color.gray_10,
+                                actionResultColor = R.color.gray_10,
+                                actionClickable = false,
+                                onActionClicked = null
+                        )
+                )
+            }
 
             if (!editPostRepository.isPage) {
                 add(HomeUiState(
                         actionType = TAGS,
                         actionResult = getPostTagsUseCase.getTags(editPostRepository)?.let { UiStringText(it) }
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
+                        actionClickable = true,
                         onActionClicked = ::onActionClicked
                 ))
             }
