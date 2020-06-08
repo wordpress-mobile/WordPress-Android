@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
@@ -22,21 +21,15 @@ class ReaderInterestsViewModel @Inject constructor(
     var initialized: Boolean = false
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData(
-        UiState(listOf(), ReaderTagList(), DoneButtonHiddenUiState)
+        UiState(emptyList(), ReaderTagList(), DoneButtonHiddenUiState)
     )
     val uiState: LiveData<UiState> = _uiState
 
     private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
     val navigateToDiscover: LiveData<Event<Unit>> = _navigateToDiscover
 
-    private val selectedInterests = ReaderTagList()
-
     fun start() {
-        if (initialized) {
-            val uiState = uiState.value as UiState
-            updateUiState(uiState.copy(interestsUiState = getInterestsUiStateWithSelectedStates()))
-            return
-        }
+        if (initialized) return
         loadInterests()
     }
 
@@ -44,11 +37,12 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val tagList = readerTagRepository.getInterests()
             if (tagList.isNotEmpty()) {
+                val currentUiState = uiState.value as UiState
                 updateUiState(
-                    UiState(
-                        transformToInterestsUiState(tagList),
-                        tagList,
-                        getDoneButtonUiState()
+                    currentUiState.copy(
+                        interestsUiState = transformToInterestsUiState(tagList),
+                        interests = tagList,
+                        doneButtonUiState = currentUiState.getDoneButtonState()
                     )
                 )
                 if (!initialized) {
@@ -60,35 +54,23 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun onInterestAtIndexToggled(index: Int, isChecked: Boolean) {
         uiState.value?.let {
-            val enableDoneButton = selectedInterests.isEmpty() && isChecked
-            val disableDoneButton = selectedInterests.size == 1 && !isChecked
+            val currentUiState = uiState.value as UiState
+            val updatedInterestsUiState = getUpdatedInterestsUiState(index, isChecked)
 
-            updateSelectedInterests(it.interests[index])
-
-            if (enableDoneButton || disableDoneButton) {
-                val uiState = uiState.value as UiState
-                updateUiState(
-                    uiState.copy(
-                        interestsUiState = getInterestsUiStateWithSelectedStates(),
-                        doneButtonUiState = getDoneButtonUiState()
-                    )
+            updateUiState(
+                currentUiState.copy(
+                    interestsUiState = updatedInterestsUiState,
+                    doneButtonUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
                 )
-            }
+            )
         }
     }
 
     fun onDoneButtonClick() {
         viewModelScope.launch {
-            readerTagRepository.saveInterests(selectedInterests)
+            val currentUiState = uiState.value as UiState
+            readerTagRepository.saveInterests(currentUiState.getSelectedInterests())
             _navigateToDiscover.value = Event(Unit)
-        }
-    }
-
-    private fun updateSelectedInterests(interestAtIndex: ReaderTag?) {
-        if (!selectedInterests.contains(interestAtIndex)) {
-            selectedInterests.add(interestAtIndex)
-        } else {
-            selectedInterests.remove(interestAtIndex)
         }
     }
 
@@ -97,21 +79,11 @@ class ReaderInterestsViewModel @Inject constructor(
             InterestUiState(interest.tagTitle)
         }
 
-    private fun getInterestsUiStateWithSelectedStates(): List<InterestUiState> {
-        val uiState = uiState.value as UiState
-
-        return uiState.interestsUiState.mapIndexed { index, interestUiState ->
-            val interestAtIndex = uiState.interests[index]
-            val isInterestAtIndexSelected = selectedInterests.contains(interestAtIndex)
-
-            interestUiState.copy(isChecked = isInterestAtIndexSelected)
-        }
-    }
-
-    private fun getDoneButtonUiState() = if (selectedInterests.isNotEmpty()) {
-        DoneButtonEnabledUiState
-    } else {
-        DoneButtonDisabledUiState
+    private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
+        val currentUiState = uiState.value as UiState
+        val newInterestsUiState = currentUiState.interestsUiState.toMutableList()
+        newInterestsUiState[index] = currentUiState.interestsUiState[index].copy(isChecked = isChecked)
+        return newInterestsUiState
     }
 
     private fun updateUiState(uiState: UiState) {
@@ -122,7 +94,26 @@ class ReaderInterestsViewModel @Inject constructor(
         val interestsUiState: List<InterestUiState>,
         val interests: ReaderTagList,
         val doneButtonUiState: DoneButtonUiState
-    )
+    ) {
+        private val checkedInterestsUiState = interestsUiState.filter { it.isChecked }
+
+        fun getSelectedInterests() = interests.filter {
+            checkedInterestsUiState.map {
+                checkedInterestUiState -> checkedInterestUiState.title
+            }.contains(it.tagTitle)
+        }
+
+        fun getDoneButtonState(
+            isInterestChecked: Boolean = false
+        ): DoneButtonUiState {
+            val disableDoneButton = interests.isEmpty() || (checkedInterestsUiState.size == 1 && !isInterestChecked)
+            return if (disableDoneButton) {
+                DoneButtonDisabledUiState
+            } else {
+                DoneButtonEnabledUiState
+            }
+        }
+    }
 
     data class InterestUiState(
         val title: String,
