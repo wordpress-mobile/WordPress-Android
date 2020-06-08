@@ -1,0 +1,4 @@
+14.9:
+<b>Blok düzenleyici geliştirmeleri:</b> Yeni Pullquote bloğu, düğme bloğu renk seçenekleri, güncellenmiş sayfa şablonları.
+
+<b>Blok düzenleyici düzeltmeleri:</b> Birkaç tane seçilse bile tek görsel ekleyen ücretsiz fotoğraf ktaplığı hatası, klasik düzenleyiciye geçerken önizleme hatası. blog şablonundan işlevsel olmayan abonelik düğmesi kaldırıldı.

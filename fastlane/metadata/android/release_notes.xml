@@ -1,137 +1,96 @@
 <ar>
-14.7:
-محرِّر المكوِّنات: تمت إضافة مكوِّن العمود وقالب صفحة بادئ التشغيل إلى المدونات. تم تعديل أزرار قالب صفحة بادئ التشغيل لتجنب تداخل محتوى الصفحة. سيفتح خيار "اختيار الوسائط من الجهاز" منتقي وسائط ووردبريس المدمج بدلاً من المنتقي الافتراضي للجهاز.
+14.9:
+<b>تحسينات على محرِّر المكوِّن:</b> مكوِّن جديد مهيأ مسبقًا، وخيارات لون مكوِّن الأزرار، وقوالب الصفحة المُحدَّثة.
 
-إصلاحات الأخطاء: خطأ يتسبب في ظهور إعدادات عنوان URL عند تغيير اتجاه الجهاز في أثناء معاينة "قوالب صفحة بادئ التشغيل".
-
-تحسينات واجهة المستخدم: تمت إضافة الجرافتار الخاص بك إلى قائمة "أنا" في "موقعي".
+<b>إصلاحات محرِّر المكوِّن:</b> ثمَّة خطأ في مكتبة الصور المجانية تسبب في إدراج صور فردية، وحتى في حالة تحديد العديد منها، تفشل المعاينة عند التبديل إلى المحرِّر التقليدي. تمت إزالة زر الاشتراك غير الفعَّال من قالب المدونة.
 </ar>
 <de-DE>
-14.7:
-Block-Editor: Spaltenblock und Seitenvorlage für Neueinsteiger für Blogs wurden hinzugefügt. Buttons der Seitenvorlage für Neueinsteiger wurden angepasst, um eine Überlappung mit dem Seiteninhalt zu vermeiden. „Medien vom Gerät auswählen“ öffnet eine integrierte WordPress-Medienauswahl, anstelle der Standardauswahl des Geräts.
+14.9:
+<b>Verbesserungen am Block-Editor:</b> Neuer Pullquote-Block, Farbauswahl im Button-Block, aktualisierte Seitenvorlagen.
 
-Fehlerkorrekturen: Ein Fehler, der dazu führte, dass ein Kästchen mit URL-Einstellungen erschien, sobald du während der Vorschau der Seitenvorlage für Neueinsteiger dein Gerät bewegt hast.
-
-Verbesserungen an der Benutzeroberfläche: Dein Gravatar wurde zum Menü unter „Meine Website“ hinzugefügt
+<b>Problembehebungen am Block-Editor:</b> Der Fehler, der dazu führte, dass im kostenlosen Fotoarchiv immer nur ein einzelnes Bild eingefügt wurde, auch wenn mehrere ausgewählt wurden, und der Fehler bei der Vorschau beim Wechsel zum klassischen Editor wurden behoben. Der nichtfunktionale Button zum Abonnieren wurde von der Blog-Vorlage entfernt.
 </de-DE>
 <en-US>
-14.7:
-Block editor: Added Column block and Starter Page template for blogs. Adjusted Starter Page Template buttons to avoid overlap with page content. “Choose media from device” opens a built-in WordPress media picker instead of your device’s default picker.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
 
-Bug fixes: A bug causing URL settings to appear when changing device orientation while previewing Starter Page Templates.
-
-UI improvements: Added your Gravatar to the Me menu in My Site.
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </en-US>
 <es-ES>
-14.7:
-Editor de bloques: Añadido un bloque de columnas y una plantilla de página de inicio para blogs. Ajustados los botones de la plantilla de página de inicio para evitar la superposición con el contenido de la página. «Elegir el medio desde el dispositivo» abre un selector de medios incorporado de WordPress en lugar del selector por defecto de tu dispositivo.
+14.9:
+<b>Mejoras en el editor de bloques:</b> Nuevo bloque de párrafo de cita, opciones de color del bloque de botón, actualizadas las plantillas de páginas.
 
-Corrección de fallos: Un fallo causa que aparezcan los ajustes de la URL al cambiar la orientación del dispositivo mientras se previsualizan las plantillas de página de inicio.
-
-Mejoras en la interfaz de usuario: Añadido tu Gravatar al menú «Yo» en «Mi sitio».
+<b>Correcciones del editor de bloques:</b> Fallo en la biblioteca de fotos gratuita que insertaba imágenes individuales incluso si eran seleccionadas varias, fallo en la vista previa al cambiar al editor clásico. Eliminado de la plantilla del blog un botón de suscripción no funcional.
 </es-ES>
 <fr-CA>
-14.7 :
-Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
 
-Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
-
-Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </fr-CA>
 <fr-FR>
-14.7 :
-Éditeur de blocs : Ajout du bloc de colonnes et du modèle de page de démarrage pour les blocs. Configuration des boutons du modèle de page de démarrage pour qu'ils ne chevauchent pas le contenu de la page. « Choisir un média depuis l'appareil » ouvre un sélecteur de médias WordPress intégré à la place du sélecteur par défaut de votre appareil.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
 
-Résolutions de bugs : Bug entraînant l'affichage des réglages de l'URL lors du changement d'orientation de l'appareil pendant la prévisualisation des modèles de page de démarrage.
-
-Améliorations de l'interface utilisateur : Ajout de votre Gravatar au menu personnel dans Mon site.
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </fr-FR>
 <iw-IL>
-14.7:
-עורך הבלוקים: הוספנו בלוק טורים בתבנית של עמוד ההתחלה לבלוגים. התאמנו את הכפתורים בתבנית של עמוד ההתחלה כדי להימנע מחפיפה עם התוכן של העמוד. האפשרות 'בחירה במדיה מהמכשיר' פותחת בורר מדיה מובנה של WordPress במקום את בורר המדיה שמוגדר במכשיר שלך כברירת מחדל.
+14.9:
+<b>שיפורים בעורך הבלוקים:</b> בלוק ציטוט חדש, אפשרויות צבע בבלוק הכפתורים, תבניות עמודים מעודכנות.
 
-תיקוני באגים: תיקנו באג שגרם להגדרות URL להופיע כאשר משנים את הכיוון של המכשיר בתצוגה המקדימה של תבניות של עמוד התחלה.
-
-שיפורים בממשק המשתמש: הופסנו את ה-Gravatar שלך לתפריט 'אני' ול'האתר שלי'.
+<b>תיקונים בעורך הבלוקים:</b> תיקנו באג בספריית התמונות החינמית שהוסיף תמונות יחידות גם אם נבחרו מספר תמונות ואת הכשל בתצוגה המקדימה כאשר מחליפים לעורך הקלאסי. הסרנו כפתור מינוי שלא פעל מתבנית הבלוג.
 </iw-IL>
 <id>
-14.7:
-Penyunting blok: Menambahkan blok Kolom dan template Halaman Starter untuk blog. Menyelaraskan tombol Template Halaman Starter untuk menghindari tumpang tindih dengan konten halaman. “Pilih media dari perangkat” akan membuka pemilih media WordPress bawaan, bukan pemilih default perangkat Anda.
+14.9:
+<b>Peningkatan pada penyunting blok:</b> Blok Kutipan Menonjol yang baru, pilihan warna untuk blok Tombol, template halaman yang diperbarui.
 
-Perbaikan bug: Bug penyebab pengaturan URL muncul saat mengubah orientasi perangkat selagi Anda mempratinjau Template Halaman Starter.
-
-Peningkatan UI: Menambahkan Gravatar ke menu Saya di Situs Saya.
+<b>Perbaikan pada penyunting blok:</b> Bug Pustaka Foto Gratis yang menyisipkan satu gambar meskipun ada beberapa yang dipilih, gagalnya pratinjau saat beralih ke penyunting klasik. Menghilangkan Tombol Langganan yang tidak fungsional dari template Blog.
 </id>
 <it-IT>
-14.7:
-Editor a blocchi: Aggiunti blocco Colonna e modello pagina di avvio di blog. Modifica di pulsanti per il modello pagina di avvio per evitare sovrapposizioni con il contenuto della stessa. "Scegli contenuti multimediali da dispositivo" apre un selezionatore contenuti multimediali integrato di WordPress.
+14.9:
+<b>Miglioramenti all'editor a blocchi:</b> nuovo blocco Citazione evidenziata, opzioni del colore nel blocco Pulsante, modelli di pagina aggiornati.
 
-Bug corretti: Un bug causava la vista di impostazioni URL quando si riorientava il dispositivo durante l'anteprima di modelli pagina di avvio.
-
-Migliore UI: Aggiunta del Gravatar a Io in Il mio sito.
+<b>Correzioni all'editor a blocchi:</b> bug della libreria di foto gratuita tramite il quale venivano inserite singole immagini anche se ne erano state selezionate differenti, anteprima dell'errore quando si passava all'editor classico. Pulsante abbonamento non funzionale rimosso dal modello Blog.
 </it-IT>
 <ja-JP>
-14.7:
-ブロックエディター :ブログにカラムブロックとスターターページテンプレートを追加しました。ページコンテンツと重複しないように、「スターターページテンプレート」ボタンを調整しました。「Choose media from device」は、デバイスのデフォルトのピッカーの代わりに組み込みの WordPress メディアピッカーを開きます。
+14.9:
+<b>ブロックエディターの改善点 :</b>新しいプルクオートブロック、ボタンブロック、色オプション、更新されたページテンプレート。
 
-バグ修正 :スターターページテンプレートのプレビュー中にデバイスの向きを変えると、URL 設定が表示されるバグ。
-
-UI の改善 :「参加サイト」の「自分」メニューに Gravatar を追加しました。
+<b>ブロックエディターの修正 :</b>複数選択された場合でも1つの画像が挿入される無料写真ギャラリーのバグ、旧エディターに切り替えるときのプレビューエラー。機能しないサブスクリプションボタンがブログテンプレートから削除されました。
 </ja-JP>
-<ko-KR>
-14.7:
-블록 편집기: 블로그에 대한 열 블록 및 시작 페이지 템플릿이 추가되었습니다. 페이지 내용과 겹치지 않도록 조정된 시작 페이지 템플릿 단추입니다. “장치에서 미디어 선택”은 장치의 기본 선택기 대신 내장된 워드프레스 미디어 선택기를 엽니다.
-
-버그 수정: 시작 페이지 템플릿을 미리 보는 동안 장치 방향을 변경할 때 URL 설정을 표시하는 버그입니다.
-
-UI 개선: 내 사이트의 내 메뉴에 그라바타를 추가했습니다.
-</ko-KR>
 <nl-NL>
-14.7:
-Blokeditor: Kolommenblok en startpaginasjabloon voor blogs toegevoegd. Knoppen voor startpaginasjablonen aangepast zodat ze geen pagina-content overlappen. Met 'Media kiezen vanuit apparaat' wordt een geïntegreerde WordPress-mediakiezer gebruikt, in plaats van de standaard kiezer van je apparaat.
+14.9:
+<b>Verbeteringen aan de blokeditor:</b> Nieuw Pull-quote-blok, kleurenopties voor het Knopblok, bijgewerkte paginasjablonen.
 
-Bugfixes: Een bug die zorgde dat URL-instellingen werden weergegeven bij het wijzigen van de oriëntatie van een apparaat terwijl startpaginasjablonen werden bekeken.
-
-UI-verbeteringen: Je Gravatar is toegevoegd aan het menu Ik in Mijn site.
+<b>Fixes van de blokeditor:</b> Bug van de Gratis fotobibliotheek die één afbeelding invoegde terwijl er meerdere waren geselecteerd, fout bij de voorbeeldweergave wanneer naar de klassieke editor werd overgeschakeld. Niet-werkende abonneerknop verwijderd uit blogsjabloon.
 </nl-NL>
 <ru-RU>
-14.7:
-Редактор блоков: добавлены блок столбца, шаблон стартовой страницы блогов. Кнопки шаблонов страниц не будут накладываться на содержимое. Выбор файлов 
-мультимедиа будет использовать встроенный компонент выбора файлов.
+14.9:
+<b>Улучшения редактора блоков:</b> Новый блок выдержки, цвета блока кнопок, обновлены шаблоны страниц.
 
-Исправления ошибок: исправлена ошибка при изменении ориентации экрана и появлении настроек URL во время просмотра шаблонов стартовой страницы.
-
-Интерфейс: Добавлен ваш граватар в меню Мой профиль.
+<b>Исправления в редакторе блоков:</b> Исправлена вставка изображений из Free Photo Library при множественном выборе вставлялось одно изображение; ошибка предпросмотра при переключении в классический редактор; удалена неработающая кнопка подписок из шаблона блога.
 </ru-RU>
 <sv-SE>
-14.7:
-Blockredigeraren: Nytt kolumnblock och mall för bloggstartsida. Justerat startsidans mallknappar så att de inte skymmer innehållet. ”Välj mediafil från enheten” öppnar WordPress egen mediaväljare i stället för enhetens standardverktyg.
+14.9:
+<b>Förbättringar i blockredigeraren:</b> nytt block för framhävt citat, färginställningar för knappfärger. uppdaterade sidmallar.
 
-Felrättningar: URL-inställningar kunde tidigare visas om man växlade mellan liggande och stående vid förhandsvisning av startsidesmallar.
-
-Förbättrat användargränssnitt: Gravatar tillagt i menyn Jag under Min webbplats.
+<b>Rättelser i blockredigeraren:</b> fel i katalogen för fria bilder infogade bara en bild även om fler var valda, förhandsvisning fungerade inte vid växling till den klassiska redigeraren. Vi har tagit bort prenumerera-knappen (som inte fungerade) ur bloggmallen.
 </sv-SE>
 <tr-TR>
-14.7:
-Blok düzenleyici: Bloglar için Sütun bloğu ve Başlangıç Sayfası şablonu eklendi. Sayfa içeriğiyle çakışmayı önlemek için Başlangıç Sayfası Şablonu'nun düğmeleri düzeltildi. "Cihazdan medya seç" işlevi, cihazınızın varsayılan seçicisi yerine yerleşik bir WordPress medya seçicisi açar.
+14.9:
+<b>Blok düzenleyici geliştirmeleri:</b> Yeni Pullquote bloğu, düğme bloğu renk seçenekleri, güncellenmiş sayfa şablonları.
 
-Hata düzeltmeleri: Başlangıç Sayfası Şablonlarını önizlerken cihaz yönü değiştirildiğinde URL ayarlarının görünmesine neden olan bir hata.
-
-Kullanıcı arayüzünde yapılan iyileştirmeler: Gravatar'ınız Sitem'deki Ben menüsüne eklendi.
+<b>Blok düzenleyici düzeltmeleri:</b> Birkaç tane seçilse bile tek görsel ekleyen ücretsiz fotoğraf ktaplığı hatası, klasik düzenleyiciye geçerken önizleme hatası. blog şablonundan işlevsel olmayan abonelik düğmesi kaldırıldı.
 </tr-TR>
 <zh-CN>
-14.7：
-区块编辑器：添加了一个“栏目”区块和一个适用于博客的入门页面模板。调整了入门页面模板按钮，从而避免与页面内容重叠。“从设备中选择媒体”会打开内置的 WordPress 媒体选择器，而不是设备默认的选择器。
+14.9：
+<b>区块编辑器增强：</b>全新醒目引文区块、按钮区块颜色选项以及更新的页面模板。
 
-错误修复：如果在预览入门页面模板时更改设备方向，该错误会导致系统显示 URL 设置。
-
-用户界面改进改进：在“我的站点”的“我”菜单中添加了 Gravatar。
+<b>区块编辑器修复：</b>免费图片库之前存在一个错误，即便选择了多张图像，它也只会插入一张图像，而且在切换到经典编辑器时无法正常预览。从“博客”模板中删除了无法正常使用的订阅按钮。
 </zh-CN>
 <zh-TW>
-14.7：
-區塊編輯器：我們為網誌新增了「內容欄」區塊和「入門頁面」範本。我們調整了「入門頁面範本」按鈕，避免與頁面內容重疊。選取「從裝置選擇媒體」將開啟 WordPress 內建媒體選擇器，而不是裝置預設的選擇器。
+14.9：
+<b>區塊編輯器增強功能：</b>推出全新「重要引述」區塊、按鈕區塊色彩選項和更新版頁面範本。
 
-錯誤修正：預覽「入門頁面範本」時如果變更裝置方向，會發生網址設定彈出的問題。
-
-改善 UI：我們在「我的網站」的「我」選單中新增了「Gravatar」。
+<b>區塊編輯器修正：</b>修正在免費圖庫選取多張圖片卻僅插入單一圖片的錯誤，並修復切換至傳統編輯器導致預覽失敗的問題。從網誌範本中移除無法正常運作的訂閱按鈕。
 </zh-TW>

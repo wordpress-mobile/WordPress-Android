@@ -59,7 +59,7 @@ class HistoryListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (checkNotNull(activity).application as WordPress).component()?.inject(this)
+        (requireActivity().application as WordPress).component()?.inject(this)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
@@ -74,7 +74,7 @@ class HistoryListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
@@ -112,7 +112,7 @@ class HistoryListFragment : Fragment() {
         val adapter: HistoryAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = HistoryAdapter(checkNotNull(activity), this::onItemClicked)
+            adapter = HistoryAdapter(requireActivity(), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as HistoryAdapter
@@ -122,11 +122,11 @@ class HistoryListFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.revisions.observe(this, Observer {
+        viewModel.revisions.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.listStatus.observe(this, Observer { listStatus ->
+        viewModel.listStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             listStatus?.let {
                 if (isAdded && view != null) {
                     swipeToRefreshHelper.isRefreshing = listStatus == HistoryListStatus.FETCHING
@@ -156,7 +156,7 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.showDialog.observe(this, Observer { showDialogItem ->
+        viewModel.showDialog.observe(viewLifecycleOwner, Observer { showDialogItem ->
             if (showDialogItem != null && showDialogItem.historyListItem is Revision) {
                 (activity as HistoryItemClickInterface).onHistoryItemClicked(
                         showDialogItem.historyListItem,
@@ -165,7 +165,7 @@ class HistoryListFragment : Fragment() {
             }
         })
 
-        viewModel.post.observe(this, Observer { post ->
+        viewModel.post.observe(viewLifecycleOwner, Observer { post ->
             actionable_empty_view.subtitle.text = if (post?.isPage == true) {
                 getString(R.string.history_empty_subtitle_page)
             } else {
