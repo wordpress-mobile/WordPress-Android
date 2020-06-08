@@ -5,6 +5,11 @@ orbs:
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@3.4.2
 
+parameters:
+  translation_review_build:
+    type: boolean
+    default: false
+
 commands:
   copy-gradle-properties:
     steps:
@@ -302,9 +307,17 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+  translation-review-build:
+    docker:
+      - image: circleci/ruby:2.6.4
+    steps:
+      - run:
+          name: Download translation
+          command: echo 'Download translation'
 
 workflows:
   wordpress_android:
+    unless: << pipeline.parameters.translation_review_build >>
     jobs:
       - gutenberg-bundle-build
       - strings-check
@@ -337,6 +350,7 @@ workflows:
                 - develop
                 - /^release.*/
   Optional Tests:
+    unless: << pipeline.parameters.translation_review_build >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -349,3 +363,7 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
+  Translation Review Build:
+    when: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - translation-review-build
