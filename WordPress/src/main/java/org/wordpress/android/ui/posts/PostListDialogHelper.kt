@@ -144,7 +144,7 @@ class PostListDialogHelper(
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit,
         editRestoredAutoSavePost: (Int) -> Unit,
-        restoreTrashedPost: (Int) -> Unit
+        moveTrashedPostToDraft: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -170,7 +170,7 @@ class PostListDialogHelper(
             }
             CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog?.let {
                 localPostIdForMoveTrashedPostToDraftDialog = null
-                restoreTrashedPost(it)
+                moveTrashedPostToDraft(it)
             }
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save

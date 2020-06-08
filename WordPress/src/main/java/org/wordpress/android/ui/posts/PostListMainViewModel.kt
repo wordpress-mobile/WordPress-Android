@@ -392,7 +392,7 @@ class PostListMainViewModel @Inject constructor(
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
                 editRestoredAutoSavePost = this::editRestoredAutoSavePost,
-                restoreTrashedPost = postActionHandler::moveTrashedPostToDraft
+                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft
         )
     }
 
