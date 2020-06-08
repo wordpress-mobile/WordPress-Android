@@ -601,6 +601,7 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
                 isFollowingScreen());
+        mNewPostsBar.clearAnimation();
     }
 
     @Override
@@ -1062,6 +1063,12 @@ public class ReaderPostListFragment extends Fragment
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        mActionableEmptyView = null;
+        super.onDestroyView();
     }
 
     private void showSettings() {
