@@ -7,6 +7,7 @@ import com.google.gson.JsonElement
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import org.wordpress.android.fluxc.persistence.EditorThemeElementType
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeBuilder
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeElementBuilder
 import java.lang.reflect.Type
@@ -68,28 +69,27 @@ data class EditorThemeElement(
 ) {
     private val MAP_KEY_ELEMENT_DISPLAY_NAME = "name"
     private val MAP_KEY_ELEMENT_SLUG = "slug"
-    private val MAP_KEY_ELEMENT_COLOR_VALUE = "color"
-    private val MAP_KEY_ELEMENT_GRADIENT_VALUE = "gradient"
 
     fun toBundle(): Bundle {
         val bundle = Bundle()
         bundle.putString(MAP_KEY_ELEMENT_DISPLAY_NAME, name)
         bundle.putString(MAP_KEY_ELEMENT_SLUG, slug)
         if (color != null) {
-            bundle.putString(MAP_KEY_ELEMENT_COLOR_VALUE, color)
+            bundle.putString(EditorThemeElementType.COLOR.value, color)
         }
         if (gradient != null) {
-            bundle.putString(MAP_KEY_ELEMENT_GRADIENT_VALUE, gradient)
+            bundle.putString(EditorThemeElementType.GRADIENT.value, gradient)
         }
         return bundle
     }
 
     fun toBuilder(themeId: Int): EditorThemeElementBuilder {
+        val isColor = color != null
         val element = EditorThemeElementBuilder()
-        element.isColor = color != null
+        element.type = if (isColor) EditorThemeElementType.COLOR.value else EditorThemeElementType.GRADIENT.value
         element.name = name
         element.slug = slug
-        element.value = if (element.isColor) color else gradient
+        element.value = if (isColor) color else gradient
         element.themeId = themeId
 
         return element

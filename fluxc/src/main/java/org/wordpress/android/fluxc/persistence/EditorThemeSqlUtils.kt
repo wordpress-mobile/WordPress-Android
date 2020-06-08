@@ -12,6 +12,11 @@ import org.wordpress.android.fluxc.model.EditorThemeElement
 import org.wordpress.android.fluxc.model.EditorThemeSupport
 import org.wordpress.android.fluxc.model.SiteModel
 
+enum class EditorThemeElementType(val value: String) {
+    COLOR("color"),
+    GRADIENT("gradient");
+}
+
 class EditorThemeSqlUtils {
     fun replaceEditorThemeForSite(site: SiteModel, editorTheme: EditorTheme?) {
         deleteEditorThemeForSite(site)
@@ -33,14 +38,14 @@ class EditorThemeSqlUtils {
         val colors = WellSql.select(EditorThemeElementBuilder::class.java)
                 .where()
                 .equals(EditorThemeElementTable.THEME_ID, editorTheme.id)
-                .equals(EditorThemeElementTable.IS_COLOR, true)
+                .equals(EditorThemeElementTable.TYPE, EditorThemeElementType.COLOR.value)
                 .endWhere()
                 .asModel
 
         val gradients = WellSql.select(EditorThemeElementBuilder::class.java)
                 .where()
                 .equals(EditorThemeElementTable.THEME_ID, editorTheme.id)
-                .equals(EditorThemeElementTable.IS_COLOR, false)
+                .equals(EditorThemeElementTable.TYPE, EditorThemeElementType.GRADIENT.value)
                 .endWhere()
                 .asModel
 
@@ -90,8 +95,8 @@ class EditorThemeSqlUtils {
             storedColors: List<EditorThemeElementBuilder>?,
             storedGradients: List<EditorThemeElementBuilder>?
         ): EditorTheme {
-            val colors = storedColors?.map { it.toEditorThemeElement() }
-            val gradients = storedGradients?.map { it.toEditorThemeElement() }
+            val colors = storedColors?.mapNotNull { it.toEditorThemeElement() }
+            val gradients = storedGradients?.mapNotNull { it.toEditorThemeElement() }
             val editorThemeSupport = EditorThemeSupport(colors, gradients)
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
@@ -101,9 +106,7 @@ class EditorThemeSqlUtils {
     @Table(name = "EditorThemeElement")
     data class EditorThemeElementBuilder(@PrimaryKey @Column private var mId: Int = -1) : Identifiable {
         @Column var themeId: Int = -1
-        @Column var isColor: Boolean = false
-            @JvmName("setIsColor")
-            set
+        @Column var type: String = EditorThemeElementType.COLOR.value
         @Column var name: String? = null
         @Column var slug: String? = null
         @Column var value: String? = null
@@ -114,11 +117,15 @@ class EditorThemeSqlUtils {
 
         override fun getId() = mId
 
-        fun toEditorThemeElement(): EditorThemeElement {
-            if (isColor) {
-                return EditorThemeElement(name, slug, value, null)
-            } else {
-                return EditorThemeElement(name, slug, null, value)
+        fun toEditorThemeElement(): EditorThemeElement? {
+            when (type) {
+                EditorThemeElementType.COLOR.value -> return EditorThemeElement(name, slug, value, null)
+                EditorThemeElementType.GRADIENT.value -> return EditorThemeElement(name, slug, null, value)
+                else -> {
+                    // This shouldn't really happen as the "type" is defined in this library and isn't really driven
+                    // off of the network call. However adding it for completeness.
+                    return null
+                }
             }
         }
     }
