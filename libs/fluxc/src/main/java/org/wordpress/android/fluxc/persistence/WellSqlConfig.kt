@@ -1167,10 +1167,11 @@ open class WellSqlConfig : DefaultWellConfig {
                             "CREATE TABLE EditorThemeElement(" +
                                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                     "THEME_ID INTEGER," +
-                                    "IS_COLOR BOOLEAN," +
+                                    "TYPE TEXT NOT NULL," +
                                     "NAME TEXT NOT NULL," +
                                     "SLUG TEXT NOT NULL," +
                                     "VALUE TEXT NOT NULL," +
+                                    "CHECK(TYPE IN (\"color\", \"gradient\") )," +
                                     "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
                     )
                 }
