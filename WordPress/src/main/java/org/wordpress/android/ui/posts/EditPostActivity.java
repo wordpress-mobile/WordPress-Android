@@ -445,7 +445,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         Bundle extras = getIntent().getExtras();
         String action = getIntent().getAction();
-        boolean isRestarting = !RestartEditorOptions.NO_RESTART.name().equals(extras.getString(EXTRA_RESTART_EDITOR));
+        boolean isRestarting = checkToRestart(getIntent());
         if (savedInstanceState == null) {
             if (!getIntent().hasExtra(EXTRA_POST_LOCAL_ID)
                 || Intent.ACTION_SEND.equals(action)
@@ -2024,6 +2024,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
+                        boolean isWpCom = getSite().isWPCom();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance(
                                 "",
@@ -2031,6 +2033,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
+                                supportsStockPhotos,
+                                mSite.getUrl(),
+                                !isWpCom,
+                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
+                                isWpCom ? "" : mSite.getPassword(),
+                                mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

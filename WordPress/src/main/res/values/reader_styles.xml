@@ -143,4 +143,20 @@
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
+
+    <!-- chips -->
+    <style name="ReaderInterestFilterChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/purple_0_blue_30_selector</item>
+        <item name="android:textColor">@color/black_white_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="chipStartPadding">@dimen/margin_medium_large</item>
+        <item name="chipEndPadding">@dimen/margin_medium</item>
+        <item name="chipSpacingHorizontal">@dimen/margin_medium</item>
+        <item name="chipSpacingVertical">@dimen/margin_small_medium</item>
+        <item name="chipMinHeight">@dimen/reader_chip_height</item>
+    </style>
+
 </resources>
