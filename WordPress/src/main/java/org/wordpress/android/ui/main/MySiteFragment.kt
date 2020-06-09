@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mLookAndFeelHeader: WPTextView? = null
     private var mThemesContainer: LinearLayout? = null
     private var mPeopleView: LinearLayout? = null
     private var mPageView: LinearLayout? = null
@@ -342,7 +341,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mLookAndFeelHeader = rootView.findViewById(R.id.my_site_look_and_feel_header)
         mThemesContainer = rootView.findViewById(R.id.row_themes)
         mPeopleView = rootView.findViewById(R.id.row_people)
         mPlanContainer = rootView.findViewById(R.id.row_plan)
@@ -941,7 +939,7 @@ class MySiteFragment : Fragment(),
         mActionableEmptyView!!.visibility = View.GONE
         toggleAdminVisibility(site)
         val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
-        mLookAndFeelHeader!!.visibility = themesVisibility
+        my_site_look_and_feel_header.visibility = themesVisibility
         mThemesContainer!!.visibility = themesVisibility
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
