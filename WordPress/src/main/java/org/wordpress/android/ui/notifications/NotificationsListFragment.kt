@@ -15,14 +15,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
+import kotlinx.android.synthetic.main.notifications_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
@@ -57,11 +56,8 @@ import java.util.HashMap
 import javax.inject.Inject
 
 class NotificationsListFragment : Fragment() {
-    private var mTabLayout: TabLayout? = null
-    private var mConnectJetpackView: ViewGroup? = null
     private var mShouldRefreshNotifications = false
     private var mLastTabPosition = 0
-    private var mToolbar: Toolbar? = null
 
     @JvmField @Inject var mAccountStore: AccountStore? = null
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -89,12 +85,9 @@ class NotificationsListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(layout.notifications_list_fragment, container, false)
         setHasOptionsMenu(true)
-        mConnectJetpackView = view.findViewById(R.id.connect_jetpack)
-        mToolbar = view.findViewById(R.id.toolbar_main)
-        mToolbar.setTitle(string.notifications_screen_title)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(mToolbar)
-        mTabLayout = view.findViewById(R.id.tab_layout)
-        mTabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+        toolbar_main.setTitle(string.notifications_screen_title)
+        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar_main)
+        tab_layout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab) {
                 val properties: MutableMap<String, String?> = HashMap(
                         1
@@ -117,7 +110,7 @@ class NotificationsListFragment : Fragment() {
         val viewPager: WPViewPager = view.findViewById(R.id.view_pager)
         viewPager.adapter = NotificationsFragmentAdapter(childFragmentManager)
         viewPager.pageMargin = resources.getDimensionPixelSize(dimen.margin_extra_large)
-        mTabLayout.setupWithViewPager(viewPager)
+        tab_layout.setupWithViewPager(viewPager)
         val jetpackTermsAndConditions = view.findViewById<TextView>(R.id.jetpack_terms_and_conditions)
         jetpackTermsAndConditions.text = Html.fromHtml(
                 String.format(
@@ -152,7 +145,7 @@ class NotificationsListFragment : Fragment() {
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (!mAccountStore!!.hasAccessToken()) {
             showConnectJetpackView()
-            mTabLayout!!.visibility = View.GONE
+            tab_layout.visibility = View.GONE
         } else {
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote()
@@ -167,8 +160,8 @@ class NotificationsListFragment : Fragment() {
     }
 
     private fun clearToolbarScrollFlags() {
-        if (mToolbar != null && mToolbar!!.layoutParams is LayoutParams) {
-            val params = mToolbar!!.layoutParams as LayoutParams
+        if (toolbar_main != null && toolbar_main.layoutParams is LayoutParams) {
+            val params = toolbar_main.layoutParams as LayoutParams
             params.scrollFlags = 0
         }
     }
@@ -194,18 +187,18 @@ class NotificationsListFragment : Fragment() {
 
     private fun setSelectedTab(position: Int) {
         mLastTabPosition = position
-        if (mTabLayout != null) {
-            val tab = mTabLayout!!.getTabAt(mLastTabPosition)
+        if (tab_layout != null) {
+            val tab = tab_layout.getTabAt(mLastTabPosition)
             tab?.select()
         }
     }
 
     private fun showConnectJetpackView() {
-        if (isAdded && mConnectJetpackView != null) {
-            mConnectJetpackView!!.visibility = View.VISIBLE
-            mTabLayout!!.visibility = View.GONE
+        if (isAdded && connect_jetpack != null) {
+            connect_jetpack.visibility = View.VISIBLE
+            tab_layout.visibility = View.GONE
             clearToolbarScrollFlags()
-            val setupButton = mConnectJetpackView!!.findViewById<Button>(R.id.jetpack_setup)
+            val setupButton = connect_jetpack.findViewById<Button>(R.id.jetpack_setup)
             setupButton.setOnClickListener {
                 val siteModel = selectedSite
                 JetpackConnectionWebViewActivity
