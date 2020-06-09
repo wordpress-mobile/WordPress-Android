@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mQuickActionPageButtonContainer: View? = null
     private var mQuickActionButtonsContainer: LinearLayout? = null
     private var mPlanContainer: LinearLayout? = null
     private var mPluginsContainer: LinearLayout? = null
@@ -348,7 +347,6 @@ class MySiteFragment : Fragment(),
         mScrollView = rootView.findViewById(R.id.scroll_view)
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
-        mQuickActionPageButtonContainer = rootView.findViewById(R.id.quick_action_pages_container)
         mQuickActionButtonsContainer = rootView.findViewById(R.id.quick_action_buttons_container)
         mQuickStartContainer = rootView.findViewById(R.id.quick_start)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
@@ -978,7 +976,7 @@ class MySiteFragment : Fragment(),
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
         row_pages.visibility = pageVisibility
-        mQuickActionPageButtonContainer!!.visibility = pageVisibility
+        quick_action_pages_container.visibility = pageVisibility
         if (pageVisibility == View.VISIBLE) {
             mQuickActionButtonsContainer!!.weightSum = 100f
         } else {
