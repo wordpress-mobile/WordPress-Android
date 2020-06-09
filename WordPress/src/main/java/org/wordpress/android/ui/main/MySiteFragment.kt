@@ -156,7 +156,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartCustomizeIcon: ImageView? = null
     private var mQuickStartCustomizeSubtitle: TextView? = null
     private var mQuickStartCustomizeTitle: TextView? = null
     private var mQuickStartCustomizeView: View? = null
@@ -322,7 +321,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
-        mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
         mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle)
         mQuickStartCustomizeTitle = rootView.findViewById(R.id.quick_start_customize_title)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
@@ -562,11 +560,11 @@ class MySiteFragment : Fragment(),
                     GROW
             ).size
             if (countCustomizeUncompleted > 0) {
-                mQuickStartCustomizeIcon!!.isEnabled = true
+                quick_start_customize_icon.isEnabled = true
                 mQuickStartCustomizeTitle!!.isEnabled = true
                 mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             } else {
-                mQuickStartCustomizeIcon!!.isEnabled = false
+                quick_start_customize_icon.isEnabled = false
                 mQuickStartCustomizeTitle!!.isEnabled = false
                 mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
