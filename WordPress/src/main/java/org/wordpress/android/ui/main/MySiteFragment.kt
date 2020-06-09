@@ -153,20 +153,20 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mSiteSettings: SiteSettingsInterface? = null
-    private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private val mQuickStartSnackBarHandler = Handler()
-    private var mBlavatarSz = 0
-    private var mIsDomainCreditAvailable = false
-    private var mIsDomainCreditChecked = false
+    private var siteSettings: SiteSettingsInterface? = null
+    private var activeTutorialPrompt: QuickStartMySitePrompts? = null
+    private val quickStartSnackBarHandler = Handler()
+    private var blavatarSz = 0
+    private var isDomainCreditAvailable = false
+    private var isDomainCreditChecked = false
 
-    @Inject lateinit var mAccountStore: AccountStore
-    @Inject lateinit var mDispatcher: Dispatcher
-    @Inject lateinit var mMediaStore: MediaStore
-    @Inject lateinit var mQuickStartStore: QuickStartStore
-    @Inject lateinit var mImageManager: ImageManager
-    @Inject lateinit var mUploadUtilsWrapper: UploadUtilsWrapper
-    @Inject lateinit var mMeGravatarLoader: MeGravatarLoader
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var mediaStore: MediaStore
+    @Inject lateinit var quickStartStore: QuickStartStore
+    @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -176,12 +176,12 @@ class MySiteFragment : Fragment(),
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
-            mActiveTutorialPrompt = savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY) as QuickStartMySitePrompts
-            mIsDomainCreditAvailable = savedInstanceState.getBoolean(
+            activeTutorialPrompt = savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY) as QuickStartMySitePrompts
+            isDomainCreditAvailable = savedInstanceState.getBoolean(
                     KEY_IS_DOMAIN_CREDIT_AVAILABLE,
                     false
             )
-            mIsDomainCreditChecked = savedInstanceState.getBoolean(
+            isDomainCreditChecked = savedInstanceState.getBoolean(
                     KEY_DOMAIN_CREDIT_CHECKED,
                     false
             )
@@ -189,8 +189,8 @@ class MySiteFragment : Fragment(),
     }
 
     private fun refreshMeGravatar() {
-        val avatarUrl = mMeGravatarLoader.constructGravatarUrl(mAccountStore.account.avatarUrl)
-        mMeGravatarLoader.load(
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        meGravatarLoader.load(
                 false,
                 avatarUrl,
                 null,
@@ -219,23 +219,23 @@ class MySiteFragment : Fragment(),
             }
         }
         updateQuickStartContainer()
-        if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(mQuickStartStore)) {
+        if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
             showQuickStartDialogMigration()
         }
         showQuickStartNoticeIfNecessary()
     }
 
     private fun showQuickStartNoticeIfNecessary() {
-        if (!isQuickStartInProgress(mQuickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
+        if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return
         }
         val taskToPrompt = getNextUncompletedQuickStartTask(
-                mQuickStartStore,
+                quickStartStore,
                 AppPrefs.getSelectedSite().toLong(), CUSTOMIZE
         ) // CUSTOMIZE is default type
         if (taskToPrompt != null) {
-            mQuickStartSnackBarHandler.removeCallbacksAndMessages(null)
-            mQuickStartSnackBarHandler.postDelayed({
+            quickStartSnackBarHandler.removeCallbacksAndMessages(null)
+            quickStartSnackBarHandler.postDelayed({
                 if (!isAdded || view == null || activity !is WPMainActivity) {
                     return@postDelayed
                 }
@@ -252,7 +252,7 @@ class MySiteFragment : Fragment(),
                         getString(R.string.quick_start_button_positive)
                 ) {
                     AnalyticsTracker.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
-                    mActiveTutorialPrompt = getPromptDetailsForTask(taskToPrompt)
+                    activeTutorialPrompt = getPromptDetailsForTask(taskToPrompt)
                     showActiveQuickStartTutorial()
                 }
                 quickStartNoticeSnackBar
@@ -272,23 +272,23 @@ class MySiteFragment : Fragment(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(QuickStartMySitePrompts.KEY, mActiveTutorialPrompt)
-        outState.putBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, mIsDomainCreditAvailable)
-        outState.putBoolean(KEY_DOMAIN_CREDIT_CHECKED, mIsDomainCreditChecked)
+        outState.putSerializable(QuickStartMySitePrompts.KEY, activeTutorialPrompt)
+        outState.putBoolean(KEY_IS_DOMAIN_CREDIT_AVAILABLE, isDomainCreditAvailable)
+        outState.putBoolean(KEY_DOMAIN_CREDIT_CHECKED, isDomainCreditChecked)
     }
 
     private fun updateSiteSettingsIfNecessary() {
         val selectedSite = selectedSite
                 ?: // If the selected site is null, we can't update its site settings
                 return
-        if (mSiteSettings != null && mSiteSettings!!.localSiteId != selectedSite.id) {
+        if (siteSettings != null && siteSettings!!.localSiteId != selectedSite.id) {
             // The site has changed, we can't use the previous site settings, force a refresh
-            mSiteSettings = null
+            siteSettings = null
         }
-        if (mSiteSettings == null) {
-            mSiteSettings = SiteSettingsInterface.getInterface(activity, selectedSite, this)
-            if (mSiteSettings != null) {
-                mSiteSettings!!.init(true)
+        if (siteSettings == null) {
+            siteSettings = SiteSettingsInterface.getInterface(activity, selectedSite, this)
+            if (siteSettings != null) {
+                siteSettings!!.init(true)
             }
         }
     }
@@ -303,7 +303,7 @@ class MySiteFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
-        mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
+        blavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         setupClickListeners()
         toolbar_main.setTitle(R.string.my_site_section_screen_title)
         toolbar_main.inflateMenu(R.menu.my_site_menu)
@@ -326,9 +326,9 @@ class MySiteFragment : Fragment(),
         row_view_site.setOnClickListener { viewSite() }
         my_site_register_domain_cta.setOnClickListener { registerDomain() }
         quick_action_stats_button.setOnClickListener {
-                    AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
-                    viewStats()
-                }
+            AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
+            viewStats()
+        }
         row_stats.setOnClickListener { viewStats() }
         my_site_blavatar.setOnClickListener { updateBlavatar() }
         row_plan.setOnClickListener {
@@ -336,19 +336,19 @@ class MySiteFragment : Fragment(),
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         quick_action_posts_button.setOnClickListener {
-                    AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
-                    viewPosts()
-                }
+            AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
+            viewPosts()
+        }
         row_blog_posts.setOnClickListener { viewPosts() }
         quick_action_media_button.setOnClickListener {
-                    AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
-                    viewMedia()
-                }
+            AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
+            viewMedia()
+        }
         row_media.setOnClickListener { viewMedia() }
         quick_action_pages_button.setOnClickListener {
-                    AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
-                    viewPages()
-                }
+            AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
+            viewPages()
+        }
         row_pages.setOnClickListener { viewPages() }
         row_comments.setOnClickListener {
             ActivityLauncher.viewCurrentBlogComments(
@@ -402,7 +402,7 @@ class MySiteFragment : Fragment(),
         actionable_empty_view.button.setOnClickListener {
             SitePickerActivity.addSite(
                     activity,
-                    mAccountStore.hasAccessToken()
+                    accountStore.hasAccessToken()
             )
         }
         quick_start_customize.setOnClickListener {
@@ -476,7 +476,7 @@ class MySiteFragment : Fragment(),
         val selectedSite = selectedSite
         if (selectedSite != null) {
             completeQuickStarTask(CHECK_STATS)
-            if (!mAccountStore.hasAccessToken() && selectedSite.isJetpackConnected) {
+            if (!accountStore.hasAccessToken() && selectedSite.isJetpackConnected) {
                 // If the user is not connected to WordPress.com, ask him to connect first.
                 startWPComLoginForJetpackStats()
             } else if (selectedSite.isWPCom || selectedSite.isJetpackInstalled && selectedSite
@@ -495,7 +495,7 @@ class MySiteFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (mActiveTutorialPrompt != null) {
+        if (activeTutorialPrompt != null) {
             showQuickStartFocusPoint()
         }
     }
@@ -504,21 +504,21 @@ class MySiteFragment : Fragment(),
         if (!isAdded) {
             return
         }
-        if (isQuickStartInProgress(mQuickStartStore)) {
+        if (isQuickStartInProgress(quickStartStore)) {
             val site = AppPrefs.getSelectedSite()
-            val countCustomizeCompleted = mQuickStartStore.getCompletedTasksByType(
+            val countCustomizeCompleted = quickStartStore.getCompletedTasksByType(
                     site.toLong(),
                     CUSTOMIZE
             ).size
-            val countCustomizeUncompleted = mQuickStartStore.getUncompletedTasksByType(
+            val countCustomizeUncompleted = quickStartStore.getUncompletedTasksByType(
                     site.toLong(),
                     CUSTOMIZE
             ).size
-            val countGrowCompleted = mQuickStartStore.getCompletedTasksByType(
+            val countGrowCompleted = quickStartStore.getCompletedTasksByType(
                     site.toLong(),
                     GROW
             ).size
-            val countGrowUncompleted = mQuickStartStore.getUncompletedTasksByType(
+            val countGrowUncompleted = quickStartStore.getUncompletedTasksByType(
                     site.toLong(),
                     GROW
             ).size
@@ -667,7 +667,7 @@ class MySiteFragment : Fragment(),
                 // reset comments status filter
                 AppPrefs.setCommentsStatusFilter(ALL)
                 // reset domain credit flag - it will be checked in onSiteChanged
-                mIsDomainCreditAvailable = false
+                isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
                 if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
@@ -744,10 +744,10 @@ class MySiteFragment : Fragment(),
             }
 
             // Remove existing quick start indicator, if necessary.
-            if (mActiveTutorialPrompt != null) {
+            if (activeTutorialPrompt != null) {
                 removeQuickStartFocusPoint()
             }
-            mActiveTutorialPrompt = getPromptDetailsForTask(task)
+            activeTutorialPrompt = getPromptDetailsForTask(task)
             showActiveQuickStartTutorial()
         }
     }
@@ -817,7 +817,7 @@ class MySiteFragment : Fragment(),
     private fun buildMediaModel(file: File, site: SiteModel): MediaModel? {
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = requireActivity().contentResolver.getType(uri)
-        return FluxCUtils.mediaModelFromLocalUri(requireActivity(), uri, mimeType, mMediaStore, site.id)
+        return FluxCUtils.mediaModelFromLocalUri(requireActivity(), uri, mimeType, mediaStore, site.id)
     }
 
     private fun startCropActivity(uri: Uri) {
@@ -853,9 +853,9 @@ class MySiteFragment : Fragment(),
         if (SiteUtils.onFreePlan(site) || SiteUtils.hasCustomDomain(
                         site
                 )) {
-            mIsDomainCreditAvailable = false
+            isDomainCreditAvailable = false
             toggleDomainRegistrationCtaVisibility()
-        } else if (!mIsDomainCreditChecked) {
+        } else if (!isDomainCreditChecked) {
             fetchSitePlans(site)
         } else {
             toggleDomainRegistrationCtaVisibility()
@@ -882,10 +882,10 @@ class MySiteFragment : Fragment(),
         // if either people or settings is visible, configuration header should be visible
         val settingsVisibility = if (isAdminOrSelfHosted || site.hasCapabilityListUsers) View.VISIBLE else View.GONE
         my_site_configuration_header.visibility = settingsVisibility
-        mImageManager.load(
+        imageManager.load(
                 my_site_blavatar,
                 BLAVATAR,
-                SiteUtils.getSiteIconUrl(site, mBlavatarSz)
+                SiteUtils.getSiteIconUrl(site, blavatarSz)
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
@@ -936,7 +936,7 @@ class MySiteFragment : Fragment(),
             false
         } else {
             val dateCreated = DateTimeUtils.dateFromIso8601(
-                    mAccountStore.account
+                    accountStore.account
                             .date
             )
             val calendar = GregorianCalendar(
@@ -955,14 +955,14 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onStop() {
-        mDispatcher.unregister(this)
+        dispatcher.unregister(this)
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
 
     override fun onStart() {
         super.onStart()
-        mDispatcher.register(this)
+        dispatcher.register(this)
         EventBus.getDefault().register(this)
     }
 
@@ -973,7 +973,7 @@ class MySiteFragment : Fragment(),
      */
     fun onSiteChanged(site: SiteModel?) {
         // whenever site changes we hide CTA and check for credit in refreshSelectedSiteDetails()
-        mIsDomainCreditChecked = false
+        isDomainCreditChecked = false
         refreshSelectedSiteDetails(site)
         showSiteIconProgressBar(false)
     }
@@ -988,14 +988,14 @@ class MySiteFragment : Fragment(),
         val site = selectedSite
         if (site != null && event.post != null) {
             if (event.post.localSiteId == site.id) {
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
+                uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
                         coordinator, true,
                         event.post, event.errorMessage, site
                 )
             }
         } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+            uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     activity,
                     coordinator, true,
                     event.mediaModelList, site, event.errorMessage
@@ -1012,14 +1012,14 @@ class MySiteFragment : Fragment(),
             if (isMediaUploadInProgress) {
                 if (event.mediaModelList.size > 0) {
                     val media = event.mediaModelList[0]
-                    mImageManager.load(
+                    imageManager.load(
                             my_site_blavatar,
                             BLAVATAR,
                             PhotonUtils
                                     .getPhotonImageUrl(
                                             media.url,
-                                            mBlavatarSz,
-                                            mBlavatarSz,
+                                            blavatarSz,
+                                            blavatarSz,
                                             HIGH,
                                             site.isPrivateWPComAtomic
                                     )
@@ -1034,7 +1034,7 @@ class MySiteFragment : Fragment(),
                 showSiteIconProgressBar(false)
             } else {
                 if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
-                    mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                    uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                             activity,
                             coordinator, false,
                             event.mediaModelList, site, event.successMessage
@@ -1076,20 +1076,20 @@ class MySiteFragment : Fragment(),
     private fun skipQuickStart() {
         val siteId = AppPrefs.getSelectedSite()
         for (quickStartTask in QuickStartTask.values()) {
-            mQuickStartStore.setDoneTask(siteId.toLong(), quickStartTask, true)
+            quickStartStore.setDoneTask(siteId.toLong(), quickStartTask, true)
         }
-        mQuickStartStore.setQuickStartCompleted(siteId.toLong(), true)
+        quickStartStore.setQuickStartCompleted(siteId.toLong(), true)
         // skipping all tasks means no achievement notification, so we mark it as received
-        mQuickStartStore.setQuickStartNotificationReceived(siteId.toLong(), true)
+        quickStartStore.setQuickStartNotificationReceived(siteId.toLong(), true)
     }
 
     private fun startQuickStart() {
-        mQuickStartStore.setDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE, true)
+        quickStartStore.setDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE, true)
         updateQuickStartContainer()
     }
 
     private fun toggleDomainRegistrationCtaVisibility() {
-        if (mIsDomainCreditAvailable) {
+        if (isDomainCreditAvailable) {
             // we nest this check because of some weirdness with ui state and race conditions
             if (my_site_register_domain_cta.visibility != View.VISIBLE) {
                 AnalyticsTracker.track(DOMAIN_CREDIT_PROMPT_SHOWN)
@@ -1153,7 +1153,7 @@ class MySiteFragment : Fragment(),
         // refresh the site after site icon change
         val site = selectedSite
         if (site != null) {
-            mDispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
+            dispatcher.dispatch(SiteActionBuilder.newFetchSiteAction(site))
         }
     }
 
@@ -1168,7 +1168,7 @@ class MySiteFragment : Fragment(),
     override fun onSettingsUpdated() {}
     override fun onCredentialsValidated(error: Exception) {}
     private fun fetchSitePlans(site: SiteModel?) {
-        mDispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
+        dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1182,8 +1182,8 @@ class MySiteFragment : Fragment(),
                     "An error occurred while fetching plans : " + event.error.message
             )
         } else {
-            mIsDomainCreditChecked = true
-            mIsDomainCreditAvailable = isDomainCreditAvailable(event.plans)
+            isDomainCreditChecked = true
+            isDomainCreditAvailable = isDomainCreditAvailable(event.plans)
             toggleDomainRegistrationCtaVisibility()
         }
     }
@@ -1192,9 +1192,9 @@ class MySiteFragment : Fragment(),
         if (!isAdded) {
             return@Runnable
         }
-        val parentView = requireActivity().findViewById<ViewGroup>(mActiveTutorialPrompt!!.parentContainerId)
+        val parentView = requireActivity().findViewById<ViewGroup>(activeTutorialPrompt!!.parentContainerId)
         val quickStartTarget = requireActivity().findViewById<View>(
-                mActiveTutorialPrompt!!.focusedContainerId
+                activeTutorialPrompt!!.focusedContainerId
         )
         if (quickStartTarget == null || parentView == null) {
             return@Runnable
@@ -1202,11 +1202,11 @@ class MySiteFragment : Fragment(),
         val focusPointSize = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
         val horizontalOffset: Int
         val verticalOffset: Int
-        if (isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
+        if (isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
             horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
                     .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
             verticalOffset = 0
-        } else if (mActiveTutorialPrompt!!.task == UPLOAD_SITE_ICON) {
+        } else if (activeTutorialPrompt!!.task == UPLOAD_SITE_ICON) {
             horizontalOffset = focusPointSize
             verticalOffset = -focusPointSize / 2
         } else {
@@ -1219,7 +1219,7 @@ class MySiteFragment : Fragment(),
         )
 
         // highlight MySite row and scroll to it
-        if (!isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
+        if (!isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
             scroll_view.post { scroll_view.smoothScrollTo(0, quickStartTarget.top) }
         }
     }
@@ -1240,18 +1240,18 @@ class MySiteFragment : Fragment(),
     }
 
     fun isQuickStartTaskActive(task: QuickStartTask): Boolean {
-        return hasActiveQuickStartTask() && mActiveTutorialPrompt!!.task == task
+        return hasActiveQuickStartTask() && activeTutorialPrompt!!.task == task
     }
 
     private fun completeQuickStarTask(quickStartTask: QuickStartTask) {
         selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
-                    !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), quickStartTask)
-                            && mActiveTutorialPrompt != null && mActiveTutorialPrompt!!.task == quickStartTask
+                    !quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), quickStartTask)
+                            && activeTutorialPrompt != null && activeTutorialPrompt!!.task == quickStartTask
             )
             completeTaskAndRemindNextOne(
-                    mQuickStartStore, quickStartTask, mDispatcher,
+                    quickStartStore, quickStartTask, dispatcher,
                     site, context = requireContext()
             )
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
@@ -1259,7 +1259,7 @@ class MySiteFragment : Fragment(),
             if (quickStartTask == UPLOAD_SITE_ICON) {
                 updateQuickStartContainer()
             }
-            if (mActiveTutorialPrompt != null && mActiveTutorialPrompt!!.task == quickStartTask) {
+            if (activeTutorialPrompt != null && activeTutorialPrompt!!.task == quickStartTask) {
                 removeQuickStartFocusPoint()
                 clearActiveQuickStartTask()
             }
@@ -1268,15 +1268,15 @@ class MySiteFragment : Fragment(),
 
     private fun clearActiveQuickStart() {
         // Clear pressed row.
-        if (mActiveTutorialPrompt != null
-                && !isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
-            requireActivity().findViewById<View>(mActiveTutorialPrompt!!.focusedContainerId).isPressed = false
+        if (activeTutorialPrompt != null
+                && !isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
+            requireActivity().findViewById<View>(activeTutorialPrompt!!.focusedContainerId).isPressed = false
         }
         if (activity != null && !requireActivity().isChangingConfigurations) {
             clearActiveQuickStartTask()
             removeQuickStartFocusPoint()
         }
-        mQuickStartSnackBarHandler.removeCallbacksAndMessages(null)
+        quickStartSnackBarHandler.removeCallbacksAndMessages(null)
     }
 
     fun requestNextStepOfActiveQuickStartTask() {
@@ -1284,16 +1284,16 @@ class MySiteFragment : Fragment(),
             return
         }
         removeQuickStartFocusPoint()
-        EventBus.getDefault().postSticky(QuickStartEvent(mActiveTutorialPrompt!!.task))
+        EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
         clearActiveQuickStartTask()
     }
 
     private fun clearActiveQuickStartTask() {
-        mActiveTutorialPrompt = null
+        activeTutorialPrompt = null
     }
 
     private fun hasActiveQuickStartTask(): Boolean {
-        return mActiveTutorialPrompt != null
+        return activeTutorialPrompt != null
     }
 
     private fun showActiveQuickStartTutorial() {
@@ -1303,8 +1303,8 @@ class MySiteFragment : Fragment(),
         showQuickStartFocusPoint()
         val shortQuickStartMessage = stylizeQuickStartPrompt(
                 requireActivity(),
-                mActiveTutorialPrompt!!.shortMessagePrompt,
-                mActiveTutorialPrompt!!.iconId
+                activeTutorialPrompt!!.shortMessagePrompt,
+                activeTutorialPrompt!!.iconId
         )
         val promptSnackbar = WPDialogSnackbar.make(
                 coordinator,
@@ -1333,7 +1333,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateSiteIconMediaId(mediaId: Int) {
-        mSiteSettings?.let {
+        siteSettings?.let {
             it.setSiteIconMediaId(mediaId)
             it.saveSettings()
         }
