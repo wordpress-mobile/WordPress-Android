@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,6 +20,7 @@ import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
+import kotlinx.android.synthetic.main.toolbar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -155,7 +155,6 @@ class MySiteFragment : Fragment(),
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
     private val mQuickStartSnackBarHandler = Handler()
-    private var mToolbar: Toolbar? = null
     private var mBlavatarSz = 0
     private var mIsDomainCreditAvailable = false
     private var mIsDomainCreditChecked = false
@@ -310,17 +309,16 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         setupClickListeners(rootView)
-        mToolbar = rootView.findViewById(R.id.toolbar_main)
-        mToolbar?.setTitle(R.string.my_site_section_screen_title)
-        mToolbar?.inflateMenu(R.menu.my_site_menu)
-        val meMenu = mToolbar?.menu?.findItem(R.id.me_item)
-        val actionView = meMenu?.actionView
-        actionView?.setOnClickListener {
+        toolbar_main.setTitle(R.string.my_site_section_screen_title)
+        toolbar_main.inflateMenu(R.menu.my_site_menu)
+        val meMenu = toolbar_main.menu.findItem(R.id.me_item)
+        val actionView = meMenu.actionView
+        actionView.setOnClickListener {
             ActivityLauncher.viewMeActivityForResult(
                     activity
             )
         }
-        actionView?.let {
+        actionView.let {
             TooltipCompat.setTooltipText(it, meMenu.title)
         }
         return rootView
