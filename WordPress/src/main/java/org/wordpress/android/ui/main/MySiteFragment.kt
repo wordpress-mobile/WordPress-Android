@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mActivityLogContainer: LinearLayout? = null
     private var mQuickStartContainer: View? = null
     private var mConfigurationHeader: WPTextView? = null
     private var mSettingsView: View? = null
@@ -243,9 +242,9 @@ class MySiteFragment : Fragment(),
                     site
             ) && !site.isJetpackConnected
             if (isNotAdmin || isSelfHostedWithoutJetpack) {
-                mActivityLogContainer!!.visibility = View.GONE
+                row_activity_log.visibility = View.GONE
             } else {
-                mActivityLogContainer!!.visibility = View.VISIBLE
+                row_activity_log.visibility = View.VISIBLE
             }
         }
         updateQuickStartContainer()
@@ -334,7 +333,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mActivityLogContainer = rootView.findViewById(R.id.row_activity_log)
         mConfigurationHeader = rootView.findViewById(R.id.my_site_configuration_header)
         mSettingsView = rootView.findViewById(R.id.row_settings)
         mSharingView = rootView.findViewById(R.id.row_sharing)
@@ -435,7 +433,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mActivityLogContainer!!.setOnClickListener {
+        row_activity_log.setOnClickListener {
             ActivityLauncher.viewActivityLogList(
                     activity,
                     selectedSite
