@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mPageView: LinearLayout? = null
     private var mQuickActionPageButtonContainer: View? = null
     private var mQuickActionButtonsContainer: LinearLayout? = null
     private var mPlanContainer: LinearLayout? = null
@@ -349,7 +348,6 @@ class MySiteFragment : Fragment(),
         mScrollView = rootView.findViewById(R.id.scroll_view)
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
-        mPageView = rootView.findViewById(R.id.row_pages)
         mQuickActionPageButtonContainer = rootView.findViewById(R.id.quick_action_pages_container)
         mQuickActionButtonsContainer = rootView.findViewById(R.id.quick_action_buttons_container)
         mQuickStartContainer = rootView.findViewById(R.id.quick_start)
@@ -419,7 +417,7 @@ class MySiteFragment : Fragment(),
                     AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
                     viewPages()
                 }
-        mPageView!!.setOnClickListener { viewPages() }
+        row_pages.setOnClickListener { viewPages() }
         rootView.findViewById<View>(R.id.row_comments).setOnClickListener {
             ActivityLauncher.viewCurrentBlogComments(
                     activity,
@@ -979,7 +977,7 @@ class MySiteFragment : Fragment(),
 
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE
-        mPageView!!.visibility = pageVisibility
+        row_pages.visibility = pageVisibility
         mQuickActionPageButtonContainer!!.visibility = pageVisibility
         if (pageVisibility == View.VISIBLE) {
             mQuickActionButtonsContainer!!.weightSum = 100f
