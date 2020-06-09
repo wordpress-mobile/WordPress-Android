@@ -246,8 +246,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mProgressDialog.setOnCancelListener(null);
             mProgressDialog = null;
         }
-
-        mPrimaryButton.setEnabled(true);
+        if (mPrimaryButton != null) {
+            mPrimaryButton.setEnabled(true);
+        }
 
         if (mSecondaryButton != null) {
             mSecondaryButton.setEnabled(true);
