@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.my_site_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -157,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mBlavatarImageView: ImageView? = null
     private var mAvatarImageView: ImageView? = null
     private var mBlavatarProgressBar: ProgressBar? = null
     private var mBlogTitleTextView: WPTextView? = null
@@ -346,7 +346,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mBlavatarImageView = rootView.findViewById(R.id.my_site_blavatar)
         mBlavatarProgressBar = rootView.findViewById(R.id.my_site_icon_progress)
         mBlogTitleTextView = rootView.findViewById(R.id.my_site_title_label)
         mBlogSubtitleTextView = rootView.findViewById(R.id.my_site_subtitle_label)
@@ -410,7 +409,7 @@ class MySiteFragment : Fragment(),
                 }
         rootView.findViewById<View>(R.id.row_stats)
                 .setOnClickListener { viewStats() }
-        mBlavatarImageView!!.setOnClickListener { updateBlavatar() }
+        my_site_blavatar.setOnClickListener { updateBlavatar() }
         mPlanContainer!!.setOnClickListener {
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
@@ -886,13 +885,13 @@ class MySiteFragment : Fragment(),
     }
 
     private fun showSiteIconProgressBar(isVisible: Boolean) {
-        if (mBlavatarProgressBar != null && mBlavatarImageView != null) {
+        if (mBlavatarProgressBar != null && my_site_blavatar != null) {
             if (isVisible) {
                 mBlavatarProgressBar!!.visibility = View.VISIBLE
-                mBlavatarImageView!!.visibility = View.INVISIBLE
+                my_site_blavatar!!.visibility = View.INVISIBLE
             } else {
                 mBlavatarProgressBar!!.visibility = View.GONE
-                mBlavatarImageView!!.visibility = View.VISIBLE
+                my_site_blavatar!!.visibility = View.VISIBLE
             }
         }
     }
@@ -969,7 +968,7 @@ class MySiteFragment : Fragment(),
         val settingsVisibility = if (isAdminOrSelfHosted || site.hasCapabilityListUsers) View.VISIBLE else View.GONE
         mConfigurationHeader!!.visibility = settingsVisibility
         mImageManager.load(
-                mBlavatarImageView!!,
+                my_site_blavatar,
                 BLAVATAR,
                 SiteUtils.getSiteIconUrl(site, mBlavatarSz)
         )
@@ -1099,7 +1098,7 @@ class MySiteFragment : Fragment(),
                 if (event.mediaModelList.size > 0) {
                     val media = event.mediaModelList[0]
                     mImageManager.load(
-                            mBlavatarImageView!!,
+                            my_site_blavatar,
                             BLAVATAR,
                             PhotonUtils
                                     .getPhotonImageUrl(
