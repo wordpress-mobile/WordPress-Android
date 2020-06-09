@@ -159,7 +159,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mBlavatarProgressBar: ProgressBar? = null
     private var mBlogTitleTextView: WPTextView? = null
     private var mBlogSubtitleTextView: WPTextView? = null
     private var mLookAndFeelHeader: WPTextView? = null
@@ -346,7 +345,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mBlavatarProgressBar = rootView.findViewById(R.id.my_site_icon_progress)
         mBlogTitleTextView = rootView.findViewById(R.id.my_site_title_label)
         mBlogSubtitleTextView = rootView.findViewById(R.id.my_site_subtitle_label)
         mLookAndFeelHeader = rootView.findViewById(R.id.my_site_look_and_feel_header)
@@ -884,19 +882,19 @@ class MySiteFragment : Fragment(),
     }
 
     private fun showSiteIconProgressBar(isVisible: Boolean) {
-        if (mBlavatarProgressBar != null && my_site_blavatar != null) {
+        if (my_site_icon_progress != null && my_site_blavatar != null) {
             if (isVisible) {
-                mBlavatarProgressBar!!.visibility = View.VISIBLE
+                my_site_icon_progress.visibility = View.VISIBLE
                 my_site_blavatar!!.visibility = View.INVISIBLE
             } else {
-                mBlavatarProgressBar!!.visibility = View.GONE
+                my_site_icon_progress.visibility = View.GONE
                 my_site_blavatar!!.visibility = View.VISIBLE
             }
         }
     }
 
     private val isMediaUploadInProgress: Boolean
-        get() = mBlavatarProgressBar!!.visibility == View.VISIBLE
+        get() = my_site_icon_progress.visibility == View.VISIBLE
 
     private fun buildMediaModel(file: File, site: SiteModel): MediaModel? {
         val uri = Uri.Builder().path(file.path).build()
