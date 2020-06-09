@@ -46,6 +46,7 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_LIKE
 import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILTER_UNREAD
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
+import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
@@ -64,12 +65,7 @@ class NotificationsListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
-            setSelectedTab(
-                    savedInstanceState.getInt(
-                            KEY_LAST_TAB_POSITION,
-                            TAB_POSITION_ALL
-                    )
-            )
+            setSelectedTab(savedInstanceState.getInt(KEY_LAST_TAB_POSITION, TAB_POSITION_ALL))
         }
     }
 
@@ -87,12 +83,11 @@ class NotificationsListFragment : Fragment() {
         val view = inflater.inflate(layout.notifications_list_fragment, container, false)
         setHasOptionsMenu(true)
         toolbar_main.setTitle(string.notifications_screen_title)
-        (activity as AppCompatActivity?)!!.setSupportActionBar(toolbar_main)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_main)
+
         tab_layout.addOnTabSelectedListener(object : OnTabSelectedListener {
             override fun onTabSelected(tab: Tab) {
-                val properties: MutableMap<String, String?> = HashMap(
-                        1
-                )
+                val properties: MutableMap<String, String?> = HashMap(1)
                 when (tab.position) {
                     TAB_POSITION_ALL -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
                     TAB_POSITION_COMMENT -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
@@ -108,30 +103,18 @@ class NotificationsListFragment : Fragment() {
             override fun onTabUnselected(tab: Tab) {}
             override fun onTabReselected(tab: Tab) {}
         })
-        val viewPager: WPViewPager = view.findViewById(R.id.view_pager)
-        viewPager.adapter = NotificationsFragmentAdapter(childFragmentManager)
-        viewPager.pageMargin = resources.getDimensionPixelSize(dimen.margin_extra_large)
-        tab_layout.setupWithViewPager(viewPager)
-        val jetpackTermsAndConditions = view.findViewById<TextView>(R.id.jetpack_terms_and_conditions)
-        jetpackTermsAndConditions.text = Html.fromHtml(
-                String.format(
-                        resources.getString(string.jetpack_connection_terms_and_conditions),
-                        "<u>",
-                        "</u>"
-                )
+        view_pager.adapter = NotificationsFragmentAdapter(childFragmentManager)
+        view_pager.pageMargin = resources.getDimensionPixelSize(dimen.margin_extra_large)
+        tab_layout.setupWithViewPager(view_pager)
+
+        jetpack_terms_and_conditions.text = Html.fromHtml(
+                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
         )
-        jetpackTermsAndConditions.setOnClickListener {
-            WPWebViewActivity.openURL(
-                    requireContext(),
-                    WPUrlUtils.buildTermsOfServiceUrl(context)
-            )
+        jetpack_terms_and_conditions.setOnClickListener {
+            WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(context))
         }
-        val jetpackFaq = view.findViewById<Button>(R.id.jetpack_faq)
-        jetpackFaq.setOnClickListener {
-            WPWebViewActivity.openURL(
-                    requireContext(),
-                    StatsConnectJetpackActivity.FAQ_URL
-            )
+        jetpack_faq.setOnClickListener {
+            WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
         }
         return view
     }
@@ -144,7 +127,7 @@ class NotificationsListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (!mAccountStore!!.hasAccessToken()) {
+        if (!mAccountStore.hasAccessToken()) {
             showConnectJetpackView()
             tab_layout.visibility = View.GONE
         } else {
@@ -180,8 +163,8 @@ class NotificationsListFragment : Fragment() {
     val selectedSite: SiteModel?
         get() {
             if (activity is WPMainActivity) {
-                val mainActivity = activity as WPMainActivity?
-                return mainActivity!!.selectedSite
+                val mainActivity = requireActivity() as WPMainActivity
+                return mainActivity.selectedSite
             }
             return null
         }
@@ -195,8 +178,7 @@ class NotificationsListFragment : Fragment() {
         connect_jetpack.visibility = View.VISIBLE
         tab_layout.visibility = View.GONE
         clearToolbarScrollFlags()
-        val setupButton = connect_jetpack.findViewById<Button>(R.id.jetpack_setup)
-        setupButton.setOnClickListener {
+        jetpack_setup.setOnClickListener {
             val siteModel = selectedSite
             JetpackConnectionWebViewActivity
                     .startJetpackConnectionFlow(
@@ -240,7 +222,7 @@ class NotificationsListFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         val notificationSettings = menu.findItem(R.id.notifications_settings)
-        notificationSettings.isVisible = mAccountStore!!.hasAccessToken()
+        notificationSettings.isVisible = mAccountStore.hasAccessToken()
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -264,7 +246,7 @@ class NotificationsListFragment : Fragment() {
         const val NOTE_MODERATE_ID_EXTRA = "moderateNoteId"
         const val NOTE_MODERATE_STATUS_EXTRA = "moderateNoteStatus"
         const val NOTE_CURRENT_LIST_FILTER_EXTRA = "currentFilter"
-        protected const val TAB_COUNT = 5
+        private const val TAB_COUNT = 5
         const val TAB_POSITION_ALL = 0
         const val TAB_POSITION_UNREAD = 1
         const val TAB_POSITION_COMMENT = 2
@@ -282,8 +264,12 @@ class NotificationsListFragment : Fragment() {
         }
 
         @JvmStatic fun openNoteForReply(
-            activity: Activity?, noteId: String?, shouldShowKeyboard: Boolean, replyText: String?,
-            filter: FILTERS?, isTappedFromPushNotification: Boolean
+            activity: Activity?,
+            noteId: String?,
+            shouldShowKeyboard: Boolean,
+            replyText: String?,
+            filter: FILTERS?,
+            isTappedFromPushNotification: Boolean
         ) {
             if (noteId == null || activity == null) {
                 return
@@ -297,10 +283,7 @@ class NotificationsListFragment : Fragment() {
                 detailIntent.putExtra(NOTE_PREFILLED_REPLY_EXTRA, replyText)
             }
             detailIntent.putExtra(NOTE_CURRENT_LIST_FILTER_EXTRA, filter)
-            detailIntent.putExtra(
-                    NotificationsUpdateServiceStarter.IS_TAPPED_ON_NOTIFICATION,
-                    isTappedFromPushNotification
-            )
+            detailIntent.putExtra(IS_TAPPED_ON_NOTIFICATION, isTappedFromPushNotification)
             openNoteForReplyWithParams(detailIntent, activity)
         }
 
