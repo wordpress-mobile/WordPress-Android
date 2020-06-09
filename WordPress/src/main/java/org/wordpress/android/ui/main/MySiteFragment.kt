@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
@@ -159,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mBlogTitleTextView: WPTextView? = null
     private var mBlogSubtitleTextView: WPTextView? = null
     private var mLookAndFeelHeader: WPTextView? = null
     private var mThemesContainer: LinearLayout? = null
@@ -345,7 +343,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mBlogTitleTextView = rootView.findViewById(R.id.my_site_title_label)
         mBlogSubtitleTextView = rootView.findViewById(R.id.my_site_subtitle_label)
         mLookAndFeelHeader = rootView.findViewById(R.id.my_site_look_and_feel_header)
         mThemesContainer = rootView.findViewById(R.id.row_themes)
@@ -971,7 +968,7 @@ class MySiteFragment : Fragment(),
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
-        mBlogTitleTextView!!.text = blogTitle
+        my_site_title_label.text = blogTitle
         mBlogSubtitleTextView!!.text = homeUrl
 
         // Hide the Plan item if the Plans feature is not available for this blog
