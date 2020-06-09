@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mQuickStartContainer: View? = null
     private var mConfigurationHeader: WPTextView? = null
     private var mSettingsView: View? = null
     private var mAdminView: LinearLayout? = null
@@ -340,7 +339,6 @@ class MySiteFragment : Fragment(),
         mScrollView = rootView.findViewById(R.id.scroll_view)
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
-        mQuickStartContainer = rootView.findViewById(R.id.quick_start)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
         mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle)
@@ -607,9 +605,9 @@ class MySiteFragment : Fragment(),
                     R.string.quick_start_sites_type_subtitle,
                     countGrowCompleted, countGrowCompleted + countGrowUncompleted
             )
-            mQuickStartContainer!!.visibility = View.VISIBLE
+            quick_start.visibility = View.VISIBLE
         } else {
-            mQuickStartContainer!!.visibility = View.GONE
+            quick_start.visibility = View.GONE
         }
     }
 
