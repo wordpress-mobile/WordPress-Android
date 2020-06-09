@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
@@ -156,7 +155,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mScrollView: ScrollView? = null
     private var mCurrentPlanNameTextView: WPTextView? = null
     private var mSharingView: View? = null
     private var mSiteSettings: SiteSettingsInterface? = null
@@ -327,7 +325,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mSharingView = rootView.findViewById(R.id.row_sharing)
-        mScrollView = rootView.findViewById(R.id.scroll_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
@@ -886,7 +883,7 @@ class MySiteFragment : Fragment(),
             return
         }
         if (site == null) {
-            mScrollView!!.visibility = View.GONE
+            scroll_view.visibility = View.GONE
             actionable_empty_view.visibility = View.VISIBLE
 
             // Hide actionable empty view image when screen height is under 600 pixels.
@@ -907,7 +904,7 @@ class MySiteFragment : Fragment(),
         } else {
             toggleDomainRegistrationCtaVisibility()
         }
-        mScrollView!!.visibility = View.VISIBLE
+        scroll_view.visibility = View.VISIBLE
         actionable_empty_view.visibility = View.GONE
         toggleAdminVisibility(site)
         val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
@@ -997,7 +994,7 @@ class MySiteFragment : Fragment(),
 
     override fun onScrollToTop() {
         if (isAdded) {
-            mScrollView!!.smoothScrollTo(0, 0)
+            scroll_view.smoothScrollTo(0, 0)
         }
     }
 
@@ -1267,7 +1264,7 @@ class MySiteFragment : Fragment(),
 
         // highlight MySite row and scroll to it
         if (!isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
-            mScrollView!!.post { mScrollView!!.smoothScrollTo(0, quickStartTarget.top) }
+            scroll_view.post { scroll_view.smoothScrollTo(0, quickStartTarget.top) }
         }
     }
 
