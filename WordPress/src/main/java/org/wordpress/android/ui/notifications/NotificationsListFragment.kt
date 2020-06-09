@@ -126,8 +126,17 @@ class NotificationsListFragment : Fragment() {
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (!mAccountStore.hasAccessToken()) {
             showConnectJetpackView()
-            tab_layout.visibility = View.GONE
+            if (view != null) {
+                connect_jetpack.visibility = View.VISIBLE
+                tab_layout.visibility = View.GONE
+                view_pager.visibility = View.GONE
+            }
         } else {
+            if (view != null) {
+                connect_jetpack.visibility = View.GONE
+                tab_layout.visibility = View.VISIBLE
+                view_pager.visibility = View.VISIBLE
+            }
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
@@ -172,8 +181,6 @@ class NotificationsListFragment : Fragment() {
     }
 
     private fun showConnectJetpackView() {
-        connect_jetpack.visibility = View.VISIBLE
-        tab_layout.visibility = View.GONE
         clearToolbarScrollFlags()
         jetpack_setup.setOnClickListener {
             val siteModel = selectedSite
