@@ -79,6 +79,7 @@ public class NotificationsListFragment extends Fragment {
 
     private TabLayout mTabLayout;
     private ViewGroup mConnectJetpackView;
+    private WPViewPager mViewPager;
     private boolean mShouldRefreshNotifications;
     private int mLastTabPosition;
 
@@ -157,10 +158,10 @@ public class NotificationsListFragment extends Fragment {
             }
         });
 
-        WPViewPager viewPager = view.findViewById(R.id.view_pager);
-        viewPager.setAdapter(new NotificationsFragmentAdapter(getChildFragmentManager()));
-        viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
-        mTabLayout.setupWithViewPager(viewPager);
+        mViewPager = view.findViewById(R.id.view_pager);
+        mViewPager.setAdapter(new NotificationsFragmentAdapter(getChildFragmentManager()));
+        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
+        mTabLayout.setupWithViewPager(mViewPager);
 
         TextView jetpackTermsAndConditions = view.findViewById(R.id.jetpack_terms_and_conditions);
         jetpackTermsAndConditions.setText(Html.fromHtml(String.format(
@@ -194,8 +195,17 @@ public class NotificationsListFragment extends Fragment {
 
         if (!mAccountStore.hasAccessToken()) {
             showConnectJetpackView();
-            mTabLayout.setVisibility(View.GONE);
+            if (getView() != null) {
+                mConnectJetpackView.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.GONE);
+                mViewPager.setVisibility(View.GONE);
+            }
         } else {
+            if (getView() != null) {
+                mConnectJetpackView.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.VISIBLE);
+                mViewPager.setVisibility(View.VISIBLE);
+            }
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote();
             }
@@ -283,9 +293,7 @@ public class NotificationsListFragment extends Fragment {
     }
 
     private void showConnectJetpackView() {
-        if (isAdded() && mConnectJetpackView != null) {
-            mConnectJetpackView.setVisibility(View.VISIBLE);
-            mTabLayout.setVisibility(View.GONE);
+        if (isAdded() && getView() != null) {
             clearToolbarScrollFlags();
 
             Button setupButton = mConnectJetpackView.findViewById(R.id.jetpack_setup);
