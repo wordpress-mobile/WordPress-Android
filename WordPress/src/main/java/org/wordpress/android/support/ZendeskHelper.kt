@@ -46,7 +46,8 @@ private const val enablePushNotificationsDelayAfterIdentityChange: Long = 2500
 class ZendeskHelper(
     private val accountStore: AccountStore,
     private val siteStore: SiteStore,
-    private val supportHelper: SupportHelper
+    private val supportHelper: SupportHelper,
+    private val zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ) {
     private val zendeskInstance: Zendesk
         get() = Zendesk.INSTANCE
@@ -124,7 +125,17 @@ class ZendeskHelper(
                 .withShowConversationsMenuButton(isIdentitySet)
         AnalyticsTracker.track(Stat.SUPPORT_HELP_CENTER_VIEWED)
         if (isIdentitySet) {
-            builder.show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+            builder.show(
+                context,
+                buildZendeskConfig(
+                    context,
+                    siteStore.sites,
+                    origin,
+                    selectedSite,
+                    extraTags,
+                    zendeskPlanFieldHelper
+                )
+            )
         } else {
             builder.show(context)
         }
@@ -148,7 +159,17 @@ class ZendeskHelper(
         requireIdentity(context, selectedSite) {
             AnalyticsTracker.track(Stat.SUPPORT_NEW_REQUEST_VIEWED)
             RequestActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+                .show(
+                    context,
+                    buildZendeskConfig(
+                        context,
+                        siteStore.sites,
+                        origin,
+                        selectedSite,
+                        extraTags,
+                        zendeskPlanFieldHelper
+                    )
+                )
         }
     }
 
@@ -169,7 +190,17 @@ class ZendeskHelper(
         requireIdentity(context, selectedSite) {
             AnalyticsTracker.track(Stat.SUPPORT_TICKET_LIST_VIEWED)
             RequestListActivity.builder()
-                    .show(context, buildZendeskConfig(context, siteStore.sites, origin, selectedSite, extraTags))
+                .show(
+                    context,
+                    buildZendeskConfig(
+                        context,
+                        siteStore.sites,
+                        origin,
+                        selectedSite,
+                        extraTags,
+                        zendeskPlanFieldHelper
+                    )
+                )
         }
     }
 
@@ -342,13 +373,17 @@ private fun buildZendeskConfig(
     allSites: List<SiteModel>?,
     origin: Origin?,
     selectedSite: SiteModel? = null,
-    extraTags: List<String>? = null
+    extraTags: List<String>? = null,
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): UiConfig {
     return RequestActivity.builder()
-            .withTicketForm(TicketFieldIds.form, buildZendeskCustomFields(context, allSites, selectedSite))
-            .withRequestSubject(ZendeskConstants.ticketSubject)
-            .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
-            .config()
+        .withTicketForm(
+            TicketFieldIds.form,
+            buildZendeskCustomFields(context, allSites, selectedSite, zendeskPlanFieldHelper)
+        )
+        .withRequestSubject(ZendeskConstants.ticketSubject)
+        .withTags(buildZendeskTags(allSites, origin ?: Origin.UNKNOWN, extraTags))
+        .config()
 }
 
 /**
@@ -358,7 +393,8 @@ private fun buildZendeskConfig(
 private fun buildZendeskCustomFields(
     context: Context,
     allSites: List<SiteModel>?,
-    selectedSite: SiteModel?
+    selectedSite: SiteModel?,
+    zendeskPlanFieldHelper: ZendeskPlanFieldHelper
 ): List<CustomField> {
     val currentSiteInformation = if (selectedSite != null) {
         "${SiteUtils.getHomeURLOrHostName(selectedSite)} (${selectedSite.stateLogInformation})"
@@ -366,6 +402,11 @@ private fun buildZendeskCustomFields(
         "not_selected"
     }
 
+    val planIds = allSites?.map { site -> site.planId }?.distinct()
+    var highestPlan: String? = null
+    planIds?.let {
+        highestPlan = zendeskPlanFieldHelper.getHighestPlan(it)
+    }
     return listOf(
             CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
             CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
@@ -374,7 +415,8 @@ private fun buildZendeskCustomFields(
             CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
             CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
             CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
-            CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
+            CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform),
+            CustomField(TicketFieldIds.highestPlan, highestPlan ?: ZendeskPlanConstants.FREE)
     )
 }
 
