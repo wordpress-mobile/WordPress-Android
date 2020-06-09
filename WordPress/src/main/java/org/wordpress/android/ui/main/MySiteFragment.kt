@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mSettingsView: View? = null
     private var mAdminView: LinearLayout? = null
     private var mActionableEmptyView: ActionableEmptyView? = null
     private var mScrollView: ScrollView? = null
@@ -331,7 +330,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mSettingsView = rootView.findViewById(R.id.row_settings)
         mSharingView = rootView.findViewById(R.id.row_sharing)
         mAdminView = rootView.findViewById(R.id.row_admin)
         mScrollView = rootView.findViewById(R.id.scroll_view)
@@ -435,7 +433,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mSettingsView!!.setOnClickListener {
+        row_settings.setOnClickListener {
             ActivityLauncher.viewBlogSettingsForResult(
                     activity,
                     selectedSite
@@ -930,7 +928,7 @@ class MySiteFragment : Fragment(),
         val isAdminOrSelfHosted = site.hasCapabilityManageOptions || !SiteUtils.isAccessedViaWPComRest(
                 site
         )
-        mSettingsView!!.visibility = if (isAdminOrSelfHosted) View.VISIBLE else View.GONE
+        row_settings.visibility = if (isAdminOrSelfHosted) View.VISIBLE else View.GONE
         row_people.visibility = if (site.hasCapabilityListUsers) View.VISIBLE else View.GONE
         row_plugins.visibility = if (PluginUtils.isPluginFeatureAvailable(site)) View.VISIBLE else View.GONE
 
