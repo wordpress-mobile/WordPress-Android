@@ -169,15 +169,6 @@ class NotificationsListFragment : Fragment() {
         NotificationsUpdateServiceStarter.startService(activity)
     }
 
-    val selectedSite: SiteModel?
-        get() {
-            if (activity is WPMainActivity) {
-                val mainActivity = requireActivity() as WPMainActivity
-                return mainActivity.selectedSite
-            }
-            return null
-        }
-
     private fun setSelectedTab(position: Int) {
         mLastTabPosition = position
         tab_layout.getTabAt(mLastTabPosition)?.select()
@@ -186,7 +177,7 @@ class NotificationsListFragment : Fragment() {
     private fun showConnectJetpackView() {
         clearToolbarScrollFlags()
         jetpack_setup.setOnClickListener {
-            val siteModel = selectedSite
+            val siteModel = (requireActivity() as? WPMainActivity)?.selectedSite
             JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, siteModel, false)
         }
     }
