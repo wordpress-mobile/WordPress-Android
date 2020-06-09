@@ -59,7 +59,8 @@ class NotificationsListFragment : Fragment() {
     private var mShouldRefreshNotifications = false
     private var mLastTabPosition = 0
 
-    @JvmField @Inject var mAccountStore: AccountStore? = null
+    @Inject lateinit var mAccountStore: AccountStore
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         if (savedInstanceState != null) {
