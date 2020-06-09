@@ -160,7 +160,7 @@ class NotificationsListFragment : Fragment() {
     }
 
     private fun clearToolbarScrollFlags() {
-        if (toolbar_main != null && toolbar_main.layoutParams is LayoutParams) {
+        if (toolbar_main.layoutParams is LayoutParams) {
             val params = toolbar_main.layoutParams as LayoutParams
             params.scrollFlags = 0
         }
@@ -187,28 +187,23 @@ class NotificationsListFragment : Fragment() {
 
     private fun setSelectedTab(position: Int) {
         mLastTabPosition = position
-        if (tab_layout != null) {
-            val tab = tab_layout.getTabAt(mLastTabPosition)
-            tab?.select()
-        }
+        tab_layout.getTabAt(mLastTabPosition)?.select()
     }
 
     private fun showConnectJetpackView() {
-        if (isAdded && connect_jetpack != null) {
-            connect_jetpack.visibility = View.VISIBLE
-            tab_layout.visibility = View.GONE
-            clearToolbarScrollFlags()
-            val setupButton = connect_jetpack.findViewById<Button>(R.id.jetpack_setup)
-            setupButton.setOnClickListener {
-                val siteModel = selectedSite
-                JetpackConnectionWebViewActivity
-                        .startJetpackConnectionFlow(
-                                activity,
-                                NOTIFICATIONS,
-                                siteModel,
-                                false
-                        )
-            }
+        connect_jetpack.visibility = View.VISIBLE
+        tab_layout.visibility = View.GONE
+        clearToolbarScrollFlags()
+        val setupButton = connect_jetpack.findViewById<Button>(R.id.jetpack_setup)
+        setupButton.setOnClickListener {
+            val siteModel = selectedSite
+            JetpackConnectionWebViewActivity
+                    .startJetpackConnectionFlow(
+                            activity,
+                            NOTIFICATIONS,
+                            siteModel,
+                            false
+                    )
         }
     }
 
