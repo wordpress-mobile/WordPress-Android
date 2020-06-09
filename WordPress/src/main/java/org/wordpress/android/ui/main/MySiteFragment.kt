@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mConfigurationHeader: WPTextView? = null
     private var mSettingsView: View? = null
     private var mAdminView: LinearLayout? = null
     private var mActionableEmptyView: ActionableEmptyView? = null
@@ -332,7 +331,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mConfigurationHeader = rootView.findViewById(R.id.my_site_configuration_header)
         mSettingsView = rootView.findViewById(R.id.row_settings)
         mSharingView = rootView.findViewById(R.id.row_sharing)
         mAdminView = rootView.findViewById(R.id.row_admin)
@@ -938,7 +936,7 @@ class MySiteFragment : Fragment(),
 
         // if either people or settings is visible, configuration header should be visible
         val settingsVisibility = if (isAdminOrSelfHosted || site.hasCapabilityListUsers) View.VISIBLE else View.GONE
-        mConfigurationHeader!!.visibility = settingsVisibility
+        my_site_configuration_header.visibility = settingsVisibility
         mImageManager.load(
                 my_site_blavatar,
                 BLAVATAR,
