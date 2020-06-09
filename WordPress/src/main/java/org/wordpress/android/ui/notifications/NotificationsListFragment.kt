@@ -27,6 +27,7 @@ import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -86,12 +87,12 @@ class NotificationsListFragment : Fragment() {
             override fun onTabSelected(tab: Tab) {
                 val properties: MutableMap<String, String?> = HashMap(1)
                 when (tab.position) {
-                    TAB_POSITION_ALL -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
-                    TAB_POSITION_COMMENT -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
-                    TAB_POSITION_FOLLOW -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_FOLLOW.toString()
-                    TAB_POSITION_LIKE -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_LIKE.toString()
-                    TAB_POSITION_UNREAD -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_UNREAD.toString()
-                    else -> properties[AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
+                    TAB_POSITION_ALL -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
+                    TAB_POSITION_COMMENT -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_COMMENT.toString()
+                    TAB_POSITION_FOLLOW -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_FOLLOW.toString()
+                    TAB_POSITION_LIKE -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_LIKE.toString()
+                    TAB_POSITION_UNREAD -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_UNREAD.toString()
+                    else -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
                 }
                 AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties)
                 mLastTabPosition = tab.position
