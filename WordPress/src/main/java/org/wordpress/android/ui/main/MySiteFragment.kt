@@ -154,7 +154,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mDomainRegistrationCta: View? = null
     private val mQuickStartSnackBarHandler = Handler()
     private var mToolbar: Toolbar? = null
     private var mBlavatarSz = 0
@@ -310,7 +309,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta)
         setupClickListeners(rootView)
         mToolbar = rootView.findViewById(R.id.toolbar_main)
         mToolbar?.setTitle(R.string.my_site_section_screen_title)
@@ -335,7 +333,7 @@ class MySiteFragment : Fragment(),
                 .setOnClickListener { showSitePicker() }
         rootView.findViewById<View>(R.id.row_view_site)
                 .setOnClickListener { viewSite() }
-        mDomainRegistrationCta!!.setOnClickListener { v: View? -> registerDomain() }
+        my_site_register_domain_cta.setOnClickListener { v: View? -> registerDomain() }
         rootView.findViewById<View>(R.id.quick_action_stats_button)
                 .setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
@@ -1110,12 +1108,12 @@ class MySiteFragment : Fragment(),
     private fun toggleDomainRegistrationCtaVisibility() {
         if (mIsDomainCreditAvailable) {
             // we nest this check because of some weirdness with ui state and race conditions
-            if (mDomainRegistrationCta!!.visibility != View.VISIBLE) {
+            if (my_site_register_domain_cta.visibility != View.VISIBLE) {
                 AnalyticsTracker.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-                mDomainRegistrationCta!!.visibility = View.VISIBLE
+                my_site_register_domain_cta.visibility = View.VISIBLE
             }
         } else {
-            mDomainRegistrationCta!!.visibility = View.GONE
+            my_site_register_domain_cta.visibility = View.GONE
         }
     }
 
