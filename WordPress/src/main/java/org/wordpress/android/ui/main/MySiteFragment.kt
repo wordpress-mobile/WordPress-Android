@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mAdminView: LinearLayout? = null
     private var mActionableEmptyView: ActionableEmptyView? = null
     private var mScrollView: ScrollView? = null
     private var mCurrentPlanNameTextView: WPTextView? = null
@@ -331,7 +330,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mSharingView = rootView.findViewById(R.id.row_sharing)
-        mAdminView = rootView.findViewById(R.id.row_admin)
         mScrollView = rootView.findViewById(R.id.scroll_view)
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
@@ -975,9 +973,9 @@ class MySiteFragment : Fragment(),
             return
         }
         if (shouldHideWPAdmin(site)) {
-            mAdminView!!.visibility = View.GONE
+            row_admin.visibility = View.GONE
         } else {
-            mAdminView!!.visibility = View.VISIBLE
+            row_admin.visibility = View.VISIBLE
         }
     }
 
