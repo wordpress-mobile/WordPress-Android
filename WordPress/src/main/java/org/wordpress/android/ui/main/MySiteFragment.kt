@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
@@ -77,7 +76,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.login.LoginMode.JETPACK_STATS
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -158,7 +156,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mActionableEmptyView: ActionableEmptyView? = null
     private var mScrollView: ScrollView? = null
     private var mCurrentPlanNameTextView: WPTextView? = null
     private var mSharingView: View? = null
@@ -331,7 +328,6 @@ class MySiteFragment : Fragment(),
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mSharingView = rootView.findViewById(R.id.row_sharing)
         mScrollView = rootView.findViewById(R.id.scroll_view)
-        mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
@@ -449,7 +445,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mActionableEmptyView!!.button.setOnClickListener {
+        actionable_empty_view.button.setOnClickListener {
             SitePickerActivity.addSite(
                     activity,
                     mAccountStore.hasAccessToken()
@@ -891,13 +887,13 @@ class MySiteFragment : Fragment(),
         }
         if (site == null) {
             mScrollView!!.visibility = View.GONE
-            mActionableEmptyView!!.visibility = View.VISIBLE
+            actionable_empty_view.visibility = View.VISIBLE
 
             // Hide actionable empty view image when screen height is under 600 pixels.
             if (DisplayUtils.getDisplayPixelHeight(activity) >= 600) {
-                mActionableEmptyView!!.image.visibility = View.VISIBLE
+                actionable_empty_view.image.visibility = View.VISIBLE
             } else {
-                mActionableEmptyView!!.image.visibility = View.GONE
+                actionable_empty_view.image.visibility = View.GONE
             }
             return
         }
@@ -912,7 +908,7 @@ class MySiteFragment : Fragment(),
             toggleDomainRegistrationCtaVisibility()
         }
         mScrollView!!.visibility = View.VISIBLE
-        mActionableEmptyView!!.visibility = View.GONE
+        actionable_empty_view.visibility = View.GONE
         toggleAdminVisibility(site)
         val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
         my_site_look_and_feel_header.visibility = themesVisibility
