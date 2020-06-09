@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
 import kotlinx.android.synthetic.main.toolbar_main.*
@@ -247,7 +248,7 @@ class MySiteFragment : Fragment(),
                 val noticeTitle = getString(noticeDetails.titleResId)
                 val noticeMessage = getString(noticeDetails.messageResId)
                 val quickStartNoticeSnackBar = WPDialogSnackbar.make(
-                        requireActivity().findViewById(R.id.coordinator),
+                        coordinator,
                         noticeMessage,
                         resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 )
@@ -325,46 +326,36 @@ class MySiteFragment : Fragment(),
     }
 
     private fun setupClickListeners(rootView: View) {
-        rootView.findViewById<View>(R.id.site_info_container)
-                .setOnClickListener { viewSite() }
-        rootView.findViewById<View>(R.id.switch_site)
-                .setOnClickListener { showSitePicker() }
-        rootView.findViewById<View>(R.id.row_view_site)
-                .setOnClickListener { viewSite() }
-        my_site_register_domain_cta.setOnClickListener { v: View? -> registerDomain() }
-        rootView.findViewById<View>(R.id.quick_action_stats_button)
-                .setOnClickListener {
+        site_info_container.setOnClickListener { viewSite() }
+        switch_site.setOnClickListener { showSitePicker() }
+        row_view_site.setOnClickListener { viewSite() }
+        my_site_register_domain_cta.setOnClickListener { registerDomain() }
+        quick_action_stats_button.setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
                     viewStats()
                 }
-        rootView.findViewById<View>(R.id.row_stats)
-                .setOnClickListener { viewStats() }
+        row_stats.setOnClickListener { viewStats() }
         my_site_blavatar.setOnClickListener { updateBlavatar() }
         row_plan.setOnClickListener {
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
-        rootView.findViewById<View>(R.id.quick_action_posts_button)
-                .setOnClickListener {
+        quick_action_posts_button.setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
                     viewPosts()
                 }
-        rootView.findViewById<View>(R.id.row_blog_posts)
-                .setOnClickListener { viewPosts() }
-        rootView.findViewById<View>(R.id.quick_action_media_button)
-                .setOnClickListener {
+        row_blog_posts.setOnClickListener { viewPosts() }
+        quick_action_media_button.setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
                     viewMedia()
                 }
-        rootView.findViewById<View>(R.id.row_media)
-                .setOnClickListener { viewMedia() }
-        rootView.findViewById<View>(R.id.quick_action_pages_button)
-                .setOnClickListener {
+        row_media.setOnClickListener { viewMedia() }
+        quick_action_pages_button.setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
                     viewPages()
                 }
         row_pages.setOnClickListener { viewPages() }
-        rootView.findViewById<View>(R.id.row_comments).setOnClickListener {
+        row_comments.setOnClickListener {
             ActivityLauncher.viewCurrentBlogComments(
                     activity,
                     selectedSite
@@ -407,7 +398,7 @@ class MySiteFragment : Fragment(),
             }
             ActivityLauncher.viewBlogSharing(activity, selectedSite)
         }
-        rootView.findViewById<View>(R.id.row_admin).setOnClickListener {
+        row_admin.setOnClickListener {
             ActivityLauncher.viewBlogAdmin(
                     activity,
                     selectedSite
@@ -1005,14 +996,14 @@ class MySiteFragment : Fragment(),
             if (event.post.localSiteId == site.id) {
                 mUploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
-                        requireActivity().findViewById(R.id.coordinator), true,
+                        coordinator, true,
                         event.post, event.errorMessage, site
                 )
             }
         } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
             mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     activity,
-                    requireActivity().findViewById(R.id.coordinator), true,
+                    coordinator, true,
                     event.mediaModelList, site, event.errorMessage
             )
         }
@@ -1051,7 +1042,7 @@ class MySiteFragment : Fragment(),
                 if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
                     mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                             activity,
-                            requireActivity().findViewById(R.id.coordinator), false,
+                            coordinator, false,
                             event.mediaModelList, site, event.successMessage
                     )
                 }
@@ -1251,7 +1242,7 @@ class MySiteFragment : Fragment(),
             return
         }
         requireView().removeCallbacks(mAddQuickStartFocusPointTask)
-        removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
+        removeQuickStartFocusPoint(root_view_main)
     }
 
     fun isQuickStartTaskActive(task: QuickStartTask): Boolean {
@@ -1322,7 +1313,7 @@ class MySiteFragment : Fragment(),
                 mActiveTutorialPrompt!!.iconId
         )
         val promptSnackbar = WPDialogSnackbar.make(
-                requireActivity().findViewById(R.id.coordinator),
+                coordinator,
                 shortQuickStartMessage, resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
         )
         (activity as WPMainActivity?)!!.showQuickStartSnackBar(promptSnackbar)
