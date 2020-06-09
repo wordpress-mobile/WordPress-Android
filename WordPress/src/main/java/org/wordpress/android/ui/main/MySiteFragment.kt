@@ -154,7 +154,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartMenuButton: View? = null
     private var mDomainRegistrationCta: View? = null
     private val mQuickStartSnackBarHandler = Handler()
     private var mToolbar: Toolbar? = null
@@ -311,7 +310,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more)
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta)
         setupClickListeners(rootView)
         mToolbar = rootView.findViewById(R.id.toolbar_main)
@@ -435,7 +433,7 @@ class MySiteFragment : Fragment(),
                     GROW
             )
         }
-        mQuickStartMenuButton!!.setOnClickListener { showQuickStartCardMenu() }
+        quick_start_more.setOnClickListener { showQuickStartCardMenu() }
     }
 
     private fun registerDomain() {
@@ -578,7 +576,7 @@ class MySiteFragment : Fragment(),
     private fun showQuickStartCardMenu() {
         val quickStartPopupMenu = PopupMenu(
                 requireContext(),
-                mQuickStartMenuButton!!
+                quick_start_more
         )
         quickStartPopupMenu.setOnMenuItemClickListener { item: MenuItem ->
             if (item.itemId == R.id.quick_start_card_menu_remove) {
