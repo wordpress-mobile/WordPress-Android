@@ -22,8 +22,6 @@ import com.google.android.material.tabs.TabLayout.Tab
 import kotlinx.android.synthetic.main.notifications_list_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
-import org.wordpress.android.R.layout
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -73,7 +71,7 @@ class NotificationsListFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layout.notifications_list_fragment, container, false)
+        return inflater.inflate(R.layout.notifications_list_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -101,7 +99,7 @@ class NotificationsListFragment : Fragment() {
             override fun onTabReselected(tab: Tab) {}
         })
         view_pager.adapter = NotificationsFragmentAdapter(childFragmentManager, buildTitles())
-        view_pager.pageMargin = resources.getDimensionPixelSize(dimen.margin_extra_large)
+        view_pager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
         tab_layout.setupWithViewPager(view_pager)
 
         jetpack_terms_and_conditions.text = Html.fromHtml(
