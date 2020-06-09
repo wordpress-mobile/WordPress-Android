@@ -154,7 +154,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mSharingView: View? = null
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
     private var mQuickStartCustomizeIcon: ImageView? = null
@@ -322,7 +321,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mSharingView = rootView.findViewById(R.id.row_sharing)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
         mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle)
@@ -427,7 +425,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mSharingView!!.setOnClickListener {
+        row_sharing.setOnClickListener {
             if (isQuickStartTaskActive(ENABLE_POST_SHARING)) {
                 requestNextStepOfActiveQuickStartTask()
             }
@@ -910,7 +908,7 @@ class MySiteFragment : Fragment(),
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
         val sharingVisibility = if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
-        mSharingView!!.visibility = sharingVisibility
+        row_sharing.visibility = sharingVisibility
 
         // show settings for all self-hosted to expose Delete Site
         val isAdminOrSelfHosted = site.hasCapabilityManageOptions || !SiteUtils.isAccessedViaWPComRest(
