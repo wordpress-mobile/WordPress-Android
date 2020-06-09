@@ -169,11 +169,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mMeGravatarLoader: MeGravatarLoader
     val selectedSite: SiteModel?
         get() {
-            if (activity is WPMainActivity) {
-                val mainActivity = activity as WPMainActivity?
-                return mainActivity!!.selectedSite
-            }
-            return null
+            return (activity as? WPMainActivity)?.selectedSite
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,8 +207,7 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         refreshMeGravatar()
-        val site = selectedSite
-        if (site != null) {
+        selectedSite?.let { site ->
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
                     site
@@ -424,8 +419,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun registerDomain() {
-        AnalyticsUtils
-                .trackWithSiteDetails(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
+        AnalyticsUtils.trackWithSiteDetails(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite)
         ActivityLauncher.viewDomainRegistrationActivityForResult(
                 activity, selectedSite,
                 CTA_DOMAIN_CREDIT_REDEMPTION
@@ -809,10 +803,10 @@ class MySiteFragment : Fragment(),
         if (my_site_icon_progress != null && my_site_blavatar != null) {
             if (isVisible) {
                 my_site_icon_progress.visibility = View.VISIBLE
-                my_site_blavatar!!.visibility = View.INVISIBLE
+                my_site_blavatar.visibility = View.INVISIBLE
             } else {
                 my_site_icon_progress.visibility = View.GONE
-                my_site_blavatar!!.visibility = View.VISIBLE
+                my_site_blavatar.visibility = View.VISIBLE
             }
         }
     }
@@ -1250,7 +1244,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun completeQuickStarTask(quickStartTask: QuickStartTask) {
-        if (selectedSite != null) {
+        selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
                     !mQuickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), quickStartTask)
@@ -1258,7 +1252,7 @@ class MySiteFragment : Fragment(),
             )
             completeTaskAndRemindNextOne(
                     mQuickStartStore, quickStartTask, mDispatcher,
-                    selectedSite!!, context = requireContext()
+                    site, context = requireContext()
             )
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
@@ -1316,7 +1310,7 @@ class MySiteFragment : Fragment(),
                 coordinator,
                 shortQuickStartMessage, resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
         )
-        (activity as WPMainActivity?)!!.showQuickStartSnackBar(promptSnackbar)
+        (requireActivity() as WPMainActivity).showQuickStartSnackBar(promptSnackbar)
     }
 
     private fun showQuickStartDialogMigration() {
@@ -1339,9 +1333,9 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateSiteIconMediaId(mediaId: Int) {
-        if (mSiteSettings != null) {
-            mSiteSettings!!.setSiteIconMediaId(mediaId)
-            mSiteSettings!!.saveSettings()
+        mSiteSettings?.let {
+            it.setSiteIconMediaId(mediaId)
+            it.saveSettings()
         }
     }
 
