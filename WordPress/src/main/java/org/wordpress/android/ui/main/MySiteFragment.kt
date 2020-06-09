@@ -156,7 +156,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartGrowIcon: ImageView? = null
     private var mQuickStartGrowSubtitle: TextView? = null
     private var mQuickStartGrowTitle: TextView? = null
     private var mQuickStartGrowView: View? = null
@@ -318,7 +317,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
-        mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon)
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle)
         mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title)
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more)
@@ -567,11 +565,11 @@ class MySiteFragment : Fragment(),
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted
             )
             if (countGrowUncompleted > 0) {
-                mQuickStartGrowIcon!!.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
+                quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
                 mQuickStartGrowTitle!!.isEnabled = true
                 mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             } else {
-                mQuickStartGrowIcon!!.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
+                quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
                 mQuickStartGrowTitle!!.isEnabled = false
                 mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
