@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mPlanContainer: LinearLayout? = null
     private var mPluginsContainer: LinearLayout? = null
     private var mActivityLogContainer: LinearLayout? = null
     private var mQuickStartContainer: View? = null
@@ -336,7 +335,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mPlanContainer = rootView.findViewById(R.id.row_plan)
         mPluginsContainer = rootView.findViewById(R.id.row_plugins)
         mActivityLogContainer = rootView.findViewById(R.id.row_activity_log)
         mConfigurationHeader = rootView.findViewById(R.id.my_site_configuration_header)
@@ -390,7 +388,7 @@ class MySiteFragment : Fragment(),
         rootView.findViewById<View>(R.id.row_stats)
                 .setOnClickListener { viewStats() }
         my_site_blavatar.setOnClickListener { updateBlavatar() }
-        mPlanContainer!!.setOnClickListener {
+        row_plan.setOnClickListener {
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
@@ -962,13 +960,13 @@ class MySiteFragment : Fragment(),
         if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions) {
             if (site.isWPCom || site.isAutomatedTransfer) {
                 mCurrentPlanNameTextView!!.text = planShortName
-                mPlanContainer!!.visibility = View.VISIBLE
+                row_plan.visibility = View.VISIBLE
             } else {
                 // TODO: Support Jetpack plans
-                mPlanContainer!!.visibility = View.GONE
+                row_plan.visibility = View.GONE
             }
         } else {
-            mPlanContainer!!.visibility = View.GONE
+            row_plan.visibility = View.GONE
         }
 
         // Do not show pages menu item to Collaborators.
