@@ -1,6 +1,6 @@
 15.1
 -----
- 
+ * Fixes issue on Notifications tab when two screens were drawn on top of each other
 15.0
 -----
 * [*] Fix wrong icon is used when a Password is visible
