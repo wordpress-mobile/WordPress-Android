@@ -304,19 +304,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         blavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        setupClickListeners()
-        toolbar_main.setTitle(R.string.my_site_section_screen_title)
-        toolbar_main.inflateMenu(R.menu.my_site_menu)
-        val meMenu = toolbar_main.menu.findItem(R.id.me_item)
-        val actionView = meMenu.actionView
-        actionView.setOnClickListener {
-            ActivityLauncher.viewMeActivityForResult(
-                    activity
-            )
-        }
-        actionView.let {
-            TooltipCompat.setTooltipText(it, meMenu.title)
-        }
         return rootView
     }
 
@@ -496,6 +483,19 @@ class MySiteFragment : Fragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
+        toolbar_main.setTitle(R.string.my_site_section_screen_title)
+        toolbar_main.inflateMenu(R.menu.my_site_menu)
+        val meMenu = toolbar_main.menu.findItem(R.id.me_item)
+        val actionView = meMenu.actionView
+        actionView.setOnClickListener {
+            ActivityLauncher.viewMeActivityForResult(
+                    activity
+            )
+        }
+        actionView.let {
+            TooltipCompat.setTooltipText(it, meMenu.title)
+        }
         if (activeTutorialPrompt != null) {
             showQuickStartFocusPoint()
         }
