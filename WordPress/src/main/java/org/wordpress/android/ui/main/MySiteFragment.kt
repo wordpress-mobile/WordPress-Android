@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mPeopleView: LinearLayout? = null
     private var mPageView: LinearLayout? = null
     private var mQuickActionPageButtonContainer: View? = null
     private var mQuickActionButtonsContainer: LinearLayout? = null
@@ -340,7 +339,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mPeopleView = rootView.findViewById(R.id.row_people)
         mPlanContainer = rootView.findViewById(R.id.row_plan)
         mPluginsContainer = rootView.findViewById(R.id.row_plugins)
         mActivityLogContainer = rootView.findViewById(R.id.row_activity_log)
@@ -435,7 +433,7 @@ class MySiteFragment : Fragment(),
             }
             ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
         }
-        mPeopleView!!.setOnClickListener {
+        row_people.setOnClickListener {
             ActivityLauncher.viewCurrentBlogPeople(
                     activity,
                     selectedSite
@@ -949,7 +947,7 @@ class MySiteFragment : Fragment(),
                 site
         )
         mSettingsView!!.visibility = if (isAdminOrSelfHosted) View.VISIBLE else View.GONE
-        mPeopleView!!.visibility = if (site.hasCapabilityListUsers) View.VISIBLE else View.GONE
+        row_people.visibility = if (site.hasCapabilityListUsers) View.VISIBLE else View.GONE
         mPluginsContainer!!.visibility = if (PluginUtils.isPluginFeatureAvailable(site)) View.VISIBLE else View.GONE
 
         // if either people or settings is visible, configuration header should be visible
