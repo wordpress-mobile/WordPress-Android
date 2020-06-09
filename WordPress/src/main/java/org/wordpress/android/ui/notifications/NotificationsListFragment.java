@@ -313,10 +313,9 @@ public class NotificationsListFragment extends Fragment {
     }
 
     private static class NotificationsFragmentAdapter extends FragmentPagerAdapter {
-
         private List<String> mTitles;
 
-        public NotificationsFragmentAdapter(@NonNull FragmentManager fm, List<String> titles) {
+        NotificationsFragmentAdapter(@NonNull FragmentManager fm, List<String> titles) {
             super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             mTitles = titles;
         }
