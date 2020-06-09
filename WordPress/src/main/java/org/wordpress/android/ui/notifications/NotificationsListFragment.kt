@@ -12,8 +12,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -52,7 +50,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.NOTIFS
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPUrlUtils
-import org.wordpress.android.widgets.WPViewPager
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -75,12 +72,12 @@ class NotificationsListFragment : Fragment() {
         mShouldRefreshNotifications = true
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(layout.notifications_list_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(layout.notifications_list_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         toolbar_main.setTitle(string.notifications_screen_title)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_main)
@@ -116,7 +113,6 @@ class NotificationsListFragment : Fragment() {
         jetpack_faq.setOnClickListener {
             WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
         }
-        return view
     }
 
     override fun onPause() {
@@ -180,13 +176,7 @@ class NotificationsListFragment : Fragment() {
         clearToolbarScrollFlags()
         jetpack_setup.setOnClickListener {
             val siteModel = selectedSite
-            JetpackConnectionWebViewActivity
-                    .startJetpackConnectionFlow(
-                            activity,
-                            NOTIFICATIONS,
-                            siteModel,
-                            false
-                    )
+            JetpackConnectionWebViewActivity.startJetpackConnectionFlow(activity, NOTIFICATIONS, siteModel, false)
         }
     }
 
