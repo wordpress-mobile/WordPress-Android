@@ -429,10 +429,6 @@ private fun buildZendeskTags(allSites: List<SiteModel>?, origin: Origin, extraTa
         if (it.any { site -> site.isJetpackConnected }) {
             tags.add(ZendeskConstants.jetpackTag)
         }
-
-        // Find distinct plans and add them
-        val plans = it.mapNotNull { site -> site.planShortName }.distinct()
-        tags.addAll(plans)
     }
     tags.add(origin.toString())
     // Add Android tag to make it easier to filter tickets by platform
