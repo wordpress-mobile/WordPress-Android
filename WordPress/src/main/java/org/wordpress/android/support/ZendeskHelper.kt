@@ -494,6 +494,7 @@ private object TicketFieldIds {
     const val currentSite = 360000103103L
     const val appLanguage = 360008583691L
     const val sourcePlatform = 360009311651L
+    const val highestPlan = 25175963L
 }
 
 object ZendeskExtraTags {
