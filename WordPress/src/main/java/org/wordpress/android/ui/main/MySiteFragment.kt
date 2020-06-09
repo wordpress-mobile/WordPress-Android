@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mPluginsContainer: LinearLayout? = null
     private var mActivityLogContainer: LinearLayout? = null
     private var mQuickStartContainer: View? = null
     private var mConfigurationHeader: WPTextView? = null
@@ -335,7 +334,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mPluginsContainer = rootView.findViewById(R.id.row_plugins)
         mActivityLogContainer = rootView.findViewById(R.id.row_activity_log)
         mConfigurationHeader = rootView.findViewById(R.id.my_site_configuration_header)
         mSettingsView = rootView.findViewById(R.id.row_settings)
@@ -431,7 +429,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mPluginsContainer!!.setOnClickListener {
+        row_plugins.setOnClickListener {
             ActivityLauncher.viewPluginBrowser(
                     activity,
                     selectedSite
@@ -940,7 +938,7 @@ class MySiteFragment : Fragment(),
         )
         mSettingsView!!.visibility = if (isAdminOrSelfHosted) View.VISIBLE else View.GONE
         row_people.visibility = if (site.hasCapabilityListUsers) View.VISIBLE else View.GONE
-        mPluginsContainer!!.visibility = if (PluginUtils.isPluginFeatureAvailable(site)) View.VISIBLE else View.GONE
+        row_plugins.visibility = if (PluginUtils.isPluginFeatureAvailable(site)) View.VISIBLE else View.GONE
 
         // if either people or settings is visible, configuration header should be visible
         val settingsVisibility = if (isAdminOrSelfHosted || site.hasCapabilityListUsers) View.VISIBLE else View.GONE
