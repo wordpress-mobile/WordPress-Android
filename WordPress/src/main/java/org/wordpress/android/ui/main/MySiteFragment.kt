@@ -28,13 +28,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.dimen
-import org.wordpress.android.R.drawable
-import org.wordpress.android.R.integer
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.menu
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -294,11 +287,11 @@ class MySiteFragment : Fragment(),
                 val quickStartNoticeSnackBar = WPDialogSnackbar.make(
                         requireActivity().findViewById(R.id.coordinator),
                         noticeMessage,
-                        resources.getInteger(integer.quick_start_snackbar_duration_ms)
+                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 )
                 quickStartNoticeSnackBar.setTitle(noticeTitle)
                 quickStartNoticeSnackBar.setPositiveButton(
-                        getString(string.quick_start_button_positive)
+                        getString(R.string.quick_start_button_positive)
                 ) { v: View? ->
                     AnalyticsTracker.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
                     mActiveTutorialPrompt = getPromptDetailsForTask(taskToPrompt)
@@ -306,7 +299,7 @@ class MySiteFragment : Fragment(),
                 }
                 quickStartNoticeSnackBar
                         .setNegativeButton(
-                                getString(string.quick_start_button_negative)
+                                getString(R.string.quick_start_button_negative)
                         ) { v: View? ->
                             AnalyticsTracker.track(
                                     QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
@@ -351,8 +344,8 @@ class MySiteFragment : Fragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(layout.my_site_fragment, container, false) as ViewGroup
-        mBlavatarSz = resources.getDimensionPixelSize(dimen.blavatar_sz_small)
+        val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
+        mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mBlavatarImageView = rootView.findViewById(R.id.my_site_blavatar)
         mBlavatarProgressBar = rootView.findViewById(R.id.my_site_icon_progress)
         mBlogTitleTextView = rootView.findViewById(R.id.my_site_title_label)
@@ -386,12 +379,12 @@ class MySiteFragment : Fragment(),
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta)
         setupClickListeners(rootView)
         mToolbar = rootView.findViewById(R.id.toolbar_main)
-        mToolbar.setTitle(string.my_site_section_screen_title)
-        mToolbar.inflateMenu(menu.my_site_menu)
-        val meMenu = mToolbar.getMenu().findItem(R.id.me_item)
-        val actionView = meMenu.actionView
-        mAvatarImageView = actionView.findViewById(R.id.avatar)
-        actionView.setOnClickListener { item: View? ->
+        mToolbar?.setTitle(R.string.my_site_section_screen_title)
+        mToolbar?.inflateMenu(R.menu.my_site_menu)
+        val meMenu = mToolbar?.menu?.findItem(R.id.me_item)
+        val actionView = meMenu?.actionView
+        mAvatarImageView = actionView?.findViewById(R.id.avatar)
+        actionView?.setOnClickListener {
             ActivityLauncher.viewMeActivityForResult(
                     activity
             )
@@ -494,7 +487,7 @@ class MySiteFragment : Fragment(),
         mActionableEmptyView!!.button.setOnClickListener { v: View? ->
             SitePickerActivity.addSite(
                     activity,
-                    mAccountStore!!.hasAccessToken()
+                    mAccountStore.hasAccessToken()
             )
         }
         mQuickStartCustomizeView!!.setOnClickListener { v: View? ->
@@ -537,8 +530,8 @@ class MySiteFragment : Fragment(),
                 completeQuickStarTask(UPLOAD_SITE_ICON)
             } else {
                 showEditingSiteIconRequiresPermissionDialog(
-                        if (hasIcon) getString(string.my_site_icon_dialog_change_requires_permission_message) else getString(
-                                string.my_site_icon_dialog_add_requires_permission_message
+                        if (hasIcon) getString(R.string.my_site_icon_dialog_change_requires_permission_message) else getString(
+                                R.string.my_site_icon_dialog_add_requires_permission_message
                         )
                 )
             }
@@ -551,7 +544,7 @@ class MySiteFragment : Fragment(),
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPosts(requireActivity(), selectedSite)
         } else {
-            ToastUtils.showToast(activity, string.site_cannot_be_loaded)
+            ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
     }
 
@@ -561,7 +554,7 @@ class MySiteFragment : Fragment(),
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
         } else {
-            ToastUtils.showToast(activity, string.site_cannot_be_loaded)
+            ToastUtils.showToast(activity, R.string.site_cannot_be_loaded)
         }
     }
 
@@ -625,20 +618,20 @@ class MySiteFragment : Fragment(),
                 mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
             mQuickStartCustomizeSubtitle!!.text = getString(
-                    string.quick_start_sites_type_subtitle,
+                    R.string.quick_start_sites_type_subtitle,
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted
             )
             if (countGrowUncompleted > 0) {
-                mQuickStartGrowIcon!!.setBackgroundResource(drawable.bg_oval_pink_50_multiple_users_white_40dp)
+                mQuickStartGrowIcon!!.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
                 mQuickStartGrowTitle!!.isEnabled = true
                 mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             } else {
-                mQuickStartGrowIcon!!.setBackgroundResource(drawable.bg_oval_neutral_30_multiple_users_white_40dp)
+                mQuickStartGrowIcon!!.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
                 mQuickStartGrowTitle!!.isEnabled = false
                 mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
             mQuickStartGrowSubtitle!!.text = getString(
-                    string.quick_start_sites_type_subtitle,
+                    R.string.quick_start_sites_type_subtitle,
                     countGrowCompleted, countGrowCompleted + countGrowUncompleted
             )
             mQuickStartContainer!!.visibility = View.VISIBLE
@@ -659,7 +652,7 @@ class MySiteFragment : Fragment(),
             }
             false
         }
-        quickStartPopupMenu.inflate(menu.quick_start_card_menu)
+        quickStartPopupMenu.inflate(R.menu.quick_start_card_menu)
         quickStartPopupMenu.show()
     }
 
@@ -668,14 +661,14 @@ class MySiteFragment : Fragment(),
         val bundle = QuickStartFullScreenDialogFragment.newBundle(type)
         when (type) {
             CUSTOMIZE -> Builder(requireContext())
-                    .setTitle(string.quick_start_sites_type_customize)
+                    .setTitle(R.string.quick_start_sites_type_customize)
                     .setOnConfirmListener(this)
                     .setOnDismissListener(this)
                     .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
                     .build()
                     .show(requireActivity().supportFragmentManager, FullScreenDialogFragment.TAG)
             GROW -> Builder(requireContext())
-                    .setTitle(string.quick_start_sites_type_grow)
+                    .setTitle(R.string.quick_start_sites_type_grow)
                     .setOnConfirmListener(this)
                     .setOnDismissListener(this)
                     .setContent(QuickStartFullScreenDialogFragment::class.java, bundle)
@@ -690,10 +683,10 @@ class MySiteFragment : Fragment(),
         val dialog = BasicFragmentDialog()
         val tag = TAG_ADD_SITE_ICON_DIALOG
         dialog.initialize(
-                tag, getString(string.my_site_icon_dialog_title),
-                getString(string.my_site_icon_dialog_add_message),
-                getString(string.yes),
-                getString(string.no),
+                tag, getString(R.string.my_site_icon_dialog_title),
+                getString(R.string.my_site_icon_dialog_add_message),
+                getString(R.string.yes),
+                getString(R.string.no),
                 null
         )
         dialog.show(requireActivity().supportFragmentManager, tag)
@@ -703,11 +696,11 @@ class MySiteFragment : Fragment(),
         val dialog = BasicFragmentDialog()
         val tag = TAG_CHANGE_SITE_ICON_DIALOG
         dialog.initialize(
-                tag, getString(string.my_site_icon_dialog_title),
-                getString(string.my_site_icon_dialog_change_message),
-                getString(string.my_site_icon_dialog_change_button),
-                getString(string.my_site_icon_dialog_remove_button),
-                getString(string.my_site_icon_dialog_cancel_button)
+                tag, getString(R.string.my_site_icon_dialog_title),
+                getString(R.string.my_site_icon_dialog_change_message),
+                getString(R.string.my_site_icon_dialog_change_button),
+                getString(R.string.my_site_icon_dialog_remove_button),
+                getString(R.string.my_site_icon_dialog_cancel_button)
         )
         dialog.show(requireActivity().supportFragmentManager, tag)
     }
@@ -716,9 +709,9 @@ class MySiteFragment : Fragment(),
         val dialog = BasicFragmentDialog()
         val tag = TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG
         dialog.initialize(
-                tag, getString(string.my_site_icon_dialog_title),
+                tag, getString(R.string.my_site_icon_dialog_title),
                 message,
-                getString(string.dialog_button_ok),
+                getString(R.string.dialog_button_ok),
                 null,
                 null
         )
@@ -729,10 +722,10 @@ class MySiteFragment : Fragment(),
         val dialog = BasicFragmentDialog()
         val tag = TAG_REMOVE_NEXT_STEPS_DIALOG
         dialog.initialize(
-                tag, getString(string.quick_start_dialog_remove_next_steps_title),
-                getString(string.quick_start_dialog_remove_next_steps_message),
-                getString(string.remove),
-                getString(string.cancel),
+                tag, getString(R.string.quick_start_dialog_remove_next_steps_title),
+                getString(R.string.quick_start_dialog_remove_next_steps_message),
+                getString(R.string.remove),
+                getString(R.string.cancel),
                 null
         )
         dialog.show(requireActivity().supportFragmentManager, tag)
@@ -817,7 +810,7 @@ class MySiteFragment : Fragment(),
                 )
                 ToastUtils.showToast(
                         activity,
-                        string.error_cropping_image,
+                        R.string.error_cropping_image,
                         SHORT
                 )
             }
@@ -853,7 +846,7 @@ class MySiteFragment : Fragment(),
         if (TextUtils.isEmpty(filePath)) {
             ToastUtils.showToast(
                     activity,
-                    string.error_locating_image,
+                    R.string.error_locating_image,
                     SHORT
             )
             return
@@ -862,7 +855,7 @@ class MySiteFragment : Fragment(),
         if (!file.exists()) {
             ToastUtils.showToast(
                     activity,
-                    string.file_error_create,
+                    R.string.file_error_create,
                     SHORT
             )
             return
@@ -882,7 +875,7 @@ class MySiteFragment : Fragment(),
         } else {
             ToastUtils.showToast(
                     activity,
-                    string.error_generic,
+                    R.string.error_generic,
                     SHORT
             )
             AppLog.e(
@@ -917,8 +910,8 @@ class MySiteFragment : Fragment(),
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(ContextCompat.getColor(context, color.status_bar))
-        options.setToolbarColor(ContextCompat.getColor(context, color.primary))
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar))
+        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
@@ -1292,18 +1285,18 @@ class MySiteFragment : Fragment(),
         if (quickStartTarget == null || parentView == null) {
             return@Runnable
         }
-        val focusPointSize = resources.getDimensionPixelOffset(dimen.quick_start_focus_point_size)
+        val focusPointSize = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
         val horizontalOffset: Int
         val verticalOffset: Int
         if (isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
             horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
-                    .getDimensionPixelOffset(dimen.quick_start_focus_point_bottom_nav_offset)
+                    .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
             verticalOffset = 0
         } else if (mActiveTutorialPrompt!!.task == UPLOAD_SITE_ICON) {
             horizontalOffset = focusPointSize
             verticalOffset = -focusPointSize / 2
         } else {
-            horizontalOffset = resources.getDimensionPixelOffset(dimen.quick_start_focus_point_my_site_right_offset)
+            horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
             verticalOffset = (quickStartTarget.height - focusPointSize) / 2
         }
         addQuickStartFocusPointAboveTheView(
@@ -1401,7 +1394,7 @@ class MySiteFragment : Fragment(),
         )
         val promptSnackbar = WPDialogSnackbar.make(
                 requireActivity().findViewById(R.id.coordinator),
-                shortQuickStartMessage, resources.getInteger(integer.quick_start_snackbar_duration_ms)
+                shortQuickStartMessage, resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
         )
         (activity as WPMainActivity?)!!.showQuickStartSnackBar(promptSnackbar)
     }
@@ -1410,10 +1403,10 @@ class MySiteFragment : Fragment(),
         val promoDialog = PromoDialog()
         promoDialog.initialize(
                 TAG_QUICK_START_MIGRATION_DIALOG,
-                getString(string.quick_start_dialog_migration_title),
-                getString(string.quick_start_dialog_migration_message),
+                getString(R.string.quick_start_dialog_migration_title),
+                getString(R.string.quick_start_dialog_migration_message),
                 getString(android.R.string.ok),
-                drawable.img_illustration_checkmark_280dp,
+                R.drawable.img_illustration_checkmark_280dp,
                 "",
                 "",
                 ""
