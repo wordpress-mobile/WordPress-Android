@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mThemesContainer: LinearLayout? = null
     private var mPeopleView: LinearLayout? = null
     private var mPageView: LinearLayout? = null
     private var mQuickActionPageButtonContainer: View? = null
@@ -341,7 +340,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mThemesContainer = rootView.findViewById(R.id.row_themes)
         mPeopleView = rootView.findViewById(R.id.row_people)
         mPlanContainer = rootView.findViewById(R.id.row_plan)
         mPluginsContainer = rootView.findViewById(R.id.row_plugins)
@@ -430,7 +428,7 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
-        mThemesContainer!!.setOnClickListener {
+        row_themes.setOnClickListener {
             completeQuickStarTask(CHOOSE_THEME)
             if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
                 requestNextStepOfActiveQuickStartTask()
@@ -940,7 +938,7 @@ class MySiteFragment : Fragment(),
         toggleAdminVisibility(site)
         val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
         my_site_look_and_feel_header.visibility = themesVisibility
-        mThemesContainer!!.visibility = themesVisibility
+        row_themes.visibility = themesVisibility
 
         // sharing is only exposed for sites accessed via the WPCOM REST API (wpcom or Jetpack)
         val sharingVisibility = if (SiteUtils.isAccessedViaWPComRest(site)) View.VISIBLE else View.GONE
