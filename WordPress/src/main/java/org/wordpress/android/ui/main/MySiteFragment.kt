@@ -156,7 +156,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartCustomizeSubtitle: TextView? = null
     private var mQuickStartCustomizeTitle: TextView? = null
     private var mQuickStartCustomizeView: View? = null
     private var mQuickStartGrowIcon: ImageView? = null
@@ -321,7 +320,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
-        mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle)
         mQuickStartCustomizeTitle = rootView.findViewById(R.id.quick_start_customize_title)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
         mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon)
@@ -568,7 +566,7 @@ class MySiteFragment : Fragment(),
                 mQuickStartCustomizeTitle!!.isEnabled = false
                 mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
-            mQuickStartCustomizeSubtitle!!.text = getString(
+            quick_start_customize_subtitle.text = getString(
                     R.string.quick_start_sites_type_subtitle,
                     countCustomizeCompleted, countCustomizeCompleted + countCustomizeUncompleted
             )
