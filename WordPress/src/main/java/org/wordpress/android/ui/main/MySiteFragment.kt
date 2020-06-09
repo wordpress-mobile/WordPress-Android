@@ -397,110 +397,110 @@ class MySiteFragment : Fragment(),
 
     private fun setupClickListeners(rootView: View) {
         rootView.findViewById<View>(R.id.site_info_container)
-                .setOnClickListener { view: View? -> viewSite() }
+                .setOnClickListener { viewSite() }
         rootView.findViewById<View>(R.id.switch_site)
-                .setOnClickListener { v: View? -> showSitePicker() }
+                .setOnClickListener { showSitePicker() }
         rootView.findViewById<View>(R.id.row_view_site)
-                .setOnClickListener { v: View? -> viewSite() }
+                .setOnClickListener { viewSite() }
         mDomainRegistrationCta!!.setOnClickListener { v: View? -> registerDomain() }
         rootView.findViewById<View>(R.id.quick_action_stats_button)
-                .setOnClickListener { v: View? ->
+                .setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_STATS_TAPPED)
                     viewStats()
                 }
         rootView.findViewById<View>(R.id.row_stats)
-                .setOnClickListener { v: View? -> viewStats() }
-        mBlavatarImageView!!.setOnClickListener { v: View? -> updateBlavatar() }
-        mPlanContainer!!.setOnClickListener { v: View? ->
+                .setOnClickListener { viewStats() }
+        mBlavatarImageView!!.setOnClickListener { updateBlavatar() }
+        mPlanContainer!!.setOnClickListener {
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
         rootView.findViewById<View>(R.id.quick_action_posts_button)
-                .setOnClickListener { v: View? ->
+                .setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
                     viewPosts()
                 }
         rootView.findViewById<View>(R.id.row_blog_posts)
-                .setOnClickListener { v: View? -> viewPosts() }
+                .setOnClickListener { viewPosts() }
         rootView.findViewById<View>(R.id.quick_action_media_button)
-                .setOnClickListener { v: View? ->
+                .setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_MEDIA_TAPPED)
                     viewMedia()
                 }
         rootView.findViewById<View>(R.id.row_media)
-                .setOnClickListener { v: View? -> viewMedia() }
+                .setOnClickListener { viewMedia() }
         rootView.findViewById<View>(R.id.quick_action_pages_button)
-                .setOnClickListener { v: View? ->
+                .setOnClickListener {
                     AnalyticsTracker.track(QUICK_ACTION_PAGES_TAPPED)
                     viewPages()
                 }
-        mPageView!!.setOnClickListener { v: View? -> viewPages() }
-        rootView.findViewById<View>(R.id.row_comments).setOnClickListener { v: View? ->
+        mPageView!!.setOnClickListener { viewPages() }
+        rootView.findViewById<View>(R.id.row_comments).setOnClickListener {
             ActivityLauncher.viewCurrentBlogComments(
                     activity,
                     selectedSite
             )
         }
-        mThemesContainer!!.setOnClickListener { v: View? ->
+        mThemesContainer!!.setOnClickListener {
             completeQuickStarTask(CHOOSE_THEME)
             if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
                 requestNextStepOfActiveQuickStartTask()
             }
             ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
         }
-        mPeopleView!!.setOnClickListener { v: View? ->
+        mPeopleView!!.setOnClickListener {
             ActivityLauncher.viewCurrentBlogPeople(
                     activity,
                     selectedSite
             )
         }
-        mPluginsContainer!!.setOnClickListener { view: View? ->
+        mPluginsContainer!!.setOnClickListener {
             ActivityLauncher.viewPluginBrowser(
                     activity,
                     selectedSite
             )
         }
-        mActivityLogContainer!!.setOnClickListener { view: View? ->
+        mActivityLogContainer!!.setOnClickListener {
             ActivityLauncher.viewActivityLogList(
                     activity,
                     selectedSite
             )
         }
-        mSettingsView!!.setOnClickListener { v: View? ->
+        mSettingsView!!.setOnClickListener {
             ActivityLauncher.viewBlogSettingsForResult(
                     activity,
                     selectedSite
             )
         }
-        mSharingView!!.setOnClickListener { v: View? ->
+        mSharingView!!.setOnClickListener {
             if (isQuickStartTaskActive(ENABLE_POST_SHARING)) {
                 requestNextStepOfActiveQuickStartTask()
             }
             ActivityLauncher.viewBlogSharing(activity, selectedSite)
         }
-        rootView.findViewById<View>(R.id.row_admin).setOnClickListener { v: View? ->
+        rootView.findViewById<View>(R.id.row_admin).setOnClickListener {
             ActivityLauncher.viewBlogAdmin(
                     activity,
                     selectedSite
             )
         }
-        mActionableEmptyView!!.button.setOnClickListener { v: View? ->
+        mActionableEmptyView!!.button.setOnClickListener {
             SitePickerActivity.addSite(
                     activity,
                     mAccountStore.hasAccessToken()
             )
         }
-        mQuickStartCustomizeView!!.setOnClickListener { v: View? ->
+        mQuickStartCustomizeView!!.setOnClickListener {
             showQuickStartList(
                     CUSTOMIZE
             )
         }
-        mQuickStartGrowView!!.setOnClickListener { v: View? ->
+        mQuickStartGrowView!!.setOnClickListener {
             showQuickStartList(
                     GROW
             )
         }
-        mQuickStartMenuButton!!.setOnClickListener { v: View? -> showQuickStartCardMenu() }
+        mQuickStartMenuButton!!.setOnClickListener { showQuickStartCardMenu() }
     }
 
     private fun registerDomain() {
@@ -817,14 +817,14 @@ class MySiteFragment : Fragment(),
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK && isAdded && data != null) {
                 AnalyticsTracker.track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
                 val email = data.getStringExtra(DomainRegistrationResultFragment.RESULT_REGISTERED_DOMAIN_EMAIL)
-                requestEmailValidation(context!!, email)
+                requestEmailValidation(requireContext(), email)
             }
         }
     }
 
     override fun onConfirm(result: Bundle?) {
         if (result != null) {
-            val task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as QuickStartTask
+            val task = result.getSerializable(QuickStartFullScreenDialogFragment.RESULT_TASK) as? QuickStartTask
             if (task == null || task == CREATE_SITE) {
                 return
             }
@@ -866,7 +866,7 @@ class MySiteFragment : Fragment(),
             if (media == null) {
                 ToastUtils.showToast(
                         activity,
-                        string.file_not_found,
+                        R.string.file_not_found,
                         SHORT
                 )
                 return
@@ -898,9 +898,9 @@ class MySiteFragment : Fragment(),
     }
 
     private val isMediaUploadInProgress: Boolean
-        private get() = mBlavatarProgressBar!!.visibility == View.VISIBLE
+        get() = mBlavatarProgressBar!!.visibility == View.VISIBLE
 
-    private fun buildMediaModel(file: File, site: SiteModel): MediaModel {
+    private fun buildMediaModel(file: File, site: SiteModel): MediaModel? {
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = requireActivity().contentResolver.getType(uri)
         return FluxCUtils.mediaModelFromLocalUri(requireActivity(), uri, mimeType, mMediaStore, site.id)
@@ -917,7 +917,7 @@ class MySiteFragment : Fragment(),
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
                 .withAspectRatio(1f, 1f)
                 .withOptions(options)
-                .start(activity!!, this)
+                .start(requireActivity(), this)
     }
 
     private fun refreshSelectedSiteDetails(site: SiteModel?) {
@@ -1314,14 +1314,14 @@ class MySiteFragment : Fragment(),
         if (view == null || !hasActiveQuickStartTask()) {
             return
         }
-        view!!.post(mAddQuickStartFocusPointTask)
+        requireView().post(mAddQuickStartFocusPointTask)
     }
 
     private fun removeQuickStartFocusPoint() {
         if (view == null || !isAdded) {
             return
         }
-        view!!.removeCallbacks(mAddQuickStartFocusPointTask)
+        requireView().removeCallbacks(mAddQuickStartFocusPointTask)
         removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
     }
 
@@ -1358,7 +1358,7 @@ class MySiteFragment : Fragment(),
                 && !isTargetingBottomNavBar(mActiveTutorialPrompt!!.task)) {
             requireActivity().findViewById<View>(mActiveTutorialPrompt!!.focusedContainerId).isPressed = false
         }
-        if (activity != null && !activity!!.isChangingConfigurations) {
+        if (activity != null && !requireActivity().isChangingConfigurations) {
             clearActiveQuickStartTask()
             removeQuickStartFocusPoint()
         }
@@ -1388,7 +1388,7 @@ class MySiteFragment : Fragment(),
         }
         showQuickStartFocusPoint()
         val shortQuickStartMessage = stylizeQuickStartPrompt(
-                activity!!,
+                requireActivity(),
                 mActiveTutorialPrompt!!.shortMessagePrompt,
                 mActiveTutorialPrompt!!.iconId
         )
@@ -1412,7 +1412,7 @@ class MySiteFragment : Fragment(),
                 ""
         )
         if (fragmentManager != null) {
-            promoDialog.show(fragmentManager!!, TAG_QUICK_START_MIGRATION_DIALOG)
+            promoDialog.show(requireFragmentManager(), TAG_QUICK_START_MIGRATION_DIALOG)
             AppPrefs.setQuickStartMigrationDialogShown(true)
             AnalyticsTracker.track(QUICK_START_MIGRATION_DIALOG_VIEWED)
         }
