@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -158,7 +159,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mAvatarImageView: ImageView? = null
     private var mBlavatarProgressBar: ProgressBar? = null
     private var mBlogTitleTextView: WPTextView? = null
     private var mBlogSubtitleTextView: WPTextView? = null
@@ -235,7 +235,7 @@ class MySiteFragment : Fragment(),
                 false,
                 avatarUrl,
                 null,
-                mAvatarImageView!!,
+                avatar,
                 USER,
                 null
         )
@@ -382,7 +382,6 @@ class MySiteFragment : Fragment(),
         mToolbar?.inflateMenu(R.menu.my_site_menu)
         val meMenu = mToolbar?.menu?.findItem(R.id.me_item)
         val actionView = meMenu?.actionView
-        mAvatarImageView = actionView?.findViewById(R.id.avatar)
         actionView?.setOnClickListener {
             ActivityLauncher.viewMeActivityForResult(
                     activity
