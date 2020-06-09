@@ -175,7 +175,8 @@ class MySiteFragment : Fragment(),
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
-            activeTutorialPrompt = savedInstanceState.getSerializable(QuickStartMySitePrompts.KEY) as QuickStartMySitePrompts
+            activeTutorialPrompt = savedInstanceState
+                    .getSerializable(QuickStartMySitePrompts.KEY) as? QuickStartMySitePrompts
             isDomainCreditAvailable = savedInstanceState.getBoolean(
                     KEY_IS_DOMAIN_CREDIT_AVAILABLE,
                     false
@@ -277,9 +278,8 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateSiteSettingsIfNecessary() {
-        val selectedSite = selectedSite
-                ?: // If the selected site is null, we can't update its site settings
-                return
+        // If the selected site is null, we can't update its site settings
+        val selectedSite = selectedSite ?: return
         if (siteSettings != null && siteSettings!!.localSiteId != selectedSite.id) {
             // The site has changed, we can't use the previous site settings, force a refresh
             siteSettings = null
@@ -298,7 +298,8 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
@@ -442,11 +443,12 @@ class MySiteFragment : Fragment(),
                 }
                 completeQuickStarTask(UPLOAD_SITE_ICON)
             } else {
-                showEditingSiteIconRequiresPermissionDialog(
-                        if (hasIcon) getString(R.string.my_site_icon_dialog_change_requires_permission_message) else getString(
-                                R.string.my_site_icon_dialog_add_requires_permission_message
-                        )
-                )
+                val message = if (hasIcon) {
+                    R.string.my_site_icon_dialog_change_requires_permission_message
+                } else {
+                    R.string.my_site_icon_dialog_add_requires_permission_message
+                }
+                showEditingSiteIconRequiresPermissionDialog(getString(message))
             }
         }
     }
@@ -524,11 +526,12 @@ class MySiteFragment : Fragment(),
             if (countCustomizeUncompleted > 0) {
                 quick_start_customize_icon.isEnabled = true
                 quick_start_customize_title.isEnabled = true
-                quick_start_customize_title.paintFlags = quick_start_customize_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                val updatedPaintFlags = quick_start_customize_title.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
+                quick_start_customize_title.paintFlags = updatedPaintFlags
             } else {
                 quick_start_customize_icon.isEnabled = false
                 quick_start_customize_title.isEnabled = false
-                quick_start_customize_title.paintFlags = quick_start_customize_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                quick_start_customize_title.paintFlags = quick_start_customize_title.paintFlags or STRIKE_THRU_TEXT_FLAG
             }
             quick_start_customize_subtitle.text = getString(
                     R.string.quick_start_sites_type_subtitle,
@@ -537,11 +540,11 @@ class MySiteFragment : Fragment(),
             if (countGrowUncompleted > 0) {
                 quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
                 quick_start_grow_title.isEnabled = true
-                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags and STRIKE_THRU_TEXT_FLAG.inv()
             } else {
                 quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
                 quick_start_grow_title.isEnabled = false
-                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags or STRIKE_THRU_TEXT_FLAG
             }
             quick_start_grow_subtitle.text = getString(
                     R.string.quick_start_sites_type_subtitle,
@@ -1135,7 +1138,11 @@ class MySiteFragment : Fragment(),
     override fun onDismissByOutsideTouch(instanceTag: String) {
         when (instanceTag) {
             TAG_ADD_SITE_ICON_DIALOG -> showQuickStartNoticeIfNecessary()
-            TAG_CHANGE_SITE_ICON_DIALOG, TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG, TAG_QUICK_START_DIALOG, TAG_QUICK_START_MIGRATION_DIALOG, TAG_REMOVE_NEXT_STEPS_DIALOG -> {
+            TAG_CHANGE_SITE_ICON_DIALOG,
+            TAG_EDIT_SITE_ICON_PERMISSIONS_DIALOG,
+            TAG_QUICK_START_DIALOG,
+            TAG_QUICK_START_MIGRATION_DIALOG,
+            TAG_REMOVE_NEXT_STEPS_DIALOG -> {
             }
             else -> {
                 AppLog.e(
@@ -1246,8 +1253,11 @@ class MySiteFragment : Fragment(),
         selectedSite?.let { site ->
             // we need to process notices for tasks that are completed at MySite fragment
             AppPrefs.setQuickStartNoticeRequired(
-                    !quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), quickStartTask)
-                            && activeTutorialPrompt != null && activeTutorialPrompt!!.task == quickStartTask
+                    !quickStartStore.hasDoneTask(
+                            AppPrefs.getSelectedSite().toLong(), quickStartTask
+                    ) &&
+                            activeTutorialPrompt != null &&
+                            activeTutorialPrompt!!.task == quickStartTask
             )
             completeTaskAndRemindNextOne(
                     quickStartStore, quickStartTask, dispatcher,
@@ -1267,8 +1277,7 @@ class MySiteFragment : Fragment(),
 
     private fun clearActiveQuickStart() {
         // Clear pressed row.
-        if (activeTutorialPrompt != null
-                && !isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
+        if (activeTutorialPrompt != null && !isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
             requireActivity().findViewById<View>(activeTutorialPrompt!!.focusedContainerId).isPressed = false
         }
         if (activity != null && !requireActivity().isChangingConfigurations) {
