@@ -378,6 +378,14 @@ public class SiteSettingsFragment extends PreferenceFragment
     }
 
     @Override
+    public void onDestroy() {
+        if (mSiteSettings != null) {
+            mSiteSettings.clear();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data != null) {
             switch (requestCode) {

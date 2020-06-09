@@ -188,6 +188,11 @@ class MySiteFragment : Fragment(),
         }
     }
 
+    override fun onDestroy() {
+        siteSettings?.clear()
+        super.onDestroy()
+    }
+
     private fun refreshMeGravatar() {
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
