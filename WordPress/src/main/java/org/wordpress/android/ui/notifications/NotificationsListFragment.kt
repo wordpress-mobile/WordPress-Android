@@ -24,7 +24,6 @@ import org.greenrobot.eventbus.EventBus
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
@@ -80,7 +79,7 @@ class NotificationsListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        toolbar_main.setTitle(string.notifications_screen_title)
+        toolbar_main.setTitle(R.string.notifications_screen_title)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar_main)
 
         tab_layout.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -101,12 +100,12 @@ class NotificationsListFragment : Fragment() {
             override fun onTabUnselected(tab: Tab) {}
             override fun onTabReselected(tab: Tab) {}
         })
-        view_pager.adapter = NotificationsFragmentAdapter(childFragmentManager)
+        view_pager.adapter = NotificationsFragmentAdapter(childFragmentManager, buildTitles())
         view_pager.pageMargin = resources.getDimensionPixelSize(dimen.margin_extra_large)
         tab_layout.setupWithViewPager(view_pager)
 
         jetpack_terms_and_conditions.text = Html.fromHtml(
-                String.format(resources.getString(string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
+                String.format(resources.getString(R.string.jetpack_connection_terms_and_conditions), "<u>", "</u>")
         )
         jetpack_terms_and_conditions.setOnClickListener {
             WPWebViewActivity.openURL(requireContext(), WPUrlUtils.buildTermsOfServiceUrl(context))
@@ -114,6 +113,16 @@ class NotificationsListFragment : Fragment() {
         jetpack_faq.setOnClickListener {
             WPWebViewActivity.openURL(requireContext(), StatsConnectJetpackActivity.FAQ_URL)
         }
+    }
+
+    private fun buildTitles(): List<String> {
+        val result: ArrayList<String> = ArrayList(TAB_COUNT)
+        result.add(TAB_POSITION_ALL, getString(R.string.notifications_tab_title_all))
+        result.add(TAB_POSITION_UNREAD, getString(R.string.notifications_tab_title_unread_notifications))
+        result.add(TAB_POSITION_COMMENT, getString(R.string.notifications_tab_title_comments))
+        result.add(TAB_POSITION_FOLLOW, getString(R.string.notifications_tab_title_follows))
+        result.add(TAB_POSITION_LIKE, getString(R.string.notifications_tab_title_likes))
+        return result
     }
 
     override fun onPause() {
@@ -184,8 +193,10 @@ class NotificationsListFragment : Fragment() {
         }
     }
 
-    private inner class NotificationsFragmentAdapter internal constructor(fragmentManager: FragmentManager?) :
-            FragmentPagerAdapter(fragmentManager!!) {
+    private class NotificationsFragmentAdapter internal constructor(
+        fragmentManager: FragmentManager,
+        private val titles: List<String>
+    ) : FragmentPagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         override fun getCount(): Int {
             return TAB_COUNT
         }
@@ -195,14 +206,10 @@ class NotificationsListFragment : Fragment() {
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
-            return when (position) {
-                TAB_POSITION_ALL -> getString(string.notifications_tab_title_all)
-                TAB_POSITION_COMMENT -> getString(string.notifications_tab_title_comments)
-                TAB_POSITION_FOLLOW -> getString(string.notifications_tab_title_follows)
-                TAB_POSITION_LIKE -> getString(string.notifications_tab_title_likes)
-                TAB_POSITION_UNREAD -> getString(string.notifications_tab_title_unread_notifications)
-                else -> super.getPageTitle(position)
+            if (titles.size > position && position >= 0) {
+                return titles[position]
             }
+            return super.getPageTitle(position)
         }
 
         override fun restoreState(state: Parcelable?, loader: ClassLoader?) {
