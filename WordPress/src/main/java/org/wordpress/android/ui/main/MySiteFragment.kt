@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mQuickActionButtonsContainer: LinearLayout? = null
     private var mPlanContainer: LinearLayout? = null
     private var mPluginsContainer: LinearLayout? = null
     private var mActivityLogContainer: LinearLayout? = null
@@ -347,7 +346,6 @@ class MySiteFragment : Fragment(),
         mScrollView = rootView.findViewById(R.id.scroll_view)
         mActionableEmptyView = rootView.findViewById(R.id.actionable_empty_view)
         mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
-        mQuickActionButtonsContainer = rootView.findViewById(R.id.quick_action_buttons_container)
         mQuickStartContainer = rootView.findViewById(R.id.quick_start)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
@@ -978,9 +976,9 @@ class MySiteFragment : Fragment(),
         row_pages.visibility = pageVisibility
         quick_action_pages_container.visibility = pageVisibility
         if (pageVisibility == View.VISIBLE) {
-            mQuickActionButtonsContainer!!.weightSum = 100f
+            quick_action_buttons_container.weightSum = 100f
         } else {
-            mQuickActionButtonsContainer!!.weightSum = 75f
+            quick_action_buttons_container.weightSum = 75f
         }
     }
 
