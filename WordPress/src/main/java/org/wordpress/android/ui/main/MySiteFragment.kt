@@ -2,7 +2,7 @@ package org.wordpress.android.ui.main
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Paint
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
 import kotlinx.android.synthetic.main.toolbar_main.*
@@ -243,7 +242,7 @@ class MySiteFragment : Fragment(),
                 val noticeTitle = getString(noticeDetails.titleResId)
                 val noticeMessage = getString(noticeDetails.messageResId)
                 val quickStartNoticeSnackBar = WPDialogSnackbar.make(
-                        coordinator,
+                        requireActivity().findViewById(R.id.coordinator),
                         noticeMessage,
                         resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 )
@@ -990,14 +989,14 @@ class MySiteFragment : Fragment(),
             if (event.post.localSiteId == site.id) {
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
-                        coordinator, true,
+                        requireActivity().findViewById(R.id.coordinator), true,
                         event.post, event.errorMessage, site
                 )
             }
         } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
             uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     activity,
-                    coordinator, true,
+                    requireActivity().findViewById(R.id.coordinator), true,
                     event.mediaModelList, site, event.errorMessage
             )
         }
@@ -1036,7 +1035,7 @@ class MySiteFragment : Fragment(),
                 if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
                     uploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                             activity,
-                            coordinator, false,
+                            requireActivity().findViewById(R.id.coordinator), false,
                             event.mediaModelList, site, event.successMessage
                     )
                 }
@@ -1236,7 +1235,7 @@ class MySiteFragment : Fragment(),
             return
         }
         requireView().removeCallbacks(mAddQuickStartFocusPointTask)
-        removeQuickStartFocusPoint(root_view_main)
+        removeQuickStartFocusPoint(requireActivity().findViewById(R.id.root_view_main))
     }
 
     fun isQuickStartTaskActive(task: QuickStartTask): Boolean {
@@ -1307,7 +1306,7 @@ class MySiteFragment : Fragment(),
                 activeTutorialPrompt!!.iconId
         )
         val promptSnackbar = WPDialogSnackbar.make(
-                coordinator,
+                requireActivity().findViewById(R.id.coordinator),
                 shortQuickStartMessage, resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
         )
         (requireActivity() as WPMainActivity).showQuickStartSnackBar(promptSnackbar)
