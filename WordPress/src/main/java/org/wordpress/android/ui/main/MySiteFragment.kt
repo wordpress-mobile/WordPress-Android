@@ -255,7 +255,7 @@ class MySiteFragment : Fragment(),
                 quickStartNoticeSnackBar.setTitle(noticeTitle)
                 quickStartNoticeSnackBar.setPositiveButton(
                         getString(R.string.quick_start_button_positive)
-                ) { v: View? ->
+                ) {
                     AnalyticsTracker.track(QUICK_START_TASK_DIALOG_POSITIVE_TAPPED)
                     mActiveTutorialPrompt = getPromptDetailsForTask(taskToPrompt)
                     showActiveQuickStartTutorial()
@@ -263,7 +263,7 @@ class MySiteFragment : Fragment(),
                 quickStartNoticeSnackBar
                         .setNegativeButton(
                                 getString(R.string.quick_start_button_negative)
-                        ) { v: View? ->
+                        ) {
                             AnalyticsTracker.track(
                                     QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
                             )
@@ -309,7 +309,7 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        setupClickListeners(rootView)
+        setupClickListeners()
         toolbar_main.setTitle(R.string.my_site_section_screen_title)
         toolbar_main.inflateMenu(R.menu.my_site_menu)
         val meMenu = toolbar_main.menu.findItem(R.id.me_item)
@@ -325,7 +325,7 @@ class MySiteFragment : Fragment(),
         return rootView
     }
 
-    private fun setupClickListeners(rootView: View) {
+    private fun setupClickListeners() {
         site_info_container.setOnClickListener { viewSite() }
         switch_site.setOnClickListener { showSitePicker() }
         row_view_site.setOnClickListener { viewSite() }
@@ -684,7 +684,7 @@ class MySiteFragment : Fragment(),
                     val mediaUriStringsArray = data.getStringArrayExtra(
                             PhotoPickerActivity.EXTRA_MEDIA_URIS
                     )
-                    if (mediaUriStringsArray == null || mediaUriStringsArray.size == 0) {
+                    if (mediaUriStringsArray.isNullOrEmpty()) {
                         AppLog.e(
                                 UTILS,
                                 "Can't resolve picked or captured image"
@@ -1000,7 +1000,7 @@ class MySiteFragment : Fragment(),
                         event.post, event.errorMessage, site
                 )
             }
-        } else if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+        } else if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
             mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                     activity,
                     coordinator, true,
@@ -1039,7 +1039,7 @@ class MySiteFragment : Fragment(),
                 }
                 showSiteIconProgressBar(false)
             } else {
-                if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
+                if (event.mediaModelList != null && event.mediaModelList.isNotEmpty()) {
                     mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
                             activity,
                             coordinator, false,
