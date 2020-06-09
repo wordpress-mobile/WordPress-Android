@@ -26,7 +26,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.NOTIFICATIONS_SELECTED_FILTER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.NOTIFICATION_TAPPED_SEGMENTED_CONTROL
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS
@@ -52,10 +51,10 @@ import java.util.HashMap
 import javax.inject.Inject
 
 class NotificationsListFragment : Fragment() {
-    private var mShouldRefreshNotifications = false
-    private var mLastTabPosition = 0
+    private var shouldRefreshNotifications = false
+    private var lastTabPosition = 0
 
-    @Inject lateinit var mAccountStore: AccountStore
+    @Inject lateinit var accountStore: AccountStore
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,7 +66,7 @@ class NotificationsListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mShouldRefreshNotifications = true
+        shouldRefreshNotifications = true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -92,7 +91,7 @@ class NotificationsListFragment : Fragment() {
                     else -> properties[NOTIFICATIONS_SELECTED_FILTER] = FILTER_ALL.toString()
                 }
                 AnalyticsTracker.track(NOTIFICATION_TAPPED_SEGMENTED_CONTROL, properties)
-                mLastTabPosition = tab.position
+                lastTabPosition = tab.position
             }
 
             override fun onTabUnselected(tab: Tab) {}
@@ -125,13 +124,13 @@ class NotificationsListFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        mShouldRefreshNotifications = true
+        shouldRefreshNotifications = true
     }
 
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (!mAccountStore.hasAccessToken()) {
+        if (!accountStore.hasAccessToken()) {
             showConnectJetpackView()
             connect_jetpack.visibility = View.VISIBLE
             tab_layout.visibility = View.GONE
@@ -140,15 +139,15 @@ class NotificationsListFragment : Fragment() {
             connect_jetpack.visibility = View.GONE
             tab_layout.visibility = View.VISIBLE
             view_pager.visibility = View.VISIBLE
-            if (mShouldRefreshNotifications) {
+            if (shouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
         }
-        setSelectedTab(mLastTabPosition)
+        setSelectedTab(lastTabPosition)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(KEY_LAST_TAB_POSITION, mLastTabPosition)
+        outState.putInt(KEY_LAST_TAB_POSITION, lastTabPosition)
         super.onSaveInstanceState(outState)
     }
 
@@ -167,8 +166,8 @@ class NotificationsListFragment : Fragment() {
     }
 
     private fun setSelectedTab(position: Int) {
-        mLastTabPosition = position
-        tab_layout.getTabAt(mLastTabPosition)?.select()
+        lastTabPosition = position
+        tab_layout.getTabAt(lastTabPosition)?.select()
     }
 
     private fun showConnectJetpackView() {
@@ -209,7 +208,7 @@ class NotificationsListFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         val notificationSettings = menu.findItem(R.id.notifications_settings)
-        notificationSettings.isVisible = mAccountStore.hasAccessToken()
+        notificationSettings.isVisible = accountStore.hasAccessToken()
         super.onPrepareOptionsMenu(menu)
     }
 
