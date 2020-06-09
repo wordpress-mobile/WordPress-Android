@@ -242,6 +242,9 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        if (mSiteSettings != null) {
+            mSiteSettings.clear();
+        }
         mDispatcher.unregister(this);
         super.onDestroy();
     }

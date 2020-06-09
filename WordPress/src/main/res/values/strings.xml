@@ -1695,6 +1695,9 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+    <string name="reader_btn_select_few_interests">Select a few to continue</string>
+    <string name="reader_btn_done">Done</string>
+
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>

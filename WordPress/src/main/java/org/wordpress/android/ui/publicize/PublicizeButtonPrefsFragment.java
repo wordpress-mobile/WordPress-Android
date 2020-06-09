@@ -98,6 +98,14 @@ public class PublicizeButtonPrefsFragment extends PublicizeBaseFragment implemen
     }
 
     @Override
+    public void onDestroy() {
+        if (mSiteSettings != null) {
+            mSiteSettings.clear();
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);

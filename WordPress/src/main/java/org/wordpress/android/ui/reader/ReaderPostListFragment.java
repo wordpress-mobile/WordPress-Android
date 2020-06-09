@@ -930,7 +930,7 @@ public class ReaderPostListFragment extends Fragment
         mActionableEmptyView = rootView.findViewById(R.id.empty_custom_view);
 
         mRecyclerView.setLogT(AppLog.T.READER);
-        mRecyclerView.setCustomEmptyView(mActionableEmptyView);
+        mRecyclerView.setCustomEmptyView();
         mRecyclerView.setFilterListener(new FilteredRecyclerView.FilterListener() {
             @Override
             public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
