@@ -140,7 +140,6 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
 import org.wordpress.android.widgets.WPDialogSnackbar
-import org.wordpress.android.widgets.WPTextView
 import java.io.File
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -155,7 +154,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mCurrentPlanNameTextView: WPTextView? = null
     private var mSharingView: View? = null
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
@@ -325,7 +323,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mSharingView = rootView.findViewById(R.id.row_sharing)
-        mCurrentPlanNameTextView = rootView.findViewById(R.id.my_site_current_plan_text_view)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartCustomizeIcon = rootView.findViewById(R.id.quick_start_customize_icon)
         mQuickStartCustomizeSubtitle = rootView.findViewById(R.id.quick_start_customize_subtitle)
@@ -940,7 +937,7 @@ class MySiteFragment : Fragment(),
         val planShortName = site.planShortName
         if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions) {
             if (site.isWPCom || site.isAutomatedTransfer) {
-                mCurrentPlanNameTextView!!.text = planShortName
+                my_site_current_plan_text_view.text = planShortName
                 row_plan.visibility = View.VISIBLE
             } else {
                 // TODO: Support Jetpack plans
