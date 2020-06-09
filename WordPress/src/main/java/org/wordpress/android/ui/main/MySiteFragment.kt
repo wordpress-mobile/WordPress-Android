@@ -156,7 +156,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartCustomizeView: View? = null
     private var mQuickStartGrowIcon: ImageView? = null
     private var mQuickStartGrowSubtitle: TextView? = null
     private var mQuickStartGrowTitle: TextView? = null
@@ -318,7 +317,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
         mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon)
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle)
@@ -437,7 +435,7 @@ class MySiteFragment : Fragment(),
                     mAccountStore.hasAccessToken()
             )
         }
-        mQuickStartCustomizeView!!.setOnClickListener {
+        quick_start_customize.setOnClickListener {
             showQuickStartList(
                     CUSTOMIZE
             )
