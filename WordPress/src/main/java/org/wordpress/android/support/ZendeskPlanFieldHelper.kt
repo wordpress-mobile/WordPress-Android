@@ -45,9 +45,39 @@ class ZendeskPlanFieldHelper {
         JetpackPlansConstants.JETPACK_PERSONAL,
         JetpackPlansConstants.JETPACK_PERSONAL_MONTHLY
     )
+    private val ecommercePlans: List<Long> = wpComEcommercePlans
+    private val businessOrProfessionalPlans: List<Long> = wpComBusinessPlans + jetpackBusinessPlans
+    private val premiumPlans: List<Long> = wpComPremiumPlans + jetpackPremiumPlans
+    private val personalPlans: List<Long> = wpComPersonalPlans + jetpackPersonalPlans
+    private val bloggerPlans: List<Long> = wpComBloggerPlans
 
+    /**
+     * This is a helper function that checks plan types from most expensive to least,
+     * so that we return the highest value plan type for the user and give them the appropriate
+     * service level (in case they have more than one plan).
+     * Internal Ref: p8wKgj-1eQ#comment-7475
+     */
     fun getHighestPlan(planIds: List<Long>): String {
-        return ZendeskPlanConstants.FREE
+        return when {
+            ecommercePlans.intersect(planIds).isNotEmpty() -> {
+                ZendeskPlanConstants.ECOMMERCE
+            }
+            businessOrProfessionalPlans.intersect(planIds).isNotEmpty() -> {
+                ZendeskPlanConstants.BUSINESS_PROFESSIONAL
+            }
+            premiumPlans.intersect(planIds).isNotEmpty() -> {
+                ZendeskPlanConstants.PREMIUM
+            }
+            personalPlans.intersect(planIds).isNotEmpty() -> {
+                ZendeskPlanConstants.PERSONAL
+            }
+            bloggerPlans.intersect(planIds).isNotEmpty() -> {
+                ZendeskPlanConstants.BLOGGER
+            }
+            else -> {
+                ZendeskPlanConstants.FREE
+            }
+        }
     }
 }
 
