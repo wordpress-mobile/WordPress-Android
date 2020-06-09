@@ -1172,7 +1172,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onSettingsUpdated() {}
-    override fun onCredentialsValidated(error: Exception) {}
+    override fun onCredentialsValidated(error: Exception?) {}
     private fun fetchSitePlans(site: SiteModel?) {
         dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
     }
