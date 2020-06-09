@@ -154,7 +154,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartGrowView: View? = null
     private var mQuickStartMenuButton: View? = null
     private var mDomainRegistrationCta: View? = null
     private val mQuickStartSnackBarHandler = Handler()
@@ -312,7 +311,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more)
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta)
         setupClickListeners(rootView)
@@ -432,7 +430,7 @@ class MySiteFragment : Fragment(),
                     CUSTOMIZE
             )
         }
-        mQuickStartGrowView!!.setOnClickListener {
+        quick_start_grow.setOnClickListener {
             showQuickStartList(
                     GROW
             )
