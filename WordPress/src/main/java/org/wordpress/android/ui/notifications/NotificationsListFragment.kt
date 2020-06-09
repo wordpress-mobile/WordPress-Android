@@ -160,10 +160,7 @@ class NotificationsListFragment : Fragment() {
     }
 
     private fun fetchNotesFromRemote() {
-        if (!isAdded) {
-            return
-        }
-        if (!NetworkUtils.isNetworkAvailable(activity)) {
+        if (!isAdded || !NetworkUtils.isNetworkAvailable(activity)) {
             return
         }
         NotificationsUpdateServiceStarter.startService(activity)
