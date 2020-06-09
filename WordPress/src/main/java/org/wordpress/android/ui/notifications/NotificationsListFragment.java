@@ -50,7 +50,9 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -158,7 +160,7 @@ public class NotificationsListFragment extends Fragment {
         });
 
         WPViewPager viewPager = view.findViewById(R.id.view_pager);
-        viewPager.setAdapter(new NotificationsFragmentAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new NotificationsFragmentAdapter(getChildFragmentManager(), buildTitles()));
         viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_extra_large));
         mTabLayout.setupWithViewPager(viewPager);
 
@@ -179,6 +181,16 @@ public class NotificationsListFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private List<String> buildTitles() {
+        ArrayList<String> result = new ArrayList<>(TAB_COUNT);
+        result.add(TAB_POSITION_ALL, getString(R.string.notifications_tab_title_all));
+        result.add(TAB_POSITION_UNREAD, getString(R.string.notifications_tab_title_unread_notifications));
+        result.add(TAB_POSITION_COMMENT, getString(R.string.notifications_tab_title_comments));
+        result.add(TAB_POSITION_FOLLOW, getString(R.string.notifications_tab_title_follows));
+        result.add(TAB_POSITION_LIKE, getString(R.string.notifications_tab_title_likes));
+        return result;
     }
 
     @Override
@@ -300,9 +312,12 @@ public class NotificationsListFragment extends Fragment {
         }
     }
 
-    private class NotificationsFragmentAdapter extends FragmentPagerAdapter {
-        NotificationsFragmentAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
+    private static class NotificationsFragmentAdapter extends FragmentPagerAdapter {
+        private List<String> mTitles;
+
+        NotificationsFragmentAdapter(@NonNull FragmentManager fm, List<String> titles) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+            mTitles = titles;
         }
 
         @Override
@@ -310,6 +325,7 @@ public class NotificationsListFragment extends Fragment {
             return TAB_COUNT;
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return NotificationsListFragmentPage.newInstance(position);
@@ -318,20 +334,10 @@ public class NotificationsListFragment extends Fragment {
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case TAB_POSITION_ALL:
-                    return getString(R.string.notifications_tab_title_all);
-                case TAB_POSITION_COMMENT:
-                    return getString(R.string.notifications_tab_title_comments);
-                case TAB_POSITION_FOLLOW:
-                    return getString(R.string.notifications_tab_title_follows);
-                case TAB_POSITION_LIKE:
-                    return getString(R.string.notifications_tab_title_likes);
-                case TAB_POSITION_UNREAD:
-                    return getString(R.string.notifications_tab_title_unread_notifications);
-                default:
-                    return super.getPageTitle(position);
+            if (mTitles.size() > position && position >= 0) {
+                return mTitles.get(position);
             }
+            return super.getPageTitle(position);
         }
 
         @Override
