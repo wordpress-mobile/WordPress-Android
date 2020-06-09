@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.widget.TooltipCompat
@@ -155,7 +154,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartGrowTitle: TextView? = null
     private var mQuickStartGrowView: View? = null
     private var mQuickStartMenuButton: View? = null
     private var mDomainRegistrationCta: View? = null
@@ -315,7 +313,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
-        mQuickStartGrowTitle = rootView.findViewById(R.id.quick_start_grow_title)
         mQuickStartMenuButton = rootView.findViewById(R.id.quick_start_more)
         mDomainRegistrationCta = rootView.findViewById(R.id.my_site_register_domain_cta)
         setupClickListeners(rootView)
@@ -563,12 +560,12 @@ class MySiteFragment : Fragment(),
             )
             if (countGrowUncompleted > 0) {
                 quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_pink_50_multiple_users_white_40dp)
-                mQuickStartGrowTitle!!.isEnabled = true
-                mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                quick_start_grow_title.isEnabled = true
+                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             } else {
                 quick_start_grow_icon.setBackgroundResource(R.drawable.bg_oval_neutral_30_multiple_users_white_40dp)
-                mQuickStartGrowTitle!!.isEnabled = false
-                mQuickStartGrowTitle!!.paintFlags = mQuickStartGrowTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                quick_start_grow_title.isEnabled = false
+                quick_start_grow_title.paintFlags = quick_start_grow_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
             quick_start_grow_subtitle.text = getString(
                     R.string.quick_start_sites_type_subtitle,
