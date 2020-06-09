@@ -158,7 +158,6 @@ class MySiteFragment : Fragment(),
         PromoDialogClickInterface,
         OnConfirmListener,
         OnDismissListener {
-    private var mBlogSubtitleTextView: WPTextView? = null
     private var mLookAndFeelHeader: WPTextView? = null
     private var mThemesContainer: LinearLayout? = null
     private var mPeopleView: LinearLayout? = null
@@ -343,7 +342,6 @@ class MySiteFragment : Fragment(),
     ): View? {
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-        mBlogSubtitleTextView = rootView.findViewById(R.id.my_site_subtitle_label)
         mLookAndFeelHeader = rootView.findViewById(R.id.my_site_look_and_feel_header)
         mThemesContainer = rootView.findViewById(R.id.row_themes)
         mPeopleView = rootView.findViewById(R.id.row_people)
@@ -969,7 +967,7 @@ class MySiteFragment : Fragment(),
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
         my_site_title_label.text = blogTitle
-        mBlogSubtitleTextView!!.text = homeUrl
+        my_site_subtitle_label.text = homeUrl
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
