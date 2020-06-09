@@ -156,7 +156,6 @@ class MySiteFragment : Fragment(),
         OnDismissListener {
     private var mSiteSettings: SiteSettingsInterface? = null
     private var mActiveTutorialPrompt: QuickStartMySitePrompts? = null
-    private var mQuickStartCustomizeTitle: TextView? = null
     private var mQuickStartCustomizeView: View? = null
     private var mQuickStartGrowIcon: ImageView? = null
     private var mQuickStartGrowSubtitle: TextView? = null
@@ -320,7 +319,6 @@ class MySiteFragment : Fragment(),
         val rootView = inflater.inflate(R.layout.my_site_fragment, container, false) as ViewGroup
         mBlavatarSz = resources.getDimensionPixelSize(R.dimen.blavatar_sz_small)
         mQuickStartCustomizeView = rootView.findViewById(R.id.quick_start_customize)
-        mQuickStartCustomizeTitle = rootView.findViewById(R.id.quick_start_customize_title)
         mQuickStartGrowView = rootView.findViewById(R.id.quick_start_grow)
         mQuickStartGrowIcon = rootView.findViewById(R.id.quick_start_grow_icon)
         mQuickStartGrowSubtitle = rootView.findViewById(R.id.quick_start_grow_subtitle)
@@ -559,12 +557,12 @@ class MySiteFragment : Fragment(),
             ).size
             if (countCustomizeUncompleted > 0) {
                 quick_start_customize_icon.isEnabled = true
-                mQuickStartCustomizeTitle!!.isEnabled = true
-                mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                quick_start_customize_title.isEnabled = true
+                quick_start_customize_title.paintFlags = quick_start_customize_title.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             } else {
                 quick_start_customize_icon.isEnabled = false
-                mQuickStartCustomizeTitle!!.isEnabled = false
-                mQuickStartCustomizeTitle!!.paintFlags = mQuickStartCustomizeTitle!!.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                quick_start_customize_title.isEnabled = false
+                quick_start_customize_title.paintFlags = quick_start_customize_title.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
             quick_start_customize_subtitle.text = getString(
                     R.string.quick_start_sites_type_subtitle,
