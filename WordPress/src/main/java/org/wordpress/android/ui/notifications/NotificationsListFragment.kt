@@ -126,17 +126,13 @@ class NotificationsListFragment : Fragment() {
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (!mAccountStore.hasAccessToken()) {
             showConnectJetpackView()
-            if (view != null) {
-                connect_jetpack.visibility = View.VISIBLE
-                tab_layout.visibility = View.GONE
-                view_pager.visibility = View.GONE
-            }
+            connect_jetpack.visibility = View.VISIBLE
+            tab_layout.visibility = View.GONE
+            view_pager.visibility = View.GONE
         } else {
-            if (view != null) {
-                connect_jetpack.visibility = View.GONE
-                tab_layout.visibility = View.VISIBLE
-                view_pager.visibility = View.VISIBLE
-            }
+            connect_jetpack.visibility = View.GONE
+            tab_layout.visibility = View.VISIBLE
+            view_pager.visibility = View.VISIBLE
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
