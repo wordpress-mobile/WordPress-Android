@@ -1065,12 +1065,6 @@ public class ReaderPostListFragment extends Fragment
         return rootView;
     }
 
-    @Override
-    public void onDestroyView() {
-        mActionableEmptyView = null;
-        super.onDestroyView();
-    }
-
     private void showSettings() {
         ReaderActivityLauncher.showReaderSubs(getActivity());
     }
