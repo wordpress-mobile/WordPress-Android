@@ -31,7 +31,7 @@ class MeViewModel
         }
     }
 
-    fun setIsDisconnecting(isDisconnecting: Boolean) {
-        _showDisconnectDialog.value = Event(isDisconnecting)
+    fun openDisconnectDialog() {
+        _showDisconnectDialog.value = Event(true)
     }
 }

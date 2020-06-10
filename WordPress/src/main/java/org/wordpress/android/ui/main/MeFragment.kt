@@ -133,7 +133,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
-                viewModel.setIsDisconnecting(true)
+                viewModel.openDisconnectDialog()
             }
             if (savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR, false)) {
                 showGravatarProgressBar(true)
