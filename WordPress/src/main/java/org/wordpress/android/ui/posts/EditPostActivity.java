@@ -359,7 +359,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Create a new post
         mEditPostRepository.set(() -> {
             PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-            post.setStatus(PostStatus.DRAFT.toString());
+
+            if (UploadUtils.userCanPublish(mSite)) {
+                post.setStatus(PostStatus.DRAFT.toString());
+            } else {
+                post.setStatus(PostStatus.PENDING.toString());
+            }
+
             return post;
         });
         mEditPostRepository.savePostSnapshot();
