@@ -16,6 +16,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/post_settings_publish"
                 android:textColor="#FFFFFF"
+                android:textSize="12sp"
                 style="@style/PostSettingsSectionHeader"
                 android:text="@string/post_settings_publish" />
 
