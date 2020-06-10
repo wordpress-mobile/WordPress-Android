@@ -5,10 +5,14 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 
-class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapper: DateTimeUtilsWrapper) {
+class UpdatePostStatusUseCase @Inject constructor(
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val postUtilsWrapper: PostUtilsWrapper
+) {
     fun updatePostStatus(
         postStatus: PostStatus,
         editPostRepository: EditPostRepository,
@@ -17,7 +21,9 @@ class UpdatePostStatusUseCase @Inject constructor(private val dateTimeUtilsWrapp
         editPostRepository.updateAsync({ postModel: PostModel ->
             // we set the date to immediately if it's scheduled.
             if (postStatus == PostStatus.PRIVATE) {
-                if (postModel.status == PostStatus.SCHEDULED.toString())
+                if (postModel.status == PostStatus.SCHEDULED.toString() || postUtilsWrapper.isPublishDateInTheFuture(
+                                postModel.dateCreated
+                        ))
                     postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
             }
 
