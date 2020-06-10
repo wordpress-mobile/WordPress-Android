@@ -206,8 +206,8 @@ class PagesViewModel
     private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
     val authorSelectionUpdated = _authorSelectionUpdated
 
-    private val _authorUiState = MutableLiveData<PagesAuthorFilterUIState>()
-    val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUiState
+    private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
+    val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
 
     data class BrowsePreview(
         val post: PostModel,
@@ -242,7 +242,7 @@ class PagesViewModel
         }
 
         _authorSelectionUpdated.value = authorFilterSelection
-        _authorUiState.value = PagesAuthorFilterUIState(
+        _authorUIState.value = PagesAuthorFilterUIState(
                 isAuthorFilterVisible = isFilteringByAuthorSupported,
                 authorFilterSelection = authorFilterSelection,
                 authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
@@ -842,10 +842,10 @@ class PagesViewModel
             "updateViewStateTriggerPagerChange should not be called before the initial state is set"
         }
 
-        _authorUiState.value = PagesAuthorFilterUIState(
-                isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
-                authorFilterSelection ?: currentState.authorFilterSelection,
-                authorFilterItems ?: currentState.authorFilterItems
+        _authorUIState.value = _authorUIState.value?.copy(
+                isAuthorFilterVisible = isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+                authorFilterSelection = authorFilterSelection ?: currentState.authorFilterSelection,
+                authorFilterItems = authorFilterItems ?: currentState.authorFilterItems
         )
 
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
