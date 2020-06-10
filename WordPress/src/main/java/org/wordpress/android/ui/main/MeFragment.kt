@@ -16,7 +16,6 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ScrollView
-import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -71,7 +70,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mMyProfileView: View? = null
     private var mAccountSettingsView: View? = null
     private var mDisconnectProgressDialog: ProgressDialog? = null
     private var mScrollView: ScrollView? = null
@@ -99,7 +97,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mMyProfileView = rootView.findViewById(R.id.row_my_profile)
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings)
         mScrollView = rootView.findViewById(R.id.scroll_view)
         val showPickerListener = OnClickListener { v: View? ->
@@ -108,7 +105,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         avatarContainer.setOnClickListener(showPickerListener)
         rootView.findViewById<View>(R.id.change_photo).setOnClickListener(showPickerListener)
-        mMyProfileView?.setOnClickListener {
+        row_my_profile.setOnClickListener {
             ActivityLauncher.viewMyProfile(
                     activity
             )
@@ -202,7 +199,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             me_display_name.visibility = View.VISIBLE
             me_username.visibility = View.VISIBLE
             card_avatar.visibility = View.VISIBLE
-            mMyProfileView!!.visibility = View.VISIBLE
+            row_my_profile.visibility = View.VISIBLE
             loadAvatar(null)
             me_username.text = getString(string.at_username, defaultAccount.userName)
             me_login_logout_text_view.setText(string.me_disconnect_from_wordpress_com)
@@ -217,7 +214,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             me_username.visibility = View.GONE
             card_avatar.visibility = View.GONE
             avatar_progress.visibility = View.GONE
-            mMyProfileView!!.visibility = View.GONE
+            row_my_profile.visibility = View.GONE
             mAccountSettingsView!!.visibility = View.GONE
             me_login_logout_text_view.setText(string.me_connect_to_wordpress_com)
         }
