@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
 import org.wordpress.android.R
@@ -60,7 +61,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var fullscreenErrorLayout: ViewGroup
     private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
@@ -106,7 +106,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        fullscreenErrorLayout = rootView.findViewById(R.id.error_layout)
         fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
@@ -140,7 +139,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
-                uiHelpers.updateVisibility(fullscreenErrorLayout, uiState.fullscreenErrorLayoutVisibility)
+                uiHelpers.updateVisibility(error_layout, uiState.fullscreenErrorLayoutVisibility)
             }
         })
         viewModel.preloadPreview.observe(this, Observer { url ->
@@ -182,18 +181,15 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun initRetryButton() {
-        val retryBtn = fullscreenErrorLayout.findViewById<View>(R.id.error_retry)
-        retryBtn.setOnClickListener { viewModel.retry() }
+        error_retry.setOnClickListener { viewModel.retry() }
     }
 
     private fun initContactSupportButton() {
-        val contactSupport = fullscreenErrorLayout.findViewById<View>(R.id.contact_support)
-        contactSupport.setOnClickListener { viewModel.onHelpClicked() }
+        contact_support.setOnClickListener { viewModel.onHelpClicked() }
     }
 
     private fun initCancelWizardButton() {
-        val cancelBtn = fullscreenErrorLayout.findViewById<View>(R.id.cancel_wizard_button)
-        cancelBtn.setOnClickListener { viewModel.onCancelWizardClicked() }
+        cancel_wizard_button.setOnClickListener { viewModel.onCancelWizardClicked() }
     }
 
     private fun initOkButton() {
@@ -254,16 +250,10 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateErrorLayout(errorUiStateState: SitePreviewFullscreenErrorUiState) {
         errorUiStateState.apply {
-            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_title), titleResId)
-            uiHelpers.setTextOrHide(fullscreenErrorLayout.findViewById(R.id.error_subtitle), subtitleResId)
-            uiHelpers.updateVisibility(
-                    fullscreenErrorLayout.findViewById(R.id.contact_support),
-                    errorUiStateState.showContactSupport
-            )
-            uiHelpers.updateVisibility(
-                    fullscreenErrorLayout.findViewById(R.id.cancel_wizard_button),
-                    errorUiStateState.showCancelWizardButton
-            )
+            uiHelpers.setTextOrHide(error_title, titleResId)
+            uiHelpers.setTextOrHide(error_subtitle, subtitleResId)
+            uiHelpers.updateVisibility(contact_support, errorUiStateState.showContactSupport)
+            uiHelpers.updateVisibility(cancel_wizard_button, errorUiStateState.showCancelWizardButton)
         }
     }
 
