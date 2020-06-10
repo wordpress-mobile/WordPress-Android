@@ -172,10 +172,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     override fun onDestroy() {
-        if (disconnectProgressDialog != null) {
-            disconnectProgressDialog!!.dismiss()
-            disconnectProgressDialog = null
-        }
+        disconnectProgressDialog?.dismiss()
+        disconnectProgressDialog = null
         super.onDestroy()
     }
 
@@ -216,7 +214,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun loadAvatar(injectFilePath: String?) {
-        val newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty()
+        val newAvatarUploaded = injectFilePath != null && injectFilePath.isNotEmpty()
         val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
         meGravatarLoader.load(
                 newAvatarUploaded,
@@ -269,8 +267,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     private fun signOutWordPressComWithConfirmation() {
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
-        val message: String
-        message = if (postStore.numLocalChanges > 0) {
+        val message: String = if (postStore.numLocalChanges > 0) {
             getString(string.sign_out_wpcom_confirm_with_changes)
         } else {
             getString(string.sign_out_wpcom_confirm_with_no_changes)
@@ -279,7 +276,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                 .setMessage(message)
                 .setPositiveButton(
                         string.signout
-                ) { dialog: DialogInterface?, whichButton: Int -> signOutWordPressCom() }
+                ) { _, _ -> signOutWordPressCom() }
                 .setNegativeButton(string.cancel, null)
                 .setCancelable(true)
                 .create().show()
@@ -430,7 +427,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private inner class SignOutWordPressComAsync internal constructor(context: Context?) : AsyncTask<Void?, Void?, Void?>() {
-        var mWeakContext: WeakReference<Context?>
+        var mWeakContext: WeakReference<Context?> = WeakReference(context)
         override fun onPreExecute() {
             super.onPreExecute()
             val context = mWeakContext.get()
@@ -452,10 +449,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
             disconnectProgressDialog = null
         }
-
-        init {
-            mWeakContext = WeakReference(context)
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -464,12 +457,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private val selectedSite: SiteModel?
-        private get() {
-            if (activity is WPMainActivity) {
-                val mainActivity = activity as WPMainActivity?
-                return mainActivity!!.selectedSite
-            }
-            return null
+        get() {
+            return (activity as? WPMainActivity)?.selectedSite
         }
 
     companion object {
