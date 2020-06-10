@@ -68,8 +68,8 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mDisconnectProgressDialog: ProgressDialog? = null
-    private var mIsUpdatingGravatar = false
+    private var disconnectProgressDialog: ProgressDialog? = null
+    private var isUpdatingGravatar = false
 
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var accountStore: AccountStore
@@ -81,7 +81,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
-            mIsUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR)
+            isUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR)
         }
     }
 
@@ -141,10 +141,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (mDisconnectProgressDialog != null) {
+        if (disconnectProgressDialog != null) {
             outState.putBoolean(IS_DISCONNECTING, true)
         }
-        outState.putBoolean(IS_UPDATING_GRAVATAR, mIsUpdatingGravatar)
+        outState.putBoolean(IS_UPDATING_GRAVATAR, isUpdatingGravatar)
         super.onSaveInstanceState(outState)
     }
 
@@ -172,9 +172,9 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     override fun onDestroy() {
-        if (mDisconnectProgressDialog != null) {
-            mDisconnectProgressDialog!!.dismiss()
-            mDisconnectProgressDialog = null
+        if (disconnectProgressDialog != null) {
+            disconnectProgressDialog!!.dismiss()
+            disconnectProgressDialog = null
         }
         super.onDestroy()
     }
@@ -212,7 +212,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     private fun showGravatarProgressBar(isUpdating: Boolean) {
         avatar_progress.visibility = if (isUpdating) View.VISIBLE else View.GONE
-        mIsUpdatingGravatar = isUpdating
+        isUpdatingGravatar = isUpdating
     }
 
     private fun loadAvatar(injectFilePath: String?) {
@@ -292,7 +292,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showDisconnectDialog(context: Context?) {
-        mDisconnectProgressDialog = ProgressDialog.show(
+        disconnectProgressDialog = ProgressDialog.show(
                 context,
                 null,
                 requireContext().getText(string.signing_out),
@@ -447,10 +447,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
         override fun onPostExecute(aVoid: Void?) {
             super.onPostExecute(aVoid)
-            if (mDisconnectProgressDialog != null && mDisconnectProgressDialog!!.isShowing) {
-                mDisconnectProgressDialog!!.dismiss()
+            if (disconnectProgressDialog != null && disconnectProgressDialog!!.isShowing) {
+                disconnectProgressDialog!!.dismiss()
             }
-            mDisconnectProgressDialog = null
+            disconnectProgressDialog = null
         }
 
         init {
