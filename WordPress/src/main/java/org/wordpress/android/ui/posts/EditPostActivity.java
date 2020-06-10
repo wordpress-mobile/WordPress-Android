@@ -1345,10 +1345,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
+                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
+                showPrepublishingNudgeBottomSheet();
+                return;
             case UPDATE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
-                mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
