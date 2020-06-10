@@ -138,6 +138,7 @@ ext {
     androidxArchCoreVersion = '2.0.0'
     assertJVersion = '3.11.1'
     espressoVersion = '3.1.0'
+    mockitoCoreVersion = "2.28.2"
     nhaarmanMockitoVersion = "2.1.0"
 }
 

@@ -2,6 +2,12 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
 ext.kotlinVersion = '1.3.61'
+ext.kotlinPoetVersion = '1.6.0'
+ext.autoServiceVersion = '1.0-rc6'
+ext.jUnitVersion = '4.13'
+ext.mockitoCoreVersion = "2.28.2"
+ext.nhaarmanMockitoVersion = "2.1.0"
+ext.assertJVersion = "3.11.1"
 
 kapt {
     generateStubs = true
@@ -10,14 +16,14 @@ kapt {
 dependencies {
     implementation project(':libs:WordPressAnnotations')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.google.auto.service:auto-service:1.0-rc6"
-    kapt "com.google.auto.service:auto-service:1.0-rc6"
-    implementation 'com.squareup:kotlinpoet:1.6.0'
+    implementation "com.google.auto.service:auto-service:$autoServiceVersion"
+    kapt "com.google.auto.service:auto-service:$autoServiceVersion"
+    implementation "com.squareup:kotlinpoet:$kotlinPoetVersion"
 
-    testImplementation "junit:junit:4.13"
-    testImplementation 'org.mockito:mockito-core:2.28.2'
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
-    testImplementation "org.assertj:assertj-core:3.11.1"
+    testImplementation "junit:junit:$jUnitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$nhaarmanMockitoVersion"
+    testImplementation "org.assertj:assertj-core:$assertJVersion"
 }
 
 sourceCompatibility = "7"
