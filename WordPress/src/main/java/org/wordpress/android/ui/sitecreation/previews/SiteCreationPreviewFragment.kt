@@ -329,7 +329,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
                     val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
                     // OK button should slide in if the container exists and fade in otherwise
-                    val okAnim = sitePreviewOkButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
+                    val okAnim = sitePreviewOkButtonContainer?.let {
+                        createSlideInFromBottomAnimator(it, contentHeight)
+                    }
                             ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
