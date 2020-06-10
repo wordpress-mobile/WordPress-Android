@@ -85,10 +85,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(layout.me_fragment, container, false) as ViewGroup
     }
 
