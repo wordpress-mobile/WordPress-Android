@@ -26,7 +26,6 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
-
     private lateinit var viewModel: SiteCreationSegmentsViewModel
 
     @Inject internal lateinit var imageManager: ImageManager
