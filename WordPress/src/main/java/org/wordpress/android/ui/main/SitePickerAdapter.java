@@ -146,10 +146,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              String lastSearch,
                              boolean isInSearchMode,
                              OnDataLoadedListener dataLoadedListener,
-                             SitePickerMode sitePickerMode
+                             SitePickerMode sitePickerMode,
+                             boolean isInEditMode
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                null, null, sitePickerMode);
+                null, null, sitePickerMode, isInEditMode);
     }
 
     public SitePickerAdapter(Context context,
@@ -162,7 +163,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              ArrayList<Integer> ignoreSitesIds
     ) {
         this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
-                headerHandler, ignoreSitesIds, SitePickerMode.DEFAULT_MODE);
+                headerHandler, ignoreSitesIds, SitePickerMode.DEFAULT_MODE, false);
     }
 
     public SitePickerAdapter(Context context,
@@ -173,7 +174,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              OnDataLoadedListener dataLoadedListener,
                              HeaderHandler headerHandler,
                              ArrayList<Integer> ignoreSitesIds,
-                             SitePickerMode sitePickerMode
+                             SitePickerMode sitePickerMode,
+                             boolean isInEditMode
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -204,6 +206,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mIgnoreSitesIds = ignoreSitesIds;
 
         mSitePickerMode = sitePickerMode;
+        mShowHiddenSites = isInEditMode; // If site picker is in edit mode, show hidden sites.
 
         loadSites();
     }
@@ -419,7 +422,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * called when the user chooses to edit the visibility of wp.com blogs
      */
-    void setEnableEditMode(boolean enable) {
+    void setEnableEditMode(boolean enable, HashSet<Integer> selectedPositions) {
         if (mIsMultiSelectEnabled == enable) {
             return;
         }
@@ -433,7 +436,14 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         mIsMultiSelectEnabled = enable;
-        mSelectedPositions.clear();
+
+        // If some selectedPositions exist and are passed from the activity, use it.
+        // Otherwise, reset the selected positions.
+        if (!selectedPositions.isEmpty()) {
+            mSelectedPositions.addAll(selectedPositions);
+        } else {
+            mSelectedPositions.clear();
+        }
 
         loadSites();
     }
@@ -534,6 +544,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         return sites;
+    }
+
+    public HashSet<Integer> getSelectedPositions() {
+        return mSelectedPositions;
     }
 
     SiteList getHiddenSites() {
