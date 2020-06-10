@@ -164,6 +164,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
+import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
@@ -514,6 +515,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderInterestsFragment object);
 
     void inject(HomepageSettingsDialog object);
+
+    void inject(CrashLogging object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

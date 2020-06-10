@@ -9,13 +9,14 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.CrashLoggingUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class EditorActionsProviderTest {
-    private val crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
+    private val crashLogging: CrashLogging = mock()
     private val actionsProvider: EditorActionsProvider = EditorActionsProvider(
-            crashLoggingUtilsWrapper
+            crashLogging
     )
 
     @Test
