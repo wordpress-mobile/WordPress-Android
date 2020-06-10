@@ -57,6 +57,15 @@ class CrashLogging @Inject constructor(
         }
     }
 
+    /**
+     * Logs a message as a Sentry breadcrumb
+     *
+     * This doesn't generate a Sentry event – it just records it as context for any future crashes. To
+     * generate a Sentry event, use [report].
+     *
+     * @param[message] The message to log
+     * @param[tag] An optional [AppLog] tag
+     */
     @JvmOverloads
     fun log(message: String, tag: AppLog.T? = null) = tag?.let {
         Sentry.addBreadcrumb(message, tag.toString())
@@ -64,9 +73,24 @@ class CrashLogging @Inject constructor(
         Sentry.addBreadcrumb(message)
     }
 
+    /**
+     * Logs as an exception as a Sentry Breadcrumb
+     *
+     * This doesn't generate a Sentry event – it just records it as context for any future crashes. To
+     * generate a Sentry event, use [reportException].
+     *
+     * @param[message] The message to log
+     * @param[tag] An optional [AppLog] tag
+     */
     @JvmOverloads
     fun logException(tr: Throwable, tag: AppLog.T? = null) = this.log(tr.toString(), tag)
 
+    /**
+     * Send a message to Sentry as a new event
+     *
+     * @param[message] The message to log
+     * @param[tag] An optional [AppLog] tag
+     */
     @JvmOverloads
     fun report(message: String, tag: AppLog.T? = null) {
         if (tag != null) {
@@ -81,6 +105,13 @@ class CrashLogging @Inject constructor(
         Sentry.removeTag("tag")
     }
 
+    /**
+     * Send an exception to Sentry as a new event
+     *
+     * @param[message] The message to log
+     * @param[tag] An optional [AppLog] tag
+     * @param[message] An optional message string
+     */
     @JvmOverloads
     fun reportException(tr: Throwable, tag: AppLog.T? = null, message: String? = null) {
         if (message != null) {
