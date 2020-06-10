@@ -71,7 +71,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mDisplayNameTextView: TextView? = null
     private var mUsernameTextView: TextView? = null
     private var mLoginLogoutTextView: TextView? = null
     private var mMyProfileView: View? = null
@@ -102,7 +101,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mDisplayNameTextView = rootView.findViewById(R.id.me_display_name)
         mUsernameTextView = rootView.findViewById(R.id.me_username)
         mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view)
         mMyProfileView = rootView.findViewById(R.id.row_my_profile)
@@ -205,7 +203,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         // we only want to show user details for WordPress.com users
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
-            mDisplayNameTextView!!.visibility = View.VISIBLE
+            me_display_name.visibility = View.VISIBLE
             mUsernameTextView!!.visibility = View.VISIBLE
             card_avatar.visibility = View.VISIBLE
             mMyProfileView!!.visibility = View.VISIBLE
@@ -214,12 +212,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             mLoginLogoutTextView!!.setText(string.me_disconnect_from_wordpress_com)
             val displayName = defaultAccount.displayName
             if (!TextUtils.isEmpty(displayName)) {
-                mDisplayNameTextView!!.text = displayName
+                me_display_name.text = displayName
             } else {
-                mDisplayNameTextView!!.text = defaultAccount.userName
+                me_display_name.text = defaultAccount.userName
             }
         } else {
-            mDisplayNameTextView!!.visibility = View.GONE
+            me_display_name.visibility = View.GONE
             mUsernameTextView!!.visibility = View.GONE
             card_avatar.visibility = View.GONE
             avatar_progress.visibility = View.GONE
