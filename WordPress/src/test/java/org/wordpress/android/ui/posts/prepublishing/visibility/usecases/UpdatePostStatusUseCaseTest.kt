@@ -1,85 +1,78 @@
 package org.wordpress.android.ui.posts.prepublishing.visibility.usecases
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
+import org.wordpress.android.BaseUnitTest
+
 import org.junit.Before
 import org.junit.Test
-import org.wordpress.android.BaseUnitTest
+import org.mockito.Mock
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PASSWORD_PROTECTED
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PENDING_REVIEW
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PRIVATE
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.PUBLISH
-import java.lang.IllegalStateException
+import org.wordpress.android.util.DateTimeUtilsWrapper
 
 class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var updatePostStatusUseCase: UpdatePostStatusUseCase
+    @Mock lateinit var dateTimeUtilsWrapper: DateTimeUtilsWrapper
 
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        updatePostStatusUseCase = UpdatePostStatusUseCase()
+        updatePostStatusUseCase = UpdatePostStatusUseCase(dateTimeUtilsWrapper)
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
-        editPostRepository.set { PostModel() }
     }
 
     @Test
-    fun `verify that when updatePostStatus is called with PUBLISH Visibility the PostStatus is PUBLISHED`() {
+    fun `if the new PostStatus is PRIVATE & the old PostStatus is SCHEDULED then the date created should be now`() {
         // arrange
-        val expectedPostStatus = PostStatus.PUBLISHED
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(PUBLISH, editPostRepository) {}
-
-        // assert
-        assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
-    }
-
-    @Test
-    fun `verify that when updatePostStatus is called with DRAFT Visibility the PostStatus is DRAFT`() {
-        // arrange
-        val expectedPostStatus = PostStatus.DRAFT
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(DRAFT, editPostRepository) {}
-
-        // assert
-        assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
-    }
-
-    @Test
-    fun `verify that when updatePostStatus is called with PENDING_REVIEW Visibility the PostStatus is PENDING`() {
-        // arrange
-        val expectedPostStatus = PostStatus.PENDING
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(PENDING_REVIEW, editPostRepository) {}
-
-        // assert
-        assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
-    }
-
-    @Test
-    fun `verify that when updatePostStatus is called with PRIVATE Visibility the PostStatus is PRIVATE`() {
-        // arrange
-        val expectedPostStatus = PostStatus.PRIVATE
+        val currentDate = "2020-06-06T20:28:20+0200"
+        whenever(dateTimeUtilsWrapper.currentTimeInIso8601()).thenReturn(currentDate)
+        editPostRepository.set { PostModel().apply { setStatus(PostStatus.SCHEDULED.toString()) } }
 
         // act
         updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
 
         // assert
-        assertThat(editPostRepository.getPost()?.status).isEqualTo(expectedPostStatus.toString())
+        assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `verify that when updatePostStatus is called with PASSWORD_PROTECTED Visibility an exception is thrown`() {
+    @Test
+    fun `if the new PostStatus is PRIVATE & the old PostStatus is not SCHEDULED then the date should be the same`() {
+        // arrange
+        val currentDate = "2020-06-06T20:28:20+0200"
+        editPostRepository.set {
+            PostModel().apply {
+                setDateCreated(currentDate)
+                setStatus(PostStatus.DRAFT.toString())
+            }
+        }
+
         // act
-        updatePostStatusUseCase.updatePostStatus(PASSWORD_PROTECTED, editPostRepository) {}
+        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+
+        // assert
+        assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
+    }
+
+    @Test
+    fun `if the new PostStatus is PRIVATE & the old PostStatus is DRAFT then the postModel should be updated`() {
+        // arrange
+        editPostRepository.set {
+            PostModel().apply {
+                setStatus(PostStatus.DRAFT.toString())
+            }
+        }
+
+        // act
+        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+
+        // assert
+        assertThat(editPostRepository.status).isEqualTo(PRIVATE)
     }
 }

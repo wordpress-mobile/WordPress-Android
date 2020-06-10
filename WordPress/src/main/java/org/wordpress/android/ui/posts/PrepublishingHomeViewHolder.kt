@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
@@ -35,9 +36,14 @@ sealed class PrepublishingHomeViewHolder(
             uiState.actionResult?.let { resultText ->
                 actionResult.text = uiHelpers.getTextOfUiString(itemView.context, resultText)
             }
+
+            actionLayout.isEnabled = uiState.actionClickable
             actionLayout.setOnClickListener {
-                uiState.onActionClicked.invoke(uiState.actionType)
+                uiState.onActionClicked?.invoke(uiState.actionType)
             }
+
+            actionType.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionTypeColor))
+            actionResult.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionResultColor))
         }
     }
 

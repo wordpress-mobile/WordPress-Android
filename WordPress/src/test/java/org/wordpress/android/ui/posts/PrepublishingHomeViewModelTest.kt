@@ -12,6 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
@@ -54,8 +55,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         ).doAnswer {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
-        whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn("")
-        whenever(editPostRepository.getPost()).thenReturn(PostModel())
+        whenever(editPostRepository.getEditablePost()).thenReturn(PostModel())
+        whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
     }
@@ -282,6 +283,39 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(event).isNotNull
+    }
+
+    @Test
+    fun `verify that PUBLISH action is unclickable if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(PUBLISH)
+
+        assertThat(uiState?.actionClickable).isFalse()
+    }
+
+    @Test
+    fun `verify that TAGS action is clickable if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(TAGS)
+
+        assertThat(uiState?.actionClickable).isTrue()
+    }
+
+    @Test
+    fun `verify that VISIBILITY action is clickable if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(VISIBILITY)
+
+        assertThat(uiState?.actionClickable).isTrue()
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
