@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.progress_layout.progress_text
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
+import kotlinx.android.synthetic.main.site_creation_preview_web_view_container.*
 import kotlinx.android.synthetic.main.site_creation_progress_creating_site.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -64,7 +65,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var sitePreviewWebView: WebView
     private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
@@ -105,7 +105,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebError = rootView.findViewById(R.id.sitePreviewWebError)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
