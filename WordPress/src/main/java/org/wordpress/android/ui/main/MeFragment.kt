@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -25,6 +24,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.me_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -71,9 +71,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mAvatarCard: ViewGroup? = null
-    private var mProgressBar: View? = null
-    private var mAvatarImageView: ImageView? = null
     private var mDisplayNameTextView: TextView? = null
     private var mUsernameTextView: TextView? = null
     private var mLoginLogoutTextView: TextView? = null
@@ -104,10 +101,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
-        mAvatarCard = rootView.findViewById(R.id.card_avatar)
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mAvatarImageView = rootView.findViewById(R.id.me_avatar)
-        mProgressBar = rootView.findViewById(R.id.avatar_progress)
         mDisplayNameTextView = rootView.findViewById(R.id.me_display_name)
         mUsernameTextView = rootView.findViewById(R.id.me_username)
         mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view)
@@ -213,7 +207,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             val defaultAccount = accountStore.account
             mDisplayNameTextView!!.visibility = View.VISIBLE
             mUsernameTextView!!.visibility = View.VISIBLE
-            mAvatarCard!!.visibility = View.VISIBLE
+            card_avatar.visibility = View.VISIBLE
             mMyProfileView!!.visibility = View.VISIBLE
             loadAvatar(null)
             mUsernameTextView!!.text = getString(string.at_username, defaultAccount.userName)
@@ -227,8 +221,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             mDisplayNameTextView!!.visibility = View.GONE
             mUsernameTextView!!.visibility = View.GONE
-            mAvatarCard!!.visibility = View.GONE
-            mProgressBar!!.visibility = View.GONE
+            card_avatar.visibility = View.GONE
+            avatar_progress.visibility = View.GONE
             mMyProfileView!!.visibility = View.GONE
             mAccountSettingsView!!.visibility = View.GONE
             mLoginLogoutTextView!!.setText(string.me_connect_to_wordpress_com)
@@ -236,7 +230,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showGravatarProgressBar(isUpdating: Boolean) {
-        mProgressBar!!.visibility = if (isUpdating) View.VISIBLE else View.GONE
+        avatar_progress.visibility = if (isUpdating) View.VISIBLE else View.GONE
         mIsUpdatingGravatar = isUpdating
     }
 
@@ -247,7 +241,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                 newAvatarUploaded,
                 avatarUrl,
                 injectFilePath,
-                mAvatarImageView!!,
+                me_avatar,
                 AVATAR_WITHOUT_BACKGROUND,
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
