@@ -402,22 +402,25 @@ private fun buildZendeskCustomFields(
         "not_selected"
     }
 
-    val planIds = allSites?.map { site -> site.planId }?.distinct()
-    var highestPlan: String? = null
-    planIds?.let {
-        highestPlan = zendeskPlanFieldHelper.getHighestPlan(it)
-    }
-    return listOf(
-            CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
-            CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
-            CustomField(TicketFieldIds.currentSite, currentSiteInformation),
-            CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
-            CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
-            CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
-            CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
-            CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform),
-            CustomField(TicketFieldIds.highestPlan, highestPlan ?: ZendeskPlanConstants.FREE)
+    val customFields = arrayListOf(
+        CustomField(TicketFieldIds.appVersion, PackageUtils.getVersionName(context)),
+        CustomField(TicketFieldIds.blogList, getCombinedLogInformationOfSites(allSites)),
+        CustomField(TicketFieldIds.currentSite, currentSiteInformation),
+        CustomField(TicketFieldIds.deviceFreeSpace, DeviceUtils.getTotalAvailableMemorySize()),
+        CustomField(TicketFieldIds.logs, AppLog.toPlainText(context)),
+        CustomField(TicketFieldIds.networkInformation, getNetworkInformation(context)),
+        CustomField(TicketFieldIds.appLanguage, LanguageUtils.getPatchedCurrentDeviceLanguage(context)),
+        CustomField(TicketFieldIds.sourcePlatform, ZendeskConstants.sourcePlatform)
     )
+    allSites?.let {
+        val planIds = it.map { site -> site.planId }.distinct()
+        val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
+        highestPlan?.let {
+            customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
+        }
+    }
+
+    return customFields
 }
 
 /**
