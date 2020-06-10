@@ -64,7 +64,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var contentLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
     private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
@@ -106,7 +105,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        contentLayout = rootView.findViewById(R.id.content_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebError = rootView.findViewById(R.id.sitePreviewWebError)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
@@ -132,7 +130,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
                 uiHelpers.updateVisibility(progress_layout, uiState.fullscreenProgressLayoutVisibility)
-                uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
+                uiHelpers.updateVisibility(content_layout, uiState.contentLayoutVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebViewShimmerLayout, uiState.shimmerVisibility)
@@ -190,8 +188,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun initOkButton() {
-        val okBtn = contentLayout.findViewById<View>(R.id.okButton)
-        okBtn.setOnClickListener { viewModel.onOkButtonClicked() }
+        okButton.setOnClickListener { viewModel.onOkButtonClicked() }
     }
 
     private fun updateContentLayout(sitePreviewData: SitePreviewData) {
@@ -204,7 +201,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             )
         }
         // The view is about to become visible
-        if (contentLayout.visibility == View.GONE) {
+        if (content_layout.visibility == View.GONE) {
             animateContentTransition()
             view?.announceForAccessibility(
                     getString(R.string.new_site_creation_preview_title) +
@@ -333,7 +330,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     private fun animateContentTransition() {
-        contentLayout.addOnLayoutChangeListener(object : OnLayoutChangeListener {
+        content_layout.addOnLayoutChangeListener(object : OnLayoutChangeListener {
             override fun onLayoutChange(
                 v: View?,
                 left: Int,
@@ -345,9 +342,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 oldRight: Int,
                 oldBottom: Int
             ) {
-                if (contentLayout.measuredWidth > 0 && contentLayout.measuredHeight > 0) {
-                    contentLayout.removeOnLayoutChangeListener(this)
-                    val contentHeight = contentLayout.measuredHeight.toFloat()
+                if (content_layout.measuredWidth > 0 && content_layout.measuredHeight > 0) {
+                    content_layout.removeOnLayoutChangeListener(this)
+                    val contentHeight = content_layout.measuredHeight.toFloat()
 
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
                     val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
