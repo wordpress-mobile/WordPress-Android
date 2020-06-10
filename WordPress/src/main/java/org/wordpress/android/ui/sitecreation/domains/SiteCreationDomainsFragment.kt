@@ -27,9 +27,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     private var searchInputWithHeader: SearchInputWithHeader? = null
     private lateinit var viewModel: SiteCreationDomainsViewModel
 
-    private lateinit var domainsScreenListener: DomainsScreenListener
-    private lateinit var helpClickedListener: OnHelpClickedListener
-
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
@@ -41,8 +38,6 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
-        domainsScreenListener = context
-        helpClickedListener = context
     }
 
     @LayoutRes
@@ -111,10 +106,10 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
             searchInputWithHeader?.setInputText("")
         })
         viewModel.createSiteBtnClicked.observe(this, Observer { domain ->
-            domain?.let { domainsScreenListener.onDomainSelected(domain) }
+            domain?.let { (requireActivity() as DomainsScreenListener).onDomainSelected(domain) }
         })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_DOMAINS)
         })
         viewModel.start(getSegmentIdFromArguments())
     }
