@@ -2,13 +2,10 @@ package org.wordpress.android.ui.main
 
 import android.app.Activity
 import android.app.ProgressDialog
-import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -17,6 +14,9 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -63,7 +63,6 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.io.File
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
@@ -75,6 +74,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     @Inject lateinit var siteStore: SiteStore
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: MeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,12 +133,22 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
-                showDisconnectDialog(activity)
+                viewModel.setIsDisconnecting(true)
             }
             if (savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR, false)) {
                 showGravatarProgressBar(true)
             }
         }
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MeViewModel::class.java)
+        viewModel.showDisconnectDialog.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled {
+                when (this) {
+                    true -> showDisconnectDialog()
+                    false -> hideDisconnectDialog()
+                }
+            }
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -283,18 +294,23 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun signOutWordPressCom() {
-        // note that signing out sends a CoreEvents.UserSignedOutWordPressCom EventBus event,
-        // which will cause the main activity to recreate this fragment
-        SignOutWordPressComAsync(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+        viewModel.signOutWordPress(requireActivity().application as WordPress)
     }
 
-    private fun showDisconnectDialog(context: Context?) {
+    private fun showDisconnectDialog() {
         disconnectProgressDialog = ProgressDialog.show(
-                context,
+                requireContext(),
                 null,
                 requireContext().getText(string.signing_out),
                 false
         )
+    }
+
+    private fun hideDisconnectDialog() {
+        if (disconnectProgressDialog?.isShowing == true) {
+            disconnectProgressDialog?.dismiss()
+        }
+        disconnectProgressDialog = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -423,31 +439,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     string.error_updating_gravatar,
                     SHORT
             )
-        }
-    }
-
-    private inner class SignOutWordPressComAsync internal constructor(context: Context?) : AsyncTask<Void?, Void?, Void?>() {
-        var mWeakContext: WeakReference<Context?> = WeakReference(context)
-        override fun onPreExecute() {
-            super.onPreExecute()
-            val context = mWeakContext.get()
-            context?.let { showDisconnectDialog(it) }
-        }
-
-        override fun doInBackground(vararg params: Void?): Void? {
-            val context = mWeakContext.get()
-            if (context != null) {
-                (this@MeFragment.requireActivity().application as WordPress).wordPressComSignOut()
-            }
-            return null
-        }
-
-        override fun onPostExecute(aVoid: Void?) {
-            super.onPostExecute(aVoid)
-            if (disconnectProgressDialog != null && disconnectProgressDialog!!.isShowing) {
-                disconnectProgressDialog!!.dismiss()
-            }
-            disconnectProgressDialog = null
         }
     }
 
