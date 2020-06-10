@@ -112,6 +112,7 @@
     <string name="local_changes">Local changes</string>
     <string name="publish_now">Publish Now</string>
     <string name="update_now">Update Now</string>
+    <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -1287,7 +1288,7 @@
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
-    <string name="post_settings_status">Status</string>
+    <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_more_options">More Options</string>
@@ -2736,7 +2737,7 @@
 
     <!-- Prepublishing Nudges -->
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
-    <string name="prepublishing_nudges_visibility_action">Visibility</string>
+    <string name="prepublishing_nudges_visibility_action" translatable="false">@string/status_and_visibility</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
@@ -2745,7 +2746,7 @@
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
-    <string name="prepublishing_nudges_toolbar_title_visibility">Visibility</string>
+    <string name="prepublishing_nudges_toolbar_title_visibility" translatable="false">@string/status_and_visibility</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
 
