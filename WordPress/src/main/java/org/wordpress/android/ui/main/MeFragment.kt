@@ -71,7 +71,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mUsernameTextView: TextView? = null
     private var mLoginLogoutTextView: TextView? = null
     private var mMyProfileView: View? = null
     private var mAccountSettingsView: View? = null
@@ -101,7 +100,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mUsernameTextView = rootView.findViewById(R.id.me_username)
         mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view)
         mMyProfileView = rootView.findViewById(R.id.row_my_profile)
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings)
@@ -204,11 +202,11 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         if (accountStore.hasAccessToken()) {
             val defaultAccount = accountStore.account
             me_display_name.visibility = View.VISIBLE
-            mUsernameTextView!!.visibility = View.VISIBLE
+            me_username.visibility = View.VISIBLE
             card_avatar.visibility = View.VISIBLE
             mMyProfileView!!.visibility = View.VISIBLE
             loadAvatar(null)
-            mUsernameTextView!!.text = getString(string.at_username, defaultAccount.userName)
+            me_username.text = getString(string.at_username, defaultAccount.userName)
             mLoginLogoutTextView!!.setText(string.me_disconnect_from_wordpress_com)
             val displayName = defaultAccount.displayName
             if (!TextUtils.isEmpty(displayName)) {
@@ -218,7 +216,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
         } else {
             me_display_name.visibility = View.GONE
-            mUsernameTextView!!.visibility = View.GONE
+            me_username.visibility = View.GONE
             card_avatar.visibility = View.GONE
             avatar_progress.visibility = View.GONE
             mMyProfileView!!.visibility = View.GONE
