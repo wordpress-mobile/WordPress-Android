@@ -93,7 +93,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
             mIsUpdatingGravatar = savedInstanceState.getBoolean(IS_UPDATING_GRAVATAR)
         }
@@ -120,32 +120,32 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         avatarContainer.setOnClickListener(showPickerListener)
         rootView.findViewById<View>(R.id.change_photo).setOnClickListener(showPickerListener)
-        mMyProfileView.setOnClickListener(OnClickListener { v: View? ->
+        mMyProfileView?.setOnClickListener {
             ActivityLauncher.viewMyProfile(
                     activity
             )
-        })
-        mAccountSettingsView.setOnClickListener(OnClickListener { v: View? ->
+        }
+        mAccountSettingsView?.setOnClickListener {
             ActivityLauncher.viewAccountSettings(
                     activity
             )
-        })
-        rootView.findViewById<View>(R.id.row_app_settings).setOnClickListener { v: View? ->
+        }
+        rootView.findViewById<View>(R.id.row_app_settings).setOnClickListener {
             ActivityLauncher.viewAppSettingsForResult(
                     activity
             )
         }
-        rootView.findViewById<View>(R.id.row_support).setOnClickListener { v: View? ->
+        rootView.findViewById<View>(R.id.row_support).setOnClickListener {
             ActivityLauncher
                     .viewHelpAndSupport(
-                            activity!!,
+                            requireContext(),
                             ME_SCREEN_HELP,
                             selectedSite,
                             null
                     )
         }
         rootView.findViewById<View>(R.id.row_logout)
-                .setOnClickListener { v: View? ->
+                .setOnClickListener {
                     if (accountStore.hasAccessToken()) {
                         signOutWordPressComWithConfirmation()
                     } else {
@@ -161,7 +161,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
         }
         mToolbar = rootView.findViewById(R.id.toolbar_main)
-        mToolbar.setTitle(mToolbarTitle)
+        mToolbar?.title = mToolbarTitle
         return rootView
     }
 
@@ -249,7 +249,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                 injectFilePath,
                 mAvatarImageView!!,
                 AVATAR_WITHOUT_BACKGROUND,
-                object : RequestListener<Drawable?> {
+                object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                         val appLogMessage = "onLoadFailed while loading Gravatar image!"
                         if (e == null) {
@@ -317,7 +317,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun showDisconnectDialog(context: Context?) {
-        mDisconnectProgressDialog = ProgressDialog.show(context, null, context!!.getText(string.signing_out), false)
+        mDisconnectProgressDialog = ProgressDialog.show(
+                context,
+                null,
+                requireContext().getText(string.signing_out),
+                false
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -398,7 +403,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))
                 .withAspectRatio(1f, 1f)
                 .withOptions(options)
-                .start(activity!!, this)
+                .start(requireActivity(), this)
     }
 
     private fun startGravatarUpload(filePath: String) {
@@ -457,10 +462,10 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             context?.let { showDisconnectDialog(it) }
         }
 
-        protected override fun doInBackground(vararg params: Void): Void? {
+        override fun doInBackground(vararg params: Void?): Void? {
             val context = mWeakContext.get()
             if (context != null) {
-                (activity!!.application as WordPress).wordPressComSignOut()
+                (this@MeFragment.requireActivity().application as WordPress).wordPressComSignOut()
             }
             return null
         }
