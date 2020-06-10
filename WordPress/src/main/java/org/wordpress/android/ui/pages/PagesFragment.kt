@@ -462,6 +462,7 @@ class PagesFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
+        tabContainer.visibility = View.VISIBLE
         searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
@@ -471,6 +472,7 @@ class PagesFragment : Fragment() {
     private fun showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
+        tabContainer.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
