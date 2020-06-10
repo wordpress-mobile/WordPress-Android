@@ -70,7 +70,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mAccountSettingsView: View? = null
     private var mDisconnectProgressDialog: ProgressDialog? = null
     private var mScrollView: ScrollView? = null
     private var mToolbar: Toolbar? = null
@@ -97,7 +96,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mAccountSettingsView = rootView.findViewById(R.id.row_account_settings)
         mScrollView = rootView.findViewById(R.id.scroll_view)
         val showPickerListener = OnClickListener { v: View? ->
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
@@ -110,7 +108,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     activity
             )
         }
-        mAccountSettingsView?.setOnClickListener {
+        row_account_settings.setOnClickListener {
             ActivityLauncher.viewAccountSettings(
                     activity
             )
@@ -215,7 +213,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             card_avatar.visibility = View.GONE
             avatar_progress.visibility = View.GONE
             row_my_profile.visibility = View.GONE
-            mAccountSettingsView!!.visibility = View.GONE
+            row_account_settings.visibility = View.GONE
             me_login_logout_text_view.setText(string.me_connect_to_wordpress_com)
         }
     }
