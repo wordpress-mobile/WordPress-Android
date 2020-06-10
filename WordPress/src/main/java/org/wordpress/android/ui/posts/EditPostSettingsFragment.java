@@ -242,6 +242,9 @@ public class EditPostSettingsFragment extends Fragment {
 
     @Override
     public void onDestroy() {
+        if (mSiteSettings != null) {
+            mSiteSettings.clear();
+        }
         mDispatcher.unregister(this);
         super.onDestroy();
     }
@@ -383,12 +386,12 @@ public class EditPostSettingsFragment extends Fragment {
             mFormatContainer.setVisibility(View.GONE);
         }
 
-        mPublishedViewModel.getOnUiModel().observe(this, new Observer<PublishUiModel>() {
+        mPublishedViewModel.getOnUiModel().observe(getViewLifecycleOwner(), new Observer<PublishUiModel>() {
             @Override public void onChanged(PublishUiModel uiModel) {
                 updatePublishDateTextView(uiModel.getPublishDateLabel());
             }
         });
-        mPublishedViewModel.getOnPostStatusChanged().observe(this, new Observer<PostStatus>() {
+        mPublishedViewModel.getOnPostStatusChanged().observe(getViewLifecycleOwner(), new Observer<PostStatus>() {
             @Override public void onChanged(PostStatus postStatus) {
                 updatePostStatus(postStatus);
             }
@@ -1087,7 +1090,7 @@ public class EditPostSettingsFragment extends Fragment {
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            for (int i = 0;; ++i) {
+            for (int i = 0; ; ++i) {
                 sb.append(address.getAddressLine(i));
                 if (i == address.getMaxAddressLineIndex()) {
                     sb.append(".");
@@ -1123,7 +1126,7 @@ public class EditPostSettingsFragment extends Fragment {
             ToastUtils.showToast(getActivity(), R.string.post_settings_error_placepicker_missing_play_services);
         } catch (GooglePlayServicesRepairableException re) {
             GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), re.getConnectionStatusCode(),
-                                                               ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
+                    ACTIVITY_REQUEST_PLAY_SERVICES_RESOLUTION);
         }
     }
 

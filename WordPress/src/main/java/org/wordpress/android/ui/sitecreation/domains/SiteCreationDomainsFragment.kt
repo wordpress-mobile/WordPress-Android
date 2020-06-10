@@ -74,7 +74,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        nonNullActivity = activity!!
+        nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
     }
 

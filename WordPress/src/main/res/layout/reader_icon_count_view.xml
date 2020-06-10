@@ -7,8 +7,8 @@
     android:background="?attr/selectableItemBackground"
     android:minHeight="@dimen/reader_button_minimum_height"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/margin_medium"
-    android:paddingEnd="@dimen/margin_medium">
+    android:paddingStart="@dimen/margin_large"
+    android:paddingEnd="@dimen/margin_large">
 
     <ImageView
         android:tintMode="src_in"

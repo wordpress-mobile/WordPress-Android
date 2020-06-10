@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-16 01:55:04+0000
+Translation-Revision-Date: 2020-05-27 15:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Welkom bij onze nieuwe blog</string>
+    <string name="gutenberg_native_select_a_color">Selecteer een kleur</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Tik tweemaal om naar de kleureninstellingen te gaan</string>
+    <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de content ervan</string>
+    <string name="gutenberg_native_number_of_columns">Aantal kolommen</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Blok naar rechts verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_right">Blok naar rechts verplaatsen</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Blok naar links verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_left">Blok naar links verplaatsen</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Tik tweemaal om het blok naar rechts te verplaatsen</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Tik tweemaal om het blok naar links te verplaatsen</string>
+    <string name="gutenberg_native_columns_settings">Kolominstellingen</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Dashboard aanmaken</string>
+    <string name="new_site_creation_creating_site_loading_3">Thema configureren</string>
+    <string name="new_site_creation_creating_site_loading_2">Sitefuncties toevoegen</string>
+    <string name="new_site_creation_creating_site_loading_1">De URL van je site aanmaken</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Je site is binnen enkele ogenblikken gereed</string>
+    <string name="new_site_creation_creating_site_loading_title">Hoera!\nBijna klaar</string>
+    <string name="pages_and_posts_cancel_auto_upload">Uploaden annuleren</string>
+    <string name="gif_list_search_returned_unknown_error">Er is een probleem opgetreden bij het uitvoeren van de aanvraag</string>
+    <string name="gif_powered_by_tenor">Mogelijk gemaakt door Tenor</string>
+    <string name="gif_picker_search_hint">Tenor doorzoeken</string>
+    <string name="photo_picker_gif">Kiezen uit Tenor</string>
+    <string name="weekday_saturday">Zaterdag</string>
+    <string name="weekday_friday">Vrijdag</string>
+    <string name="weekday_thursday">Donderdag</string>
+    <string name="weekday_wednesday">Woensdag</string>
+    <string name="weekday_tuesday">Dinsdag</string>
+    <string name="weekday_monday">Maandag</string>
+    <string name="weekday_sunday">Zondag</string>
+    <string name="media_accessing_failed">Openen van content van privésite mislukt. Sommige media zijn mogelijk niet beschikbaar</string>
+    <string name="media_accessing_progress">Content van privésite wordt geopend</string>
     <string name="error_failed_to_crop_and_save_image">Afbeelding bijsnijden en opslaan mislukt. Probeer opnieuw.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Invoegen van afbeelding mislukt.\nTik om het opnieuw te proberen.</string>
+    <string name="failed_to_load_image_tap_to_retry">Afbeelding laden mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="preview_image_description">Voorbeeldweergave afbeelding</string>
     <string name="error_unknown_page_type">Onbekende pagina-indeling</string>
     <string name="error_page_not_submitted">We konden deze handeling niet voltooien en hebben de pagina niet verzonden voor beoordeling.</string>
@@ -31,7 +64,6 @@ Language: nl
     <string name="page_uploading">Pagina wordt geüpload</string>
     <string name="error_publish_page_no_network">Apparaat is offline. Pagina lokaal opgeslagen.</string>
     <string name="local_page_autosave_revision_available">Je hebt niet-opgeslagen wijzigingen aan deze pagina aangebracht</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Je pagina wordt geüpload</string>
     <string name="editor_page_saved_locally_failed_media">De pagina bevat mislukte media-uploads en is lokaal opgeslagen</string>
     <string name="editor_page_saved_locally">Pagina opgeslagen op apparaat</string>
@@ -64,9 +96,7 @@ Language: nl
     <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimumhoogte in pixels</string>
     <string name="gutenberg_native_link_to">Link naar</string>
-    <string name="gutenberg_native_link_settings">Link-instellingen</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Laten we samen wat bouwen.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Laten we samen wat opbouwen</string>
@@ -80,22 +110,16 @@ Language: nl
     <string name="gutenberg_native_get_in_touch">Neem contact op</string>
     <string name="gutenberg_native_excerpt_length_words">Lengte samenvatting (woorden)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Stuur me een e-mail: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Omslagmedia bewerken</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Treur niet om wat voorbij is, lach omdat het gebeurd is.</string>
     <string name="gutenberg_native_customize">AANPASSEN</string>
     <string name="gutenberg_native_city_10100">Plaats, 1234 AB</string>
-    <string name="gutenberg_native_button_link_url">Knop URL-link</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Kleureninstellingen voor knoppen zijn binnenkort beschikbaar.</string>
-    <string name="gutenberg_native_border_settings">Instellingen rand</string>
-    <string name="gutenberg_native_border_radius">Radius rand</string>
-    <string name="gutenberg_native_background_opacity">Doorzichtigheid van de achtergrond</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraafblok toevoegen</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Een korte beschrijving van de services die je biedt.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Een beschrijving van het project en het uiteindelijke resultaat.</string>
-    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">012–3456789</string>
     <string name="gutenberg_native_10_street_road">Dorpsstraat 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Een bericht maken</string>
     <string name="post_list_tab_trashed_posts">Verwijderd</string>
@@ -223,7 +247,6 @@ Language: nl
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty">%s-blok. Leegmaken</string>
     <string name="gutenberg_native_reset_block">Blok resetten</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Blok verwijderen uit rij %s</string>
     <string name="gutenberg_native_remove_annotations">Aantekeningen verwijderen</string>
     <string name="gutenberg_native_problem_opening_the_video">Probleem bij het openen van de video</string>
     <string name="gutenberg_native_problem_displaying_block">Probleem bij het weergeven van het blok</string>
@@ -254,7 +277,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_select_an_image">Tik tweemaal om een afbeelding te selecteren</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Tik tweemaal om een video te selecteren</string>
     <string name="gutenberg_native_double_tap_to_select">Tik tweemaal om te selecteren</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Tik tweemaal om het blok te verwijderen</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Tik tweemaal om laatste wijziging opnieuw uit te voeren</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Tik tweemaal om het blok omhoog te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Tik tweemaal om het blok omlaag te verplaatsen</string>
@@ -758,7 +780,6 @@ Language: nl
     <string name="reader_empty_posts_liked_title">Nog niets geliket</string>
     <string name="reader_empty_followed_blogs_button_followed">Ga naar gevolgde site</string>
     <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
-    <string name="reader_empty_followed_blogs_description">Je volgt nog geen sites. Waarom zou je er nu niet een gaan volgen?</string>
     <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
     <string name="notifications_empty_likes">Nog geen likes</string>
     <string name="notifications_empty_followers">Nog geen volgers</string>
@@ -1191,7 +1212,6 @@ Language: nl
     <string name="media_edit_filename_caption">Bestandsnaam</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt. tekst</string>
-    <string name="copy">Kopieer</string>
     <string name="connect_site">Site koppelen</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lamp laten knipperen</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Apparaat laten trillen</string>
@@ -2043,6 +2063,7 @@ Language: nl
     <string name="reader_btn_unfollow">Volgend</string>
     <string name="reader_btn_follow">Volg</string>
     <string name="reader_btn_share">Delen</string>
+    <string name="reader_view_reblog">Rebloggen</string>
     <string name="reader_untitled_post">(geen titel)</string>
     <string name="comments_empty_list">Nog geen reacties</string>
     <string name="empty_list_default">Deze lijst is leeg</string>

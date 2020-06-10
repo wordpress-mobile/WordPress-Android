@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -21,10 +22,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -44,14 +45,12 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
-import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
+import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListener;
 
@@ -76,6 +75,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
     private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
+    private static final String ARG_SITE_URL = "param_site_url";
+    private static final String ARG_IS_SITE_PRIVATE = "param_is_site_private";
+    private static final String ARG_SITE_USER_ID = "param_user_id";
+    private static final String ARG_SITE_USERNAME = "param_site_username";
+    private static final String ARG_SITE_PASSWORD = "param_site_password";
+    private static final String ARG_SITE_TOKEN = "param_site_token";
+    private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
+
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -83,6 +90,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
 
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
+
+    private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
     private boolean mHtmlModeEnabled;
 
@@ -110,7 +119,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
-                                                      boolean supportStockPhotos) {
+                                                      boolean supportStockPhotos,
+                                                      String siteUrl,
+                                                      boolean isPrivate,
+                                                      long userId,
+                                                      String username,
+                                                      String password,
+                                                      String token,
+                                                      boolean isSiteUsingWpComRestApi) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -119,6 +135,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
         args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
+        args.putString(ARG_SITE_URL, siteUrl);
+        args.putBoolean(ARG_IS_SITE_PRIVATE, isPrivate);
+        args.putLong(ARG_SITE_USER_ID, userId);
+        args.putString(ARG_SITE_USERNAME, username);
+        args.putString(ARG_SITE_PASSWORD, password);
+        args.putString(ARG_SITE_TOKEN, token);
+        args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         fragment.setArguments(args);
         return fragment;
     }
@@ -218,6 +241,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String postType = getArguments().getString(ARG_POST_TYPE);
             boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
+            boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -226,7 +250,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             isNewPost,
                             localeSlug,
                             getTranslations(),
-                            isDarkMode());
+                            isDarkMode(),
+                            isSiteUsingWpComRestApi);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -344,34 +369,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         });
                     }
                 },
-                new OnEditorAutosaveListener() {
-                    @Override public void onEditorAutosave() {
-                        mTextWatcher.postTextChanged();
-                    }
-                },
-                new OnAuthHeaderRequestedListener() {
-                    @Override public Map<String, String> onAuthHeaderRequested(String url) {
-                        return mEditorFragmentListener.onAuthHeaderRequested(url);
-                    }
-                },
-                new RequestExecutor() {
-                    @Override public void performRequest(String path,
-                                                         Consumer<String> onResult,
-                                                         Consumer<Bundle> onError) {
-                        mEditorFragmentListener.onPerformFetch(path, onResult, onError);
-                    }
-                },
-                new OnImageFullscreenPreviewListener() {
-                    @Override public void onImageFullscreenPreviewClicked(String mediaUrl) {
-                        mEditorImagePreviewListener.onImagePreviewRequested(mediaUrl);
-                    }
-                },
-                new OnMediaEditorListener() {
-                    @Override public void onMediaEditorClicked(String mediaUrl) {
-                        // Show Media Editor
-                        mEditorEditMediaListener.onMediaEditorRequested(mediaUrl);
-                    }
-                },
+                mTextWatcher::postTextChanged,
+                mEditorFragmentListener::onAuthHeaderRequested,
+                mEditorFragmentListener::onPerformFetch,
+                mEditorImagePreviewListener::onImagePreviewRequested,
+                mEditorEditMediaListener::onMediaEditorRequested,
                 new OnLogGutenbergUserEventListener() {
                     @Override
                     public void onGutenbergUserEvent(GutenbergUserEvent event, Map<String, Object> properties) {
@@ -386,7 +388,30 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                         }
                     }
-                }, isDarkMode());
+                },
+                new OnGutenbergDidRequestUnsupportedBlockFallbackListener() {
+                    @Override
+                    public void gutenbergDidRequestUnsupportedBlockFallback(UnsupportedBlock unsupportedBlock) {
+                        openGutenbergWebViewActivity(
+                                unsupportedBlock.getContent(),
+                                unsupportedBlock.getId(),
+                                unsupportedBlock.getName()
+                        );
+                    }
+                },
+                mEditorFragmentListener::getMention,
+                new OnStarterPageTemplatesTooltipShownEventListener() {
+                    @Override
+                    public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+                        mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
+                    }
+                    
+                    @Override
+                    public boolean onRequestStarterPageTemplatesTooltipShown() {
+                        return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+                    }
+                },
+                isDarkMode());
 
         // request dependency injection. Do this after setting min/max dimensions
         if (getActivity() instanceof EditorFragmentActivity) {
@@ -417,6 +442,41 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         return view;
     }
 
+    private void openGutenbergWebViewActivity(String content, String blockId, String blockName) {
+        String siteUrl = getArguments().getString(ARG_SITE_URL);
+        boolean isSitePrivate = getArguments().getBoolean(ARG_IS_SITE_PRIVATE, false);
+        long userId = getArguments().getLong(ARG_SITE_USER_ID);
+        String siteUsername = getArguments().getString(ARG_SITE_USERNAME);
+        String sitePassword = getArguments().getString(ARG_SITE_PASSWORD);
+        String siteToken = getArguments().getString(ARG_SITE_TOKEN);
+
+        Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_NAME, blockName);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT, content);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_URL_TO_LOAD, siteUrl);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_IS_SITE_PRIVATE, isSitePrivate);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_ID, userId);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
+
+        startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == UNSUPPORTED_BLOCK_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
+                String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
+                getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+            }
+        }
+    }
+
     private boolean isDarkMode() {
         Configuration configuration = getActivity().getResources().getConfiguration();
         int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -429,7 +489,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         FragmentActivity activity = getActivity();
 
         Bundle arguments = getArguments();
-        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SUPPORT_STOCK_PHOTOS);
+        boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         if (activity != null) {
             if (supportStockPhotos) {
                 String packageName = activity.getApplication().getPackageName();

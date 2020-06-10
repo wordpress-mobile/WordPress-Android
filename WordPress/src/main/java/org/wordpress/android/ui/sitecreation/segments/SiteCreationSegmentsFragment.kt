@@ -113,7 +113,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
     }
 
     private fun updateContentLayout(segments: SegmentsContentUiState) {

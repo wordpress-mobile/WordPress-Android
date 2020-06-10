@@ -1,18 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-08 18:59:17+0000
+Translation-Revision-Date: 2020-05-19 10:10:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_select_a_color">Wähle eine Farbe aus</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Willkommen in unserem neuen Blog</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Zum Wechseln zu den Farbeinstellungen zweimal tippen</string>
+    <string name="reader_empty_followed_blogs_description">Wenn du Websites folgst, wirst du ihren Inhalt hier sehen</string>
+    <string name="crop">zuschneiden</string>
+    <string name="insert_label_with_count">%d einfügen</string>
+    <string name="feature_announcement_dialog_label">Was ist neu in WordPress?</string>
+    <string name="photo_picker_use_video">Dieses Video verwenden</string>
+    <string name="photo_picker_use_media">Diese Medien verwenden</string>
+    <string name="photo_picker_video_title">Video auswählen</string>
+    <string name="photo_picker_photo_or_video_title">Medien auswählen</string>
+    <string name="site_picker_ask_site_select">Die Website konnte nicht ausgewählt werden. Bitte versuche es erneut.</string>
+    <string name="error_failed_to_load_into_file">Laden in die Datei fehlgeschlagen, bitte versuche es erneut. </string>
+    <string name="feature_announcement_find_out_mode">Mehr erfahren</string>
+    <string name="preview_image_thumbnail_description">Vorschau des Vorschaubilds</string>
+    <string name="copy_text">Kopieren</string>
+    <string name="button_insert">Einfügen</string>
+    <string name="whats_new_in_version_title">Was ist neu?</string>
+    <string name="reader_no_site_to_reblog_title">Keine verfügbaren Websites bei WordPress.com</string>
+    <string name="comment_q_action_copied_url">Link-Adresse wurde kopiert</string>
+    <string name="copy_link_address">Link-Adresse kopieren</string>
+    <string name="comment_share_link_via">Teilen über</string>
+    <string name="comment_toast_err_share_intent">Teilen nicht möglich</string>
+    <string name="continue_label">Weiter</string>
+    <string name="sitepicker_continue_flow">Weiter</string>
+    <string name="reader_reblog_error">Rebloggen ist fehlgeschlagen</string>
+    <string name="reader_no_site_to_reblog_action">Websites verwalten</string>
+    <string name="reader_no_site_to_reblog_detail">Sobald du eine Website bei WordPress.com erstellt hast, kannst du Inhalte, die dir gefallen, auf deiner eigenen Website rebloggen.</string>
+    <string name="gutenberg_native_number_of_columns">Anzahl an Spalten</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bewege den Block von Position %1$s nach rechts zur Position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Block nach rechts verschieben</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bewege den Block von Position %1$s nach links zur Position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Block nach links verschieben</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Zum Verschieben des Blocks nach rechts zweimal tippen</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Zum Verschieben des Blocks nach links zweimal tippen</string>
+    <string name="gutenberg_native_columns_settings">Spalten-Einstellungen</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Das Dashboard wird erstellt</string>
+    <string name="new_site_creation_creating_site_loading_3">Das Theme wird eingerichtet</string>
+    <string name="new_site_creation_creating_site_loading_2">Die Website-Funktionen werden hinzugefügt</string>
+    <string name="new_site_creation_creating_site_loading_1">Die Website-URL wird abgerufen</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Deine Website wird in Kürze bereit sein</string>
+    <string name="new_site_creation_creating_site_loading_title">Hurra!\nFast geschafft</string>
+    <string name="pages_and_posts_cancel_auto_upload">Upload abbrechen</string>
+    <string name="gif_list_search_returned_unknown_error">Beim Verarbeiten der Anfrage ist ein Problem aufgetreten</string>
+    <string name="gif_powered_by_tenor">Bereitgestellt von Tenor</string>
+    <string name="gif_picker_search_hint">Tenor durchsuchen</string>
+    <string name="photo_picker_gif">Von Tenor auswählen</string>
+    <string name="weekday_saturday">Samstag</string>
+    <string name="weekday_friday">Freitag</string>
+    <string name="weekday_thursday">Donnerstag</string>
+    <string name="weekday_wednesday">Mittwoch</string>
+    <string name="weekday_tuesday">Dienstag</string>
+    <string name="weekday_monday">Montag</string>
+    <string name="weekday_sunday">Sonntag</string>
+    <string name="media_accessing_failed">Auf den Inhalt einer privaten Website konnte nicht zugegriffen werden. Einige Medien sind möglicherweise nicht verfügbar.</string>
+    <string name="media_accessing_progress">Auf den Inhalt einer privaten Website wird zugegriffen</string>
     <string name="error_failed_to_crop_and_save_image">Das Bild konnte nicht zugeschnitten und gespeichert werden, bitte versuche es erneut.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Das Einfügen von Medien ist fehlgeschlagen.\nBitte tippe, um es erneut zu versuchen.</string>
     <string name="preview_image_description">Vorschaubild</string>
     <string name="error_unknown_page_type">Unbekanntes Seitenformat</string>
     <string name="error_page_not_submitted">Wir konnten diese Aktion nicht abschließen und haben diese Seite nicht zur Überprüfung gesendet.</string>
     <string name="error_page_not_scheduled">Wir konnten diese Aktion nicht abschließen und haben diese Seite nicht geplant.</string>
     <string name="error_page_not_published_private">Wir konnten diese Aktion nicht abschließen und haben diese private Seite nicht veröffentlicht.</string>
+    <string name="failed_to_load_image_tap_to_retry">Das Laden des Bildes ist fehlgeschlagen.\nBitte tippe, um es erneut zu versuchen.</string>
     <string name="error_page_not_published">Wir konnten diese Aktion nicht abschließen und haben diese Seite nicht veröffentlicht.</string>
     <string name="error_page_not_submitted_retrying">Wir konnten diese Seite nicht zur Überprüfung senden, versuchen es aber später erneut. </string>
     <string name="error_page_not_scheduled_retrying">Wir konnten diese Seite nicht planen, versuchen es aber später erneut.</string>
@@ -41,7 +98,6 @@ Language: de
     <string name="editor_page_saved_locally">Die Seite wurde auf dem Gerät gespeichert</string>
     <string name="editor_page_saved_locally_failed_media">Es befinden sich nicht fertiggestellte Medien-Uploads in der Seite; sie wurde lokal gespeichert.</string>
     <string name="editor_uploading_page">Deine Seite wird hochgeladen</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Wir bieten eine Reihe von Dienstleistungen an, die dir helfen, die gewünschten Ergebnisse zu erzielen. Du bist dir nicht sicher, was du brauchst oder was es kostet? Wir können dir erklären, welche Dienstleistungen für dich die richtigen sind und dir mehr über unsere Preise sagen. Nimm unten Kontakt mit uns auf.</string>
     <string name="gutenberg_native_what_people_say">Was die Leute sagen</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Wir sind ein kleines Team von talentierten Fachleuten mit einem breiten Spektrum an Fähigkeiten und Erfahrungen. Wir lieben, was wir tun, und wir tun es mit Leidenschaft. Wir freuen uns auf die Zusammenarbeit mit dir.</string>
@@ -62,9 +118,7 @@ Language: de
     <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Dies ist Beispielinhalt, der dem Template enthalten ist, um die Funktionen zu veranschaulichen. Entferne oder ersetze ihn durch deine eigenen Worte und Medien.</string>
     <string name="gutenberg_native_usa">Deutschland</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Lass uns reden. 👋 Zögere nicht, dich mit den untenstehenden Kontaktinformationen zu melden oder eine Nachricht über das Formular zu senden.</string>
-    <string name="gutenberg_native_link_settings">Link-Einstellungen</string>
     <string name="gutenberg_native_link_to">Link zu</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Mindesthöhe in Pixeln</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mein Portfolio zeigt verschiedene Projekte, die im Laufe meiner Karriere entstanden sind. Meine Kontaktinformationen findest du unten. Setz dich mit mir in Verbindung.</string>
     <string name="gutenberg_native_only_show_excerpt">Nur Textauszug anzeigen</string>
     <string name="gutenberg_native_portfolio">Portfolio</string>
@@ -73,7 +127,6 @@ Language: de
     <string name="gutenberg_native_let_s_build_something_together">Lass uns gemeinsam etwas aufbauen</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
-    <string name="gutenberg_native_edit_cover_media">Covermedien bearbeiten</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Schreib eine E-Mail: &lt;a href=\"mailto:mail@beispiel.de\">mail@beispiel.de&lt;/a></string>
     <string name="gutenberg_native_excerpt_length_words">Länge des Textauszugs (in Wörtern)</string>
     <string name="gutenberg_native_get_in_touch">Kontakt aufnehmen</string>
@@ -83,18 +136,13 @@ Language: de
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Es sind unsere Entscheidungen, Harry, die zeigen, was wir wirklich sind, weit mehr als unsere Fähigkeiten.</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Weine nicht, weil es vorbei ist, lächle, weil es passiert ist.</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Einstellungen für die Button-Farbe sind demnächst verfügbar.</string>
-    <string name="gutenberg_native_button_link_url">Button-Link-URL</string>
     <string name="gutenberg_native_city_10100">12345 Musterstadt</string>
     <string name="gutenberg_native_customize">ANPASSEN</string>
-    <string name="gutenberg_native_background_opacity">Hintergrund-Deckkraft</string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Eine Beschreibung des Projekts und der vorgestellten Arbeiten.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@beispiel.de\">mail@beispiel.de&lt;/a></string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Eine kurze Biografie mit persönlicher Geschichte, Schlüsselerfolgen oder einem interessanten Fakt.</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Eine kurze Beschreibung der Dienstleistungen, die du anbietest.</string>
     <string name="gutenberg_native_add_paragraph_block">Absatz-Block hinzufügen</string>
-    <string name="gutenberg_native_border_radius">Rahmenradius</string>
-    <string name="gutenberg_native_border_settings">Rahmeneinstellungen</string>
     <string name="gutenberg_native_555_555_1234">+49 (0)123 456789</string>
     <string name="gutenberg_native_10_street_road">Hauptstraße 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Erstelle einen Beitrag</string>
@@ -121,7 +169,7 @@ Language: de
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>
     <string name="reader_btn_selected_filter_tick_content_description">Ausgewählt</string>
     <string name="reader_btn_select_filter_content_description">Wähle eine Website oder ein Schlagwort aus, um Beiträge zu filtern</string>
-    <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu einem bestimmten Thema zu finden</string>
+    <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu bestimmten Themen zu finden</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Melde dich bei WordPress.com an, um die neuesten Beiträge von Websites zu sehen, denen du folgst</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Melde dich bei WordPress.com an, um die neuesten Beiträge zu Schlagwörtern zu sehen, denen du folgst</string>
     <string name="gutenberg_native_add_block_after">Block dahinter hinzufügen</string>
@@ -223,7 +271,6 @@ Language: de
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block %s. Dieser Block hat ungültigen Inhalt</string>
     <string name="gutenberg_native_s_block_empty">Block %s. Leer</string>
     <string name="gutenberg_native_reset_block">Block zurücksetzen</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Block in Zeile %s entfernen</string>
     <string name="gutenberg_native_remove_annotations">Anmerkungen entfernen</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem beim Öffnen des Videos</string>
     <string name="gutenberg_native_problem_displaying_block">Problem beim Anzeigen des Blocks</string>
@@ -254,7 +301,6 @@ Language: de
     <string name="gutenberg_native_double_tap_to_select_an_image">Zum Auswählen eines Bilds zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Zum Auswählen eines Videos zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_select">Zum Auswählen zweimal tippen</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Zum Entfernen des Blocks zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Zum Wiederholen der letzten Änderung zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Zum Verschieben des Blocks nach oben zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Zum Verschieben des Blocks nach unten zweimal tippen</string>
@@ -288,6 +334,8 @@ Language: de
     <string name="notifications_tab_dialog_master_off_title">Aktiviere die Benachrichtigungen für diese Website, um Benachrichtigungen auf dem Tab „Benachrichtigungen“ zu sehen.</string>
     <string name="notifications_tab_dialog_master_hint_off">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website aktivieren</string>
     <string name="notifications_tab_dialog_master_hint_on">Benachrichtigungsanzeige auf dem Tab „Benachrichtigungen“ für diese Website deaktivieren</string>
+    <string name="dialog_gutenberg_informative_description_page">Großartig! Du nutzt jetzt den Block-Editor für neue Seiten! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
+    <string name="dialog_gutenberg_informative_description_post">Großartig! Du nutzt jetzt den Block-Editor für neue Beiträge! Wenn du zum klassischen Editor wechseln möchtest, gehe zu „Meine Website“ > „Website-Einstellungen“.</string>
     <string name="pick_media">Bild oder Video hinzufügen</string>
     <string name="error_post_not_submitted_retrying">Wir konnten diesen Beitrag nicht zur Überprüfung einreichen, aber wir werden es später erneut versuchen.</string>
     <string name="error_post_not_published_retrying_private">Wir konnten diesen privaten Beitrag nicht veröffentlichen, aber wir werden es später erneut versuchen.</string>
@@ -339,13 +387,13 @@ Language: de
     <string name="site_settings_more">Mehr</string>
     <string name="site_settings_improved_search_summary">Ersetze die integrierte WordPress-Suche durch eine verbesserte Suchfunktion</string>
     <string name="site_settings_improved_search">Verbesserte Suche</string>
-    <string name="site_settings_jetpack_search">Jetpack Suche</string>
     <string name="site_settings_ad_free_video_hosting">Werbefreies Videohosting</string>
     <string name="site_settings_media">Medien</string>
     <string name="site_settings_site_accelerator_summary">Lade Seiten schneller, indem du Jetpack erlaubst, deine Bild- und statischen Dateien wie CSS und JavaScript zu optimieren.</string>
     <string name="site_settings_faster_static_files">Schnellere statische Dateien</string>
     <string name="site_settings_faster_images">Schnellere Bilder</string>
     <string name="site_settings_site_accelerator_off">Aus</string>
+    <string name="site_settings_jetpack_search">Jetpack-Suche</string>
     <string name="site_settings_site_accelerator_on">Ein</string>
     <string name="site_settings_site_accelerator">Website-Beschleuniger</string>
     <string name="site_settings_lazy_load_images_summary">Verbessere die Ladezeit deiner Website, indem du nur die auf dem Bildschirm sichtbaren Bilder lädst.</string>
@@ -561,11 +609,11 @@ Language: de
     <string name="site_settings_gutenberg_default_for_new_posts">Block-Editor benutzen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bearbeite neue Beiträge und Seiten mit dem Block-Editor.</string>
     <string name="stats_loading_error">Daten nicht geladen</string>
-    <string name="stats_loading_block_error">Es gab ein Problem beim Laden deiner Daten, aktualisiere deine Seite, um es erneut zu versuchen.</string>
     <string name="menu_switch_to_gutenberg_editor">Zum Block-Editor wechseln</string>
     <string name="plans_loading_error_network_title">Keine Verbindung</string>
     <string name="plans_loading_error_no_plans_title">Pläne können nicht geladen werden</string>
     <string name="menu_switch_to_aztec_editor">Zum klassischen Editor wechseln</string>
+    <string name="stats_loading_block_error">Beim Laden deiner Daten ist ein Problem aufgetreten. Aktualisiere deine Seite, um es erneut zu versuchen.</string>
     <string name="exit">beenden</string>
     <string name="dialog_gutenberg_informative_title">Block-Editor aktiviert</string>
     <string name="quick_start_sites">Nächste Schritte</string>
@@ -615,16 +663,16 @@ Language: de
     <string name="new_site_creation_search_domain_input_hint">Domains durchsuchen</string>
     <string name="new_site_creation_create_site_button">Website erstellen</string>
     <string name="notification_new_site_creation_title">Website erstellen</string>
-    <string name="notification_new_site_creation_failed">Es gab ein Problem</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Wir erstellen deine neue Website.</string>
     <string name="cancel_new_site_wizard_content_description">Assistent zum Erstellen von Websites abbrechen</string>
     <string name="site_created_but_not_fetched_snackbar_message">Es scheint, als ob du eine langsame Verbindung hast. Wenn du deine neue Website nicht in der Liste siehst, versuch sie zu aktualisieren.</string>
     <string name="new_site_creation_clear_all_content_description">Löschen</string>
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
-    <string name="site_creation_error_generic_title">Es gab ein Problem</string>
+    <string name="notification_new_site_creation_failed">Es ist ein Problem aufgetreten</string>
     <string name="new_site_creation_empty_domain_list_message">Keine verfügbaren Adressen, die deiner Suche entsprechen.</string>
     <string name="new_site_creation_domain_header_title">Wähl einen Domainnamen für deine Website aus.</string>
     <string name="site_creation_error_generic_subtitle">Fehler bei der Kommunikation mit dem Server, bitte versuche es erneut.</string>
+    <string name="site_creation_error_generic_title">Es ist ein Problem aufgetreten</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ein Problem ist aufgetreten</string>
     <string name="site_creation_segments_subtitle">Dies hilft uns, Empfehlungen zu geben. Aber du bist nie gebunden – alle Seiten entwickeln sich weiter!</string>
     <string name="site_creation_segments_title">Sag uns, welche Art von Website du erstellen möchtest.</string>
@@ -654,11 +702,7 @@ Language: de
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_facebook">Facebook</string>
-    <string name="giphy_powered_by_giphy">Bereitgestellt von GIPHY</string>
-    <string name="giphy_picker_endless_scroll_network_error">Einige Medien konnten aufgrund eines Netzwerkfehlers nicht geladen werden.</string>
-    <string name="giphy_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
-    <string name="giphy_picker_initial_empty_text">Suche nach GIFs, die du deiner Mediathek hinzufügen kannst!</string>
-    <string name="giphy_picker_search_hint">Giphy durchsuchen</string>
+    <string name="gif_picker_empty_search_list">Keine Medien entsprechen deiner Suche</string>
     <string name="stats_author_views_label">Aufrufe</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoren</string>
@@ -682,6 +726,8 @@ Language: de
     <string name="stats_insights_share_post">Beitrag teilen</string>
     <string name="stats_insights_create_post">Beitrag erstellen</string>
     <string name="stats_insights_latest_post_message">%2$s wurde vor %1$s veröffentlicht. Hier siehst du, wie der Beitrag bislang abschneidet:</string>
+    <string name="gif_picker_initial_empty_text">Suche, um GIFs zu finden und sie zu deiner Mediathek hinzuzufügen!</string>
+    <string name="gif_picker_endless_scroll_network_error">Das Laden einiger Medien schlug aufgrund eines Netzwerkfehlers fehl.</string>
     <string name="stats_insights_tags_and_categories">Schlagwörter und Kategorien</string>
     <string name="stats_insights_latest_post_with_no_engagement">%2$s wurde vor %1$s veröffentlicht. Erhalte mehr Aufrufe deines Beitrags, indem du ihn teilst:</string>
     <string name="stats_insights_latest_post_empty">Du hast noch keine Beiträge veröffentlicht. Sobald du Beiträge veröffentlichst, wird hier eine Übersicht zum aktuellsten Beitrag angezeigt:</string>
@@ -807,7 +853,6 @@ Language: de
     <string name="content_description_more">Mehr</string>
     <string name="login_to_to_connect_jetpack">Melde dich bei deinem WordPress.com-Konto an, das du für die Jetpack-Verbindung verwendet hast.</string>
     <string name="install_jetpack_retry">Erneut versuchen</string>
-    <string name="install_jetpack_continue">Weiter</string>
     <string name="jetpack_installation_problem_message">Jetpack kann zurzeit nicht installiert werden</string>
     <string name="jetpack_installation_problem">Es ist ein Problem aufgetreten</string>
     <string name="jetpack_installed">Jetpack installiert</string>
@@ -817,6 +862,7 @@ Language: de
     <string name="install_jetpack">Jetpack installieren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Häufige Fragen zu Jetpack</string>
+    <string name="install_jetpack_continue">Einrichten</string>
     <string name="stats_jetpack_connection_setup_info">Wenn du Statistiken zu deiner WordPress-Website erhalten möchtest, musst du das Jetpack-Plugin installieren.</string>
     <string name="themes_empty_list">Keine Themes entsprechen deiner Suche</string>
     <string name="reader_label_post_search_explainer">Was möchtest du finden?</string>
@@ -835,7 +881,6 @@ Language: de
     <string name="reader_empty_posts_liked_title">Noch nichts mit „Gefällt mir“ markiert</string>
     <string name="reader_empty_followed_blogs_button_followed">Zu „Du folgst“ wechseln</string>
     <string name="reader_empty_followed_blogs_button_discover">Websites entdecken</string>
-    <string name="reader_empty_followed_blogs_description">Du folgst noch keinen Websites. Warum nicht jetzt einer Website folgen?</string>
     <string name="reader_empty_followed_blogs_title">Keine abonnierten Websites</string>
     <string name="notifications_empty_likes">Noch keine Likes</string>
     <string name="notifications_empty_followers">Noch keine Follower</string>
@@ -1293,7 +1338,6 @@ Language: de
     <string name="media_edit_filetype_caption">Dateityp</string>
     <string name="media_edit_filename_caption">Dateiname</string>
     <string name="media_edit_alttext_text">Alternativtext</string>
-    <string name="copy">Kopieren</string>
     <string name="connect_site">Website verbinden</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinklicht</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gerät vibrieren lassen</string>
@@ -2161,6 +2205,7 @@ Language: de
     <string name="reader_toast_err_tag_invalid">Das ist kein gültiges Schlagwort</string>
     <string name="reader_hint_comment_on_comment">Antwort auf Kommentar…</string>
     <string name="comments_empty_list">Bisher keine Kommentare</string>
+    <string name="reader_view_reblog">Rebloggen</string>
     <string name="themes">Themes</string>
     <string name="media_gallery_type_squares">Quadrate</string>
     <string name="media_gallery_type_tiled">Gekachelt</string>

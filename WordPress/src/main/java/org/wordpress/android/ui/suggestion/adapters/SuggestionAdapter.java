@@ -10,6 +10,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Suggestion;
@@ -18,6 +20,7 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -112,41 +115,45 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private class SuggestionFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            List<Suggestion> filteredSuggestions = getFilteredSuggestions(constraint);
             FilterResults results = new FilterResults();
+            results.values = filteredSuggestions;
+            results.count = filteredSuggestions.size();
+            return results;
+        }
 
+        @NonNull
+        private List<Suggestion> getFilteredSuggestions(CharSequence constraint) {
             if (mOrigSuggestionList == null) {
-                results.values = null;
-                results.count = 0;
+                return Collections.emptyList();
             } else if (constraint == null || constraint.length() == 0) {
-                results.values = mOrigSuggestionList;
-                results.count = mOrigSuggestionList.size();
+                return mOrigSuggestionList;
             } else {
-                List<Suggestion> nSuggestionList = new ArrayList<>();
-
+                List<Suggestion> filteredSuggestions = new ArrayList<>();
                 for (Suggestion suggestion : mOrigSuggestionList) {
                     String lowerCaseConstraint = constraint.toString().toLowerCase(Locale.getDefault());
-                    if (suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
-                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault()).startsWith(lowerCaseConstraint)
-                        || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
-                                     .contains(" " + lowerCaseConstraint)) {
-                        nSuggestionList.add(suggestion);
+                    boolean suggestionMatchesConstraint =
+                            suggestion.getUserLogin().toLowerCase(Locale.ROOT).startsWith(lowerCaseConstraint)
+                            || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                                         .startsWith(lowerCaseConstraint)
+                            || suggestion.getDisplayName().toLowerCase(Locale.getDefault())
+                                         .contains(" " + lowerCaseConstraint);
+                    if (suggestionMatchesConstraint) {
+                        filteredSuggestions.add(suggestion);
                     }
                 }
-
-                results.values = nSuggestionList;
-                results.count = nSuggestionList.size();
+                return filteredSuggestions;
             }
-            return results;
         }
 
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint,
                                       FilterResults results) {
+            mSuggestionList = (List<Suggestion>) results.values;
             if (results.count == 0) {
                 notifyDataSetInvalidated();
             } else {
-                mSuggestionList = (List<Suggestion>) results.values;
                 notifyDataSetChanged();
             }
         }

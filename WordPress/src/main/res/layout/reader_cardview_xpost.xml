@@ -1,84 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ReaderCardView"
     android:id="@+id/post_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/layout_container"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:selectableItemBackground"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/reader_card_content_padding"
-        android:paddingTop="@dimen/margin_large"
-        android:paddingEnd="@dimen/reader_card_content_padding"
-        android:paddingBottom="@dimen/margin_large">
+        android:padding="@dimen/reader_card_content_padding">
 
-        <FrameLayout
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/image_avatar"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:layout_marginStart="@dimen/reader_xpost_avatar_margin_start"
+            android:background="@drawable/bg_reader_avatar_or_blavatar_with_border"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            android:src="@drawable/bg_rectangle_placeholder_user_32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_subtitle"
+            app:layout_constraintStart_toStartOf="@id/image_blavatar"
+            app:layout_constraintTop_toTopOf="@+id/text_subtitle" />
+
+        <ImageView
+            android:id="@+id/image_blavatar"
+            style="@style/ReaderImageView.Avatar.ExtraSmall"
+            android:background="@drawable/bg_reader_avatar_or_blavatar_with_border"
+            android:importantForAccessibility="no"
+            android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
+            android:src="@drawable/bg_rectangle_placeholder_globe_32dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/image_avatar" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_subtitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/reader_xpost_padding_left">
+            style="@style/ReaderTextView.XPost.SubTitle"
+            app:fixWidowWords="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="text_subtitle" />
 
-            <ImageView
-                android:id="@+id/image_blavatar"
-                android:layout_width="@dimen/blavatar_sz"
-                android:layout_height="@dimen/blavatar_sz"
-                android:layout_gravity="top|start"
-                android:background="@android:color/white"
-                android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
-
-            <ImageView
-                android:id="@+id/image_avatar"
-                style="@style/ReaderImageView.Avatar.Small"
-                android:layout_gravity="bottom|end"
-                android:layout_marginStart="14dp"
-                android:layout_marginTop="14dp"
-                android:background="@android:color/white"
-                android:importantForAccessibility="no"
-                android:src="@drawable/bg_rectangle_neutral_10_user_32dp" />
-        </FrameLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_title"
+            style="@style/ReaderTextView.Post.Title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_large"
-            android:orientation="vertical">
+            android:layout_marginTop="@dimen/margin_extra_large"
+            android:ellipsize="end"
+            android:maxLines="3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_avatar"
+            tools:text="text_title" />
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_title"
-                style="@style/ReaderTextView.Post.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="serif"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBody2"
-                android:textStyle="bold"
-                tools:text="text_title" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_subtitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textAppearance="?attr/textAppearanceCaption"
-                app:fixWidowWords="true"
-                tools:text="text_subtitle" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:background="?android:attr/listDivider" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

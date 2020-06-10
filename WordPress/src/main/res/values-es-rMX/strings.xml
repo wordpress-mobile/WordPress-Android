@@ -1,13 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-07 18:40:13+0000
+Translation-Revision-Date: 2020-05-19 12:57:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Bienvenido a nuestro nuevo blog</string>
+    <string name="gutenberg_native_select_a_color">Seleccionar un color</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
+    <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
+    <string name="feature_announcement_find_out_mode">Saber más</string>
+    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
+    <string name="insert_label_with_count">Insertar %d</string>
+    <string name="crop">recortar</string>
+    <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
+    <string name="preview_image_thumbnail_description">Vista previa de la miniatura de la imagen</string>
+    <string name="photo_picker_use_media">Usar este medio</string>
+    <string name="photo_picker_use_video">Usar este vídeo</string>
+    <string name="photo_picker_photo_or_video_title">Elegir el medio</string>
+    <string name="photo_picker_video_title">Elegir el vídeo</string>
+    <string name="site_picker_ask_site_select">No se ha podido seleccionar el sitio. Por favor, inténtalo de nuevo.</string>
+    <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_reblog_error">Ha fallado reblog</string>
+    <string name="reader_no_site_to_reblog_action">Gestionar los sitios</string>
+    <string name="reader_no_site_to_reblog_detail">Una vez que crees un sitio en WordPress.com, puedes volver a publicar el contenido que te gusta en tu propio sitio.</string>
+    <string name="reader_no_site_to_reblog_title">No hay disponibles sitios WordPress.com</string>
+    <string name="whats_new_in_version_title">Qué hay de nuevo</string>
+    <string name="comment_q_action_copied_url">Copiada la dirección del enlace</string>
+    <string name="copy_link_address">Copiar la dirección del enlace</string>
+    <string name="comment_share_link_via">Compartir en</string>
+    <string name="comment_toast_err_share_intent">No se ha podido compartir</string>
+    <string name="button_insert">Insertar</string>
+    <string name="continue_label">Continuar</string>
+    <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_number_of_columns">Número de columnas</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover el bloque a la derecha desde la posición %1$s a la posición %2$s</string>
+    <string name="gutenberg_native_move_block_right">Mover el bloque a la derecha</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover el bloque a la izquierda desde la posición %1$s a la posición %2$s</string>
+    <string name="gutenberg_native_move_block_left">Mover bloque a la izquierda</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toca dos veces para mover el bloque hacia la derecha</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toca dos veces para mover el bloque hacia la izquierda</string>
+    <string name="gutenberg_native_columns_settings">Ajustes de las columnas</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Creando el escritorio</string>
+    <string name="new_site_creation_creating_site_loading_3">Configurar el tema</string>
+    <string name="new_site_creation_creating_site_loading_2">Añadiendo las características del sitio</string>
+    <string name="new_site_creation_creating_site_loading_1">Obteniendo la URL del sitio</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Tu sitio estará listo en breve</string>
+    <string name="new_site_creation_creating_site_loading_title">¡Hurra!\nCasi está hecho</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancelar la subida</string>
+    <string name="gif_list_search_returned_unknown_error">Ha habido un problema al gestionar la petición</string>
+    <string name="gif_powered_by_tenor">Funciona con Tenor</string>
+    <string name="gif_picker_search_hint">Buscar en Tenor</string>
+    <string name="photo_picker_gif">Elegir desde Tenor</string>
+    <string name="weekday_saturday">Sábado</string>
+    <string name="weekday_friday">Viernes</string>
+    <string name="weekday_thursday">Jueves</string>
+    <string name="weekday_wednesday">Miércoles</string>
+    <string name="weekday_tuesday">Martes</string>
+    <string name="weekday_monday">Lunes</string>
+    <string name="weekday_sunday">Domingo</string>
+    <string name="media_accessing_failed">Ha fallado el acceso al contenido de un sitio privado. Algunos medios pueden no estar disponibles</string>
+    <string name="media_accessing_progress">Accediendo al contenido de un sitio privado</string>
     <string name="error_failed_to_crop_and_save_image">No se pudo recortar y guardar la imagen, inténtalo de nuevo</string>
-    <string name="failed_to_insert_image_tap_to_retry">Fallo al insertar la imagen.\nPor favor, toca para volver a intentarlo.</string>
+    <string name="failed_to_load_image_tap_to_retry">Fallo al cargar la imagen.\nPor favor, toca para volver a intentarlo.</string>
     <string name="preview_image_description">Previsualizar la imagen</string>
     <string name="error_unknown_page_type">Formato de página desconocido</string>
     <string name="error_page_not_submitted">No hemos podido completar esta acción y no se ha enviado esta página a revisión.</string>
@@ -31,7 +88,6 @@ Language: es_MX
     <string name="page_uploading">Subiendo página</string>
     <string name="error_publish_page_no_network">El dispositivo está desconectado. La página se guardará localmente.</string>
     <string name="local_page_autosave_revision_available">Has hecho cambios no guardados en esta página</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Tu página se está subiendo</string>
     <string name="editor_page_saved_locally_failed_media">La página falló al subir los medios y se ha guardado localmente</string>
     <string name="editor_page_saved_locally">Página guardada en el dispositivo</string>
@@ -64,9 +120,7 @@ Language: es_MX
     <string name="gutenberg_native_portfolio">Porfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mi porfolio presenta varios proyectos creados a lo largo de mi carrera. Mira a continuación mi información de contacto y ponte en contacto.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Altura mínima en píxeles</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
-    <string name="gutenberg_native_link_settings">Ajustes de los enlaces</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hablemos 👋 No dudes en contactar en la siguiente información de contacto o envía un mensaje usando el formulario.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Vamos a construir algo juntos.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Vamos a construir algo juntos</string>
@@ -80,16 +134,10 @@ Language: es_MX
     <string name="gutenberg_native_get_in_touch">Ponte en contacto</string>
     <string name="gutenberg_native_excerpt_length_words">Longitud del extracto (palabras)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Envíame un correo electrónico: &lt;a href=\"mailto:correo@ejemplo.mx\">correo@ejemplo.mx&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Editar el medio de la portada</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">No llores porque se ha acabado, sonríe porque ha pasado.</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
     <string name="gutenberg_native_city_10100">00000, Ciudad</string>
-    <string name="gutenberg_native_button_link_url">URL del enlace del botón</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Próximamente habrá ajustes para el color del botón.</string>
-    <string name="gutenberg_native_border_settings">Ajustes del borde</string>
-    <string name="gutenberg_native_border_radius">Radio del borde</string>
-    <string name="gutenberg_native_background_opacity">Opacidad del fondo</string>
     <string name="gutenberg_native_add_paragraph_block">Añadir un bloque de párrafo</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Una breve descripción de los servicios que ofreces.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Una breve biografía sobre tu historial personal, tus logros clave o un hecho interesante.</string>
@@ -223,7 +271,6 @@ Language: es_MX
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_reset_block">Restablecer el bloque</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Eliminar el bloque de la fila %s</string>
     <string name="gutenberg_native_remove_annotations">Eliminar las notas</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el video</string>
     <string name="gutenberg_native_problem_displaying_block">Problema al mostrar el bloque</string>
@@ -254,7 +301,6 @@ Language: es_MX
     <string name="gutenberg_native_double_tap_to_select_an_image">Toca dos veces para seleccionar una imagen</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Toca dos veces para seleccionar un video</string>
     <string name="gutenberg_native_double_tap_to_select">Toca dos veces para seleccionar</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Toca dos veces para eliminar el bloque</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Toca dos veces para rehacer el último cambio</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Toca dos veces para mover el bloque hacia arriba</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dos veces para mover el bloque hacia abajo</string>
@@ -288,6 +334,8 @@ Language: es_MX
     <string name="notifications_tab_dialog_master_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
     <string name="notifications_tab_dialog_master_status_off">Avisos para este sitio</string>
     <string name="notifications_tab_dialog_master_status_on">Avisos para este sitio</string>
+    <string name="dialog_gutenberg_informative_description_page">Ahora estás usando el editor de bloques para las nuevas páginas, ¡genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
+    <string name="dialog_gutenberg_informative_description_post">Ahora estás usando el editor de bloques para las nuevas entradas, ¡genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
     <string name="pick_media">Añadir una imagen o un video</string>
     <string name="error_post_not_submitted_retrying">No hemos podido enviar esta entrada para revisión, pero lo intentaremos de nuevo más tarde. </string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
@@ -648,6 +696,9 @@ Language: es_MX
     <string name="stats_no_data_for_period">No hay datos en este periodo</string>
     <string name="preference_strip_image_location">Eliminar la ubicación de los medios</string>
     <string name="stats_cannot_be_started">No podemos abrir las estadísticas en este momento. Por favor inténtalo de nuevo más tarde</string>
+    <string name="gif_picker_endless_scroll_network_error">Algunos medios fallan al cargar debido a un error de red.</string>
+    <string name="gif_picker_empty_search_list">Ningún medio coincide con tu búsqueda</string>
+    <string name="gif_picker_initial_empty_text">¡Busca para encontrar GIF para añadir a tu biblioteca de medios!</string>
     <string name="stats_author_views_label">Vistas</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -830,7 +881,6 @@ Language: es_MX
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a los siguientes</string>
     <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
-    <string name="reader_empty_followed_blogs_description">Aún no estás siguiendo a ningún sitio. ¿Por qué no sigues uno ahora?</string>
     <string name="reader_empty_followed_blogs_title">Sitios a los que no sigues</string>
     <string name="notifications_empty_likes">No hay me gusta aún</string>
     <string name="notifications_empty_followers">No hay seguidores aún</string>
@@ -1288,7 +1338,6 @@ Language: es_MX
     <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy">Copiar</string>
     <string name="connect_site">Conectar el sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración del dispositivo</string>
@@ -2153,6 +2202,7 @@ Language: es_MX
     <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_share">Compartir</string>
+    <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">Sin título</string>
     <string name="comments_empty_list">No hay comentarios aún</string>
     <string name="empty_list_default">Esta lista esta vacía</string>

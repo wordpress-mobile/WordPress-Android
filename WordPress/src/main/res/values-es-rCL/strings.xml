@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-04-29 20:21:54+0000
+Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: es_CL
 -->
 <resources>
+    <string name="error_page_not_submitted">No pudimos completar esta acción, y tampoco enviamos esta página para su revisión. </string>
     <string name="notification_wpcom_username_needed">Por favor, inicia sesión con tu nombre de usuario y contraseña.</string>
     <string name="error_user_username_instead_of_email">Por favor, inicia sesión con tu nombre de usuario WordPress.com, en lugar de tu dirección de correo electrónico.</string>
     <string name="stats_insights_average_words">Promedio palabras/entrada</string>
@@ -55,6 +56,7 @@ Language: es_CL
     <string name="plans_loading_error_no_plans_subtitle">No podemos cargar planes en este momento. Por favor inténtalo de nuevo más tarde.</string>
     <string name="plans_loading_error_no_plans_title">No se pueden cargar planes</string>
     <string name="plans_loading_error_network_title">Sin conexión</string>
+    <string name="menu_switch_to_gutenberg_editor">Cambiar al editor de bloques</string>
     <string name="stats_loading_block_error">Se ha producido un problema al cargar los datos, actualiza la página para volver a intentarlo.</string>
     <string name="stats_loading_error">Datos no cargados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita nuevas publicaciones y páginas con el editor de bloques</string>
@@ -318,7 +320,6 @@ Language: es_CL
     <string name="reader_empty_posts_liked_title">Aún no te gusta algo</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a siguiendo</string>
     <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
-    <string name="reader_empty_followed_blogs_description">Aún no estás siguiendo ningún sitio. ¿Por qué no sigues uno ahora?</string>
     <string name="reader_empty_followed_blogs_title">Sin sitios seguidos</string>
     <string name="notifications_empty_likes">Aún no hay “me gusta”</string>
     <string name="notifications_empty_followers">Aún sin seguidores</string>
@@ -773,7 +774,6 @@ Language: es_CL
     <string name="media_edit_filename_caption">Nombre de Archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy">Copiar</string>
     <string name="connect_site">Conectar Sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Parpadeo de luz</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>
@@ -1681,6 +1681,7 @@ Language: es_CL
     <string name="pages">Páginas</string>
     <string name="no_network_title">No hay red disponible</string>
     <string name="ok">OK</string>
+    <string name="done">hecho</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Términos de Servicio</string>

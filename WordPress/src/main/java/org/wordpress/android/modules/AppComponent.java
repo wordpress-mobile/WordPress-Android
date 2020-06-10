@@ -97,8 +97,10 @@ import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
+import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
@@ -118,14 +120,19 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.quickstart.QuickStartFullScreenDialogFragment;
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver;
 import org.wordpress.android.ui.reader.ReaderCommentListActivity;
+import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.ReaderPostDetailFragment;
+import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
+import org.wordpress.android.ui.reader.ReaderSearchActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -155,6 +162,8 @@ import org.wordpress.android.ui.themes.ThemeBrowserFragment;
 import org.wordpress.android.ui.uploads.MediaUploadHandler;
 import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
@@ -374,6 +383,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderPostPagerActivity object);
 
+    void inject(ReaderPostListActivity object);
+
     void inject(ReaderBlogAdapter object);
 
     void inject(ReleaseNotesActivity object);
@@ -487,6 +498,22 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(AddContentAdapter object);
 
     void inject(PageParentSearchFragment object);
+
+    void inject(AppSettingsActivity object);
+
+    void inject(FeatureAnnouncementDialogFragment object);
+
+    void inject(FeatureAnnouncementListAdapter object);
+
+    void inject(ReaderFragment object);
+
+    void inject(ReaderDiscoverFragment object);
+
+    void inject(ReaderSearchActivity object);
+
+    void inject(ReaderInterestsFragment object);
+
+    void inject(HomepageSettingsDialog object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

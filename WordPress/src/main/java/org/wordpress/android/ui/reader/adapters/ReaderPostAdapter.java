@@ -12,19 +12,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.fluxc.store.AccountStore;
@@ -42,6 +40,7 @@ import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
@@ -52,7 +51,6 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
-import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -67,6 +65,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -88,7 +87,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final int mPhotonHeight;
     private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
-    private final int mMarginLarge;
+    private final int mMarginExtraLarge;
 
     private boolean mCanRequestMorePosts;
     private final boolean mIsLoggedOutReader;
@@ -105,6 +104,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
     private ReaderSiteHeaderView.OnBlogInfoLoadedListener mBlogInfoLoadedListener;
+    private ReblogActionListener mReblogActionListener;
 
     // the large "tbl_posts.text" column is unused here, so skip it when querying
     private static final boolean EXCLUDE_TEXT_COLUMN = true;
@@ -123,6 +123,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private static final long ITEM_ID_NEWS_CARD = -3L;
 
     private static final int NEWS_CARD_POSITION = 0;
+
+    private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
     private boolean mIsMainReader = false;
 
@@ -181,83 +183,73 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         final View mPostContainer;
 
+        private final ConstraintLayout mRootLayout;
+        private final ConstraintSet mRootLayoutConstraintSet = new ConstraintSet();
+
         private final TextView mTxtTitle;
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
+        private final TextView mTxtBlogUrl;
+        private final TextView mDotSeparator;
         private final TextView mTxtDateline;
 
+        private final ReaderIconCountView mReblog;
         private final ReaderIconCountView mCommentCount;
         private final ReaderIconCountView mLikeCount;
         private final ImageView mBtnBookmark;
 
         private final ImageView mImgMore;
         private final ImageView mImgVideoOverlay;
-        private final LinearLayout mVisit;
 
         private final ImageView mImgFeatured;
         private final ImageView mImgAvatarOrBlavatar;
 
-        private final ReaderFollowButton mFollowButton;
-
-        private final ViewGroup mFramePhoto;
+        private final Group mFramePhoto;
         private final TextView mTxtPhotoTitle;
 
-        private final ViewGroup mLayoutDiscover;
+        private final View mLayoutDiscover;
         private final ImageView mImgDiscoverAvatar;
         private final TextView mTxtDiscover;
 
         private final ReaderThumbnailStrip mThumbnailStrip;
 
-
         ReaderPostViewHolder(View itemView) {
             super(itemView);
 
             mPostContainer = itemView.findViewById(R.id.post_container);
+            mRootLayout = itemView.findViewById(R.id.root_layout);
+            mRootLayoutConstraintSet.clone(mRootLayout);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
             mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
+            mTxtBlogUrl = itemView.findViewById(R.id.text_blog_url);
+            mDotSeparator = itemView.findViewById(R.id.dot_separator);
             mTxtDateline = itemView.findViewById(R.id.text_dateline);
 
+            mReblog = itemView.findViewById(R.id.reblog);
             mCommentCount = itemView.findViewById(R.id.count_comments);
             mLikeCount = itemView.findViewById(R.id.count_likes);
             mBtnBookmark = itemView.findViewById(R.id.bookmark);
 
             mFramePhoto = itemView.findViewById(R.id.frame_photo);
-            mTxtPhotoTitle = mFramePhoto.findViewById(R.id.text_photo_title);
-            mImgFeatured = mFramePhoto.findViewById(R.id.image_featured);
-            mImgVideoOverlay = mFramePhoto.findViewById(R.id.image_video_overlay);
+            mTxtPhotoTitle = itemView.findViewById(R.id.text_photo_title);
+            mImgFeatured = itemView.findViewById(R.id.image_featured);
+            mImgVideoOverlay = itemView.findViewById(R.id.image_video_overlay);
 
             mImgAvatarOrBlavatar = itemView.findViewById(R.id.image_avatar_or_blavatar);
             mImgMore = itemView.findViewById(R.id.image_more);
-            mVisit = itemView.findViewById(R.id.visit);
 
             mLayoutDiscover = itemView.findViewById(R.id.layout_discover);
-            mImgDiscoverAvatar = mLayoutDiscover.findViewById(R.id.image_discover_avatar);
-            mTxtDiscover = mLayoutDiscover.findViewById(R.id.text_discover);
+            mImgDiscoverAvatar = itemView.findViewById(R.id.image_discover_avatar);
+            mTxtDiscover = itemView.findViewById(R.id.text_discover);
 
             mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
 
-            ViewGroup postHeaderView = itemView.findViewById(R.id.layout_post_header);
-            mFollowButton = postHeaderView.findViewById(R.id.follow_button);
+            View postHeaderView = itemView.findViewById(R.id.layout_post_header);
 
             ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
-            ViewUtilsKt.expandTouchTargetArea(mVisit, R.dimen.reader_visit_layout_extra_padding, false);
             ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
-
-            // show post in internal browser when "visit" is clicked
-            View.OnClickListener visitListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (post != null) {
-                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-                        ReaderActivityLauncher.openPost(view.getContext(), post);
-                    }
-                }
-            };
-            mVisit.setOnClickListener(visitListener);
 
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
@@ -415,7 +407,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR,
+        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR_CIRCULAR,
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
@@ -454,41 +446,50 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        // Set title below thumbnail strip if card type is GALLERY
+        View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
+                ? holder.mThumbnailStrip : holder.mImgFeatured;
+        holder.mRootLayoutConstraintSet.connect(
+                holder.mTxtTitle.getId(),
+                ConstraintSet.TOP,
+                txtTitlePreviousView.getId(),
+                ConstraintSet.BOTTOM,
+                mMarginExtraLarge
+        );
+        holder.mRootLayoutConstraintSet.applyTo(holder.mRootLayout);
+
+        String urlString = "";
+        if (post.hasBlogUrl()) {
+            urlString = UrlUtils.removeScheme(post.getBlogUrl());
+            holder.mTxtBlogUrl.setText(urlString);
+            holder.mTxtBlogUrl.setVisibility(View.VISIBLE);
+            holder.mDotSeparator.setVisibility(View.VISIBLE);
+        } else {
+            holder.mTxtBlogUrl.setVisibility(View.GONE);
+            holder.mDotSeparator.setVisibility(View.GONE);
+        }
+
         holder.mTxtDateline.setText(DateTimeUtils.javaDateToTimeSpan(post.getDisplayDate(), WordPress.getContext()));
 
-        // show avatar if it exists, otherwise show blavatar
-        if (post.hasPostAvatar()) {
-            String imageUrl = GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzMedium);
-            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar,
-                    ImageType.AVATAR, imageUrl);
-            holder.mImgAvatarOrBlavatar.setBackgroundColor(0);
-            holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
-        } else if (post.hasBlogImageUrl()) {
+        if (post.hasBlogImageUrl()) {
             String imageUrl = GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzMedium);
-            mImageManager.load(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR, imageUrl);
-            holder.mImgAvatarOrBlavatar
-                    .setBackgroundColor(
-                            ContextCompat.getColor(holder.mImgAvatarOrBlavatar.getContext(), android.R.color.white));
+            mImageManager.loadIntoCircle(holder.mImgAvatarOrBlavatar, ImageType.BLAVATAR_CIRCULAR, imageUrl);
             holder.mImgAvatarOrBlavatar.setVisibility(View.VISIBLE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgAvatarOrBlavatar);
             holder.mImgAvatarOrBlavatar.setVisibility(View.GONE);
         }
 
-        // show author and blog name if both are available, otherwise show whichever is available
-        if (post.hasBlogName() && post.hasAuthorName() && !post.getBlogName().equals(post.getAuthorName())) {
-            holder.mTxtAuthorAndBlogName.setText(holder.mTxtAuthorAndBlogName.getResources()
-                                                                             .getString(R.string.author_name_blog_name,
-                                                                                     post.getAuthorName(),
-                                                                                     post.getBlogName()));
-        } else if (post.hasBlogName()) {
+        if (post.hasBlogName()) {
             holder.mTxtAuthorAndBlogName.setText(post.getBlogName());
-        } else if (post.hasAuthorName()) {
-            holder.mTxtAuthorAndBlogName.setText(post.getAuthorName());
         } else {
             holder.mTxtAuthorAndBlogName.setText(null);
         }
 
+        int imgFeaturedCornerRadius = holder.mImgFeatured
+            .getContext()
+            .getResources()
+            .getDimensionPixelSize(R.dimen.reader_featured_image_corner_radius);
         if (post.getCardType() == ReaderCardType.PHOTO) {
             // posts with a suitable featured image that have very little text get the "photo
             // card" treatment - show the title overlaid on the featured image without any text
@@ -497,8 +498,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mFramePhoto.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setVisibility(View.VISIBLE);
             holder.mTxtPhotoTitle.setText(post.getTitle());
-            mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
-                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
+            mImageManager.loadImageWithCorners(
+                holder.mImgFeatured,
+                ImageType.READER,
+                post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                imgFeaturedCornerRadius
+            );
             holder.mThumbnailStrip.setVisibility(View.GONE);
         } else {
             mImageManager.cancelRequestAndClearImageView(holder.mImgFeatured);
@@ -513,17 +518,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 holder.mTxtText.setVisibility(View.GONE);
             }
 
-            final int titleMargin;
             if (post.getCardType() == ReaderCardType.GALLERY) {
                 // if this post is a gallery, scan it for images and show a thumbnail strip of
                 // them - note that the thumbnail strip will take care of making itself visible
                 holder.mThumbnailStrip.loadThumbnails(post.blogId, post.postId, post.isPrivate);
                 holder.mFramePhoto.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else if (post.getCardType() == ReaderCardType.VIDEO) {
                 ReaderVideoUtils.retrieveVideoThumbnailUrl(post.getFeaturedVideo(), new VideoThumbnailUrlListener() {
                     @Override public void showThumbnail(String thumbnailUrl) {
-                        mImageManager.load(holder.mImgFeatured, ImageType.PHOTO, thumbnailUrl, ScaleType.CENTER_CROP);
+                        mImageManager.loadImageWithCorners(
+                            holder.mImgFeatured,
+                            ImageType.READER,
+                            thumbnailUrl,
+                            imgFeaturedCornerRadius
+                        );
                     }
 
                     @Override public void showPlaceholder() {
@@ -536,22 +544,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else if (post.hasFeaturedImage()) {
-                mImageManager.load(holder.mImgFeatured, ImageType.PHOTO,
-                        post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight), ScaleType.CENTER_CROP);
+                mImageManager.loadImageWithCorners(
+                    holder.mImgFeatured,
+                    ImageType.READER,
+                    post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
+                    imgFeaturedCornerRadius
+                );
                 holder.mFramePhoto.setVisibility(View.VISIBLE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = mMarginLarge;
             } else {
                 holder.mFramePhoto.setVisibility(View.GONE);
                 holder.mThumbnailStrip.setVisibility(View.GONE);
-                titleMargin = 0;
             }
-
-            // set the top margin of the title based on whether there's a featured image
-            LayoutParams params = (LayoutParams) holder.mTxtTitle.getLayoutParams();
-            params.topMargin = titleMargin;
         }
 
         // show the video overlay (play icon) when there's a featured video
@@ -559,6 +564,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         showLikes(holder, post);
         showComments(holder, post);
+        showReblogButton(holder, post);
         initBookmarkButton(position, holder, post);
 
         // more menu only shows for followed tags
@@ -575,19 +581,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
             holder.mImgMore.setVisibility(View.GONE);
             holder.mImgMore.setOnClickListener(null);
-        }
-
-        if (shouldShowFollowButton()) {
-            holder.mFollowButton.setIsFollowed(post.isFollowedByCurrentUser);
-            holder.mFollowButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    toggleFollow(view.getContext(), view, post);
-                }
-            });
-            holder.mFollowButton.setVisibility(View.VISIBLE);
-        } else {
-            holder.mFollowButton.setVisibility(View.GONE);
         }
 
         // attribution section for discover posts
@@ -614,16 +607,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mRenderedIds.add(post.getPseudoId());
             AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
         }
-    }
-
-    /*
-     * follow button only shows for tags and "Posts I Like" - it doesn't show for Followed Sites,
-     * Discover, lists, etc.
-     */
-    private boolean shouldShowFollowButton() {
-        return mCurrentTag != null
-               && (mCurrentTag.isTagTopic() || mCurrentTag.isPostsILike())
-               && !mIsLoggedOutReader;
     }
 
     /*
@@ -705,14 +688,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mPostListType = postListType;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMarginLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_large);
+        mMarginExtraLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
         mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
         int cardMargin = context.getResources().getDimensionPixelSize(R.dimen.reader_card_margin);
         mPhotonWidth = displayWidth - (cardMargin * 2);
-        mPhotonHeight = context.getResources().getDimensionPixelSize(R.dimen.reader_featured_image_height_cardview);
+        mPhotonHeight = (int) (mPhotonWidth / READER_FEATURED_IMAGE_ASPECT_RATIO);
 
         setHasStableIds(true);
     }
@@ -735,6 +718,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
+    }
+
+    public void setReblogActionListener(ReblogActionListener reblogActionListener) {
+        mReblogActionListener = reblogActionListener;
     }
 
     public void setOnPostSelectedListener(ReaderInterfaces.OnPostSelectedListener listener) {
@@ -924,7 +911,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (canShowLikes) {
             holder.mLikeCount.setCount(post.numLikes);
             holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
-            holder.mLikeCount.setVisibility(View.VISIBLE);
+            holder.mLikeCount.setEnabled(true);
             holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mPostContainer.getContext(),
                     post.numLikes,
                     post.isLikedByCurrentUser));
@@ -938,7 +925,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 });
             }
         } else {
-            holder.mLikeCount.setVisibility(View.GONE);
+            holder.mLikeCount.setEnabled(false);
             holder.mLikeCount.setOnClickListener(null);
         }
     }
@@ -965,9 +952,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean canBookmarkPost = !post.isDiscoverPost();
         if (canBookmarkPost) {
-            bookmarkButton.setVisibility(View.VISIBLE);
+            bookmarkButton.setEnabled(true);
         } else {
-            bookmarkButton.setVisibility(View.GONE);
+            bookmarkButton.setEnabled(false);
         }
 
         if (post.isBookmarked) {
@@ -1004,7 +991,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         if (canShowComments) {
             holder.mCommentCount.setCount(post.numReplies);
-            holder.mCommentCount.setVisibility(View.VISIBLE);
+            holder.mCommentCount.setEnabled(true);
             holder.mCommentCount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1012,8 +999,26 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 }
             });
         } else {
-            holder.mCommentCount.setVisibility(View.GONE);
+            holder.mCommentCount.setEnabled(false);
             holder.mCommentCount.setOnClickListener(null);
+        }
+    }
+
+    /**
+     * Sets reblog button visibility and action
+     *
+     * @param holder the view holder
+     * @param post   the current reader post
+     */
+    private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
+        boolean canBeReblogged = !mIsLoggedOutReader && !post.isPrivate;
+        if (canBeReblogged) {
+            holder.mReblog.setCount(0);
+            holder.mReblog.setEnabled(true);
+            holder.mReblog.setOnClickListener(v -> mReblogActionListener.reblog(post));
+        } else {
+            holder.mReblog.setEnabled(false);
+            holder.mReblog.setOnClickListener(null);
         }
     }
 
