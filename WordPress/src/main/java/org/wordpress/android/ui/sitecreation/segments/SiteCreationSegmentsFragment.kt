@@ -32,9 +32,6 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
-    private lateinit var helpClickedListener: OnHelpClickedListener
-    private lateinit var segmentsScreenListener: SegmentsScreenListener
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is OnHelpClickedListener) {
@@ -43,8 +40,6 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
         if (context !is SegmentsScreenListener) {
             throw IllegalStateException("Parent activity must implement SegmentsScreenListener.")
         }
-        helpClickedListener = context
-        segmentsScreenListener = context
     }
 
     @LayoutRes
@@ -90,9 +85,13 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
         })
         viewModel.segmentSelected.observe(
                 this,
-                Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
+                Observer { segmentId ->
+                    segmentId?.let {
+                        (requireActivity() as SegmentsScreenListener).onSegmentSelected(segmentId)
+                    }
+                })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_SEGMENTS)
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_SEGMENTS)
         })
         viewModel.start()
     }
