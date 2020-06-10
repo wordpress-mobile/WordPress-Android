@@ -359,13 +359,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Create a new post
         mEditPostRepository.set(() -> {
             PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, null, null);
-
-            if (UploadUtils.userCanPublish(mSite)) {
-                post.setStatus(PostStatus.DRAFT.toString());
-            } else {
-                post.setStatus(PostStatus.PENDING.toString());
-            }
-
+            post.setStatus(PostStatus.DRAFT.toString());
             return post;
         });
         mEditPostRepository.savePostSnapshot();
@@ -1813,7 +1807,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
                     postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
                 }
-                postModel.setStatus(PostStatus.PUBLISHED.toString());
+
+                if (mUploadUtilsWrapper.userCanPublish(getSite())) {
+                    postModel.setStatus(PostStatus.PUBLISHED.toString());
+                } else {
+                    postModel.setStatus(PostStatus.PENDING.toString());
+                }
+
                 mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
             } else {
                 mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
