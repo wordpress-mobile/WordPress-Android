@@ -6,6 +6,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
 typealias PublishPost = Boolean
+
 sealed class PrepublishingHomeItemUiState {
     data class HomeUiState(
         val actionType: ActionType,
@@ -18,37 +19,33 @@ sealed class PrepublishingHomeItemUiState {
 
     sealed class ButtonUiState(
         val buttonText: UiStringRes,
-        val publishPost: PublishPost,
-        open val onButtonClicked: (PublishPost) -> Unit
+        val publishPost: PublishPost
     ) : PrepublishingHomeItemUiState() {
+        open val onButtonClicked: ((PublishPost) -> Unit)? = null
+
         data class PublishButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_publish_button),
-                true,
-                onButtonClicked
+                true
         )
 
         data class ScheduleButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_schedule_button),
-                false,
-                onButtonClicked
+                false
         )
 
         data class UpdateButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_update_button),
-                false,
-                onButtonClicked
+                false
         )
 
         data class SubmitButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_submit_button),
-                false,
-                onButtonClicked
+                false
         )
 
         data class SaveButtonUiState(override val onButtonClicked: (PublishPost) -> Unit) : ButtonUiState(
                 UiStringRes(R.string.prepublishing_nudges_home_save_button),
-                false,
-                onButtonClicked
+                false
         )
     }
 
