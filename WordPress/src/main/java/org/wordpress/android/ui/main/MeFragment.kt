@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.me_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R
 import org.wordpress.android.R.color
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -89,14 +88,17 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
-        val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        val showPickerListener = OnClickListener { v: View? ->
+        return inflater.inflate(layout.me_fragment, container, false) as ViewGroup
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val showPickerListener = OnClickListener {
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
         }
-        avatarContainer.setOnClickListener(showPickerListener)
-        rootView.findViewById<View>(R.id.change_photo).setOnClickListener(showPickerListener)
+        avatar_container.setOnClickListener(showPickerListener)
+        change_photo.setOnClickListener(showPickerListener)
         row_my_profile.setOnClickListener {
             ActivityLauncher.viewMyProfile(
                     activity
@@ -107,12 +109,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     activity
             )
         }
-        rootView.findViewById<View>(R.id.row_app_settings).setOnClickListener {
+        row_app_settings.setOnClickListener {
             ActivityLauncher.viewAppSettingsForResult(
                     activity
             )
         }
-        rootView.findViewById<View>(R.id.row_support).setOnClickListener {
+        row_support.setOnClickListener {
             ActivityLauncher
                     .viewHelpAndSupport(
                             requireContext(),
@@ -121,14 +123,13 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                             null
                     )
         }
-        rootView.findViewById<View>(R.id.row_logout)
-                .setOnClickListener {
-                    if (accountStore.hasAccessToken()) {
-                        signOutWordPressComWithConfirmation()
-                    } else {
-                        ActivityLauncher.showSignInForResult(activity)
-                    }
-                }
+        row_logout.setOnClickListener {
+            if (accountStore.hasAccessToken()) {
+                signOutWordPressComWithConfirmation()
+            } else {
+                ActivityLauncher.showSignInForResult(activity)
+            }
+        }
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean(IS_DISCONNECTING, false)) {
                 showDisconnectDialog(activity)
@@ -137,7 +138,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                 showGravatarProgressBar(true)
             }
         }
-        return rootView
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
