@@ -385,8 +385,12 @@ class PagesViewModel
         site: SiteModel,
         searchQuery: String
     ): SortedMap<PageListType, List<PageModel>> = withContext(defaultDispatcher) {
-        val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
-        return@withContext list.toSortedMap(
+        val list = pageStore.search(site, searchQuery)
+        val filteredList = if (shouldFilterByAuthor())
+            list.filter { it.post.authorId == accountStore.account.userId }.groupBy { PageListType.fromPageStatus(it.status) }
+        else list.groupBy { PageListType.fromPageStatus(it.status) }
+
+        return@withContext filteredList.toSortedMap(
                 Comparator { previous, next ->
                     when {
                         previous == next -> 0
@@ -936,6 +940,11 @@ class PagesViewModel
         launch {
             liveData.value = value
         }
+    }
+
+    // todo: annmarie - a candidate for removal & align with PageListViewModel
+    private fun shouldFilterByAuthor(): Boolean {
+        return authorUIState.value?.authorFilterSelection == AuthorFilterSelection.ME
     }
 }
 
