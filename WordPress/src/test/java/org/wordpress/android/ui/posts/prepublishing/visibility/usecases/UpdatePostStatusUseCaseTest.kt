@@ -35,6 +35,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         // arrange
         val currentDate = "2020-06-06T20:28:20+0200"
         whenever(dateTimeUtilsWrapper.currentTimeInIso8601()).thenReturn(currentDate)
+        whenever(postUtilsWrapper.isPublishDateInTheFuture(any())).thenReturn(true)
         editPostRepository.set { PostModel().apply { setStatus(PostStatus.SCHEDULED.toString()) } }
 
         // act
@@ -42,6 +43,42 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
 
         // assert
         assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
+    }
+
+    @Test
+    fun `if the new PostStatus is PRIVATE & the old PostStatus is not SCHEDULED then the date should be the same`() {
+        // arrange
+        val currentDate = "2020-06-06T20:28:20+0200"
+        editPostRepository.set {
+            PostModel().apply {
+                setDateCreated(currentDate)
+                setStatus(PostStatus.DRAFT.toString())
+            }
+        }
+        whenever(postUtilsWrapper.isPublishDateInTheFuture(any())).thenReturn(false)
+
+
+        // act
+        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+
+        // assert
+        assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
+    }
+
+    @Test
+    fun `if the new PostStatus is PRIVATE & the old PostStatus is DRAFT then the postModel should be updated`() {
+        // arrange
+        editPostRepository.set {
+            PostModel().apply {
+                setStatus(PostStatus.DRAFT.toString())
+            }
+        }
+
+        // act
+        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
+
+        // assert
+        assertThat(editPostRepository.status).isEqualTo(PRIVATE)
     }
 
     @Test
@@ -76,39 +113,5 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
 
         // assert
         assertThat(editPostRepository.dateCreated).isEqualTo(dateCreated)
-    }
-
-    @Test
-    fun `if the new PostStatus is PRIVATE & the old PostStatus is not SCHEDULED then the date should be the same`() {
-        // arrange
-        val currentDate = "2020-06-06T20:28:20+0200"
-        editPostRepository.set {
-            PostModel().apply {
-                setDateCreated(currentDate)
-                setStatus(PostStatus.DRAFT.toString())
-            }
-        }
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
-
-        // assert
-        assertThat(editPostRepository.dateCreated).isEqualTo(currentDate)
-    }
-
-    @Test
-    fun `if the new PostStatus is PRIVATE & the old PostStatus is DRAFT then the postModel should be updated`() {
-        // arrange
-        editPostRepository.set {
-            PostModel().apply {
-                setStatus(PostStatus.DRAFT.toString())
-            }
-        }
-
-        // act
-        updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
-
-        // assert
-        assertThat(editPostRepository.status).isEqualTo(PRIVATE)
     }
 }
