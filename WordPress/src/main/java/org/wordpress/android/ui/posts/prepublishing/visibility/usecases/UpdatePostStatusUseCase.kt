@@ -21,9 +21,7 @@ class UpdatePostStatusUseCase @Inject constructor(
         editPostRepository.updateAsync({ postModel: PostModel ->
             // we set the date to immediately if it's scheduled.
             if (postStatus == PostStatus.PRIVATE) {
-                if (postModel.status == PostStatus.SCHEDULED.toString() || postUtilsWrapper.isPublishDateInTheFuture(
-                                postModel.dateCreated
-                        ))
+                if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated))
                     postModel.setDateCreated(dateTimeUtilsWrapper.currentTimeInIso8601())
             }
 
