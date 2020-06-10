@@ -43,7 +43,7 @@ class SearchListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(savedInstanceState)
@@ -78,7 +78,7 @@ class SearchListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.searchResult.observe(this, Observer { data ->
+        viewModel.searchResult.observe(viewLifecycleOwner, Observer { data ->
             data?.let { setSearchResult(data) }
         })
     }

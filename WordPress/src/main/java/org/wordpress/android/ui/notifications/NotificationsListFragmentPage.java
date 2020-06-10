@@ -196,6 +196,13 @@ public class NotificationsListFragmentPage extends Fragment implements
     }
 
     @Override
+    public void onDestroyView() {
+        mRecyclerView.setAdapter(null);
+        mNotesAdapter = null;
+        super.onDestroyView();
+    }
+
+    @Override
     public void onDataLoaded(int itemsCount) {
         if (!isAdded()) {
             CrashLoggingUtils.log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.");

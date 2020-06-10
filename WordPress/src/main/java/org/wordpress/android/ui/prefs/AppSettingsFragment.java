@@ -16,6 +16,8 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.view.MenuItem;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.BuildConfig;
@@ -31,6 +33,9 @@ import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncement;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.CrashLoggingUtils;
@@ -66,10 +71,13 @@ public class AppSettingsFragment extends PreferenceFragment
     private PreferenceScreen mPrivacySettings;
     private WPSwitchPreference mStripImageLocation;
 
+    private Preference mWhatsNew;
+
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
     @Inject Dispatcher mDispatcher;
     @Inject ContextProvider mContextProvider;
+    @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -162,6 +170,16 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mStripImageLocation.setChecked(AppPrefs.isStripImageLocation());
 
+        mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
+
+        FeatureAnnouncement featureAnnouncement = mFeatureAnnouncementProvider.getLatestFeatureAnnouncement();
+        if (featureAnnouncement != null) {
+            mWhatsNew.setSummary(getString(R.string.version_with_name_param, featureAnnouncement.getAppVersionName()));
+            mWhatsNew.setOnPreferenceClickListener(this);
+        } else {
+            removeWhatsNewPreference();
+        }
+
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
         }
@@ -173,6 +191,13 @@ public class AppSettingsFragment extends PreferenceFragment
         PreferenceScreen preferenceScreen =
                 (PreferenceScreen) findPreference(getString(R.string.pref_key_app_settings_root));
         preferenceScreen.removePreference(experimentalPreferenceCategory);
+    }
+
+
+    private void removeWhatsNewPreference() {
+        PreferenceCategory aboutTheAppPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        aboutTheAppPreferenceCategory.removePreference(mWhatsNew);
     }
 
     @Override
@@ -255,6 +280,8 @@ public class AppSettingsFragment extends PreferenceFragment
             return handleOssPreferenceClick();
         } else if (preference == mPrivacySettings) {
             return handlePrivacyClick();
+        } else if (preference == mWhatsNew) {
+            return handleFeatureAnnouncementClick();
         }
 
         return false;
@@ -469,5 +496,19 @@ public class AppSettingsFragment extends PreferenceFragment
             WPActivityUtils.addToolbarToDialog(this, dialog, title);
         }
         return true;
+    }
+
+    private boolean handleFeatureAnnouncementClick() {
+        if (getActivity() instanceof AppCompatActivity) {
+            AnalyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS);
+            new FeatureAnnouncementDialogFragment()
+                    .show(((AppCompatActivity) getActivity()).getSupportFragmentManager(),
+                            FeatureAnnouncementDialogFragment.TAG);
+            return true;
+        } else {
+            throw new IllegalArgumentException(
+                    "Parent activity is not AppCompatActivity. FeatureAnnouncementDialogFragment must be called "
+                    + "using support fragment manager from AppCompatActivity.");
+        }
     }
 }

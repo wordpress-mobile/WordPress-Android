@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: uz
 -->
 <resources>
@@ -72,7 +72,6 @@ Language: uz
     <string name="no_network_title">Netvork mavjud emas</string>
     <string name="pages">Sahifalar</string>
     <string name="posts">Postlar</string>
-    <string name="blogusername">blogusername</string>
     <string name="ok">OK</string>
     <string name="link_enter_url">URL</string>
     <string name="version">Versiya</string>
@@ -86,7 +85,6 @@ Language: uz
     <string name="quickpress_add_alert_title">Tez o‘tish nomi</string>
     <string name="settings">Moslamalar</string>
     <string name="quickpress_add_error">Tez o‘tar nomi bo‘sh bo‘lishi mumkin emas</string>
-    <string name="quickpress_window_title">QuickPress tez o‘tari uchun blog tanlang</string>
     <string name="title">Sarlavha</string>
     <string name="categories">Bo‘limlar</string>
     <string name="tags_separate_with_commas">Kalit so\'zlarni vergul bilan ajrating</string>

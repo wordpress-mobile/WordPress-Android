@@ -8,12 +8,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
 
 public class AppSettingsActivity extends LocaleAwareActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.app_settings_activity);
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);

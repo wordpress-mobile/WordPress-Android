@@ -22,7 +22,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 137;
+    private static final int DB_VERSION = 138;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -93,6 +93,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 135 - added tbl_blog_info.is_notifications_enabled in ReaderBlogTable
      * 136 - added tbl_posts.is_bookmarked
      * 137 - added support for migration scripts
+     * 138 - added tbl_posts.is_private_atomic
      */
 
     /*
@@ -175,12 +176,15 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         if (currentVersion <= DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT) {
             // versions 0 - 136 didn't support migration scripts, so we can safely drop and recreate all tables
             reset(db);
-            currentVersion = DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT;
+            currentVersion = newVersion;
         }
 
         switch (currentVersion) {
             case 136:
                 // no-op
+                currentVersion++;
+            case 137:
+                db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

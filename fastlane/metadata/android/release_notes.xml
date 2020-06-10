@@ -1,126 +1,96 @@
 <ar>
-14.5:
-محرِّر المكوِّنات: تمت إضافة مكوِّن أحدث المقالات، وتم إصلاح العطل الناتج عن لصق محتوى HTML مع الصور المضمَّنة
-قوالب الصفحة: تمت إضافة قوالب مستندة إلى المكوِّنات لإنشاء الصفحات بشكل أسرع.
-إنشاء موقع: تمت إزالة بعض الخطوات للإعداد بشكل أسرع — حدِّد نوع الموقع، وأدخل اسم النطاق، وهذا كل شيء.
-إصلاح الأخطاء: تم إصلاح المشكلة التي تتسبَّب في إعادة محاولة عمليات رفع المقالات الفاشلة إلى أجل غير مسمى.
+14.9:
+<b>تحسينات على محرِّر المكوِّن:</b> مكوِّن جديد مهيأ مسبقًا، وخيارات لون مكوِّن الأزرار، وقوالب الصفحة المُحدَّثة.
+
+<b>إصلاحات محرِّر المكوِّن:</b> ثمَّة خطأ في مكتبة الصور المجانية تسبب في إدراج صور فردية، وحتى في حالة تحديد العديد منها، تفشل المعاينة عند التبديل إلى المحرِّر التقليدي. تمت إزالة زر الاشتراك غير الفعَّال من قالب المدونة.
 </ar>
 <de-DE>
-14.5:
-Block-Editor: „Neueste Beiträge“-Block hinzugefügt
-Seiten-Templates: Block basierte Templates zur schnelleren Seitenerstellung hinzugefügt.
-Website-Erstellung: Einige Schritte wurden zugunsten einer schnelleren Einrichtung entfernt – Art der Website auswählen, Domainnamen eingeben, fertig.
-Fehlerbehebung: Ein Problem wurde behoben, das dazu führte, dass fehlgeschlagene Uploads von Beiträgen auf unbestimmte Zeit wiederholt wurden.
+14.9:
+<b>Verbesserungen am Block-Editor:</b> Neuer Pullquote-Block, Farbauswahl im Button-Block, aktualisierte Seitenvorlagen.
+
+<b>Problembehebungen am Block-Editor:</b> Der Fehler, der dazu führte, dass im kostenlosen Fotoarchiv immer nur ein einzelnes Bild eingefügt wurde, auch wenn mehrere ausgewählt wurden, und der Fehler bei der Vorschau beim Wechsel zum klassischen Editor wurden behoben. Der nichtfunktionale Button zum Abonnieren wurde von der Blog-Vorlage entfernt.
 </de-DE>
 <en-US>
-14.5:
-Block editor: Added Latest Posts block, fixed crash caused by pasting HTML content with embedded images
-Page Templates: Added a block-based templates for quicker page creation.
-Site Creation: removed a few steps for faster setup — select the kind of site, enter the domain name, done.
-Bug fix: fixed an issue causing failed post uploads to be retried indefinitely.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
+
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </en-US>
 <es-ES>
-14.5:
-Editor de bloques: Añadido el bloque «Últimas entradas»
-Plantillas de página: Añadidas plantillas basadas en bloques para una creación de páginas más rápida.
-Creación del sitio: Eliminados algunos pasos para una configuración más rápida — seleccionar el tipo de sitio, introducir el nombre de dominio y listo.
-Correción de fallos: Corregido un problema que causaba que las subidas de entradas fallidas se volvieran a intentar indefinidamente.
+14.9:
+<b>Mejoras en el editor de bloques:</b> Nuevo bloque de párrafo de cita, opciones de color del bloque de botón, actualizadas las plantillas de páginas.
+
+<b>Correcciones del editor de bloques:</b> Fallo en la biblioteca de fotos gratuita que insertaba imágenes individuales incluso si eran seleccionadas varias, fallo en la vista previa al cambiar al editor clásico. Eliminado de la plantilla del blog un botón de suscripción no funcional.
 </es-ES>
 <fr-CA>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
+
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </fr-CA>
 <fr-FR>
-14.5 :
-Éditeur de blocs : Ajout d’un bloc « Derniers articles »
-Modèles de pages :  Ajout de modèles basé sur les blocs pour une création de page plus rapide.
-Création de site : suppression de quelques étapes pour une configuration plus rapide. Sélectionnez le type de site, saisissez le domaine et voilà !
-Correction de bug : correction d’une problème qui causait un échec de téléversement d’article qui recommençait indéfiniment.
+14.9:
+<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
+
+<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
 </fr-FR>
 <iw-IL>
-14.5:
-עורך הבלוקים: הוספנו בלוק פוסטים אחרונים, תיקנו קריסה שהתרחשה בהדבקה של תוכן HTML בתמונות מוטבעות
-תבניות עמודים: הוספנו תבניות מבוססות-בלוק ליצירת עמודים מהירה יותר.
-יצירת אתר: הסרנו מספר שלבים להגדרה מהירה יותר – ניתן לבחור אתר מכל סוג, להזין את הדומיין וסיימת.
-תיקון באג: תיקנו בעיה שגרמה לניסיונות בלתי פוסקים בהעלאה חוזרת של פוסטים שנכשלו.
+14.9:
+<b>שיפורים בעורך הבלוקים:</b> בלוק ציטוט חדש, אפשרויות צבע בבלוק הכפתורים, תבניות עמודים מעודכנות.
+
+<b>תיקונים בעורך הבלוקים:</b> תיקנו באג בספריית התמונות החינמית שהוסיף תמונות יחידות גם אם נבחרו מספר תמונות ואת הכשל בתצוגה המקדימה כאשר מחליפים לעורך הקלאסי. הסרנו כפתור מינוי שלא פעל מתבנית הבלוג.
 </iw-IL>
 <id>
-14.5:
-Penyunting blok: Menambahkan blok Pos Terbaru, memperbaiki crash yang disebabkan karena konten HTML yang ditempel dengan gambar tersemat
-Template Halaman: Menambahkan template berbasis blok agar proses pembuatan halaman lebih cepat.
-Pembuatan Situs: menghapus beberapa langkah agar proses penyiapan lebih cepat — pilih jenis situs, masukkan nama domain, selesai.
-Perbaikan bug: memperbaiki masalah penyebab unggahan pos yang gagal dicoba ulang tanpa batas.
+14.9:
+<b>Peningkatan pada penyunting blok:</b> Blok Kutipan Menonjol yang baru, pilihan warna untuk blok Tombol, template halaman yang diperbarui.
+
+<b>Perbaikan pada penyunting blok:</b> Bug Pustaka Foto Gratis yang menyisipkan satu gambar meskipun ada beberapa yang dipilih, gagalnya pratinjau saat beralih ke penyunting klasik. Menghilangkan Tombol Langganan yang tidak fungsional dari template Blog.
 </id>
 <it-IT>
-14.5:
-Editor a blocchi: aggiunto il blocco Ultimi articoli
-Modelli di pagina: aggiunti modelli basati su un blocco per la creazione più rapida delle pagine.
-Creazione del sito: rimosse alcuni fasi per un'impostazione più veloce: selezione del tipo di sito, inserimento del nome di dominio, completamento dell'operazione.
-Correzione di bug: risolto un problema che impediva di ritentare indefinitamente i caricamenti non riusciti degli articoli.
+14.9:
+<b>Miglioramenti all'editor a blocchi:</b> nuovo blocco Citazione evidenziata, opzioni del colore nel blocco Pulsante, modelli di pagina aggiornati.
+
+<b>Correzioni all'editor a blocchi:</b> bug della libreria di foto gratuita tramite il quale venivano inserite singole immagini anche se ne erano state selezionate differenti, anteprima dell'errore quando si passava all'editor classico. Pulsante abbonamento non funzionale rimosso dal modello Blog.
 </it-IT>
 <ja-JP>
-14.5:
-ブロックエディター :最新の投稿ブロックを追加し、画像が埋め込まれた HTML コンテンツを貼り付けることで発生するクラッシュを修正しました。
-ページテンプレート :ブロックベースのテンプレートを追加し、ページをすばやく作成できるようにしました。
-サイト作成 :いくつかの手順を削除し、すばやく設定できるようにしました。サイトの種類を選択し、ドメイン名を入力すると完了します。
-バグ修正 :失敗した投稿のアップロードが繰り返し再試行される問題を修正しました。
+14.9:
+<b>ブロックエディターの改善点 :</b>新しいプルクオートブロック、ボタンブロック、色オプション、更新されたページテンプレート。
+
+<b>ブロックエディターの修正 :</b>複数選択された場合でも1つの画像が挿入される無料写真ギャラリーのバグ、旧エディターに切り替えるときのプレビューエラー。機能しないサブスクリプションボタンがブログテンプレートから削除されました。
 </ja-JP>
-<ko-KR>
-14.5:
-블록 편집기: 최신 글 블록이 추가되었습니다. 이미지가 포함된 HTML 콘텐츠를 붙여넣을 때 발생하는 충돌이 수정되었습니다.
-페이지 템플릿: 보다 빠른 페이지 생성을 위해 블록 기반 템플릿을 추가했습니다.
-사이트 생성: 빠른 설치를 위해 몇 단계를 없앴습니다. 사이트 종류를 선택하고 도메인 네임을 입력하기만 하면 됩니다.
-- 버그 수정: 글 업로드가 실패하여 무한대로 재시도해야 하는 문제를 수정했습니다.
-</ko-KR>
 <nl-NL>
-14.5:
-Blokeditor: Blok Nieuwste berichten toegevoegd, crash veroorzaakt door het plakken van HTML-content met ingesloten afbeeldingen opgelost
-Paginasjablonen: Op blokken gebaseerde sjablonen toegevoegd om pagina's sneller te kunnen aanmaken.
-Site-ontwerp: een aantal stappen verwijderd voor een snellere configuratie: selecteer het soort site, voer de domeinnaam in en klaar is Kees.
-Bugfix: een probleem verholpen dat zorgde dat de mislukte upload van berichten oneindig werd herhaald.
+14.9:
+<b>Verbeteringen aan de blokeditor:</b> Nieuw Pull-quote-blok, kleurenopties voor het Knopblok, bijgewerkte paginasjablonen.
+
+<b>Fixes van de blokeditor:</b> Bug van de Gratis fotobibliotheek die één afbeelding invoegde terwijl er meerdere waren geselecteerd, fout bij de voorbeeldweergave wanneer naar de klassieke editor werd overgeschakeld. Niet-werkende abonneerknop verwijderd uit blogsjabloon.
 </nl-NL>
-<pt-BR>
-14.5:
-Editor de blocos: Adição do bloco "Posts recentes" e correção de travamentos ao colar conteúdo HTML com imagens.
-Modelos de página: Adição de modelos baseados em blocos para agilizar a criação de páginas.
-Criação de site: Remoção de alguns passos para tornar o processo mais rápido. Selecione o tipo de site, adicione um nome de domínio e pronto.
-Correção de erros: Correção de um erro que tentava reenviar posts diversas vezes.
-</pt-BR>
 <ru-RU>
-14.5:
-Редактор блоков: добавлен блок последних записей, исправлено падение в обработке HTML с встроенными изображениями.
-Шаблоны страниц: добавлены шаблоны с блоками для быстрого создания.
-Создание сайта: убраны пара шагов, теперь надо просто выбрать тип сайта и ввести домен.
-Исправлена ошибка с загрузкой неудачных записей, больше не откладывается на неопределенное время.
+14.9:
+<b>Улучшения редактора блоков:</b> Новый блок выдержки, цвета блока кнопок, обновлены шаблоны страниц.
+
+<b>Исправления в редакторе блоков:</b> Исправлена вставка изображений из Free Photo Library при множественном выборе вставлялось одно изображение; ошибка предпросмотра при переключении в классический редактор; удалена неработающая кнопка подписок из шаблона блога.
 </ru-RU>
 <sv-SE>
-14.5:
-Blockredigeraren: Nytt block för senaste inläggen, rättat krasch vid inklistring av HTML-innehåll med inbäddade bilder
-Sidmallar: Nya blockbaserade mallar för att kunna skapa sidor snabbare.
-Skapa webbplats: Tagit bort några steg för att snabbare process – Välj typ av webbplats, ange domännamnet, klart!.
-Felrättelse: Löst ett problem som kunde försöka göra om misslyckade uppladdningar av inlägg i evighet.
+14.9:
+<b>Förbättringar i blockredigeraren:</b> nytt block för framhävt citat, färginställningar för knappfärger. uppdaterade sidmallar.
+
+<b>Rättelser i blockredigeraren:</b> fel i katalogen för fria bilder infogade bara en bild även om fler var valda, förhandsvisning fungerade inte vid växling till den klassiska redigeraren. Vi har tagit bort prenumerera-knappen (som inte fungerade) ur bloggmallen.
 </sv-SE>
 <tr-TR>
-14.5:
-Blok düzenleyici: Güncel yazılar bloğu eklendi, gömülü görsel içerek HTML içeriğin yapıştırılması sırasındaki çökme düzeltildi
-Sayfa şablonları: Hızlı sayfa oluşturma için blok-tabanlı şablonlar eklendi.
-Site oluşturma: Hızlı kurulum için bir kaç adım kaldırıldı — sitenin tipini seçin, alan adını girin, her şey tamam.
-Hata ayıklama: Başarısız olan yazı yüklemelerinin sonsuz döngüde tekrarlanması problemi giderildi.
+14.9:
+<b>Blok düzenleyici geliştirmeleri:</b> Yeni Pullquote bloğu, düğme bloğu renk seçenekleri, güncellenmiş sayfa şablonları.
+
+<b>Blok düzenleyici düzeltmeleri:</b> Birkaç tane seçilse bile tek görsel ekleyen ücretsiz fotoğraf ktaplığı hatası, klasik düzenleyiciye geçerken önizleme hatası. blog şablonundan işlevsel olmayan abonelik düğmesi kaldırıldı.
 </tr-TR>
 <zh-CN>
-14.5：
-区块编辑器：添加了“最新文章”区块，修正了粘贴包含嵌入图片的 HTML 内容时所导致的崩溃
-页面模板：添加了基于区块的模板，以提高页面创建速度。
-站点创建：删除了几个步骤，以提高创建速度。您只需选择站点类型，输入域名即可。
-错误修复：修正了导致上传失败，需要多次重试的问题。
+14.9：
+<b>区块编辑器增强：</b>全新醒目引文区块、按钮区块颜色选项以及更新的页面模板。
+
+<b>区块编辑器修复：</b>免费图片库之前存在一个错误，即便选择了多张图像，它也只会插入一张图像，而且在切换到经典编辑器时无法正常预览。从“博客”模板中删除了无法正常使用的订阅按钮。
 </zh-CN>
 <zh-TW>
-14.5：
-區塊編輯器：新增「最新文章」區塊，修復複製包含內嵌圖片的 HTML 內容會導致當機的問題
-頁面範本︰新增區塊式範本，讓你更快建立頁面。
-網站建立︰移除幾個步驟以加快設定速度︰選取網站類型，輸入網域名稱，即可完成設定。
-錯誤修正：修正導致文章上傳失敗時無限重複的問題。
+14.9：
+<b>區塊編輯器增強功能：</b>推出全新「重要引述」區塊、按鈕區塊色彩選項和更新版頁面範本。
+
+<b>區塊編輯器修正：</b>修正在免費圖庫選取多張圖片卻僅插入單一圖片的錯誤，並修復切換至傳統編輯器導致預覽失敗的問題。從網誌範本中移除無法正常運作的訂閱按鈕。
 </zh-TW>

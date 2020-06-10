@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
-Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
+Generator: GlotPress/3.0.0-alpha
 Language: is
 -->
 <resources>
@@ -555,7 +555,6 @@ Language: is
     <string name="mnu_comment_unapprove">Hafna</string>
     <string name="content_required">Athugasemdar er krafist</string>
     <string name="toast_comment_unedited">Athugasemd var ekki breytt</string>
-    <string name="hint_comment_content">Athugasemd</string>
     <string name="connection_error">Tengingarvilla</string>
     <string name="http_authorization_required">Leyfisveitingar krafist</string>
     <string name="fatal_db_error">Villa kom upp við að stofna gagnagrunn smáforrits. Reyndu að setja smáforritið aftur upp.</string>
@@ -663,7 +662,6 @@ Language: is
     <string name="anonymous">Nafnlaust</string>
     <string name="no_network_title">Ekkert net tiltækt</string>
     <string name="ok">Í lagi</string>
-    <string name="blogusername">bloggnotandanafn</string>
     <string name="link_enter_url">Slóð</string>
     <string name="version">Útgáfa</string>
     <string name="tos">Notendaskilmálar</string>
@@ -676,7 +674,6 @@ Language: is
     <string name="quickpress_add_alert_title">Skilgreindu nafn á flýtileið</string>
     <string name="settings">Stillingar</string>
     <string name="quickpress_add_error">Nafn á flýtileið getur ekki verið autt</string>
-    <string name="quickpress_window_title">Veldu blogg fyrir QuickPress flýtileið</string>
     <string name="title">Titill</string>
     <string name="categories">Flokkar</string>
     <string name="dlg_deleting_comments">Eyði athugasemdum</string>

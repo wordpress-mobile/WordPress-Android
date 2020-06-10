@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2015-09-21 11:11:47+0000
-Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: sr_RS
 -->
 <resources>
@@ -183,7 +183,6 @@ Language: sr_RS
     <string name="content_required">Коментар је неопходан</string>
     <string name="sure_to_cancel_edit_comment">Одустајете од уређивања овог коментара?</string>
     <string name="saving_changes">Чувам измене</string>
-    <string name="hint_comment_content">Коментар</string>
     <string name="trash">Отпад</string>
     <string name="media_error_no_permission">Немате дозволу да прегледате библиотеку медија</string>
     <string name="dlg_confirm_trash_comments">Помери на отпад?</string>
@@ -268,7 +267,6 @@ Language: sr_RS
     <string name="posts">Чланци</string>
     <string name="no_network_title">Нема доступне мреже</string>
     <string name="pages">Стране</string>
-    <string name="blogusername">korisnickoimebloga</string>
     <string name="ok">У реду</string>
     <string name="link_enter_url">URL</string>
     <string name="tos">Услови сервиса</string>
@@ -281,7 +279,6 @@ Language: sr_RS
     <string name="immediately">Одмах</string>
     <string name="quickpress_add_alert_title">Подеси име пречице</string>
     <string name="settings">Подешавања</string>
-    <string name="quickpress_window_title">Одаберите блог за QuickPress пречицу</string>
     <string name="quickpress_add_error">Име пречице не може бити празно</string>
     <string name="categories">Категорије</string>
     <string name="title">Наслов</string>
