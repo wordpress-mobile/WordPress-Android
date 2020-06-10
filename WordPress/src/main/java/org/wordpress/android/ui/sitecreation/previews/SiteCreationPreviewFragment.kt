@@ -15,14 +15,12 @@ import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.webkit.WebView
-import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import com.facebook.shimmer.ShimmerFrameLayout
 import kotlinx.android.synthetic.main.progress_layout.progress_layout
 import kotlinx.android.synthetic.main.progress_layout.progress_text
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
@@ -68,9 +66,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
-    private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
-    private lateinit var helpClickedListener: OnHelpClickedListener
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -79,8 +74,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         if (context !is OnHelpClickedListener) {
             throw IllegalStateException("Parent activity must implement OnHelpClickedListener.")
         }
-        sitePreviewScreenListener = context
-        helpClickedListener = context
     }
 
     override fun onResume() {
@@ -145,19 +138,19 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             }
         })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_CREATING)
         })
         viewModel.onSiteCreationCompleted.observe(this, Observer {
-            sitePreviewScreenListener.onSiteCreationCompleted()
+            (requireActivity() as SitePreviewScreenListener).onSiteCreationCompleted()
         })
         viewModel.onOkButtonClicked.observe(this, Observer { createSiteState ->
             createSiteState?.let {
-                sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
+                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
         })
         viewModel.onCancelWizardClicked.observe(this, Observer { createSiteState ->
             createSiteState?.let {
-                sitePreviewScreenListener.onSitePreviewScreenDismissed(createSiteState)
+                (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
         })
 
