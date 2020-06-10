@@ -65,7 +65,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -102,7 +101,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         initViewModel()
         initRetryButton()
