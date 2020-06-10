@@ -71,7 +71,6 @@ import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
-    private var mLoginLogoutTextView: TextView? = null
     private var mMyProfileView: View? = null
     private var mAccountSettingsView: View? = null
     private var mDisconnectProgressDialog: ProgressDialog? = null
@@ -100,7 +99,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mLoginLogoutTextView = rootView.findViewById(R.id.me_login_logout_text_view)
         mMyProfileView = rootView.findViewById(R.id.row_my_profile)
         mAccountSettingsView = rootView.findViewById(R.id.row_account_settings)
         mScrollView = rootView.findViewById(R.id.scroll_view)
@@ -207,7 +205,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             mMyProfileView!!.visibility = View.VISIBLE
             loadAvatar(null)
             me_username.text = getString(string.at_username, defaultAccount.userName)
-            mLoginLogoutTextView!!.setText(string.me_disconnect_from_wordpress_com)
+            me_login_logout_text_view.setText(string.me_disconnect_from_wordpress_com)
             val displayName = defaultAccount.displayName
             if (!TextUtils.isEmpty(displayName)) {
                 me_display_name.text = displayName
@@ -221,7 +219,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             avatar_progress.visibility = View.GONE
             mMyProfileView!!.visibility = View.GONE
             mAccountSettingsView!!.visibility = View.GONE
-            mLoginLogoutTextView!!.setText(string.me_connect_to_wordpress_com)
+            me_login_logout_text_view.setText(string.me_connect_to_wordpress_com)
         }
     }
 
