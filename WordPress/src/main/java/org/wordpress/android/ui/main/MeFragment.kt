@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -71,7 +70,6 @@ import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
     private var mDisconnectProgressDialog: ProgressDialog? = null
-    private var mScrollView: ScrollView? = null
     private var mToolbar: Toolbar? = null
     private val mToolbarTitle: String? = null
     private var mIsUpdatingGravatar = false
@@ -96,7 +94,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     ): View? {
         val rootView = inflater.inflate(layout.me_fragment, container, false) as ViewGroup
         val avatarContainer = rootView.findViewById<ViewGroup>(R.id.avatar_container)
-        mScrollView = rootView.findViewById(R.id.scroll_view)
         val showPickerListener = OnClickListener { v: View? ->
             AnalyticsTracker.track(ME_GRAVATAR_TAPPED)
             showPhotoPickerForGravatar()
@@ -158,7 +155,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     override fun onScrollToTop() {
         if (isAdded) {
-            mScrollView!!.smoothScrollTo(0, 0)
+            scroll_view.smoothScrollTo(0, 0)
         }
     }
 
