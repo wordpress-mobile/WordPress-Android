@@ -23,9 +23,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.shimmer.ShimmerFrameLayout
+import kotlinx.android.synthetic.main.progress_layout.progress_layout
+import kotlinx.android.synthetic.main.progress_layout.progress_text
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
+import kotlinx.android.synthetic.main.site_creation_progress_creating_site.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -61,14 +64,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var fullscreenProgressLayout: ViewGroup
     private lateinit var contentLayout: ViewGroup
     private lateinit var sitePreviewWebView: WebView
     private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
-    private lateinit var loadingTextLayout: ViewGroup
-    private lateinit var loadingTextView: TextView
 
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
@@ -106,15 +106,12 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        fullscreenProgressLayout = rootView.findViewById(R.id.progress_layout)
         contentLayout = rootView.findViewById(R.id.content_layout)
         sitePreviewWebView = rootView.findViewById(R.id.sitePreviewWebView)
         sitePreviewWebError = rootView.findViewById(R.id.sitePreviewWebError)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
-        loadingTextView = fullscreenProgressLayout.findViewById(R.id.progress_text)
-        loadingTextLayout = fullscreenProgressLayout.findViewById(R.id.progress_text_layout)
         initViewModel()
         initRetryButton()
         initOkButton()
@@ -134,7 +131,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     is SitePreviewFullscreenProgressUiState -> updateLoadingLayout(uiState)
                     is SitePreviewFullscreenErrorUiState -> updateErrorLayout(uiState)
                 }
-                uiHelpers.updateVisibility(fullscreenProgressLayout, uiState.fullscreenProgressLayoutVisibility)
+                uiHelpers.updateVisibility(progress_layout, uiState.fullscreenProgressLayoutVisibility)
                 uiHelpers.updateVisibility(contentLayout, uiState.contentLayoutVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebView, uiState.webViewVisibility)
                 uiHelpers.updateVisibility(sitePreviewWebError, uiState.webViewErrorVisibility)
@@ -218,29 +215,29 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private fun updateLoadingLayout(progressUiState: SitePreviewFullscreenProgressUiState) {
         progressUiState.apply {
-            val newText = uiHelpers.getTextOfUiString(loadingTextView.context, loadingTextResId)
+            val newText = uiHelpers.getTextOfUiString(progress_text.context, loadingTextResId)
             AppLog.d(AppLog.T.MAIN, "Changing text - animation: $animate")
             if (animate) {
                 updateLoadingTextWithFadeAnimation(newText)
             } else {
-                loadingTextView.text = newText
+                progress_text.text = newText
             }
         }
     }
 
     private fun updateLoadingTextWithFadeAnimation(newText: String) {
         val animationDuration = AniUtils.Duration.SHORT
-        val fadeOut = AniUtils.getFadeOutAnim(loadingTextLayout, animationDuration, View.VISIBLE)
-        val fadeIn = AniUtils.getFadeInAnim(loadingTextLayout, animationDuration)
+        val fadeOut = AniUtils.getFadeOutAnim(progress_text_layout, animationDuration, View.VISIBLE)
+        val fadeIn = AniUtils.getFadeInAnim(progress_text_layout, animationDuration)
 
         // update the text when the view isn't visible
         fadeIn.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationStart(animation: Animator) {
-                loadingTextView.text = newText
+                progress_text.text = newText
             }
         })
         // Start the fadein animation right after the view fades out
-        fadeIn.startDelay = animationDuration.toMillis(loadingTextLayout.context)
+        fadeIn.startDelay = animationDuration.toMillis(progress_text_layout.context)
 
         AnimatorSet().apply {
             playSequentially(fadeOut, fadeIn)
