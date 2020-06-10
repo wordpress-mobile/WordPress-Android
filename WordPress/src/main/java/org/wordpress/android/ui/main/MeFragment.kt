@@ -56,7 +56,6 @@ import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
@@ -65,7 +64,6 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.io.File
@@ -87,26 +85,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     private val mToolbarTitle: String? = null
     private var mIsUpdatingGravatar = false
 
-    @JvmField @Inject
-    var mDispatcher: Dispatcher? = null
+    @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var siteStore: SiteStore
+    @Inject lateinit var postStore: PostStore
+    @Inject lateinit var meGravatarLoader: MeGravatarLoader
 
-    @JvmField @Inject
-    var mAccountStore: AccountStore? = null
-
-    @JvmField @Inject
-    var mSiteStore: SiteStore? = null
-
-    @JvmField @Inject
-    var mImageManager: ImageManager? = null
-
-    @JvmField @Inject
-    var mAppPrefsWrapper: AppPrefsWrapper? = null
-
-    @JvmField @Inject
-    var mPostStore: PostStore? = null
-
-    @JvmField @Inject
-    var mMeGravatarLoader: MeGravatarLoader? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (activity!!.application as WordPress).component().inject(this)
@@ -162,7 +146,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         }
         rootView.findViewById<View>(R.id.row_logout)
                 .setOnClickListener { v: View? ->
-                    if (mAccountStore!!.hasAccessToken()) {
+                    if (accountStore.hasAccessToken()) {
                         signOutWordPressComWithConfirmation()
                     } else {
                         ActivityLauncher.showSignInForResult(activity)
@@ -198,11 +182,11 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
-        mDispatcher!!.register(this)
+        dispatcher.register(this)
     }
 
     override fun onStop() {
-        mDispatcher!!.unregister(this)
+        dispatcher.unregister(this)
         EventBus.getDefault().unregister(this)
         super.onStop()
     }
@@ -221,12 +205,12 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     private fun refreshAccountDetails() {
-        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+        if (!FluxCUtils.isSignedInWPComOrHasWPOrgSite(accountStore, siteStore)) {
             return
         }
         // we only want to show user details for WordPress.com users
-        if (mAccountStore!!.hasAccessToken()) {
-            val defaultAccount = mAccountStore!!.account
+        if (accountStore.hasAccessToken()) {
+            val defaultAccount = accountStore.account
             mDisplayNameTextView!!.visibility = View.VISIBLE
             mUsernameTextView!!.visibility = View.VISIBLE
             mAvatarCard!!.visibility = View.VISIBLE
@@ -258,8 +242,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
 
     private fun loadAvatar(injectFilePath: String?) {
         val newAvatarUploaded = injectFilePath != null && !injectFilePath.isEmpty()
-        val avatarUrl = mMeGravatarLoader!!.constructGravatarUrl(mAccountStore!!.account.avatarUrl)
-        mMeGravatarLoader!!.load(
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        meGravatarLoader.load(
                 newAvatarUploaded,
                 avatarUrl,
                 injectFilePath,
@@ -311,7 +295,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
         val message: String
-        message = if (mPostStore!!.numLocalChanges > 0) {
+        message = if (postStore.numLocalChanges > 0) {
             getString(string.sign_out_wpcom_confirm_with_changes)
         } else {
             getString(string.sign_out_wpcom_confirm_with_no_changes)
@@ -436,7 +420,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             return
         }
         showGravatarProgressBar(true)
-        GravatarApi.uploadGravatar(file, mAccountStore!!.account.email, mAccountStore!!.accessToken,
+        GravatarApi.uploadGravatar(file, accountStore.account.email, accountStore.accessToken,
                 object : GravatarUploadListener {
                     override fun onSuccess() {
                         EventBus.getDefault().post(GravatarUploadFinished(filePath, true))
