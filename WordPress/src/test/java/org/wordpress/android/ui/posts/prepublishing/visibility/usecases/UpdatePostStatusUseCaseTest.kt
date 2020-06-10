@@ -57,7 +57,6 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
         }
         whenever(postUtilsWrapper.isPublishDateInTheFuture(any())).thenReturn(false)
 
-
         // act
         updatePostStatusUseCase.updatePostStatus(PRIVATE, editPostRepository) {}
 
@@ -82,7 +81,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if the new PostStatus is PRIVATE & the old PostStatus is PENDING & date is in future then the date created should be now`() {
+    fun `if the new PostStatus is PRIVATE & the date is in future then the date created should be now`() {
         // arrange
         val currentDate = "2020-06-06T20:28:20+0200"
         whenever(dateTimeUtilsWrapper.currentTimeInIso8601()).thenReturn(currentDate)
@@ -97,7 +96,7 @@ class UpdatePostStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if the new PostStatus is PRIVATE & the old PostStatus is PENDING & date is not in future then the date created should be the same`() {
+    fun `if the new PostStatus is PRIVATE & the date is not in future then the date created should be the same`() {
         // arrange
         val dateCreated = "2020-06-06T20:28:20+0200"
         whenever(postUtilsWrapper.isPublishDateInTheFuture(any())).thenReturn(false)
