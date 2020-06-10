@@ -65,7 +65,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
-    private lateinit var sitePreviewWebError: ViewGroup
     private lateinit var sitePreviewWebViewShimmerLayout: ShimmerFrameLayout
     private lateinit var sitePreviewWebUrlTitle: TextView
 
@@ -105,7 +104,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        sitePreviewWebError = rootView.findViewById(R.id.sitePreviewWebError)
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
         okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
