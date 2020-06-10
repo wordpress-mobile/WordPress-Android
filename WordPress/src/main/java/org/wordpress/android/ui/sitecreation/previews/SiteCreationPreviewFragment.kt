@@ -74,8 +74,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     private lateinit var sitePreviewScreenListener: SitePreviewScreenListener
     private lateinit var helpClickedListener: OnHelpClickedListener
 
-    private var okButtonContainer: View? = null
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context !is SitePreviewScreenListener) {
@@ -106,7 +104,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
     override fun setupContent(rootView: ViewGroup) {
         sitePreviewWebViewShimmerLayout = rootView.findViewById(R.id.sitePreviewWebViewShimmerLayout)
         sitePreviewWebUrlTitle = rootView.findViewById(R.id.sitePreviewWebUrlTitle)
-        okButtonContainer = rootView.findViewById(R.id.sitePreviewOkButtonContainer)
         initViewModel()
         initRetryButton()
         initOkButton()
@@ -346,7 +343,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                     val titleAnim = createFadeInAnimator(sitePreviewTitle)
                     val webViewAnim = createSlideInFromBottomAnimator(webviewContainer, contentHeight)
                     // OK button should slide in if the container exists and fade in otherwise
-                    val okAnim = okButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
+                    val okAnim = sitePreviewOkButtonContainer?.let { createSlideInFromBottomAnimator(it, contentHeight) }
                             ?: createFadeInAnimator(okButton)
                     AnimatorSet().apply {
                         interpolator = DecelerateInterpolator()
