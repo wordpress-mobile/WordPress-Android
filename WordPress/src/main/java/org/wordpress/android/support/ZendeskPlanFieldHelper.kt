@@ -30,6 +30,10 @@ class ZendeskPlanFieldHelper {
         WpComPlansConstants.WPCOM_BLOGGER_BUNDLE_2Y
     )
 
+    private val wpFreePlans = listOf(
+        WpComPlansConstants.WPCOM_FREE
+    )
+
     // jetpack plans
     private val jetpackBusinessPlans = listOf(
         JetpackPlansConstants.JETPACK_BUSINESS,
@@ -45,19 +49,27 @@ class ZendeskPlanFieldHelper {
         JetpackPlansConstants.JETPACK_PERSONAL,
         JetpackPlansConstants.JETPACK_PERSONAL_MONTHLY
     )
-    private val ecommercePlans: List<Long> = wpComEcommercePlans
-    private val businessOrProfessionalPlans: List<Long> = wpComBusinessPlans + jetpackBusinessPlans
-    private val premiumPlans: List<Long> = wpComPremiumPlans + jetpackPremiumPlans
-    private val personalPlans: List<Long> = wpComPersonalPlans + jetpackPersonalPlans
-    private val bloggerPlans: List<Long> = wpComBloggerPlans
+
+    private val jetpackFreePlans = listOf(
+        JetpackPlansConstants.JETPACK_FREE
+    )
+
+    private val ecommercePlans = wpComEcommercePlans
+    private val businessOrProfessionalPlans = wpComBusinessPlans + jetpackBusinessPlans
+    private val premiumPlans = wpComPremiumPlans + jetpackPremiumPlans
+    private val personalPlans = wpComPersonalPlans + jetpackPersonalPlans
+    private val bloggerPlans = wpComBloggerPlans
+    private val freePlans = wpFreePlans + jetpackFreePlans
 
     /**
      * This is a helper function that checks plan types from most expensive to least,
      * so that we return the highest value plan type for the user and give them the appropriate
      * service level (in case they have more than one plan).
      * Internal Ref: p8wKgj-1eQ#comment-7475
+     *
+     * It doesn't support add_on_plan, tier and other plans that are included in the zendesk plan dropdown.
      */
-    fun getHighestPlan(planIds: List<Long>): String {
+    fun getHighestPlan(planIds: List<Long>): String? {
         return when {
             ecommercePlans.intersect(planIds).isNotEmpty() -> {
                 ZendeskPlanConstants.ECOMMERCE
@@ -74,14 +86,18 @@ class ZendeskPlanFieldHelper {
             bloggerPlans.intersect(planIds).isNotEmpty() -> {
                 ZendeskPlanConstants.BLOGGER
             }
-            else -> {
+            freePlans.intersect(planIds).isNotEmpty() -> {
                 ZendeskPlanConstants.FREE
+            }
+            else -> {
+                null
             }
         }
     }
 }
 
 object WpComPlansConstants {
+    const val WPCOM_FREE = 1L
     const val WPCOM_BLOGGER_BUNDLE = 1010L
     const val WPCOM_PERSONAL_BUNDLE = 1009L
     const val WPCOM_VALUE_BUNDLE = 1003L
@@ -98,6 +114,7 @@ object WpComPlansConstants {
 }
 
 object JetpackPlansConstants {
+    const val JETPACK_FREE = 2002L
     const val JETPACK_PREMIUM = 2000L
     const val JETPACK_BUSINESS = 2001L
     const val JETPACK_PERSONAL = 2005L
