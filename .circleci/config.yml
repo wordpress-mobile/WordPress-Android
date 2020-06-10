@@ -336,18 +336,20 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
-            ./tools/update-translations.sh review
-
             VERSION_NAME="${APP_VERSION_PREFIX}-build-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
-            ./gradlew --stacktrace assembleJalapenoDebug -PversionName="$VERSION_NAME"
+            bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
       - android/save-gradle-cache
       - run:
           name: Prepare APK
           command: |
             mkdir -p Artifacts
             mv WordPress/build/outputs/apk/jalapeno/debug/org.wordpress.android-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - run: 
+          name: Upload APK
+          command: |
+            curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
       - store_artifacts:
           path: Artifacts
           destination: Artifacts
