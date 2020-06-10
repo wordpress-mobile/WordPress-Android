@@ -22,7 +22,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_fragment.*
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -70,7 +69,6 @@ import javax.inject.Inject
 
 class MeFragment : Fragment(), OnScrollToTopListener {
     private var mDisconnectProgressDialog: ProgressDialog? = null
-    private val mToolbarTitle: String? = null
     private var mIsUpdatingGravatar = false
 
     @Inject lateinit var dispatcher: Dispatcher
@@ -139,7 +137,6 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                 showGravatarProgressBar(true)
             }
         }
-        toolbar_main.title = mToolbarTitle
         return rootView
     }
 
