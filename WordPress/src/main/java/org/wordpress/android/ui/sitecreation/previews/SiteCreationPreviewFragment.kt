@@ -21,8 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.progress_layout.progress_layout
-import kotlinx.android.synthetic.main.progress_layout.progress_text
 import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
