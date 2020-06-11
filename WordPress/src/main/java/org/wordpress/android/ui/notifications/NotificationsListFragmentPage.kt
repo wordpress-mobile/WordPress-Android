@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
@@ -60,16 +59,6 @@ import javax.inject.Inject
 
 class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoadedListener {
     private var mNotesAdapter: NotesAdapter? = null
-
-    private val notesAdapter: NotesAdapter
-        get() {
-            return mNotesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
-                mNotesAdapter = this
-                this.setOnNoteClickListener(mOnNoteClickListener)
-            }
-        }
-
-
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mIsAnimatingOutNewNotificationsBar = false
     private var mShouldRefreshNotifications = false
@@ -84,7 +73,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        notifications_list.adapter = notesAdapter
+        notifications_list.adapter = createOrGetNotesAdapter()
         if (savedInstanceState != null) {
             mTabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
@@ -160,7 +149,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (mAccountStore.hasAccessToken()) {
-            notesAdapter.reloadNotesFromDBAsync()
+            createOrGetNotesAdapter().reloadNotesFromDBAsync()
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
@@ -387,6 +376,12 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         }
     }
 
+    private fun createOrGetNotesAdapter(): NotesAdapter {
+        return mNotesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
+            this.setOnNoteClickListener(mOnNoteClickListener)
+        }
+    }
+
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: NoteLikeOrModerationStatusChanged) {
         NotificationsActions.downloadNoteAndUpdateDB(
@@ -413,7 +408,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (!isAdded) {
             return
         }
-        notesAdapter.reloadNotesFromDBAsync()
+        createOrGetNotesAdapter().reloadNotesFromDBAsync()
         if (event.hasUnseenNotes) {
             showNewUnseenNotificationsUI()
         }
