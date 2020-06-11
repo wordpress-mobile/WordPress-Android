@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AuthOptionsPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -396,6 +397,11 @@ public class AccountStore extends Store {
             this.contactModel = contactModel;
             this.error = error;
         }
+    }
+
+    public static class OnAuthOptionsFetched extends OnChanged<AuthOptionsError> {
+        public boolean isPasswordless;
+        public boolean isEmailVerified;
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -917,6 +923,12 @@ public class AccountStore extends Store {
             case FETCHED_DOMAIN_CONTACT:
                 handleFetchedDomainContact((DomainContactPayload) payload);
                 break;
+            case FETCH_AUTH_OPTIONS:
+                mAccountRestClient.fetchAuthOptions((String) payload);
+                break;
+            case FETCHED_AUTH_OPTIONS:
+                handleFetchedAuthOptions((AuthOptionsPayload) payload);
+                break;
         }
     }
 
@@ -1317,5 +1329,16 @@ public class AccountStore extends Store {
 
     private void handleFetchedDomainContact(DomainContactPayload payload) {
         emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
+    }
+
+    private void handleFetchedAuthOptions(AuthOptionsPayload payload) {
+        OnAuthOptionsFetched event = new OnAuthOptionsFetched();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.isPasswordless = payload.isPasswordless;
+            event.isEmailVerified = payload.isEmailVerified;
+        }
+        emitChange(event);
     }
 }
