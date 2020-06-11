@@ -1,4 +1,0 @@
-14.8:
-<b>Tambahan pada penyunting blok:</b> Blok Tombol menampilkan beberapa tombol dalam satu baris, blok Gambar menuliskan keterangan jika ada, blok Sampul mengizinkan untuk mengunggah; gambar yang disisipkan dapat dipotong, diperbesar/diperkecil, atau diputar; blok Heading menyertakan pilihan penyelarasan.
-<b>Peningkatan pada penyunting blok:</b> Memindahkan bilah peralatan melayang, memperbaiki bug yang memengaruhi spasi putih di blok Teks, memperbaiki ikon bilah peralatan yang tidak selaras di mode RTL.
-<b>Pembaruan umum:</b> Menambahkan fungsionalitas reblog.

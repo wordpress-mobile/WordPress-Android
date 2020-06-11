@@ -1750,6 +1750,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
             case FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED:
                 return "feature_announcement_button_tapped";
+            case OPENED_PLANS_COMPARISON:
+                return "plans_compare";
         }
         return null;
     }

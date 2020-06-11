@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -92,7 +93,7 @@ public class PhotoPickerFragment extends Fragment {
     private EmptyViewRecyclerView mRecycler;
     private PhotoPickerAdapter mAdapter;
     private View mMediaSourceBottomBar;
-    private View mInsertPreviewBottomBar;
+    private View mInsertEditBottomBar;
     private ActionableEmptyView mSoftAskView;
     private ActionMode mActionMode;
     private GridLayoutManager mGridManager;
@@ -167,7 +168,7 @@ public class PhotoPickerFragment extends Fragment {
         });
 
         mMediaSourceBottomBar = view.findViewById(R.id.container_media_source_bar);
-        mInsertPreviewBottomBar = view.findViewById(R.id.container_insert_preview_bar);
+        mInsertEditBottomBar = view.findViewById(R.id.container_insert_edit_bar);
 
         if (!canShowMediaSourceBottomBar()) {
             mMediaSourceBottomBar.setVisibility(View.GONE);
@@ -218,14 +219,14 @@ public class PhotoPickerFragment extends Fragment {
             }
         }
 
-        if (canShowInsertPreviewBottomBar()) {
-            mInsertPreviewBottomBar.findViewById(R.id.text_preview).setOnClickListener(v -> {
+        if (canShowInsertEditBottomBar()) {
+            mInsertEditBottomBar.findViewById(R.id.text_edit).setOnClickListener(v -> {
                 ArrayList<EditImageData.InputData> inputData =
                         WPMediaUtils.createListOfEditImageInputData(requireContext(), getAdapter().getSelectedURIs());
                 ActivityLauncher.openImageEditor(getActivity(), inputData);
             });
 
-            mInsertPreviewBottomBar.findViewById(R.id.text_insert).setOnClickListener(v -> performInsertAction());
+            mInsertEditBottomBar.findViewById(R.id.text_insert).setOnClickListener(v -> performInsertAction());
         }
 
         mSoftAskView = view.findViewById(R.id.soft_ask_view);
@@ -243,8 +244,8 @@ public class PhotoPickerFragment extends Fragment {
         return true;
     }
 
-    private boolean canShowInsertPreviewBottomBar() {
-        return mBrowserType.isGutenbergPicker() && !mBrowserType.isVideoPicker();
+    private boolean canShowInsertEditBottomBar() {
+        return mBrowserType.isGutenbergPicker();
     }
 
     @Override
@@ -409,6 +410,13 @@ public class PhotoPickerFragment extends Fragment {
                 if (activity == null) {
                     return;
                 }
+
+                if (canShowInsertEditBottomBar()) {
+                    TextView editView = mInsertEditBottomBar.findViewById(R.id.text_edit);
+                    boolean isVideoFileSelected = getAdapter().isVideoFileSelected();
+                    editView.setVisibility(isVideoFileSelected ? View.GONE : View.VISIBLE);
+                }
+
                 if (mActionMode == null) {
                     ((AppCompatActivity) activity).startSupportActionMode(new ActionModeCallback());
                 }
@@ -516,8 +524,8 @@ public class PhotoPickerFragment extends Fragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             mActionMode = actionMode;
-            if (canShowInsertPreviewBottomBar()) {
-                showBottomBar(mInsertPreviewBottomBar);
+            if (canShowInsertEditBottomBar()) {
+                showBottomBar(mInsertEditBottomBar);
             } else {
                 MenuInflater inflater = actionMode.getMenuInflater();
                 inflater.inflate(R.menu.photo_picker_action_mode, menu);
@@ -547,7 +555,7 @@ public class PhotoPickerFragment extends Fragment {
             if (canShowMediaSourceBottomBar()) {
                 showBottomBar(mMediaSourceBottomBar);
             }
-            hideBottomBar(mInsertPreviewBottomBar);
+            hideBottomBar(mInsertEditBottomBar);
             getAdapter().clearSelection();
         }
     }

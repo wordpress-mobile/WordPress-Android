@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-05 12:05:46+0000
+Translation-Revision-Date: 2020-05-19 11:26:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Bienvenue sur notre nouveau blog</string>
+    <string name="gutenberg_native_select_a_color">Sélectionnez une couleur</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toucher deux fois pour aller aux réglages de couleur</string>
+    <string name="reader_empty_followed_blogs_description">Lorsque vous suivez des sites, vous verrez leur contenu ici</string>
     <string name="feature_announcement_find_out_mode">En savoir plus</string>
     <string name="feature_announcement_dialog_label">Quoi de neuf dans WordPress</string>
     <string name="insert_label_with_count">Insérer %d</string>
@@ -30,18 +34,14 @@ Language: fr
     <string name="button_insert">Insérer</string>
     <string name="continue_label">Continuer</string>
     <string name="copy_text">Copier</string>
-    <string name="gutenberg_native_subscribe">S’abonner</string>
     <string name="gutenberg_native_number_of_columns">Nombre de colonnes</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Déplace le bloc à droite de la position %1$s vers la position %2$s</string>
     <string name="gutenberg_native_move_block_right">Déplacer le bloc à droite</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Déplace le bloc à gauche de la position %1$s vers la position %2$s</string>
     <string name="gutenberg_native_move_block_left">Déplacer le bloc à gauche</string>
-    <string name="gutenberg_native_latest_blog_posts">Derniers articles de blog</string>
-    <string name="gutenberg_native_follow_our_blog">Suivez notre blog</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toucher deux fois pour déplacer le bloc à droite</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toucher deux fois pour déplacer le bloc à gauche</string>
     <string name="gutenberg_native_columns_settings">Réglages de colonnes</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Les réglages de couleur arrivent bientôt.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Création du tableau de bord</string>
     <string name="new_site_creation_creating_site_loading_3">Configuration du thème</string>
@@ -121,7 +121,6 @@ Language: fr
     <string name="gutenberg_native_only_show_excerpt">N’afficher que l’extrait</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mon portfolio présente des projets variés créés tout au long de ma carrière. Mes coordonnées sont plus bas. Contactez-moi !</string>
     <string name="gutenberg_native_link_to">Lier à</string>
-    <string name="gutenberg_native_link_settings">Réglages de lien</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parlons-en ! 👋 N’hésitez pas à communiquer en utilisant les coordonnées ci-dessous ou utiliser le formulaire.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Construisons quelque chose ensemble !</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Construisons quelque chose ensemble !</string>
@@ -139,10 +138,6 @@ Language: fr
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Ne pleurez pas parce que c’est fini, souriez parce que c’est arrivé.</string>
     <string name="gutenberg_native_customize">PERSONNALISER</string>
     <string name="gutenberg_native_city_10100">Bordeaux, 33000</string>
-    <string name="gutenberg_native_button_link_url">URL du lien du bouton</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Les réglages de couleur de bouton arrivent bientôt.</string>
-    <string name="gutenberg_native_border_settings">Réglages de la bordure</string>
-    <string name="gutenberg_native_border_radius">Arrondit de bordure</string>
     <string name="gutenberg_native_add_paragraph_block">Ajouter un bloc paragraphe</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Une courte description des services que vous offrez.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Une courte bio avec votre histoire personnelle, vos principales réalisations ou d’autres choses intéressantes.</string>
@@ -276,7 +271,6 @@ Language: fr
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Le contenu de ce bloc n\'est pas valide</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Vide</string>
     <string name="gutenberg_native_reset_block">Réinitialiser le bloc</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Retirer le bloc à la ligne %s</string>
     <string name="gutenberg_native_remove_annotations">Retirer les annotations</string>
     <string name="gutenberg_native_problem_opening_the_video">Un problème est survenu lors de l\'ouverture de la vidéo</string>
     <string name="gutenberg_native_problem_displaying_block">Un problème est survenu lors de l\'affichage du bloc</string>
@@ -307,7 +301,6 @@ Language: fr
     <string name="gutenberg_native_double_tap_to_select_an_image">Appuyer deux fois pour sélectionner une image</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Appuyer deux fois pour sélectionner une vidéo</string>
     <string name="gutenberg_native_double_tap_to_select">Appuyer deux fois effectuer une sélection</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Appuyer deux fois pour supprimer le bloc</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Appuyer deux fois pour rétablir la dernière modification</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Appuyer deux fois pour faire monter le bloc</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Appuyer deux fois pour faire descendre le bloc</string>
@@ -888,7 +881,6 @@ Language: fr
     <string name="reader_empty_posts_liked_title">Aucune mention J\'aime</string>
     <string name="reader_empty_followed_blogs_button_followed">Accéder à la page des abonnés</string>
     <string name="reader_empty_followed_blogs_button_discover">Découvrir des sites</string>
-    <string name="reader_empty_followed_blogs_description">Vous ne suivez actuellement aucun site. Pourquoi ne pas en suivre un maintenant ?</string>
     <string name="reader_empty_followed_blogs_title">Aucun site suivi</string>
     <string name="notifications_empty_likes">Pas encore de mentions J\'aime</string>
     <string name="notifications_empty_followers">Pas encore d\'abonnés</string>
