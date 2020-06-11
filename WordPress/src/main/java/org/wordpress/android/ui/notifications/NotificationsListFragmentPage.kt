@@ -373,6 +373,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     private fun createOrGetNotesAdapter(): NotesAdapter {
         return notesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
+            notesAdapter = this
             this.setOnNoteClickListener(mOnNoteClickListener)
         }
     }
