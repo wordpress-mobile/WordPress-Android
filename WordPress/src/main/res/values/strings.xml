@@ -2670,6 +2670,7 @@
     <string name="pages_list_author">Page author</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
