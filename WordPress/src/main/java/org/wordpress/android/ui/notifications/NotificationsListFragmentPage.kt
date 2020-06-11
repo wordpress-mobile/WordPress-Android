@@ -18,9 +18,7 @@ import kotlinx.android.synthetic.main.notifications_list_fragment_page.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R.anim
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_CHECKING_NOTIFICATION
 import org.wordpress.android.datasets.NotificationsTable
@@ -107,7 +105,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layout.notifications_list_fragment_page, container, false)
+        return inflater.inflate(R.layout.notifications_list_fragment_page, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -259,7 +257,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
             override fun onAnimationRepeat(animation: Animation) {}
         }
-        AniUtils.startAnimation(layout_new_notificatons, anim.notifications_bottom_bar_out, listener)
+        AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_out, listener)
     }
 
     private val isNewNotificationsBarShowing: Boolean
@@ -312,35 +310,35 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         }
         when (tabPosition) {
             NotificationsListFragment.TAB_POSITION_ALL -> showEmptyView(
-                    string.notifications_empty_all,
-                    string.notifications_empty_action_all,
-                    string.notifications_empty_view_reader
+                    R.string.notifications_empty_all,
+                    R.string.notifications_empty_action_all,
+                    R.string.notifications_empty_view_reader
             )
             NotificationsListFragment.TAB_POSITION_COMMENT -> showEmptyView(
-                    string.notifications_empty_comments,
-                    string.notifications_empty_action_comments,
-                    string.notifications_empty_view_reader
+                    R.string.notifications_empty_comments,
+                    R.string.notifications_empty_action_comments,
+                    R.string.notifications_empty_view_reader
             )
             NotificationsListFragment.TAB_POSITION_FOLLOW -> showEmptyView(
-                    string.notifications_empty_followers,
-                    string.notifications_empty_action_followers_likes,
-                    string.notifications_empty_view_reader
+                    R.string.notifications_empty_followers,
+                    R.string.notifications_empty_action_followers_likes,
+                    R.string.notifications_empty_view_reader
             )
             NotificationsListFragment.TAB_POSITION_LIKE -> showEmptyView(
-                    string.notifications_empty_likes,
-                    string.notifications_empty_action_followers_likes,
-                    string.notifications_empty_view_reader
+                    R.string.notifications_empty_likes,
+                    R.string.notifications_empty_action_followers_likes,
+                    R.string.notifications_empty_view_reader
             )
             NotificationsListFragment.TAB_POSITION_UNREAD -> if (selectedSite == null) {
-                showEmptyView(string.notifications_empty_unread)
+                showEmptyView(R.string.notifications_empty_unread)
             } else {
                 showEmptyView(
-                        string.notifications_empty_unread,
-                        string.notifications_empty_action_unread,
-                        string.posts_empty_list_button
+                        R.string.notifications_empty_unread,
+                        R.string.notifications_empty_action_unread,
+                        R.string.posts_empty_list_button
                 )
             }
-            else -> showEmptyView(string.notifications_empty_list)
+            else -> showEmptyView(R.string.notifications_empty_list)
         }
         actionable_empty_view.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }
@@ -349,7 +347,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (!isAdded || isNewNotificationsBarShowing) {
             return
         }
-        AniUtils.startAnimation(layout_new_notificatons, anim.notifications_bottom_bar_in)
+        AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_in)
         layout_new_notificatons.visibility = View.VISIBLE
     }
 
