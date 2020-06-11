@@ -97,9 +97,9 @@ class NotificationsListFragmentPage : Fragment(),
         if (requestCode == RequestCodes.NOTE_DETAIL) {
             mShouldRefreshNotifications = false
             if (resultCode == Activity.RESULT_OK) {
-                val noteId = data!!.getStringExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)
-                val newStatus = data.getStringExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA)
-                if (!TextUtils.isEmpty(noteId) && !TextUtils.isEmpty(newStatus)) {
+                val noteId = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)
+                val newStatus = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA)
+                if (!noteId.isNullOrBlank() && !newStatus.isNullOrBlank()) {
                     updateNote(noteId, CommentStatus.fromString(newStatus))
                 }
             }
