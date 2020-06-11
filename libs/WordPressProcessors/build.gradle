@@ -1,13 +1,8 @@
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
-ext.kotlinVersion = '1.3.61'
 ext.kotlinPoetVersion = '1.6.0'
 ext.autoServiceVersion = '1.0-rc6'
-ext.jUnitVersion = '4.13'
-ext.mockitoCoreVersion = "2.28.2"
-ext.nhaarmanMockitoVersion = "2.1.0"
-ext.assertJVersion = "3.11.1"
 
 kapt {
     generateStubs = true
