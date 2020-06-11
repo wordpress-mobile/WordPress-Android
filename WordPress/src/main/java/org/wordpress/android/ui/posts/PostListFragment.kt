@@ -25,7 +25,6 @@ import org.wordpress.android.ui.posts.adapters.PostListAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
@@ -46,7 +45,6 @@ class PostListFragment : Fragment() {
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
-    @Inject internal lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: PostListViewModel
     private lateinit var mainViewModel: PostListMainViewModel
 
@@ -68,8 +66,7 @@ class PostListFragment : Fragment() {
         PostListAdapter(
                 context = nonNullActivity,
                 imageManager = imageManager,
-                uiHelpers = uiHelpers,
-                localeManagerWrapper = localeManagerWrapper
+                uiHelpers = uiHelpers
         )
     }
 
