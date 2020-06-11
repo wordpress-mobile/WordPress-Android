@@ -107,7 +107,11 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(layout.notifications_list_fragment_page, container, false)
+        return inflater.inflate(layout.notifications_list_fragment_page, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         arguments?.let{
             tabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
@@ -118,7 +122,6 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         }
         layout_new_notificatons.visibility = View.GONE
         layout_new_notificatons.setOnClickListener { onScrollToTop() }
-        return view
     }
 
     override fun onDestroyView() {
