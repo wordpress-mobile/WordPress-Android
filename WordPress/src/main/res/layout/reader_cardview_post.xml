@@ -146,7 +146,7 @@
             android:contentDescription="@null"
             android:cropToPadding="true"
             android:padding="@dimen/reader_image_featured_border_width"
-            android:background="@drawable/bg_reader_image_featured"
+            android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
