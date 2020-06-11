@@ -29,6 +29,14 @@ class CrashLogging @Inject constructor(
 
                 if (!this.shouldSendEvents(context)) return@setBeforeSend null
 
+                this.accountStore.account.apply {
+                    val user = User()
+                    user.id = this.userId.toString()
+                    user.username = this.userName
+                    user.email = this.email
+                    event.user = user
+                }
+
                 if (event.exceptions.size > 1) {
                     event.exceptions.lastOrNull()?.let { lastException ->
                         // Remove the "Invoking subscriber failed" exception so that the main error will show up
@@ -46,15 +54,6 @@ class CrashLogging @Inject constructor(
         }
 
         Sentry.setTag("version", BuildConfig.VERSION_NAME)
-
-        this.accountStore.account.apply {
-            val user = User()
-            user.id = this.userId.toString()
-            user.username = this.userName
-            user.email = this.email
-
-            Sentry.setUser(user)
-        }
     }
 
     /**
