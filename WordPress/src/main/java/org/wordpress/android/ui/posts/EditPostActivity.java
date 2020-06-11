@@ -2040,7 +2040,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi);
+                                isSiteUsingWpComRestApi,
+                                BuildConfig.TENOR_AVAILABLE);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2635,6 +2636,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddStockMediaClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override
+    public void onAddGifClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection);
     }
 
     @Override
