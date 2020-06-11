@@ -58,9 +58,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
-class NotificationsListFragmentPage : Fragment(),
-        OnScrollToTopListener,
-        DataLoadedListener {
+class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoadedListener {
     private var mNotesAdapter: NotesAdapter? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mIsAnimatingOutNewNotificationsBar = false
@@ -78,10 +76,7 @@ class NotificationsListFragmentPage : Fragment(),
         super.onActivityCreated(savedInstanceState)
         notifications_list.adapter = notesAdapter
         if (savedInstanceState != null) {
-            mTabPosition = savedInstanceState.getInt(
-                    KEY_TAB_POSITION,
-                    NotificationsListFragment.TAB_POSITION_ALL
-            )
+            mTabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
         when (mTabPosition) {
             NotificationsListFragment.TAB_POSITION_ALL -> mNotesAdapter!!.setFilter(FILTER_ALL)
@@ -112,25 +107,18 @@ class NotificationsListFragmentPage : Fragment(),
         mShouldRefreshNotifications = true
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layout.notifications_list_fragment_page, container, false)
-        if (arguments != null) {
-            mTabPosition = arguments!!.getInt(
-                    KEY_TAB_POSITION,
-                    NotificationsListFragment.TAB_POSITION_ALL
-            )
+        arguments?.let{
+            mTabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
         notifications_list.layoutManager = LinearLayoutManager(activity)
         mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
             hideNewNotificationsBar()
             fetchNotesFromRemote()
         }
-        layout_new_notificatons.setVisibility(View.GONE)
-        layout_new_notificatons.setOnClickListener(OnClickListener { onScrollToTop() })
+        layout_new_notificatons.visibility = View.GONE
+        layout_new_notificatons.setOnClickListener { onScrollToTop() }
         return view
     }
 
@@ -218,11 +206,7 @@ class NotificationsListFragmentPage : Fragment(),
         }
     }
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
-        override fun onScrolled(
-            recyclerView: RecyclerView,
-            dx: Int,
-            dy: Int
-        ) {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
             notifications_list.removeOnScrollListener(this)
             clearPendingNotificationsItemsOnUI()
@@ -257,11 +241,7 @@ class NotificationsListFragmentPage : Fragment(),
         }
 
     val selectedSite: SiteModel?
-        get() = if (activity is WPMainActivity) {
-            (activity as WPMainActivity?)!!.selectedSite
-        } else {
-            null
-        }
+        get() = (activity as? WPMainActivity)?.selectedSite
 
     private fun hideEmptyView() {
         if (isAdded) {
@@ -290,7 +270,7 @@ class NotificationsListFragmentPage : Fragment(),
     }
 
     private val isNewNotificationsBarShowing: Boolean
-        private get() = layout_new_notificatons != null && layout_new_notificatons.visibility == View.VISIBLE
+        get() = layout_new_notificatons != null && layout_new_notificatons.visibility == View.VISIBLE
 
     private fun performActionForActiveFilter() {
         if (!isAdded) {
@@ -301,12 +281,7 @@ class NotificationsListFragmentPage : Fragment(),
             return
         }
         if (mTabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
-            ActivityLauncher.addNewPostForResult(
-                    activity,
-                    selectedSite,
-                    false,
-                    POST_FROM_NOTIFS_EMPTY_VIEW
-            )
+            ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW)
         } else if (activity is WPMainActivity) {
             (activity as WPMainActivity?)!!.setReaderPageActive()
         }
