@@ -90,7 +90,6 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
         val accountModel = AccountModel()
         accountModel.userId = 4
-        whenever(accountStore.account).thenReturn(accountModel)
     }
 
     @Test
@@ -372,7 +371,7 @@ class PageListViewModelTest : BaseUnitTest() {
         authorFilterSelection.value = ME
 
         pageItems = pagesResult[1].first
-        assertThat(pageItems).hasSize(3)
+        assertThat(pageItems).hasSize(13)
     }
 
     @Test
