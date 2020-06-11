@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_request"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/activity_request_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/activity_request_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                app:navigationIcon="@drawable/zs_request_icon_back"
+                app:navigationContentDescription="@string/abc_action_bar_up_description"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+                tools:ignore="PrivateResource">
+
+                <include layout="@layout/zs_request_toolbar_content" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
+            <zendesk.support.request.ViewAlmostRealProgressBar
+                android:id="@+id/activity_request_progressbar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/zs_request_toolbar_progress_bar_height"
+                android:layout_gravity="bottom"
+                android:indeterminate="false"
+                android:visibility="visible"
+                android:progressDrawable="@drawable/zs_request_toolbar_progress_bar" />
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/activity_request_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <zendesk.support.request.RequestViewConversationsEnabled
+            android:id="@+id/activity_request_conversation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <zendesk.support.request.RequestViewConversationsDisabled
+            android:id="@+id/activity_request_conversation_disabled"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <zendesk.support.request.RequestViewLoading
+            android:id="@+id/activity_request_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"/>
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/activity_request_compat_toolbar_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zs_request_toolbar_shadow_space"
+        android:background="@drawable/zs_request_toolbar_shadow"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

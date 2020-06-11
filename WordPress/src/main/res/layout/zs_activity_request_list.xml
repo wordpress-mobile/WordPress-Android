@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/request_list_coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/request_list_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:navigationContentDescription="@string/abc_action_bar_up_description"
+                app:navigationIcon="@drawable/zs_request_icon_back"
+                app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
+                app:theme="@style/WordPress.ActionBar"
+                app:title="@string/request_list_activity_title"
+                tools:ignore="PrivateResource" />
+
+            <zendesk.support.request.ViewAlmostRealProgressBar
+                android:id="@+id/request_list_progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/zs_request_toolbar_progress_bar_height"
+                android:layout_gravity="bottom"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/zs_request_toolbar_progress_bar" />
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/request_list_scene_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:layout_marginTop="?attr/actionBarSize" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        style="@style/zs_contact_us_fab"
+        android:id="@+id/request_list_create_new_ticket_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:accessibilityTraversalBefore="@id/request_list_scene_root"
+        tools:ignore="UnusedAttribute" />
+
+    <View
+        android:id="@+id/request_list_compat_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zs_request_toolbar_shadow_space"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/zs_request_toolbar_shadow" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
