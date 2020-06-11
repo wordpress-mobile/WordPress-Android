@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import kotlinx.android.synthetic.main.notifications_list_fragment_page.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -29,7 +30,6 @@ import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.push.GCMMessageHandler
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_NOTIFS_EMPTY_VIEW
 import org.wordpress.android.ui.RequestCodes
@@ -63,7 +63,6 @@ import javax.inject.Inject
 class NotificationsListFragmentPage : Fragment(),
         OnScrollToTopListener,
         DataLoadedListener {
-    private var mActionableEmptyView: ActionableEmptyView? = null
     private var mLinearLayoutManager: LinearLayoutManager? = null
     private var mNotesAdapter: NotesAdapter? = null
     private var mRecyclerView: RecyclerView? = null
@@ -130,7 +129,6 @@ class NotificationsListFragmentPage : Fragment(),
                     NotificationsListFragment.TAB_POSITION_ALL
             )
         }
-        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view)
         mLinearLayoutManager = LinearLayoutManager(activity)
         mRecyclerView = view.findViewById(R.id.notifications_list)
         mRecyclerView.setLayoutManager(mLinearLayoutManager)
@@ -274,8 +272,8 @@ class NotificationsListFragmentPage : Fragment(),
         }
 
     private fun hideEmptyView() {
-        if (isAdded && mActionableEmptyView != null) {
-            mActionableEmptyView!!.visibility = View.GONE
+        if (isAdded) {
+            actionable_empty_view.visibility = View.GONE
             mRecyclerView!!.visibility = View.VISIBLE
         }
     }
@@ -327,23 +325,23 @@ class NotificationsListFragmentPage : Fragment(),
         @StringRes descriptionResId: Int = 0,
         @StringRes buttonResId: Int = 0
     ) {
-        if (isAdded && mActionableEmptyView != null) {
-            mActionableEmptyView!!.visibility = View.VISIBLE
+        if (isAdded) {
+            actionable_empty_view.visibility = View.VISIBLE
             mRecyclerView!!.visibility = View.GONE
-            mActionableEmptyView!!.title.setText(titleResId)
+            actionable_empty_view.title.setText(titleResId)
             if (descriptionResId != 0) {
-                mActionableEmptyView!!.subtitle.setText(descriptionResId)
-                mActionableEmptyView!!.subtitle.visibility = View.VISIBLE
+                actionable_empty_view.subtitle.setText(descriptionResId)
+                actionable_empty_view.subtitle.visibility = View.VISIBLE
             } else {
-                mActionableEmptyView!!.subtitle.visibility = View.GONE
+                actionable_empty_view.subtitle.visibility = View.GONE
             }
             if (buttonResId != 0) {
-                mActionableEmptyView!!.button.setText(buttonResId)
-                mActionableEmptyView!!.button.visibility = View.VISIBLE
+                actionable_empty_view.button.setText(buttonResId)
+                actionable_empty_view.button.visibility = View.VISIBLE
             } else {
-                mActionableEmptyView!!.button.visibility = View.GONE
+                actionable_empty_view.button.visibility = View.GONE
             }
-            mActionableEmptyView!!.button.setOnClickListener { performActionForActiveFilter() }
+            actionable_empty_view.button.setOnClickListener { performActionForActiveFilter() }
         }
     }
 
@@ -384,7 +382,7 @@ class NotificationsListFragmentPage : Fragment(),
             }
             else -> showEmptyView(string.notifications_empty_list)
         }
-        mActionableEmptyView!!.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
+        actionable_empty_view.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }
 
     private fun showNewNotificationsBar() {
