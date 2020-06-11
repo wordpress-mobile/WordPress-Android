@@ -79,11 +79,11 @@ class CrashLogging @Inject constructor(
      * This doesn't generate a Sentry event – it just records it as context for any future crashes. To
      * generate a Sentry event, use [reportException].
      *
-     * @param[message] The message to log
+     * @param[throwable] The exception to log
      * @param[tag] An optional [AppLog] tag
      */
     @JvmOverloads
-    fun logException(tr: Throwable, tag: AppLog.T? = null) = this.log(tr.toString(), tag)
+    fun logException(throwable: Throwable, tag: AppLog.T? = null) = this.log(throwable.toString(), tag)
 
     /**
      * Send a message to Sentry as a new event
@@ -101,6 +101,7 @@ class CrashLogging @Inject constructor(
         val sentryId = Sentry.captureMessage(message)
         AppLog.d(T.UTILS, "Captured Sentry Event: $sentryId")
 
+        /// Reset the Sentry global object to how we found it – otherwise this data might leak into future events
         Sentry.removeExtra("tag")
         Sentry.removeTag("tag")
     }
@@ -108,12 +109,12 @@ class CrashLogging @Inject constructor(
     /**
      * Send an exception to Sentry as a new event
      *
-     * @param[message] The message to log
+     * @param[throwable] The exception to log
      * @param[tag] An optional [AppLog] tag
      * @param[message] An optional message string
      */
     @JvmOverloads
-    fun reportException(tr: Throwable, tag: AppLog.T? = null, message: String? = null) {
+    fun reportException(throwable: Throwable, tag: AppLog.T? = null, message: String? = null) {
         if (message != null) {
             Sentry.setExtra("message", message)
         }
@@ -123,9 +124,10 @@ class CrashLogging @Inject constructor(
             Sentry.setTag("tag", tag.toString())
         }
 
-        val sentryId = Sentry.captureException(tr)
+        val sentryId = Sentry.captureException(throwable)
         AppLog.d(T.UTILS, "Captured Sentry Event: $sentryId")
 
+        /// Reset the Sentry global object to how we found it – otherwise this data might leak into future events
         Sentry.removeExtra("tag")
         Sentry.removeTag("tag")
         Sentry.removeExtra("message")
