@@ -20,6 +20,15 @@
     <!-- Switch to attribute after dropping support for api 21-23 -->
     <color name="placeholder">#1AFFFFFF</color>
 
+    <!-- Override of Zendesk colors in Dark Mode -->
+    <color name="zs_request_list_white" tools:ignore="MissingDefaultResource">#222222</color>
+    <color name="zs_request_list_dark_text_color" tools:ignore="MissingDefaultResource">
+        @android:color/white
+    </color>
+    <color name="zs_request_list_light_text_color" tools:ignore="MissingDefaultResource">
+        @color/material_on_surface_emphasis_medium
+    </color>
+
     <!-- Stats -->
 
     <color name="stats_activity_very_low">@color/gray_80</color>

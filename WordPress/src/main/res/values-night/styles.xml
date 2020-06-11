@@ -43,9 +43,9 @@
             @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
-         <item name="bottomSheetDialogTheme">
-             @style/WordPress.BottomSheetDialogTheme
-         </item>
+        <item name="bottomSheetDialogTheme">
+            @style/WordPress.BottomSheetDialogTheme
+        </item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
@@ -122,6 +122,59 @@
 
     <style name="DividerHorizontal">
         <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+    <!-- Zendesk Styles Override for Dark Theme -->
+
+    <style name="ZendeskActivityDefaultTheme" parent="WordPress.NoActionBar">
+        <item name="colorPrimary">#282828</item>
+        <item name="snackbarButtonStyle">@style/ZendeskSdkTheme.Snackbar.Button</item>
+        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.RequestList.AvatarText" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.Request.Message.SystemMessage" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:lineSpacingExtra">8dp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.RequestList.Subject" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.RequestList.Title" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.Request.Date" parent="@style/TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Snackbar.Button" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/blue_30</item>
+    </style>
+
+    <style name="ZendeskSdkTheme.Light.Request.Dialog.Retry" parent="ZendeskSdkTheme.Light">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
 </resources>
