@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.notifications_list_fragment_page.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
-import org.wordpress.android.R
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -62,7 +61,6 @@ import javax.inject.Inject
 class NotificationsListFragmentPage : Fragment(),
         OnScrollToTopListener,
         DataLoadedListener {
-    private var mLinearLayoutManager: LinearLayoutManager? = null
     private var mNotesAdapter: NotesAdapter? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mIsAnimatingOutNewNotificationsBar = false
@@ -126,8 +124,7 @@ class NotificationsListFragmentPage : Fragment(),
                     NotificationsListFragment.TAB_POSITION_ALL
             )
         }
-        mLinearLayoutManager = LinearLayoutManager(activity)
-        notifications_list.layoutManager = mLinearLayoutManager
+        notifications_list.layoutManager = LinearLayoutManager(activity)
         mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
             hideNewNotificationsBar()
             fetchNotesFromRemote()
@@ -182,8 +179,9 @@ class NotificationsListFragmentPage : Fragment(),
             return
         }
         clearPendingNotificationsItemsOnUI()
-        if (mLinearLayoutManager!!.findFirstCompletelyVisibleItemPosition() > 0) {
-            mLinearLayoutManager!!.smoothScrollToPosition(notifications_list, null, 0)
+        val layoutManager = notifications_list.layoutManager as LinearLayoutManager
+        if (layoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
+            layoutManager.smoothScrollToPosition(notifications_list, null, 0)
         }
     }
 
