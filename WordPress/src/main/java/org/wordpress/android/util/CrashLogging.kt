@@ -100,7 +100,7 @@ class CrashLogging @Inject constructor(
         val sentryId = Sentry.captureMessage(message)
         AppLog.d(T.UTILS, "Captured Sentry Event: $sentryId")
 
-        /// Reset the Sentry global object to how we found it – otherwise this data might leak into future events
+        // Reset the Sentry global object to how we found it – otherwise this data might leak into future events
         Sentry.removeExtra("tag")
         Sentry.removeTag("tag")
     }
@@ -126,7 +126,7 @@ class CrashLogging @Inject constructor(
         val sentryId = Sentry.captureException(throwable)
         AppLog.d(T.UTILS, "Captured Sentry Event: $sentryId")
 
-        /// Reset the Sentry global object to how we found it – otherwise this data might leak into future events
+        // Reset the Sentry global object to how we found it – otherwise this data might leak into future events
         Sentry.removeExtra("tag")
         Sentry.removeTag("tag")
         Sentry.removeExtra("message")
