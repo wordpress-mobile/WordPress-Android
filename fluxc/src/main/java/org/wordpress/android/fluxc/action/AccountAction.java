@@ -71,6 +71,8 @@ public enum AccountAction implements IAction {
     UPDATE_SUBSCRIPTION_NOTIFICATION_POST,
     @Action
     FETCH_DOMAIN_CONTACT,
+    @Action
+    FETCH_AUTH_OPTIONS,
 
     // Remote responses
     @Action(payloadType = AccountRestPayload.class)
@@ -97,6 +99,8 @@ public enum AccountAction implements IAction {
     UPDATED_SUBSCRIPTION,
     @Action(payloadType = DomainContactPayload.class)
     FETCHED_DOMAIN_CONTACT,
+    @Action
+    FETCHED_AUTH_OPTIONS,
 
     // Local actions
     @Action(payloadType = AccountModel.class)
