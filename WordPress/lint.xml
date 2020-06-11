@@ -95,4 +95,9 @@
     <issue id="Typos" severity="error">
         <ignore regexp=".*\/values\-([a-z]|[A-Z]|\-){2,6}\/strings\.xml$"/>
     </issue>
+
+    <issue id="InvalidPackage">
+        <!-- zendesk_java_common references to java.awt, which is not available in Android-->
+        <ignore regexp="java.awt.*" />
+    </issue>
 </lint>
