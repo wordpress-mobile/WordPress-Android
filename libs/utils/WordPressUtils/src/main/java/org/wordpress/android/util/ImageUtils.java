@@ -41,6 +41,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class ImageUtils {
     public static int[] getImageSize(Uri uri, Context context) {
@@ -609,7 +610,7 @@ public class ImageUtils {
      * @param videoPath The path to the video on internet
      * @return the path to the picture on disk
      */
-    public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth) {
+    public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth, Map<String, String> headers) {
         if (TextUtils.isEmpty(videoPath) || maxWidth <= 0) {
             return null;
         }
@@ -625,7 +626,11 @@ public class ImageUtils {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Bitmap bitmap = null;
         try {
-            mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+            if (headers != null) {
+                mediaMetadataRetriever.setDataSource(videoPath, headers);
+            } else {
+                mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
+            }
             bitmap = mediaMetadataRetriever.getFrameAtTime();
         } catch (IllegalArgumentException e) {
             AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);

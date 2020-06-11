@@ -67,7 +67,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'org.wordpress:utils:1.22'
+    // TODO change this back once utils library version gets bumped and published to bintray
+     // implementation 'org.wordpress:utils:1.22'
+    implementation (project(':libs:utils:WordPressUtils')) {
+
+    }
 
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
         exclude group: "com.android.volley"

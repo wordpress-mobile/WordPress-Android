@@ -209,7 +209,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
                 mock<MediaUtilsWrapper> {
                     on { isVideoMimeType(anyOrNull()) }.thenReturn(resultForIsVideoMimeType)
                     on { getRealPathFromURI(any()) }.thenReturn("")
-                    on { getVideoThumbnail(any()) }.thenReturn(resultForGetVideoThumbnail)
+                    on { getVideoThumbnail(any(), any()) }.thenReturn(resultForGetVideoThumbnail)
                     resultForGetRealPath?.let {
                         on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
                                 resultForGetRealPath.second
