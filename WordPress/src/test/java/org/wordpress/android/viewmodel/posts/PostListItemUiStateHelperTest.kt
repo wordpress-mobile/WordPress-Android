@@ -908,7 +908,7 @@ class PostListItemUiStateHelperTest {
     }
 
     @Test
-    fun `post status is dispalyed when isSearch == true`() {
+    fun `post status is displayed when isSearch == true`() {
         // Arrange
         val state = createPostListItemUiState(
                 post = createPostModel(status = POST_STATE_PRIVATE),
