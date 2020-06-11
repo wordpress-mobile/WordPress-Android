@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- override of a Zendesk layout for Dark Mode support -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/request_dialog_retry_retry"
+        style="@style/ZendeskSdkTheme.Light.Request.Dialog.Retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:importantForAccessibility="no"
+            android:scaleX="@integer/zs_request_rtl_support_scale_x"
+            android:tint="?attr/wpColorOnSurfaceMedium"
+            app:srcCompat="@drawable/zs_request_ic_retry"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="56dp"
+            android:gravity="start"
+            android:text="@string/request_retry_dialog_retry"
+            android:textAppearance="?attr/textAppearanceBody1" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/request_dialog_retry_delete"
+        style="@style/ZendeskSdkTheme.Light.Request.Dialog.Retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:importantForAccessibility="no"
+            android:tint="?attr/wpColorOnSurfaceMedium"
+            app:srcCompat="@drawable/zs_request_ic_delete"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="56dp"
+            android:gravity="start"
+            android:text="@string/request_retry_dialog_delete_message"
+            android:textAppearance="?attr/textAppearanceBody1" />
+
+    </FrameLayout>
+
+</LinearLayout>
