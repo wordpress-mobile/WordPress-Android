@@ -58,6 +58,12 @@
             android:text="@string/web_preview_desktop"
             android:textColor="?attr/colorOnPrimarySurface" />
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/snackbar_anchor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/navbar_container" />
+
         <LinearLayout
             android:id="@+id/navbar_container"
             android:layout_width="match_parent"
@@ -117,7 +123,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/appbar"
-        android:background="@color/background_default"
         android:visibility="gone"
         app:aevButton="@string/retry"
         app:aevImage="@drawable/img_illustration_cloud_off_152dp"

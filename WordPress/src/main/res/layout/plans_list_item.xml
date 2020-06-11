@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/activity_log_icon_margin"
         android:importantForAccessibility="no"
-        tools:src="@drawable/bg_oval_neutral_30_plans_32dp" />
+        tools:src="@drawable/bg_oval_placholder_plans_32dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

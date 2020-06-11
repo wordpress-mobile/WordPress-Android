@@ -70,7 +70,6 @@ ENV["HAS_ALPHA_VERSION"]="true"
     localize_gutenberg(skip_module_update: true)
     localize_libs()
     ensure_git_status_clean()
-    android_tag_build()
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
 
@@ -92,6 +91,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     files = {
       release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
+      release_note_short: prj_folder + "/WordPress/metadata/release_notes_short.txt",
       play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
       play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
       play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",

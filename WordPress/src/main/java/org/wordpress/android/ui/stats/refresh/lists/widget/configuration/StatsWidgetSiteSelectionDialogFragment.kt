@@ -22,7 +22,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StatsSiteSelectionViewModel
     private fun buildView(): View? {
-        val rootView = activity!!.layoutInflater.inflate(R.layout.stats_widget_site_selector, null)
+        val rootView = requireActivity().layoutInflater.inflate(R.layout.stats_widget_site_selector, null)
         val recyclerView = rootView.findViewById<RecyclerView>(R.id.recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = StatsWidgetSiteAdapter(imageManager)
@@ -36,7 +36,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         alertDialogBuilder.setNegativeButton(R.string.cancel) { _, _ -> }
         alertDialogBuilder.setCancelable(true)
 
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
         viewModel.sites.observe(this, Observer {
             (requireDialog().recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())

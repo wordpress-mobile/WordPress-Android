@@ -35,6 +35,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
+import java.util.Locale
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -46,11 +47,12 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
         private val onItemTapped: (Page) -> Unit,
         private val imageManager: ImageManager? = null,
         private val isSitePhotonCapable: Boolean = false,
+        private val isPrivateAtSite: Boolean = false,
         private val uiHelper: UiHelpers
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
-        private val time = itemView.findViewById<TextView>(R.id.time_posted)
+        private val pageSubtitle = itemView.findViewById<TextView>(R.id.page_subtitle)
         private val labels = itemView.findViewById<TextView>(R.id.labels)
         private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
         private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
@@ -79,8 +81,19 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                     page.title
 
                 val date = if (page.date == Date(0)) Date() else page.date
-                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
+                val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
                         .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
+                val subtitle = page.subtitle
+                pageSubtitle.text = if (subtitle == null) {
+                    stringDate
+                } else {
+                    String.format(
+                            Locale.getDefault(),
+                            parent.context.getString(R.string.pages_item_subtitle),
+                            stringDate,
+                            parent.context.getString(subtitle)
+                    )
+                }
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
                         .joinToString(separator = " · ")
@@ -148,7 +161,9 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 imageManager?.cancelRequestAndClearImageView(featuredImage)
             } else if (imageUrl.startsWith("http")) {
                 featuredImage.visibility = View.VISIBLE
-                val photonUrl = ReaderUtils.getResizedImageUrl(imageUrl, imageSize, imageSize, !isSitePhotonCapable)
+                val photonUrl = ReaderUtils.getResizedImageUrl(
+                        imageUrl, imageSize, imageSize, !isSitePhotonCapable, isPrivateAtSite
+                )
                 imageManager?.load(featuredImage, ImageType.PHOTO, photonUrl, ScaleType.CENTER_CROP)
             } else {
                 val bmp = ImageUtils.getWPImageSpanThumbnailFromFilePath(featuredImage.context, imageUrl, imageSize)

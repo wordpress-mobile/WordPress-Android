@@ -83,7 +83,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
 
         viewModel.pages.observeForever { result.add(it) }
 
@@ -109,7 +109,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
 
         viewModel.pages.observeForever { result.add(it) }
 
@@ -154,7 +154,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
 
         viewModel.pages.observeForever { result.add(it) }
 
@@ -202,7 +202,7 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.start(PUBLISHED, pagesViewModel)
 
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
 
         viewModel.pages.observeForever { result.add(it) }
 
@@ -236,7 +236,7 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
         viewModel.pages.observeForever { result.add(it) }
 
         // Act
@@ -261,7 +261,7 @@ class PageListViewModelTest : BaseUnitTest() {
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
         viewModel.pages.observeForever { result.add(it) }
 
         // Act
@@ -276,13 +276,15 @@ class PageListViewModelTest : BaseUnitTest() {
         // Arrange
         val actions = setOf(mock<PageItem.Action>())
 
-        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull())).thenReturn(actions)
+        whenever(pageListItemActionsUseCase.setupPageActions(anyOrNull(), anyOrNull(), anyOrNull(), any())).thenReturn(
+                actions
+        )
 
         val pages = MutableLiveData<List<PageModel>>()
         whenever(pagesViewModel.pages).thenReturn(pages)
 
         viewModel.start(PUBLISHED, pagesViewModel)
-        val result = mutableListOf<Pair<List<PageItem>, Boolean>>()
+        val result = mutableListOf<Triple<List<PageItem>, Boolean, Boolean>>()
         viewModel.pages.observeForever { result.add(it) }
 
         // Act

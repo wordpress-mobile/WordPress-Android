@@ -30,14 +30,15 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
         )
 
         when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                     .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 
         val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
-        val view = activity!!.layoutInflater.inflate(R.layout.post_notification_type_selector, null) as RadioGroup
+        val view = requireActivity().layoutInflater.inflate(R.layout.post_notification_type_selector, null)
+                as RadioGroup
         alertDialogBuilder.setView(view)
         val notificationTime = arguments?.getString(ARG_NOTIFICATION_SCHEDULE_TIME)?.let {
             SchedulingReminderModel.Period.valueOf(
@@ -75,7 +76,7 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity!!.applicationContext as WordPress).component().inject(this)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     companion object {

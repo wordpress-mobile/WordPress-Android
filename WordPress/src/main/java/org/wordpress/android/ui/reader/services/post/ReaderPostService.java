@@ -55,16 +55,18 @@ public class ReaderPostService extends Service implements ServiceCompletionListe
             action = UpdateAction.REQUEST_NEWER;
         }
 
-        EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
 
         if (intent.hasExtra(ARG_TAG)) {
             ReaderTag tag = (ReaderTag) intent.getSerializableExtra(ARG_TAG);
+            EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action, tag));
             mReaderPostLogic.performTask(null, action, tag, -1, -1);
         } else if (intent.hasExtra(ARG_BLOG_ID)) {
             long blogId = intent.getLongExtra(ARG_BLOG_ID, 0);
+            EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
             mReaderPostLogic.performTask(null, action, null, blogId, -1);
         } else if (intent.hasExtra(ARG_FEED_ID)) {
             long feedId = intent.getLongExtra(ARG_FEED_ID, 0);
+            EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
             mReaderPostLogic.performTask(null, action, null, -1, feedId);
         }
 

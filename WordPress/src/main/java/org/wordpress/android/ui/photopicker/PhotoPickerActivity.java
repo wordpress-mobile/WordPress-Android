@@ -21,6 +21,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.posts.FeaturedImageHelper;
 import org.wordpress.android.ui.posts.FeaturedImageHelper.EnqueueFeaturedImageResult;
+import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ListUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class PhotoPickerActivity extends LocaleAwareActivity
@@ -50,7 +53,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     public static final String EXTRA_MEDIA_URIS = "media_uris";
     public static final String EXTRA_MEDIA_ID = "media_id";
     public static final String EXTRA_MEDIA_QUEUED = "media_queued";
-    public static final String CHILD_REQUEST_CODE = "child_request_code";
 
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
     public static final String EXTRA_MEDIA_SOURCE = "media_source";
@@ -69,6 +71,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Inject Dispatcher mDispatcher;
     @Inject MediaStore mMediaStore;
     @Inject FeaturedImageHelper mFeaturedImageHelper;
+    @Inject ImageEditorTracker mImageEditorTracker;
 
     public enum PhotoPickerMediaSource {
         ANDROID_CAMERA,
@@ -123,6 +126,17 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                                 .commitAllowingStateLoss();
         } else {
             fragment.setPhotoPickerListener(this);
+        }
+        updateTitle(mBrowserType, actionBar);
+    }
+
+    private void updateTitle(MediaBrowserType browserType, ActionBar actionBar) {
+        if (browserType.isImagePicker() && browserType.isVideoPicker()) {
+            actionBar.setTitle(R.string.photo_picker_photo_or_video_title);
+        } else if (browserType.isVideoPicker()) {
+            actionBar.setTitle(R.string.photo_picker_video_title);
+        } else {
+            actionBar.setTitle(R.string.photo_picker_title);
         }
     }
 
@@ -179,12 +193,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                     doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
                 }
                 break;
-            // user took a photo with the device camera
-            case RequestCodes.TAKE_VIDEO:
-                data.putExtra(CHILD_REQUEST_CODE, RequestCodes.TAKE_VIDEO);
-                setResult(RESULT_OK, data);
-                finish();
-                break;
             case RequestCodes.TAKE_PHOTO:
                 try {
                     WPMediaUtils.scanMediaFile(this, mMediaCapturePath);
@@ -210,6 +218,12 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 if (data != null && data.hasExtra(EXTRA_MEDIA_ID)) {
                     long mediaId = data.getLongExtra(EXTRA_MEDIA_ID, 0);
                     doMediaIdSelected(mediaId, PhotoPickerMediaSource.STOCK_MEDIA_PICKER);
+                }
+                break;
+            case IMAGE_EDITOR_EDIT_IMAGE:
+                if (data != null && data.hasExtra(PreviewImageFragment.ARG_EDIT_IMAGE_DATA)) {
+                    List<Uri> uris = WPMediaUtils.retrieveImageEditorResult(data);
+                    doMediaUrisSelected(uris, PhotoPickerMediaSource.APP_PICKER);
                 }
                 break;
         }

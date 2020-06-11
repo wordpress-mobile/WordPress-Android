@@ -25,9 +25,9 @@ class PostDatePickerDialogFragment : DialogFragment() {
         )
 
         when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                     .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 
@@ -63,7 +63,7 @@ class PostDatePickerDialogFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        (activity!!.applicationContext as WordPress).component().inject(this)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
     companion object {
