@@ -58,14 +58,14 @@ import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
 class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoadedListener {
-    private var mNotesAdapter: NotesAdapter? = null
-    private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var mIsAnimatingOutNewNotificationsBar = false
-    private var mShouldRefreshNotifications = false
-    private var mTabPosition = 0
+    private var notesAdapter: NotesAdapter? = null
+    private var swipeToRefreshHelper: SwipeToRefreshHelper? = null
+    private var isAnimatingOutNewNotificationsBar = false
+    private var shouldRefreshNotifications = false
+    private var tabPosition = 0
 
-    @Inject lateinit var mAccountStore: AccountStore
-    @Inject lateinit var mGCMMessageHandler: GCMMessageHandler
+    @Inject lateinit var accountStore: AccountStore
+    @Inject lateinit var gcmMessageHandler: GCMMessageHandler
 
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
@@ -75,21 +75,21 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         super.onActivityCreated(savedInstanceState)
         notifications_list.adapter = createOrGetNotesAdapter()
         if (savedInstanceState != null) {
-            mTabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
+            tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
-        when (mTabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> mNotesAdapter!!.setFilter(FILTER_ALL)
-            NotificationsListFragment.TAB_POSITION_COMMENT -> mNotesAdapter!!.setFilter(FILTER_COMMENT)
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> mNotesAdapter!!.setFilter(FILTER_FOLLOW)
-            NotificationsListFragment.TAB_POSITION_LIKE -> mNotesAdapter!!.setFilter(FILTER_LIKE)
-            NotificationsListFragment.TAB_POSITION_UNREAD -> mNotesAdapter!!.setFilter(FILTER_UNREAD)
-            else -> mNotesAdapter!!.setFilter(FILTER_ALL)
+        when (tabPosition) {
+            NotificationsListFragment.TAB_POSITION_ALL -> notesAdapter!!.setFilter(FILTER_ALL)
+            NotificationsListFragment.TAB_POSITION_COMMENT -> notesAdapter!!.setFilter(FILTER_COMMENT)
+            NotificationsListFragment.TAB_POSITION_FOLLOW -> notesAdapter!!.setFilter(FILTER_FOLLOW)
+            NotificationsListFragment.TAB_POSITION_LIKE -> notesAdapter!!.setFilter(FILTER_LIKE)
+            NotificationsListFragment.TAB_POSITION_UNREAD -> notesAdapter!!.setFilter(FILTER_UNREAD)
+            else -> notesAdapter!!.setFilter(FILTER_ALL)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == RequestCodes.NOTE_DETAIL) {
-            mShouldRefreshNotifications = false
+            shouldRefreshNotifications = false
             if (resultCode == Activity.RESULT_OK) {
                 val noteId = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)
                 val newStatus = data?.getStringExtra(NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA)
@@ -103,16 +103,16 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mShouldRefreshNotifications = true
+        shouldRefreshNotifications = true
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(layout.notifications_list_fragment_page, container, false)
         arguments?.let{
-            mTabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
+            tabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
         notifications_list.layoutManager = LinearLayoutManager(activity)
-        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
+        swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
             hideNewNotificationsBar()
             fetchNotesFromRemote()
         }
@@ -122,9 +122,9 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onDestroyView() {
-        mSwipeToRefreshHelper = null
+        swipeToRefreshHelper = null
         notifications_list.adapter = null
-        mNotesAdapter = null
+        notesAdapter = null
         super.onDestroyView()
     }
 
@@ -141,23 +141,23 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onPause() {
         super.onPause()
-        mShouldRefreshNotifications = true
+        shouldRefreshNotifications = true
     }
 
     override fun onResume() {
         super.onResume()
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (mAccountStore.hasAccessToken()) {
+        if (accountStore.hasAccessToken()) {
             createOrGetNotesAdapter().reloadNotesFromDBAsync()
-            if (mShouldRefreshNotifications) {
+            if (shouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(KEY_TAB_POSITION, mTabPosition)
+        outState.putInt(KEY_TAB_POSITION, tabPosition)
         super.onSaveInstanceState(outState)
     }
 
@@ -199,7 +199,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
                     noteId,
                     false,
                     null,
-                    mNotesAdapter!!.currentFilter,
+                    notesAdapter!!.currentFilter,
                     false
             )
         }
@@ -216,15 +216,15 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         NotificationsActions.updateNotesSeenTimestamp()
-        Thread(Runnable { mGCMMessageHandler.removeAllNotifications(activity) }).start()
+        Thread(Runnable { gcmMessageHandler.removeAllNotifications(activity) }).start()
     }
 
     private fun fetchNotesFromRemote() {
-        if (!isAdded || mNotesAdapter == null) {
+        if (!isAdded || notesAdapter == null) {
             return
         }
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            mSwipeToRefreshHelper?.isRefreshing = false
+            swipeToRefreshHelper?.isRefreshing = false
             return
         }
         NotificationsUpdateServiceStarter.startService(activity)
@@ -241,16 +241,16 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     private fun hideNewNotificationsBar() {
-        if (!isAdded || !isNewNotificationsBarShowing || mIsAnimatingOutNewNotificationsBar) {
+        if (!isAdded || !isNewNotificationsBarShowing || isAnimatingOutNewNotificationsBar) {
             return
         }
-        mIsAnimatingOutNewNotificationsBar = true
+        isAnimatingOutNewNotificationsBar = true
         val listener: AnimationListener = object : AnimationListener {
             override fun onAnimationStart(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
                 if (isAdded) {
                     layout_new_notificatons.visibility = View.GONE
-                    mIsAnimatingOutNewNotificationsBar = false
+                    isAnimatingOutNewNotificationsBar = false
                 }
             }
 
@@ -266,11 +266,11 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (!isAdded) {
             return
         }
-        if (!mAccountStore.hasAccessToken()) {
+        if (!accountStore.hasAccessToken()) {
             ActivityLauncher.showSignInForResult(activity)
             return
         }
-        if (mTabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
+        if (tabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
             ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW)
         } else if (activity is WPMainActivity) {
             (activity as WPMainActivity?)!!.setReaderPageActive()
@@ -304,10 +304,10 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     // Show different empty view message and action button based on selected tab.
     private fun showEmptyViewForCurrentFilter() {
-        if (!mAccountStore.hasAccessToken()) {
+        if (!accountStore.hasAccessToken()) {
             return
         }
-        when (mTabPosition) {
+        when (tabPosition) {
             NotificationsListFragment.TAB_POSITION_ALL -> showEmptyView(
                     string.notifications_empty_all,
                     string.notifications_empty_action_all,
@@ -377,7 +377,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     private fun createOrGetNotesAdapter(): NotesAdapter {
-        return mNotesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
+        return notesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
             this.setOnNoteClickListener(mOnNoteClickListener)
         }
     }
@@ -393,7 +393,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
                             )
                     val note = NotificationsTable.getNoteById(event.noteId)
                     if (note != null) {
-                        mNotesAdapter!!.replaceNote(note)
+                        notesAdapter!!.replaceNote(note)
                     }
                 }
         ) {
@@ -419,14 +419,14 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (!isAdded) {
             return
         }
-        mSwipeToRefreshHelper?.isRefreshing = false
-        mNotesAdapter!!.addAll(event.notes, true)
+        swipeToRefreshHelper?.isRefreshing = false
+        notesAdapter!!.addAll(event.notes, true)
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {
-            mSwipeToRefreshHelper?.isRefreshing = false
+            swipeToRefreshHelper?.isRefreshing = false
         }
     }
 
