@@ -56,7 +56,6 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.AppRatingDialog.incrementInteractions
 import javax.inject.Inject
 
@@ -66,7 +65,6 @@ class NotificationsListFragmentPage : Fragment(),
     private var mLinearLayoutManager: LinearLayoutManager? = null
     private var mNotesAdapter: NotesAdapter? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
-    private var mNewNotificationsBar: View? = null
     private var mIsAnimatingOutNewNotificationsBar = false
     private var mShouldRefreshNotifications = false
     private var mTabPosition = 0
@@ -134,9 +132,8 @@ class NotificationsListFragmentPage : Fragment(),
             hideNewNotificationsBar()
             fetchNotesFromRemote()
         }
-        mNewNotificationsBar = view.findViewById(R.id.layout_new_notificatons)
-        mNewNotificationsBar.setVisibility(View.GONE)
-        mNewNotificationsBar.setOnClickListener(OnClickListener { onScrollToTop() })
+        layout_new_notificatons.setVisibility(View.GONE)
+        layout_new_notificatons.setOnClickListener(OnClickListener { onScrollToTop() })
         return view
     }
 
@@ -284,18 +281,18 @@ class NotificationsListFragmentPage : Fragment(),
             override fun onAnimationStart(animation: Animation) {}
             override fun onAnimationEnd(animation: Animation) {
                 if (isAdded) {
-                    mNewNotificationsBar!!.visibility = View.GONE
+                    layout_new_notificatons.visibility = View.GONE
                     mIsAnimatingOutNewNotificationsBar = false
                 }
             }
 
             override fun onAnimationRepeat(animation: Animation) {}
         }
-        AniUtils.startAnimation(mNewNotificationsBar, anim.notifications_bottom_bar_out, listener)
+        AniUtils.startAnimation(layout_new_notificatons, anim.notifications_bottom_bar_out, listener)
     }
 
     private val isNewNotificationsBarShowing: Boolean
-        private get() = mNewNotificationsBar != null && mNewNotificationsBar!!.visibility == View.VISIBLE
+        private get() = layout_new_notificatons != null && layout_new_notificatons.visibility == View.VISIBLE
 
     private fun performActionForActiveFilter() {
         if (!isAdded) {
@@ -386,8 +383,8 @@ class NotificationsListFragmentPage : Fragment(),
         if (!isAdded || isNewNotificationsBarShowing) {
             return
         }
-        AniUtils.startAnimation(mNewNotificationsBar, anim.notifications_bottom_bar_in)
-        mNewNotificationsBar!!.visibility = View.VISIBLE
+        AniUtils.startAnimation(layout_new_notificatons, anim.notifications_bottom_bar_in)
+        layout_new_notificatons.visibility = View.VISIBLE
     }
 
     private fun showNewUnseenNotificationsUI() {
