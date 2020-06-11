@@ -12,6 +12,11 @@ import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeBu
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeElementBuilder
 import java.lang.reflect.Type
 
+const val MAP_KEY_ELEMENT_DISPLAY_NAME: String = "name"
+const val MAP_KEY_ELEMENT_SLUG: String = "slug"
+const val MAP_KEY_ELEMENT_COLORS: String = "colors"
+const val MAP_KEY_ELEMENT_GRADIENTS: String = "gradients"
+
 data class EditorTheme(
     @SerializedName("theme_supports") val themeSupport: EditorThemeSupport,
     val stylesheet: String?,
@@ -44,8 +49,6 @@ data class EditorThemeSupport(
     @SerializedName("editor-gradient-presets")
     val gradients: List<EditorThemeElement>?
 ) {
-    private val MAP_KEY_ELEMENT_COLORS = "colors"
-    private val MAP_KEY_ELEMENT_GRADIENTS = "gradients"
     fun toBundle(): Bundle {
         val bundle = Bundle()
 
@@ -67,9 +70,6 @@ data class EditorThemeElement(
     val color: String?,
     val gradient: String?
 ) {
-    private val MAP_KEY_ELEMENT_DISPLAY_NAME = "name"
-    private val MAP_KEY_ELEMENT_SLUG = "slug"
-
     fun toBundle(): Bundle {
         val bundle = Bundle()
         bundle.putString(MAP_KEY_ELEMENT_DISPLAY_NAME, name)
