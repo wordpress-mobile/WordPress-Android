@@ -160,6 +160,8 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="ZendeskRequestListButton" parent="@style/WordPress.Button.Primary" />
+
     <style name="ZendeskSdkTheme.Snackbar.Button" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/blue_30</item>
     </style>
