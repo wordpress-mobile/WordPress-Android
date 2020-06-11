@@ -71,17 +71,18 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        notifications_list.adapter = createOrGetNotesAdapter()
+        val adapter = createOrGetNotesAdapter()
+        notifications_list.adapter = adapter
         if (savedInstanceState != null) {
             tabPosition = savedInstanceState.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
         when (tabPosition) {
-            NotificationsListFragment.TAB_POSITION_ALL -> notesAdapter!!.setFilter(FILTER_ALL)
-            NotificationsListFragment.TAB_POSITION_COMMENT -> notesAdapter!!.setFilter(FILTER_COMMENT)
-            NotificationsListFragment.TAB_POSITION_FOLLOW -> notesAdapter!!.setFilter(FILTER_FOLLOW)
-            NotificationsListFragment.TAB_POSITION_LIKE -> notesAdapter!!.setFilter(FILTER_LIKE)
-            NotificationsListFragment.TAB_POSITION_UNREAD -> notesAdapter!!.setFilter(FILTER_UNREAD)
-            else -> notesAdapter!!.setFilter(FILTER_ALL)
+            NotificationsListFragment.TAB_POSITION_ALL -> adapter.setFilter(FILTER_ALL)
+            NotificationsListFragment.TAB_POSITION_COMMENT -> adapter.setFilter(FILTER_COMMENT)
+            NotificationsListFragment.TAB_POSITION_FOLLOW -> adapter.setFilter(FILTER_FOLLOW)
+            NotificationsListFragment.TAB_POSITION_LIKE -> adapter.setFilter(FILTER_LIKE)
+            NotificationsListFragment.TAB_POSITION_UNREAD -> adapter.setFilter(FILTER_UNREAD)
+            else -> adapter.setFilter(FILTER_ALL)
         }
     }
 
@@ -110,7 +111,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let{
+        arguments?.let {
             tabPosition = it.getInt(KEY_TAB_POSITION, NotificationsListFragment.TAB_POSITION_ALL)
         }
         notifications_list.layoutManager = LinearLayoutManager(activity)
@@ -150,7 +151,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         if (accountStore.hasAccessToken()) {
-            createOrGetNotesAdapter().reloadNotesFromDBAsync()
+            notesAdapter!!.reloadNotesFromDBAsync()
             if (shouldRefreshNotifications) {
                 fetchNotesFromRemote()
             }
@@ -195,14 +196,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
             // Open the latest version of this note in case it has changed, which can happen if the note was tapped
             // from the list after it was updated by another fragment (such as NotificationsDetailListFragment).
-            openNoteForReply(
-                    activity,
-                    noteId,
-                    false,
-                    null,
-                    notesAdapter!!.currentFilter,
-                    false
-            )
+            openNoteForReply(activity, noteId, false, null, notesAdapter!!.currentFilter, false)
         }
     }
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
@@ -274,7 +268,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (tabPosition == NotificationsListFragment.TAB_POSITION_UNREAD) {
             ActivityLauncher.addNewPostForResult(activity, selectedSite, false, POST_FROM_NOTIFS_EMPTY_VIEW)
         } else if (activity is WPMainActivity) {
-            (activity as WPMainActivity?)!!.setReaderPageActive()
+            (requireActivity() as WPMainActivity).setReaderPageActive()
         }
     }
 
@@ -409,7 +403,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         if (!isAdded) {
             return
         }
-        createOrGetNotesAdapter().reloadNotesFromDBAsync()
+        notesAdapter!!.reloadNotesFromDBAsync()
         if (event.hasUnseenNotes) {
             showNewUnseenNotificationsUI()
         }
@@ -460,8 +454,12 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         }
 
         fun openNoteForReply(
-            activity: Activity?, noteId: String?, shouldShowKeyboard: Boolean, replyText: String?,
-            filter: FILTERS?, isTappedFromPushNotification: Boolean
+            activity: Activity?,
+            noteId: String?,
+            shouldShowKeyboard: Boolean,
+            replyText: String?,
+            filter: FILTERS?,
+            isTappedFromPushNotification: Boolean
         ) {
             if (noteId == null || activity == null || activity.isFinishing) {
                 return
