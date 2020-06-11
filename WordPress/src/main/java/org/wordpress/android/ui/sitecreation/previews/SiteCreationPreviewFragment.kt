@@ -61,6 +61,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     private lateinit var viewModel: SitePreviewViewModel
 
+    private var animatorSet: AnimatorSet? = null
+
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
 
@@ -212,11 +214,16 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             override fun onAnimationStart(animation: Animator) {
                 progress_text.text = newText
             }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                super.onAnimationEnd(animation)
+                animatorSet = null
+            }
         })
         // Start the fadein animation right after the view fades out
         fadeIn.startDelay = animationDuration.toMillis(progress_text_layout.context)
 
-        AnimatorSet().apply {
+        animatorSet = AnimatorSet().apply {
             playSequentially(fadeOut, fadeIn)
             start()
         }
@@ -238,6 +245,13 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
             // we need to manually clear the SiteCreationService state so we don't for example receive sticky events
             // from the previous run of the SiteCreation flow.
             SiteCreationService.clearSiteCreationServiceState()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (animatorSet?.isRunning == true) {
+            animatorSet?.cancel()
         }
     }
 
