@@ -391,7 +391,8 @@ class PageListViewModelTest : BaseUnitTest() {
 
         viewModel.pages.observeForever { pagesResult.add(it) }
 
-        val pageModels = (0..1).map { buildPageModel(it, authorId = it.toLong(), authorDisplayName = authorDisplayName) }
+        val pageModels = (0..1).map { buildPageModel(it, authorId = it.toLong(),
+                authorDisplayName = authorDisplayName) }
         pages.value = pageModels
 
         authorFilterState.value = PagesAuthorFilterUIState(
@@ -434,7 +435,6 @@ class PageListViewModelTest : BaseUnitTest() {
         assertNull(pageItem.author)
     }
 
-
     private fun buildPageModel(
         id: Int,
         date: Date = Date(0),
@@ -447,7 +447,7 @@ class PageListViewModelTest : BaseUnitTest() {
         val title = pageTitle ?: if (id < 10) "Title 0$id" else "Title $id"
         return PageModel(PostModel().apply { this.setId(id)
                 this.setAuthorId(authorId ?: 0)
-                this.setAuthorDisplayName(authorDisplayName)},
+                this.setAuthorDisplayName(authorDisplayName) },
                 site, id, title, status, date, false, id.toLong(),
                 parent, id.toLong())
     }
