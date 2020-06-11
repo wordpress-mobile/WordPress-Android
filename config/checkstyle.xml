@@ -154,7 +154,7 @@
         </module>
 
         <module name="ImportOrder">
-            <property name="groups" value="android,com,junit,net,org,java,javax"/>
+            <property name="groups" value="android,androidx,com,junit,net,org,java,javax"/>
             <property name="ordered" value="false"/>
             <property name="separated" value="true"/>
             <property name="option" value="bottom"/>

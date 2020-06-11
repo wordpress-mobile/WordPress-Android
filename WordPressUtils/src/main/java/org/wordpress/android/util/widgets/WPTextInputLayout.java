@@ -1,10 +1,11 @@
 package org.wordpress.android.util.widgets;
 
 import android.content.Context;
-import android.support.design.widget.TextInputLayout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.EditText;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.wordpress.android.util.R;
 
@@ -38,7 +39,7 @@ public class WPTextInputLayout extends TextInputLayout {
 
         // remove hardcoded side padding of the error view
         if (enabled) {
-            View errorView = findViewById(android.support.design.R.id.textinput_error);
+            View errorView = findViewById(com.google.android.material.R.id.textinput_error);
             if (errorView != null && errorView.getParent() != null) {
                 ((View) errorView.getParent())
                         .setPadding(0, errorView.getPaddingTop(), 0, errorView.getPaddingBottom());

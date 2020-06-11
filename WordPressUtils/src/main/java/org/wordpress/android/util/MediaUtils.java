@@ -1,7 +1,6 @@
 package org.wordpress.android.util;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -13,9 +12,10 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.util.AppLog.T;
 
@@ -105,11 +105,11 @@ public class MediaUtils {
                || state.equalsIgnoreCase("failed");
     }
 
-    public static Uri getLastRecordedVideoUri(Activity activity) {
+    public static Uri getLastRecordedVideoUri(Context appContext) {
         String[] proj = {MediaStore.Video.Media._ID};
         Uri contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         String sortOrder = MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC";
-        CursorLoader loader = new CursorLoader(activity, contentUri, proj, null, null, sortOrder);
+        CursorLoader loader = new CursorLoader(appContext, contentUri, proj, null, null, sortOrder);
         Cursor cursor = loader.loadInBackground();
         cursor.moveToFirst();
         long value = cursor.getLong(0);
@@ -170,7 +170,8 @@ public class MediaUtils {
     }
 
     public static @Nullable String getFilenameFromURI(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        Cursor cursor = context.getContentResolver().query(uri, new String[]{OpenableColumns.DISPLAY_NAME},
+                null, null, null);
         try {
             String result = null;
             if (cursor != null && cursor.moveToFirst()) {
@@ -188,6 +189,11 @@ public class MediaUtils {
         }
     }
 
+    /*
+     * Some media providers (eg. Google Photos) give us a limited access to media files just so we can copy them and
+     * then they revoke the access. Copying these files must be performed on the UI thread, otherwise the access might
+     * be revoked before the action completes. See https://github.com/wordpress-mobile/WordPress-Android/issues/5818
+     */
     public static Uri downloadExternalMedia(Context context, Uri imageUri) {
         if (context == null || imageUri == null) {
             return null;
@@ -436,16 +442,31 @@ public class MediaUtils {
                 }
 
                 // TODO handle non-primary volumes
-            } else if (isDownloadsDocument(uri)) { // DownloadsProvider
+            } else if (isDownloadsDocument(uri)) {
                 final String id = DocumentsContract.getDocumentId(uri);
-                try {
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-                    return getDataColumn(context, contentUri, null, null);
-                } catch (NumberFormatException e) {
-                    AppLog.e(AppLog.T.UTILS, "Can't read the path for file with ID " + id);
-                    return null;
+
+                if (id != null && id.startsWith("raw:")) {
+                    return id.substring(4);
                 }
+
+                String[] contentUriPrefixesToTry = new String[]{
+                        "content://downloads/public_downloads",
+                        "content://downloads/my_downloads",
+                        "content://downloads/all_downloads"
+                };
+
+                for (String contentUriPrefix : contentUriPrefixesToTry) {
+                    Uri contentUri = ContentUris.withAppendedId(Uri.parse(contentUriPrefix), Long.valueOf(id));
+                    try {
+                        String path = getDataColumn(context, contentUri, null, null);
+                        if (path != null) {
+                            return path;
+                        }
+                    } catch (Exception e) {
+                        AppLog.e(AppLog.T.UTILS, "Error reading _data column for URI: " + contentUri, e);
+                    }
+                }
+                return downloadExternalMedia(context, uri).getPath();
             } else if (isMediaDocument(uri)) { // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");

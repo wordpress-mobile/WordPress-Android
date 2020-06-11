@@ -2,6 +2,9 @@ package org.wordpress.android.util;
 
 import android.text.TextUtils;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 /**
  * routines related to the Photon API
  * http://developer.wordpress.com/docs/photon/
@@ -12,8 +15,8 @@ public class PhotonUtils {
     }
 
     /*
-    * returns true if the passed url is an obvious "mshots" url
-    */
+     * returns true if the passed url is an obvious "mshots" url
+     */
     public static boolean isMshotsUrl(final String imageUrl) {
         return (imageUrl != null && imageUrl.contains("/mshots/"));
     }
@@ -28,11 +31,23 @@ public class PhotonUtils {
         LOW
     }
 
+    public static final String ATOMIC_MEDIA_PROXY_URL_PREFIX = "https://public-api.wordpress.com/wpcom/v2/sites/";
+    public static final String ATOMIC_MEDIA_PROXY_URL_SUFFIX = "/atomic-auth-proxy/file";
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height) {
         return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM);
     }
 
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, boolean isPrivateAtomicSite) {
+        return getPhotonImageUrl(imageUrl, width, height, Quality.MEDIUM, isPrivateAtomicSite);
+    }
+
     public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality) {
+        return getPhotonImageUrl(imageUrl, width, height, quality, false);
+    }
+
+    public static String getPhotonImageUrl(String imageUrl, int width, int height, Quality quality,
+                                           boolean isPrivateAtomicSite) {
         if (TextUtils.isEmpty(imageUrl)) {
             return "";
         }
@@ -49,6 +64,8 @@ public class PhotonUtils {
         if (fragmentPos > 0) {
             imageUrl = imageUrl.substring(0, fragmentPos);
         }
+
+        String urlCopy = imageUrl;
 
         // remove existing query string since it may contain params that conflict with the passed ones
         imageUrl = UrlUtils.removeQuery(imageUrl);
@@ -83,9 +100,28 @@ public class PhotonUtils {
             query += "&h=" + height;
         }
 
+        if (isPrivateAtomicSite) {
+            try {
+                URL url = new URL(imageUrl);
+                String slug = url.getHost();
+                String path = url.getPath();
+                return ATOMIC_MEDIA_PROXY_URL_PREFIX + slug + ATOMIC_MEDIA_PROXY_URL_SUFFIX
+                       + "?path=" + path + "&" + query;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+
         // return passed url+query if it's already a photon url
         if (imageUrl.contains(".wp.com")) {
             if (imageUrl.contains("i0.wp.com") || imageUrl.contains("i1.wp.com") || imageUrl.contains("i2.wp.com")) {
+                boolean useSsl = urlCopy.indexOf("?") > 0 && urlCopy.contains("ssl=1");
+
+                if (useSsl) {
+                    query += "&ssl=1";
+                }
+
                 return imageUrl + query;
             }
         }
@@ -96,11 +132,12 @@ public class PhotonUtils {
             return imageUrl + query;
         }
 
-        // must use https for https image urls
-        if (UrlUtils.isHttps(imageUrl)) {
-            return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
-        } else {
-            return "http://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
+        // must use ssl=1 parameter for https image urls
+        boolean useSSl = UrlUtils.isHttps(imageUrl);
+        if (useSSl) {
+            query += "&ssl=1";
         }
+
+        return "https://i0.wp.com/" + imageUrl.substring(schemePos + 3, imageUrl.length()) + query;
     }
 }

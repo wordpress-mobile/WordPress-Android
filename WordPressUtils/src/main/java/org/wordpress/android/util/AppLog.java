@@ -4,18 +4,25 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import org.wordpress.android.util.helpers.logfile.LogFileCleaner;
+import org.wordpress.android.util.helpers.logfile.LogFileProvider;
+import org.wordpress.android.util.helpers.logfile.LogFileWriter;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 
 import static java.lang.String.format;
 
@@ -51,13 +58,16 @@ public class AppLog {
         ACTIVITY_LOG,
         JETPACK_REMOTE_INSTALL,
         SUPPORT,
-        SITE_CREATION
+        SITE_CREATION,
+        DOMAIN_REGISTRATION,
+        FEATURE_ANNOUNCEMENT
     }
 
     public static final String TAG = "WordPress";
     public static final int HEADER_LINE_COUNT = 2;
     private static boolean mEnableRecording = false;
     private static List<AppLogListener> mListeners = new ArrayList<>(0);
+    private static TimeZone mUtcTimeZone = TimeZone.getTimeZone("UTC");
 
     private AppLog() {
         throw new AssertionError();
@@ -82,6 +92,22 @@ public class AppLog {
     public interface AppLogListener {
         void onLog(T tag, LogLevel logLevel, String message);
     }
+
+    /**
+     * Add a LogFileWriter that will persist logs to disk
+     * @param context The current application context
+     * @param maxLogCount The maximum number of logs that should be stored
+     */
+     public static void enableLogFilePersistence(Context context, int maxLogCount) {
+         LogFileProvider logFileProvider = LogFileProvider.fromContext(context);
+         new LogFileCleaner(logFileProvider, maxLogCount).clean();
+
+         sLogFileWriter = new LogFileWriter(logFileProvider);
+         sLogFileWriter.write(getAppInfoHeaderText(context) + "\n");
+         sLogFileWriter.write(getDeviceInfoHeaderText(context) + "\n");
+    }
+
+    private static LogFileWriter sLogFileWriter;
 
     /**
      * Sends a VERBOSE log message
@@ -196,22 +222,6 @@ public class AppLog {
 
     public enum LogLevel {
         v, d, i, w, e;
-
-        private String toHtmlColor() {
-            switch (this) {
-                case v:
-                    return "grey";
-                case i:
-                    return "black";
-                case w:
-                    return "purple";
-                case e:
-                    return "red";
-                case d:
-                default:
-                    return "teal";
-            }
-        }
     }
 
     private static class LogEntry {
@@ -222,7 +232,7 @@ public class AppLog {
 
         LogEntry(LogLevel logLevel, String logText, T logTag) {
             mLogLevel = logLevel;
-            mDate = DateTimeUtils.nowUTC();
+            mDate = new Date();
             if (logText == null) {
                 mLogText = "null";
             } else {
@@ -232,22 +242,31 @@ public class AppLog {
         }
 
         private String formatLogDate() {
-            return new SimpleDateFormat("MMM-dd kk:mm", Locale.US).format(mDate);
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd kk:mm", Locale.US);
+            sdf.setTimeZone(mUtcTimeZone);
+            return sdf.format(mDate);
         }
 
         private String toHtml() {
             StringBuilder sb = new StringBuilder();
-            sb.append("<font color=\"");
-            sb.append(mLogLevel.toHtmlColor());
-            sb.append("\">");
             sb.append("[");
             sb.append(formatLogDate()).append(" ");
             sb.append(mLogTag.name()).append(" ");
             sb.append(mLogLevel.name());
             sb.append("] ");
             sb.append(TextUtils.htmlEncode(mLogText).replace("\n", "<br />"));
-            sb.append("</font>");
             return sb.toString();
+        }
+
+        @Override
+        public @NonNull String toString() {
+            return "["
+            + formatLogDate()
+            + " "
+            + mLogTag.name()
+            + "] "
+            + mLogText
+            + "\n";
         }
     }
 
@@ -283,6 +302,10 @@ public class AppLog {
         if (mEnableRecording) {
             LogEntry entry = new LogEntry(level, text, tag);
             mLogEntries.addEntry(entry);
+
+            if (sLogFileWriter != null) {
+                sLogFileWriter.write(entry.toString());
+            }
         }
     }
 
@@ -350,12 +373,7 @@ public class AppLog {
         while (it.hasNext()) {
             LogEntry entry = it.next();
             sb.append(format(Locale.US, "%02d - ", lineNum))
-              .append("[")
-              .append(entry.formatLogDate()).append(" ")
-              .append(entry.mLogTag.name())
-              .append("] ")
-              .append(entry.mLogText)
-              .append("\n");
+              .append(entry.toString());
             lineNum++;
         }
         return sb.toString();

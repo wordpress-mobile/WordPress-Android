@@ -30,9 +30,23 @@ public class ToastUtils {
     }
 
     public static Toast showToast(Context context, String text, Duration duration) {
+        return showToast(context, text, duration, Gravity.CENTER);
+    }
+
+    public static Toast showToast(Context context, String text, Duration duration, int gravity) {
+        return showToast(context, text, duration, gravity, 0, 0);
+    }
+
+    public static Toast showToast(
+            Context context,
+            String text,
+            Duration duration,
+            int gravity,
+            int xOffset,
+            int yOffset) {
         Toast toast = Toast.makeText(context, text,
-                                     (duration == Duration.SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG));
-        toast.setGravity(Gravity.CENTER, 0, 0);
+                (duration == Duration.SHORT ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG));
+        toast.setGravity(gravity, xOffset, yOffset);
         toast.show();
         return toast;
     }
