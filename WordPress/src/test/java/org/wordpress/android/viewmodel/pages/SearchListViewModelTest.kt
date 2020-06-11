@@ -26,9 +26,10 @@ import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.DraftPage
 import org.wordpress.android.ui.pages.PageItem.Empty
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
+import org.wordpress.android.viewmodel.pages.PostModelUploadUiStateUseCase.PostUploadUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import java.util.Date
 import java.util.SortedMap
@@ -109,6 +110,8 @@ class SearchListViewModelTest {
     fun `builds list with dividers from grouped result`() {
         val expectedTitle = "title"
         whenever(resourceProvider.getString(any())).thenReturn(expectedTitle)
+        val authorFilterState = MutableLiveData<PagesAuthorFilterUIState>()
+        whenever(pagesViewModel.authorUIState).thenReturn(authorFilterState)
 
         val publishedPageId = 1
         val publishedPageRemoteId = 11L
