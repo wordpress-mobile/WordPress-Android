@@ -314,6 +314,5 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
-    <color name="reader_image_avatar_or_blavatar_border">@color/gray_0</color>
 
 </resources>
