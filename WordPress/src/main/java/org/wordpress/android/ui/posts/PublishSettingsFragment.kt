@@ -62,25 +62,25 @@ abstract class PublishSettingsFragment : Fragment() {
 
         setupContent(rootView, viewModel)
 
-        viewModel.onDatePicked.observe(this, Observer {
+        viewModel.onDatePicked.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 showPostTimeSelectionDialog()
             }
         })
-        viewModel.onPublishedDateChanged.observe(this, Observer { event ->
+        viewModel.onPublishedDateChanged.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let { date ->
                 viewModel.updatePost(date, getPostRepository())
                 trackPostScheduled()
             }
         })
-        viewModel.onNotificationTime.observe(this, Observer {
+        viewModel.onNotificationTime.observe(viewLifecycleOwner, Observer {
             it?.let { notificationTime ->
                 getPostRepository()?.let { postRepository ->
                     viewModel.scheduleNotification(postRepository, notificationTime)
                 }
             }
         })
-        viewModel.onUiModel.observe(this, Observer {
+        viewModel.onUiModel.observe(viewLifecycleOwner, Observer {
             it?.let { uiModel ->
                 dateAndTime.text = uiModel.publishDateLabel
                 publishNotificationTitle.isEnabled = uiModel.notificationEnabled
@@ -108,12 +108,12 @@ abstract class PublishSettingsFragment : Fragment() {
                 addToCalendarContainer.visibility = if (uiModel.notificationVisible) View.VISIBLE else View.GONE
             }
         })
-        viewModel.onShowNotificationDialog.observe(this, Observer {
+        viewModel.onShowNotificationDialog.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { notificationTime ->
                 showNotificationTimeSelectionDialog(notificationTime)
             }
         })
-        viewModel.onToast.observe(this, Observer {
+        viewModel.onToast.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 ToastUtils.showToast(
                         context,
@@ -123,7 +123,7 @@ abstract class PublishSettingsFragment : Fragment() {
                 )
             }
         })
-        viewModel.onNotificationAdded.observe(this, Observer { event ->
+        viewModel.onNotificationAdded.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { notification ->
                 activity?.let {
                     NotificationManagerCompat.from(it).cancel(notification.id)
@@ -145,7 +145,7 @@ abstract class PublishSettingsFragment : Fragment() {
                 }
             }
         })
-        viewModel.onAddToCalendar.observe(this, Observer {
+        viewModel.onAddToCalendar.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { calendarEvent ->
                 val calIntent = Intent(Intent.ACTION_INSERT)
                 calIntent.data = Events.CONTENT_URI
@@ -177,7 +177,7 @@ abstract class PublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostDatePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
-        fragment.show(activity!!.supportFragmentManager, PostDatePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostDatePickerDialogFragment.TAG)
     }
 
     private fun showPostTimeSelectionDialog() {
@@ -186,7 +186,7 @@ abstract class PublishSettingsFragment : Fragment() {
         }
 
         val fragment = PostTimePickerDialogFragment.newInstance(getPublishSettingsFragmentType())
-        fragment.show(activity!!.supportFragmentManager, PostTimePickerDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostTimePickerDialogFragment.TAG)
     }
 
     private fun showNotificationTimeSelectionDialog(schedulingReminderPeriod: SchedulingReminderModel.Period?) {
@@ -198,7 +198,7 @@ abstract class PublishSettingsFragment : Fragment() {
                 schedulingReminderPeriod,
                 getPublishSettingsFragmentType()
         )
-        fragment.show(activity!!.supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
+        fragment.show(requireActivity().supportFragmentManager, PostNotificationScheduleTimeDialogFragment.TAG)
     }
 
     private fun getPostRepository(): EditPostRepository? {
