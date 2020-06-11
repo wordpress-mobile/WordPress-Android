@@ -1,6 +1,13 @@
 package org.wordpress.android.support
 
-class ZendeskPlanFieldHelper {
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.SUPPORT
+import org.wordpress.android.util.CrashLoggingUtilsWrapper
+
+const val ZENDESK_UNKNOWN_PLAN_IDS_ERROR = "See issue #12064; zendesk-unknown-plan-ids"
+const val UNKNOWN_PLAN = "unknown-plan"
+
+class ZendeskPlanFieldHelper(private val remoteLoggingUtils: CrashLoggingUtilsWrapper) {
     // wpcom plans
     private val wpComEcommercePlans = listOf(
         WpComPlansConstants.WPCOM_ECOMMERCE_BUNDLE,
@@ -60,6 +67,14 @@ class ZendeskPlanFieldHelper {
     private val personalPlans = wpComPersonalPlans + jetpackPersonalPlans
     private val bloggerPlans = wpComBloggerPlans
     private val freePlans = wpFreePlans + jetpackFreePlans
+    private val allPlans = ecommercePlans +
+        businessOrProfessionalPlans +
+        premiumPlans +
+        personalPlans +
+        bloggerPlans +
+        freePlans
+
+    private fun getUnknownPlanIds(planIds: List<Long>) = planIds.subtract(allPlans)
 
     /**
      * This is a helper function that checks plan types from most expensive to least,
@@ -69,7 +84,14 @@ class ZendeskPlanFieldHelper {
      *
      * It doesn't support add_on_plan, tier and other plans that are included in the zendesk plan dropdown.
      */
-    fun getHighestPlan(planIds: List<Long>): String? {
+    fun getHighestPlan(planIds: List<Long>): String {
+        if (getUnknownPlanIds(planIds).isNotEmpty()) {
+            val logMessage = "$ZENDESK_UNKNOWN_PLAN_IDS_ERROR ${getUnknownPlanIds(planIds)}"
+
+            AppLog.e(SUPPORT, ZendeskPlanFieldHelper::class.java.simpleName + logMessage)
+            remoteLoggingUtils.log(NoSuchElementException(logMessage))
+        }
+
         return when {
             ecommercePlans.intersect(planIds).isNotEmpty() -> {
                 ZendeskPlanConstants.ECOMMERCE
@@ -90,7 +112,7 @@ class ZendeskPlanFieldHelper {
                 ZendeskPlanConstants.FREE
             }
             else -> {
-                null
+                UNKNOWN_PLAN
             }
         }
     }

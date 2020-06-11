@@ -1,15 +1,21 @@
 package org.wordpress.android.support
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.wordpress.android.util.CrashLoggingUtilsWrapper
 
 class ZendeskPlanFieldHelperTest {
     private lateinit var zendeskPlanFieldHelper: ZendeskPlanFieldHelper
+    private val crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
 
     @Before
     fun setUp() {
-        zendeskPlanFieldHelper = ZendeskPlanFieldHelper()
+        zendeskPlanFieldHelper = ZendeskPlanFieldHelper(crashLoggingUtilsWrapper)
     }
 
     @Test
@@ -111,11 +117,31 @@ class ZendeskPlanFieldHelperTest {
     }
 
     @Test
-    fun `getHighestPlan returns null if no matching plan id found`() {
+    fun `getHighestPlan returns UNKNOWN_PLAN if no matching plan id found`() {
         // Given
         val planIds = listOf(100000L)
 
         // Then
-        Assert.assertNull(zendeskPlanFieldHelper.getHighestPlan(planIds))
+        Assert.assertEquals(
+            UNKNOWN_PLAN,
+            zendeskPlanFieldHelper.getHighestPlan(planIds)
+        )
+    }
+
+    @Test
+    fun `getHighestPlan logs error if unknown plan ids are found`() {
+        // Given
+        val planIds = listOf(
+            WpComPlansConstants.WPCOM_PERSONAL_BUNDLE,
+            123456789L,
+            9999999L,
+            JetpackPlansConstants.JETPACK_PREMIUM
+        )
+
+        // When
+        zendeskPlanFieldHelper.getHighestPlan(planIds)
+
+        // Then
+        verify(crashLoggingUtilsWrapper, times(1)).log(any<Throwable>())
     }
 }
