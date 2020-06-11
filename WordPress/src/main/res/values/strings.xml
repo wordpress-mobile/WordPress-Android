@@ -1382,6 +1382,10 @@
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_post_private">Private</string>
+    <string name="post_status_post_scheduled">Scheduled</string>
+    <string name="post_status_post_trashed">Trashed</string>
+    <string name="post_status_post_published">Published</string>
+
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>

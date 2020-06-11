@@ -67,7 +67,7 @@
                 tools:text="text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt text_excerpt " />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/date_and_author"
+                android:id="@+id/post_info"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_extra_large"
@@ -140,7 +140,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/layout_buttons"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/date_and_author"
+                app:layout_constraintTop_toBottomOf="@+id/post_info"
                 app:layout_goneMarginBottom="@dimen/margin_extra_large"
                 tools:text="Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes Private · Local Changes " />
 
