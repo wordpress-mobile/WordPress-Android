@@ -298,7 +298,7 @@ dependencies {
         exclude group: 'com.github.bumptech.glide'
     }
 
-    // When upgrading Zendesk make sure that overriden layouts files with "zs_" are still valid
+    // When upgrading Zendesk make sure that overriden layouts files with "zs_" prefix are still valid
     implementation (group: 'com.zendesk', name: 'support', version: '4.0.0') {
         exclude group: 'com.google.dagger'
     }
