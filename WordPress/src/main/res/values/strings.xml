@@ -854,6 +854,9 @@
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
+    <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
+    <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act ("CCPA") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
+    <string name="ccpa_privacy_notice_read">Read CCPA privacy notice</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="app_theme">Appearance</string>
     <string name="app_theme_light">Light</string>
