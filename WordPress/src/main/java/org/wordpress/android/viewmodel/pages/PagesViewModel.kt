@@ -944,8 +944,7 @@ class PagesViewModel
         }
     }
 
-    // todo: annmarie - a candidate for removal & align with PageListViewModel
-    private fun shouldFilterByAuthor(): Boolean {
+    fun shouldFilterByAuthor(): Boolean {
         return authorUIState.value?.authorFilterSelection == AuthorFilterSelection.ME
     }
 }

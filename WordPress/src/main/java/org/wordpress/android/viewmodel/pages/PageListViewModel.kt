@@ -257,12 +257,8 @@ class PageListViewModel @Inject constructor(
         return null
     }
 
-    private fun shouldFilterByAuthor(): Boolean {
-        return pagesViewModel.authorUIState.value?.authorFilterSelection == AuthorFilterSelection.ME
-    }
-
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -303,7 +299,7 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -335,7 +331,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -362,7 +358,7 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
