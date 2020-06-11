@@ -65,7 +65,6 @@ class NotificationsListFragmentPage : Fragment(),
         DataLoadedListener {
     private var mLinearLayoutManager: LinearLayoutManager? = null
     private var mNotesAdapter: NotesAdapter? = null
-    private var mRecyclerView: RecyclerView? = null
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mNewNotificationsBar: View? = null
     private var mIsAnimatingOutNewNotificationsBar = false
@@ -81,7 +80,7 @@ class NotificationsListFragmentPage : Fragment(),
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mRecyclerView!!.adapter = notesAdapter
+        notifications_list.adapter = notesAdapter
         if (savedInstanceState != null) {
             mTabPosition = savedInstanceState.getInt(
                     KEY_TAB_POSITION,
@@ -130,8 +129,7 @@ class NotificationsListFragmentPage : Fragment(),
             )
         }
         mLinearLayoutManager = LinearLayoutManager(activity)
-        mRecyclerView = view.findViewById(R.id.notifications_list)
-        mRecyclerView.setLayoutManager(mLinearLayoutManager)
+        notifications_list.layoutManager = mLinearLayoutManager
         mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
                 view.findViewById<View>(R.id.notifications_refresh) as CustomSwipeRefreshLayout
         ) {
@@ -145,7 +143,7 @@ class NotificationsListFragmentPage : Fragment(),
     }
 
     override fun onDestroyView() {
-        mRecyclerView!!.adapter = null
+        notifications_list.adapter = null
         mNotesAdapter = null
         super.onDestroyView()
     }
@@ -189,7 +187,7 @@ class NotificationsListFragmentPage : Fragment(),
         }
         clearPendingNotificationsItemsOnUI()
         if (mLinearLayoutManager!!.findFirstCompletelyVisibleItemPosition() > 0) {
-            mLinearLayoutManager!!.smoothScrollToPosition(mRecyclerView, null, 0)
+            mLinearLayoutManager!!.smoothScrollToPosition(notifications_list, null, 0)
         }
     }
 
@@ -232,7 +230,7 @@ class NotificationsListFragmentPage : Fragment(),
             dy: Int
         ) {
             super.onScrolled(recyclerView, dx, dy)
-            mRecyclerView!!.removeOnScrollListener(this)
+            notifications_list.removeOnScrollListener(this)
             clearPendingNotificationsItemsOnUI()
         }
     }
@@ -274,7 +272,7 @@ class NotificationsListFragmentPage : Fragment(),
     private fun hideEmptyView() {
         if (isAdded) {
             actionable_empty_view.visibility = View.GONE
-            mRecyclerView!!.visibility = View.VISIBLE
+            notifications_list.visibility = View.VISIBLE
         }
     }
 
@@ -327,7 +325,7 @@ class NotificationsListFragmentPage : Fragment(),
     ) {
         if (isAdded) {
             actionable_empty_view.visibility = View.VISIBLE
-            mRecyclerView!!.visibility = View.GONE
+            notifications_list.visibility = View.GONE
             actionable_empty_view.title.setText(titleResId)
             if (descriptionResId != 0) {
                 actionable_empty_view.subtitle.setText(descriptionResId)
@@ -394,18 +392,18 @@ class NotificationsListFragmentPage : Fragment(),
     }
 
     private fun showNewUnseenNotificationsUI() {
-        if (!isAdded || mRecyclerView == null || mRecyclerView!!.layoutManager == null) {
+        if (!isAdded || notifications_list.layoutManager == null) {
             return
         }
-        mRecyclerView!!.clearOnScrollListeners()
-        mRecyclerView!!.postDelayed({
+        notifications_list.clearOnScrollListeners()
+        notifications_list.postDelayed({
             if (isAdded) {
-                mRecyclerView!!.addOnScrollListener(mOnScrollListener)
+                notifications_list.addOnScrollListener(mOnScrollListener)
             }
         }, 1000L)
-        val first = mRecyclerView!!.layoutManager!!.getChildAt(0)
+        val first = notifications_list.layoutManager!!.getChildAt(0)
         // Show new notifications bar if first item is not visible on the screen.
-        if (first != null && mRecyclerView!!.layoutManager!!.getPosition(first) > 0) {
+        if (first != null && notifications_list.layoutManager!!.getPosition(first) > 0) {
             showNewNotificationsBar()
         }
     }
