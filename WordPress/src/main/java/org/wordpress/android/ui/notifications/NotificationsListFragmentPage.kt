@@ -60,6 +60,16 @@ import javax.inject.Inject
 
 class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoadedListener {
     private var mNotesAdapter: NotesAdapter? = null
+
+    private val notesAdapter: NotesAdapter
+        get() {
+            return mNotesAdapter ?: NotesAdapter(requireActivity(), this, null).apply {
+                mNotesAdapter = this
+                this.setOnNoteClickListener(mOnNoteClickListener)
+            }
+        }
+
+
     private var mSwipeToRefreshHelper: SwipeToRefreshHelper? = null
     private var mIsAnimatingOutNewNotificationsBar = false
     private var mShouldRefreshNotifications = false
@@ -230,15 +240,6 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         }
         NotificationsUpdateServiceStarter.startService(activity)
     }
-
-    private val notesAdapter: NotesAdapter
-        private get() {
-            if (mNotesAdapter == null) {
-                mNotesAdapter = NotesAdapter(requireActivity(), this, null)
-                mNotesAdapter!!.setOnNoteClickListener(mOnNoteClickListener)
-            }
-            return mNotesAdapter!!
-        }
 
     val selectedSite: SiteModel?
         get() = (activity as? WPMainActivity)?.selectedSite
