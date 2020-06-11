@@ -618,6 +618,7 @@ public final class AnalyticsTracker {
         FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS,
         FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED,
         FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED,
+        PAGES_LIST_AUTHOR_FILTER_CHANGED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

@@ -1748,6 +1748,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "feature_announcement_button_tapped";
             case OPENED_PLANS_COMPARISON:
                 return "plans_compare";
+            case PAGES_LIST_AUTHOR_FILTER_CHANGED:
+                return "pages_list_author_filter_changed";
         }
         return null;
     }
