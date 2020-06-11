@@ -11,7 +11,7 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.PreferenceMatchers.withTitle;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.wordpress.android.support.WPSupportUtils.setSwitchPreferenceIsChecked;
+import static org.wordpress.android.support.WPSupportUtils.ensureSwitchPreferenceIsChecked;
 
 public class SiteSettingsPage {
     private static ViewInteraction settings = onView(withText(R.string.site_settings_title_title));
@@ -23,12 +23,12 @@ public class SiteSettingsPage {
     public void setEditorToClassic() {
         onData(withTitle(R.string.site_settings_gutenberg_default_for_new_posts))
                 .perform(scrollTo())
-                .perform(setSwitchPreferenceIsChecked(false));
+                .perform(ensureSwitchPreferenceIsChecked(false));
     }
 
     public void setEditorToGutenberg() {
         onData(withTitle(R.string.site_settings_gutenberg_default_for_new_posts))
                 .perform(scrollTo())
-                .perform(setSwitchPreferenceIsChecked(true));
+                .perform(ensureSwitchPreferenceIsChecked(true));
     }
 }

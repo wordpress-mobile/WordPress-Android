@@ -18,6 +18,7 @@ import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
 import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Tap;
+import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
@@ -138,12 +139,12 @@ public class WPSupportUtils {
                 rollbackAction);
     }
 
-    /** Sets a SwitchPreference isChecked value regardless of the current value. This is useful to ensure a checked or
-     * un-checked state where a previously toggled state may not be known.
+    /** Ensures that a SwitchPreference isChecked is true or false regardless of the current value. This is useful to
+     * guarantee a particular resulting state where a previously toggled state may not be known.
      * @param isChecked the value to set the preference to
      * @return the ViewAction
      */
-    public static ViewAction setSwitchPreferenceIsChecked(final boolean isChecked) {
+    public static ViewAction ensureSwitchPreferenceIsChecked(final boolean isChecked) {
         return new ViewAction() {
             @Override public BaseMatcher<View> getConstraints() {
                 return new BaseMatcher<View>() {
@@ -162,7 +163,10 @@ public class WPSupportUtils {
             }
 
             @Override public void perform(UiController uiController, View view) {
-                ((Checkable) view.findViewById(android.R.id.switch_widget)).setChecked(isChecked);
+                // perform click only if necessary
+                if (((Checkable) view.findViewById(android.R.id.switch_widget)).isChecked() != isChecked) {
+                    ViewActions.click().perform(uiController, view);
+                }
             }
         };
     }
