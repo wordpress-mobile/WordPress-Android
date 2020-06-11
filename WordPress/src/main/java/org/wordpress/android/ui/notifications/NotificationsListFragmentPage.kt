@@ -73,11 +73,8 @@ class NotificationsListFragmentPage : Fragment(),
     private var mShouldRefreshNotifications = false
     private var mTabPosition = 0
 
-    @JvmField @Inject
-    var mAccountStore: AccountStore? = null
-
-    @JvmField @Inject
-    var mGCMMessageHandler: GCMMessageHandler? = null
+    @Inject lateinit var mAccountStore: AccountStore
+    @Inject lateinit var mGCMMessageHandler: GCMMessageHandler
 
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
@@ -175,7 +172,7 @@ class NotificationsListFragmentPage : Fragment(),
         super.onResume()
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
-        if (mAccountStore!!.hasAccessToken()) {
+        if (mAccountStore.hasAccessToken()) {
             notesAdapter.reloadNotesFromDBAsync()
             if (mShouldRefreshNotifications) {
                 fetchNotesFromRemote()
@@ -246,7 +243,7 @@ class NotificationsListFragmentPage : Fragment(),
         hideNewNotificationsBar()
         EventBus.getDefault().post(NotificationsUnseenStatus(false))
         NotificationsActions.updateNotesSeenTimestamp()
-        Thread(Runnable { mGCMMessageHandler!!.removeAllNotifications(activity) }).start()
+        Thread(Runnable { mGCMMessageHandler.removeAllNotifications(activity) }).start()
     }
 
     private fun fetchNotesFromRemote() {
@@ -309,7 +306,7 @@ class NotificationsListFragmentPage : Fragment(),
         if (!isAdded) {
             return
         }
-        if (!mAccountStore!!.hasAccessToken()) {
+        if (!mAccountStore.hasAccessToken()) {
             ActivityLauncher.showSignInForResult(activity)
             return
         }
@@ -352,7 +349,7 @@ class NotificationsListFragmentPage : Fragment(),
 
     // Show different empty view message and action button based on selected tab.
     private fun showEmptyViewForCurrentFilter() {
-        if (!mAccountStore!!.hasAccessToken()) {
+        if (!mAccountStore.hasAccessToken()) {
             return
         }
         when (mTabPosition) {
