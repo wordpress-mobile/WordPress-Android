@@ -26,7 +26,7 @@
 
     <style name="ReaderTextView.Label" parent="ReaderTextView">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-        <item name="textColor">@color/reader_label_text</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
@@ -40,7 +40,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="textColor">@color/reader_site_title</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
@@ -51,7 +51,7 @@
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
-        <item name="textColor">@color/reader_post_title</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
@@ -64,11 +64,10 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textColor">@color/reader_label_text</item>
     </style>
 
     <style name="ReaderTextView.XPost.SubTitle" parent="ReaderTextView">
@@ -80,7 +79,6 @@
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
         <item name="android:fontFamily">serif</item>
-        <item name="textColor">@color/reader_post_title</item>
     </style>
 
     <style name="ReaderTextView.RemovedPost.Title" parent="ReaderTextView">
@@ -88,7 +86,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:textColor">@color/reader_post_title</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
