@@ -130,9 +130,7 @@ class NotificationsListFragmentPage : Fragment(),
         }
         mLinearLayoutManager = LinearLayoutManager(activity)
         notifications_list.layoutManager = mLinearLayoutManager
-        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(
-                view.findViewById<View>(R.id.notifications_refresh) as CustomSwipeRefreshLayout
-        ) {
+        mSwipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(notifications_refresh) {
             hideNewNotificationsBar()
             fetchNotesFromRemote()
         }
@@ -143,6 +141,7 @@ class NotificationsListFragmentPage : Fragment(),
     }
 
     override fun onDestroyView() {
+        mSwipeToRefreshHelper = null
         notifications_list.adapter = null
         mNotesAdapter = null
         super.onDestroyView()
@@ -247,7 +246,7 @@ class NotificationsListFragmentPage : Fragment(),
             return
         }
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            mSwipeToRefreshHelper!!.isRefreshing = false
+            mSwipeToRefreshHelper?.isRefreshing = false
             return
         }
         NotificationsUpdateServiceStarter.startService(activity)
@@ -454,14 +453,14 @@ class NotificationsListFragmentPage : Fragment(),
         if (!isAdded) {
             return
         }
-        mSwipeToRefreshHelper!!.isRefreshing = false
+        mSwipeToRefreshHelper?.isRefreshing = false
         mNotesAdapter!!.addAll(event.notes, true)
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(error: NotificationsRefreshError?) {
         if (isAdded) {
-            mSwipeToRefreshHelper!!.isRefreshing = false
+            mSwipeToRefreshHelper?.isRefreshing = false
         }
     }
 
