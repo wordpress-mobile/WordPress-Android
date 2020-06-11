@@ -667,6 +667,38 @@ public class AccountStore extends Store {
         GENERIC_ERROR;
     }
 
+    public static class AuthOptionsError implements OnChangedError {
+        @NonNull public AuthOptionsErrorType type;
+        @Nullable public String message;
+
+        public AuthOptionsError(@Nullable String type, @Nullable String message) {
+            this.type = AuthOptionsErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public AuthOptionsError(@NonNull AuthOptionsErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AuthOptionsErrorType {
+        UNKNOWN_USER,
+        GENERIC_ERROR;
+
+        public static AuthOptionsErrorType fromString(String string) {
+            if (string != null) {
+                for (AuthOptionsErrorType v : AuthOptionsErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;

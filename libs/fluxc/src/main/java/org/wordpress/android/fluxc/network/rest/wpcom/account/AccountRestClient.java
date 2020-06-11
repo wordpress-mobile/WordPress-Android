@@ -41,6 +41,7 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
+import org.wordpress.android.fluxc.store.AccountStore.AuthOptionsError;
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactError;
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
@@ -179,6 +180,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         public DomainContactPayload(@NonNull DomainContactError error) {
             this.error = error;
         }
+    }
+
+    public static class AuthOptionsPayload extends Payload<AuthOptionsError> {
+        public boolean isPasswordless;
+        public boolean isEmailVerified;
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
