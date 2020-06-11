@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-14 08:54:08+0000
+Translation-Revision-Date: 2020-05-28 00:46:30+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">مرحبًا بك في مدونتنا الجديدة</string>
+    <string name="gutenberg_native_select_a_color">تحديد لون</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
+    <string name="reader_empty_followed_blogs_description">عندما تتابع المواقع، سترى محتواها هنا</string>
     <string name="feature_announcement_find_out_mode">اكتشاف المزيد</string>
     <string name="feature_announcement_dialog_label">ما الجديد في ووردبريس</string>
-    <string name="insert_label_with_count">إدراج%d</string>
+    <string name="insert_label_with_count">إدراج %d</string>
     <string name="crop">قص</string>
     <string name="error_failed_to_load_into_file">فشل التحميل إلى الملف، يرجى المحاولة مرة أخرى.</string>
     <string name="preview_image_thumbnail_description">معاينة الصورة المصغَّرة</string>
@@ -30,18 +34,14 @@ Language: ar
     <string name="button_insert">إدراج</string>
     <string name="continue_label">المتابعة</string>
     <string name="copy_text">نسخ</string>
-    <string name="gutenberg_native_subscribe">اشترك</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
-    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع%2$s</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع %2$s</string>
     <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
-    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليسار من الموضع %1$s إلى الموضع%2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليسار من الموضع %1$s إلى الموضع %2$s</string>
     <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
-    <string name="gutenberg_native_latest_blog_posts">أحدث مقالات على المدونة</string>
-    <string name="gutenberg_native_follow_our_blog">متابعة مدونتنا</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">الضغط المزدوج لنقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_columns_settings">إعدادات الأعمدة</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">ستتوافر إعدادات اللون قريبًا.</string>
     <string name="gutenberg_native_blog">المدوّنة</string>
     <string name="new_site_creation_creating_site_loading_4">إنشاء لوحة التحكم</string>
     <string name="new_site_creation_creating_site_loading_3">إعداد القالب</string>
@@ -121,7 +121,6 @@ Language: ar
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
     <string name="gutenberg_native_link_to">رابط لـ</string>
-    <string name="gutenberg_native_link_settings">إعدادات الرابط</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">دعونا نبني شيئًا معًا.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">دعونا نبني شيئًا معًا</string>
@@ -139,10 +138,6 @@ Language: ar
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">لا تبكي لأنه انتهى، ابتسم لأنه حدث.</string>
     <string name="gutenberg_native_customize">تخصيص</string>
     <string name="gutenberg_native_city_10100">المدينة، 10100</string>
-    <string name="gutenberg_native_button_link_url">رابط الزر URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">إعدادات لون الزر، قريبًا.</string>
-    <string name="gutenberg_native_border_settings">إعدادات الحدود</string>
-    <string name="gutenberg_native_border_radius">زوايا الحدود</string>
     <string name="gutenberg_native_add_paragraph_block">إضافة مكوّن فقرة</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">وصف موجز للخدمات التي تقدمها.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">سيرة ذاتية قصيرة مع التاريخ الشخصي والإنجازات الرئيسية، أو حقيقة مثيرة للاهتمام.</string>
@@ -276,7 +271,6 @@ Language: ar
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">مكوِّن %s. يحتوي هذا المكوِّن على محتوى غير صالح</string>
     <string name="gutenberg_native_s_block_empty">مكوِّن %s. فارغ</string>
     <string name="gutenberg_native_reset_block">إعادة تعيين المكوِّن</string>
-    <string name="gutenberg_native_remove_block_at_row_s">إزالة المكوِّن عند الصف %s</string>
     <string name="gutenberg_native_remove_annotations">إزالة التعليقات التوضيحية</string>
     <string name="gutenberg_native_problem_opening_the_video">ثمَّة مشكلة أثناء فتح مقطع الفيديو</string>
     <string name="gutenberg_native_problem_displaying_block">ثمَّة مشكلة أثناء عرض المكوِّن</string>
@@ -307,7 +301,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_to_select_an_image">الضغط المزدوج لتحديد صورة</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">الضغط المزدوج لتحديد مقطع الفيديو</string>
     <string name="gutenberg_native_double_tap_to_select">الضغط المزدوج للتحديد</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">الضغط المزدوج لإزالة المكوِّن</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">الضغط المزدوج لإعادة آخر تغيير</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">الضغط المزدوج لنقل المكوِّن إلى أعلى</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">الضغط المزدوج لنقل المكوِّن إلى أسفل</string>
@@ -888,7 +881,6 @@ Language: ar
     <string name="reader_empty_posts_liked_title">لا توجد إعجابات حتى الآن</string>
     <string name="reader_empty_followed_blogs_button_followed">الذهاب للمتابعة</string>
     <string name="reader_empty_followed_blogs_button_discover">استكشف المواقع</string>
-    <string name="reader_empty_followed_blogs_description">لم تتابع أي مواقع حتى الآن. لمَ لا تتابع واحدًا الآن؟</string>
     <string name="reader_empty_followed_blogs_title">لا توجد مواقع تمت متابعتها</string>
     <string name="notifications_empty_likes">لا توجد إعجابات حتى الآن</string>
     <string name="notifications_empty_followers">لا متابعين حتى الآن</string>

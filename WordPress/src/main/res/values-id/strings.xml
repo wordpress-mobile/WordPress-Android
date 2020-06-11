@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-13 09:54:11+0000
+Translation-Revision-Date: 2020-05-26 15:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Selamat datang di blog baru kami</string>
+    <string name="gutenberg_native_select_a_color">Pilih warna</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Ketuk dua kali untuk membuka pengaturan warna</string>
+    <string name="reader_empty_followed_blogs_description">Saat Anda mengikuti situs, Anda akan melihat kontennya di sini</string>
     <string name="feature_announcement_find_out_mode">Cari tahu selengkapnya</string>
     <string name="feature_announcement_dialog_label">Apa yang Baru di WordPress</string>
     <string name="insert_label_with_count">Sisipkan %d</string>
@@ -30,18 +34,14 @@ Language: id
     <string name="button_insert">Sisipkan</string>
     <string name="continue_label">Lanjutkan</string>
     <string name="copy_text">Salin</string>
-    <string name="gutenberg_native_subscribe">Berlangganan</string>
     <string name="gutenberg_native_number_of_columns">Jumlah kolom</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Geser blok ke kanan dari posisi %1$s ke posisi %2$s\"</string>
     <string name="gutenberg_native_move_block_right">Geser blok ke kanan</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Geser blok ke kiri dari posisi %1$s ke posisi %2$s\"</string>
     <string name="gutenberg_native_move_block_left">Geser blok ke kiri</string>
-    <string name="gutenberg_native_latest_blog_posts">Pos Blog Terbaru</string>
-    <string name="gutenberg_native_follow_our_blog">Ikuti Blog kami</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Ketuk dua kali untuk memindahkan blok ke kanan</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Ketuk dua kali untuk memindahkan blok ke kiri</string>
     <string name="gutenberg_native_columns_settings">Pengaturan Kolom</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Pengaturan warna akan segera hadir.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Membuat dasbor</string>
     <string name="new_site_creation_creating_site_loading_3">Menyiapkan tema</string>
@@ -121,7 +121,6 @@ Language: id
     <string name="gutenberg_native_only_show_excerpt">Hanya tampilkan kutipan</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofolio saya menampilkan berbagai proyek yang saya hasilkan sepanjang karier. Lihat informasi kontak di bawah ini dan hubungi.</string>
     <string name="gutenberg_native_link_to">Tautan Ke</string>
-    <string name="gutenberg_native_link_settings">Pengaturan Tautan</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ayo bicara 👋 Jangan ragu untuk menghubungi kami melalui informasi kontak di bawah ini, atau kirimkan pesan menggunakan formulir.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Ayo buat sesuatu bersama.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Ayo Buat Sesuatu Bersama</string>
@@ -139,10 +138,6 @@ Language: id
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Jangan menangis karena sesuatu itu berakhir, tetapi tersenyumlah karena itu terjadi.</string>
     <string name="gutenberg_native_customize">SESUAIKAN</string>
     <string name="gutenberg_native_city_10100">Kota, 10100</string>
-    <string name="gutenberg_native_button_link_url">URL Tautan Tombol</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Pengaturan warna tombol akan segera hadir.</string>
-    <string name="gutenberg_native_border_settings">Pengaturan Border</string>
-    <string name="gutenberg_native_border_radius">Radius Batas</string>
     <string name="gutenberg_native_add_paragraph_block">Tambahkan blok paragraf</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Deskripsi singkat layanan yang Anda tawarkan.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Biografi singkat berisi riwayat diri, pencapaian utama, atau fakta menarik.</string>
@@ -276,7 +271,6 @@ Language: id
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Kosong</string>
     <string name="gutenberg_native_reset_block">Reset Blok</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Hilangkan blok di baris %s</string>
     <string name="gutenberg_native_remove_annotations">Hilangkan anotasi</string>
     <string name="gutenberg_native_problem_opening_the_video">Terjadi masalah saat membuka video</string>
     <string name="gutenberg_native_problem_displaying_block">Terjadi masalah saat menampilkan blok</string>
@@ -307,7 +301,6 @@ Language: id
     <string name="gutenberg_native_double_tap_to_select_an_image">Ketuk dua kali untuk memilih gambar</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Ketuk dua kali untuk memilih video</string>
     <string name="gutenberg_native_double_tap_to_select">Ketuk dua kali untuk memilih</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Ketuk dua kali untuk menghapus blok</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Ketuk dua kali untuk mengulangi perubahan terakhir</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Ketuk dua kali untuk memindahkan blok ke atas</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Ketuk dua kali untuk memindahkan blok ke bawah</string>
@@ -877,7 +870,6 @@ Language: id
     <string name="reader_empty_posts_liked_title">Belum ada yang menyukai</string>
     <string name="reader_empty_followed_blogs_button_followed">Buka yang diikuti</string>
     <string name="reader_empty_followed_blogs_button_discover">Temukan situs</string>
-    <string name="reader_empty_followed_blogs_description">Sekarang Anda tidak sedang mengikuti situs mana pun. Mengapa tidak mengikuti salah satu situs sekarang?</string>
     <string name="reader_empty_followed_blogs_title">Tidak ada situs yang diikuti</string>
     <string name="notifications_empty_likes">Belum ada suka</string>
     <string name="notifications_empty_followers">Belum ada pengikut</string>

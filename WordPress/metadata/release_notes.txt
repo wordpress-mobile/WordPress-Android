@@ -1,3 +1,4 @@
-<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
-
-<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
+Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.
+Block editor updates: “Trash block” in a menu reachable from the block toolbar.
+Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.
+Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.
