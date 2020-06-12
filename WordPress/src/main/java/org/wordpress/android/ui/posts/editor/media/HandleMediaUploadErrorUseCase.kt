@@ -35,9 +35,9 @@ class HandleMediaUploadErrorUseCase @Inject constructor(
         }
     }
 
-    private fun trackMediaUploadError(it: MediaFile, error: MediaError) {
+    private fun trackMediaUploadError(mediaFile: MediaFile, error: MediaError) {
         val properties: MutableMap<String, Any?> =
-                analyticsUtilsWrapper.getMediaProperties(it.isVideo, null, it.filePath)
+                analyticsUtilsWrapper.getMediaProperties(mediaFile.isVideo, null, mediaFile.filePath)
         properties["error_type"] = error.type.name
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
     }
