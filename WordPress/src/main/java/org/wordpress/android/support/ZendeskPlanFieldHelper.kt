@@ -2,12 +2,12 @@ package org.wordpress.android.support
 
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SUPPORT
-import org.wordpress.android.util.CrashLoggingUtilsWrapper
+import org.wordpress.android.util.CrashLogging
 
 const val ZENDESK_UNKNOWN_PLAN_IDS_ERROR = "See issue #12064; zendesk-unknown-plan-ids"
 const val UNKNOWN_PLAN = "unknown-plan"
 
-class ZendeskPlanFieldHelper(private val remoteLoggingUtils: CrashLoggingUtilsWrapper) {
+class ZendeskPlanFieldHelper(private val remoteLoggingUtils: CrashLogging) {
     // wpcom plans
     private val wpComEcommercePlans = listOf(
         WpComPlansConstants.WPCOM_ECOMMERCE_BUNDLE,
