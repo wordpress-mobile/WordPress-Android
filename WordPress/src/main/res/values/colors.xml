@@ -43,7 +43,7 @@
     <color name="color_primary">@color/primary</color>
 
     <!-- Prepublishing Nudges -->
-    <color name="prepublishing_toolbar_icon_color">@color/gray_20</color>
+    <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
 
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
