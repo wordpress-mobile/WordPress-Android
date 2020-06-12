@@ -1501,28 +1501,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
-    private void onUploadError(MediaModel media, MediaError error) {
-        String localMediaId = String.valueOf(media.getId());
 
-        Map<String, Object> properties = null;
-        MediaFile mf = FluxCUtils.mediaFileFromMediaModel(media);
-        if (mf != null) {
-            properties = AnalyticsUtils.getMediaProperties(this, mf.isVideo(), null, mf.getFilePath());
-            properties.put("error_type", error.type.name());
-        }
-        AnalyticsTracker.track(Stat.EDITOR_UPLOAD_MEDIA_FAILED, properties);
-
-        // Display custom error depending on error type
-        String errorMessage = WPMediaUtils.getErrorMessage(this, media, error);
-        if (errorMessage == null) {
-            errorMessage = TextUtils.isEmpty(error.message) ? getString(R.string.tap_to_try_again) : error.message;
-        }
-
-        if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localMediaId,
-                    EditorFragmentAbstract.getEditorMimeType(mf), errorMessage);
-        }
-    }
 
     private void onUploadProgress(MediaModel media, float progress) {
         String localMediaId = String.valueOf(media.getId());
@@ -2928,12 +2907,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError()) {
-            onUploadError(event.media, event.error);
+            mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                onUploadError(event.media, error);
+                mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {
                 onUploadSuccess(event.media);
             }
