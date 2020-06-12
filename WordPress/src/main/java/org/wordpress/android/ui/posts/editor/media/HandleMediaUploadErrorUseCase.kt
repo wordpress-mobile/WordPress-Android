@@ -23,16 +23,12 @@ class HandleMediaUploadErrorUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun onMediaUploadError(editorMediaListener: EditorMediaListener, media: MediaModel, error: MediaError) {
-        withContext(bgDispatcher) {
-            val localMediaId = media.id.toString()
-            fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let {
-                trackMediaUploadError(it, error)
-            }
-            withContext(mainDispatcher) {
-                editorMediaListener.onMediaUploadFailed(localMediaId)
-            }
+    fun onMediaUploadError(editorMediaListener: EditorMediaListener, media: MediaModel, error: MediaError) {
+        val localMediaId = media.id.toString()
+        fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let {
+            trackMediaUploadError(it, error)
         }
+        editorMediaListener.onMediaUploadFailed(localMediaId)
     }
 
     private fun trackMediaUploadError(mediaFile: MediaFile, error: MediaError) {
