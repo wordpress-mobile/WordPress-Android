@@ -49,6 +49,4 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
             EditorMediaUtils.getVideoThumbnail(appContext, videoPath)
 
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
-
-    fun getErrorMessage(media: MediaModel, error: MediaError): String? = WPMediaUtils.getErrorMessage(appContext, media, error)
 }
