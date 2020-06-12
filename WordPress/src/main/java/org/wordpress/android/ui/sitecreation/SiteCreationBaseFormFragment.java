@@ -57,7 +57,7 @@ public abstract class SiteCreationBaseFormFragment extends Fragment {
         setupContent((ViewGroup) getView().getRootView());
 
         Toolbar toolbar = view.findViewById(R.id.toolbar_main);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
