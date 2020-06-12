@@ -60,6 +60,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -68,6 +69,7 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -94,6 +96,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 
 /**
  * The main activity in which the user can browse their media.
@@ -113,6 +116,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject MediaStore mMediaStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
 
     private SiteModel mSite;
 
@@ -221,6 +225,18 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         mQuotaText = findViewById(R.id.quota_text);
 
         showQuota(true);
+    }
+
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+            NotificationType notificationType =
+                    (NotificationType) intent.getSerializableExtra(ARG_NOTIFICATION_TYPE);
+            if (notificationType != null) {
+                mSystemNotificationsTracker.trackTappedNotification(notificationType);
+            }
+        }
     }
 
     private void formatQuotaDiskSpace() {
