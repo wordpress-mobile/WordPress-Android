@@ -297,7 +297,8 @@ class EditorMedia @Inject constructor(
     }
 
     fun onMediaUploadError(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
-        trackMediaUploadErrorUseCase.trackMediaUploadError(listener, media, error)
+        trackMediaUploadErrorUseCase.trackMediaUploadError(media, error)
+        listener.onMediaUploadFailed(media.id.toString())
     }
 
     enum class AddExistingMediaSource {
