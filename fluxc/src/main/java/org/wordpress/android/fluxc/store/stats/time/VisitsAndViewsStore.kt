@@ -40,11 +40,11 @@ class VisitsAndViewsStore
                 currentTimeProvider.currentDate,
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
-        logProgress("Site timezone: ${site.timezone}")
-        logProgress("Current date: ${currentTimeProvider.currentDate}")
-        logProgress("Fetching for date with applied timezone: $dateWithTimeZone")
+        logProgress(granularity, "Site timezone: ${site.timezone}")
+        logProgress(granularity, "Current date: ${currentTimeProvider.currentDate}")
+        logProgress(granularity, "Fetching for date with applied timezone: $dateWithTimeZone")
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
-            logProgress("Loading cached data")
+            logProgress(granularity, "Loading cached data")
             return@withDefaultContext OnStatsFetched(
                     getVisits(site, granularity, limitMode, dateWithTimeZone),
                     cached = true
@@ -53,19 +53,19 @@ class VisitsAndViewsStore
         val payload = restClient.fetchVisits(site, granularity, dateWithTimeZone, limitMode.limit, forced)
         return@withDefaultContext when {
             payload.isError -> {
-                logProgress("Error fetching data: ${payload.error}")
+                logProgress(granularity, "Error fetching data: ${payload.error}")
                 OnStatsFetched(payload.error)
             }
             payload.response != null -> {
-                logProgress("Data fetched correctly")
+                logProgress(granularity, "Data fetched correctly")
                 sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)
                 val overviewResponse = timeStatsMapper.map(payload.response, limitMode)
                 if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty()) {
-                    logProgress("Invalid response")
+                    logProgress(granularity, "Invalid response")
                     OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
                 } else {
-                    logProgress("Valid response returned for period: ${overviewResponse.period}")
-                    logProgress("Last data item for: ${overviewResponse.dates.lastOrNull()?.period}")
+                    logProgress(granularity, "Valid response returned for period: ${overviewResponse.period}")
+                    logProgress(granularity, "Last data item for: ${overviewResponse.dates.lastOrNull()?.period}")
                     OnStatsFetched(overviewResponse)
                 }
             }
@@ -73,8 +73,8 @@ class VisitsAndViewsStore
         }
     }
 
-    private fun logProgress(message: String) {
-        appLogWrapper.d(STATS, "fetchVisits: $message")
+    private fun logProgress(granularity: StatsGranularity, message: String) {
+        appLogWrapper.d(STATS, "fetchVisits for $granularity: $message")
     }
 
     fun getVisits(
