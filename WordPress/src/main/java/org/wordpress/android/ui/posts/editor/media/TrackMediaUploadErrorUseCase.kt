@@ -9,7 +9,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 
 @Reusable
-class HandleMediaUploadErrorUseCase @Inject constructor(
+class TrackMediaUploadErrorUseCase @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
