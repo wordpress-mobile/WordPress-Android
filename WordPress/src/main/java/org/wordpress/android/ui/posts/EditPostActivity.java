@@ -2907,12 +2907,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError()) {
-            mEditorMedia.onMediaUploadError(event.media, event.error);
+            mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
             if (event.media.getUrl() == null) {
                 MediaError error = new MediaError(MediaErrorType.GENERIC_ERROR);
-                mEditorMedia.onMediaUploadError(event.media, error);
+                mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, error);
             } else {
                 onUploadSuccess(event.media);
             }
@@ -3088,13 +3088,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @NotNull @Override
     public PostImmutableModel getImmutablePost() {
         return Objects.requireNonNull(mEditPostRepository.getPost());
-    }
-
-    @Override
-    public void onMediaUploadFailed(@NotNull String localId) {
-        if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localId);
-        }
     }
 
     @Override

@@ -52,7 +52,6 @@ interface EditorMediaListener {
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
-    fun onMediaUploadFailed(localId: String)
 }
 
 class EditorMedia @Inject constructor(
@@ -297,8 +296,8 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun onMediaUploadError(media: MediaModel, error: MediaError) = launch {
-        trackMediaUploadErrorUseCase.trackMediaUploadError(editorMediaListener, media, error)
+    fun onMediaUploadError(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) = launch {
+        trackMediaUploadErrorUseCase.trackMediaUploadError(listener, media, error)
     }
 
     enum class AddExistingMediaSource {

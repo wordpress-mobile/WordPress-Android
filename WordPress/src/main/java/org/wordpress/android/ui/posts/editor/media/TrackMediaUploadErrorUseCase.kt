@@ -4,6 +4,7 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_FAILED
+import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.modules.BG_THREAD
@@ -20,7 +21,7 @@ class TrackMediaUploadErrorUseCase @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun trackMediaUploadError(editorMediaListener: EditorMediaListener, media: MediaModel, error: MediaError) {
+    suspend fun trackMediaUploadError(listener: EditorMediaUploadListener, media: MediaModel, error: MediaError) {
         withContext(bgDispatcher) {
             val localMediaId = media.id.toString()
             val properties: Map<String, Any?> = analyticsUtilsWrapper
@@ -30,7 +31,7 @@ class TrackMediaUploadErrorUseCase @Inject constructor(
                     }
             analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
             withContext(mainDispatcher) {
-                editorMediaListener.onMediaUploadFailed(localMediaId)
+                listener.onMediaUploadFailed(localMediaId)
             }
         }
     }
