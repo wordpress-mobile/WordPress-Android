@@ -46,8 +46,7 @@ public abstract class SiteCreationBaseFormFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = createMainView(inflater, container, savedInstanceState);
-        return rootView;
+        return createMainView(inflater, container, savedInstanceState);
     }
 
     @Override

@@ -54,7 +54,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         rootView.findViewById<AppCompatButton>(R.id.create_site_button).setOnClickListener {
             viewModel.createSiteBtnClicked()
         }
-        initRecyclerView(rootView)
+        initRecyclerView()
         initViewModel()
     }
 
