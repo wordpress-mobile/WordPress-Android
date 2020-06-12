@@ -38,10 +38,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
@@ -82,6 +85,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var quickStartStore: QuickStartStore
+    @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
 
     private lateinit var site: SiteModel
     private lateinit var viewModel: PostListMainViewModel
@@ -159,7 +163,6 @@ class PostsListActivity : LocaleAwareActivity(),
 
         quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
-
     private fun setupActionBar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -337,6 +340,11 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun loadIntentData(intent: Intent) {
+        val notificationType: NotificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+        if (notificationType != null) {
+            systemNotificationTracker.trackTappedNotification(notificationType)
+        }
+
         val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)
         if (targetPostId != -1) {
             viewModel.showTargetPost(targetPostId)
