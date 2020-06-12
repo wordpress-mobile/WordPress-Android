@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.store.StatsStore.OnStatsFetched
 import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.fluxc.utils.SiteUtils
 import org.wordpress.android.util.AppLog.T.STATS
@@ -26,7 +27,8 @@ class VisitsAndViewsStore
     private val timeStatsMapper: TimeStatsMapper,
     private val statsUtils: StatsUtils,
     private val currentTimeProvider: CurrentTimeProvider,
-    private val coroutineEngine: CoroutineEngine
+    private val coroutineEngine: CoroutineEngine,
+    private val appLogWrapper: AppLogWrapper
 ) {
     suspend fun fetchVisits(
         site: SiteModel,
@@ -38,7 +40,11 @@ class VisitsAndViewsStore
                 currentTimeProvider.currentDate,
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
+        logProgress("Site timezone: ${site.timezone}")
+        logProgress("Current date: ${currentTimeProvider.currentDate}")
+        logProgress("Fetching for date with applied timezone: $dateWithTimeZone")
         if (!forced && sqlUtils.hasFreshRequest(site, granularity, dateWithTimeZone, limitMode.limit)) {
+            logProgress("Loading cached data")
             return@withDefaultContext OnStatsFetched(
                     getVisits(site, granularity, limitMode, dateWithTimeZone),
                     cached = true
@@ -46,17 +52,29 @@ class VisitsAndViewsStore
         }
         val payload = restClient.fetchVisits(site, granularity, dateWithTimeZone, limitMode.limit, forced)
         return@withDefaultContext when {
-            payload.isError -> OnStatsFetched(payload.error)
+            payload.isError -> {
+                logProgress("Error fetching data: ${payload.error}")
+                OnStatsFetched(payload.error)
+            }
             payload.response != null -> {
+                logProgress("Data fetched correctly")
                 sqlUtils.insert(site, payload.response, granularity, dateWithTimeZone, limitMode.limit)
                 val overviewResponse = timeStatsMapper.map(payload.response, limitMode)
-                if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty())
+                if (overviewResponse.period.isBlank() || overviewResponse.dates.isEmpty()) {
+                    logProgress("Invalid response")
                     OnStatsFetched(StatsError(INVALID_RESPONSE, "Overview: Required data 'period' or 'dates' missing"))
-                else
+                } else {
+                    logProgress("Valid response returned for period: ${overviewResponse.period}")
+                    logProgress("Last data item for: ${overviewResponse.dates.lastOrNull()?.period}")
                     OnStatsFetched(overviewResponse)
+                }
             }
             else -> OnStatsFetched(StatsError(INVALID_RESPONSE))
         }
+    }
+
+    private fun logProgress(message: String) {
+        appLogWrapper.d(STATS, "fetchVisits: $message")
     }
 
     fun getVisits(
