@@ -80,7 +80,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
         searchInputWithHeader?.onTextChanged = { viewModel.updateQuery(it) }
     }
 
-    private fun initRecyclerView(rootView: ViewGroup) {
+    private fun initRecyclerView() {
         recycler_view.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
