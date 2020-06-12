@@ -27,7 +27,6 @@ class HandleMediaUploadErrorUseCase @Inject constructor(
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val mediaUtilsWrapper: MediaUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
@@ -38,25 +37,11 @@ class HandleMediaUploadErrorUseCase @Inject constructor(
                 trackMediaUploadError(it, error)
                 it
             }
-            val errorMessage: UiString = createMediaUploadErrorMessage(media, error)
             val mimeType = EditorFragmentAbstract.getEditorMimeType(mf)
             withContext(mainDispatcher) {
-                editorMediaListener.onMediaUploadFailed(localMediaId, mimeType, errorMessage)
+                editorMediaListener.onMediaUploadFailed(localMediaId, mimeType)
             }
         }
-    }
-
-    private fun createMediaUploadErrorMessage(media: MediaModel, error: MediaError): UiString {
-        // Display custom error depending on error type
-        var errorMessage: UiString? = mediaUtilsWrapper.getErrorMessage(media, error)?.let { UiStringText(it) }
-        if (errorMessage == null) {
-            errorMessage = if (TextUtils.isEmpty(error.message)) {
-                UiStringRes(string.tap_to_try_again)
-            } else {
-                UiStringText(error.message)
-            }
-        }
-        return errorMessage
     }
 
     private fun trackMediaUploadError(it: MediaFile, error: MediaError) {

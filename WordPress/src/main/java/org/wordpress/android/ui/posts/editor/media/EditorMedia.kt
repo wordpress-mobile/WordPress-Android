@@ -54,7 +54,7 @@ interface EditorMediaListener {
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
-    fun onMediaUploadFailed(localId: String, mediaType: MediaType, errorMessage: UiString)
+    fun onMediaUploadFailed(localId: String, mediaType: MediaType)
 }
 
 class EditorMedia @Inject constructor(
@@ -300,8 +300,8 @@ class EditorMedia @Inject constructor(
     }
 
     fun onMediaUploadError(media: MediaModel, error: MediaError) = launch {
-                handleMediaUploadErrorUseCase.onMediaUploadError(editorMediaListener, media, error)
-            }
+        handleMediaUploadErrorUseCase.onMediaUploadError(editorMediaListener, media, error)
+    }
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
