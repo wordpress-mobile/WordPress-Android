@@ -80,25 +80,25 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
-        viewModel.dismissBottomSheet.observe(this, Observer { event ->
+        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 closeListener?.onCloseClicked()
             }
         })
 
-        viewModel.dismissKeyboard.observe(this, Observer { event ->
+        viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 ActivityUtils.hideKeyboardForced(tags_edit_text)
             }
         })
 
-        viewModel.navigateToHomeScreen.observe(this, Observer { event ->
+        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 closeListener?.onBackClicked()
             }
         })
 
-        viewModel.toolbarTitleUiState.observe(this, Observer { uiString ->
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 

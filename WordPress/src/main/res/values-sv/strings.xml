@@ -1,11 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-03 17:31:27+0000
+Translation-Revision-Date: 2020-05-19 10:16:39+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Välkommen till vår nya blogg</string>
+    <string name="gutenberg_native_select_a_color">Välj en färg</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
+    <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
+    <string name="feature_announcement_find_out_mode">Ta reda på mer</string>
+    <string name="feature_announcement_dialog_label">Nyheter i WordPress</string>
+    <string name="insert_label_with_count">Infoga %d</string>
+    <string name="crop">beskär</string>
+    <string name="error_failed_to_load_into_file">Lyckades inte ladda in i filen, försök igen.</string>
+    <string name="preview_image_thumbnail_description">Miniatyr av förhandsvisningsbild</string>
+    <string name="photo_picker_use_media">Använd denna mediafil</string>
+    <string name="photo_picker_use_video">Använd denna video</string>
+    <string name="photo_picker_photo_or_video_title">Välj media</string>
+    <string name="photo_picker_video_title">Välj video</string>
+    <string name="site_picker_ask_site_select">Kunde inte välja webbplats. Försök igen.</string>
+    <string name="sitepicker_continue_flow">Fortsätt</string>
+    <string name="reader_reblog_error">Reblogg misslyckades</string>
+    <string name="reader_no_site_to_reblog_action">Hantera webbplatser</string>
+    <string name="reader_no_site_to_reblog_detail">När du har skapat en webbplats på WordPress.com kan du reblogga innehåll du tycker om till din egen webbplats.</string>
+    <string name="reader_no_site_to_reblog_title">Inga webbplatser på WordPress.com tillgängliga</string>
+    <string name="whats_new_in_version_title">Nyheter</string>
+    <string name="comment_q_action_copied_url">Länkadress kopierad</string>
+    <string name="copy_link_address">Kopiera länkadress</string>
+    <string name="comment_share_link_via">Dela via</string>
+    <string name="comment_toast_err_share_intent">Kunde inte dela</string>
+    <string name="button_insert">Infoga</string>
+    <string name="continue_label">Fortsätt</string>
+    <string name="copy_text">Kopiera</string>
+    <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Flytta blocket åt höger</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytta blocket åt vänster från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
+    <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
+    <string name="gutenberg_native_blog">Blogg</string>
+    <string name="new_site_creation_creating_site_loading_4">Skapar adminpanel</string>
+    <string name="new_site_creation_creating_site_loading_3">Konfigurerar temat</string>
+    <string name="new_site_creation_creating_site_loading_2">Lägger till olika webbplatsfunktioner</string>
+    <string name="new_site_creation_creating_site_loading_1">Hämtar URL för webbplatsen</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Din webbplats är snart klar</string>
+    <string name="new_site_creation_creating_site_loading_title">Hurra!\nNästan klart nu</string>
+    <string name="pages_and_posts_cancel_auto_upload">Avbryt uppladdningen</string>
+    <string name="gif_list_search_returned_unknown_error">Ett problem uppstod när din begäran behandlades</string>
+    <string name="gif_powered_by_tenor">Drivs med Tenor</string>
+    <string name="gif_picker_search_hint">Sök i Tenor</string>
+    <string name="photo_picker_gif">Välj från Tenor</string>
+    <string name="weekday_saturday">Lördag</string>
+    <string name="weekday_friday">Fredag</string>
+    <string name="weekday_thursday">Torsdag</string>
+    <string name="weekday_wednesday">Onsdag</string>
+    <string name="weekday_tuesday">Tisdag</string>
+    <string name="weekday_monday">Måndag</string>
+    <string name="weekday_sunday">Söndag</string>
+    <string name="media_accessing_failed">Lyckades inte hämta innehållet från en privat webbplats. Vissa mediafiler kanske inte är tillgängliga</string>
+    <string name="media_accessing_progress">Hämtning av innehåll från en privat webbplats</string>
+    <string name="error_failed_to_crop_and_save_image">Lyckades inte beskära och spara bilden. Försök igen.</string>
+    <string name="failed_to_load_image_tap_to_retry">Misslyckades att ladda bild.\nTryck för att försöka igen.</string>
+    <string name="preview_image_description">Förhandsgranskningsbild</string>
+    <string name="error_unknown_page_type">Okänt sidformat</string>
+    <string name="error_page_not_submitted">Åtgärden gick inte att slutföra och denna sida skickades inte för granskning.</string>
+    <string name="error_page_not_scheduled">Åtgärden gick inte att slutföra och sidan schemalades inte.</string>
+    <string name="error_page_not_published_private">Åtgärden gick inte att slutföra och denna privata sida publicerades inte.</string>
+    <string name="error_page_not_published">Åtgärden gick inte att slutföra och denna sida publicerades inte.</string>
+    <string name="error_page_not_submitted_retrying">Det gick inte att skicka denna sida för granskning, men vi försöker igen senare. </string>
+    <string name="error_page_not_scheduled_retrying">Det gick inte att schemalägga denna sida, men vi försöker igen senare.</string>
+    <string name="error_page_not_published_retrying_private">Det gick inte att publicera denna privata sida, men vi försöker igen senare.</string>
+    <string name="error_page_not_published_retrying">Sidan gick inte att publicera, men vi försöker igen senare.</string>
+    <string name="error_media_recover_page_not_submitted">Det gick inte att ladda upp denna mediafil och sidan skickades inte för granskning. </string>
+    <string name="error_media_recover_page_not_scheduled">Det gick inte att ladda upp denna mediafil och sidan schemalades inte.</string>
+    <string name="error_media_recover_page_not_published_private">Det gick inte att ladda upp denna mediafil och denna privata sida publicerades inte.</string>
+    <string name="error_media_recover_page_not_published">Det gick inte att ladda upp denna mediafil och sidan publicerades inte.</string>
+    <string name="page_waiting_for_connection_draft">Vi kommer att spara ditt utkast när din enhet har uppkoppling till internet igen</string>
+    <string name="page_waiting_for_connection_private">Vi kommer att publicera din privata sida när din enhet har kontakt med internet igen</string>
+    <string name="page_waiting_for_connection_scheduled">Vi kommer att schemalägga sidan när din enhet har kontakt med internet igen.</string>
+    <string name="page_waiting_for_connection_pending">Vi kommer att skicka din sida för granskning när din enhet har kontakt med internet igen.</string>
+    <string name="page_waiting_for_connection_publish">Vi kommer att publicera sidan när din enhet har kontakt med internet igen.</string>
+    <string name="page_queued">Sidan i kö</string>
+    <string name="page_uploading">Laddar upp sidan</string>
+    <string name="error_publish_page_no_network">Enheten är offline. Sidan sparad lokalt.</string>
+    <string name="local_page_autosave_revision_available">Du har gjort ändringar i denna sida som inte är sparade</string>
+    <string name="editor_uploading_page">Din sida håller på att laddas upp</string>
+    <string name="editor_page_saved_locally_failed_media">Sidan innehåller media som inte kunde laddas upp och har sparats lokalt på enheten</string>
+    <string name="editor_page_saved_locally">Sidan sparad på enheten</string>
+    <string name="editor_page_saved_online">Sidan har sparats on-line</string>
+    <string name="quickpress_shortcut_activity_label">Välj blogg för QuickPress-genväg</string>
+    <string name="app_theme_default">Tilldelat av batterisparfunktionen</string>
+    <string name="app_theme_dark">Mörkt</string>
+    <string name="app_theme_light">Ljust</string>
+    <string name="app_theme">Utseende</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
     <string name="gutenberg_native_what_people_say">Så här säger andra personer</string>
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Vi erbjuder en rad tjänster som hjälper dig att uppnå dina mål. Vet du inte vad du behöver, eller undrar du hur mycket det kostar? Vi förklarar gärna mer om våra tjänster och berättar om våra priser. Hör av dig till oss här nedan.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Vi är ett litet team med proffsiga specialister och täcker många olika områden och erfarenheter. Vi älskar vårt jobb och arbetar därför passionerat. Vi ser fram emot att arbeta även med dig.</string>
@@ -28,9 +120,7 @@ Language: sv_SE
     <string name="gutenberg_native_portfolio">Portfölj</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minsta höjd i pixlar</string>
     <string name="gutenberg_native_link_to">Länk till</string>
-    <string name="gutenberg_native_link_settings">Länkalternativ</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Låt oss skapa något tillsammans.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Låt oss skapa något tillsammans</string>
@@ -44,22 +134,16 @@ Language: sv_SE
     <string name="gutenberg_native_get_in_touch">Hör av dig</string>
     <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Redigera omslagsmedia</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
     <string name="gutenberg_native_customize">ANPASSA</string>
     <string name="gutenberg_native_city_10100">Staden, 10100</string>
-    <string name="gutenberg_native_button_link_url">URL för knapp-länk</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Inställningar för knappfärger kommer att läggas till snart.</string>
-    <string name="gutenberg_native_border_settings">Kantinställningar</string>
-    <string name="gutenberg_native_border_radius">Kantradie</string>
-    <string name="gutenberg_native_background_opacity">Bakgrundens opacitet</string>
     <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">En beskrivning av projektet och dess slutresultat.</string>
-    <string name="gutenberg_native_555_555_1234">+1&#8211;(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">+1-(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
     <string name="post_list_tab_trashed_posts">Borttagna</string>
@@ -187,7 +271,6 @@ Language: sv_SE
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Ta bort block från rad %s</string>
     <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
     <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
     <string name="gutenberg_native_problem_displaying_block">Problem med att visa block</string>
@@ -218,7 +301,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_select_an_image">Dubbeltryck för att välja en bild</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Dubbeltryck för att välja ett videoklipp</string>
     <string name="gutenberg_native_double_tap_to_select">Dubbeltryck för att välja</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Dubbeltryck för att ta bort blocket</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Dubbeltryck för att göra om senaste ändring</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Dubbeltryck för att flytta blocket uppåt</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Dubbeltryck för att flytta blocket nedåt</string>
@@ -614,6 +696,9 @@ Language: sv_SE
     <string name="stats_no_data_for_period">Inga uppgifter för denna tidsperiod</string>
     <string name="preference_strip_image_location">Avlägsna position från media</string>
     <string name="stats_cannot_be_started">Just nu går det inte att öppna statistiken. Försök igen senare</string>
+    <string name="gif_picker_endless_scroll_network_error">Vissa mediefiler kunde inte laddas på grund av nätverksproblem.</string>
+    <string name="gif_picker_empty_search_list">Inga media matchar din sökning</string>
+    <string name="gif_picker_initial_empty_text">Leta efter GIF-filer du kan lägga till i ditt mediebibliotek!</string>
     <string name="stats_author_views_label">Visningar</string>
     <string name="stats_author_label">Författare</string>
     <string name="stats_authors">Författare</string>
@@ -796,7 +881,6 @@ Language: sv_SE
     <string name="reader_empty_posts_liked_title">Ingenting gillat än</string>
     <string name="reader_empty_followed_blogs_button_followed">Gå till följda webbplatser</string>
     <string name="reader_empty_followed_blogs_button_discover">Hitta webbplatser</string>
-    <string name="reader_empty_followed_blogs_description">Du följer inte någre webbplatser än. Du kanske vill följa någon nu?</string>
     <string name="reader_empty_followed_blogs_title">Inga följda webbplatser</string>
     <string name="notifications_empty_likes">Inga gillamarkeringar än</string>
     <string name="notifications_empty_followers">Inga följare än</string>
@@ -1254,7 +1338,6 @@ Language: sv_SE
     <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
-    <string name="copy">Kopiera</string>
     <string name="connect_site">Anslut webbplats</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinksignal</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrationssignal</string>
@@ -2063,7 +2146,6 @@ Language: sv_SE
     <string name="content_required">Kommentar krävs</string>
     <string name="sure_to_cancel_edit_comment">Avbryt redigeringen av denna kommentar?</string>
     <string name="saving_changes">Spara ändringarna</string>
-    <string name="hint_comment_content">Kommentar</string>
     <string name="trash">Kasta bort</string>
     <string name="dlg_confirm_trash_comments">Kasta?</string>
     <string name="dlg_trashing_comments">Skicka till papperskorg</string>
@@ -2120,6 +2202,7 @@ Language: sv_SE
     <string name="reader_btn_unfollow">Följer</string>
     <string name="reader_btn_follow">Följ</string>
     <string name="reader_btn_share">Dela</string>
+    <string name="reader_view_reblog">Reblogga</string>
     <string name="reader_untitled_post">(Ingen titel)</string>
     <string name="comments_empty_list">Inga kommentarer … än</string>
     <string name="empty_list_default">Listan är tom</string>
@@ -2165,7 +2248,7 @@ Language: sv_SE
     <string name="pages">Sidor</string>
     <string name="no_network_title">Inget nätverk tillgängligt</string>
     <string name="ok">OK</string>
-    <string name="blogusername">användarnamn</string>
+    <string name="done">klart</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress for Android</string>
     <string name="tos">Allmänna villkor</string>
@@ -2178,7 +2261,6 @@ Language: sv_SE
     <string name="quickpress_add_alert_title">Ange genvägsnamn</string>
     <string name="settings">Inställningar</string>
     <string name="quickpress_add_error">Genvägsnamn kan inte vara tomt</string>
-    <string name="quickpress_window_title">Välj blogg för QuickPress-genväg</string>
     <string name="pages_private">Privat</string>
     <string name="categories">Kategorier</string>
     <string name="tags_separate_with_commas">Separera etiketter med kommatecken</string>

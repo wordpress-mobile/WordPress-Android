@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-04 19:33:56+0000
-Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-04-13 07:20:53+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: pl
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
+    <string name="error_page_not_published_private">Nie można było ukończyć tego działania, i opublikować tej prywatnej strony. </string>
+    <string name="preview_image_description">Podgląd zdjęcia</string>
+    <string name="error_unknown_page_type">Nieznany format strony</string>
+    <string name="error_page_not_submitted">Nie można było ukończyć tego działania, i przesłać tej strony do przeglądu.</string>
+    <string name="error_page_not_scheduled">Nie można było przesłać tego pliku mediów i zaplanować daty opublikowania tej strony. </string>
+    <string name="error_page_not_published">Nie można było ukończyć tego działania, i opublikować tej strony. </string>
+    <string name="error_page_not_submitted_retrying">Nie można było przesłać tej strony do przeglądu, ale spróbujemy ponownie później. </string>
+    <string name="error_page_not_scheduled_retrying">Nie można było zaplanować opublikowania tej strony, ale spróbujemy ponownie później.</string>
+    <string name="error_page_not_published_retrying_private">Nie można było opublikować tej prywatnej strony, ale spróbujemy ponownie później.</string>
+    <string name="error_page_not_published_retrying">Nie można było opublikować tej strony, ale spróbujemy ponownie później.</string>
+    <string name="error_media_recover_page_not_submitted">Nie można było przesłać pliku mediów i przesłać tej strony do przeglądu.</string>
+    <string name="error_media_recover_page_not_scheduled">Nie można było przesłać tego pliku mediów i zaplanować opublikowania tej strony. </string>
+    <string name="error_media_recover_page_not_published_private">Nie można było przesłać tego pliku mediów i opublikować tej prywatnej strony. </string>
+    <string name="error_media_recover_page_not_published">Nie można było przesłać tego pliku mediów i opublikować strony. </string>
+    <string name="page_waiting_for_connection_draft">Zapiszemy twój szkic kiedy urządzenie będzie ponownie online</string>
+    <string name="page_waiting_for_connection_private">Opublikujemy twoją prywatną stronę kiedy urządzenie będzie ponownie online.</string>
+    <string name="page_uploading">Przesyłanie strony</string>
+    <string name="error_publish_page_no_network">Urządzenie jest offline. Strona zapisana lokalnie. </string>
+    <string name="local_page_autosave_revision_available">Dokonałeś niezapisanych zmian na tej stronie</string>
+    <string name="page_queued">Strona w kolejce</string>
+    <string name="page_waiting_for_connection_scheduled">Zaplanujemy publikację tej strony kiedy urządzenie będzie ponownie online.</string>
+    <string name="page_waiting_for_connection_pending">Prześlemy twoją stronę do przeglądu kiedy urządzenie będzie ponownie online.</string>
+    <string name="page_waiting_for_connection_publish">Opublikujemy stronę kiedy twoje urządzenie będzie ponownie online.</string>
+    <string name="app_theme">Wygląd</string>
+    <string name="app_theme_light">Jasny</string>
+    <string name="app_theme_dark">Ciemny</string>
+    <string name="app_theme_default">Ustawiony przez tryb oszczędzania baterii</string>
+    <string name="editor_uploading_page">Strona wczytuje się</string>
+    <string name="editor_page_saved_locally_failed_media">Strona posiada zakończone niepowodzeniem próby przesłania plików mediów i została zapisana lokalnie</string>
+    <string name="editor_page_saved_locally">Strona zapisana na urządzeniu</string>
+    <string name="editor_page_saved_online">Strona zapisana online</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
+    <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
     <string name="gutenberg_native_what_people_say">Co mówią ludzie</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jesteśmy małym zespołem utalentowanych profesjonalistów z szerokim zakresem umiejętności i doświadczeń. Kochamy to co robimy i robimy to z pasją. Czekamy z niecierpliwością aby rozpocząć współpracę z tobą. </string>
     <string name="gutenberg_native_warning_message">Ostrzeżenie</string>
@@ -24,9 +58,7 @@ Language: pl
     <string name="gutenberg_native_success_message">Komunikat o pozytywnym zakończeniu</string>
     <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">To jest przykładowa treść, zawarta w szablonie, która ilustruje jego możliwości. Usuń ją i wstaw swoje słowa i media.</string>
     <string name="gutenberg_native_portfolio">Portfolio</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimalna wysokość w pikselach</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
-    <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
@@ -45,14 +77,9 @@ Language: pl
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nie płacz bo się skończyło, śmiej się bo się zdarzyło.</string>
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
     <string name="gutenberg_native_city_10100">Miasto, 10100</string>
-    <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Ustawienia kolorów dla przycisków pojawią się wkrótce</string>
-    <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
-    <string name="gutenberg_native_background_opacity">Przezroczystość tła</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Krótki opis usług które oferujesz.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Opis projektu i zaprezentowanych prac</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Krótki życiorys z osobistą historią, kluczowe osiągnięcia lub interesujący fakt.</string>
     <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
@@ -183,7 +210,6 @@ Language: pl
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
     <string name="gutenberg_native_sidebar_title_plugin">Wtyczka paska bocznego</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Usuń blok we wierszu %s</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
     <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
@@ -213,7 +239,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
     <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Stuknij dwukrotnie aby usunąć blok</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Stuknij dwukrotnie aby cofnąć ostatnią zmianę</string>
     <string name="gutenberg_native_double_tap_to_toggle_setting">Stuknij dwukrotnie aby zmienić ustawienie</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Stuknij dwukrotnie aby przesunąć blok do góry</string>
@@ -248,8 +273,6 @@ Language: pl
     <string name="notifications_tab_dialog_master_off_title">Aby zobaczyć zakładkę powiadomień dla tej witryny, włącz powiadomienia dla tej witryny.</string>
     <string name="notifications_tab_dialog_master_hint_off">Włącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
     <string name="notifications_tab_dialog_master_hint_on">Wyłącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
-    <string name="dialog_gutenberg_informative_description_page">Dla nowych stron używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Dla nowych wpisów używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \"Moja Witryna\' > \'Ustawienia witryny\'.</string>
     <string name="pick_media">Dodaj zdjęcie lub film</string>
     <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
     <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
@@ -790,7 +813,6 @@ Language: pl
     <string name="people_empty_list_filtered_email_followers">Brak oglądających przez email</string>
     <string name="people_empty_list_filtered_users">Jeszcze nie ma użytkowników</string>
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
-    <string name="reader_empty_followed_blogs_description">Nie obserwujesz żadnych witryn. Może zaczniesz? </string>
     <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
     <string name="reader_empty_followed_blogs_button_discover">Odkrywaj witryny </string>
@@ -1250,7 +1272,6 @@ Language: pl
     <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL </string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
-    <string name="copy">Kopiuj</string>
     <string name="connect_site">Połącz witrynę</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>
@@ -2054,7 +2075,6 @@ Language: pl
     <string name="post_settings">Ustawienia wpisu</string>
     <string name="mnu_comment_spam">Spam</string>
     <string name="edit_comment">Edytuj komentarz</string>
-    <string name="hint_comment_content">Komentarz</string>
     <string name="saving_changes">Zapisywanie zmian</string>
     <string name="toast_comment_unedited">Komentarz nie został zmieniony</string>
     <string name="learn_more">Dowiedz się więcej</string>
@@ -2161,7 +2181,7 @@ Language: pl
     <string name="posts">Wpisy</string>
     <string name="anonymous">Anonimowy</string>
     <string name="ok">OK</string>
-    <string name="blogusername">nazwa użytkownika blogu</string>
+    <string name="done">gotowe</string>
     <string name="link_enter_url">Adres URL</string>
     <string name="version">Wersja</string>
     <string name="app_title">WordPress dla Androida</string>
@@ -2173,7 +2193,6 @@ Language: pl
     <string name="immediately">Natychmiast</string>
     <string name="quickpress_add_alert_title">Wpisz nazwę skrótu</string>
     <string name="settings">Ustawienia</string>
-    <string name="quickpress_window_title">Wybierz blog dla skrótu QuickPress</string>
     <string name="quickpress_add_error">Nazwa skrótu nie może być pusta</string>
     <string name="pages_private">Prywatny</string>
     <string name="categories">Kategorie</string>

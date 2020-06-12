@@ -59,8 +59,8 @@ class PageListViewModel @Inject constructor(
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
-    val pages: LiveData<Pair<List<PageItem>, Boolean>> = Transformations.map(_pages) {
-        Pair(it, isSitePhotonCapable)
+    val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
+        Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
 
     private val _scrollToPosition = SingleLiveEvent<Int>()
@@ -76,6 +76,10 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePhotonCapable: Boolean by lazy {
         SiteUtils.isPhotonCapable(pagesViewModel.site)
+    }
+
+    private val isSitePrivateAt: Boolean by lazy {
+        pagesViewModel.site.isPrivateWPComAtomic
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
@@ -257,20 +261,20 @@ class PageListViewModel @Inject constructor(
                         DEFAULT_INDENT
                     }
                     val itemUiStateData = createItemUiStateData(it)
-
                     PublishedPage(
-                            it.remoteId,
-                            it.pageId,
-                            it.title,
-                            it.date,
-                            itemUiStateData.labels,
-                            itemUiStateData.labelsColor,
-                            pageItemIndent,
-                            getFeaturedImageUrl(it.featuredImageId),
-                            itemUiStateData.actions,
-                            actionsEnabled,
-                            itemUiStateData.progressBarUiState,
-                            itemUiStateData.showOverlay
+                            remoteId = it.remoteId,
+                            localId = it.pageId,
+                            title = it.title,
+                            subtitle = itemUiStateData.subtitle,
+                            date = it.date,
+                            labels = itemUiStateData.labels,
+                            labelsColor = itemUiStateData.labelsColor,
+                            indent = pageItemIndent,
+                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                            actions = itemUiStateData.actions,
+                            actionsEnabled = actionsEnabled,
+                            progressBarUiState = itemUiStateData.progressBarUiState,
+                            showOverlay = itemUiStateData.showOverlay
                     )
                 }
     }
@@ -286,16 +290,17 @@ class PageListViewModel @Inject constructor(
                                 val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, it.pageId,
-                                        it.title,
-                                        it.date,
-                                        itemUiStateData.labels,
-                                        itemUiStateData.labelsColor,
-                                        getFeaturedImageUrl(it.featuredImageId),
-                                        itemUiStateData.actions,
-                                        actionsEnabled,
-                                        itemUiStateData.progressBarUiState,
-                                        itemUiStateData.showOverlay
+                                        remoteId = it.remoteId,
+                                        localId = it.pageId,
+                                        title = it.title,
+                                        date = it.date,
+                                        labels = itemUiStateData.labels,
+                                        labelsColor = itemUiStateData.labelsColor,
+                                        imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                                        actions = itemUiStateData.actions,
+                                        actionsEnabled = actionsEnabled,
+                                        progressBarUiState = itemUiStateData.progressBarUiState,
+                                        showOverlay = itemUiStateData.showOverlay
                                 )
                             }
                 }
@@ -309,17 +314,17 @@ class PageListViewModel @Inject constructor(
         return pages.map {
             val itemUiStateData = createItemUiStateData(it)
             DraftPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay
             )
         }
     }
@@ -331,17 +336,17 @@ class PageListViewModel @Inject constructor(
         return pages.map {
             val itemUiStateData = createItemUiStateData(it)
             TrashedPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay
             )
         }
     }
@@ -391,8 +396,18 @@ class PageListViewModel @Inject constructor(
         val (labels, labelColor) = createPageListItemLabelsUseCase.createLabels(pageModel.post, uploadUiState)
 
         val (progressBarUiState, showOverlay) = pageItemProgressUiStateUseCase.getProgressStateForPage(uploadUiState)
-        val actions = pageListItemActionsUseCase.setupPageActions(listType, uploadUiState)
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
+        val actions = pageListItemActionsUseCase.setupPageActions(
+                listType,
+                uploadUiState,
+                pagesViewModel.site,
+                pageModel.remoteId
+        )
+        val subtitle = when (pageModel.remoteId) {
+            pagesViewModel.site.pageOnFront -> R.string.site_settings_homepage
+            pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
+            else -> null
+        }
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle)
     }
 
     private data class ItemUiStateData(
@@ -400,6 +415,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>
+        val actions: Set<Action>,
+        val subtitle: Int? = null
     )
 }

@@ -73,6 +73,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_ADDED_PHOTO_VIA_STOCK_MEDIA_LIBRARY:
                 predefinedEventProperties.put("via", "stock_photos");
                 break;
+            case EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR:
+                predefinedEventProperties.put("via", "media_editor");
+                break;
             case EDITOR_TAPPED_BLOCKQUOTE:
                 predefinedEventProperties.put("button", "blockquote");
                 break;
@@ -462,6 +465,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED:
                 predefinedEventProperties.put("button", "add_self_hosted_site");
                 break;
+            case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
+                predefinedEventProperties.put("source", "app_upgrade");
+                break;
+            case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
+                predefinedEventProperties.put("source", "app_settings");
+                break;
+            case FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED:
+                predefinedEventProperties.put("button", "close_dialog");
+                break;
+            case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
+                predefinedEventProperties.put("button", "find_out_more");
+                break;
         }
 
         final String user;
@@ -633,6 +648,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_article_detail_unliked";
             case READER_ARTICLE_LIKED:
                 return "reader_article_liked";
+            case READER_ARTICLE_REBLOGGED:
+                return "reader_article_reblogged";
+            case READER_ARTICLE_DETAIL_REBLOGGED:
+                return "reader_article_detail_reblogged";
             case READER_ARTICLE_OPENED:
                 return "reader_article_opened";
             case READER_ARTICLE_UNLIKED:
@@ -763,6 +782,8 @@ public class AnalyticsTrackerNosara extends Tracker {
             case EDITOR_ADDED_PHOTO_VIA_DEVICE_LIBRARY:
                 return "editor_photo_added";
             case EDITOR_ADDED_PHOTO_VIA_WP_MEDIA_LIBRARY:
+                return "editor_photo_added";
+            case EDITOR_ADDED_PHOTO_VIA_MEDIA_EDITOR:
                 return "editor_photo_added";
             case EDITOR_ADDED_VIDEO_NEW:
                 return "editor_video_added";
@@ -1741,6 +1762,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_shown";
             case MEDIA_EDITOR_USED:
                 return "media_editor_used";
+            case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
+            case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
+                return "feature_announcement_shown";
+            case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
+            case FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED:
+                return "feature_announcement_button_tapped";
+            case OPENED_PLANS_COMPARISON:
+                return "plans_compare";
         }
         return null;
     }

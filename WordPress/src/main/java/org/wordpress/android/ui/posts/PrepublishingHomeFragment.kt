@@ -59,17 +59,17 @@ class PrepublishingHomeFragment : Fragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
 
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             (actions_recycler_view.adapter as PrepublishingHomeAdapter).update(uiState)
         })
 
-        viewModel.onActionClicked.observe(this, Observer { event ->
+        viewModel.onActionClicked.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let { actionType ->
                 actionClickedListener?.onActionClicked(actionType)
             }
         })
 
-        viewModel.onSubmitButtonClicked.observe(this, Observer { event ->
+        viewModel.onSubmitButtonClicked.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 actionClickedListener?.onSubmitButtonClicked(publishPost)
             }

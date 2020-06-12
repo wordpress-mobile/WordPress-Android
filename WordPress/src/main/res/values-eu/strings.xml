@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-12-08 17:50:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: eu_ES
 -->
 <resources>
@@ -356,7 +356,6 @@ Language: eu_ES
     <string name="dlg_trashing_comments">Zakarrontzira bidaltzen</string>
     <string name="dlg_confirm_trash_comments">Zakarrontzira bidali?</string>
     <string name="trash">Zakarrontzia</string>
-    <string name="hint_comment_content">Iruzkina</string>
     <string name="add_new_category">Gehitu kategoria berria</string>
     <string name="category_name">Kategoriaren izena</string>
     <string name="privacy_policy">Pribatutasun politika</string>
@@ -461,7 +460,6 @@ Language: eu_ES
     <string name="pages">Orrialdeak</string>
     <string name="anonymous">Anonimoa</string>
     <string name="posts">Bidalketak</string>
-    <string name="blogusername">Blogeko erabiltzaile-izena</string>
     <string name="ok">Ados</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress Android-erako</string>
@@ -475,7 +473,6 @@ Language: eu_ES
     <string name="quickpress_add_alert_title">Sarbide zuzenaren izena</string>
     <string name="settings">Ezarpenak</string>
     <string name="quickpress_add_error">Sarbide zuzenaren izena ezin da hutsik egon.</string>
-    <string name="quickpress_window_title">Aukeratu Argitaratze Azkarra erabiltzeko blog bat</string>
     <string name="title">Izenburua</string>
     <string name="categories">Kategoriak</string>
     <string name="tags_separate_with_commas">Banandu etiketak komak erabiliz</string>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2019-10-14 10:15:49+0000
+Translation-Revision-Date: 2020-04-06 15:11:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ku_TR
 -->
 <resources>
+    <string name="notifications_tab_title_likes">Ecibandinên Te</string>
+    <string name="reader_filter_main_title">Şopandinên Te</string>
+    <string name="reader_save_for_later_display_name">Tomarên Te</string>
     <string name="stats_file_downloads_value_label">Daxistin</string>
     <string name="stats_file_downloads_title_label">Pelge</string>
     <string name="stats_file_downloads">Daxistinên pelgeyan</string>
@@ -484,7 +487,6 @@ Language: ku_TR
     <string name="reader_empty_posts_liked_title">Hîn ti tişt nehatiye ecibandin</string>
     <string name="reader_empty_followed_blogs_button_followed">Here şopandinên xwe</string>
     <string name="reader_empty_followed_blogs_button_discover">Malperan vebibîne</string>
-    <string name="reader_empty_followed_blogs_description">Te hîn ti malper neşopandiye. Çima niha malperekê naşopînî?</string>
     <string name="reader_empty_followed_blogs_title">Malperên tu dişopîne tune</string>
     <string name="notifications_empty_likes">Hîn ecibandin tune</string>
     <string name="notifications_empty_followers">Hîna şopîner tune</string>
@@ -941,7 +943,6 @@ Language: ku_TR
     <string name="media_edit_filename_caption">Navê Pelgeyê</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Nivîsa alternatîv</string>
-    <string name="copy">Kopî bike</string>
     <string name="connect_site">Malper Girêde</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Şewqê veke - bigire</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Amûrê biricifîne</string>
@@ -1750,7 +1751,6 @@ Language: ku_TR
     <string name="content_required">Şîrove pêwîst e</string>
     <string name="sure_to_cancel_edit_comment">Bila serrastkirina vê şîroveyê were betalkirin?</string>
     <string name="saving_changes">Guherîn tê tomarkirin</string>
-    <string name="hint_comment_content">Şîrove</string>
     <string name="trash">Jêbirdank</string>
     <string name="dlg_confirm_trash_comments">Bila bişîne jêbirdankê?</string>
     <string name="dlg_trashing_comments">Dişîne jêbirdankê</string>
@@ -1818,7 +1818,7 @@ Language: ku_TR
     <string name="stats_view_referrers">Şander</string>
     <string name="stats_view_tags_and_categories">Tîtik û Kategorî</string>
     <string name="stats_view_clicks">Tikandin</string>
-    <string name="stats">Rêjejimar</string>
+    <string name="stats">Amar</string>
     <string name="share_action">Parve bike</string>
     <string name="theme_activate_button">Biçalakîne</string>
     <string name="media_edit_failure">Hildemandin têkçû</string>
@@ -1852,7 +1852,6 @@ Language: ku_TR
     <string name="pages">Rûpel</string>
     <string name="no_network_title">Tora berdest nîn e</string>
     <string name="ok">BAŞ e</string>
-    <string name="blogusername">blognavêbikarhêner</string>
     <string name="link_enter_url">Navnîşan</string>
     <string name="app_title">WordPress ji bo Android</string>
     <string name="tos">Mercên Xizmetê</string>
@@ -1865,7 +1864,6 @@ Language: ku_TR
     <string name="quickpress_add_alert_title">Navê kurterê bisazîne</string>
     <string name="settings">Sazkarî</string>
     <string name="quickpress_add_error">Navê Kurterê nabe vala be.</string>
-    <string name="quickpress_window_title">Ji bo kurterêya QuickPressê, blog hilbijêre</string>
     <string name="pages_private">Veşartî</string>
     <string name="categories">Kategorî</string>
     <string name="tags_separate_with_commas">Tîtikan bi bêhnokan(,) ji hev veqetîne</string>
@@ -1878,7 +1876,7 @@ Language: ku_TR
     <string name="none">Hîç</string>
     <string name="no">Na</string>
     <string name="yes">Erê</string>
-    <string name="notification_settings">Sazkariyên Danezana</string>
+    <string name="notification_settings">Sazkariyên Danezanan</string>
     <string name="reply">Bibersivîne</string>
     <string name="on">li ser</string>
     <string name="preview">Pêşdîtin</string>

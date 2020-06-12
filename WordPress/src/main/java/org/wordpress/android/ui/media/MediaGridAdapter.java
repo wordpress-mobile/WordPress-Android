@@ -132,7 +132,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         // return photon-ized url if the site allows it since this gives us the image at the
         // exact size we need here
         if (SiteUtils.isPhotonCapable(mSite)) {
-            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight);
+            return PhotonUtils.getPhotonImageUrl(media.getUrl(), mThumbWidth, mThumbHeight,
+                    mSite.isPrivateWPComAtomic());
         }
 
         // can't use photon, so try the various image sizes - note we favor medium-large and

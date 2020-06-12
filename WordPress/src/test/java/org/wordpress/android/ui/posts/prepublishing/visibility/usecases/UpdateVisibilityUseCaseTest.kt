@@ -23,7 +23,7 @@ class UpdateVisibilityUseCaseTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setup() {
-        updateVisibilityUseCase = UpdateVisibilityUseCase(UpdatePostStatusUseCase(mock()))
+        updateVisibilityUseCase = UpdateVisibilityUseCase(UpdatePostStatusUseCase(mock(), mock()))
         editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { PostModel() }
     }

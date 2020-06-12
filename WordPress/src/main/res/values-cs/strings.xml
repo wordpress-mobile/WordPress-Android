@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2020-03-31 06:52:54+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: cs_CZ
 -->
 <resources>
@@ -96,11 +96,9 @@ Language: cs_CZ
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autoři</string>
     <string name="stats_videos_views_label">Zobrazení</string>
-    <string name="giphy_powered_by_giphy">Powered by GIPHY</string>
     <string name="stats_insights_view_more">Zobrazit více</string>
     <string name="stats_insights_share_post">Sdílet příspěvek</string>
     <string name="stats_insights_create_post">Vytvořit příspěvek</string>
-    <string name="giphy_picker_search_hint">Prohledat Giphy</string>
     <string name="stats_search_terms_label">Hledaný výraz</string>
     <string name="stats_search_terms">Hledaný výrazy</string>
     <string name="stats_clicks_label">Kliknutí</string>
@@ -693,7 +691,6 @@ Language: cs_CZ
     <string name="media_edit_filetype_caption">Typ souboru</string>
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="copy">Kopírovat</string>
     <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>
@@ -1491,7 +1488,6 @@ Language: cs_CZ
     <string name="comment_status_unapproved">Čekající na schválení</string>
     <string name="local_draft">Místní návrh</string>
     <string name="saving_changes">Ukládám změny</string>
-    <string name="hint_comment_content">Komentář</string>
     <string name="content_required">Je vyžadován komentář</string>
     <string name="toast_comment_unedited">Komentář nebyl změněn</string>
     <string name="view_in_browser">Zobrazit v prohlížeči</string>
@@ -1602,7 +1598,6 @@ Language: cs_CZ
     <string name="posts">Příspěvky</string>
     <string name="anonymous">Anonymní</string>
     <string name="ok">OK</string>
-    <string name="blogusername">Jmémo blogera</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress pro Android</string>
     <string name="version">Verze</string>
@@ -1615,7 +1610,6 @@ Language: cs_CZ
     <string name="quickpress_add_alert_title">Nastavit název zkráceného odkazu</string>
     <string name="settings">Nastavení</string>
     <string name="quickpress_add_error">Název zkráceného odkazu nemůže být prázdný</string>
-    <string name="quickpress_window_title">Vyberte web pro zkrácený odkaz QuickPress</string>
     <string name="pages_private">Soukromé</string>
     <string name="title">Název</string>
     <string name="categories">Rubriky</string>

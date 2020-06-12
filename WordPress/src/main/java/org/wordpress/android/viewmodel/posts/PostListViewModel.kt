@@ -369,7 +369,8 @@ class PostListViewModel @Inject constructor(
                         trackPostListAction(connector.site, buttonType, postModel, statEvent)
                         connector.postActionHandler.handlePostButton(buttonType, postModel)
                     },
-                    uploadStatusTracker = connector.uploadStatusTracker
+                    uploadStatusTracker = connector.uploadStatusTracker,
+                    isSearch = connector.postListType == SEARCH
             )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
@@ -386,7 +387,8 @@ class PostListViewModel @Inject constructor(
                     featuredImageUrl,
                     photonWidth,
                     photonHeight,
-                    !SiteUtils.isPhotonCapable(connector.site)
+                    !SiteUtils.isPhotonCapable(connector.site),
+                    connector.site.isPrivateWPComAtomic
             )
 
     fun updateAuthorFilterIfNotSearch(authorFilterSelection: AuthorFilterSelection): Boolean {

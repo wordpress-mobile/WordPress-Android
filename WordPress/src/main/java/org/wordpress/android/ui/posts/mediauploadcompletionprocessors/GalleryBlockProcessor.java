@@ -1,38 +1,17 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.wordpress.android.util.helpers.MediaFile;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class GalleryBlockProcessor extends BlockProcessor {
-    /**
-     * Template pattern used to match and splice gallery blocks
-     */
-    private static final String PATTERN_TEMPLATE_GALLERY = "(<!-- wp:gallery \\{[^\\}]*\"ids\":\\[(?:\"?\\d+\"?,)*)"
-                                                           + "(\"?%1$s\"?)" // local id must match to be replaced
-                                                           + "([,\\]][^>]*-->\n?)" // rest of header
-                                                           + "(.*)" // block contents
-                                                           + "(<!-- /wp:gallery -->\n?)"; // closing comment
-
-
-    /**
-     * A {@link Pattern} to match and capture gallery linkTo property from block header
-     *
-     * <ol>
-     *     <li>Block header before linkTo property</li>
-     *     <li>The linkTo property</li>
-     *     <li>Block header after linkTo property</li>
-     * </ol>
-     */
-    public static final Pattern PATTERN_GALLERY_LINK_TO = Pattern.compile("(<!-- wp:gallery \\{[^\\}]*\"linkTo\":\")"
-                                                                          + "([^\"]*)" // linkTo value
-                                                                          + "([\"][^>]*-->\n?)"); // rest of header
-
-
     private String mAttachmentPageUrl;
+    private String mLinkTo;
 
     /**
      * Query selector for selecting the img element from gallery which needs processing
@@ -47,10 +26,6 @@ public class GalleryBlockProcessor extends BlockProcessor {
                 .append("\"]")
                 .toString();
         mAttachmentPageUrl = mediaFile.getAttachmentPageURL(siteUrl);
-    }
-
-    @Override String getBlockPatternTemplate() {
-        return PATTERN_TEMPLATE_GALLERY;
     }
 
     @Override boolean processBlockContentDocument(Document document) {
@@ -69,15 +44,10 @@ public class GalleryBlockProcessor extends BlockProcessor {
             targetImg.removeClass("wp-image-" + mLocalId);
             targetImg.addClass("wp-image-" + mRemoteId);
 
-            // check for linkTo property
-            Matcher linkToMatcher = PATTERN_GALLERY_LINK_TO.matcher(getHeaderComment());
-
             // set parent anchor href if necessary
             Element parent = targetImg.parent();
-            if (parent != null && parent.is("a") && linkToMatcher.find()) {
-                String linkToValue = linkToMatcher.group(2);
-
-                switch (linkToValue) {
+            if (parent != null && parent.is("a") && mLinkTo != null) {
+                switch (mLinkTo) {
                     case "media":
                         parent.attr("href", mRemoteUrl);
                         break;
@@ -93,6 +63,24 @@ public class GalleryBlockProcessor extends BlockProcessor {
             return true;
         }
 
+        return false;
+    }
+
+    @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
+        JsonArray ids = jsonAttributes.getAsJsonArray("ids");
+        if (ids == null) {
+            return false;
+        }
+        JsonElement linkTo = jsonAttributes.get("linkTo");
+        if (linkTo != null) {
+            mLinkTo = linkTo.getAsString();
+        }
+        for (int i = 0; i < ids.size(); i++) {
+            if (ids.get(i).getAsString().equals(mLocalId)) {
+                ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
+                return true;
+            }
+        }
         return false;
     }
 }

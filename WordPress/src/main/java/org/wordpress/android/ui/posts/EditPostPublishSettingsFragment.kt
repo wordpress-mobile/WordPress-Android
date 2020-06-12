@@ -14,8 +14,8 @@ class EditPostPublishSettingsFragment : PublishSettingsFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity!!, viewModelFactory)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(EditPostPublishSettingsViewModel::class.java)
     }
 
