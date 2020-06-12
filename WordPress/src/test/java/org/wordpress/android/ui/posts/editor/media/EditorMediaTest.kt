@@ -406,6 +406,7 @@ class EditorMediaTest : BaseUnitTest() {
                     reattachUploadingMediaUseCase,
                     analyticsUtilsWrapper,
                     analyticsTrackerWrapper,
+                    TEST_DISPATCHER,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener)
