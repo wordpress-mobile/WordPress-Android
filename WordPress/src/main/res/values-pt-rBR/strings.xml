@@ -138,7 +138,7 @@ Language: pt_BR
     <string name="gutenberg_native_excerpt_length_words">Tamanho do resumo (em palavras)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Entre em contato: &lt;a href=\"mailto:e-mail@exemplo.com\">e-mail@exemplo.com&lt;/a></string>
     <string name="gutenberg_native_customize">Personalizar</string>
-    <string name="gutenberg_native_city_10100">Cidade, 01010-100</string>
+    <string name="gutenberg_native_city_10100">Cidade, 01010&#8211;100</string>
     <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
