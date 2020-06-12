@@ -4,11 +4,9 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_UPLOAD_MEDIA_FAILED
-import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
