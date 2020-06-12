@@ -388,13 +388,9 @@ class PagesViewModel
         searchQuery: String
     ): SortedMap<PageListType, List<PageModel>> = withContext(defaultDispatcher) {
         val list = pageStore.search(site, searchQuery)
-        val filteredList = if (shouldFilterByAuthor())
-            list.filter {
-                    it.post.authorId == accountStore.account.userId }
-                    .groupBy { PageListType.fromPageStatus(it.status) }
-        else list.groupBy { PageListType.fromPageStatus(it.status) }
+                .groupBy { PageListType.fromPageStatus(it.status) }
 
-        return@withContext filteredList.toSortedMap(
+        return@withContext list.toSortedMap(
                 Comparator { previous, next ->
                     when {
                         previous == next -> 0

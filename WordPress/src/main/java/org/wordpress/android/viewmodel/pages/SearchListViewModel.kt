@@ -19,7 +19,6 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
@@ -121,8 +120,7 @@ class SearchListViewModel
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
                         showOverlay = showOverlay,
-                        author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) null
-                                    else post.authorDisplayName
+                        author = post.authorDisplayName
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
                     remoteId = remoteId,
@@ -140,8 +138,7 @@ class SearchListViewModel
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) null
-                                else post.authorDisplayName
+                    author = post.authorDisplayName
             )
             PageStatus.TRASHED -> TrashedPage(
                     remoteId = remoteId,
@@ -159,8 +156,7 @@ class SearchListViewModel
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) null
-                                else post.authorDisplayName
+                    author = post.authorDisplayName
             )
             PageStatus.SCHEDULED -> ScheduledPage(
                     remoteId = remoteId,
@@ -178,8 +174,7 @@ class SearchListViewModel
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay,
-                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME) null
-                                else post.authorDisplayName
+                    author = post.authorDisplayName
             )
         }
     }
