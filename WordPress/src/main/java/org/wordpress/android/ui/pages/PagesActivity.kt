@@ -6,7 +6,6 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.pages_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.push.NotificationType
-import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
