@@ -31,6 +31,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -257,12 +258,8 @@ class PageListViewModel @Inject constructor(
         return null
     }
 
-    private fun shouldFilterByAuthor(): Boolean {
-        return pagesViewModel.authorUIState.value?.authorFilterSelection == AuthorFilterSelection.ME
-    }
-
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -294,7 +291,9 @@ class PageListViewModel @Inject constructor(
                             actions = itemUiStateData.actions,
                             actionsEnabled = actionsEnabled,
                             progressBarUiState = itemUiStateData.progressBarUiState,
-                            showOverlay = itemUiStateData.showOverlay
+                            showOverlay = itemUiStateData.showOverlay,
+                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                                null else it.post.authorDisplayName
                     )
                 }
     }
@@ -303,7 +302,7 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -324,7 +323,9 @@ class PageListViewModel @Inject constructor(
                                         actions = itemUiStateData.actions,
                                         actionsEnabled = actionsEnabled,
                                         progressBarUiState = itemUiStateData.progressBarUiState,
-                                        showOverlay = itemUiStateData.showOverlay
+                                        showOverlay = itemUiStateData.showOverlay,
+                                        author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                                            null else it.post.authorDisplayName
                                 )
                             }
                 }
@@ -335,7 +336,7 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -353,7 +354,9 @@ class PageListViewModel @Inject constructor(
                     actions = itemUiStateData.actions,
                     actionsEnabled = actionsEnabled,
                     progressBarUiState = itemUiStateData.progressBarUiState,
-                    showOverlay = itemUiStateData.showOverlay
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                        null else it.post.authorDisplayName
             )
         }
     }
@@ -362,7 +365,7 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        val filteredPages = if (shouldFilterByAuthor())
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
             pages.filter { it.post.authorId == accountStore.account.userId }
         else pages
 
@@ -380,7 +383,9 @@ class PageListViewModel @Inject constructor(
                     actions = itemUiStateData.actions,
                     actionsEnabled = actionsEnabled,
                     progressBarUiState = itemUiStateData.progressBarUiState,
-                    showOverlay = itemUiStateData.showOverlay
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                        null else it.post.authorDisplayName
             )
         }
     }
