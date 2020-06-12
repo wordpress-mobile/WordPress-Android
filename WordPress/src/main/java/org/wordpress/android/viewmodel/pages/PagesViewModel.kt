@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
@@ -87,6 +88,7 @@ private const val SEARCH_DELAY = 200L
 private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
+private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
 
 typealias LoadAutoSaveRevision = Boolean
 
@@ -853,12 +855,11 @@ class PagesViewModel
         if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
             _authorSelectionUpdated.value = authorFilterSelection
 
-            // todo annmarie - author filter - track the pages - future subtask
-//            AnalyticsUtils.trackWithSiteDetails(
-//                    POST_LIST_AUTHOR_FILTER_CHANGED,
-//                    site,
-//                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
-//            )
+            AnalyticsUtils.trackWithSiteDetails(
+                    PAGES_LIST_AUTHOR_FILTER_CHANGED,
+                    site,
+                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
+            )
         }
     }
 
