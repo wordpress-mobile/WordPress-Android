@@ -17,10 +17,10 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
@@ -137,7 +137,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(mock(), site)
 
         // assert
-        assertThat(viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.size).isEqualTo(
+        assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
                 expectedActionsAmount
         )
     }
@@ -320,8 +320,8 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
 
-    private fun getButtonUiState(): SubmitButtonUiState? {
-        return viewModel.uiState.value?.filterIsInstance(SubmitButtonUiState::class.java)?.first()
+    private fun getButtonUiState(): ButtonUiState? {
+        return viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.first()
     }
 
     private fun getHomeUiState(actionType: ActionType): HomeUiState? {

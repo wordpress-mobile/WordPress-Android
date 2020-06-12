@@ -183,11 +183,11 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns empty string in other cases`() {
+    fun `returns "immediately" in other cases`() {
         postModel.setDateCreated("")
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
-        assertThat(publishedDate).isEqualTo("")
+        assertThat(publishedDate).isEqualTo("Immediately")
     }
 }

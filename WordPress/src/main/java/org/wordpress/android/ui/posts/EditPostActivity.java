@@ -1404,12 +1404,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void performPrimaryAction() {
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
-            case UPDATE:
-            case SCHEDULE:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 showPrepublishingNudgeBottomSheet();
                 return;
+            case UPDATE:
+            case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
+                showPrepublishingNudgeBottomSheet();
+                return;
             case SAVE:
                 uploadPost(false);
                 break;
@@ -1870,7 +1872,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (postModel.getStatus().equals(PostStatus.SCHEDULED.toString())) {
                     postModel.setDateCreated(mDateTimeUtils.currentTimeInIso8601());
                 }
-                postModel.setStatus(PostStatus.PUBLISHED.toString());
+
+                if (mUploadUtilsWrapper.userCanPublish(getSite())) {
+                    postModel.setStatus(PostStatus.PUBLISHED.toString());
+                } else {
+                    postModel.setStatus(PostStatus.PENDING.toString());
+                }
+
                 mPostEditorAnalyticsSession.setOutcome(Outcome.PUBLISH);
             } else {
                 mPostEditorAnalyticsSession.setOutcome(Outcome.SAVE);
