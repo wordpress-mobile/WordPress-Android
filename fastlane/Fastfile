@@ -210,7 +210,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
 
-    upload_build_to_play_store(version: version, track: "production")
+    upload_build_to_play_store(version: version["name"], track: "production")
   end
 
   #####################################################################################
@@ -258,7 +258,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     build_bundle(version: version, flavor:"Zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version, track: "alpha")
+        upload_build_to_play_store(version: version["name"], track: "alpha")
     end
   end
 
@@ -284,7 +284,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version, track: "beta")
+        upload_build_to_play_store(version: version["name"], track: "beta")
     end
   end
 
@@ -304,7 +304,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do | options |
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version]["name"] }.aab")
+    aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version] }.aab")
     UI.error("Unable to find a build artifact at #{aab_file_path}") unless File.exist? aab_file_path
     upload_to_play_store(
       package_name: 'org.wordpress.android',
