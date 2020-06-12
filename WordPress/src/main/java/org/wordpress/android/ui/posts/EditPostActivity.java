@@ -56,7 +56,6 @@ import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorDragAndDropListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentNotAddedException;
-import org.wordpress.android.editor.EditorFragmentAbstract.MediaType;
 import org.wordpress.android.editor.EditorFragmentAbstract.TrackableEvent;
 import org.wordpress.android.editor.EditorFragmentActivity;
 import org.wordpress.android.editor.EditorImageMetaData;
@@ -3092,9 +3091,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onMediaUploadFailed(@NotNull String localId, @NotNull MediaType mediaType) {
+    public void onMediaUploadFailed(@NotNull String localId) {
         if (mEditorMediaUploadListener != null) {
-            mEditorMediaUploadListener.onMediaUploadFailed(localId, mediaType);
+            mEditorMediaUploadListener.onMediaUploadFailed(localId);
         }
     }
 

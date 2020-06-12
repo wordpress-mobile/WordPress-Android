@@ -54,7 +54,7 @@ interface EditorMediaListener {
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
-    fun onMediaUploadFailed(localId: String, mediaType: MediaType)
+    fun onMediaUploadFailed(localId: String)
 }
 
 class EditorMedia @Inject constructor(
