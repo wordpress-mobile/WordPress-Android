@@ -109,6 +109,11 @@
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_failed_to_insert_media_tap_for_options">Failed to insert media.\nPlease tap for options.</string>
 
+    <string name="dialog_content_info_title">Content info</string>
+    <string name="dialog_content_info_body">%1$d blocks\n%2$d words\n%3$d characters</string>
+    <string name="toast_content_info_failed">Failed to get content info</string>
+    <string name="toast_content_info_editor_not_ready">Editor is still loading</string>
+
     <!-- Aztec -->
     <string name="editor_content_hint">Share your story here&#8230;</string>
 
