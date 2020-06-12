@@ -297,8 +297,9 @@ class EditorMedia @Inject constructor(
         }
     }
 
-    fun onMediaUploadError(media: MediaModel, error: MediaError) =
-            trackMediaUploadErrorUseCase.onMediaUploadError(editorMediaListener, media, error)
+    fun onMediaUploadError(media: MediaModel, error: MediaError) = launch {
+        trackMediaUploadErrorUseCase.trackMediaUploadError(editorMediaListener, media, error)
+    }
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,
