@@ -608,6 +608,8 @@ public class ImageUtils {
      * Note that this method could take time if network url.
      *
      * @param videoPath The path to the video on internet
+     * @param maxWidth the maximumWidth for the thumbnail
+     * @param headers optional: HTTP headers map to add to the request if the video is remote
      * @return the path to the picture on disk
      */
     public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth, Map<String, String> headers) {
