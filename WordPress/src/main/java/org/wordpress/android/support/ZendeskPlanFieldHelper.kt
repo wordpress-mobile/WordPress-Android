@@ -89,7 +89,7 @@ class ZendeskPlanFieldHelper(private val remoteLoggingUtils: CrashLogging) {
             val logMessage = "$ZENDESK_UNKNOWN_PLAN_IDS_ERROR ${getUnknownPlanIds(planIds)}"
 
             AppLog.e(SUPPORT, ZendeskPlanFieldHelper::class.java.simpleName + logMessage)
-            remoteLoggingUtils.log(NoSuchElementException(logMessage))
+            remoteLoggingUtils.reportException(NoSuchElementException(logMessage))
         }
 
         return when {
