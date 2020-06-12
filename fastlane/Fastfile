@@ -199,7 +199,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # bundle exec fastlane build_release skip_confirm:true
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_release do | options |
+  lane :build_and_upload_release do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
@@ -209,12 +209,14 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+
+    upload_build_to_play_store(version: version, track: "production")
   end
 
   #####################################################################################
   # build_pre_releases
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for both internal and external distribution
+  # This lane builds the app it for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_pre_releases [skip_confirm:<skip confirm>]
@@ -230,21 +232,21 @@ ENV["HAS_ALPHA_VERSION"]="true"
       beta: true,
       final: false)
     android_build_preflight()
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
   end
 
   #####################################################################################
   # build_alpha
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing
+  # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm> upload_to_play_store:<upload to play store>]
   #
   # Example:
   # bundle exec fastlane build_alpha
-  # bundle exec fastlane build_alpha skip_confirm:true
+  # bundle exec fastlane build_alpha skip_confirm:true upload_to_play_store:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do | options |
@@ -254,19 +256,23 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=android_get_alpha_version()
     build_bundle(version: version, flavor:"Zalpha", buildType: "release")
+
+    if (options[:upload_to_play_store]) then
+        upload_build_to_play_store(version: version, track: "alpha")
+    end
   end
 
   #####################################################################################
   # build_beta
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing
+  # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm> upload_to_play_store:<upload to play store>]
   #
   # Example:
   # bundle exec fastlane build_beta
-  # bundle exec fastlane build_beta skip_confirm:true
+  # bundle exec fastlane build_beta skip_confirm:true upload_to_play_store:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do | options |
@@ -276,6 +282,41 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+
+    if (options[:upload_to_play_store]) then
+        upload_build_to_play_store(version: version, track: "beta")
+    end
+  end
+
+  #####################################################################################
+  # upload_build_to_play_store
+  # -----------------------------------------------------------------------------------
+  # This lane uploads the build for a given version to the given track
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane upload_build_to_play_store version:<version> track:<track>
+  #
+  # Example:
+  # bundle exec fastlane upload_build_to_play_store version:15.0 track:production
+  # bundle exec fastlane upload_build_to_play_store version:alpha-228 track:alpha
+  # bundle exec fastlane upload_build_to_play_store version:15.0-rc-1 track:beta
+  #####################################################################################
+  desc "Upload Build to Play Store"
+  lane :upload_build_to_play_store do | options |
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version]["name"] }.aab")
+    UI.error("Unable to find a build artifact at #{aab_file_path}") unless File.exist? aab_file_path
+    upload_to_play_store(
+      package_name: 'org.wordpress.android',
+      aab: aab_file_path,
+      track: options[:upload_track],
+      release_status: 'draft',
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      json_key: './google-upload-credentials.json',
+    )
   end
 
   #####################################################################################
