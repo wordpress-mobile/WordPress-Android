@@ -4,8 +4,6 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
-import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import javax.inject.Inject
 
 /**
