@@ -45,8 +45,7 @@ class PostSettingsUtils
         } else if (postUtilsWrapper.shouldPublishImmediatelyOptionBeAvailable(status)) {
             labelToUse = resourceProvider.getString(R.string.immediately)
         } else {
-            // TODO: What should the label be if there is no specific date and this is not a DRAFT?
-            labelToUse = ""
+            labelToUse = resourceProvider.getString(R.string.immediately)
         }
         return labelToUse
     }
