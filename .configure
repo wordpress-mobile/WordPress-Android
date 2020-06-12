@@ -1,7 +1,7 @@
 {
   "project_name": "WordPress-Android",
   "branch": "master",
-  "pinned_hash": "62249ca6e914a98dcee0bb715fab1d24053ce65b",
+  "pinned_hash": "dfad4fad4b10b878f23d86276af89b48d223bbc4",
   "files_to_copy": [
     {
       "file": "android/WPAndroid/gradle.properties",
@@ -27,6 +27,11 @@
       "file": "android/automattic.jks",
       "destination": "WordPress/release.jks",
       "encrypt": false
+    },
+    {
+      "file": "android/WPAndroid/google-upload-credentials.json",
+      "destination": "google-upload-credentials.json",
+      "encrypt": true
     }
   ],
   "file_dependencies": [
