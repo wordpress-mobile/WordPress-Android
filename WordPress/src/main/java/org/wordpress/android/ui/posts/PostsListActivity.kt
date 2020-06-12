@@ -340,8 +340,9 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun loadIntentData(intent: Intent) {
-        val notificationType: NotificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
-        if (notificationType != null) {
+        if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+            val notificationType: NotificationType =
+                    intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             systemNotificationTracker.trackTappedNotification(notificationType)
         }
 
