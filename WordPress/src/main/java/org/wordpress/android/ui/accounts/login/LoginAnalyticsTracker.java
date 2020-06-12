@@ -205,7 +205,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override
     public void trackSocialButtonStart() {
-        mUnifiedLoginTracker.track(Flow.LOGIN_SOCIAL, Step.START);
+        mUnifiedLoginTracker.track(Flow.GOOGLE_LOGIN, Step.START);
     }
 
     @Override
