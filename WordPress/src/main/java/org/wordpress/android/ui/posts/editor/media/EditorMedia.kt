@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.editor.EditorFragmentAbstract.MediaType
 import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
+import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiS
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
 import org.wordpress.android.ui.uploads.UploadService
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -51,6 +54,7 @@ interface EditorMediaListener {
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
+    fun onMediaUploadFailed(localId: String, mediaType: MediaType, errorMessage: UiString)
 }
 
 class EditorMedia @Inject constructor(
@@ -65,6 +69,7 @@ class EditorMedia @Inject constructor(
     private val cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase,
     private val removeMediaUseCase: RemoveMediaUseCase,
     private val reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase,
+    private val handleMediaUploadErrorUseCase: HandleMediaUploadErrorUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     // region Fields
@@ -293,6 +298,10 @@ class EditorMedia @Inject constructor(
             }
         }
     }
+
+    fun onMediaUploadError(media: MediaModel, error: MediaError) = launch {
+                handleMediaUploadErrorUseCase.onMediaUploadError(editorMediaListener, media, error)
+            }
 
     enum class AddExistingMediaSource {
         WP_MEDIA_LIBRARY,

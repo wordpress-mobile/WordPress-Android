@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
+import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import javax.inject.Inject
 
 /**
@@ -47,4 +49,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
             EditorMediaUtils.getVideoThumbnail(appContext, videoPath)
 
     fun isLocalFile(uploadState: String): Boolean = MediaUtils.isLocalFile(uploadState)
+
+    fun getErrorMessage(media: MediaModel, error: MediaError): String? = WPMediaUtils.getErrorMessage(appContext, media, error)
 }
