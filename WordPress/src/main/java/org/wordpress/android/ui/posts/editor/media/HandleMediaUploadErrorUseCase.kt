@@ -25,15 +25,13 @@ class HandleMediaUploadErrorUseCase @Inject constructor(
 ) {
     fun onMediaUploadError(editorMediaListener: EditorMediaListener, media: MediaModel, error: MediaError) {
         val localMediaId = media.id.toString()
-        fluxCUtilsWrapper.mediaFileFromMediaModel(media)?.let {
-            trackMediaUploadError(it, error)
-        }
+        trackMediaUploadError(media.isVideo, media.filePath, error)
         editorMediaListener.onMediaUploadFailed(localMediaId)
     }
 
-    private fun trackMediaUploadError(mediaFile: MediaFile, error: MediaError) {
-        val properties: MutableMap<String, Any?> =
-                analyticsUtilsWrapper.getMediaProperties(mediaFile.isVideo, null, mediaFile.filePath)
+    private fun trackMediaUploadError(isVideo: Boolean, mediaPath: String, error: MediaError) {
+        val properties: MutableMap<String, Any?> = analyticsUtilsWrapper
+                .getMediaProperties(isVideo, null, mediaPath)
         properties["error_type"] = error.type.name
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
     }
