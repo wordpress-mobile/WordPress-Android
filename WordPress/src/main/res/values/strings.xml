@@ -248,7 +248,7 @@
     <string name="page_homepage_successfully_updated">Homepage successfully updated</string>
     <string name="page_homepage_update_failed">Homepage update failed</string>
     <string name="page_posts_page_successfully_updated">Posts Page successfully updated</string>
-    <string name="page_posts_page_update_failed">Homepage update failed</string>
+    <string name="page_posts_page_update_failed">Posts Page update failed</string>
 
     <!-- posts tab -->
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
@@ -1304,7 +1304,7 @@
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
-    <string name="reader_dot_separator">\u0020\u2022\u0020</string>
+    <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1382,6 +1382,10 @@
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_post_private">Private</string>
+    <string name="post_status_post_scheduled">Scheduled</string>
+    <string name="post_status_post_trashed">Trashed</string>
+    <string name="post_status_post_published">Published</string>
+
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
@@ -1695,6 +1699,9 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+    <string name="reader_btn_select_few_interests">Select a few to continue</string>
+    <string name="reader_btn_done">Done</string>
+
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
@@ -2665,6 +2672,7 @@
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
