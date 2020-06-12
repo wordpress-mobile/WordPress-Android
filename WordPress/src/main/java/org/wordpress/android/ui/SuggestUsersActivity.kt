@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.database.DataSetObserver
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -89,8 +88,6 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 // the dropdown to always be visible.
                 post { showDropDown() }
             }
-
-            setDropDownBackgroundDrawable(ColorDrawable(0))
 
             // Insure the text always starts with an "@"
             addTextChangedListener(object : TextWatcher {
