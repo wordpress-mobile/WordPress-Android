@@ -609,6 +609,18 @@ public class ImageUtils {
      *
      * @param videoPath The path to the video on internet
      * @param maxWidth the maximumWidth for the thumbnail
+     * @return the path to the picture on disk
+     */
+    public static Bitmap getVideoFrameFromVideo(String videoPath, int maxWidth) {
+        return getVideoFrameFromVideo(videoPath, maxWidth, new HashMap<String, String>());
+    }
+
+    /**
+     * Generate a thumbnail from a video url.
+     * Note that this method could take time if network url.
+     *
+     * @param videoPath The path to the video on internet
+     * @param maxWidth the maximumWidth for the thumbnail
      * @param headers optional: HTTP headers map to add to the request if the video is remote
      * @return the path to the picture on disk
      */
@@ -628,11 +640,7 @@ public class ImageUtils {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
         Bitmap bitmap = null;
         try {
-            if (headers != null) {
-                mediaMetadataRetriever.setDataSource(videoPath, headers);
-            } else {
-                mediaMetadataRetriever.setDataSource(videoPath, new HashMap<String, String>());
-            }
+            mediaMetadataRetriever.setDataSource(videoPath, headers);
             bitmap = mediaMetadataRetriever.getFrameAtTime();
         } catch (IllegalArgumentException e) {
             AppLog.e(AppLog.T.MEDIA, "The passed video path is invalid: " + videoPath);
