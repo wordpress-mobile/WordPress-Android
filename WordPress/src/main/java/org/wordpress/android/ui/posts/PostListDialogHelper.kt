@@ -11,6 +11,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
+private const val CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG = "CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
@@ -28,10 +29,23 @@ class PostListDialogHelper(
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
+    private var localPostIdForMoveTrashedPostToDraftDialog: Int? = null
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var localPostIdForAutosaveRevisionResolutionDialog: Int? = null
     private var localPostIdForScheduledPostSyncDialog: Int? = null
+
+    fun showMoveTrashedPostToDraftDialog(post: PostModel) {
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG,
+                title = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_title),
+                message = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_message),
+                positiveButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_positive),
+                negativeButton = UiStringRes(R.string.post_list_move_trashed_post_to_draft_dialog_negative)
+        )
+        localPostIdForMoveTrashedPostToDraftDialog = post.id
+        showDialog.invoke(dialogHolder)
+    }
 
     fun showDeletePostConfirmationDialog(post: PostModel) {
         // We need network connection to delete a remote post, but not a local draft
@@ -111,7 +125,8 @@ class PostListDialogHelper(
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit,
-        editRestoredAutoSavePost: (Int) -> Unit
+        editRestoredAutoSavePost: (Int) -> Unit,
+        moveTrashedPostToDraft: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -130,6 +145,10 @@ class PostListDialogHelper(
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog?.let {
                 localPostIdForTrashPostWithLocalChangesDialog = null
                 trashPostWithLocalChanges(it)
+            }
+            CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog?.let {
+                localPostIdForMoveTrashedPostToDraftDialog = null
+                moveTrashedPostToDraft(it)
             }
             CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG -> localPostIdForAutosaveRevisionResolutionDialog?.let {
                 // open the editor with the restored auto save
@@ -163,6 +182,7 @@ class PostListDialogHelper(
                         mapOf(POST_TYPE to "post")
                 )
             }
+            CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog = null
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }

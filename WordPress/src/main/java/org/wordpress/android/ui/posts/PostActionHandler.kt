@@ -41,6 +41,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
@@ -112,6 +113,9 @@ class PostActionHandler(
             BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> {
                 cancelPendingAutoUpload(post)
             }
+            BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> {
+                postListDialogHelper.showMoveTrashedPostToDraftDialog(post)
+            }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
         }
@@ -153,6 +157,13 @@ class PostActionHandler(
 
     fun publishPost(post: PostModel) {
         triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
+    }
+
+    fun moveTrashedPostToDraft(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            moveTrashedPostToDraft(post)
+        }
     }
 
     private fun moveTrashedPostToDraft(post: PostModel) {

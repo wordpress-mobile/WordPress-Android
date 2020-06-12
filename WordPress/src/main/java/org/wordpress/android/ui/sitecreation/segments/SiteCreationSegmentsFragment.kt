@@ -4,14 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
+import kotlinx.android.synthetic.main.site_creation_segments_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.accounts.HelpActivity
@@ -24,20 +24,11 @@ import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
-    private lateinit var linearLayoutManager: LinearLayoutManager
-    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: SiteCreationSegmentsViewModel
-
-    private lateinit var errorLayout: ViewGroup
-    private lateinit var errorTitle: TextView
-    private lateinit var errorSubtitle: TextView
 
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
-
-    private lateinit var helpClickedListener: OnHelpClickedListener
-    private lateinit var segmentsScreenListener: SegmentsScreenListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -47,8 +38,6 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
         if (context !is SegmentsScreenListener) {
             throw IllegalStateException("Parent activity must implement SegmentsScreenListener.")
         }
-        helpClickedListener = context
-        segmentsScreenListener = context
     }
 
     @LayoutRes
@@ -57,29 +46,19 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     }
 
     override fun setupContent(rootView: ViewGroup) {
-        initErrorLayout(rootView)
-        initRecyclerView(rootView)
+        initRecyclerView()
         initViewModel()
-        initRetryButton(rootView)
+        initRetryButton()
     }
 
-    private fun initErrorLayout(rootView: ViewGroup) {
-        errorLayout = rootView.findViewById(R.id.error_layout)
-        errorTitle = errorLayout.findViewById(R.id.error_title)
-        errorSubtitle = errorLayout.findViewById(R.id.error_subtitle)
-    }
-
-    private fun initRecyclerView(rootView: ViewGroup) {
-        recyclerView = rootView.findViewById(R.id.recycler_view)
-        val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        linearLayoutManager = layoutManager
-        recyclerView.layoutManager = linearLayoutManager
+    private fun initRecyclerView() {
+        recycler_view.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         initAdapter()
     }
 
     private fun initAdapter() {
         val adapter = SiteCreationSegmentsAdapter(imageManager = imageManager)
-        recyclerView.adapter = adapter
+        recycler_view.adapter = adapter
     }
 
     private fun initViewModel() {
@@ -90,13 +69,13 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
             state?.let { uiState ->
                 when (uiState) {
                     is SegmentsContentUiState -> {
-                        recyclerView.visibility = View.VISIBLE
-                        errorLayout.visibility = View.GONE
+                        recycler_view.visibility = View.VISIBLE
+                        error_layout.visibility = View.GONE
                         updateContentLayout(uiState)
                     }
                     is SegmentsErrorUiState -> {
-                        recyclerView.visibility = View.GONE
-                        errorLayout.visibility = View.VISIBLE
+                        recycler_view.visibility = View.GONE
+                        error_layout.visibility = View.VISIBLE
                         updateErrorLayout(uiState)
                     }
                 }
@@ -104,21 +83,24 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
         })
         viewModel.segmentSelected.observe(
                 this,
-                Observer { segmentId -> segmentId?.let { segmentsScreenListener.onSegmentSelected(segmentId) } })
+                Observer { segmentId ->
+                    segmentId?.let {
+                        (requireActivity() as SegmentsScreenListener).onSegmentSelected(segmentId)
+                    }
+                })
         viewModel.onHelpClicked.observe(this, Observer {
-            helpClickedListener.onHelpClicked(HelpActivity.Origin.SITE_CREATION_SEGMENTS)
+            (requireActivity() as OnHelpClickedListener).onHelpClicked(HelpActivity.Origin.SITE_CREATION_SEGMENTS)
         })
         viewModel.start()
     }
 
     private fun updateErrorLayout(errorUiStateState: SegmentsErrorUiState) {
-        uiHelpers.setTextOrHide(errorTitle, errorUiStateState.titleResId)
-        uiHelpers.setTextOrHide(errorSubtitle, errorUiStateState.subtitleResId)
+        uiHelpers.setTextOrHide(error_title, errorUiStateState.titleResId)
+        uiHelpers.setTextOrHide(error_subtitle, errorUiStateState.subtitleResId)
     }
 
-    private fun initRetryButton(rootView: ViewGroup) {
-        val retryBtn = rootView.findViewById<Button>(R.id.error_retry)
-        retryBtn.setOnClickListener { viewModel.onRetryClicked() }
+    private fun initRetryButton() {
+        error_retry.setOnClickListener { viewModel.onRetryClicked() }
     }
 
     override fun onHelp() {
@@ -131,7 +113,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun updateContentLayout(segments: SegmentsContentUiState) {
-        (recyclerView.adapter as SiteCreationSegmentsAdapter).update(segments.items)
+        (recycler_view.adapter as SiteCreationSegmentsAdapter).update(segments.items)
     }
 
     override fun getScreenTitle(): String {
