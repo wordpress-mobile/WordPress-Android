@@ -186,7 +186,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
             )
         }
 
-        private fun createAuthenticationUtils(): AuthenticationUtils = mock<AuthenticationUtils>{
+        private fun createAuthenticationUtils(): AuthenticationUtils = mock<AuthenticationUtils> {
             on { getAuthHeaders(any()) }.thenReturn(mock())
         }
 
