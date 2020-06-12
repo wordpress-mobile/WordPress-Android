@@ -72,29 +72,29 @@ class PrepublishingVisibilityFragment : Fragment(), PostSettingsInputDialogListe
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingVisibilityViewModel::class.java)
 
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             (visibility_recycler_view.adapter as PrepublishingVisibilityAdapter).update(uiState)
         })
 
-        viewModel.showPasswordDialog.observe(this, Observer { event ->
+        viewModel.showPasswordDialog.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 showPostPasswordDialog()
             }
         })
 
-        viewModel.dismissBottomSheet.observe(this, Observer { event ->
+        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 closeListener?.onCloseClicked()
             }
         })
 
-        viewModel.navigateToHomeScreen.observe(this, Observer { event ->
+        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 closeListener?.onBackClicked()
             }
         })
 
-        viewModel.toolbarUiState.observe(this, Observer { uiString ->
+        viewModel.toolbarUiState.observe(viewLifecycleOwner, Observer { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(
                     requireContext(),
                     uiString
