@@ -323,6 +323,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+    private Handler mShowPrepublishingBottomSheetHandler;
+    private Runnable mShowPrepublishingBottomSheetRunnable;
+
     private boolean mHtmlModeMenuStateOn = false;
 
     @Inject Dispatcher mDispatcher;
@@ -792,6 +795,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mReactNativeRequestHandler != null) {
             mReactNativeRequestHandler.destroy();
+        }
+
+        if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
+            mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
 
         super.onDestroy();
@@ -1812,9 +1819,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
 
             long delayMs = 100;
-            new Handler().postDelayed(
-                    () -> prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG),
-                    delayMs);
+            mShowPrepublishingBottomSheetRunnable =
+                    () -> prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+            mShowPrepublishingBottomSheetHandler = new Handler();
+            mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
         }
     }
 
