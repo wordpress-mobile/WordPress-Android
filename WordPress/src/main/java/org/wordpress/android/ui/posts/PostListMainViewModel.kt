@@ -39,6 +39,7 @@ import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.CompactViewLayoutTypeMenuUiState
 import org.wordpress.android.ui.posts.PostListViewLayoutTypeMenuUiState.StandardViewLayoutTypeMenuUiState
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
@@ -78,6 +79,8 @@ class PostListMainViewModel @Inject constructor(
     private val postListEventListenerFactory: PostListEventListener.Factory,
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase,
+    private val postUtilsWrapper: PostUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -432,10 +435,18 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
-    private fun showPrepublishingBottomSheet(post: PostModel) {
+    fun showPrepublishingBottomSheet(post: PostModel) {
         currentBottomSheetPostId = LocalId(post.id)
         editPostRepository.loadPostByLocalPostId(post.id)
+        draftPostShouldPublishImmediately()
         _openPrepublishingBottomSheet.postValue(Event(Unit))
+    }
+
+    private fun draftPostShouldPublishImmediately() {
+        if (editPostRepository.status == PostStatus.DRAFT &&
+                postUtilsWrapper.isPublishDateInThePast(editPostRepository.dateCreated)) {
+            publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, true)
+        }
     }
 
     /**
