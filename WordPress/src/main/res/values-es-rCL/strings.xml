@@ -569,7 +569,6 @@ Language: es_CL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 entrada con 1 archivo no subido</string>
     <string name="untitled_in_parentheses">(Sin título)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
@@ -1036,7 +1035,6 @@ Language: es_CL
     <string name="pending_draft_one_day_2">¿Sabías que \'%1$s\' sigue siendo un borrador? ¡Publícalo!</string>
     <string name="pending_draft_one_day_1">Redactaste \'%1$s’. ¡No olvides publicarlo!</string>
     <string name="reader_photo_by">Foto por %s</string>
-    <string name="reader_label_visit">Visitar</string>
     <string name="swipe_for_more">Deslízate para más</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">No estás autorizado para ver esta entrada. Primero intenta iniciar sesión en WordPress.com o utiliza el botón de acción para abrirlo en un navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">No estás autorizado para ver esta entrada. Intenta iniciar sesión en WordPress.com primero.</string>

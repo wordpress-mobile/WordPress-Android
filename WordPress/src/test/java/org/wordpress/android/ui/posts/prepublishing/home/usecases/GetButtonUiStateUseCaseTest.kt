@@ -11,9 +11,11 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.PublishButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.ScheduleButtonUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.SubmitButtonUiState.UpdateButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.SaveButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.ScheduleButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.SubmitButtonUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.UpdateButtonUiState
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.PUBLISH_NOW
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SAVE
@@ -21,7 +23,6 @@ import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SCHEDULE
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.SUBMIT_FOR_REVIEW
 import org.wordpress.android.ui.posts.editor.PrimaryEditorAction.UPDATE
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
-import java.lang.Exception
 
 class GetButtonUiStateUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetButtonUiStateUseCase
@@ -72,21 +73,27 @@ class GetButtonUiStateUseCaseTest : BaseUnitTest() {
         assertThat(uiState).isInstanceOf(UpdateButtonUiState::class.java)
     }
 
-    @Test(expected = Exception::class)
-    fun `verify that SUBMIT_FOR_REVIEW EditorAction throws Exception`() {
+    @Test
+    fun `verify that SUBMIT_FOR_REVIEW EditorAction returns SubmitButtonUiState`() {
         // arrange
         whenever(editorActionsProvider.getPrimaryAction(any(), any())).thenReturn(SUBMIT_FOR_REVIEW)
 
         // act
-        useCase.getUiState(editPostRepository, mock()) {}
+        val uiState = useCase.getUiState(editPostRepository, mock()) {}
+
+        // assert
+        assertThat(uiState).isInstanceOf(SubmitButtonUiState::class.java)
     }
 
-    @Test(expected = Exception::class)
-    fun `verify that SAVE EditorAction throws Exception`() {
+    @Test
+    fun `verify that SAVE EditorAction returns SaveButtonUiState`() {
         // arrange
         whenever(editorActionsProvider.getPrimaryAction(any(), any())).thenReturn(SAVE)
 
         // act
-        useCase.getUiState(editPostRepository, mock()) {}
+        val uiState = useCase.getUiState(editPostRepository, mock()) {}
+
+        // assert
+        assertThat(uiState).isInstanceOf(SaveButtonUiState::class.java)
     }
 }
