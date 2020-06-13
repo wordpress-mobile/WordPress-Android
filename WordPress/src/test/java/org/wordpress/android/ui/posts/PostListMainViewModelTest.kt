@@ -229,11 +229,10 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if PostStatus is PRIVATE and Publish Date is is in the past then don't call publish immediately use case`() {
+    fun `if PostStatus is PRIVATE then don't call publish immediately use case`() {
         // arrange
         val editPostRepository: EditPostRepository = mock()
         whenever(editPostRepository.status).thenReturn(PRIVATE)
-        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
 
         // act
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
