@@ -60,4 +60,11 @@
     <color name="reader_image_featured_border">@color/gray_80</color>
     <color name="reader_image_avatar_or_blavatar_border">@color/gray_80</color>
 
+    <!-- Prepublishing Nudges -->
+    <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>
+    <color name="prepublishing_action_type_enabled_color">@color/white</color>
+    <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
+    <color name="prepublishing_action_type_disabled_color">@color/gray_60</color>
+    <color name="prepublishing_action_result_disabled_color">@color/gray_60</color>
+
 </resources>

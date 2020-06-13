@@ -76,8 +76,8 @@ class PrepublishingHomeViewModel @Inject constructor(
                                 actionType = PUBLISH,
                                 actionResult = editPostRepository.getEditablePost()
                                         ?.let { UiStringText(postSettingsUtils.getPublishDateLabel(it)) },
-                                actionTypeColor = R.color.gray_10,
-                                actionResultColor = R.color.gray_10,
+                                actionTypeColor = R.color.prepublishing_action_type_disabled_color,
+                                actionResultColor = R.color.prepublishing_action_result_disabled_color,
                                 actionClickable = false,
                                 onActionClicked = null
                         )
