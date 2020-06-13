@@ -6,6 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +20,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_AC
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -273,6 +275,16 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         uploadStarter.queueUploadFromSite(site)
+
+        editPostRepository.run {
+            postChanged.observe(this@PostListMainViewModel, Observer {
+                getEditablePost()?.let { post -> updatePrepublishingBottomSheetPost(post) }
+            })
+        }
+    }
+
+    private fun updatePrepublishingBottomSheetPost(post: PostModel) {
+        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
     }
 
     override fun onCleared() {
