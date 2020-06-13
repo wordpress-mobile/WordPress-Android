@@ -1,6 +1,7 @@
 package org.wordpress.android.support
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -142,6 +143,6 @@ class ZendeskPlanFieldHelperTest {
         zendeskPlanFieldHelper.getHighestPlan(planIds)
 
         // Then
-        verify(crashLogging, times(1)).reportException(any<Throwable>())
+        verify(crashLogging, times(1)).reportException(any(), anyOrNull(), anyOrNull())
     }
 }

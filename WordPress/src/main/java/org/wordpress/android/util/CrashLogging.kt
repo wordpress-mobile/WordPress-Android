@@ -113,14 +113,14 @@ class CrashLogging @Inject constructor(
      * @param[message] An optional message string
      */
     @JvmOverloads
-    fun reportException(throwable: Throwable, tag: AppLog.T? = null, message: String? = null) {
+    fun reportException(throwable: Throwable, tag: String? = null, message: String? = null) {
         if (message != null) {
             Sentry.setExtra("message", message)
         }
 
         if (tag != null) {
-            Sentry.setExtra("tag", tag.toString())
-            Sentry.setTag("tag", tag.toString())
+            Sentry.setExtra("tag", tag)
+            Sentry.setTag("tag", tag)
         }
 
         val sentryId = Sentry.captureException(throwable)
