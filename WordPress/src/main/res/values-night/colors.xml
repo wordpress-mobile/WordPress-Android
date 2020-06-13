@@ -64,7 +64,7 @@
     <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>
     <color name="prepublishing_action_type_enabled_color">@color/white</color>
     <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
-    <color name="prepublishing_action_type_disabled_color">@color/gray_60</color>
-    <color name="prepublishing_action_result_disabled_color">@color/gray_60</color>
+    <color name="prepublishing_action_type_disabled_color">@color/gray_50</color>
+    <color name="prepublishing_action_result_disabled_color">@color/gray_50</color>
 
 </resources>
