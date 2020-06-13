@@ -199,7 +199,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `if PostStatus is DRAFT and Publish Date is in the past then call publish immediately use case`() {
         // arrange
-        val editPostRepository:EditPostRepository = mock()
+        val editPostRepository: EditPostRepository = mock()
         whenever(editPostRepository.status).thenReturn(DRAFT)
         whenever(editPostRepository.dateCreated).thenReturn("")
         whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
@@ -212,11 +212,10 @@ class PostListMainViewModelTest : BaseUnitTest() {
         verify(publishPostImmediatelyUseCase, times(1)).updatePostToPublishImmediately(any(), any())
     }
 
-
     @Test
     fun `if PostStatus is DRAFT and Publish Date is is in the future then don't call publish immediately use case`() {
         // arrange
-        val editPostRepository:EditPostRepository = mock()
+        val editPostRepository: EditPostRepository = mock()
         whenever(editPostRepository.status).thenReturn(DRAFT)
         whenever(editPostRepository.dateCreated).thenReturn("")
         whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(false)
@@ -232,9 +231,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `if PostStatus is PRIVATE and Publish Date is is in the past then don't call publish immediately use case`() {
         // arrange
-        val editPostRepository:EditPostRepository = mock()
+        val editPostRepository: EditPostRepository = mock()
         whenever(editPostRepository.status).thenReturn(PRIVATE)
-        whenever(editPostRepository.dateCreated).thenReturn("")
         whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
 
         // act
