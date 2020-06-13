@@ -278,13 +278,9 @@ class PostListMainViewModel @Inject constructor(
 
         editPostRepository.run {
             postChanged.observe(this@PostListMainViewModel, Observer {
-                getEditablePost()?.let { post -> updatePrepublishingBottomSheetPost(post) }
+                getEditablePost()?.let { post -> dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post)) }
             })
         }
-    }
-
-    private fun updatePrepublishingBottomSheetPost(post: PostModel) {
-        dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
     }
 
     override fun onCleared() {
