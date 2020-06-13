@@ -96,6 +96,7 @@ import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
+import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -514,6 +515,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderInterestsFragment object);
 
     void inject(HomepageSettingsDialog object);
+
+    void inject(AztecVideoLoader object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
