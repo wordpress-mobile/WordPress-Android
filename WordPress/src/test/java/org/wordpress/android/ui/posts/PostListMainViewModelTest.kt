@@ -4,8 +4,10 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -15,8 +17,11 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
+import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 
@@ -24,6 +29,8 @@ class PostListMainViewModelTest : BaseUnitTest() {
     lateinit var site: SiteModel
     private val currentBottomSheetPostId = LocalId(0)
     @Mock lateinit var uploadStarter: UploadStarter
+    @Mock lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
+    @Mock lateinit var postUtilsWrapper: PostUtilsWrapper
     private lateinit var viewModel: PostListMainViewModel
 
     @UseExperimental(ExperimentalCoroutinesApi::class)
@@ -49,7 +56,9 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 bgDispatcher = Dispatchers.Unconfined,
                 postListEventListenerFactory = mock(),
                 uploadStarter = uploadStarter,
-                uploadActionUseCase = mock()
+                uploadActionUseCase = mock(),
+                publishPostImmediatelyUseCase = publishPostImmediatelyUseCase,
+                postUtilsWrapper = postUtilsWrapper
         )
     }
 
@@ -185,5 +194,54 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         // assert
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
+    }
+
+    @Test
+    fun `if PostStatus is DRAFT and Publish Date is in the past then call publish immediately use case`() {
+        // arrange
+        val editPostRepository:EditPostRepository = mock()
+        whenever(editPostRepository.status).thenReturn(DRAFT)
+        whenever(editPostRepository.dateCreated).thenReturn("")
+        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.showPrepublishingBottomSheet(mock())
+
+        // assert
+        verify(publishPostImmediatelyUseCase, times(1)).updatePostToPublishImmediately(any(), any())
+    }
+
+
+    @Test
+    fun `if PostStatus is DRAFT and Publish Date is is in the future then don't call publish immediately use case`() {
+        // arrange
+        val editPostRepository:EditPostRepository = mock()
+        whenever(editPostRepository.status).thenReturn(DRAFT)
+        whenever(editPostRepository.dateCreated).thenReturn("")
+        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(false)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.showPrepublishingBottomSheet(mock())
+
+        // assert
+        verify(publishPostImmediatelyUseCase, never()).updatePostToPublishImmediately(any(), any())
+    }
+
+    @Test
+    fun `if PostStatus is PRIVATE and Publish Date is is in the past then don't call publish immediately use case`() {
+        // arrange
+        val editPostRepository:EditPostRepository = mock()
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+        whenever(editPostRepository.dateCreated).thenReturn("")
+        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
+
+        // act
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.showPrepublishingBottomSheet(mock())
+
+        // assert
+        verify(publishPostImmediatelyUseCase, never()).updatePostToPublishImmediately(any(), any())
     }
 }
