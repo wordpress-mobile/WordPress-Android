@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-26 09:54:09+0000
+Translation-Revision-Date: 2020-06-10 08:54:14+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha
 Language: zh_TW
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">移除 %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
+    <string name="gutenberg_native_move_s_up">向上移動%s</string>
+    <string name="gutenberg_native_move_s_right">向右移動%s</string>
+    <string name="gutenberg_native_move_s_left">向左移動%s</string>
+    <string name="gutenberg_native_move_s_down">向下移動%s</string>
+    <string name="gutenberg_native_try_a_starter_layout">試用入門版面配置</string>
+    <string name="gutenberg_native_insert_mention">插入標記</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">按兩下以開啟含有可用選項的操作工作表</string>
+    <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
+    <string name="pages_set_as_posts_page">設為文章頁面</string>
+    <string name="pages_set_as_homepage">設為首頁</string>
+    <string name="suggestion_no_matching_users">「沒有符合條件的使用者。」</string>
+    <string name="suggestion_invalid_user">「%s不是有效的使用者」</string>
+    <string name="site_settings_select_page">選取頁面</string>
+    <string name="site_settings_posts_page">文章列表頁面</string>
+    <string name="site_settings_static_homepage">靜態首頁</string>
+    <string name="site_settings_classic_blog">傳統網誌</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">選取的首頁和文章頁面不能相同。</string>
+    <string name="site_settings_failed_update_homepage_settings">首頁設定更新失敗，請檢查你的網際網路連線</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">載入頁面之前無法儲存首頁設定</string>
+    <string name="site_settings_failed_to_save_homepage_settings">無法儲存首頁設定</string>
+    <string name="site_settings_accept_homepage">接受</string>
+    <string name="site_settings_failed_to_load_pages">載入頁面失敗</string>
+    <string name="site_settings_homepage_settings_description">選擇讓首頁顯示你的最新文章 (傳統網誌)，或顯示固定/靜態頁面。</string>
+    <string name="site_settings_homepage_settings">首頁設定</string>
+    <string name="site_settings_homepage">首頁</string>
+    <string name="page_posts_page_update_failed">文章頁面更新失敗</string>
+    <string name="page_posts_page_successfully_updated">文章頁面已成功更新</string>
+    <string name="page_homepage_update_failed">首頁更新失敗</string>
+    <string name="page_homepage_successfully_updated">首頁已成功更新</string>
+    <string name="page_cannot_set_posts_page">若要設定文章頁面，請在網站設定中啟用「靜態首頁」</string>
+    <string name="page_cannot_set_homepage">若要設定首頁，請在網站設定中啟用「靜態首頁」</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">歡迎來到我們全新的網誌</string>
     <string name="gutenberg_native_select_a_color">選擇顏色</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">點選兩次即可前往顏色設定</string>
@@ -36,9 +71,7 @@ Language: zh_TW
     <string name="copy_text">複製</string>
     <string name="gutenberg_native_number_of_columns">欄位數</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_right">向右移動區塊</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
-    <string name="gutenberg_native_move_block_left">向左移動區塊</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">按兩下將區塊向右移</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">按兩下將區塊向左移</string>
     <string name="gutenberg_native_columns_settings">欄位設定</string>
@@ -121,16 +154,14 @@ Language: zh_TW
     <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的個人作品集展示了我在職涯中完成的各項專案。我的聯絡資訊如下，歡迎與我聯繫。</string>
     <string name="gutenberg_native_link_to">連結至</string>
+    <string name="gutenberg_native_s_settings">%s 設定</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">與我們討論 👋 如有任何疑問，歡迎使用下方資訊與我們聯絡，或使用表單傳送訊息給我們。</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">讓我們攜手創造不凡。</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">讓我們攜手創造不凡</string>
-    <string name="gutenberg_native_let_s_build_something_together">讓我們攜手創造不凡</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">讓我們攜手創造不凡！</string>
+    <string name="gutenberg_native_let_s_build_something_together">讓我們攜手創造不凡！</string>
     <string name="gutenberg_native_juan_p_rez">胡安培瑞茲</string>
     <string name="gutenberg_native_j_k_rowling">J.K.羅琳</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">哈利，決定我們成為什麼樣的人，並不是我們的能力，而是我們做了什麼選擇。</string>
     <string name="gutenberg_native_inspiration">旅遊靈感</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">與我們聯絡！</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">與我們聯絡！</string>
     <string name="gutenberg_native_get_in_touch">與我們聯絡</string>
     <string name="gutenberg_native_excerpt_length_words">摘要長度 (字數)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">透過電子郵件聯絡我：&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -284,9 +315,7 @@ Language: zh_TW
     <string name="gutenberg_native_my_post_publish_panel">我的發表後面板</string>
     <string name="gutenberg_native_my_document_setting_panel">我的文件設定面板</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向上移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_up">向上移動區塊</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_down">向下移動區塊</string>
     <string name="gutenberg_native_link_text">連結文字</string>
     <string name="gutenberg_native_link_inserted">連結已插入</string>
     <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
@@ -308,7 +337,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_and_hold_to_edit">點兩下並按住不放即可編輯</string>
     <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
     <string name="gutenberg_native_content">內容…</string>
-    <string name="gutenberg_native_clear_all_settings">清除所有設定</string>
     <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
     <string name="gutenberg_native_annotations_sidebar">註解側邊欄</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">發生不明的錯誤，請再試一次。</string>
@@ -1114,7 +1142,6 @@ Language: zh_TW
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">無法上傳 1 篇文章和 1 個檔案</string>
     <string name="untitled_in_parentheses">(未命名)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s，%2$s</string>
     <string name="latitude_longitude">%1$f，%2$f</string>
     <string name="site_creation_domain_finish_button">建立網站</string>
     <string name="notification_site_creation_created">點選以繼續。</string>
@@ -1582,7 +1609,7 @@ Language: zh_TW
     <string name="pending_draft_one_day_2">你知道「%1$s」還是草稿嗎？快發表吧！</string>
     <string name="pending_draft_one_day_1">你昨天寫了草稿「%1$s」，請記得發表！</string>
     <string name="reader_photo_by">拍攝者：%s</string>
-    <string name="reader_label_visit">造訪</string>
+    <string name="reader_label_visit">造訪網站</string>
     <string name="swipe_for_more">撥動以瞭解更多</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">你未獲授權，無法檢視此文章。請先嘗試登入 WordPress.com，或者使用頂端的動作按鈕開啟瀏覽器。</string>
     <string name="reader_err_get_post_not_authorized_signin">你未獲授權，無法檢視此文章。請先嘗試登入 WordPress.com。</string>

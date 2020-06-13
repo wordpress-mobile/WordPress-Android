@@ -124,6 +124,10 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="WordPress.PrepublishingNudges.BottomSheetDialogTheme" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
     <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
 
