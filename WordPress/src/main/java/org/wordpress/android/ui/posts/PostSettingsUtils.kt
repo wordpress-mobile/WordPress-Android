@@ -4,6 +4,7 @@ import android.text.TextUtils
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.model.post.PostStatus.DRAFT
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class PostSettingsUtils
         if (!TextUtils.isEmpty(dateCreated)) {
             val formattedDate = dateUtils.formatDateTime(dateCreated)
 
-            if (postModel.isLocalDraft) {
+            if (postModel.isLocalDraft || status == DRAFT) {
                 if (postUtilsWrapper.isPublishDateInThePast(postModel.dateCreated)) {
                     labelToUse = resourceProvider.getString(R.string.backdated_for, formattedDate)
                 } else if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated)) {

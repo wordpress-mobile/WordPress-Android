@@ -183,6 +183,15 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `returns "immediately" for draft post that should publish immediately`() {
+        postModel.setStatus(PostStatus.DRAFT.toString())
+
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
+
+        assertThat(publishedDate).isEqualTo("Immediately")
+    }
+
+    @Test
     fun `returns "immediately" in other cases`() {
         postModel.setDateCreated("")
 
