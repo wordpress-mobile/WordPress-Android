@@ -6,6 +6,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.e2e.components.MasterbarComponent;
@@ -33,6 +34,7 @@ public class BlockEditorTests extends BaseTest {
         wpLogin();
     }
 
+    @Ignore("until startup times are improved or idling resources are made more reliable")
     @Test
     public void testSwitchToClassicAndPreview() {
         String title = "Hello Espresso!";
