@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
@@ -16,8 +17,8 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettings
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
@@ -353,6 +354,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(PrepublishingVisibilityViewModel.class)
     abstract ViewModel prepublishingVisibilityViewModel(PrepublishingVisibilityViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MeViewModel.class)
+    abstract ViewModel meViewModel(MeViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
