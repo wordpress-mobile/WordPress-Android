@@ -1002,8 +1002,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final MediaType
-            mediaType, final String errorMessage) {
+    public void onMediaUploadFailed(final String localMediaId) {
         getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
         mFailedMediaIds.add(localMediaId);
         mUploadingMediaProgressMax.remove(localMediaId);
