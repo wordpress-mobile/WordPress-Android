@@ -25,9 +25,7 @@ import kotlinx.android.synthetic.main.me_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.R.color
-import org.wordpress.android.R.layout
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED
@@ -86,7 +84,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layout.me_fragment, container, false) as ViewGroup
+        return inflater.inflate(R.layout.me_fragment, container, false) as ViewGroup
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -197,8 +195,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             card_avatar.visibility = View.VISIBLE
             row_my_profile.visibility = View.VISIBLE
             loadAvatar(null)
-            me_username.text = getString(string.at_username, defaultAccount.userName)
-            me_login_logout_text_view.setText(string.me_disconnect_from_wordpress_com)
+            me_username.text = getString(R.string.at_username, defaultAccount.userName)
+            me_login_logout_text_view.setText(R.string.me_disconnect_from_wordpress_com)
             val displayName = defaultAccount.displayName
             if (!TextUtils.isEmpty(displayName)) {
                 me_display_name.text = displayName
@@ -212,7 +210,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             avatar_progress.visibility = View.GONE
             row_my_profile.visibility = View.GONE
             row_account_settings.visibility = View.GONE
-            me_login_logout_text_view.setText(string.me_connect_to_wordpress_com)
+            me_login_logout_text_view.setText(R.string.me_connect_to_wordpress_com)
         }
     }
 
@@ -249,7 +247,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                         // For some reason, the Activity can be null so, guard for it. See #8590.
                         if (activity != null) {
                             ToastUtils.showToast(
-                                    activity, string.error_refreshing_gravatar,
+                                    activity, R.string.error_refreshing_gravatar,
                                     SHORT
                             )
                         }
@@ -276,16 +274,16 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         // if there are local changes we need to let the user know they'll be lost if they logout, otherwise
         // we use a simpler (less scary!) confirmation
         val message: String = if (postStore.numLocalChanges > 0) {
-            getString(string.sign_out_wpcom_confirm_with_changes)
+            getString(R.string.sign_out_wpcom_confirm_with_changes)
         } else {
-            getString(string.sign_out_wpcom_confirm_with_no_changes)
+            getString(R.string.sign_out_wpcom_confirm_with_no_changes)
         }
         MaterialAlertDialogBuilder(activity)
                 .setMessage(message)
                 .setPositiveButton(
-                        string.signout
+                        R.string.signout
                 ) { _, _ -> signOutWordPressCom() }
-                .setNegativeButton(string.cancel, null)
+                .setNegativeButton(R.string.cancel, null)
                 .setCancelable(true)
                 .create().show()
     }
@@ -298,7 +296,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         disconnectProgressDialog = ProgressDialog.show(
                 requireContext(),
                 null,
-                requireContext().getText(string.signing_out),
+                requireContext().getText(R.string.signing_out),
                 false
         )
     }
@@ -365,7 +363,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
                     )
                     ToastUtils.showToast(
                             activity,
-                            string.error_cropping_image,
+                            R.string.error_cropping_image,
                             SHORT
                     )
                 }
@@ -381,8 +379,8 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(ContextCompat.getColor(context, color.status_bar))
-        options.setToolbarColor(ContextCompat.getColor(context, color.primary))
+        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar))
+        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))
@@ -395,7 +393,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         if (TextUtils.isEmpty(filePath)) {
             ToastUtils.showToast(
                     activity,
-                    string.error_locating_image,
+                    R.string.error_locating_image,
                     SHORT
             )
             return
@@ -404,7 +402,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         if (!file.exists()) {
             ToastUtils.showToast(
                     activity,
-                    string.error_locating_image,
+                    R.string.error_locating_image,
                     SHORT
             )
             return
@@ -433,7 +431,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         } else {
             ToastUtils.showToast(
                     activity,
-                    string.error_updating_gravatar,
+                    R.string.error_updating_gravatar,
                     SHORT
             )
         }
