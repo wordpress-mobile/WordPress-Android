@@ -11,15 +11,20 @@ class FeatureAnnouncementProvider @Inject constructor(
     private val whatsNewStore: WhatsNewStore,
     private val buildConfigWrapper: BuildConfigWrapper
 ) {
-    suspend fun getLatestFeatureAnnouncement(): FeatureAnnouncement? {
-        return getFeatureAnnouncements().firstOrNull()
+    suspend fun getLatestFeatureAnnouncement(fromCache: Boolean): FeatureAnnouncement? {
+        return getFeatureAnnouncements(fromCache).firstOrNull()
     }
 
-    suspend fun getFeatureAnnouncements(): List<FeatureAnnouncement> {
+    suspend fun getFeatureAnnouncements(fromCache: Boolean): List<FeatureAnnouncement> {
         val featureAnnouncements = mutableListOf<FeatureAnnouncement>()
-        val onWhatsNewFetched = whatsNewStore.fetchWhatsNew(
-                buildConfigWrapper.getAppVersionCode().toString(), WP_ANDROID,false
-        )
+
+        val onWhatsNewFetched = if (fromCache) {
+            whatsNewStore.fetchCachedAnnouncements()
+        } else {
+            whatsNewStore.fetchRemoteAnnouncements(
+                    buildConfigWrapper.getAppVersionName(), WP_ANDROID
+            )
+        }
         onWhatsNewFetched.whatsNewItems?.map { featureAnnouncements.add(it.build()) }?.toList()
         return featureAnnouncements
     }
@@ -42,10 +47,5 @@ class FeatureAnnouncementProvider @Inject constructor(
                 StringUtils.notNullStr(iconBase64),
                 StringUtils.notNullStr(iconUrl)
         )
-    }
-
-    suspend fun isAnnouncementOnUpgradeAvailable(): Boolean {
-        val announcements = getFeatureAnnouncements()
-        return announcements.isNotEmpty() && announcements[0].isLocalized && announcements[0].features.isNotEmpty()
     }
 }

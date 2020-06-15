@@ -23,9 +23,7 @@ data class FeatureAnnouncement(
         val minAppVersion = WhatsNewAppVersionUtils.versionNameToInt(minimumAppVersion)
         val maxAppVersion = WhatsNewAppVersionUtils.versionNameToInt(maximumAppVersion)
 
-        var isWithinRange = true
-
-        isWithinRange = when {
+        val isWithinRange = when {
             minAppVersion == -1 -> {
                 integerRepresentationOfVersionName <= maxAppVersion
             }
@@ -39,7 +37,6 @@ data class FeatureAnnouncement(
                 ).contains(integerRepresentationOfVersionName)
             }
         }
-
 
         return isLocalized && features.isNotEmpty() && isWithinRange
     }
