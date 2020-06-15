@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-19 11:26:59+0000
+Translation-Revision-Date: 2020-06-10 16:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: fr
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Retirer %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
+    <string name="gutenberg_native_move_s_up">Déplacer %s vers le haut</string>
+    <string name="gutenberg_native_move_s_right">Déplacer %s vers la droite</string>
+    <string name="gutenberg_native_move_s_left">Déplacer %s vers la gauche</string>
+    <string name="gutenberg_native_move_s_down">Déplacer %s vers le bas</string>
+    <string name="gutenberg_native_try_a_starter_layout">Essayer une mise en page de démarrage</string>
+    <string name="gutenberg_native_insert_mention">Insérer une mention</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille du bas avec des options disponibles</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille d’action avec des options disponibles</string>
+    <string name="pages_cannot_be_started">Impossible d’ouvrir des pages pour le moment. Réessayez ultérieurement.</string>
+    <string name="pages_set_as_posts_page">Définir comme page d’articles</string>
+    <string name="pages_set_as_homepage">Définir comme page d’accueil</string>
+    <string name="suggestion_no_matching_users">« Aucun utilisateur correspondant disponible. »</string>
+    <string name="suggestion_invalid_user">« %s n’est pas un utilisateur valide »</string>
+    <string name="site_settings_select_page">Sélectionner une page</string>
+    <string name="site_settings_posts_page">Page des articles</string>
+    <string name="site_settings_static_homepage">Page d’accueil statique</string>
+    <string name="site_settings_classic_blog">Blog classique</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">La page d’accueil sélectionnée et la page des articles ne peuvent pas être la même.</string>
+    <string name="site_settings_failed_update_homepage_settings">La mise à jour des paramètres de la page d’accueil a échoué, vérifiez votre connexion internet</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Impossible d’enregistrer les paramètres de la page d’accueil avant le chargement des pages</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Impossible d’enregistrer les paramètres de la page d’accueil</string>
+    <string name="site_settings_accept_homepage">Accepter</string>
+    <string name="site_settings_failed_to_load_pages">Échec du chargement des pages</string>
+    <string name="site_settings_homepage_settings_description">Choisissez entre une page d’accueil qui affiche vos derniers articles (blog classique) ou une page fixe/statique.</string>
+    <string name="site_settings_homepage_settings">Paramètres de la page d’accueil</string>
+    <string name="site_settings_homepage">Page d’accueil</string>
+    <string name="page_posts_page_update_failed">Échec de la mise à jour de la page des articles</string>
+    <string name="page_posts_page_successfully_updated">Page des articles mise à jour avec succès</string>
+    <string name="page_homepage_update_failed">Échec de la mise à jour de la page d’accueil</string>
+    <string name="page_homepage_successfully_updated">Page d’accueil mise à jour avec succès</string>
+    <string name="page_cannot_set_posts_page">Pour régler la page des articles, activez « Page d’accueil statique » dans les réglages du site</string>
+    <string name="page_cannot_set_homepage">Pour régler la page d’accueil, activez « Page d’accueil statique » dans les réglages du site</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">Bienvenue sur notre nouveau blog</string>
     <string name="gutenberg_native_select_a_color">Sélectionnez une couleur</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toucher deux fois pour aller aux réglages de couleur</string>
@@ -36,9 +71,7 @@ Language: fr
     <string name="copy_text">Copier</string>
     <string name="gutenberg_native_number_of_columns">Nombre de colonnes</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Déplace le bloc à droite de la position %1$s vers la position %2$s</string>
-    <string name="gutenberg_native_move_block_right">Déplacer le bloc à droite</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Déplace le bloc à gauche de la position %1$s vers la position %2$s</string>
-    <string name="gutenberg_native_move_block_left">Déplacer le bloc à gauche</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toucher deux fois pour déplacer le bloc à droite</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toucher deux fois pour déplacer le bloc à gauche</string>
     <string name="gutenberg_native_columns_settings">Réglages de colonnes</string>
@@ -121,16 +154,14 @@ Language: fr
     <string name="gutenberg_native_only_show_excerpt">N’afficher que l’extrait</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mon portfolio présente des projets variés créés tout au long de ma carrière. Mes coordonnées sont plus bas. Contactez-moi !</string>
     <string name="gutenberg_native_link_to">Lier à</string>
+    <string name="gutenberg_native_s_settings">Réglages de %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parlons-en ! 👋 N’hésitez pas à communiquer en utilisant les coordonnées ci-dessous ou utiliser le formulaire.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Construisons quelque chose ensemble !</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Construisons quelque chose ensemble !</string>
-    <string name="gutenberg_native_let_s_build_something_together">Construisons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Créons quelque chose ensemble !</string>
+    <string name="gutenberg_native_let_s_build_something_together">Créons quelque chose ensemble !</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Ce sont nos choix, Harry, qui montrent ce que nous sommes vraiment, bien plus que nos capacités.</string>
     <string name="gutenberg_native_inspiration">Inspiration</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Contactez-nous !</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Contactez-nous !</string>
     <string name="gutenberg_native_get_in_touch">Contactez-nous !</string>
     <string name="gutenberg_native_excerpt_length_words">Longueur de l’extrait (mots)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Écrivez-nous : &lt;a href=\"mailto:mail@example.com\">mail@exemple.com&lt;/a></string>
@@ -286,9 +317,7 @@ Language: fr
     <string name="gutenberg_native_my_post_publish_panel">Mon panneau post-publication</string>
     <string name="gutenberg_native_my_document_setting_panel">Panneau des paramètres de mon document</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Faire monter le bloc de la ligne %1$s à la ligne %2$s</string>
-    <string name="gutenberg_native_move_block_up">Faire monter le bloc</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Faire descendre le bloc de la ligne %1$s à la ligne %2$s</string>
-    <string name="gutenberg_native_move_block_down">Faire descendre le bloc</string>
     <string name="gutenberg_native_link_text">Texte du lien</string>
     <string name="gutenberg_native_link_inserted">Lien inséré</string>
     <string name="gutenberg_native_image_caption_s">Légende de l\'image. %s</string>
@@ -310,7 +339,6 @@ Language: fr
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Appuyer deux fois et maintenir le bouton enfoncé apporter une modification</string>
     <string name="gutenberg_native_current_value_is_s">La valeur actuelle est %s</string>
     <string name="gutenberg_native_content">Contenu…</string>
-    <string name="gutenberg_native_clear_all_settings">Effacer tous les paramètres</string>
     <string name="gutenberg_native_choose_from_device">Choisir depuis l\'appareil</string>
     <string name="gutenberg_native_annotations_sidebar">Colonne latérale des annotations</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Une erreur inconnue est survenue. Veuillez réessayer.</string>
@@ -1132,7 +1160,6 @@ Language: fr
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 article avec 1 fichier non chargé</string>
     <string name="untitled_in_parentheses">(Sans titre)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Créer un site</string>
     <string name="notification_site_creation_created">Touchez pour continuer.</string>
@@ -1602,7 +1629,7 @@ Language: fr
     <string name="pending_draft_one_day_2">Saviez-vous que «&amp;nbsp;%1$s&amp;nbsp;» est toujours un brouillon&amp;nbsp;? Publiez-le&amp;nbsp;!</string>
     <string name="pending_draft_one_day_1">Vous avez commencé «&amp;nbsp;%1$s&amp;nbsp;» hier. N\'oubliez pas de le publier&amp;nbsp;!</string>
     <string name="reader_photo_by">Photo par %s</string>
-    <string name="reader_label_visit">Visitez</string>
+    <string name="reader_label_visit">Aller sur le site</string>
     <string name="swipe_for_more">Glissez pour plus</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Vous n’êtes pas autorisé à voir cet article. Essayez de vous connecter à WordPress.com ou utilisez le bouton en haut pour l’ouvrir dans le navigateur à la place.</string>
     <string name="reader_err_get_post_not_authorized_signin">Vous n\'êtes pas autorisé à voir ce poste. Essayez de vous connecter à WordPress.com d\'abord.</string>
