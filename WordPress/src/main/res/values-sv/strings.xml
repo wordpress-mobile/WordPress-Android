@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-19 10:16:39+0000
+Translation-Revision-Date: 2020-06-05 20:34:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: sv_SE
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Ta bort %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Öppna menyn för blockåtgärder</string>
+    <string name="gutenberg_native_move_s_up">Flytta %s uppåt</string>
+    <string name="gutenberg_native_move_s_right">Flytta %s åt höger</string>
+    <string name="gutenberg_native_move_s_left">Flytta %s åt vänster</string>
+    <string name="gutenberg_native_move_s_down">Flytta %s nedåt</string>
+    <string name="gutenberg_native_try_a_starter_layout">Prova någon av grundlayouterna</string>
+    <string name="gutenberg_native_insert_mention">Infoga omnämnande</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltryck för att öppna det nedre arket med tillgänliga alternativ</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltryck för att öppna åtgärdsbladet med tillgängliga alternativ</string>
+    <string name="pages_cannot_be_started">Vi kan inte öppna sidor just nu. Försök igen senare</string>
+    <string name="pages_set_as_posts_page">Ställ in som inläggssida</string>
+    <string name="pages_set_as_homepage">Ställ in som startsida</string>
+    <string name="suggestion_no_matching_users">”Inga matchande användare finns tillgängliga.”</string>
+    <string name="suggestion_invalid_user">”%s är inte en giltig användare”</string>
+    <string name="site_settings_select_page">Välj sida</string>
+    <string name="site_settings_posts_page">Inläggssida</string>
+    <string name="site_settings_static_homepage">Statisk startsida</string>
+    <string name="site_settings_classic_blog">Klassisk blogg</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Den valda startsidan kan inte vara den samma som sidan för inlägg.</string>
+    <string name="site_settings_failed_update_homepage_settings">Uppdateringen av inställningar för startsida misslyckades, kontrollera att du har kontakt med internet</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Det går inte att spara inställningarna för startsida förrän sidorna har lästs in</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Det gick inte att spara inställningarna för startsida</string>
+    <string name="site_settings_accept_homepage">Acceptera</string>
+    <string name="site_settings_failed_to_load_pages">Laddningen av sidorna misslyckades</string>
+    <string name="site_settings_homepage_settings_description">Välj mellan en startsida som visar dina senaste inlägg (klassisk blogg) och en fast/statisk sida.</string>
+    <string name="site_settings_homepage_settings">Inställningar för startsida</string>
+    <string name="site_settings_homepage">Startsida</string>
+    <string name="page_posts_page_update_failed">Uppdateringen av inläggssidan misslyckades</string>
+    <string name="page_posts_page_successfully_updated">Inställningarna för sida med blogginlägg har uppdaterats</string>
+    <string name="page_homepage_update_failed">Uppdatering av startsida misslyckades</string>
+    <string name="page_homepage_successfully_updated">Inställningarna för startsida har ändrats</string>
+    <string name="page_cannot_set_posts_page">För att ange sida för blogginlägg behöver du aktivera ”Statisk startsida” under webbplatsinställningar</string>
+    <string name="page_cannot_set_homepage">För att ange startsida behöver du aktivera ”Statisk startsida” under webbplatsinställningar</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">Välkommen till vår nya blogg</string>
     <string name="gutenberg_native_select_a_color">Välj en färg</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
@@ -36,9 +71,7 @@ Language: sv_SE
     <string name="copy_text">Kopiera</string>
     <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
-    <string name="gutenberg_native_move_block_right">Flytta blocket åt höger</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytta blocket åt vänster från position %1$s till position %2$s</string>
-    <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
     <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
@@ -121,16 +154,14 @@ Language: sv_SE
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
     <string name="gutenberg_native_link_to">Länk till</string>
+    <string name="gutenberg_native_s_settings">%s-inställningar</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Låt oss skapa något tillsammans.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Låt oss skapa något tillsammans</string>
-    <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Låt oss skapa något tillsammans!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, det är dina val som visar vilka vi egentligen är, i långt högre grad än våra förmågor.</string>
     <string name="gutenberg_native_inspiration">Inspiration</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Hör av dig!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Hör av dig!</string>
     <string name="gutenberg_native_get_in_touch">Hör av dig</string>
     <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -286,9 +317,7 @@ Language: sv_SE
     <string name="gutenberg_native_my_post_publish_panel">Min panel för publicering av inlägg</string>
     <string name="gutenberg_native_my_document_setting_panel">Min panel för dokumentinställningar</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Flytta block uppåt från rad  %1$s till rad %2$s</string>
-    <string name="gutenberg_native_move_block_up">Flytta block uppåt</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytta block nedåt från rad %1$s till rad %2$s</string>
-    <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
     <string name="gutenberg_native_link_text">Länktext</string>
     <string name="gutenberg_native_link_inserted">Länk infogad</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
@@ -310,7 +339,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Dubbeltryck och håll kvar för att redigera</string>
     <string name="gutenberg_native_current_value_is_s">Nuvarande värde är %s</string>
     <string name="gutenberg_native_content">Innehåll…</string>
-    <string name="gutenberg_native_clear_all_settings">Rensa alla inställningar</string>
     <string name="gutenberg_native_choose_from_device">Välj från enheten</string>
     <string name="gutenberg_native_annotations_sidebar">Sidopanel för bildtexter/beskrivninger</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ett okänt fel har inträffatt. Försök igen.</string>
@@ -1132,7 +1160,6 @@ Language: sv_SE
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 inlägg med 1 fil laddades inte upp</string>
     <string name="untitled_in_parentheses">(Namnlös)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%s, %s</string>
     <string name="latitude_longitude">%f, %f</string>
     <string name="site_creation_domain_finish_button">Skapa webbplats</string>
     <string name="notification_site_creation_created">Tryck för att fortsätta.</string>
@@ -1602,7 +1629,7 @@ Language: sv_SE
     <string name="pending_draft_one_day_2">Visste du att \'%1$s\' fortfarande är ett utkast? Publicera det!</string>
     <string name="pending_draft_one_day_1">Du skapade \'%1$s\' igår. Glöm inte att publicera det!</string>
     <string name="reader_photo_by">Foto: %s</string>
-    <string name="reader_label_visit">Gå till</string>
+    <string name="reader_label_visit">Besök webbplats</string>
     <string name="swipe_for_more">Dra för att se mer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först och sedan använda knappen högst upp för att öppna ett webbläsarfönster istället.</string>
     <string name="reader_err_get_post_not_authorized_signin">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först.</string>

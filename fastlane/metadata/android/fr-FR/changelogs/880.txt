@@ -1,0 +1,4 @@
+15.0 :
+Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
+Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
+Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
