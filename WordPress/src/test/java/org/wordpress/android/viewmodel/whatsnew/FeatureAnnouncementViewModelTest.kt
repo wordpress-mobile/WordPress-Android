@@ -6,12 +6,14 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -58,16 +60,18 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
             1,
+            "14.5",
+            "14.7",
             "https://wordpress.org/",
             true,
             testFeatures
     )
 
     @Before
-    fun setUp() {
+    fun setUp() = runBlockingTest {
         uiModelResults.clear()
 
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(featureAnnouncement)
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(any())).thenReturn(featureAnnouncement)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         viewModel = FeatureAnnouncementViewModel(
                 featureAnnouncementProvider,
@@ -131,8 +135,8 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `find Out More is not visible when detailsUrl is missing`() {
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
+    fun `find Out More is not visible when detailsUrl is missing`() = test {
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement.copy(detailsUrl = "")
         )
 
@@ -146,5 +150,13 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
         verify(appPrefsWrapper).featureAnnouncementShownVersion = 1
         verify(appPrefsWrapper).lastFeatureAnnouncementAppVersionCode = 850
+    }
+
+    @Test
+    fun `when no cached announcement is available we will try to fetch one from endpoint`() = test {
+        viewModel.start()
+
+        verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(true)
+        verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
     }
 }
