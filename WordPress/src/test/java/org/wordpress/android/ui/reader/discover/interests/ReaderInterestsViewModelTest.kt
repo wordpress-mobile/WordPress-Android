@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -267,6 +268,20 @@ class ReaderInterestsViewModelTest {
 
             // Then
             verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `error shown on start when internet access not available`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
+
+            // When
+            initViewModel()
+
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadFailedConnectionErrorUiState::class.java)
         }
 
     private fun initViewModel() = viewModel.start()
