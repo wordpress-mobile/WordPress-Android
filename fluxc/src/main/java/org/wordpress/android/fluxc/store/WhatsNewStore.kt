@@ -59,7 +59,7 @@ class WhatsNewStore @Inject constructor(
 
     suspend fun fetchCachedAnnouncements() =
             coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
-                return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements())
+                return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements(), true)
             }
 
     suspend fun fetchRemoteAnnouncements(versionName: String, appId: WhatsNewAppId) =
@@ -100,6 +100,7 @@ class WhatsNewStore @Inject constructor(
 
     data class OnWhatsNewFetched(
         val whatsNewItems: List<WhatsNewAnnouncementModel>? = null,
+        val isFromCache: Boolean = false,
         val fetchError: WhatsNewFetchError? = null
     ) : Store.OnChanged<WhatsNewFetchError>() {
         init {
