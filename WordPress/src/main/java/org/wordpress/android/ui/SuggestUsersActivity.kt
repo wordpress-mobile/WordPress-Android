@@ -7,6 +7,7 @@ import android.database.DataSetObserver
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.suggest_users_activity.*
@@ -63,21 +64,18 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 finishWithId(suggestionUserId)
             }
 
+            setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_UP) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        return@setOnKeyListener exitIfOnlyOneMatchingUser()
+                    }
+                }
+                false
+            }
+
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
-                        suggestionAdapter?.getItem(0)?.userLogin
-                    } else {
-                        null
-                    }
-                    if (onlySuggestedUser != null) {
-                        finishWithId(onlySuggestedUser)
-                    } else {
-                        // If there is not exactly 1 suggestion, notify that entered text is not a valid user
-                        val message = getString(R.string.suggestion_invalid_user, text)
-                        ToastUtils.showToast(this@SuggestUsersActivity, message)
-                    }
-                    true
+                    exitIfOnlyOneMatchingUser()
                 } else {
                     false
                 }
@@ -119,6 +117,24 @@ class SuggestUsersActivity : LocaleAwareActivity() {
             post { requestFocus() }
             showDropdownOnTouch()
         }
+    }
+
+    private fun exitIfOnlyOneMatchingUser(): Boolean {
+        val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
+            suggestionAdapter?.getItem(0)?.userLogin
+        } else {
+            null
+        }
+
+        if (onlySuggestedUser != null) {
+            finishWithId(onlySuggestedUser)
+        } else {
+            // If there is not exactly 1 suggestion, notify that entered text is not a valid user
+            val message = getString(R.string.suggestion_invalid_user, autocompleteText.text)
+            ToastUtils.showToast(this@SuggestUsersActivity, message)
+        }
+
+        return onlySuggestedUser != null
     }
 
     @SuppressLint("ClickableViewAccessibility")
