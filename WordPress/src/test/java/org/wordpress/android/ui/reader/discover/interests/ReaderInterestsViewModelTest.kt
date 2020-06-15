@@ -23,7 +23,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentInitialUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
@@ -126,7 +126,7 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(viewModel.uiState.value).isEqualTo(ContentInitialUiState)
+            assertThat(viewModel.uiState.value).isEqualTo(InitialUiState)
         }
 
     @ExperimentalCoroutinesApi

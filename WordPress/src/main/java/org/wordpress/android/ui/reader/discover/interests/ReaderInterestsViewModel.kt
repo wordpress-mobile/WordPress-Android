@@ -11,7 +11,7 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentInitialUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.viewmodel.Event
@@ -22,7 +22,7 @@ class ReaderInterestsViewModel @Inject constructor(
 ) : ViewModel() {
     var initialized: Boolean = false
 
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData(ContentInitialUiState)
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData(InitialUiState)
     val uiState: LiveData<UiState> = _uiState
 
     private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
@@ -39,10 +39,10 @@ class ReaderInterestsViewModel @Inject constructor(
             if (tagList.isNotEmpty()) {
                 val currentUiState = uiState.value as UiState
                 updateUiState(
-                   ContentLoadSuccessUiState(
-                        interestsUiState = transformToInterestsUiState(tagList),
-                        interests = tagList,
-                        doneButtonUiState = currentUiState.getDoneButtonState()
+                    ContentLoadSuccessUiState(
+                        interestTagsUiState = transformToInterestsUiState(tagList),
+                        interestTags = tagList,
+                        doneBtnUiState = currentUiState.getDoneButtonState()
                     )
                 )
                 if (!initialized) {
@@ -58,9 +58,9 @@ class ReaderInterestsViewModel @Inject constructor(
             val updatedInterestsUiState = getUpdatedInterestsUiState(index, isChecked)
 
             updateUiState(
-                uiState.copy(
-                    interestsUiState = updatedInterestsUiState,
-                    doneButtonUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
+                currentUiState.copy(
+                    interestTagsUiState = updatedInterestsUiState,
+                    doneBtnUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
                 )
             )
         }
@@ -93,9 +93,12 @@ class ReaderInterestsViewModel @Inject constructor(
     sealed class UiState(
         val interestsUiState: List<InterestUiState>,
         val interests: ReaderTagList,
-        val doneButtonUiState: DoneButtonUiState
+        val doneButtonUiState: DoneButtonUiState,
+        val progressBarVisible: Boolean = false,
+        val titleVisible: Boolean = !progressBarVisible,
+        val subtitleVisible: Boolean = !progressBarVisible
     ) {
-        object ContentInitialUiState : UiState(
+        object InitialUiState : UiState(
             interestsUiState = emptyList(),
             interests = ReaderTagList(),
             doneButtonUiState = DoneButtonHiddenUiState,
@@ -105,10 +108,7 @@ class ReaderInterestsViewModel @Inject constructor(
         data class ContentLoadSuccessUiState(
             val interestTagsUiState: List<InterestUiState>,
             val interestTags: ReaderTagList,
-            val doneBtnUiState: DoneButtonUiState,
-            val progressBarVisible: Boolean = false,
-            val titleVisible: Boolean = !progressBarVisible,
-            val subtitleVisible: Boolean = !progressBarVisible
+            val doneBtnUiState: DoneButtonUiState
         ) : UiState(
             interestsUiState = interestTagsUiState,
             interests = interestTags,
