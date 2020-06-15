@@ -7,16 +7,20 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.WhatsNewAction
-import org.wordpress.android.fluxc.action.WhatsNewAction.FETCH_WHATS_NEW
+import org.wordpress.android.fluxc.action.WhatsNewAction.FETCH_CACHED_ANNOUNCEMENT
+import org.wordpress.android.fluxc.action.WhatsNewAction.FETCH_REMOTE_ANNOUNCEMENT
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.whatsnew.WhatsNewRestClient
 import org.wordpress.android.fluxc.persistence.WhatsNewSqlUtils
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewErrorType.MALFORMED_APP_VERSION_NAME
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.WhatsNewAppVersionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.AppLog.T.API
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -33,22 +37,42 @@ class WhatsNewStore @Inject constructor(
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? WhatsNewAction ?: return
         when (actionType) {
-            FETCH_WHATS_NEW -> {
+            FETCH_REMOTE_ANNOUNCEMENT -> {
                 val versionCode = (action.payload as WhatsNewFetchPayload).versionName
-                val isForced = (action.payload as WhatsNewFetchPayload).forced
                 val appId = (action.payload as WhatsNewFetchPayload).appId
-                GlobalScope.launch(coroutineContext) { emitChange(fetchWhatsNew(versionCode, appId, isForced)) }
+                GlobalScope.launch(coroutineContext) {
+                    emitChange(
+                            fetchRemoteAnnouncements(
+                                    versionCode,
+                                    appId
+                            )
+                    )
+                }
+            }
+            FETCH_CACHED_ANNOUNCEMENT -> {
+                GlobalScope.launch(coroutineContext) {
+                    emitChange(fetchCachedAnnouncements())
+                }
             }
         }
     }
 
-    suspend fun fetchWhatsNew(versionCode: String, appId: WhatsNewAppId, forced: Boolean) =
+    suspend fun fetchCachedAnnouncements() =
             coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
-                if (!forced && whatsNewSqlUtils.hasCachedAnnouncements()) {
-                    return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements())
-                }
+                return@withDefaultContext OnWhatsNewFetched(whatsNewSqlUtils.getAnnouncements())
+            }
 
-                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(versionCode, appId)
+    suspend fun fetchRemoteAnnouncements(versionName: String, appId: WhatsNewAppId) =
+            coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
+                val normalizedVersionName = WhatsNewAppVersionUtils.normalizeVersion(versionName)
+                        ?: return@withDefaultContext OnWhatsNewFetched(
+                                fetchError = WhatsNewFetchError(
+                                        MALFORMED_APP_VERSION_NAME,
+                                        "App version ($versionName) name does not follow major.minor.patch format."
+                                )
+                        )
+
+                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(normalizedVersionName, appId)
 
                 return@withDefaultContext if (!fetchedWhatsNewPayload.isError) {
                     val fetchedAnnouncements = fetchedWhatsNewPayload.whatsNewItems
@@ -62,13 +86,12 @@ class WhatsNewStore @Inject constructor(
             }
 
     override fun onRegister() {
-        AppLog.d(AppLog.T.API, WhatsNewStore::class.java.simpleName + " onRegister")
+        AppLog.d(API, WhatsNewStore::class.java.simpleName + " onRegister")
     }
 
     class WhatsNewFetchPayload(
         val versionName: String,
-        val appId: WhatsNewAppId,
-        val forced: Boolean
+        val appId: WhatsNewAppId
     ) : Payload<BaseNetworkError>()
 
     class WhatsNewFetchedPayload(
@@ -92,7 +115,8 @@ class WhatsNewStore @Inject constructor(
     ) : OnChangedError
 
     enum class WhatsNewErrorType {
-        GENERIC_ERROR
+        GENERIC_ERROR,
+        MALFORMED_APP_VERSION_NAME
     }
 
     enum class WhatsNewAppId(val id: Int) {
