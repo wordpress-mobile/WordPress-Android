@@ -1201,6 +1201,27 @@ open class WellSqlConfig : DefaultWellConfig {
                             "ATTRIBUTES TEXT NOT NULL," +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
                 }
+                108 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE EditorThemeElement(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "THEME_ID INTEGER," +
+                                    "TYPE TEXT NOT NULL," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "VALUE TEXT NOT NULL," +
+                                    "CHECK(TYPE IN (\"color\", \"gradient\") )," +
+                                    "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
+                    )
+                }
             }
         }
         db.setTransactionSuccessful()
