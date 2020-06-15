@@ -307,7 +307,6 @@ Language: es_CO
     <string name="pending_draft_one_day_2">¿Sabías que \"%1$s\" aún es un borrador? No esperes más y publícala.</string>
     <string name="pending_draft_one_day_1">Ayer guardaste \'%1$s\' como borrador. ¡No olvides publicarla!</string>
     <string name="reader_photo_by">Foto de %s</string>
-    <string name="reader_label_visit">Visitar</string>
     <string name="swipe_for_more">Deslizar para ver más</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero o en su lugar usa el botón de acción arriba para abrir un navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero.</string>
