@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-27 08:54:10+0000
+Translation-Revision-Date: 2020-06-10 08:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha
 Language: ko_KR
@@ -36,9 +36,7 @@ Language: ko_KR
     <string name="copy_text">복사</string>
     <string name="gutenberg_native_number_of_columns">단의 수</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">블록을 %1$s 위치에서 %2$s(으)로 이동</string>
-    <string name="gutenberg_native_move_block_right">블록 오른쪽으로 움직이기</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">블록을 %1$s 위치에서 %2$s (으)로 이동</string>
-    <string name="gutenberg_native_move_block_left">블록 왼쪽으로 움직이기</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">블록을 오른쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">블록을 왼쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_columns_settings">다단 설정</string>
@@ -122,15 +120,12 @@ Language: ko_KR
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
     <string name="gutenberg_native_link_to">링크</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">함께 만들어 보세요.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">함께 만들어 보세요.</string>
-    <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요.</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">함께 만들어 보세요!</string>
+    <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요!</string>
     <string name="gutenberg_native_juan_p_rez">후안 페레스</string>
     <string name="gutenberg_native_j_k_rowling">J.K. 롤링</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">해리야, 우리가 진짜 누군지 보여주는 건 우리 능력들보다는 우리의 선택이야.</string>
     <string name="gutenberg_native_inspiration">영감</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">연락주세요!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">연락주세요!</string>
     <string name="gutenberg_native_get_in_touch">문의하기</string>
     <string name="gutenberg_native_excerpt_length_words">요약문 길이(단어)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">이메일: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -286,9 +281,7 @@ Language: ko_KR
     <string name="gutenberg_native_my_post_publish_panel">내 글 발행 패널</string>
     <string name="gutenberg_native_my_document_setting_panel">내 문서 설정 패널</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">블록을 위로(%1$s 행에서 %2$s 행으로) 이동</string>
-    <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
-    <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
     <string name="gutenberg_native_link_text">링크 텍스트</string>
     <string name="gutenberg_native_link_inserted">링크 삽입됨</string>
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
@@ -310,7 +303,6 @@ Language: ko_KR
     <string name="gutenberg_native_double_tap_and_hold_to_edit">편집하려면 두 번 탭하고 길게 누르세요.</string>
     <string name="gutenberg_native_current_value_is_s">현재 값은 %s입니다.</string>
     <string name="gutenberg_native_content">콘텐츠…</string>
-    <string name="gutenberg_native_clear_all_settings">모든 설정 지우기</string>
     <string name="gutenberg_native_choose_from_device">기기에서 선택</string>
     <string name="gutenberg_native_annotations_sidebar">주석 사이드바</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">알 수 없는 오류가 발생했습니다. 다시 시도하세요.</string>
@@ -1132,7 +1124,6 @@ Language: ko_KR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1개의 파일이 포함된 1개의 글이 업로드되지 않음</string>
     <string name="untitled_in_parentheses">(제목 없음)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%s, %s</string>
     <string name="latitude_longitude">%f, %f</string>
     <string name="site_creation_domain_finish_button">사이트 생성</string>
     <string name="notification_site_creation_created">계속하려면 누르세요.</string>
@@ -1602,7 +1593,6 @@ Language: ko_KR
     <string name="pending_draft_one_day_2">\'%1$s\'이(가) 아직 임시글입니다. 어서 발행하세요!</string>
     <string name="pending_draft_one_day_1">어제 \'%1$s\'의 초안을 작성했습니다. 잊지 말고 발행하세요!</string>
     <string name="reader_photo_by">%s 촬영</string>
-    <string name="reader_label_visit">방문</string>
     <string name="swipe_for_more">더 많은 내용을 보려면 살짝 밀기</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">이 글을 볼 권한이 없습니다. 워드프레스닷컴에 먼저 로그인하거나, 상단 조치 버튼을 사용하여 브라우저를 대신 엽니다.</string>
     <string name="reader_err_get_post_not_authorized_signin">이 글을 볼 권한이 없습니다. 워드프레스닷컴에 먼저 로그인하세요.</string>

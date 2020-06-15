@@ -62,9 +62,7 @@ Language: en_CA
     <string name="gutenberg_native_my_post_publish_panel">My post publish panel</string>
     <string name="gutenberg_native_my_document_setting_panel">My Document Setting Panel</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Move block up from row %1$s to row %2$s</string>
-    <string name="gutenberg_native_move_block_up">Move block up</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Move block down from row %1$s to row %2$s</string>
-    <string name="gutenberg_native_move_block_down">Move block down</string>
     <string name="gutenberg_native_link_text">Link text</string>
     <string name="gutenberg_native_link_inserted">Link inserted</string>
     <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
@@ -86,7 +84,6 @@ Language: en_CA
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Double tap and hold to edit</string>
     <string name="gutenberg_native_current_value_is_s">Current value is %s</string>
     <string name="gutenberg_native_content">Content…</string>
-    <string name="gutenberg_native_clear_all_settings">Clear All Settings</string>
     <string name="gutenberg_native_choose_from_device">Choose from device</string>
     <string name="gutenberg_native_annotations_sidebar">Annotations Sidebar</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">An unknown error occurred. Please try again.</string>
@@ -901,7 +898,6 @@ Language: en_CA
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
@@ -1371,7 +1367,6 @@ Language: en_CA
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
     <string name="reader_photo_by">Photo by %s</string>
-    <string name="reader_label_visit">Visit</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorized to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_authorized_signin">You\'re not authorized to view this post. Try signing in to WordPress.com first.</string>
