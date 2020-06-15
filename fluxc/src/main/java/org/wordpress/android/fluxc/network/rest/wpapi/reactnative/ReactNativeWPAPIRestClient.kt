@@ -50,7 +50,8 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
         params: Map<String, String>,
         successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
-        nonce: String? = null
+        nonce: String? = null,
+        enableCaching: Boolean = true
     ): ReactNativeFetchResponse {
         val response =
                 wpApiGsonRequestBuilder.syncGetRequest(
@@ -59,7 +60,7 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
                         params,
                         emptyMap(),
                         JsonElement::class.java,
-                        true,
+                        enableCaching,
                         nonce = nonce)
         return when (response) {
             is Success -> successHandler(response.data)
