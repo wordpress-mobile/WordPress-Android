@@ -129,13 +129,14 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interests).isEqualTo(mockInterests)
             assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState).interests)
+                .isEqualTo(mockInterests)
 
             val uiState = requireNotNull(viewModel.uiState.value) as ContentLoadSuccessUiState
-            assertThat(uiState.interestTags).isEqualTo(mockInterests)
-            assertThat(uiState.interestTagsUiState[0]).isInstanceOf(InterestUiState::class.java)
-            assertThat(uiState.interestTagsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
+            assertThat(uiState.interests).isEqualTo(mockInterests)
+            assertThat(uiState.interestsUiState[0]).isInstanceOf(InterestUiState::class.java)
+            assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
         }
 
     @ExperimentalCoroutinesApi
@@ -176,7 +177,8 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState)
+                .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(true)
         }
 
@@ -195,7 +197,8 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState)
+                .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(false)
         }
 

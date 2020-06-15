@@ -44,7 +44,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun initRetryButton() {
-        error_retry.setOnClickListener { viewModel.onRetryButtonClicked() }
+        error_retry.setOnClickListener { // TODO
+        }
     }
 
     private fun initViewModel() {
@@ -107,7 +108,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             setTextOrHide(error_title, uiState.titleResId)
             setTextOrHide(error_subtitle, uiState.subtitleResId)
             updateVisibility(contact_support, uiState.showContactSupport)
-            updateVisibility(cancel_wizard_button, uiState.showCancelButton)
         }
     }
 

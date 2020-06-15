@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
@@ -43,12 +44,10 @@ class ReaderInterestsViewModel @Inject constructor(
         if (networkUtils.isNetworkAvailable()) {
             viewModelScope.launch {
                 val tagList = readerTagRepository.getInterests()
-                val currentUiState = uiState.value as UiState
                 updateUiState(
                     ContentLoadSuccessUiState(
-                        interestTagsUiState = transformToInterestsUiState(tagList),
-                        interestTags = tagList,
-                        doneBtnUiState = currentUiState.getDoneButtonState()
+                        interestsUiState = transformToInterestsUiState(tagList),
+                        interests = tagList
                     )
                 )
             }
@@ -66,8 +65,8 @@ class ReaderInterestsViewModel @Inject constructor(
 
             updateUiState(
                 currentUiState.copy(
-                    interestTagsUiState = updatedInterestsUiState,
-                    doneBtnUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
+                    interestsUiState = updatedInterestsUiState,
+                    doneButtonUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
                 )
             )
         }
@@ -81,18 +80,13 @@ class ReaderInterestsViewModel @Inject constructor(
         }
     }
 
-    fun onRetryButtonClicked() {
-        updateUiState(InitialUiState)
-        loadInterests()
-    }
-
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
             InterestUiState(interest.tagTitle)
         }
 
     private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
-        val currentUiState = uiState.value as UiState
+        val currentUiState = uiState.value as ContentLoadSuccessUiState
         val newInterestsUiState = currentUiState.interestsUiState.toMutableList()
         newInterestsUiState[index] = currentUiState.interestsUiState[index].copy(isChecked = isChecked)
         return newInterestsUiState
@@ -103,9 +97,7 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     sealed class UiState(
-        val interestsUiState: List<InterestUiState> = emptyList(),
-        val interests: ReaderTagList = ReaderTagList(),
-        val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
+        open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
         val progressBarVisible: Boolean = true,
         val titleVisible: Boolean = false,
         val subtitleVisible: Boolean = false,
@@ -114,13 +106,10 @@ class ReaderInterestsViewModel @Inject constructor(
         object InitialUiState : UiState()
 
         data class ContentLoadSuccessUiState(
-            val interestTagsUiState: List<InterestUiState>,
-            val interestTags: ReaderTagList,
-            val doneBtnUiState: DoneButtonUiState
+            val interestsUiState: List<InterestUiState>,
+            val interests: ReaderTagList,
+            override val doneButtonUiState: DoneButtonUiState = DoneButtonDisabledUiState
         ) : UiState(
-            interestsUiState = interestTagsUiState,
-            interests = interestTags,
-            doneButtonUiState = doneBtnUiState,
             progressBarVisible = false,
             titleVisible = true,
             subtitleVisible = true,
@@ -130,8 +119,7 @@ class ReaderInterestsViewModel @Inject constructor(
         sealed class ContentLoadFailedUiState constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null,
-            val showContactSupport: Boolean = false,
-            val showCancelButton: Boolean = false
+            val showContactSupport: Boolean = false
         ) : UiState(
             progressBarVisible = false,
             fullscreenErrorLayoutVisible = true
@@ -141,22 +129,39 @@ class ReaderInterestsViewModel @Inject constructor(
             )
         }
 
-        private val checkedInterestsUiState = interestsUiState.filter { it.isChecked }
+        private fun getCheckedInterestsUiState(): List<InterestUiState> {
+            return if (this is ContentLoadSuccessUiState) {
+                interestsUiState.filter { it.isChecked }
+            } else {
+                emptyList()
+            }
+        }
 
-        fun getSelectedInterests() = interests.filter {
-            checkedInterestsUiState.map {
-                checkedInterestUiState -> checkedInterestUiState.title
-            }.contains(it.tagTitle)
+        fun getSelectedInterests(): List<ReaderTag> {
+            return if (this is ContentLoadSuccessUiState) {
+                interests.filter {
+                    getCheckedInterestsUiState().map { checkedInterestUiState ->
+                        checkedInterestUiState.title
+                    }.contains(it.tagTitle)
+                }
+            } else {
+                emptyList()
+            }
         }
 
         fun getDoneButtonState(
             isInterestChecked: Boolean = false
         ): DoneButtonUiState {
-            val disableDoneButton = interests.isEmpty() || (checkedInterestsUiState.size == 1 && !isInterestChecked)
-            return if (disableDoneButton) {
-                DoneButtonDisabledUiState
+            return if (this is ContentLoadSuccessUiState) {
+                val disableDoneButton = interests.isEmpty() ||
+                    (getCheckedInterestsUiState().size == 1 && !isInterestChecked)
+                if (disableDoneButton) {
+                    DoneButtonDisabledUiState
+                } else {
+                    DoneButtonEnabledUiState
+                }
             } else {
-                DoneButtonEnabledUiState
+                DoneButtonHiddenUiState
             }
         }
     }
