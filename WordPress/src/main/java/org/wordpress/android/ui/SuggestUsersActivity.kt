@@ -134,7 +134,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.do_nothing, R.anim.fade_out)
+        overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)
     }
 
     private fun finishWithId(userId: String?) {
