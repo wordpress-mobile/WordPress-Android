@@ -20,7 +20,7 @@ import javax.inject.Inject
 class ReaderInterestsViewModel @Inject constructor(
     private val readerTagRepository: ReaderTagRepository
 ) : ViewModel() {
-    var initialized: Boolean = false
+    private var isStarted = false
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData(InitialUiState)
     val uiState: LiveData<UiState> = _uiState
@@ -29,26 +29,24 @@ class ReaderInterestsViewModel @Inject constructor(
     val navigateToDiscover: LiveData<Event<Unit>> = _navigateToDiscover
 
     fun start() {
-        if (initialized) return
+        if (isStarted) {
+            return
+        }
         loadInterests()
+        isStarted = true
     }
 
     private fun loadInterests() {
         viewModelScope.launch {
             val tagList = readerTagRepository.getInterests()
-            if (tagList.isNotEmpty()) {
-                val currentUiState = uiState.value as UiState
-                updateUiState(
-                    ContentLoadSuccessUiState(
-                        interestTagsUiState = transformToInterestsUiState(tagList),
-                        interestTags = tagList,
-                        doneBtnUiState = currentUiState.getDoneButtonState()
-                    )
+            val currentUiState = uiState.value as UiState
+            updateUiState(
+                ContentLoadSuccessUiState(
+                    interestTagsUiState = transformToInterestsUiState(tagList),
+                    interestTags = tagList,
+                    doneBtnUiState = currentUiState.getDoneButtonState()
                 )
-                if (!initialized) {
-                    initialized = true
-                }
-            }
+            )
         }
     }
 
@@ -95,8 +93,8 @@ class ReaderInterestsViewModel @Inject constructor(
         val interests: ReaderTagList,
         val doneButtonUiState: DoneButtonUiState,
         val progressBarVisible: Boolean = false,
-        val titleVisible: Boolean = !progressBarVisible,
-        val subtitleVisible: Boolean = !progressBarVisible
+        val titleVisible: Boolean = false,
+        val subtitleVisible: Boolean = false
     ) {
         object InitialUiState : UiState(
             interestsUiState = emptyList(),
@@ -113,7 +111,9 @@ class ReaderInterestsViewModel @Inject constructor(
             interestsUiState = interestTagsUiState,
             interests = interestTags,
             doneButtonUiState = doneBtnUiState,
-            progressBarVisible = false
+            progressBarVisible = false,
+            titleVisible = true,
+            subtitleVisible = true
         )
 
         private val checkedInterestsUiState = interestsUiState.filter { it.isChecked }

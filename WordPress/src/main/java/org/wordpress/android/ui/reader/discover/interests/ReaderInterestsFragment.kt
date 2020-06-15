@@ -13,6 +13,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -46,8 +48,15 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-            updateInterests(uiState.interestsUiState)
-            updateDoneButton(uiState.doneButtonUiState)
+            when (uiState) {
+                is InitialUiState -> {
+                    updateDoneButton(uiState.doneButtonUiState)
+                }
+                is ContentLoadSuccessUiState -> {
+                    updateDoneButton(uiState.doneButtonUiState)
+                    updateInterests(uiState.interestsUiState)
+                }
+            }
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
