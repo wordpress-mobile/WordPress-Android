@@ -74,29 +74,32 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun updateInterests(interestsUiState: List<InterestUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
-            var chip = interests_chip_group.findViewWithTag<Chip>(interestTagUiState.title)
-            if (chip == null) {
-                chip = layoutInflater.inflate(
-                    R.layout.reader_interest_filter_chip,
-                    interests_chip_group,
-                    false
-                ) as Chip
-                with(chip) {
-                    layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-                    tag = interestTagUiState.title
-                    setOnCheckedChangeListener { compoundButton, isChecked ->
-                        if (compoundButton.isPressed) {
-                            viewModel.onInterestAtIndexToggled(index, isChecked)
-                        }
-                    }
-                    interests_chip_group.addView(chip)
-                }
-            }
+            val chip = interests_chip_group.findViewWithTag(interestTagUiState.title)
+                ?: createChipView(interestTagUiState.title, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
             }
         }
+    }
+
+    private fun createChipView(titleTag: String, index: Int): Chip {
+        val chip = layoutInflater.inflate(
+            R.layout.reader_interest_filter_chip,
+            interests_chip_group,
+            false
+        ) as Chip
+        with(chip) {
+            layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+            tag = titleTag
+            setOnCheckedChangeListener { compoundButton, isChecked ->
+                if (compoundButton.isPressed) {
+                    viewModel.onInterestAtIndexToggled(index, isChecked)
+                }
+            }
+            interests_chip_group.addView(chip)
+        }
+        return chip
     }
 
     private fun navigateToDiscover() {

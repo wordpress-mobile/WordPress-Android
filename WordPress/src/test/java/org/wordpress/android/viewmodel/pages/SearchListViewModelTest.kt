@@ -145,18 +145,18 @@ class SearchListViewModelTest {
     @Test
     fun `passes action to page view model on menu action`() {
         val clickedPage = PageItem.PublishedPage(
-                1,
-                1,
-                "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                remoteId = 1,
+                localId = 1,
+                title = "title",
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
         val action = VIEW_PAGE
 
@@ -168,18 +168,18 @@ class SearchListViewModelTest {
     @Test
     fun `passes page to page view model on item tapped`() {
         val clickedPage = PageItem.PublishedPage(
-                1,
-                1,
-                "title",
-                Date(),
-                listOf(),
-                0,
-                0,
-                null,
-                mock(),
-                false,
-                ProgressBarUiState.Hidden,
-                false
+                remoteId = 1,
+                localId = 1,
+                title = "title",
+                date = Date(),
+                labels = listOf(),
+                labelsColor = 0,
+                indent = 0,
+                imageUrl = null,
+                actions = mock(),
+                actionsEnabled = false,
+                progressBarUiState = ProgressBarUiState.Hidden,
+                showOverlay = false
         )
 
         viewModel.onItemTapped(clickedPage)

@@ -2024,6 +2024,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
+                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
+                        boolean isWpCom = getSite().isWPCom();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
                         return GutenbergEditorFragment.newInstance(
                                 "",
@@ -2031,6 +2033,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
+                                supportsStockPhotos,
+                                mSite.getUrl(),
+                                !isWpCom,
+                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
+                                isWpCom ? "" : mSite.getPassword(),
+                                mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi);
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

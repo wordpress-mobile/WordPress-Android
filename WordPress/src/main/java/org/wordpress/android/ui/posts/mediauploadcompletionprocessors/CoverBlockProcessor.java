@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.jsoup.nodes.Document;
@@ -50,7 +51,8 @@ public class CoverBlockProcessor extends BlockProcessor {
     }
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
-        if (jsonAttributes.get("id").getAsInt() == Integer.parseInt(mLocalId, 10)) {
+        JsonElement id = jsonAttributes.get("id");
+        if (id != null && id.getAsInt() == Integer.parseInt(mLocalId, 10)) {
             jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId, 10));
             jsonAttributes.addProperty("url", mRemoteUrl);
             return true;

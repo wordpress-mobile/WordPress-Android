@@ -11,6 +11,15 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_150"
+msgid ""
+"15.0:\n"
+"Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.\n"
+"Block editor updates: “Trash block” in a menu reachable from the block toolbar.\n"
+"Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.\n"
+"Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.\n"
+msgstr ""
+
 msgctxt "release_note_149"
 msgid ""
 "14.9:\n"
@@ -19,27 +28,19 @@ msgid ""
 "<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.\n"
 msgstr ""
 
-msgctxt "release_note_148"
+#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_150"
 msgid ""
-"14.8:\n"
-"<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.\n"
-"<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.\n"
-"<b>General updates:</b> Added reblog functionality.\n"
+"15.0:\n"
+"Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for Floating Toolbar. Tooltip for page template selection buttons.\n"
+"Block editor updates: “Trash block” in a menu reachable from the block toolbar.\n"
+"Other updates: Added homepage settings to pages list and to site settings.\n"
 msgstr ""
 
-#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "release_note_short_149"
 msgid ""
 "14.9:\n"
 "<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.\n"
-msgstr ""
-
-msgctxt "release_note_short_148"
-msgid ""
-"14.8:\n"
-"<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.\n"
-"<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.\n"
-"<b>General updates:</b> Added reblog functionality.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
