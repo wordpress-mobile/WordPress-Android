@@ -220,16 +220,16 @@ class ReaderInterestsViewModelTest {
     @Test
     fun `done button shown in disabled state if no interests are in selected state`() =
         coroutineScope.runBlockingTest {
-        // Given
-        val mockInterests = getMockInterests()
-        whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-        // When
-        initViewModel()
+            // When
+            initViewModel()
 
-        // Then
-        assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-            .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            // Then
+            assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                .isInstanceOf(DoneButtonDisabledUiState::class.java)
         }
 
     @ExperimentalCoroutinesApi
