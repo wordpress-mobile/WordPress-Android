@@ -51,8 +51,6 @@ public class BlockEditorTests extends BaseTest {
 
         mb.clickBlogPosts();
 
-        sleep();
-
         new MySitesPage()
                 .startNewPost();
 
