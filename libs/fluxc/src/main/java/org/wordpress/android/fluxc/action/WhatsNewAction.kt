@@ -9,5 +9,8 @@ import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload
 enum class WhatsNewAction : IAction {
     // Remote actions
     @Action(payloadType = WhatsNewFetchPayload::class)
-    FETCH_WHATS_NEW
+    FETCH_REMOTE_ANNOUNCEMENT,
+
+    @Action
+    FETCH_CACHED_ANNOUNCEMENT
 }
