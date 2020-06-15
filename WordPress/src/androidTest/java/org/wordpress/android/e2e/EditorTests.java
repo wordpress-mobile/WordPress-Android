@@ -38,12 +38,6 @@ public class EditorTests extends BaseTest {
     public void setUp() {
         logoutIfNecessary();
         wpLogin();
-    }
-
-    @Test
-    public void testPublishSimplePost() {
-        String title = "Hello Espresso!";
-        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
         MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
         sleep();
@@ -61,6 +55,12 @@ public class EditorTests extends BaseTest {
 
         new MySitesPage()
                 .startNewPost();
+    }
+
+    @Test
+    public void testPublishSimplePost() {
+        String title = "Hello Espresso!";
+        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
@@ -78,13 +78,6 @@ public class EditorTests extends BaseTest {
         String category = "Wedding";
         long now = Instant.now().toEpochMilli();
         String tag = "Tag " + now;
-
-        MasterbarComponent mb = new MasterbarComponent().goToMySitesTab();
-        sleep();
-        mb.clickBlogPosts();
-
-        new MySitesPage()
-                .startNewPost();
 
         EditorPage editorPage = new EditorPage();
         editorPage.enterTitle(title);
