@@ -15,14 +15,17 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
+import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
+import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
+import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
@@ -41,20 +44,31 @@ class WPMainActivityViewModelTest {
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
             2,
+            "14.5",
+            "14.7",
             "https://wordpress.org/",
             true,
-            emptyList()
+            listOf(
+                    FeatureAnnouncementItem(
+                            "Test Feature 1",
+                            "Test Description 1",
+                            "",
+                            "https://wordpress.org/icon1.png"
+                    )
+            )
     )
 
     @Before
     fun setUp() {
         whenever(appPrefsWrapper.isMainFabTooltipDisabled()).thenReturn(false)
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
+        whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
                 buildConfigWrapper,
                 appPrefsWrapper,
-                analyticsTrackerWrapper
+                analyticsTrackerWrapper,
+                NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
@@ -181,49 +195,60 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `show feature announcement when it's available and no announcement was not shown before`() {
+    fun `show feature announcement when it's available and no announcement was not shown before`() = test {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
-        verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+        verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
     }
 
     @Test
-    fun `show feature announcement when it's available and was not shown before`() {
+    fun `show feature announcement when it's available and was not shown before`() = test {
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(1)
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
-        verify(analyticsTrackerWrapper).track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+        verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
     }
 
     @Test
-    fun `don't show feature announcement on fresh app install`() {
+    fun `don't show feature announcement when cache is empty`() = test {
+        whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                null
+        )
+
+        startViewModelWithDefaultParameters()
+
+        verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
+        verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
+    }
+
+    @Test
+    fun `don't show feature announcement on fresh app install`() = test {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(0)
 
         startViewModelWithDefaultParameters()
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
         verify(appPrefsWrapper).lastFeatureAnnouncementAppVersionCode = 850
+        verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
     }
 
     @Test
-    fun `don't show feature announcement when it's not available`() {
+    fun `don't show feature announcement when it's not available`() = test {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(false)
 
         startViewModelWithDefaultParameters()
 
@@ -231,27 +256,27 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `don't show feature announcement when it's available but previous announcement is the same as current`() {
-        whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
-        whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(2)
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
-                featureAnnouncement
-        )
-        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
+    fun `don't show feature announcement when it's available but previous announcement is the same as current`() =
+            test {
+                whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
+                whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(2)
+                whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                        featureAnnouncement
+                )
 
-        startViewModelWithDefaultParameters()
+                startViewModelWithDefaultParameters()
 
-        verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
-    }
+                verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
+                verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
+            }
 
     @Test
-    fun `don't show feature announcement after view model starts again`() {
+    fun `don't show feature announcement after view model starts again`() = test {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
         whenever(appPrefsWrapper.featureAnnouncementShownVersion).thenReturn(-1)
-        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement()).thenReturn(
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
                 featureAnnouncement
         )
-        whenever(featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable()).thenReturn(true)
 
         startViewModelWithDefaultParameters()
 

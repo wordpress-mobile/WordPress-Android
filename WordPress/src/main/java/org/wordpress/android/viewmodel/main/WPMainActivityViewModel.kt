@@ -177,22 +177,26 @@ class WPMainActivityViewModel @Inject constructor(
 
             // only proceed to feature announcement logic if we are upgrading the app
             if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                // we only show announcement from cache
+                // if no cache is available, we request announcement and try to show it later
                 if (canShowFeatureAnnouncement()) {
                     analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
                     _onFeatureAnnouncementRequested.call()
+                } else {
+                    featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
                 }
-//          else {
-//              // request feature announcement from endpoint to be used on next app start
-//          }
             } else {
                 appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+                featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
             }
         }
     }
 
     private suspend fun canShowFeatureAnnouncement(): Boolean {
-        return featureAnnouncementProvider.isAnnouncementOnUpgradeAvailable() &&
-                appPrefsWrapper.featureAnnouncementShownVersion <
-                featureAnnouncementProvider.getLatestFeatureAnnouncement()?.announcementVersion!!
+        val cachedAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
+
+        return cachedAnnouncement != null &&
+                cachedAnnouncement.canBeDisplayedOnAppUpgrade(buildConfigWrapper.getAppVersionName()) &&
+                appPrefsWrapper.featureAnnouncementShownVersion < cachedAnnouncement.announcementVersion
     }
 }
