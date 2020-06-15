@@ -42,6 +42,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
@@ -82,6 +83,7 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,8 +180,7 @@ public class AppSettingsFragment extends PreferenceFragment
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
         removeWhatsNewPreference();
-        mDispatcher.dispatch(WhatsNewActionBuilder
-                .newFetchWhatsNewAction(new WhatsNewFetchPayload("14.2", WhatsNewAppId.WP_ANDROID, false)));
+        mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
@@ -238,6 +239,13 @@ public class AppSettingsFragment extends PreferenceFragment
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onWhatsNewFetched(OnWhatsNewFetched event) {
+        if (event.isFromCache()) {
+            mDispatcher.dispatch(WhatsNewActionBuilder
+                    .newFetchRemoteAnnouncementAction(
+                            new WhatsNewFetchPayload(mBuildConfigWrapper.getAppVersionName(),
+                                    WhatsNewAppId.WP_ANDROID)));
+        }
+
         if (event.error != null || event.getWhatsNewItems() == null || event.getWhatsNewItems().isEmpty()) {
             return;
         }
