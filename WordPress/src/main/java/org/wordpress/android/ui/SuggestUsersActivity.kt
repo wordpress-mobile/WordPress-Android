@@ -31,7 +31,6 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
     private var suggestionAdapter: SuggestionAdapter? = null
     private var siteId: Long? = null
-    private var hasLoadedSuggestions = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,24 +162,20 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     private fun initializeSuggestionAdapter(site: SiteModel) {
         if (!SiteUtils.isAccessedViaWPComRest(site)) {
             AppLog.d(AppLog.T.EDITOR, "Cannot provide user suggestions for non-WPCom site")
-            hasLoadedSuggestions = true
             updateEmptyView(true)
         } else {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
             val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
-            if (adapter?.isEmpty == true) {
-                empty_view.text = getString(R.string.loading)
-            } else {
-                hasLoadedSuggestions = true
-            }
+
+            val hasLoadedSuggestions = adapter?.isEmpty == false
+            updateEmptyView(hasLoadedSuggestions)
+
             adapter?.registerDataSetObserver(object : DataSetObserver() {
                 override fun onChanged() {
-                    updateEmptyView(adapter.isEmpty)
-                }
-                override fun onInvalidated() {
-                    updateEmptyView(true)
+                    updateEmptyView(!adapter.isEmpty)
                 }
             })
+
             autocompleteText.setAdapter(adapter)
 
             suggestionServiceConnectionManager = connectionManager
@@ -188,18 +183,14 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         }
     }
 
-    private fun updateEmptyView(isVisible: Boolean) {
-        if (isVisible) {
-            val viewText = if (hasLoadedSuggestions) {
-                R.string.suggestion_no_matching_users
-            } else {
-                R.string.loading
-            }
-            empty_view.text = getString(viewText)
-            empty_view.visibility = View.VISIBLE
+    private fun updateEmptyView(hasSuggestions: Boolean) {
+        val viewText = if (hasSuggestions) {
+            R.string.suggestion_no_matching_users
         } else {
-            empty_view.visibility = View.GONE
+            R.string.loading
         }
+        empty_view.text = getString(viewText)
+        empty_view.visibility = View.VISIBLE
     }
 
     override fun onResume() {
@@ -222,7 +213,6 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (siteId != 0L && siteId == event.mRemoteBlogId) {
             val suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId)
-            hasLoadedSuggestions = true
             suggestionAdapter?.setSuggestionList(suggestions)
 
             // Calling forceFiltering is the only way I was able to force the suggestions list to immediately refresh

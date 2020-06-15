@@ -16,7 +16,6 @@
         android:background="?attr/colorSurface"
         android:textColor="?attr/wpColorText"
         android:textSize="@dimen/text_sz_medium"
-        android:text="@string/suggestion_no_matching_users"
         android:visibility="gone"
         />
 
