@@ -38,6 +38,7 @@
                 style="@style/PostSettingsContainer">
 
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/publish_date_title"
                     style="@style/PostSettingsTitle"
                     android:text="@string/publish_date" />
 

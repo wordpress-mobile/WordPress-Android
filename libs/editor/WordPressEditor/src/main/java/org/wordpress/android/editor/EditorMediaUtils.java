@@ -21,6 +21,7 @@ import org.wordpress.android.util.ImageUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 public class EditorMediaUtils {
     public static BitmapDrawable getAztecPlaceholderDrawableFromResID(Context context, @DrawableRes int drawableId,
@@ -53,14 +54,15 @@ public class EditorMediaUtils {
         return maximumThumbnailWidthForEditor;
     }
 
-    public static String getVideoThumbnail(Context context, String videoPath) {
+    public static String getVideoThumbnail(Context context, String videoPath, Map<String, String> headers) {
         String thumbnailPath = null;
         try {
             File outputFile = File.createTempFile("thumb", ".png", context.getCacheDir());
             FileOutputStream outputStream = new FileOutputStream(outputFile);
             Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
                     videoPath,
-                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(context)
+                    EditorMediaUtils.getMaximumThumbnailSizeForEditor(context),
+                    headers
             );
             if (thumb != null) {
                 thumb.compress(Bitmap.CompressFormat.PNG, 75, outputStream);
