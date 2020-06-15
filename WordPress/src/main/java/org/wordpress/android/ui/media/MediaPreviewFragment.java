@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -76,6 +77,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
 
     @Inject MediaStore mMediaStore;
     @Inject ImageManager mImageManager;
+    @Inject AuthenticationUtils mAuthenticationUtils;
 
     /**
      * @param site       optional site this media is associated with
@@ -365,7 +367,7 @@ public class MediaPreviewFragment extends Fragment implements MediaController.Me
         });
 
         initControls();
-        mVideoView.setVideoURI(Uri.parse(mediaUri));
+        mVideoView.setVideoURI(Uri.parse(mediaUri), mAuthenticationUtils.getAuthHeaders(mediaUri));
         mVideoView.requestFocus();
     }
 

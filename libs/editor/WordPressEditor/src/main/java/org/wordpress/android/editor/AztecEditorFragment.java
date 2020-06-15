@@ -1396,30 +1396,22 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId, final EditorFragmentAbstract.MediaType
-            mediaType, final String errorMessage) {
+    public void onMediaUploadFailed(final String localMediaId) {
         if (!isAdded() || mContent == null) {
             return;
         }
-        if (mediaType != null) {
-            switch (mediaType) {
-                case IMAGE:
-                case VIDEO:
-                    MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
-                    AttributesWithClass attributesWithClass = getAttributesWithClass(
-                            mContent.getElementAttributes(localMediaIdPredicate));
+        MediaPredicate localMediaIdPredicate = MediaPredicate.getLocalMediaIdPredicate(localMediaId);
+        AttributesWithClass attributesWithClass = getAttributesWithClass(
+                mContent.getElementAttributes(localMediaIdPredicate));
 
-                    attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
-                    attributesWithClass.addClass(ATTR_STATUS_FAILED);
+        attributesWithClass.removeClass(ATTR_STATUS_UPLOADING);
+        attributesWithClass.addClass(ATTR_STATUS_FAILED);
 
-                    mContent.clearOverlays(localMediaIdPredicate);
-                    overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
-                    mContent.resetAttributedMediaSpan(localMediaIdPredicate);
-                    break;
-            }
-            mFailedMediaIds.add(localMediaId);
-            mUploadingMediaProgressMax.remove(localMediaId);
-        }
+        mContent.clearOverlays(localMediaIdPredicate);
+        overlayFailedMedia(localMediaId, attributesWithClass.getAttributes());
+        mContent.resetAttributedMediaSpan(localMediaIdPredicate);
+        mFailedMediaIds.add(localMediaId);
+        mUploadingMediaProgressMax.remove(localMediaId);
     }
 
     @Override

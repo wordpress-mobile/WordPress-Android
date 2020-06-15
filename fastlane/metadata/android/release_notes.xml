@@ -1,96 +1,103 @@
 <ar>
-14.9:
-<b>تحسينات على محرِّر المكوِّن:</b> مكوِّن جديد مهيأ مسبقًا، وخيارات لون مكوِّن الأزرار، وقوالب الصفحة المُحدَّثة.
-
-<b>إصلاحات محرِّر المكوِّن:</b> ثمَّة خطأ في مكتبة الصور المجانية تسبب في إدراج صور فردية، وحتى في حالة تحديد العديد منها، تفشل المعاينة عند التبديل إلى المحرِّر التقليدي. تمت إزالة زر الاشتراك غير الفعَّال من قالب المدونة.
+15.0:
+إضافات محرِّر المكوّن: مكوِّن الشِعر الجديد. ادعم ألوان التراكب في مكوِّن "الغلاف". يمكنك إدخال/إنهاء رسم متحرك في شريط الأدوات العائم. تلميح الأداة لأزرار تحديد قالب الصفحة.
+- تحديثات محرِّر المكوّن: "مكوِّن سلة المهملات" في قائمة يمكن الوصول إليها من شريط أدوات المكوِّن.
+إصلاحات محرِّر المكوِّن: مشكلة دمج مكوِّن النص، ومحاذاة الزر في قوالب الصفحات، وتناقضات السلسلة.
+تحديثات أخرى: تمت إضافة إعدادات الصفحة الرئيسية إلى قائمة الصفحات وإعدادات الموقع. تم تحسين واجهة مستخدم القارئ.
 </ar>
 <de-DE>
-14.9:
-<b>Verbesserungen am Block-Editor:</b> Neuer Pullquote-Block, Farbauswahl im Button-Block, aktualisierte Seitenvorlagen.
-
-<b>Problembehebungen am Block-Editor:</b> Der Fehler, der dazu führte, dass im kostenlosen Fotoarchiv immer nur ein einzelnes Bild eingefügt wurde, auch wenn mehrere ausgewählt wurden, und der Fehler bei der Vorschau beim Wechsel zum klassischen Editor wurden behoben. Der nichtfunktionale Button zum Abonnieren wurde von der Blog-Vorlage entfernt.
+15.0:
+Neu im Block-Editor: Neuer Versblock. Support für Overlay-Farben im Cover-Block. Starten/Verlassen der Animation in der unverankerten Toolbar. Tooltip für Auswahlbuttons für die Seitenvorlage.
+Updates im Block-Editor: „Trash block“ (Block in Papierkorb verschieben) in einem Menü ist nun über die Block-Toolbar erreichbar.
+Weitere Updates: Startseite-Einstellungen wurden zur Seitenliste und den Website-Einstellungen hinzugefügt.
 </de-DE>
 <en-US>
-14.9:
-<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
-
-<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
+15.0:
+Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.
+Block editor updates: “Trash block” in a menu reachable from the block toolbar.
+Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.
+Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.
 </en-US>
 <es-ES>
-14.9:
-<b>Mejoras en el editor de bloques:</b> Nuevo bloque de párrafo de cita, opciones de color del bloque de botón, actualizadas las plantillas de páginas.
-
-<b>Correcciones del editor de bloques:</b> Fallo en la biblioteca de fotos gratuita que insertaba imágenes individuales incluso si eran seleccionadas varias, fallo en la vista previa al cambiar al editor clásico. Eliminado de la plantilla del blog un botón de suscripción no funcional.
+15.0:
+Añadido en el editor de bloques: Nuevo bloque de verso. Compatibilidad para colores de superposición en el bloque de cubierta. Animación de entrada/salida para la barra de herramientas flotante. Información emergente para los botones de selección de la plantilla de página.
+Actualizaciones del editor de bloques: «Bloque de papelera» en un menú accesible desde la barra de herramientas de bloques.
+Otras actualizaciones: Añadidos ajustes de la página de inicio a la lista de páginas y a los ajustes del sitio.
 </es-ES>
 <fr-CA>
-14.9:
-<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
-
-<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
+15.0 :
+Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
+Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
+Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
 </fr-CA>
 <fr-FR>
-14.9:
-<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.
-
-<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.
+15.0 :
+Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
+Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
+Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
 </fr-FR>
 <iw-IL>
-14.9:
-<b>שיפורים בעורך הבלוקים:</b> בלוק ציטוט חדש, אפשרויות צבע בבלוק הכפתורים, תבניות עמודים מעודכנות.
-
-<b>תיקונים בעורך הבלוקים:</b> תיקנו באג בספריית התמונות החינמית שהוסיף תמונות יחידות גם אם נבחרו מספר תמונות ואת הכשל בתצוגה המקדימה כאשר מחליפים לעורך הקלאסי. הסרנו כפתור מינוי שלא פעל מתבנית הבלוג.
+15.0:
+תוספות לעורך הבלוקים: בלוק פסוק חדש. תמיכה בצבעים של שכבות בבלוק כיסוי. אפשרות להנפשה של כניסה/יציאה בסרגל הכלים הצף. תיאורי כלי בכפתורי בחירה של תבניות עמוד.
+עדכונים בעורך הבלוקים: ניתן להגיע אל הפעולה 'להעביר את הבלוק לפח' בתפריט מסרגל הכלים של הבלוק.
+תיקונים בעורך הבלוקים: בעיה עם שילוב של בלוק טקסט, יישור כפתורים בתבניות עמוד, חוסר עקביות במחרוזות.
+עדכונים אחרים: הוספנו הגדרות של עמוד הבית ברשימת עמודים ובהגדרות האתר. ממשק משתמש משופר ב-Reader.
 </iw-IL>
 <id>
-14.9:
-<b>Peningkatan pada penyunting blok:</b> Blok Kutipan Menonjol yang baru, pilihan warna untuk blok Tombol, template halaman yang diperbarui.
-
-<b>Perbaikan pada penyunting blok:</b> Bug Pustaka Foto Gratis yang menyisipkan satu gambar meskipun ada beberapa yang dipilih, gagalnya pratinjau saat beralih ke penyunting klasik. Menghilangkan Tombol Langganan yang tidak fungsional dari template Blog.
+15.0:
+Tambahan pada penyunting blok: Blok Bait baru. Dukungan untuk warna pelapis (overlay) pada blok Sampul. Animasi masuk/keluar untuk Bilah Peralatan Mengambang. Tip alat untuk tombol pemilihan template halaman.
+Pembaruan pada penyunting blok: “Blok Tempat Sampah” dalam menu yang dapat diakses dari bilah peralatan blok.
+Pembaruan lainnya: Penambahan pengaturan beranda ke daftar halaman dan ke pengaturan situs.
 </id>
 <it-IT>
-14.9:
-<b>Miglioramenti all'editor a blocchi:</b> nuovo blocco Citazione evidenziata, opzioni del colore nel blocco Pulsante, modelli di pagina aggiornati.
-
-<b>Correzioni all'editor a blocchi:</b> bug della libreria di foto gratuita tramite il quale venivano inserite singole immagini anche se ne erano state selezionate differenti, anteprima dell'errore quando si passava all'editor classico. Pulsante abbonamento non funzionale rimosso dal modello Blog.
+15.0:
+Aggiunte all'editor a blocchi: nuovo blocco Verso. Supporto per i colori di sovrapposizione nel blocco Copertina. Animazione di ingresso/uscita per la barra degli strumenti mobile. Tooltip per i pulsanti di selezione del modello di pagina.
+Aggiornamenti all'editor a blocchi: il "blocco Cestino" in un menu è raggiungibile dalla barra degli strumenti del blocco.
+Altri aggiornamenti: aggiunte impostazioni della homepage all'elenco di pagine e alle impostazioni del sito.
 </it-IT>
 <ja-JP>
-14.9:
-<b>ブロックエディターの改善点 :</b>新しいプルクオートブロック、ボタンブロック、色オプション、更新されたページテンプレート。
-
-<b>ブロックエディターの修正 :</b>複数選択された場合でも1つの画像が挿入される無料写真ギャラリーのバグ、旧エディターに切り替えるときのプレビューエラー。機能しないサブスクリプションボタンがブログテンプレートから削除されました。
+15.0:
+ブロックエディター追加機能 :新しい詩ブロック。カバーブロックのオーバーレイの色をサポート。「フローティングツールバー」のアニメーションの開始 / 終了機能。ページテンプレートの選択ボタンのツールチップ。
+ブロックエディターの更新 :ブロックツールバーから選択できるメニューに「ブロック削除」を追加。
+ブロックエディターの修正 :テキストブロックのマージ問題、ページテンプレートのボタン配置、文字列の不一致。
+その他アップデート :ページリストとサイト設定にホームページ設定を追加。Reader の UI を改善。
 </ja-JP>
 <nl-NL>
-14.9:
-<b>Verbeteringen aan de blokeditor:</b> Nieuw Pull-quote-blok, kleurenopties voor het Knopblok, bijgewerkte paginasjablonen.
-
-<b>Fixes van de blokeditor:</b> Bug van de Gratis fotobibliotheek die één afbeelding invoegde terwijl er meerdere waren geselecteerd, fout bij de voorbeeldweergave wanneer naar de klassieke editor werd overgeschakeld. Niet-werkende abonneerknop verwijderd uit blogsjabloon.
+15.0:
+Aanvullingen op de blokeditor: Nieuw Versblok. Ondersteuning voor overlaykleuren in het Omslagblok. Animatie starten/sluiten voor zwevende werkbalk. Tooltip voor selectieknoppen van paginasjabloon.
+Updates van de blokeditor: 'Blok naar prullenbak verplaatsen' in een menu dat via de blokwerkbalk geopend kan worden.
+Overige updates: Homepage-instellingen toegevoegd aan paginalijst en site-instellingen.
 </nl-NL>
 <ru-RU>
-14.9:
-<b>Улучшения редактора блоков:</b> Новый блок выдержки, цвета блока кнопок, обновлены шаблоны страниц.
-
-<b>Исправления в редакторе блоков:</b> Исправлена вставка изображений из Free Photo Library при множественном выборе вставлялось одно изображение; ошибка предпросмотра при переключении в классический редактор; удалена неработающая кнопка подписок из шаблона блога.
+15.0:
+Редактор блоков, добавлено: Новый блок для стихов. Поддержка наложения цвета в блоке обложки. Анимация появления и скрытия для плавающей панели инструментов. Подсказки для кнопок выбора шаблонов.
+Обновлено: Удаление блока доступно в меню выбора блоков.
+Исправлено: Слияние текстовых блоков, выравнивание кнопок в шаблонах страниц, целостность строк.
+Другое: Добавлены настройки главной страницы в список страниц и настройки сайта. Улучшен интерфейс Чтива.
 </ru-RU>
 <sv-SE>
-14.9:
-<b>Förbättringar i blockredigeraren:</b> nytt block för framhävt citat, färginställningar för knappfärger. uppdaterade sidmallar.
-
-<b>Rättelser i blockredigeraren:</b> fel i katalogen för fria bilder infogade bara en bild även om fler var valda, förhandsvisning fungerade inte vid växling till den klassiska redigeraren. Vi har tagit bort prenumerera-knappen (som inte fungerade) ur bloggmallen.
+15.0:
+Nytt i blockredigeraren: Diktblock. Överläggsfärger i omslagsblocket. Animering av flytande verktygsfält. Inforuta vid val av sidmall.
+Uppdaterat i blockredigeraren: ”Kasta block” nås via menyn från blockets verktygsfält.
+Andra uppdateringar: Inställningar för startsidan har lagts till i sidlista och webbplatsinställningar.
 </sv-SE>
 <tr-TR>
-14.9:
-<b>Blok düzenleyici geliştirmeleri:</b> Yeni Pullquote bloğu, düğme bloğu renk seçenekleri, güncellenmiş sayfa şablonları.
-
-<b>Blok düzenleyici düzeltmeleri:</b> Birkaç tane seçilse bile tek görsel ekleyen ücretsiz fotoğraf ktaplığı hatası, klasik düzenleyiciye geçerken önizleme hatası. blog şablonundan işlevsel olmayan abonelik düğmesi kaldırıldı.
+15.0:
+Blok düzenleyici eklemeleri: Yeni Dörtlük bloku. Kapak blokunda katman renklerine yönelik destek. Kayan Araç Çubuğu için giriş/çıkış animasyonu. Sayfa şablonu seçim düğmeleri için araç ipucu.
+Blok düzenleyici güncellemeleri: Blok araç çubuğundan ulaşılabilen bir menüde “Çöp Kutusu bloku”.
+Diğer güncellemeler: Sayfalar listesine ve site ayarlarına ana sayfa ayarları eklendi.
 </tr-TR>
 <zh-CN>
-14.9：
-<b>区块编辑器增强：</b>全新醒目引文区块、按钮区块颜色选项以及更新的页面模板。
-
-<b>区块编辑器修复：</b>免费图片库之前存在一个错误，即便选择了多张图像，它也只会插入一张图像，而且在切换到经典编辑器时无法正常预览。从“博客”模板中删除了无法正常使用的订阅按钮。
+15.0：
+区块编辑器新增内容：新的“诗篇”区块。在“封面”区块中支持叠加颜色。在浮动工具栏中增加了进入/退出动画。为页面模板选择按钮增加了工具提示。
+区块编辑器更新：“回收站区块”现在位于可通过区块工具栏访问的菜单中。
+区块编辑器修复：文本区块合并问题、页面模板中的按钮对齐问题、字符串不一致问题。
+其他更新：在页面列表和站点设置中增加了主页设置。改进了阅读器 UI。
 </zh-CN>
 <zh-TW>
-14.9：
-<b>區塊編輯器增強功能：</b>推出全新「重要引述」區塊、按鈕區塊色彩選項和更新版頁面範本。
-
-<b>區塊編輯器修正：</b>修正在免費圖庫選取多張圖片卻僅插入單一圖片的錯誤，並修復切換至傳統編輯器導致預覽失敗的問題。從網誌範本中移除無法正常運作的訂閱按鈕。
+15.0：
+區塊編輯器新增功能：全新詩句區塊。為封面區塊提供覆疊色彩支援。浮動工具列的進入/退出動畫。頁面範本選擇按鈕的工具提示。
+區塊編輯器更新：可從區塊工具列存取選單中的「垃圾區塊」。
+區塊編輯器修正：文字區塊合併問題、頁面範本中的按鈕對齊問題、字串不一致問題。
+其他更新：在頁面清單和網站設定中新增首頁設定。改善的閱讀器 UI。
 </zh-TW>
