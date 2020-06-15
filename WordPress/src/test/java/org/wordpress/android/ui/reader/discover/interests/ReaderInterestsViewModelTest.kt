@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
@@ -38,10 +39,12 @@ class ReaderInterestsViewModelTest {
     private lateinit var viewModel: ReaderInterestsViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
+    @Mock lateinit var networkUtils: NetworkUtilsWrapper
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository)
+        viewModel = ReaderInterestsViewModel(readerTagRepository, networkUtils)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
     @ExperimentalCoroutinesApi

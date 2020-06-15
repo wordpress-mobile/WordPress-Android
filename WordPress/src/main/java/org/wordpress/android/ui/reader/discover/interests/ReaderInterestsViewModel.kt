@@ -11,14 +11,17 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderInterestsViewModel @Inject constructor(
-    private val readerTagRepository: ReaderTagRepository
+    private val readerTagRepository: ReaderTagRepository,
+    private val networkUtils: NetworkUtilsWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -37,15 +40,21 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun loadInterests() {
-        viewModelScope.launch {
-            val tagList = readerTagRepository.getInterests()
-            val currentUiState = uiState.value as UiState
-            updateUiState(
-                ContentLoadSuccessUiState(
-                    interestTagsUiState = transformToInterestsUiState(tagList),
-                    interestTags = tagList,
-                    doneBtnUiState = currentUiState.getDoneButtonState()
+        if (networkUtils.isNetworkAvailable()) {
+            viewModelScope.launch {
+                val tagList = readerTagRepository.getInterests()
+                val currentUiState = uiState.value as UiState
+                updateUiState(
+                    ContentLoadSuccessUiState(
+                        interestTagsUiState = transformToInterestsUiState(tagList),
+                        interestTags = tagList,
+                        doneBtnUiState = currentUiState.getDoneButtonState()
+                    )
                 )
+            }
+        } else {
+            updateUiState(
+                ContentLoadFailedConnectionErrorUiState
             )
         }
     }
@@ -72,6 +81,11 @@ class ReaderInterestsViewModel @Inject constructor(
         }
     }
 
+    fun onRetryButtonClicked() {
+        updateUiState(InitialUiState)
+        loadInterests()
+    }
+
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
             InterestUiState(interest.tagTitle)
@@ -89,19 +103,15 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     sealed class UiState(
-        val interestsUiState: List<InterestUiState>,
-        val interests: ReaderTagList,
-        val doneButtonUiState: DoneButtonUiState,
-        val progressBarVisible: Boolean = false,
+        val interestsUiState: List<InterestUiState> = emptyList(),
+        val interests: ReaderTagList = ReaderTagList(),
+        val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
+        val progressBarVisible: Boolean = true,
         val titleVisible: Boolean = false,
-        val subtitleVisible: Boolean = false
+        val subtitleVisible: Boolean = false,
+        val fullscreenErrorLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : UiState(
-            interestsUiState = emptyList(),
-            interests = ReaderTagList(),
-            doneButtonUiState = DoneButtonHiddenUiState,
-            progressBarVisible = true
-        )
+        object InitialUiState : UiState()
 
         data class ContentLoadSuccessUiState(
             val interestTagsUiState: List<InterestUiState>,
@@ -113,8 +123,23 @@ class ReaderInterestsViewModel @Inject constructor(
             doneButtonUiState = doneBtnUiState,
             progressBarVisible = false,
             titleVisible = true,
-            subtitleVisible = true
+            subtitleVisible = true,
+            fullscreenErrorLayoutVisible = false
         )
+
+        sealed class ContentLoadFailedUiState constructor(
+            val titleResId: Int,
+            val subtitleResId: Int? = null,
+            val showContactSupport: Boolean = false,
+            val showCancelButton: Boolean = false
+        ) : UiState(
+            progressBarVisible = false,
+            fullscreenErrorLayoutVisible = true
+        ) {
+            object ContentLoadFailedConnectionErrorUiState : ContentLoadFailedUiState(
+                titleResId = R.string.no_network_message
+            )
+        }
 
         private val checkedInterestsUiState = interestsUiState.filter { it.isChecked }
 

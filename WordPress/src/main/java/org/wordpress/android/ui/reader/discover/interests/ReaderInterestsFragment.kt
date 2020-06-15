@@ -8,11 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
+import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.utils.UiHelpers
@@ -31,6 +33,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDoneButton()
+        initRetryButton()
         initViewModel()
     }
 
@@ -38,6 +41,10 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         done_button.setOnClickListener {
             viewModel.onDoneButtonClick()
         }
+    }
+
+    private fun initRetryButton() {
+        error_retry.setOnClickListener { viewModel.onRetryButtonClicked() }
     }
 
     private fun initViewModel() {
@@ -50,17 +57,20 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
                 is InitialUiState -> {
-                    updateDoneButton(uiState.doneButtonUiState)
                 }
                 is ContentLoadSuccessUiState -> {
-                    updateDoneButton(uiState.doneButtonUiState)
                     updateInterests(uiState.interestsUiState)
                 }
+                is ContentLoadFailedUiState -> {
+                    updateErrorLayout(uiState)
+                }
             }
+            updateDoneButton(uiState.doneButtonUiState)
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
                 updateVisibility(subtitle, uiState.subtitleVisible)
+                updateVisibility(error_layout, uiState.fullscreenErrorLayoutVisible)
             }
         })
 
@@ -89,6 +99,15 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
             }
+        }
+    }
+
+    private fun updateErrorLayout(uiState: ContentLoadFailedUiState) {
+        with(uiHelpers) {
+            setTextOrHide(error_title, uiState.titleResId)
+            setTextOrHide(error_subtitle, uiState.subtitleResId)
+            updateVisibility(contact_support, uiState.showContactSupport)
+            updateVisibility(cancel_wizard_button, uiState.showCancelButton)
         }
     }
 
