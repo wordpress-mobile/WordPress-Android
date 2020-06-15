@@ -23,7 +23,6 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
@@ -70,7 +69,7 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `title, subtitles hidden on start become visible on successful data load`() {
+    fun `title hidden on start become visible on successful data load`() {
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
@@ -83,19 +82,40 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(false)
-            assertThat(requireNotNull(viewModel.uiState.value).subtitleVisible).isEqualTo(false)
 
             // Resume pending coroutines execution
             coroutineScope.resumeDispatcher()
 
             assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
-            assertThat(requireNotNull(viewModel.uiState.value).subtitleVisible).isEqualTo(true)
         }
     }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `content correctly loaded if non empty interests received from repo on start`() =
+    fun `subtitles hidden on start become visible on successful data load`() {
+        coroutineScope.runBlockingTest {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // Pause dispatcher so we can verify title, subtitles initial state
+            coroutineScope.pauseDispatcher()
+
+            // Trigger data load
+            initViewModel()
+
+            assertThat(requireNotNull(viewModel.uiState.value).subtitleVisible).isEqualTo(false)
+
+            // Resume pending coroutines execution
+            coroutineScope.resumeDispatcher()
+
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `interests correctly shown on successful data load`() =
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
@@ -112,21 +132,6 @@ class ReaderInterestsViewModelTest {
             assertThat(uiState.interestTags).isEqualTo(mockInterests)
             assertThat(uiState.interestTagsUiState[0]).isInstanceOf(InterestUiState::class.java)
             assertThat(uiState.interestTagsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
-            assertThat(uiState.doneBtnUiState).isEqualTo(DoneButtonDisabledUiState)
-        }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `content not updated if no tags received from repo on start`() =
-        coroutineScope.runBlockingTest {
-            // Given
-            whenever(readerTagRepository.getInterests()).thenReturn(ReaderTagList())
-
-            // When
-            initViewModel()
-
-            // Then
-            assertThat(viewModel.uiState.value).isEqualTo(InitialUiState)
         }
 
     @ExperimentalCoroutinesApi
@@ -168,7 +173,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
-                    .isEqualTo(true)
+                .isEqualTo(true)
         }
 
     @ExperimentalCoroutinesApi
@@ -187,7 +192,7 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
-                    .isEqualTo(false)
+                .isEqualTo(false)
         }
 
     @ExperimentalCoroutinesApi
@@ -224,7 +229,7 @@ class ReaderInterestsViewModelTest {
 
         // Then
         assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
-                .isInstanceOf(DoneButtonDisabledUiState::class.java)
+            .isInstanceOf(DoneButtonDisabledUiState::class.java)
         }
 
     @ExperimentalCoroutinesApi
