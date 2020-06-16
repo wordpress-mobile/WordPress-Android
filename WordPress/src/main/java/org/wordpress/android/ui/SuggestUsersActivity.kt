@@ -48,6 +48,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     private fun initializeActivity(siteModel: SiteModel) {
         siteId = siteModel.siteId
+
         initializeSuggestionAdapter(siteModel)
 
         rootView.setOnClickListener {
@@ -113,6 +114,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 setSelection(1)
             }
 
+            updateEmptyView()
             post { requestFocus() }
             showDropdownOnTouch()
         }
@@ -140,7 +142,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     private fun SuggestionAutoCompleteText.showDropdownOnTouch() {
         setOnTouchListener { _, _ ->
             // Prevent touching the view from dismissing the suggestion list if it's not empty
-            if (adapter.count > 0) {
+            if (!adapter.isEmpty) {
                 showDropDown()
             }
             false
@@ -160,22 +162,19 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     }
 
     private fun initializeSuggestionAdapter(site: SiteModel) {
-        if (!SiteUtils.isAccessedViaWPComRest(site)) {
-            AppLog.d(AppLog.T.EDITOR, "Cannot provide user suggestions for non-WPCom site")
-            updateEmptyView(true)
-        } else {
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
             val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
 
-            val hasLoadedSuggestions = adapter?.isEmpty == false
-            updateEmptyView(hasLoadedSuggestions)
-
             adapter?.registerDataSetObserver(object : DataSetObserver() {
                 override fun onChanged() {
-                    updateEmptyView(!adapter.isEmpty)
+                    updateEmptyView()
+                }
+
+                override fun onInvalidated() {
+                    updateEmptyView()
                 }
             })
-
             autocompleteText.setAdapter(adapter)
 
             suggestionServiceConnectionManager = connectionManager
@@ -183,14 +182,22 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         }
     }
 
-    private fun updateEmptyView(hasSuggestions: Boolean) {
+    private fun updateEmptyView() {
+        val hasSuggestions = suggestionAdapter?.suggestionList?.isNotEmpty() == true
+        val showingSuggestions = suggestionAdapter?.isEmpty == false
+
         val viewText = if (hasSuggestions) {
             R.string.suggestion_no_matching_users
         } else {
             R.string.loading
         }
         empty_view.text = getString(viewText)
-        empty_view.visibility = View.VISIBLE
+
+        empty_view.visibility = if (showingSuggestions) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
     }
 
     override fun onResume() {
