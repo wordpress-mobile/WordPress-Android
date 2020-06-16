@@ -37,7 +37,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
-            when(it) {
+            when (it) {
                 is ContentUiState -> (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
             }
         })
