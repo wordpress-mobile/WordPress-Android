@@ -59,7 +59,7 @@ class WPMainActivityViewModel @Inject constructor(
 
         loadMainActions()
 
-        checkForFeatureAnnouncements()
+        updateFeatureAnnouncements()
     }
 
     private fun loadMainActions() {
@@ -151,6 +151,23 @@ class WPMainActivityViewModel @Inject constructor(
                     CreateContentMessageId = getCreateContentMessageId(hasFullAccessToContent)
             )
         }
+
+        if (hasFullAccessToContent) {
+            launch {
+                val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+                val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+
+                // only proceed to feature announcement logic if we are upgrading the app
+                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                    if (canShowFeatureAnnouncement()) {
+                        analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+                        _onFeatureAnnouncementRequested.call()
+                    }
+                } else {
+                    appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+                }
+            }
+        }
     }
 
     private fun setMainFabUiState(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
@@ -170,25 +187,9 @@ class WPMainActivityViewModel @Inject constructor(
             R.string.create_post_page_fab_tooltip_contributors
     }
 
-    private fun checkForFeatureAnnouncements() {
+    private fun updateFeatureAnnouncements() {
         launch {
-            val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-            val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
-
-            // only proceed to feature announcement logic if we are upgrading the app
-            if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
-                // we only show announcement from cache
-                // if no cache is available, we request announcement and try to show it later
-                if (canShowFeatureAnnouncement()) {
-                    analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
-                    _onFeatureAnnouncementRequested.call()
-                } else {
-                    featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
-                }
-            } else {
-                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
-                featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
-            }
+            featureAnnouncementProvider.getLatestFeatureAnnouncement(false)
         }
     }
 

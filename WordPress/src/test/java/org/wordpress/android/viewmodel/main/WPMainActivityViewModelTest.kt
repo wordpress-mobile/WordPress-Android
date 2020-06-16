@@ -203,6 +203,7 @@ class WPMainActivityViewModelTest {
         )
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
         verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
@@ -217,6 +218,7 @@ class WPMainActivityViewModelTest {
         )
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
         verify(analyticsTrackerWrapper).track(FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
@@ -230,6 +232,7 @@ class WPMainActivityViewModelTest {
         )
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
         verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
@@ -240,6 +243,7 @@ class WPMainActivityViewModelTest {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(0)
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
         verify(appPrefsWrapper).lastFeatureAnnouncementAppVersionCode = 850
@@ -251,6 +255,7 @@ class WPMainActivityViewModelTest {
         whenever(appPrefsWrapper.lastFeatureAnnouncementAppVersionCode).thenReturn(840)
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
     }
@@ -265,6 +270,7 @@ class WPMainActivityViewModelTest {
                 )
 
                 startViewModelWithDefaultParameters()
+                viewModel.onResume(true)
 
                 verify(onFeatureAnnouncementRequestedObserver, never()).onChanged(anyOrNull())
                 verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(false)
@@ -279,6 +285,7 @@ class WPMainActivityViewModelTest {
         )
 
         startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
 
         verify(onFeatureAnnouncementRequestedObserver).onChanged(anyOrNull())
 
