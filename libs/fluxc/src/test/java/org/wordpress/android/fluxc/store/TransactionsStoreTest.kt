@@ -3,7 +3,6 @@ package org.wordpress.android.fluxc.store
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers.Unconfined
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -24,6 +23,7 @@ import org.wordpress.android.fluxc.store.TransactionsStore.FetchedSupportedCount
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemShoppingCartPayload
 import org.wordpress.android.fluxc.store.TransactionsStore.RedeemedShoppingCartPayload
 import org.wordpress.android.fluxc.test
+import org.wordpress.android.fluxc.tools.initCoroutineEngine
 
 @RunWith(MockitoJUnitRunner::class)
 class TransactionsStoreTest {
@@ -40,7 +40,7 @@ class TransactionsStoreTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        transactionsStore = TransactionsStore(transactionsRestClient, Unconfined, dispatcher)
+        transactionsStore = TransactionsStore(transactionsRestClient, initCoroutineEngine(), dispatcher)
     }
 
     @Test

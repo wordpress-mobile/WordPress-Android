@@ -54,6 +54,10 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
     @Column private long mMemoryLimit; // only set for Jetpack sites
     @Column private int mOrigin = ORIGIN_UNKNOWN; // Does this site come from a WPCOM REST or XMLRPC fetch_sites call?
 
+    @Column private String mShowOnFront;
+    @Column private long mPageOnFront = -1;
+    @Column private long mPageForPosts = -1;
+
     // Self hosted specifics
     // The siteId for self hosted sites. Jetpack sites will also have a mSiteId, which is their id on wpcom
     @Column private long mSelfHostedSiteId;
@@ -668,5 +672,29 @@ public class SiteModel extends Payload<BaseNetworkError> implements Identifiable
 
     public boolean isPrivateWPComAtomic() {
         return isWPComAtomic() && (isPrivate() || isComingSoon());
+    }
+
+    public String getShowOnFront() {
+        return mShowOnFront;
+    }
+
+    public void setShowOnFront(String showOnFront) {
+        mShowOnFront = showOnFront;
+    }
+
+    public long getPageOnFront() {
+        return mPageOnFront;
+    }
+
+    public void setPageOnFront(long pageOnFront) {
+        mPageOnFront = pageOnFront;
+    }
+
+    public long getPageForPosts() {
+        return mPageForPosts;
+    }
+
+    public void setPageForPosts(long pageForPosts) {
+        mPageForPosts = pageForPosts;
     }
 }
