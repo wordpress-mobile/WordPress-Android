@@ -164,17 +164,20 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     private fun initializeSuggestionAdapter(site: SiteModel) {
         if (SiteUtils.isAccessedViaWPComRest(site)) {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
-            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
+            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)?.apply {
+                setBackgroundColorAttr(R.attr.colorGutenbergBackground)
 
-            adapter?.registerDataSetObserver(object : DataSetObserver() {
-                override fun onChanged() {
-                    updateEmptyView()
-                }
+                registerDataSetObserver(object : DataSetObserver() {
+                    override fun onChanged() {
+                        updateEmptyView()
+                    }
 
-                override fun onInvalidated() {
-                    updateEmptyView()
-                }
-            })
+                    override fun onInvalidated() {
+                        updateEmptyView()
+                    }
+                })
+            }
+
             autocompleteText.setAdapter(adapter)
 
             suggestionServiceConnectionManager = connectionManager

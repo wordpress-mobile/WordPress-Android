@@ -31,6 +31,9 @@
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
         <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest</item>
 
+        <item name="colorGutenbergDivider">@color/background_dark_elevated</item>
+        <item name="colorGutenbergBackground">@color/background_dark_elevated</item>
+
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>

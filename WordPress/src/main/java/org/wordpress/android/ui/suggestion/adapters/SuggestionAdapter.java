@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.suggestion.adapters;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -32,6 +35,7 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
     private List<Suggestion> mSuggestionList;
     private List<Suggestion> mOrigSuggestionList;
     private int mAvatarSz;
+    private @Nullable @AttrRes Integer mBackgroundColor;
 
     @Inject protected ImageManager mImageManager;
 
@@ -39,6 +43,10 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
         ((WordPress) context.getApplicationContext()).component().inject(this);
         mAvatarSz = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mInflater = LayoutInflater.from(context);
+    }
+
+    public void setBackgroundColorAttr(int backgroundColor) {
+        mBackgroundColor = backgroundColor;
     }
 
     public void setSuggestionList(List<Suggestion> suggestionList) {
@@ -76,6 +84,12 @@ public class SuggestionAdapter extends BaseAdapter implements Filterable {
 
         if (convertView == null || convertView.getTag() == null) {
             convertView = mInflater.inflate(R.layout.suggestion_list_row, parent, false);
+            if (mBackgroundColor != null) {
+                TypedValue typedValue = new TypedValue();
+                convertView.getContext().getTheme().resolveAttribute(mBackgroundColor, typedValue, true);
+                View view = convertView.findViewById(R.id.suggestion_list_root_view);
+                view.setBackgroundResource(typedValue.resourceId);
+            }
             holder = new SuggestionViewHolder(convertView);
             convertView.setTag(holder);
         } else {
