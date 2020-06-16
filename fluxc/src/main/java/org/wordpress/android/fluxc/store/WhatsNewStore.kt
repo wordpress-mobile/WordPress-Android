@@ -38,12 +38,12 @@ class WhatsNewStore @Inject constructor(
         val actionType = action.type as? WhatsNewAction ?: return
         when (actionType) {
             FETCH_REMOTE_ANNOUNCEMENT -> {
-                val versionCode = (action.payload as WhatsNewFetchPayload).versionName
+                val versionName = (action.payload as WhatsNewFetchPayload).versionName
                 val appId = (action.payload as WhatsNewFetchPayload).appId
                 GlobalScope.launch(coroutineContext) {
                     emitChange(
                             fetchRemoteAnnouncements(
-                                    versionCode,
+                                    versionName,
                                     appId
                             )
                     )
