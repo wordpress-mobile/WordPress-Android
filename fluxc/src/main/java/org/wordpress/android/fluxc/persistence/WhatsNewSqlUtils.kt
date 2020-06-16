@@ -51,7 +51,6 @@ class WhatsNewSqlUtils
             WellSql.delete(WhatsNewAnnouncementBuilder::class.java).execute()
             WellSql.delete(WhatsNewAnnouncementFeatureBuilder::class.java).execute()
 
-
             if (announcements == null || announcements.isEmpty()) {
                 db.setTransactionSuccessful()
                 return
