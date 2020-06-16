@@ -152,20 +152,18 @@ class WPMainActivityViewModel @Inject constructor(
             )
         }
 
-        if (hasFullAccessToContent) {
-            launch {
-                val currentVersionCode = buildConfigWrapper.getAppVersionCode()
-                val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
+        launch {
+            val currentVersionCode = buildConfigWrapper.getAppVersionCode()
+            val previousVersionCode = appPrefsWrapper.lastFeatureAnnouncementAppVersionCode
 
-                // only proceed to feature announcement logic if we are upgrading the app
-                if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
-                    if (canShowFeatureAnnouncement()) {
-                        analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
-                        _onFeatureAnnouncementRequested.call()
-                    }
-                } else {
-                    appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
+            // only proceed to feature announcement logic if we are upgrading the app
+            if (previousVersionCode != 0 && previousVersionCode < currentVersionCode) {
+                if (canShowFeatureAnnouncement()) {
+                    analyticsTracker.track(Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE)
+                    _onFeatureAnnouncementRequested.call()
                 }
+            } else {
+                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = currentVersionCode
             }
         }
     }
