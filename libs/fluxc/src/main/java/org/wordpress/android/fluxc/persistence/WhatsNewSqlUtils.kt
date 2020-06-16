@@ -23,9 +23,7 @@ class WhatsNewSqlUtils
     fun getAnnouncements(): List<WhatsNewAnnouncementModel> {
         val announcements = mutableListOf<WhatsNewAnnouncementModel>()
 
-        val announcementModels = WellSql.select(WhatsNewAnnouncementBuilder::class.java)
-                .orderBy(WhatsNewAnnouncementTable.ANNOUNCEMENT_ID, SelectQuery.ORDER_ASCENDING)
-                .asModel
+        val announcementModels = WellSql.select(WhatsNewAnnouncementBuilder::class.java).asModel
 
         for (announcementModel in announcementModels) {
             val features = getAnnouncementFeatures(announcementModel.announcementId)
