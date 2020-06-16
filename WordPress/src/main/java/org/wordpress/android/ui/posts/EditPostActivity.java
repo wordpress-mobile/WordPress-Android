@@ -592,6 +592,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             setupViewPager();
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+
+        setupPrepublishingBottomSheetRunnable();
     }
 
     @SuppressWarnings("unused")
@@ -776,6 +778,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
         }
+
+        if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
+            mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
+        }
     }
 
     @Override
@@ -795,10 +801,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         if (mReactNativeRequestHandler != null) {
             mReactNativeRequestHandler.destroy();
-        }
-
-        if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
-            mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
 
         super.onDestroy();
@@ -1789,22 +1791,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
+    private void setupPrepublishingBottomSheetRunnable() {
+        mShowPrepublishingBottomSheetHandler = new Handler();
+        mShowPrepublishingBottomSheetRunnable = () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                    PrepublishingBottomSheetFragment.TAG);
+            if (fragment == null) {
+                PrepublishingBottomSheetFragment prepublishingFragment =
+                        PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
+                prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+            }
+        };
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
-
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                PrepublishingBottomSheetFragment.TAG);
-        if (fragment == null) {
-            PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
-
-            long delayMs = 100;
-            mShowPrepublishingBottomSheetRunnable =
-                    () -> prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
-            mShowPrepublishingBottomSheetHandler = new Handler();
-            mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
-        }
+        long delayMs = 100;
+        mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
     }
 
     @Override public void onSubmitButtonClicked(boolean publishPost) {
