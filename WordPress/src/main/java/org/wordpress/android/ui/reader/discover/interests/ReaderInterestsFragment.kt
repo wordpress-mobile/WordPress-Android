@@ -16,7 +16,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -44,7 +44,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun initRetryButton() {
-        error_retry.setOnClickListener { // TODO
+        error_retry.setOnClickListener {
+            viewModel.onRetryButtonClick()
         }
     }
 
@@ -57,7 +58,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
-                is InitialUiState -> {
+                is LoadingUiState -> {
                 }
                 is ContentLoadSuccessUiState -> {
                     updateInterests(uiState.interestsUiState)

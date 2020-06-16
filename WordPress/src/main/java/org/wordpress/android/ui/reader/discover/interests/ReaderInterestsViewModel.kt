@@ -13,7 +13,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -26,7 +26,7 @@ class ReaderInterestsViewModel @Inject constructor(
 ) : ViewModel() {
     private var isStarted = false
 
-    private val _uiState: MutableLiveData<UiState> = MutableLiveData(InitialUiState)
+    private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
     private val _navigateToDiscover = MutableLiveData<Event<Unit>>()
@@ -41,6 +41,7 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun loadInterests() {
+        updateUiState(LoadingUiState)
         if (networkUtils.isNetworkAvailable()) {
             viewModelScope.launch {
                 val tagList = readerTagRepository.getInterests()
@@ -80,6 +81,10 @@ class ReaderInterestsViewModel @Inject constructor(
         }
     }
 
+    fun onRetryButtonClick() {
+        loadInterests()
+    }
+
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
             InterestUiState(interest.tagTitle)
@@ -98,12 +103,14 @@ class ReaderInterestsViewModel @Inject constructor(
 
     sealed class UiState(
         open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
-        val progressBarVisible: Boolean = true,
+        val progressBarVisible: Boolean = false,
         val titleVisible: Boolean = false,
         val subtitleVisible: Boolean = false,
         val fullscreenErrorLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : UiState()
+        object LoadingUiState : UiState(
+            progressBarVisible = true
+        )
 
         data class ContentLoadSuccessUiState(
             val interestsUiState: List<InterestUiState>,

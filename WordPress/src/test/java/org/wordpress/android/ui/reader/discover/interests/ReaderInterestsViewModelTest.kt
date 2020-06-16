@@ -23,8 +23,11 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.util.NetworkUtilsWrapper
 
@@ -79,7 +82,7 @@ class ReaderInterestsViewModelTest {
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-            // Pause dispatcher so we can verify title, subtitles initial state
+            // Pause dispatcher so we can verify title initial state
             coroutineScope.pauseDispatcher()
 
             // Trigger data load
@@ -96,13 +99,13 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subtitles hidden on start become visible on successful data load`() {
+    fun `subtitle hidden on start become visible on successful data load`() {
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-            // Pause dispatcher so we can verify title, subtitles initial state
+            // Pause dispatcher so we can verify subtitle initial state
             coroutineScope.pauseDispatcher()
 
             // Trigger data load
@@ -275,7 +278,7 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `error shown on start when internet access not available`() =
+    fun `no network error shown when internet access not available`() =
         coroutineScope.runBlockingTest {
             // Given
             whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
@@ -285,6 +288,29 @@ class ReaderInterestsViewModelTest {
 
             // Then
             assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadFailedConnectionErrorUiState::class.java)
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as ContentLoadFailedUiState)
+            assertThat(contentLoadFailedUiState.fullscreenErrorLayoutVisible).isEqualTo(true)
+            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.no_network_message)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `data loading triggered on retry`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            val uiStates = mutableListOf<UiState>()
+            viewModel.uiState.observeForever {
+                uiStates.add(it)
+            }
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            viewModel.onRetryButtonClick()
+
+            // Then
+            assertThat(uiStates.size).isEqualTo(2)
+            assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
         }
 
     private fun initViewModel() = viewModel.start()
