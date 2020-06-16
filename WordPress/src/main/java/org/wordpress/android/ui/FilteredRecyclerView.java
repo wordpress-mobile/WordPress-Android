@@ -54,7 +54,6 @@ public class FilteredRecyclerView extends RelativeLayout {
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
-    private View mCustomEmptyView;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
     private RecyclerView mSearchSuggestionsRecyclerView;
@@ -68,6 +67,7 @@ public class FilteredRecyclerView extends RelativeLayout {
     private int mSpinnerDrawableRight;
     private AppLog.T mTAG;
 
+    private boolean mShowEmptyView;
     private boolean mToolbarDisableScrollGestures = false;
     @LayoutRes private int mSpinnerItemView = 0;
     @LayoutRes private int mSpinnerDropDownItemView = 0;
@@ -137,8 +137,8 @@ public class FilteredRecyclerView extends RelativeLayout {
         mTAG = tag;
     }
 
-    public void setCustomEmptyView(View v) {
-        mCustomEmptyView = v;
+    public void setCustomEmptyView() {
+        mShowEmptyView = true;
     }
 
     private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -310,7 +310,7 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         if (!hasAdapter() || mAdapter.getItemCount() == 0) {
             if (mFilterListener != null) {
-                if (mCustomEmptyView == null) {
+                if (mShowEmptyView) {
                     String msg = mFilterListener.onShowEmptyViewMessage(emptyViewMessageType);
                     if (msg == null) {
                         msg = getContext().getString(R.string.empty_list_default);

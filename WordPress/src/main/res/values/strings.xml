@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <string name="app_name" translatable="false">WordPress</string>
@@ -55,7 +55,6 @@
     <string name="username">Username</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
-    <string name="keep_editing">Keep editing</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
     <string name="removed">Removed</string>
@@ -109,6 +108,9 @@
     <string name="local_draft">Local draft</string>
     <string name="local_changes">Local changes</string>
     <string name="continue_label">Continue</string>
+    <string name="publish_now">Publish Now</string>
+    <string name="update_now">Update Now</string>
+    <string name="status_and_visibility">Status &amp; Visibility</string>
 
     <string name="button_not_now">Not now</string>
 
@@ -248,7 +250,7 @@
     <string name="page_homepage_successfully_updated">Homepage successfully updated</string>
     <string name="page_homepage_update_failed">Homepage update failed</string>
     <string name="page_posts_page_successfully_updated">Posts Page successfully updated</string>
-    <string name="page_posts_page_update_failed">Homepage update failed</string>
+    <string name="page_posts_page_update_failed">Posts Page update failed</string>
 
     <!-- posts tab -->
     <string name="posts_cannot_be_started">We cannot open the posts right now. Please try again later</string>
@@ -337,14 +339,6 @@
     <string name="delete_page">Delete page?</string>
     <string name="posts_fetching">Fetching posts…</string>
     <string name="pages_fetching">Fetching pages…</string>
-    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
-    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
-    <string name="dialog_confirm_publish_yes">Publish now</string>
-    <string name="dialog_confirm_update_title">Ready to Update?</string>
-    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
-    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
-    <string name="dialog_confirm_update_yes">Update now</string>
     <string name="dialog_confirm_delete_permanently_post">Are you sure you\'d like to permanently delete this post?</string>
 
     <!-- scheduled post sync confirmation dialog -->
@@ -854,6 +848,9 @@
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="privacy_policy_read">Read privacy policy</string>
+    <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
+    <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act ("CCPA") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
+    <string name="ccpa_privacy_notice_read">Read CCPA privacy notice</string>
     <string name="preference_strip_image_location">Remove location from media</string>
     <string name="app_theme">Appearance</string>
     <string name="app_theme_light">Light</string>
@@ -1304,7 +1301,7 @@
     <string name="reader_filter_empty_sites_action">Follow a site</string>
     <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
-    <string name="reader_dot_separator">\u0020\u2022\u0020</string>
+    <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1323,7 +1320,7 @@
 
     <!-- Post Settings -->
     <string name="post_settings">Post settings</string>
-    <string name="post_settings_status">Status</string>
+    <string name="post_settings_status" translatable="false">@string/status_and_visibility</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
     <string name="post_settings_publish">Publish</string>
     <string name="post_settings_more_options">More Options</string>
@@ -1352,7 +1349,7 @@
     <string name="post_notification_error">Notification can\'t be created when the publish date is in the past.</string>
 
     <!-- post date selection -->
-    <string name="publish_date">Publish</string>
+    <string name="publish_date">Publish Date</string>
     <string name="immediately">Immediately</string>
     <string name="now">Now</string>
     <string name="scheduled_for">Scheduled for: %s</string>
@@ -1382,6 +1379,10 @@
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_draft">Draft</string>
     <string name="post_status_post_private">Private</string>
+    <string name="post_status_post_scheduled">Scheduled</string>
+    <string name="post_status_post_trashed">Trashed</string>
+    <string name="post_status_post_published">Published</string>
+
     <string-array name="post_settings_statuses" translatable="false">
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
@@ -1400,7 +1401,7 @@
     <string name="error_media_small">Media too small to show</string>
 
     <string name="menu_save_as_draft">Save as Draft</string>
-    <string name="menu_publish_now">Publish Now</string>
+    <string name="menu_publish_now" translatable="false">@string/publish_now</string>
     <string name="menu_preview">Preview</string>
     <string name="menu_history">History</string>
     <string name="menu_html_mode">HTML Mode</string>
@@ -1695,12 +1696,16 @@
     <string name="reader_bookmark_snack_title">Post saved</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
+    <string name="reader_btn_select_few_interests">Select a few to continue</string>
+    <string name="reader_btn_done">Done</string>
+
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
+    <string name="reader_choose_interests_content_description">Choose your interests</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1728,6 +1733,8 @@
     <string name="reader_label_local_related_posts">More in %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
+    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
+    <string name="reader_label_choose_your_interests">Choose your interests</string>
     <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
@@ -2652,7 +2659,7 @@
     <string name="pages_set_parent">Set parent</string>
     <string name="pages_set_as_homepage">Set as Homepage</string>
     <string name="pages_set_as_posts_page">Set as Posts Page</string>
-    <string name="pages_publish_now">Publish Now</string>
+    <string name="pages_publish_now" translatable="false">@string/publish_now</string>
     <string name="pages_move_to_draft">Move to Draft</string>
     <string name="pages_move_to_trash">Move to Trash</string>
     <string name="pages_delete_permanently">Delete Permanently</string>
@@ -2665,6 +2672,7 @@
     <string name="pages_open_page_error">The selected page is not available</string>
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
@@ -2715,6 +2723,10 @@
     <string name="post_list_tab_trashed_posts">Trashed</string>
     <string name="post_list_search_prompt">Search posts</string>
     <string name="post_list_search_nothing_found">No posts matching your search</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Move post to Drafts?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Trashed posts can\'t be edited. Do you want change the status of this post to "draft" so you can work on it?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Move to Draft</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancel</string>
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>
@@ -2795,6 +2807,25 @@
     <string name="feature_announcement_dialog_label">What\'s New In WordPress</string>
     <string name="feature_announcement_find_out_mode">Find out more</string>
 
+    <!-- Prepublishing Nudges -->
+    <string name="prepublishing_nudges_publish_action">Publish Date</string>
+    <string name="prepublishing_nudges_visibility_action" translatable="false">@string/status_and_visibility</string>
+    <string name="prepublishing_nudges_tags_action">Tags</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
+    <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
+    <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
+    <string name="prepublishing_nudges_home_submit_button">Submit Now</string>
+    <string name="prepublishing_nudges_home_save_button">Save Now</string>
+    <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
+    <string name="prepublishing_nudges_back_button">Back</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
+    <string name="prepublishing_nudges_toolbar_title_visibility" translatable="false">@string/status_and_visibility</string>
+    <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
+
+    <string name="prepublishing_nudges_visibility_password">Password Protected</string>
+
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
     <string name="gutenberg_native_1_s_current_value_is_2_s" tools:ignore="UnusedResources">%1$s. Current value is %2$s</string>
@@ -2837,6 +2868,7 @@
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
+    <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_double_tap_and_hold_to_edit" tools:ignore="UnusedResources">Double tap and hold to edit</string>
@@ -2863,6 +2895,7 @@
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_dr_seuss" tools:ignore="UnusedResources">Dr. Seuss</string>
+    <string name="gutenberg_native_edit_block_in_web_browser" tools:ignore="UnusedResources">Edit block in web browser</string>
     <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <!-- translators: sample content for "Team" page template -->
@@ -3007,7 +3040,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_warning_message" tools:ignore="UnusedResources">Warning Message</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o" tools:ignore="UnusedResources">We are a small team of talented professionals with a wide range of skills and experience. We love what we do, and we do it with passion. We look forward to working with you.</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m" tools:ignore="UnusedResources">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m" tools:ignore="UnusedResources">We are working hard to add more blocks with each release. In the meantime, you can also edit this block using your device\'s web browser.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180" tools:ignore="UnusedResources">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you" tools:ignore="UnusedResources">We offer a range of services to help you achieve the results you\'re after. Not sure what you need, or what it costs? We can explain what services are right for you and tell you more about our fees. Get in touch below.</string>
     <!-- translators: sample content for "Blog" page template -->

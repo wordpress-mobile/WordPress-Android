@@ -199,6 +199,10 @@
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
+
+    <dimen name="reader_chip_radius">8dp</dimen>
+    <dimen name="reader_chip_height">38dp</dimen>
+
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
@@ -450,6 +454,7 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
+    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -492,5 +497,10 @@
     <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
     <dimen name="feature_announcement_top_margin">64dp</dimen>
+
+    <!-- prepublishing nudges -->
+    <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
 
 </resources>

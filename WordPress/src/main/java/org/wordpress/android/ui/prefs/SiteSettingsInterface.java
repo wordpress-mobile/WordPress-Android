@@ -165,7 +165,7 @@ public abstract class SiteSettingsInterface {
      */
     protected abstract void fetchRemoteData();
 
-    protected final Context mContext;
+    protected Context mContext;
     protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
@@ -195,6 +195,11 @@ public abstract class SiteSettingsInterface {
     protected void finalize() throws Throwable {
         mDispatcher.unregister(this);
         super.finalize();
+    }
+
+    public void clear() {
+        mDispatcher.unregister(this);
+        mContext = null;
     }
 
     public void saveSettings() {
