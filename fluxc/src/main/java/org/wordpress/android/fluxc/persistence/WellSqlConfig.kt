@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 109
+        return 110
     }
 
     override fun getDbName(): String {
@@ -1201,7 +1201,7 @@ open class WellSqlConfig : DefaultWellConfig {
                             "ATTRIBUTES TEXT NOT NULL," +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
                 }
-                108 -> migrate(version) {
+                109 -> migrate(version) {
                     db.execSQL(
                             "CREATE TABLE EditorTheme(" +
                                     "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
