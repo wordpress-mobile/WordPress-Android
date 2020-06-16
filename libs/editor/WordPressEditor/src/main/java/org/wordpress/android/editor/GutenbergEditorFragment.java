@@ -865,12 +865,20 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().triggerGetContentInfo(new OnContentInfoReceivedListener() {
             @Override
             public void onContentInfoFailed() {
-                ToastUtils.showToast(getActivity(), R.string.toast_content_info_failed);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        ToastUtils.showToast(getActivity(), R.string.toast_content_info_failed);
+                    });
+                }
             }
 
             @Override
             public void onEditorNotReady() {
-                ToastUtils.showToast(getActivity(), R.string.toast_content_info_editor_not_ready);
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        ToastUtils.showToast(getActivity(), R.string.toast_content_info_editor_not_ready);
+                    });
+                }
             }
 
             @Override
