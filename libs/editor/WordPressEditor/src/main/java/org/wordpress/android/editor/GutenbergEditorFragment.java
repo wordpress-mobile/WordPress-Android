@@ -46,6 +46,7 @@ import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
@@ -57,6 +58,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachQueryListe
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
@@ -849,6 +851,44 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             @Override public void onGetContentTimeout(InterruptedException ie) {
                 AppLog.e(T.EDITOR, ie);
                 Thread.currentThread().interrupt();
+            }
+        });
+    }
+
+
+    @Override
+    public void showContentInfo() throws EditorFragmentNotAddedException {
+        if (!isAdded()) {
+            throw new EditorFragmentNotAddedException();
+        }
+
+        getGutenbergContainerFragment().triggerGetContentInfo(new OnContentInfoReceivedListener() {
+            @Override
+            public void onContentInfoFailed() {
+                ToastUtils.showToast(getActivity(), R.string.toast_content_info_failed);
+            }
+
+            @Override
+            public void onEditorNotReady() {
+                ToastUtils.showToast(getActivity(), R.string.toast_content_info_editor_not_ready);
+            }
+
+            @Override
+            public void onContentInfoReceived(HashMap<String, Object> contentInfo) {
+                int blockCount = (int) Double.parseDouble(contentInfo.get("blockCount").toString());
+                int wordCount = (int) Double.parseDouble(contentInfo.get("wordCount").toString());
+                int charCount = (int) Double.parseDouble(contentInfo.get("characterCount").toString());
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(getActivity());
+                        builder.setTitle(getString(R.string.dialog_content_info_title));
+                        builder.setMessage(
+                                getString(R.string.dialog_content_info_body, blockCount, wordCount, charCount));
+                        builder.setPositiveButton(getString(R.string.dialog_button_ok), null);
+                        builder.show();
+                    });
+                }
             }
         });
     }

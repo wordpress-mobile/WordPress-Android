@@ -11,6 +11,7 @@ import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequestedListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
@@ -188,6 +189,10 @@ public class GutenbergContainerFragment extends Fragment {
 
     public CharSequence getTitle(OnGetContentTimeout onGetContentTimeout) {
         return mWPAndroidGlueCode.getTitle(onGetContentTimeout);
+    }
+
+    public void triggerGetContentInfo(OnContentInfoReceivedListener onContentInfoReceivedListener) {
+        mWPAndroidGlueCode.triggerGetContentInfo(onContentInfoReceivedListener);
     }
 
     public void showDevOptionsDialog() {
