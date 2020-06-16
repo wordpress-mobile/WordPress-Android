@@ -3,10 +3,15 @@ package org.wordpress.android.ui.reader.discover
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import javax.inject.Inject
 
 class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout) {
@@ -20,10 +25,22 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViews()
         initViewModel()
+    }
+
+    private fun setupViews() {
+        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recycler_view.adapter = ReaderDiscoverAdapter()
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            when(it) {
+                is ContentUiState -> (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
+            }
+        })
+        viewModel.start()
     }
 }
