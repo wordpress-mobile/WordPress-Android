@@ -154,6 +154,9 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when no cached announcement is available we will try to fetch one from endpoint`() = test {
+        whenever(featureAnnouncementProvider.getLatestFeatureAnnouncement(true)).thenReturn(
+                null
+        )
         viewModel.start()
 
         verify(featureAnnouncementProvider).getLatestFeatureAnnouncement(true)

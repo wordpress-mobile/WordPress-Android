@@ -70,7 +70,7 @@ class FeatureAnnouncementValidityTest {
     private val noMinVersionAnnouncement = FeatureAnnouncement(
             "14.7",
             1,
-            "-1",
+            "-1.0",
             "14.8",
             "https://wordpress.org/",
             true,
@@ -81,7 +81,7 @@ class FeatureAnnouncementValidityTest {
             "14.7",
             1,
             "14.5",
-            "-1",
+            "-1.0",
             "https://wordpress.org/",
             true,
             testFeatures
