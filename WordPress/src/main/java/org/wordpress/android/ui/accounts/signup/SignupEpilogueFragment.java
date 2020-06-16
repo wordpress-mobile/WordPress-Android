@@ -16,11 +16,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -28,6 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
@@ -93,7 +95,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private FullScreenDialogFragment mDialog;
     private SignupEpilogueListener mSignupEpilogueListener;
 
-    protected ImageButton mHeaderAvatarAdd;
+    protected ImageView mHeaderAvatarAdd;
     protected String mDisplayName;
     protected String mEmailAddress;
     protected String mPhotoUrl;
@@ -102,6 +104,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected ImageView mHeaderAvatar;
     protected WPTextView mHeaderDisplayName;
     protected WPTextView mHeaderEmailAddress;
+    protected View mBottomShadow;
+    protected NestedScrollView mScrollView;
     protected boolean mIsAvatarAdded;
     protected boolean mIsEmailSignup;
 
@@ -169,7 +173,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        final RelativeLayout headerAvatarLayout = rootView.findViewById(R.id.signup_epilogue_header_avatar_layout);
+        final FrameLayout headerAvatarLayout = rootView.findViewById(R.id.login_epilogue_header_avatar_layout);
         headerAvatarLayout.setEnabled(mIsEmailSignup);
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,12 +192,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
-        mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
+        mHeaderAvatarAdd = rootView.findViewById(R.id.login_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
-        mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
-        mHeaderDisplayName = rootView.findViewById(R.id.signup_epilogue_header_display);
+        mHeaderAvatar = rootView.findViewById(R.id.login_epilogue_header_avatar);
+        mHeaderDisplayName = rootView.findViewById(R.id.login_epilogue_header_title);
         mHeaderDisplayName.setText(mDisplayName);
-        mHeaderEmailAddress = rootView.findViewById(R.id.signup_epilogue_header_email);
+        mHeaderEmailAddress = rootView.findViewById(R.id.login_epilogue_header_subtitle);
         mHeaderEmailAddress.setText(mEmailAddress);
         WPLoginInputRow inputDisplayName = rootView.findViewById(R.id.signup_epilogue_input_display);
         mEditTextDisplayName = inputDisplayName.getEditText();
@@ -247,6 +251,27 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         // Set focus on static text field to avoid showing keyboard on start.
         mHeaderEmailAddress.requestFocus();
+
+        mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangeListener(
+                (OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> showBottomShadowIfNeeded());
+        // We must use onGlobalLayout here otherwise canScrollVertically will always return false
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                showBottomShadowIfNeeded();
+            }
+        });
+    }
+
+    private void showBottomShadowIfNeeded() {
+        if (mScrollView != null) {
+            final boolean canScrollDown = mScrollView.canScrollVertically(1);
+            if (mBottomShadow != null) {
+                mBottomShadow.setVisibility(canScrollDown ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
     @Override

@@ -18,13 +18,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -42,8 +43,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     private RecyclerView mSitesList;
     private View mBottomShadow;
-    private View mBottomButtonsContainer;
-    private Button mConnectMore;
 
     private SitePickerAdapter mAdapter;
     private boolean mDoLoginUpdate;
@@ -94,10 +93,6 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void setupContent(ViewGroup rootView) {
         mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
-
-        mBottomButtonsContainer = rootView.findViewById(R.id.bottom_buttons);
-        mConnectMore = mBottomButtonsContainer.findViewById(R.id.secondary_button);
-
         mSitesList = rootView.findViewById(R.id.recycler_view);
         mSitesList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mSitesList.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
@@ -107,22 +102,9 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
-        secondaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginEpilogueListener != null) {
-                    mLoginEpilogueListener.onConnectAnotherSite();
-                }
-            }
-        });
-
-        primaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLoginEpilogueListener != null) {
-                    mLoginEpilogueListener.onContinue();
-                }
+        primaryButton.setOnClickListener(v -> {
+            if (mLoginEpilogueListener != null) {
+                mLoginEpilogueListener.onContinue();
             }
         });
     }
@@ -164,33 +146,45 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
 
                     @Override
                     public void onAfterLoad() {
-                        mSitesList.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!isAdded()) {
-                                    return;
-                                }
+                        mSitesList.post(() -> {
+                            if (!isAdded()) {
+                                return;
+                            }
 
-                                if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
-                                    mBottomShadow.setVisibility(View.VISIBLE);
-                                } else {
-                                    mBottomShadow.setVisibility(View.GONE);
-                                }
+                            if (mSitesList.computeVerticalScrollRange() > mSitesList.getHeight()) {
+                                mBottomShadow.setVisibility(View.VISIBLE);
+                            } else {
+                                mBottomShadow.setVisibility(View.GONE);
                             }
                         });
                     }
-                }, new SitePickerAdapter.HeaderHandler() {
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                              boolean attachToRoot) {
-                return new LoginHeaderViewHolder(layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
-            }
+                },
+                new SitePickerAdapter.ViewHolderHandler<LoginHeaderViewHolder>() {
+                    @Override
+                    public LoginHeaderViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                                    boolean attachToRoot) {
+                        return new LoginHeaderViewHolder(
+                                layoutInflater.inflate(R.layout.login_epilogue_header, parent, false));
+                    }
 
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, SiteList sites) {
-                refreshAccountDetails((LoginHeaderViewHolder) holder, sites);
-            }
-        }, mOldSitesIds);
+                    @Override
+                    public void onBindViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
+                        bindHeaderViewHolder(holder, sites);
+                    }
+                },
+                new ViewHolderHandler<LoginFooterViewHolder>() {
+                    @Override
+                    public LoginFooterViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
+                                                                    boolean attachToRoot) {
+                        return new LoginFooterViewHolder(
+                                layoutInflater.inflate(R.layout.login_epilogue_footer, parent, false));
+                    }
+
+                    @Override
+                    public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+                        bindFooterViewHolder(holder, sites);
+                    }
+                }, mOldSitesIds);
     }
 
     @Override
@@ -213,35 +207,42 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         }
     }
 
-    private void refreshAccountDetails(LoginHeaderViewHolder holder, SiteList sites) {
+    private void bindHeaderViewHolder(LoginHeaderViewHolder holder, SiteList sites) {
         if (!isAdded()) {
             return;
         }
 
         final boolean isWpcom = mAccountStore.hasAccessToken();
+        final boolean hasSites = sites.size() != 0;
 
         if (isWpcom) {
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, mAccountStore.getAccount());
-        } else if (sites.size() != 0) {
-            SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
-            int avatarSz = getResources().getDimensionPixelSize(R.dimen.avatar_sz_large);
-
-            String avatarUrl = GravatarUtils.gravatarFromEmail(site.getEmail(), avatarSz);
-            String username = site.getUsername();
-            String displayName = site.getDisplayName();
-
-            holder.updateLoggedInAsHeading(getContext(), mImageManager, true, avatarUrl, username, displayName);
+            final AccountModel account = mAccountStore.getAccount();
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, account);
+        } else if (hasSites) {
+            final SiteModel site = mSiteStore.getSiteByLocalId(sites.get(0).getLocalId());
+            holder.updateLoggedInAsHeading(getContext(), mImageManager, site);
         }
 
-        if (sites.size() == 0) {
-            holder.hideSitesHeading();
-            mConnectMore.setText(R.string.connect_site);
-        } else {
+        if (hasSites) {
             holder.showSitesHeading(StringUtils.getQuantityString(
-                    getActivity(), R.string.days_quantity_one, R.string.login_epilogue_mysites_one,
+                    getActivity(), R.string.login_epilogue_mysites_one, R.string.login_epilogue_mysites_one,
                     R.string.login_epilogue_mysites_other, sites.size()));
+        } else {
+            holder.hideSitesHeading();
+        }
+    }
 
-            mConnectMore.setText(R.string.connect_more);
+    private void bindFooterViewHolder(LoginFooterViewHolder holder, SiteList sites) {
+        holder.itemView.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
+        holder.itemView.setOnClickListener(v -> {
+            if (mLoginEpilogueListener != null) {
+                mLoginEpilogueListener.onConnectAnotherSite();
+            }
+        });
+        if (sites.size() == 0) {
+            holder.bindText(getString(R.string.connect_site));
+        } else {
+            holder.bindText(getString(R.string.connect_more));
         }
     }
 

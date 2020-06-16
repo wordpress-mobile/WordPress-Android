@@ -956,7 +956,7 @@
 
     <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
-    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="startIconTint">?attr/colorPrimary</item>
         <item name="endIconTint">?attr/colorPrimary</item>
         <item name="endIconDrawable">@drawable/ic_arrow_left_white_24dp</item>
@@ -981,19 +981,37 @@
         <item name="fixWidowWords">true</item>
     </style>
 
+    <style name="LoginTheme.Headline" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="fontFamily">serif</item>
+    </style>
+
     <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
     <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
 
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textStyle">bold</item>
+    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Overline">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1" />
+    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1" />
 
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
+    <style name="LoginTheme.Subhead2" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="fontFamily">sans-serif</item>
+    </style>
+
+    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+    </style>
+
+    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
 
     <style name="LoginEpilogueSitesList">
         <item name="colorControlHighlight">@android:color/transparent</item>

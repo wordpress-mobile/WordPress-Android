@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_buttons"
+        android:scrollbars="vertical"
+        android:theme="@style/LoginEpilogueSitesList" />
+
+    <ProgressBar
+        android:id="@+id/sites_progress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <View
+        android:id="@+id/bottom_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_container_shadow_height"
+        android:layout_above="@+id/bottom_buttons"
+        android:background="@drawable/login_shadow" />
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_medium_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium_large">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/secondary_button"
+            style="@style/LoginTheme.Button.SignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:text="@string/share_action_media" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/primary_button"
+            style="@style/LoginTheme.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_action_post" />
+    </LinearLayout>
+</RelativeLayout>
