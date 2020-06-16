@@ -336,7 +336,8 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
-            VERSION_NAME="${APP_VERSION_PREFIX}-build-${CIRCLE_BUILD_NUM}"
+            TODAY_DATE=$(date +'%Y%m%d')
+            VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
             echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
 
             bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
