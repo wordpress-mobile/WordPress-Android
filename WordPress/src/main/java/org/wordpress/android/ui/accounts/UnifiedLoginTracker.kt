@@ -68,7 +68,7 @@ class UnifiedLoginTracker
 
     enum class Flow(val value: String) {
         GET_STARTED("get_started"),
-        LOGIN_SOCIAL("social_login"),
+        GOOGLE_LOGIN("google_login"),
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),

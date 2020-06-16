@@ -55,6 +55,8 @@ import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -129,6 +131,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected Dispatcher mDispatcher;
     @Inject protected ImageManager mImageManager;
     @Inject protected AppPrefsWrapper mAppPrefsWrapper;
+    @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -278,6 +281,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ReaderUpdateServiceStarter.startService(WordPress.getContext(),
                     EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
+            mUnifiedLoginTracker.track(Step.USERNAME_PASSWORD);
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
 
