@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -223,6 +224,9 @@ public class AppPrefs {
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
+
+        // feature flag for Reader Improvements Phase 2
+        FF_READER_IMPROVEMENTS_PHASE_2
     }
 
     private static SharedPreferences prefs() {
@@ -1157,5 +1161,18 @@ public class AppPrefs {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Feature Flag for Reader Improvements Phase 2. Both BuildTime and RunTime feature flag is used.
+     *
+     * BuildTime feature flag is used to make sure we never enable the feature in production builds - even when the
+     * user manually overrides the shared preferences record using adb.
+     *
+     * RunTime feature flag is used for us to enable the feature during development.
+     */
+    public static boolean isReaderImprovementsPhase2Enabled() {
+        return BuildConfig.READER_IMPROVEMENTS_PHASE_2 && getBoolean(UndeletablePrefKey.FF_READER_IMPROVEMENTS_PHASE_2,
+                false);
     }
 }

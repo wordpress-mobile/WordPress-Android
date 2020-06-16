@@ -302,6 +302,21 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+
+    public static void openEditorForPostInNewStack(Context context, @NonNull SiteModel site, int localPostId) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, localPostId);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
     /**
      * Opens the editor and passes the information needed for a reblog action
      *
