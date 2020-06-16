@@ -115,6 +115,27 @@
         <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
+    <style name="ReaderTextView.Interests.Title" parent="ReaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:gravity">start</item>
+        <item name="android:includeFontPadding">false</item>>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
+    </style>
+
+    <style name="ReaderTextView.Interests.SubTitle" parent="ReaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:gravity">start</item>
+        <item name="android:includeFontPadding">false</item>>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <!-- EditTexts -->
 
     <style name="ReaderEditText">
@@ -143,4 +164,20 @@
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
+
+    <!-- chips -->
+    <style name="ReaderInterestFilterChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/purple_0_blue_30_selector</item>
+        <item name="android:textColor">@color/black_white_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="chipStartPadding">@dimen/margin_medium_large</item>
+        <item name="chipEndPadding">@dimen/margin_medium</item>
+        <item name="chipSpacingHorizontal">@dimen/margin_medium</item>
+        <item name="chipSpacingVertical">@dimen/margin_small_medium</item>
+        <item name="chipMinHeight">@dimen/reader_chip_height</item>
+    </style>
+
 </resources>

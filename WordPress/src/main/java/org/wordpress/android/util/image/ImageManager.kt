@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
@@ -42,6 +43,7 @@ import javax.inject.Singleton
 /**
  * Singleton for asynchronous image fetching/loading with support for placeholders, transformations and more.
  */
+
 @Singleton
 class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
@@ -448,6 +450,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
             val thumbnailRequest = GlideApp
                     .with(context)
                     .load(thumbnailUrl)
+                    .downsample(DownsampleStrategy.AT_MOST)
                     .attachRequestListener(listener)
             return this.thumbnail(thumbnailRequest)
         }
