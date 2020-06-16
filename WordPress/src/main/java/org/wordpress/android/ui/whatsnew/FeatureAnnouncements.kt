@@ -13,6 +13,8 @@ data class FeatureAnnouncement(
     val isLocalized: Boolean = false,
     val features: List<FeatureAnnouncementItem>
 ) {
+    private val openEndedVersionBracketIndicator = "-1.0"
+
     fun canBeDisplayedOnAppUpgrade(appVersionName: String): Boolean {
         val integerRepresentationOfVersionName = WhatsNewAppVersionUtils.versionNameToInt(appVersionName)
 
@@ -24,10 +26,10 @@ data class FeatureAnnouncement(
         val maxAppVersion = WhatsNewAppVersionUtils.versionNameToInt(maximumAppVersion)
 
         val isWithinRange = when {
-            minimumAppVersion == "-1.0" -> {
+            minimumAppVersion == openEndedVersionBracketIndicator -> {
                 integerRepresentationOfVersionName <= maxAppVersion
             }
-            maximumAppVersion == "-1.0" -> {
+            maximumAppVersion == openEndedVersionBracketIndicator -> {
                 integerRepresentationOfVersionName >= minAppVersion
             }
             else -> {
