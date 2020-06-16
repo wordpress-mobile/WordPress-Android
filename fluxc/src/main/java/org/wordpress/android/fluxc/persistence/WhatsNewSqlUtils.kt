@@ -1,8 +1,6 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.WhatsNewAnnouncementFeatureTable
-import com.wellsql.generated.WhatsNewAnnouncementTable
-import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
 import com.yarolegovich.wellsql.core.annotation.Column
