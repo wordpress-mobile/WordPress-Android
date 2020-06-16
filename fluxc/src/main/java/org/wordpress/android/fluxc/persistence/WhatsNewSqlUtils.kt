@@ -44,23 +44,33 @@ class WhatsNewSqlUtils
     }
 
     fun updateAnnouncementCache(announcements: List<WhatsNewAnnouncementModel>?) {
-        // we want the local store to be 1 to 1 representation of endpoint announcements
-        WellSql.delete(WhatsNewAnnouncementBuilder::class.java).execute()
-        WellSql.delete(WhatsNewAnnouncementFeatureBuilder::class.java).execute()
+        val db = WellSql.giveMeWritableDb()
+        db.beginTransaction()
+        try {
+            // we want the local store to be 1 to 1 representation of endpoint announcements
+            WellSql.delete(WhatsNewAnnouncementBuilder::class.java).execute()
+            WellSql.delete(WhatsNewAnnouncementFeatureBuilder::class.java).execute()
 
-        if (announcements == null || announcements.isEmpty()) {
-            return
+
+            if (announcements == null || announcements.isEmpty()) {
+                db.setTransactionSuccessful()
+                return
+            }
+
+            val announcementBuilders = announcements.map { it.toBuilder() }
+
+            val featureBuilders = mutableListOf<WhatsNewAnnouncementFeatureBuilder>()
+            for (announcement in announcements) {
+                featureBuilders.addAll(announcement.features.map { it.toBuilder(announcement.announcementVersion) })
+            }
+
+            WellSql.insert(announcementBuilders).execute()
+            WellSql.insert(featureBuilders).execute()
+
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
         }
-
-        val announcementBuilders = announcements.map { it.toBuilder() }
-
-        val featureBuilders = mutableListOf<WhatsNewAnnouncementFeatureBuilder>()
-        for (announcement in announcements) {
-            featureBuilders.addAll(announcement.features.map { it.toBuilder(announcement.announcementVersion) })
-        }
-
-        WellSql.insert(announcementBuilders).asSingleTransaction(true).execute()
-        WellSql.insert(featureBuilders).asSingleTransaction(true).execute()
     }
 
     @Table(name = "WhatsNewAnnouncement")
