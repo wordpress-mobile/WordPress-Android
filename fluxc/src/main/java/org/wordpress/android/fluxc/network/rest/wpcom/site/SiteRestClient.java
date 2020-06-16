@@ -83,6 +83,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsResponsePayload;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesError;
 import org.wordpress.android.fluxc.store.SiteStore.UserRolesErrorType;
+import org.wordpress.android.fluxc.utils.SiteUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.StringUtils;
@@ -369,17 +370,17 @@ public class SiteRestClient extends BaseWPComRestClient {
                 new Listener<PostFormatsResponse>() {
                     @Override
                     public void onResponse(PostFormatsResponse response) {
-                        List<PostFormatModel> postFormats = new ArrayList<>();
-                        if (response.formats != null) {
-                            for (String key : response.formats.keySet()) {
-                                PostFormatModel postFormat = new PostFormatModel();
-                                postFormat.setSlug(key);
-                                postFormat.setDisplayName(response.formats.get(key));
-                                postFormats.add(postFormat);
-                            }
+                        List<PostFormatModel> postFormats = SiteUtils.getValidPostFormatsOrNull(response.formats);
+
+                        if (postFormats != null) {
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
+                                    FetchedPostFormatsPayload(site, postFormats)));
+                        } else {
+                            FetchedPostFormatsPayload payload = new FetchedPostFormatsPayload(site,
+                                    Collections.<PostFormatModel>emptyList());
+                            payload.error = new PostFormatsError(PostFormatsErrorType.INVALID_RESPONSE);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(payload));
                         }
-                        mDispatcher.dispatch(SiteActionBuilder.newFetchedPostFormatsAction(new
-                                FetchedPostFormatsPayload(site, postFormats)));
                     }
                 },
                 new WPComErrorListener() {
@@ -997,6 +998,9 @@ public class SiteRestClient extends BaseWPComRestClient {
             site.setJetpackVersion(from.options.jetpack_version);
             site.setSoftwareVersion(from.options.software_version);
             site.setIsWPComAtomic(from.options.is_wpcom_atomic);
+            site.setShowOnFront(from.options.show_on_front);
+            site.setPageOnFront(from.options.page_on_front);
+            site.setPageForPosts(from.options.page_for_posts);
 
             try {
                 site.setMaxUploadSize(Long.valueOf(from.options.max_upload_size));
