@@ -1,7 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -10,26 +8,27 @@ import org.wordpress.android.fluxc.action.VerticalAction
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.vertical.VerticalSegmentModel
 import org.wordpress.android.fluxc.network.rest.wpcom.vertical.VerticalRestClient
+import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.CoroutineContext
 
 @Singleton
 class VerticalStore @Inject constructor(
     private val verticalRestClient: VerticalRestClient,
-    private val coroutineContext: CoroutineContext,
+    private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     override fun onAction(action: Action<*>) {
         val actionType = action.type as? VerticalAction ?: return
 
-        GlobalScope.launch(coroutineContext) {
-            val onChanged = when (actionType) {
-                VerticalAction.FETCH_SEGMENTS -> fetchSegments()
+        when (actionType) {
+            VerticalAction.FETCH_SEGMENTS -> {
+                coroutineEngine.launch(AppLog.T.API, this, "FETCH_SEGMENTS") {
+                    emitChange(fetchSegments())
+                }
             }
-            emitChange(onChanged)
         }
     }
 

@@ -61,7 +61,7 @@ public class SiteXMLRPCClientTest {
                 XMLRPCRequest request = (XMLRPCRequest) invocation.getArguments()[0];
                 try {
                     Class<XMLRPCRequest> requestClass = (Class<XMLRPCRequest>)
-                                    Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
+                            Class.forName("org.wordpress.android.fluxc.network.xmlrpc.XMLRPCRequest");
                     // Reflection code equivalent to:
                     // Object o = request.parseNetworkResponse(data)
                     Method parseNetworkResponse = requestClass.getDeclaredMethod("parseNetworkResponse",
@@ -150,9 +150,9 @@ public class SiteXMLRPCClientTest {
         // 3. Report the parse error and its details in an OnUnexpectedError
         final SiteModel site = generateSelfHostedNonJPSite();
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "  <string>whoops</string>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "  <string>whoops</string>\n"
+                          + "</value></param></params></methodResponse>";
 
         doAnswer(new Answer() {
             @Override
@@ -192,18 +192,18 @@ public class SiteXMLRPCClientTest {
     @Test
     public void testFetchSites() throws Exception {
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "<array><data><value><struct>\n"
-                + "<member><name>isAdmin</name><value><boolean>1</boolean></value></member>\n"
-                + "<member><name>url</name><value>\n"
-                + "<string>http://docbrown.url/</string>\n"
-                + "</value></member>\n"
-                + "<member><name>blogid</name><value><string>1</string></value></member>\n"
-                + "<member><name>blogName</name><value><string>Doc Brown Testing</string></value></member>\n"
-                + "<member><name>xmlrpc</name><value>\n"
-                + "<string>http://docbrown.url/xmlrpc.php</string>\n"
-                + "</value></member></struct></value></data></array>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "<array><data><value><struct>\n"
+                          + "<member><name>isAdmin</name><value><boolean>1</boolean></value></member>\n"
+                          + "<member><name>url</name><value>\n"
+                          + "<string>http://docbrown.url/</string>\n"
+                          + "</value></member>\n"
+                          + "<member><name>blogid</name><value><string>1</string></value></member>\n"
+                          + "<member><name>blogName</name><value><string>Doc Brown Testing</string></value></member>\n"
+                          + "<member><name>xmlrpc</name><value>\n"
+                          + "<string>http://docbrown.url/xmlrpc.php</string>\n"
+                          + "</value></member></struct></value></data></array>\n"
+                          + "</value></param></params></methodResponse>";
         final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
 
         mCountDownLatch = new CountDownLatch(1);
@@ -214,9 +214,9 @@ public class SiteXMLRPCClientTest {
     @Test
     public void testFetchSitesResponseNotArray() throws Exception {
         mMockedResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<methodResponse><params><param><value>\n"
-                + "<string>disaster!</string>\n"
-                + "</value></param></params></methodResponse>";
+                          + "<methodResponse><params><param><value>\n"
+                          + "<string>disaster!</string>\n"
+                          + "</value></param></params></methodResponse>";
         final String xmlrpcUrl = "http://docbrown.url/xmlrpc.php";
 
         doAnswer(new Answer() {

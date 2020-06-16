@@ -1,0 +1,174 @@
+{
+  "orderId": 25,
+  "paperSize": "label",
+  "formData": {
+    "is_packed": true,
+    "selected_packages": {
+      "default_box": {
+        "id": "default_box",
+        "box_id": "not_selected",
+        "height": 0,
+        "length": 0,
+        "weight": 0,
+        "width": 0,
+        "items": [{
+          "height": 0,
+          "product_id": 61,
+          "length": 0,
+          "quantity": 1,
+          "weight": 0,
+          "width": 0,
+          "name": "woo-polo - Polo",
+          "url": "https:\/\/awootestshop.mystagingwebsite.com\/wp-admin\/post.php?post=61&action=edit",
+          "value": 20
+        }, {
+          "height": 0,
+          "product_id": 39,
+          "length": 0,
+          "quantity": 1,
+          "weight": 0,
+          "width": 0,
+          "name": "woo-sunglasses - Sunglasses",
+          "url": "https:\/\/awootestshop.mystagingwebsite.com\/wp-admin\/post.php?post=39&action=edit",
+          "value": 90
+        }, {
+          "height": 0,
+          "product_id": 35,
+          "length": 0,
+          "quantity": 1,
+          "weight": 0,
+          "width": 0,
+          "name": "woo-tshirt - T-Shirt",
+          "url": "https:\/\/awootestshop.mystagingwebsite.com\/wp-admin\/post.php?post=35&action=edit",
+          "value": 18
+        }]
+      }
+    },
+    "origin": {
+      "company": "awootestshop.mystagingwebsite.com",
+      "name": "Anitaa Murthy",
+      "phone": "",
+      "country": "US",
+      "state": "CA",
+      "address": "60 29TH ST # 343",
+      "address_2": "",
+      "city": "SAN FRANCISCO",
+      "postcode": "94110-4929"
+    },
+    "destination": {
+      "company": "",
+      "address_2": "",
+      "city": "SAN FRANCISCO",
+      "state": "CA",
+      "postcode": "94110-4929",
+      "country": "US",
+      "phone": "41535032",
+      "name": "Anitaa OrderTesting29",
+      "address": "60 29TH ST # 343"
+    },
+    "origin_normalized": true,
+    "destination_normalized": true,
+    "rates": {
+      "selected": {}
+    },
+    "order_id": 1427
+  },
+  "labelsData": [{
+    "label_id": 1,
+    "tracking": "9405500205309038753691",
+    "refundable_amount": 7.65,
+    "created": 1589295659638,
+    "carrier_id": "usps",
+    "service_name": "USPS - Priority Mail",
+    "status": "PURCHASED",
+    "package_name": "Small Flat Rate Box",
+    "product_names": ["Polo", "T-Shirt"],
+    "receipt_item_id": 24212914,
+    "created_date": 1589295663000,
+    "main_receipt_id": 19680344,
+    "rate": 7.65,
+    "currency": "USD",
+    "expiry_date": 1604847662000,
+    "label_cached": 1589295666000,
+    "refund":{
+      "status": "pending",
+      "request_date": 1604847663000
+    }
+  }, {
+    "label_id": 2,
+    "tracking": "9405500205309038753691",
+    "refundable_amount": 7.65,
+    "created": 1589295659638,
+    "carrier_id": "usps",
+    "service_name": "USPS - Priority Mail",
+    "status": "PURCHASED",
+    "package_name": "Small Flat Rate Box",
+    "product_names": ["Polo", "T-Shirt"],
+    "receipt_item_id": 24212914,
+    "created_date": 1589295663000,
+    "main_receipt_id": 19680344,
+    "rate": 7.65,
+    "currency": "USD",
+    "expiry_date": 1604847662000,
+    "label_cached": 1589295666000
+  }, {
+    "label_id": 3,
+    "tracking": "9405500205309038753691",
+    "refundable_amount": 7.65,
+    "created": 1589295659638,
+    "carrier_id": "usps",
+    "service_name": "USPS - Priority Mail",
+    "status": "PURCHASED",
+    "package_name": "Small Flat Rate Box",
+    "product_names": ["Polo", "T-Shirt"],
+    "receipt_item_id": 24212914,
+    "created_date": 1589295663000,
+    "main_receipt_id": 19680344,
+    "rate": 7.65,
+    "currency": "USD",
+    "expiry_date": 1604847662000,
+    "label_cached": 1589295666000
+  }, {
+    "label_id": 4,
+    "tracking": "9405500205309038753691",
+    "refundable_amount": 7.65,
+    "created": 1589295659638,
+    "carrier_id": "usps",
+    "service_name": "USPS - Priority Mail",
+    "status": "PURCHASED",
+    "package_name": "Small Flat Rate Box",
+    "product_names": ["Polo", "T-Shirt"],
+    "receipt_item_id": 24212914,
+    "created_date": 1589295663000,
+    "main_receipt_id": 19680344,
+    "rate": 7.65,
+    "currency": "USD",
+    "expiry_date": 1604847662000,
+    "label_cached": 1589295666000
+  }, {
+    "label_id": 5,
+    "tracking": "9405500205309038753691",
+    "refundable_amount": 7.65,
+    "created": 1589295659638,
+    "carrier_id": "usps",
+    "service_name": "USPS - Priority Mail",
+    "status": "PURCHASED",
+    "package_name": "Small Flat Rate Box",
+    "product_names": ["Polo", "T-Shirt"],
+    "receipt_item_id": 24212914,
+    "created_date": 1589295663000,
+    "main_receipt_id": 19680344,
+    "rate": 7.65,
+    "currency": "USD",
+    "expiry_date": 1604847662000,
+    "label_cached": 1589295666000
+  }],
+  "storeOptions": {
+    "currency_symbol": "$",
+    "dimension_unit": "in",
+    "weight_unit": "oz",
+    "origin_country": "US"
+  },
+  "canChangeCountries": true,
+  "success": true
+}
