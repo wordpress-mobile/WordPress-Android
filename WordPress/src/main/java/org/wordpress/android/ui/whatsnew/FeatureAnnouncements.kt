@@ -24,10 +24,10 @@ data class FeatureAnnouncement(
         val maxAppVersion = WhatsNewAppVersionUtils.versionNameToInt(maximumAppVersion)
 
         val isWithinRange = when {
-            minAppVersion == -1 -> {
+            minimumAppVersion == "-1.0" -> {
                 integerRepresentationOfVersionName <= maxAppVersion
             }
-            maxAppVersion == -1 -> {
+            maximumAppVersion == "-1.0" -> {
                 integerRepresentationOfVersionName >= minAppVersion
             }
             else -> {
