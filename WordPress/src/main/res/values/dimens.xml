@@ -130,10 +130,11 @@
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
     <dimen name="reader_tag_header_image_height">128dp</dimen>
-    <dimen name="reader_xpost_padding_left">50dp</dimen>
+    <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
-    <dimen name="reader_card_gutters">1px</dimen>
+    <dimen name="reader_card_gutters">6dp</dimen>
     <dimen name="reader_card_avatar_margin_end">18dp</dimen>
+    <dimen name="reader_card_elevation">0dp</dimen>
 
     <dimen name="reader_video_overlay_size">56dp</dimen>
 
@@ -151,7 +152,7 @@
 
     <dimen name="avatar_sz_extra_small">24dp</dimen>
     <dimen name="avatar_sz_small">32dp</dimen>
-    <dimen name="avatar_sz_medium">38dp</dimen>
+    <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
     <dimen name="avatar_sz_login">100dp</dimen>
@@ -159,8 +160,9 @@
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
 
+    <dimen name="reader_post_header_height">40dp</dimen>
     <dimen name="reader_button_icon">24dp</dimen>
-    <dimen name="reader_button_minimum_height">36dp</dimen>
+    <dimen name="reader_button_minimum_height">44dp</dimen>
     <dimen name="reader_count_icon">18dp</dimen>
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
@@ -171,8 +173,9 @@
     <dimen name="reader_featured_image_height_tablet">280dp</dimen>
     <dimen name="reader_featured_image_height_tablet_large">340dp</dimen>
     <dimen name="reader_featured_image_height">@dimen/reader_featured_image_height_default</dimen>
-
-    <dimen name="reader_featured_image_height_cardview">100dp</dimen>
+    <dimen name="reader_image_avatar_or_blavatar_border_width">1dp</dimen>
+    <dimen name="reader_featured_image_corner_radius">4dp</dimen>
+    <dimen name="reader_image_featured_border_width">1dp</dimen>
 
     <dimen name="reader_simple_post_image_width">72dp</dimen>
 
@@ -193,10 +196,13 @@
 
     <!-- Increased touch targets to make views more accessible -->
     <dimen name="reader_discover_layout_extra_padding">16dp</dimen>
-    <dimen name="reader_visit_layout_extra_padding">12dp</dimen>
     <dimen name="reader_remove_button_extra_padding">12dp</dimen>
     <dimen name="reader_more_image_extra_padding">12dp</dimen>
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
+
+    <dimen name="reader_chip_radius">8dp</dimen>
+    <dimen name="reader_chip_height">38dp</dimen>
+
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
     <dimen name="empty_list_title_side_margin">32dp</dimen>
@@ -448,6 +454,7 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
+    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -490,5 +497,10 @@
     <dimen name="feature_announcement_content_margin">40dp</dimen>
     <dimen name="feature_announcement_icon_size">48dp</dimen>
     <dimen name="feature_announcement_top_margin">64dp</dimen>
+
+    <!-- prepublishing nudges -->
+    <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
 
 </resources>

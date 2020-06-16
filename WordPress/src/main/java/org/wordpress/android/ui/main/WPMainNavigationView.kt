@@ -26,7 +26,8 @@ import org.wordpress.android.ui.main.WPMainNavigationView.PageType.NOTIFS
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType.READER
 import org.wordpress.android.ui.notifications.NotificationsListFragment
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.reader.ReaderPostListFragment
+import org.wordpress.android.ui.reader.ReaderFragment
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.getColorStateListFromAttribute
@@ -166,9 +167,9 @@ class WPMainNavigationView @JvmOverloads constructor(
         val previousFragment = navAdapter.getFragment(prevPosition)
         if (fragment != null) {
             if (previousFragment != null) {
-                fragmentManager.beginTransaction().hide(previousFragment).show(fragment).commit()
+                fragmentManager.beginTransaction().detach(previousFragment).attach(fragment).commit()
             } else {
-                fragmentManager.beginTransaction().show(fragment).commit()
+                fragmentManager.beginTransaction().attach(fragment).commit()
             }
         }
         prevPosition = position
@@ -282,7 +283,11 @@ class WPMainNavigationView @JvmOverloads constructor(
         private fun createFragment(pageType: PageType): Fragment {
             val fragment = when (pageType) {
                 MY_SITE -> MySiteFragment.newInstance()
-                READER -> ReaderPostListFragment.newInstance(true)
+                READER -> if (AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                    ReaderInterestsFragment() // TODO: Temporary entry point
+                } else {
+                    ReaderFragment()
+                }
                 NOTIFS -> NotificationsListFragment.newInstance()
             }
             fragmentManager.beginTransaction()

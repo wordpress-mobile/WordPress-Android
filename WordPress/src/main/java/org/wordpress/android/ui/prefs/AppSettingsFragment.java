@@ -43,7 +43,6 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BuildConfigWrapper;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -108,9 +107,6 @@ public class AppSettingsFragment extends PreferenceFragment
                                 mDispatcher,
                                 mAccountStore,
                                 hasUserOptedOut);
-
-
-                        CrashLoggingUtils.stopCrashLogging();
 
                         return true;
                     }

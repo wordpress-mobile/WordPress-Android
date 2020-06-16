@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2020-04-13 07:20:53+0000
-Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: pl
 -->
 <resources>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
-    <string name="failed_to_insert_image_tap_to_retry">Nie udało się osadzić obrazka. \nSuknij aby spróbować ponownie. </string>
     <string name="preview_image_description">Podgląd zdjęcia</string>
     <string name="error_unknown_page_type">Nieznany format strony</string>
     <string name="error_page_not_submitted">Nie można było ukończyć tego działania, i przesłać tej strony do przeglądu.</string>
@@ -62,16 +61,10 @@ Language: pl
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
-    <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Zbudujmy coś razem.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Zbudujmy coś razem</string>
-    <string name="gutenberg_native_let_s_build_something_together">Zbudujmy coś razem</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_inspiration">Inspiracja</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Skontaktuj się!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Skontaktuj się!</string>
     <string name="gutenberg_native_get_in_touch">Skontaktuj się</string>
     <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Napisz do mnie email:  &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -79,10 +72,6 @@ Language: pl
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nie płacz bo się skończyło, śmiej się bo się zdarzyło.</string>
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
     <string name="gutenberg_native_city_10100">Miasto, 10100</string>
-    <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Ustawienia kolorów dla przycisków pojawią się wkrótce</string>
-    <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
-    <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Krótki opis usług które oferujesz.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Krótki życiorys z osobistą historią, kluczowe osiągnięcia lub interesujący fakt.</string>
@@ -216,7 +205,6 @@ Language: pl
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Usuń blok we wierszu %s</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
     <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
@@ -232,9 +220,7 @@ Language: pl
     <string name="gutenberg_native_my_post_publish_panel">Panel publikacji mojego wpisu</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel ustawień dokumentu</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_link_text">Tekst odnośnika</string>
     <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
@@ -247,7 +233,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
     <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Stuknij dwukrotnie aby usunąć blok</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Stuknij dwukrotnie aby cofnąć ostatnią zmianę</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Stuknij dwukrotnie aby przesunąć blok do góry</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Stuknij dwukrotnie aby przesunąć blok w dół</string>
@@ -257,7 +242,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
     <string name="gutenberg_native_content">Treść…</string>
-    <string name="gutenberg_native_clear_all_settings">Wyczyść wszystkie ustawienia</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
     <string name="gutenberg_native_annotations_sidebar">Pasek boczny przypisu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
@@ -823,7 +807,6 @@ Language: pl
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
     <string name="reader_empty_followed_blogs_button_discover">Odkrywaj witryny </string>
-    <string name="reader_empty_followed_blogs_description">Nie obserwujesz żadnych witryn. Może zaczniesz? </string>
     <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="notifications_empty_likes">Brak polubień</string>
     <string name="notifications_empty_followers">Brak obserwujących</string>
@@ -1075,7 +1058,6 @@ Language: pl
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Nie przesłano 1 wpisu z 1 plikiem</string>
     <string name="untitled_in_parentheses">(bez tytułu)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
@@ -1281,7 +1263,6 @@ Language: pl
     <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL </string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
-    <string name="copy_text">Kopiuj</string>
     <string name="connect_site">Połącz witrynę</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>
@@ -1546,7 +1527,6 @@ Language: pl
     <string name="pending_draft_one_day_2">Czy wiesz że \'%1$s\' jest wciąż szkicem? Opublikuj ten wpis! </string>
     <string name="pending_draft_one_day_1">Stworzyłeś wczoraj szkic  \'%1$s\'. Nie zapomnij go opublikować! </string>
     <string name="reader_photo_by">Zdjęcie wykonane przez %s</string>
-    <string name="reader_label_visit">Przejdź do witryny</string>
     <string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com lub skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com.</string>

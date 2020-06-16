@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2017-05-01 23:08:27+0000
-Plural-Forms: nplurals=2; plural=(n % 100 != 1 && n % 100 != 21 && n % 100 != 31 && n % 100 != 41 && n % 100 != 51 && n % 100 != 61 && n % 100 != 71 && n % 100 != 81 && n % 100 != 91);
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
+Generator: GlotPress/3.0.0-alpha
 Language: is
 -->
 <resources>
@@ -61,7 +61,6 @@ Language: is
     <string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
     <string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
     <string name="reader_photo_by">Mynd eftir %s</string>
-    <string name="reader_label_visit">Heimsækja</string>
     <string name="swipe_for_more">Strjúktu fyrir meira</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst eða nota hnappinn efst til þess að opna í vafra í staðinn.</string>
     <string name="reader_err_get_post_not_authorized_signin">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst.</string>

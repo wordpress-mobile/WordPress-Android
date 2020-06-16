@@ -105,49 +105,69 @@ class SearchListViewModel
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
-                        remoteId,
-                        pageId,
-                        title,
-                        date,
-                        labels,
-                        labelColor,
-                        actions = pageListItemActionsUseCase.setupPageActions(PUBLISHED, uploadUiState),
+                        remoteId = remoteId,
+                        localId = pageId,
+                        title = title,
+                        date = date,
+                        labels = labels,
+                        labelsColor = labelColor,
+                        actions = pageListItemActionsUseCase.setupPageActions(
+                                PUBLISHED,
+                                uploadUiState,
+                                pagesViewModel.site,
+                                remoteId
+                        ),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
                         showOverlay = showOverlay
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(DRAFTS, uploadUiState),
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            DRAFTS,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
             )
             PageStatus.TRASHED -> TrashedPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(TRASHED, uploadUiState),
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            TRASHED,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay
             )
             PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
-                    actions = pageListItemActionsUseCase.setupPageActions(SCHEDULED, uploadUiState),
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
+                    actions = pageListItemActionsUseCase.setupPageActions(
+                            SCHEDULED,
+                            uploadUiState,
+                            pagesViewModel.site,
+                            remoteId
+                    ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
                     showOverlay = showOverlay

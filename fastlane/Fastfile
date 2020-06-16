@@ -91,6 +91,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     files = {
       release_note: prj_folder + "/WordPress/metadata/release_notes.txt",
+      release_note_short: prj_folder + "/WordPress/metadata/release_notes_short.txt",
       play_store_promo: prj_folder + "/WordPress/metadata/short_description.txt",
       play_store_desc: prj_folder + "/WordPress/metadata/full_description.txt",
       play_store_app_title: prj_folder + "/WordPress/metadata/title.txt",
@@ -293,7 +294,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :download_metadata_strings do |options| 
     values = options[:version].split('.')
     files = {
-      "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 0},
+      "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key:"release_note_short_#{values[0]}#{values[1]}"},
       play_store_promo: {desc:"short_description.txt", max_size: 80},
       play_store_desc: {desc:"full_description.txt", max_size: 0},
       play_store_app_title: {desc:"title.txt", max_size: 50}

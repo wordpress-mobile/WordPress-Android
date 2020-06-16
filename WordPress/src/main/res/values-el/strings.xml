@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-02-28 09:54:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: el_GR
 -->
 <resources>
@@ -186,7 +186,6 @@ Language: el_GR
     <string name="people_empty_list_filtered_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
     <string name="people_empty_list_filtered_users">Δεν υπάρχουν χρήστες ακόμη</string>
     <string name="reader_empty_followed_blogs_button_discover">Ανακαλύψτε ιστοτόπους</string>
-    <string name="reader_empty_followed_blogs_description">Δεν ακολουθείτε ιστότοπους ακόμα. Γιατί να μην ξεκινήσετε τώρα;</string>
     <string name="reader_empty_followed_blogs_title">Δεν υπάρχουν ακολουθούμενοι ιστότοποι</string>
     <string name="notifications_empty_likes">Κανένα Like ακόμα</string>
     <string name="notifications_empty_followers">Δεν υπάρχουν ακόλουθοι ακόμη</string>
@@ -305,7 +304,6 @@ Language: el_GR
     <string name="dialog_confirm_publish_title">Έτοιμοι να δημοσιεύσετε;</string>
     <string name="untitled_in_parentheses">(Χωρίς τίτλο)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Δημιουργία ενός ιστότοπου</string>
     <string name="notification_site_creation_created">Πατήστε για να συνεχίσετε.</string>
@@ -438,7 +436,6 @@ Language: el_GR
     <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
-    <string name="copy_text">Αντιγραφή</string>
     <string name="connect_site">Σύνδεση ιστότοπου</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Δόνηση συσκευής</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Επιλογή ήχου</string>
@@ -609,7 +606,6 @@ Language: el_GR
     <string name="pending_draft_one_day_2">Το ξέρατε ότι το \'%1$s\' είναι ακόμα προσχέδιο; Δημοσιεύστε το!</string>
     <string name="pending_draft_one_day_1">Κάνατε το προσχέδιο του \'%1$s\' χθες. Μην ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="reader_photo_by">Φωτογραφία από %s</string>
-    <string name="reader_label_visit">Επισκεφθείτε</string>
     <string name="swipe_for_more">Σαρώστε για περισσότερα</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
     <string name="reader_err_get_post_not_authorized_signin">Δεν είστε εξουσιοδοτημένος να δείτε αυτό το άρθρο. Δοκιμάστε να συνδεθείτε στο WordPress.com πρώτα.</string>
