@@ -2713,8 +2713,6 @@
 
     <!-- Posts -->
     <string name="post_list_author">Post author</string>
-    <string name="post_list_author_me">Me</string>
-    <string name="post_list_author_everyone">Everyone</string>
     <string name="post_list_tab_published_posts">Published</string>
     <string name="post_list_tab_drafts">Drafts</string>
     <string name="post_list_tab_scheduled_posts">Scheduled</string>
