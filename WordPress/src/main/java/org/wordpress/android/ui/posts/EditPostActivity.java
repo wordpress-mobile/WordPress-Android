@@ -166,7 +166,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -1077,6 +1076,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
+        MenuItem contentInfo = menu.findItem(R.id.menu_content_info);
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            contentInfo.setOnMenuItemClickListener((menuItem) -> {
+                try {
+                    mEditorFragment.showContentInfo();
+                } catch (EditorFragmentNotAddedException e) {
+                    ToastUtils.showToast(WordPress.getContext(), R.string.toast_content_info_failed);
+                }
+                return true;
+            });
+        } else {
+            contentInfo.setVisible(false); // only show the menu item when for Gutenberg
+        }
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -1270,8 +1283,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void logWrongMenuState(String logMsg) {
         AppLog.w(T.EDITOR, logMsg);
-        // Lets record this event in Sentry
-        CrashLoggingUtils.logException(new IllegalStateException(logMsg), T.EDITOR);
     }
 
     private void showEmptyPostErrorForSecondaryAction() {
@@ -1649,10 +1660,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void log(@NotNull String s) {
-                    // For now, we're wrapping up the actual log into an exception to reduce possibility
-                    // of information not travelling to our Crash Logging Service.
-                    // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
+                    AppLog.e(T.EDITOR, s);
                 }
 
                 @Override
@@ -1660,7 +1668,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (isError8828(throwable)) {
                         return;
                     }
-                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
+                    AppLog.e(T.EDITOR, throwable);
                 }
 
                 @Override
@@ -1668,8 +1676,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (isError8828(throwable)) {
                         return;
                     }
-                    CrashLoggingUtils.logException(
-                            new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
+                    AppLog.e(T.EDITOR, s);
                 }
             });
         }
@@ -3102,12 +3109,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public Consumer<Exception> getExceptionLogger() {
-        return (Exception e) -> CrashLoggingUtils.logException(e, T.EDITOR);
+        return (Exception e) -> AppLog.e(T.EDITOR, e);
     }
 
     @Override
     public Consumer<String> getBreadcrumbLogger() {
-        return CrashLoggingUtils::log;
+        return (String s) -> AppLog.e(T.EDITOR, s);
     }
 
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {

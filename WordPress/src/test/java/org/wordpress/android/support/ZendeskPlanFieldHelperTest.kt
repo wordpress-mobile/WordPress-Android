@@ -1,21 +1,22 @@
 package org.wordpress.android.support
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.wordpress.android.util.CrashLoggingUtilsWrapper
+import org.wordpress.android.util.CrashLogging
 
 class ZendeskPlanFieldHelperTest {
     private lateinit var zendeskPlanFieldHelper: ZendeskPlanFieldHelper
-    private val crashLoggingUtilsWrapper: CrashLoggingUtilsWrapper = mock()
+    private val crashLogging: CrashLogging = mock()
 
     @Before
     fun setUp() {
-        zendeskPlanFieldHelper = ZendeskPlanFieldHelper(crashLoggingUtilsWrapper)
+        zendeskPlanFieldHelper = ZendeskPlanFieldHelper(crashLogging)
     }
 
     @Test
@@ -142,6 +143,6 @@ class ZendeskPlanFieldHelperTest {
         zendeskPlanFieldHelper.getHighestPlan(planIds)
 
         // Then
-        verify(crashLoggingUtilsWrapper, times(1)).log(any<Throwable>())
+        verify(crashLogging, times(1)).reportException(any(), anyOrNull(), anyOrNull())
     }
 }

@@ -1415,6 +1415,7 @@
     <string name="menu_debug">Debug Menu</string>
     <string name="menu_switch_to_aztec_editor">Switch to classic editor</string>
     <string name="menu_switch_to_gutenberg_editor">Switch to block editor</string>
+    <string name="menu_content_info">Content structure</string>
 
     <string name="post_title">Title</string>
 

@@ -114,6 +114,10 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <include
+        layout="@layout/fullscreen_error_with_retry"
+        android:visibility="gone"/>
+
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
