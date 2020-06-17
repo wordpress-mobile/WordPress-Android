@@ -48,7 +48,7 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
     suspend fun fetch(
         url: String,
         params: Map<String, String>,
-        successHandler: (data: JsonElement) -> ReactNativeFetchResponse,
+        successHandler: (data: JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         nonce: String? = null,
         enableCaching: Boolean = true
@@ -84,7 +84,7 @@ class ReactNativeWPAPIRestClient @VisibleForTesting constructor(
         val response =
                 wpApiEncodedBodyRequestBuilder.syncPostRequest(this, wpLoginUrl, body = body)
         return when (response) {
-            is Success -> if (response.data.matches("[0-9a-zA-Z]{2,}".toRegex())) {
+            is Success -> if (response.data?.matches("[0-9a-zA-Z]{2,}".toRegex()) == true) {
                 Available(response.data)
             } else {
                 FailedRequest(currentTimeMillis())
