@@ -53,7 +53,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     public static final String EXTRA_MEDIA_URIS = "media_uris";
     public static final String EXTRA_MEDIA_ID = "media_id";
     public static final String EXTRA_MEDIA_QUEUED = "media_queued";
-    public static final String CHILD_REQUEST_CODE = "child_request_code";
     public static final String EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED = "launch_wpstories_camera_requested";
 
     // the enum name of the source will be returned as a string in EXTRA_MEDIA_SOURCE
@@ -194,12 +193,6 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 if (data != null) {
                     doMediaUrisSelected(WPMediaUtils.retrieveMediaUris(data), PhotoPickerMediaSource.ANDROID_PICKER);
                 }
-                break;
-            // user took a photo with the device camera
-            case RequestCodes.TAKE_VIDEO:
-                data.putExtra(CHILD_REQUEST_CODE, RequestCodes.TAKE_VIDEO);
-                setResult(RESULT_OK, data);
-                finish();
                 break;
             case RequestCodes.TAKE_PHOTO:
                 try {

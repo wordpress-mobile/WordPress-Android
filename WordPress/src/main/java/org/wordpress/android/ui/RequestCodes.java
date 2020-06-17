@@ -19,6 +19,7 @@ public class RequestCodes {
     public static final int PHOTO_PICKER = 1200;
     public static final int STOCK_MEDIA_PICKER_MULTI_SELECT = 1201;
     public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT = 1202;
+    public static final int STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK = 1203;
     public static final int SHOW_LOGIN_EPILOGUE_AND_RETURN = 1300;
     public static final int SHOW_SIGNUP_EPILOGUE_AND_RETURN = 1301;
     public static final int SMART_LOCK_SAVE = 1400;
@@ -52,10 +53,12 @@ public class RequestCodes {
     // Domain Registration
     public static final int DOMAIN_REGISTRATION = 5000;
 
-
     // ImageEditor
     public static final int IMAGE_EDITOR_EDIT_IMAGE = 6000;
 
     // Story creator
     public static final int CREATE_STORY = 7000;
+
+    // Other
+    public static final int SELECTED_USER_MENTION = 7000;
 }

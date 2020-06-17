@@ -303,6 +303,21 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+
+    public static void openEditorForPostInNewStack(Context context, @NonNull SiteModel site, int localPostId) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, localPostId);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
     /**
      * Opens the editor and passes the information needed for a reblog action
      *
@@ -366,6 +381,12 @@ public class ActivityLauncher {
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
         taskStackBuilder.startActivities();
+    }
+
+    public static void viewStatsInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        context.startActivity(intent);
     }
 
     private static Intent getMainActivityInNewStack(Context context) {
@@ -963,6 +984,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void viewSuggestUsersForResult(@NonNull Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, SuggestUsersActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivityForResult(intent, RequestCodes.SELECTED_USER_MENTION);
+    }
+
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
@@ -996,6 +1023,7 @@ public class ActivityLauncher {
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
             // disable deeplinking activity so to not catch WP URLs
@@ -1048,5 +1076,26 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, EditImageActivity.class);
         intent.putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, input);
         activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
+    }
+
+    public static void viewPagesInNewStack(Context context, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.pages_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        Intent pagesIntent = new Intent(context, PagesActivity.class);
+        pagesIntent.putExtra(WordPress.SITE, site);
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(pagesIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    public static void viewPagesInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
+        context.startActivity(intent);
     }
 }

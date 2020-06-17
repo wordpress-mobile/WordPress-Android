@@ -43,7 +43,7 @@ class PlansListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
 
         empty_recycler_view.layoutManager = LinearLayoutManager(nonNullActivity, RecyclerView.VERTICAL, false)
         empty_recycler_view.setEmptyView(actionable_empty_view)
@@ -71,7 +71,7 @@ class PlansListFragment : Fragment() {
         val adapter: PlansListAdapter
 
         if (empty_recycler_view.adapter == null) {
-            adapter = PlansListAdapter(checkNotNull(activity), this::onItemClicked)
+            adapter = PlansListAdapter(requireActivity(), this::onItemClicked)
             empty_recycler_view.adapter = adapter
         } else {
             adapter = empty_recycler_view.adapter as PlansListAdapter
@@ -81,11 +81,11 @@ class PlansListFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.plans.observe(this, Observer {
+        viewModel.plans.observe(viewLifecycleOwner, Observer {
             reloadList(it ?: emptyList())
         })
 
-        viewModel.listStatus.observe(this, Observer { listStatus ->
+        viewModel.listStatus.observe(viewLifecycleOwner, Observer { listStatus ->
             if (isAdded && view != null) {
                 swipeToRefreshHelper.isRefreshing = listStatus == FETCHING
             }
@@ -118,7 +118,7 @@ class PlansListFragment : Fragment() {
             }
         })
 
-        viewModel.showDialog.observe(this, Observer {
+        viewModel.showDialog.observe(viewLifecycleOwner, Observer {
             if (it is PlanOffersModel && activity is PlansListInterface) {
                 (activity as PlansListInterface).onPlanItemClicked(it)
             }
