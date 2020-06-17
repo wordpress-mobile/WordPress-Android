@@ -14,6 +14,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnAuthHeaderRequeste
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorAutosaveListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGetContentTimeout;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidRequestUnsupportedBlockFallbackListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPreviewListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
@@ -69,6 +70,8 @@ public class GutenbergContainerFragment extends Fragment {
                                   OnImageFullscreenPreviewListener onImageFullscreenPreviewListener,
                                   OnMediaEditorListener onMediaEditorListener,
                                   OnLogGutenbergUserEventListener onLogGutenbergUserEventListener,
+                                  OnGutenbergDidRequestUnsupportedBlockFallbackListener
+                                          onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   AddMentionUtil addMentionUtil,
                                   OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
                                   boolean isDarkMode) {
@@ -83,6 +86,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onImageFullscreenPreviewListener,
                     onMediaEditorListener,
                     onLogGutenbergUserEventListener,
+                    onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     addMentionUtil,
                     onSPTTooltipShownEventListener,
                     isDarkMode);
@@ -123,7 +127,8 @@ public class GutenbergContainerFragment extends Fragment {
                 isDarkMode,
                 exceptionLogger,
                 breadcrumbLogger,
-                isSiteUsingWpComRestApi);
+                isSiteUsingWpComRestApi,
+                null);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
@@ -211,5 +216,9 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void mediaSelectionCancelled() {
         mWPAndroidGlueCode.mediaSelectionCancelled();
+    }
+
+    public void replaceUnsupportedBlock(String content, String blockId) {
+        mWPAndroidGlueCode.replaceUnsupportedBlock(content, blockId);
     }
 }

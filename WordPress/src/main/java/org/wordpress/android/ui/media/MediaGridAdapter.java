@@ -23,6 +23,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -75,6 +76,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     private static final float SCALE_SELECTED = .8f;
 
     @Inject ImageManager mImageManager;
+    @Inject AuthenticationUtils mAuthenticationUtils;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
@@ -487,7 +489,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         new Thread() {
             @Override
             public void run() {
-                final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(filePath, mThumbWidth);
+                final Bitmap thumb =
+                        ImageUtils.getVideoFrameFromVideo(filePath,
+                                mThumbWidth,
+                                mAuthenticationUtils.getAuthHeaders(filePath)
+                        );
                 if (thumb != null) {
                     mHandler.post(new Runnable() {
                         @Override

@@ -105,12 +105,12 @@ class SearchListViewModel
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
-                        remoteId,
-                        pageId,
-                        title,
-                        date,
-                        labels,
-                        labelColor,
+                        remoteId = remoteId,
+                        localId = pageId,
+                        title = title,
+                        date = date,
+                        labels = labels,
+                        labelsColor = labelColor,
                         actions = pageListItemActionsUseCase.setupPageActions(
                                 PUBLISHED,
                                 uploadUiState,
@@ -122,12 +122,12 @@ class SearchListViewModel
                         showOverlay = showOverlay
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             DRAFTS,
                             uploadUiState,
@@ -139,12 +139,12 @@ class SearchListViewModel
                     showOverlay = showOverlay
             )
             PageStatus.TRASHED -> TrashedPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             TRASHED,
                             uploadUiState,
@@ -156,12 +156,12 @@ class SearchListViewModel
                     showOverlay = showOverlay
             )
             PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             SCHEDULED,
                             uploadUiState,
