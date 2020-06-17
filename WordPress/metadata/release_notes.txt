@@ -1,4 +1,1 @@
-Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.
-Block editor updates: “Trash block” in a menu reachable from the block toolbar.
-Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.
-Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.
+This change is for test purposes only
