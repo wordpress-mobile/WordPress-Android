@@ -64,7 +64,8 @@ class ReaderResourceVars {
 
         mGreyExtraLightStr = "rgba(" + Color.red(onSurfaceColor) + ", "
                              + Color.green(onSurfaceColor) + ", " + Color
-                                     .blue(onSurfaceColor) + ", " + R.dimen.emphasis_low + ")";
+                                     .blue(onSurfaceColor) + ", " + ResourcesCompat
+                                     .getFloat(resources, R.dimen.emphasis_low) + ")";
 
         mTextColor = onSurfaceHighType;
         mLinkColorStr = HtmlUtils.colorResToHtmlColor(context,
