@@ -40,4 +40,4 @@ jobs:
       - name: Danger
         run: |
           yarn run danger ci \
-            --dangerfile Automattic/danger-settings/wordpress/android.ts@wordpress-android
+            --dangerfile Automattic/danger-settings/wordpress/android.ts
