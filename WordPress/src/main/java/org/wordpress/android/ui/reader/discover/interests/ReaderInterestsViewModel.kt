@@ -12,17 +12,14 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
-import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderInterestsViewModel @Inject constructor(
-    private val readerTagRepository: ReaderTagRepository,
-    private val networkUtils: NetworkUtilsWrapper
+    private val readerTagRepository: ReaderTagRepository
 ) : ViewModel() {
     private var isStarted = false
 
@@ -42,19 +39,13 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun loadInterests() {
         updateUiState(LoadingUiState)
-        if (networkUtils.isNetworkAvailable()) {
-            viewModelScope.launch {
-                val tagList = readerTagRepository.getInterests()
-                updateUiState(
-                    ContentLoadSuccessUiState(
-                        interestsUiState = transformToInterestsUiState(tagList),
-                        interests = tagList
-                    )
-                )
-            }
-        } else {
+        viewModelScope.launch {
+            val tagList = readerTagRepository.getInterests()
             updateUiState(
-                ContentLoadFailedConnectionErrorUiState
+                ContentLoadSuccessUiState(
+                    interestsUiState = transformToInterestsUiState(tagList),
+                    interests = tagList
+                )
             )
         }
     }

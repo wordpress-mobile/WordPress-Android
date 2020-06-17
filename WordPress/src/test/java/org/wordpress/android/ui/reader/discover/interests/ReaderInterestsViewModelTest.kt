@@ -24,12 +24,9 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState.ContentLoadFailedConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
-import org.wordpress.android.util.NetworkUtilsWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
@@ -43,12 +40,10 @@ class ReaderInterestsViewModelTest {
     private lateinit var viewModel: ReaderInterestsViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
-    @Mock lateinit var networkUtils: NetworkUtilsWrapper
 
     @Before
     fun setUp() {
-        viewModel = ReaderInterestsViewModel(readerTagRepository, networkUtils)
-        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
+        viewModel = ReaderInterestsViewModel(readerTagRepository)
     }
 
     @ExperimentalCoroutinesApi
@@ -274,23 +269,6 @@ class ReaderInterestsViewModelTest {
 
             // Then
             verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
-        }
-
-    @ExperimentalCoroutinesApi
-    @Test
-    fun `no network error shown when internet access not available`() =
-        coroutineScope.runBlockingTest {
-            // Given
-            whenever(networkUtils.isNetworkAvailable()).thenReturn(false)
-
-            // When
-            initViewModel()
-
-            // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadFailedConnectionErrorUiState::class.java)
-            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as ContentLoadFailedUiState)
-            assertThat(contentLoadFailedUiState.fullscreenErrorLayoutVisible).isEqualTo(true)
-            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.no_network_message)
         }
 
     @ExperimentalCoroutinesApi
