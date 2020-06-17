@@ -39,7 +39,7 @@
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/LoginTheme.BottomBar"
+        style="@style/Widget.LoginFlow.CardView.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
@@ -57,7 +57,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signup_magic_link_button"
-                style="@style/LoginTheme.Button.Primary"
+                style="@style/Widget.LoginFlow.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

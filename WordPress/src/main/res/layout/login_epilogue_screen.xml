@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/primary_button"
-        android:scrollbars="vertical"
-        android:theme="@style/LoginEpilogueSitesList" />
+        android:scrollbars="vertical" />
 
     <ProgressBar
         android:id="@+id/sites_progress"
@@ -30,7 +29,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/primary_button"
-        style="@style/LoginTheme.Button.Primary"
+        style="@style/Widget.LoginFlow.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

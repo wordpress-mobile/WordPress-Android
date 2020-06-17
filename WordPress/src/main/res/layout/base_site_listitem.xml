@@ -21,7 +21,7 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
-            style="@style/LoginTheme.Subhead"
+            style="@style/Widget.LoginFlow.TextView.List.Line1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -30,7 +30,7 @@
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_domain"
-            style="@style/LoginTheme.Subhead2"
+            style="@style/Widget.LoginFlow.TextView.List.Line2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"

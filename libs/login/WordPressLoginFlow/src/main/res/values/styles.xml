@@ -1,103 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- App Bar -->
+    <style name="Widget.LoginFlow.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="elevation">0dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
 
-    <style name="LoginTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorAccent">@color/login_theme_accent_color</item>
+    <!-- Toolbar -->
+    <style name="Widget.LoginFlow.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <!-- Note: this theme overlay will only work if the style is applied directly to a Toolbar. -->
+        <item name="android:theme">@style/ThemeOverlay.LoginFlow.Toolbar</item>
+    </style>
 
-        <item name="android:statusBarColor" tools:targetApi="21">@color/status_bar</item>
-        <item name="android:windowBackground">@color/login_background_color</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
+    <style name="ThemeOverlay.LoginFlow.Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="actionMenuTextColor">?attr/colorOnSurface</item>
+    </style>
 
-        <item name="bottomSheetDialogTheme">
-            @style/LoginTheme.BottomSheetDialogStyle
+    <!-- Buttons -->
+    <style name="Widget.LoginFlow.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Button.Tertiary" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <style name="Widget.LoginFlow.Button.Tertiary.Small" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">@color/login_on_surface_medium_selector</item>
+    </style>
+
+    <style name="ThemeOverlay.LoginFlow.Button.Secondary" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="ThemeOverlay.LoginFlow.Button.OnSurface" parent="">
+        <item name="colorPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Bottom Sheets -->
+    <style name="ThemeOverlay.LoginFlow.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">
+            @style/Animation.MaterialComponents.BottomSheetDialog
         </item>
-
-        <item name="toolbarStyle">@style/LoginTheme.ToolBar</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="bottomSheetStyle">@style/Widget.LoginFlow.BottomSheet.Modal</item>
     </style>
 
-    <style name="LoginTheme.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">@android:color/white</item>
+    <style name="Widget.LoginFlow.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">?attr/shapeAppearanceLargeComponent</item>
     </style>
 
-    <style name="LoginTheme.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:background">@color/login_toolbar_color</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    <!-- TextViews -->
+
+    <style name="Widget.LoginFlow.TextView.Label" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
-    <style name="LoginTheme.Button.Primary" parent="Widget.MaterialComponents.Button">
-        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
-        <item name="android:textColor">@color/login_primary_button_text_color</item>
+    <style name="Widget.LoginFlow.TextView.Headline" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
     </style>
 
-    <style name="LoginTheme.Button.SignUp" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="colorButtonNormal">@color/login_primary_button_normal_color</item>
-        <item name="android:textColor">@color/login_primary_button_text_color</item>
+    <style name="Widget.LoginFlow.TextView.Subtitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textColor">@color/login_on_surface_medium_selector</item>
     </style>
 
-    <style name="LoginTheme.Button.Secondary" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/login_secondary_button_text_color</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    <style name="Widget.LoginFlow.TextView.Footnote" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">@color/login_on_surface_medium_selector</item>
     </style>
 
+    <style name="Widget.LoginFlow.TextView.DividerText" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
+        <item name="android:textColor">@color/login_on_background_medium_selector</item>
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+
+    <style name="Widget.LoginFlow.TextView.List.Subheader" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+    </style>
+
+    <style name="Widget.LoginFlow.TextView.List.Line1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    </style>
+
+    <style name="Widget.LoginFlow.TextView.List.Line2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">@color/login_on_surface_medium_selector</item>
+    </style>
+
+    <!-- TextInputs -->
+    <style name="Widget.LoginFlow.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox" />
+
+    <!-- Cards -->
+    <style name="Widget.LoginFlow.CardView.BottomBar" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <!-- Legacy (remove after getting rid of the old layouts) -->
     <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">@color/login_google_button_text_color</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:padding">0dp</item>
     </style>
-
-
-    <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView" />
-
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">@color/login_text_label_text_color</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel.Icon" />
 
     <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2">
         <item name="android:textColor">@color/login_input_label_static_text_color</item>
     </style>
 
-    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="colorControlNormal">@color/login_edit_text_color_control_normal</item>
-        <item name="android:textColor">@color/login_edit_text_text_color</item>
-        <item name="android:textColorHint">@color/login_edit_text_text_hint_color</item>
-        <item name="colorControlActivated">@color/login_edit_text_color_control_activated</item>
-        <item name="colorControlHighlight">@color/login_edit_text_color_control_highlight</item>
-    </style>
-
-    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:gravity">center</item>
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:textColor">@color/login_heading_text_color</item>
-    </style>
-
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">@color/login_subhead_text_color</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textColor">@color/login_username_text_color</item>
-    </style>
-
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption">
-        <item name="android:textColor">@color/login_footnote_text_color</item>
-    </style>
-
     <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
 
     <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
-
-    <style name="LoginTheme.BottomSheetDialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:colorBackground">@color/login_background_color</item>
-        <item name="android:statusBarColor" tools:targetApi="21">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="bottomSheetStyle">@style/Widget.Design.BottomSheet.Modal</item>
-    </style>
 
 </resources>

@@ -38,7 +38,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/login_epilogue_header_title"
-        style="@style/LoginTheme.Headline"
+        style="@style/Widget.LoginFlow.TextView.Headline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
@@ -46,7 +46,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/login_epilogue_header_subtitle"
-        style="@style/LoginTheme.Username"
+        style="@style/Widget.LoginFlow.TextView.Subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_small"
