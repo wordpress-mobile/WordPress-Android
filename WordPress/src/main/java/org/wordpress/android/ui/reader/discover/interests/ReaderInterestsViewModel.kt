@@ -13,7 +13,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val tagList = readerTagRepository.getInterests()
             updateUiState(
-                ContentLoadSuccessUiState(
+                ContentUiState(
                     interestsUiState = transformToInterestsUiState(tagList),
                     interests = tagList
                 )
@@ -52,7 +52,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun onInterestAtIndexToggled(index: Int, isChecked: Boolean) {
         uiState.value?.let {
-            val currentUiState = uiState.value as ContentLoadSuccessUiState
+            val currentUiState = uiState.value as ContentUiState
             val updatedInterestsUiState = getUpdatedInterestsUiState(index, isChecked)
 
             updateUiState(
@@ -82,7 +82,7 @@ class ReaderInterestsViewModel @Inject constructor(
         }
 
     private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
-        val currentUiState = uiState.value as ContentLoadSuccessUiState
+        val currentUiState = uiState.value as ContentUiState
         val newInterestsUiState = currentUiState.interestsUiState.toMutableList()
         newInterestsUiState[index] = currentUiState.interestsUiState[index].copy(isChecked = isChecked)
         return newInterestsUiState
@@ -97,13 +97,13 @@ class ReaderInterestsViewModel @Inject constructor(
         val progressBarVisible: Boolean = false,
         val titleVisible: Boolean = false,
         val subtitleVisible: Boolean = false,
-        val fullscreenErrorLayoutVisible: Boolean = false
+        val errorLayoutVisible: Boolean = false
     ) {
         object LoadingUiState : UiState(
             progressBarVisible = true
         )
 
-        data class ContentLoadSuccessUiState(
+        data class ContentUiState(
             val interestsUiState: List<InterestUiState>,
             val interests: ReaderTagList,
             override val doneButtonUiState: DoneButtonUiState = DoneButtonDisabledUiState
@@ -111,24 +111,24 @@ class ReaderInterestsViewModel @Inject constructor(
             progressBarVisible = false,
             titleVisible = true,
             subtitleVisible = true,
-            fullscreenErrorLayoutVisible = false
+            errorLayoutVisible = false
         )
 
-        sealed class ContentLoadFailedUiState constructor(
+        sealed class ErrorUiState constructor(
             val titleResId: Int,
             val subtitleResId: Int? = null,
             val showContactSupport: Boolean = false
         ) : UiState(
             progressBarVisible = false,
-            fullscreenErrorLayoutVisible = true
+            errorLayoutVisible = true
         ) {
-            object ContentLoadFailedConnectionErrorUiState : ContentLoadFailedUiState(
+            object ConnectionErrorUiState : ErrorUiState(
                 titleResId = R.string.no_network_message
             )
         }
 
         private fun getCheckedInterestsUiState(): List<InterestUiState> {
-            return if (this is ContentLoadSuccessUiState) {
+            return if (this is ContentUiState) {
                 interestsUiState.filter { it.isChecked }
             } else {
                 emptyList()
@@ -136,7 +136,7 @@ class ReaderInterestsViewModel @Inject constructor(
         }
 
         fun getSelectedInterests(): List<ReaderTag> {
-            return if (this is ContentLoadSuccessUiState) {
+            return if (this is ContentUiState) {
                 interests.filter {
                     getCheckedInterestsUiState().map { checkedInterestUiState ->
                         checkedInterestUiState.title
@@ -150,7 +150,7 @@ class ReaderInterestsViewModel @Inject constructor(
         fun getDoneButtonState(
             isInterestChecked: Boolean = false
         ): DoneButtonUiState {
-            return if (this is ContentLoadSuccessUiState) {
+            return if (this is ContentUiState) {
                 val disableDoneButton = interests.isEmpty() ||
                     (getCheckedInterestsUiState().size == 1 && !isInterestChecked)
                 if (disableDoneButton) {

@@ -14,8 +14,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadFailedUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
@@ -60,10 +60,10 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             when (uiState) {
                 is LoadingUiState -> {
                 }
-                is ContentLoadSuccessUiState -> {
+                is ContentUiState -> {
                     updateInterests(uiState.interestsUiState)
                 }
-                is ContentLoadFailedUiState -> {
+                is ErrorUiState -> {
                     updateErrorLayout(uiState)
                 }
             }
@@ -72,7 +72,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 updateVisibility(progress_bar, uiState.progressBarVisible)
                 updateVisibility(title, uiState.titleVisible)
                 updateVisibility(subtitle, uiState.subtitleVisible)
-                updateVisibility(error_layout, uiState.fullscreenErrorLayoutVisible)
+                updateVisibility(error_layout, uiState.errorLayoutVisible)
             }
         })
 
@@ -104,7 +104,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun updateErrorLayout(uiState: ContentLoadFailedUiState) {
+    private fun updateErrorLayout(uiState: ErrorUiState) {
         with(uiHelpers) {
             setTextOrHide(error_title, uiState.titleResId)
             setTextOrHide(error_subtitle, uiState.subtitleResId)

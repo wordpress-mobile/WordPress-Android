@@ -24,7 +24,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
@@ -111,7 +111,7 @@ class ReaderInterestsViewModelTest {
             // Resume pending coroutines execution
             coroutineScope.resumeDispatcher()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
         }
     }
 
@@ -127,11 +127,11 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
-            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState).interests)
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
                 .isEqualTo(mockInterests)
 
-            val uiState = requireNotNull(viewModel.uiState.value) as ContentLoadSuccessUiState
+            val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
             assertThat(uiState.interests).isEqualTo(mockInterests)
             assertThat(uiState.interestsUiState[0]).isInstanceOf(InterestUiState::class.java)
             assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
@@ -175,7 +175,7 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
                 .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(true)
         }
@@ -195,7 +195,7 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value as ContentLoadSuccessUiState)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
                 .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(false)
         }
