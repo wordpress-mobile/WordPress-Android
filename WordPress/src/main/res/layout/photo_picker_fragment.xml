@@ -85,7 +85,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_insert_preview_bar"
+        android:id="@+id/container_insert_edit_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -95,7 +95,7 @@
         tools:visibility="visible">
 
         <TextView
-            android:id="@+id/text_preview"
+            android:id="@+id/text_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"

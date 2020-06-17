@@ -105,12 +105,12 @@ class SearchListViewModel
         return when (status) {
             PageStatus.PUBLISHED, PageStatus.PRIVATE ->
                 PublishedPage(
-                        remoteId,
-                        pageId,
-                        title,
-                        date,
-                        labels,
-                        labelColor,
+                        remoteId = remoteId,
+                        localId = pageId,
+                        title = title,
+                        date = date,
+                        labels = labels,
+                        labelsColor = labelColor,
                         actions = pageListItemActionsUseCase.setupPageActions(
                                 PUBLISHED,
                                 uploadUiState,
@@ -119,15 +119,16 @@ class SearchListViewModel
                         ),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
-                        showOverlay = showOverlay
+                        showOverlay = showOverlay,
+                        author = post.authorDisplayName
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             DRAFTS,
                             uploadUiState,
@@ -136,15 +137,16 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
             PageStatus.TRASHED -> TrashedPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             TRASHED,
                             uploadUiState,
@@ -153,15 +155,16 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
             PageStatus.SCHEDULED -> ScheduledPage(
-                    remoteId,
-                    pageId,
-                    title,
-                    date,
-                    labels,
-                    labelColor,
+                    remoteId = remoteId,
+                    localId = pageId,
+                    title = title,
+                    date = date,
+                    labels = labels,
+                    labelsColor = labelColor,
                     actions = pageListItemActionsUseCase.setupPageActions(
                             SCHEDULED,
                             uploadUiState,
@@ -170,7 +173,8 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
         }
     }

@@ -21,7 +21,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.SqlUtils;
 
 import java.util.Locale;
@@ -1096,7 +1095,6 @@ public class ReaderPostTable {
                 } while (cursor.moveToNext());
             }
         } catch (IllegalStateException e) {
-            CrashLoggingUtils.log(e);
             AppLog.e(AppLog.T.READER, e);
         }
         return posts;

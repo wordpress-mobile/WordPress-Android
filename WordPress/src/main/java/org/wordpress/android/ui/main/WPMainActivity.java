@@ -1443,6 +1443,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         }
     }
 
+    // The first time this is called in onCreate -> initViewModel we still haven't initialized mSelectedSite,
+    // which hasFullAccessToContent depends on, and as such the state will be initialized with the most restrictive
+    // rights case (that is, will assume hasFullAccessToContent is false). This is OK and will be frequently checked
+    // to normalize the UI state whenever mSelectedSite changes.
     private boolean hasFullAccessToContent() {
         return SiteUtils.hasFullAccessToContent(getSelectedSite());
     }

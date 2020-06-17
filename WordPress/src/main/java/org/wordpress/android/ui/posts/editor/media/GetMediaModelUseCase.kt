@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.FileProvider
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -24,6 +25,7 @@ class GetMediaModelUseCase @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val mediaStore: MediaStore,
     private val fileProvider: FileProvider,
+    private val authenticationUtils: AuthenticationUtils,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun loadMediaByLocalId(mediaModelLocalIds: Iterable<Int>): List<MediaModel> {
@@ -106,7 +108,7 @@ class GetMediaModelUseCase @Inject constructor(
 
     private fun createVideoThumbnail(uri: Uri): String? {
         val path = mediaUtilsWrapper.getRealPathFromURI(uri)
-        return path?.let { mediaUtilsWrapper.getVideoThumbnail(it) }
+        return path?.let { mediaUtilsWrapper.getVideoThumbnail(it, authenticationUtils.getAuthHeaders(it)) }
     }
 
     private fun verifyFileExists(uri: Uri): Boolean {

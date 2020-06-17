@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
@@ -29,6 +30,8 @@ import org.wordpress.android.ui.pages.PageItem.Page
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -56,6 +59,7 @@ class PageListViewModel @Inject constructor(
     private val mediaStore: MediaStore,
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
+    private val accountStore: AccountStore,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
@@ -124,6 +128,7 @@ class PageListViewModel @Inject constructor(
 
             pagesViewModel.pages.observeForever(pagesObserver)
             pagesViewModel.invalidateUploadStatus.observeForever(uploadStatusObserver)
+            pagesViewModel.authorSelectionUpdated.observeForever(authorSelectionChangedObserver)
 
             dispatcher.register(this)
         }
@@ -132,6 +137,7 @@ class PageListViewModel @Inject constructor(
     override fun onCleared() {
         pagesViewModel.pages.removeObserver(pagesObserver)
         pagesViewModel.invalidateUploadStatus.removeObserver(uploadStatusObserver)
+        pagesViewModel.authorSelectionUpdated.removeObserver(authorSelectionChangedObserver)
 
         dispatcher.unregister(this)
     }
@@ -171,6 +177,12 @@ class PageListViewModel @Inject constructor(
 
     private val uploadStatusObserver = Observer<List<LocalId>> { ids ->
         pagesViewModel.uploadStatusTracker.invalidateUploadStatus(ids.map { localId -> localId.value })
+    }
+
+    private val authorSelectionChangedObserver = Observer<AuthorFilterSelection> { authorSelection ->
+        authorSelection?.let {
+            pagesViewModel.pages.value?.let { loadPagesAsync(it) }
+        }
     }
 
     private fun loadPagesAsync(pages: List<PageModel>) = launch {
@@ -247,12 +259,17 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun preparePublishedPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        val shouldSortTopologically = pages.size < MAX_TOPOLOGICAL_PAGE_COUNT
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+            pages.filter { it.post.authorId == accountStore.account.userId }
+        else pages
+
+        val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = if (shouldSortTopologically) {
-            topologicalSort(pages, listType = PUBLISHED)
+            topologicalSort(filteredPages, listType = PUBLISHED)
         } else {
-            pages.sortedByDescending { it.date }
+            filteredPages.sortedByDescending { it.date }
         }
+
         return sortedPages
                 .map {
                     val pageItemIndent = if (shouldSortTopologically) {
@@ -261,20 +278,22 @@ class PageListViewModel @Inject constructor(
                         DEFAULT_INDENT
                     }
                     val itemUiStateData = createItemUiStateData(it)
-
                     PublishedPage(
-                            it.remoteId,
-                            it.pageId,
-                            it.title,
-                            it.date,
-                            itemUiStateData.labels,
-                            itemUiStateData.labelsColor,
-                            pageItemIndent,
-                            getFeaturedImageUrl(it.featuredImageId),
-                            itemUiStateData.actions,
-                            actionsEnabled,
-                            itemUiStateData.progressBarUiState,
-                            itemUiStateData.showOverlay
+                            remoteId = it.remoteId,
+                            localId = it.pageId,
+                            title = it.title,
+                            subtitle = itemUiStateData.subtitle,
+                            date = it.date,
+                            labels = itemUiStateData.labels,
+                            labelsColor = itemUiStateData.labelsColor,
+                            indent = pageItemIndent,
+                            imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                            actions = itemUiStateData.actions,
+                            actionsEnabled = actionsEnabled,
+                            progressBarUiState = itemUiStateData.progressBarUiState,
+                            showOverlay = itemUiStateData.showOverlay,
+                            author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                                null else it.post.authorDisplayName
                     )
                 }
     }
@@ -283,23 +302,30 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        return pages.asSequence().groupBy { it.date.toFormattedDateString() }
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+            pages.filter { it.post.authorId == accountStore.account.userId }
+        else pages
+
+        return filteredPages.asSequence().groupBy { it.date.toFormattedDateString() }
                 .map { (date, results) ->
                     listOf(Divider(date)) +
                             results.map {
                                 val itemUiStateData = createItemUiStateData(it)
 
                                 ScheduledPage(
-                                        it.remoteId, it.pageId,
-                                        it.title,
-                                        it.date,
-                                        itemUiStateData.labels,
-                                        itemUiStateData.labelsColor,
-                                        getFeaturedImageUrl(it.featuredImageId),
-                                        itemUiStateData.actions,
-                                        actionsEnabled,
-                                        itemUiStateData.progressBarUiState,
-                                        itemUiStateData.showOverlay
+                                        remoteId = it.remoteId,
+                                        localId = it.pageId,
+                                        title = it.title,
+                                        date = it.date,
+                                        labels = itemUiStateData.labels,
+                                        labelsColor = itemUiStateData.labelsColor,
+                                        imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                                        actions = itemUiStateData.actions,
+                                        actionsEnabled = actionsEnabled,
+                                        progressBarUiState = itemUiStateData.progressBarUiState,
+                                        showOverlay = itemUiStateData.showOverlay,
+                                        author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                                            null else it.post.authorDisplayName
                                 )
                             }
                 }
@@ -310,20 +336,27 @@ class PageListViewModel @Inject constructor(
     }
 
     private fun prepareDraftPages(pages: List<PageModel>, actionsEnabled: Boolean): List<PageItem> {
-        return pages.map {
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+            pages.filter { it.post.authorId == accountStore.account.userId }
+        else pages
+
+        return filteredPages
+                .map {
             val itemUiStateData = createItemUiStateData(it)
             DraftPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                        null else it.post.authorDisplayName
             )
         }
     }
@@ -332,20 +365,27 @@ class PageListViewModel @Inject constructor(
         pages: List<PageModel>,
         actionsEnabled: Boolean
     ): List<PageItem> {
-        return pages.map {
+        val filteredPages = if (pagesViewModel.shouldFilterByAuthor())
+            pages.filter { it.post.authorId == accountStore.account.userId }
+        else pages
+
+        return filteredPages
+                    .map {
             val itemUiStateData = createItemUiStateData(it)
             TrashedPage(
-                    it.remoteId,
-                    it.pageId,
-                    it.title,
-                    it.date,
-                    itemUiStateData.labels,
-                    itemUiStateData.labelsColor,
-                    getFeaturedImageUrl(it.featuredImageId),
-                    itemUiStateData.actions,
-                    actionsEnabled,
-                    itemUiStateData.progressBarUiState,
-                    itemUiStateData.showOverlay
+                    remoteId = it.remoteId,
+                    localId = it.pageId,
+                    title = it.title,
+                    date = it.date,
+                    labels = itemUiStateData.labels,
+                    labelsColor = itemUiStateData.labelsColor,
+                    imageUrl = getFeaturedImageUrl(it.featuredImageId),
+                    actions = itemUiStateData.actions,
+                    actionsEnabled = actionsEnabled,
+                    progressBarUiState = itemUiStateData.progressBarUiState,
+                    showOverlay = itemUiStateData.showOverlay,
+                    author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
+                        null else it.post.authorDisplayName
             )
         }
     }
@@ -401,7 +441,12 @@ class PageListViewModel @Inject constructor(
                 pagesViewModel.site,
                 pageModel.remoteId
         )
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions)
+        val subtitle = when (pageModel.remoteId) {
+            pagesViewModel.site.pageOnFront -> R.string.site_settings_homepage
+            pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
+            else -> null
+        }
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle)
     }
 
     private data class ItemUiStateData(
@@ -409,6 +454,7 @@ class PageListViewModel @Inject constructor(
         @ColorRes val labelsColor: Int?,
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
-        val actions: Set<Action>
+        val actions: Set<Action>,
+        val subtitle: Int? = null
     )
 }

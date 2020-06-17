@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.util.FileProvider
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -172,15 +173,21 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
             fluxCUtilsWrapper: FluxCUtilsWrapper = createFluxCUtilsWrapper(),
             mediaUtilsWrapper: MediaUtilsWrapper = createMediaUtilsWrapper(),
             fileProvider: FileProvider = createFileProvider(),
-            mediaStore: MediaStore = createMediaStore()
+            mediaStore: MediaStore = createMediaStore(),
+            authenticationUtils: AuthenticationUtils = createAuthenticationUtils()
         ): GetMediaModelUseCase {
             return GetMediaModelUseCase(
                     fluxCUtilsWrapper,
                     mediaUtilsWrapper,
                     mediaStore,
                     fileProvider,
+                    authenticationUtils,
                     TEST_DISPATCHER
             )
+        }
+
+        private fun createAuthenticationUtils(): AuthenticationUtils = mock<AuthenticationUtils> {
+            on { getAuthHeaders(any()) }.thenReturn(mock())
         }
 
         private fun createMediaStore(
@@ -209,7 +216,7 @@ class GetMediaModelUseCaseTest : BaseUnitTest() {
                 mock<MediaUtilsWrapper> {
                     on { isVideoMimeType(anyOrNull()) }.thenReturn(resultForIsVideoMimeType)
                     on { getRealPathFromURI(any()) }.thenReturn("")
-                    on { getVideoThumbnail(any()) }.thenReturn(resultForGetVideoThumbnail)
+                    on { getVideoThumbnail(any(), any()) }.thenReturn(resultForGetVideoThumbnail)
                     resultForGetRealPath?.let {
                         on { getRealPathFromURI(resultForGetRealPath.first) }.thenReturn(
                                 resultForGetRealPath.second

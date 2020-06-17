@@ -106,7 +106,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
@@ -134,7 +134,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
@@ -182,7 +182,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
@@ -228,7 +228,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
@@ -272,7 +272,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
       - run:
@@ -335,7 +335,7 @@ workflows:
       - Connected Tests:
           requires:
             - gutenberg-bundle-build
-          post-to-slack: false
+          post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
             branches:

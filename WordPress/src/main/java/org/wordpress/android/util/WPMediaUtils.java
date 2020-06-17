@@ -463,9 +463,8 @@ public class WPMediaUtils {
             return MediaUtils.downloadExternalMedia(context, mediaUri);
         } catch (IllegalStateException e) {
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
-            AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString(), e);
-            CrashLoggingUtils.logException(e, AppLog.T.MEDIA, "Can't download the image at: " + mediaUri.toString()
-                                                             + " See issue #5823");
+            AppLog.e(AppLog.T.UTILS, "Can't download the image at: " + mediaUri.toString()
+                                     + " See issue #5823", e);
 
             return null;
         }

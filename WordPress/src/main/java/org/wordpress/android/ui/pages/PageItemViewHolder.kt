@@ -35,6 +35,7 @@ import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Determinate
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState.Indeterminate
 import java.util.Date
+import java.util.Locale
 
 sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layout: Int) :
         RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
@@ -51,7 +52,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
     ) : PageItemViewHolder(parentView, R.layout.page_list_item) {
         private val pageTitle = itemView.findViewById<TextView>(R.id.page_title)
         private val pageMore = itemView.findViewById<ImageButton>(R.id.page_more)
-        private val time = itemView.findViewById<TextView>(R.id.time_posted)
+        private val pageSubtitle = itemView.findViewById<TextView>(R.id.page_subtitle)
         private val labels = itemView.findViewById<TextView>(R.id.labels)
         private val featuredImage = itemView.findViewById<ImageView>(R.id.featured_image)
         private val uploadProgressBar: ProgressBar = itemView.findViewById(R.id.upload_progress)
@@ -79,9 +80,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 else
                     page.title
 
-                val date = if (page.date == Date(0)) Date() else page.date
-                time.text = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
-                        .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
+                showSubtitle(page.date, page.author, page.subtitle)
 
                 labels.text = page.labels.map { uiHelper.getTextOfUiString(parent.context, it) }.sorted()
                         .joinToString(separator = " · ")
@@ -161,6 +160,44 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 } else {
                     featuredImage.visibility = View.GONE
                     imageManager?.cancelRequestAndClearImageView(featuredImage)
+                }
+            }
+        }
+
+        @ExperimentalStdlibApi
+        private fun showSubtitle(inputDate: Date, author: String?, subtitle: Int?) {
+            val date = if (inputDate == Date(0)) Date() else inputDate
+            val stringDate = DateTimeUtils.javaDateToTimeSpan(date, parent.context)
+                    .capitalizeWithLocaleWithoutLint(parent.context.currentLocale)
+
+            /** The subtitle can use 2 or 3 placeholders
+            * Date - Only (author & subtitle are null)
+            * Date - Author (author != null && subtitle == null)
+            * Date - subtitle (author == null && subtitle != null)
+            * Date - Author - subtitle (all have values)
+            */
+            pageSubtitle.text = if (author == null && subtitle == null) {
+                stringDate
+            } else if (author != null && subtitle == null) {
+                String.format(
+                        Locale.getDefault(),
+                        parent.context.getString(R.string.pages_item_subtitle),
+                        stringDate,
+                        author)
+            } else if (author == null && subtitle != null) {
+                String.format(
+                        Locale.getDefault(),
+                        parent.context.getString(R.string.pages_item_subtitle),
+                        stringDate,
+                        parent.context.getString(subtitle))
+            } else {
+                subtitle?.let {
+                    String.format(
+                            Locale.getDefault(),
+                            parent.context.getString(R.string.pages_item_subtitle_date_author),
+                            stringDate,
+                            author,
+                            parent.context.getString(it))
                 }
             }
         }
