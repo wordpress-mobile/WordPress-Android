@@ -11,24 +11,29 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.Calendar
-import java.util.Date
 
 class PostSettingsUtilsTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var dateUtils: DateUtils
+    @Mock lateinit var dateProvider: DateProvider
     private lateinit var postSettingsUtils: PostSettingsUtils
+    private lateinit var postUtilsWrapper: PostUtilsWrapper
 
     private val dateCreated = "2019-05-05T14:33:20+0200"
+    private val currentDate = "2019-05-05T20:33:20+0200"
     private val formattedDate = "5. 5. 2019"
     private lateinit var postModel: PostModel
+
     @Before
     fun setUp() {
-        postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils)
+        postUtilsWrapper = PostUtilsWrapper(dateProvider)
+        postSettingsUtils = PostSettingsUtils(resourceProvider, dateUtils, postUtilsWrapper)
         whenever(dateUtils.formatDateTime(any())).thenReturn(formattedDate)
+        whenever(dateProvider.getCurrentDate()).thenReturn(DateTimeUtils.dateUTCFromIso8601(currentDate))
         whenever(
                 resourceProvider.getString(
                         R.string.scheduled_for,
@@ -96,6 +101,20 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
+    fun `returns "scheduled for" for private post that is local and scheduled`() {
+        postModel.setStatus(PostStatus.PRIVATE.toString())
+        postModel.setIsLocalDraft(true)
+
+        // two hours ahead of the currentDate
+        val futureDate = "2019-05-05T22:28:20+0200"
+        postModel.setDateCreated(futureDate)
+
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
+
+        assertThat(publishedDate).isEqualTo("Schedule for 5. 5. 2019")
+    }
+
+    @Test
     fun `returns "backdated for" for local draft when publish date in the past`() {
         postModel.setIsLocalDraft(true)
         postModel.setDateCreated(dateCreated)
@@ -109,7 +128,7 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     fun `returns "immediately" for local draft when should publish immediately`() {
         postModel.setIsLocalDraft(true)
         postModel.setStatus(PostStatus.DRAFT.toString())
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(Date()))
+        postModel.setDateCreated(currentDate)
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
@@ -117,11 +136,24 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns "published on" for local draft when date is not set`() {
+    fun `returns "immediately" for local private post that should publish immediately`() {
         postModel.setIsLocalDraft(true)
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, -5)
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+        postModel.setStatus(PostStatus.PRIVATE.toString())
+        postModel.setDateCreated(currentDate)
+
+        val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
+
+        assertThat(publishedDate).isEqualTo("Immediately")
+    }
+
+    @Test
+    fun `returns "publish on" for local draft when date within the next 30 minutes`() {
+        postModel.setIsLocalDraft(true)
+
+        // This date is 5 minutes before the currentDate
+        val dateCreated = "2019-05-05T20:28:20+0200"
+
+        postModel.setDateCreated(dateCreated)
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
@@ -130,9 +162,10 @@ class PostSettingsUtilsTest : BaseUnitTest() {
 
     @Test
     fun `returns "schedule for" when post published in future`() {
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.MINUTE, 100)
-        postModel.setDateCreated(DateTimeUtils.iso8601FromDate(calendar.time))
+        // two hours ahead of the currentDate
+        val futureDate = "2019-05-05T22:28:20+0200"
+
+        postModel.setDateCreated(futureDate)
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
@@ -150,11 +183,11 @@ class PostSettingsUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `returns empty string in other cases`() {
+    fun `returns "immediately" in other cases`() {
         postModel.setDateCreated("")
 
         val publishedDate = postSettingsUtils.getPublishDateLabel(postModel)
 
-        assertThat(publishedDate).isEqualTo("")
+        assertThat(publishedDate).isEqualTo("Immediately")
     }
 }

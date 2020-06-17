@@ -12,7 +12,6 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 
 private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 private const val CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG = "CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG"
-private const val CONFIRM_PUBLISH_POST_DIALOG_TAG = "CONFIRM_PUBLISH_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
@@ -30,7 +29,6 @@ class PostListDialogHelper(
 ) {
     // Since we are using DialogFragments we need to hold onto which post will be published or trashed / resolved
     private var localPostIdForDeleteDialog: Int? = null
-    private var localPostIdForPublishDialog: Int? = null
     private var localPostIdForMoveTrashedPostToDraftDialog: Int? = null
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
@@ -62,22 +60,6 @@ class PostListDialogHelper(
                 negativeButton = UiStringRes(R.string.cancel)
         )
         localPostIdForDeleteDialog = post.id
-        showDialog.invoke(dialogHolder)
-    }
-
-    fun showPublishConfirmationDialog(post: PostModel) {
-        if (localPostIdForPublishDialog != null) {
-            // We can only handle one publish dialog at once
-            return
-        }
-        val dialogHolder = DialogHolder(
-                tag = CONFIRM_PUBLISH_POST_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_publish_title),
-                message = UiStringRes(R.string.dialog_confirm_publish_message_post),
-                positiveButton = UiStringRes(R.string.dialog_confirm_publish_yes),
-                negativeButton = UiStringRes(R.string.cancel)
-        )
-        localPostIdForPublishDialog = post.id
         showDialog.invoke(dialogHolder)
     }
 
@@ -151,10 +133,6 @@ class PostListDialogHelper(
                 localPostIdForDeleteDialog = null
                 deletePost(it)
             }
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog?.let {
-                localPostIdForPublishDialog = null
-                publishPost(it)
-            }
             CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog?.let {
                 localPostIdForScheduledPostSyncDialog = null
                 publishPost(it)
@@ -191,7 +169,6 @@ class PostListDialogHelper(
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
-            CONFIRM_PUBLISH_POST_DIALOG_TAG -> localPostIdForPublishDialog = null
             CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog = null
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {

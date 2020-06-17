@@ -43,6 +43,7 @@ import javax.inject.Singleton
 /**
  * Singleton for asynchronous image fetching/loading with support for placeholders, transformations and more.
  */
+
 @Singleton
 class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
