@@ -9,8 +9,14 @@ import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
 import org.wordpress.android.ui.reader.ReaderCommentListViewModel;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel;
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel;
+import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
+import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
@@ -97,6 +103,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ReaderPostListViewModel.class)
     abstract ViewModel readerPostListViewModel(ReaderPostListViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SubFilterViewModel.class)
+    abstract ViewModel readerSubFilterViewModel(SubFilterViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -287,6 +298,31 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SitePickerViewModel.class)
     abstract ViewModel sitePickerViewModel(SitePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderViewModel.class)
+    abstract ViewModel readerParentPostListViewModel(ReaderViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderDiscoverViewModel.class)
+    abstract ViewModel readerDiscoverViewModel(ReaderDiscoverViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ReaderInterestsViewModel.class)
+    abstract ViewModel readerInterestsViewModel(ReaderInterestsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(NewsCardViewModel.class)
+    abstract ViewModel newsCardViewModel(NewsCardViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomepageSettingsViewModel.class)
+    abstract ViewModel homepageSettingsDialogViewModel(HomepageSettingsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

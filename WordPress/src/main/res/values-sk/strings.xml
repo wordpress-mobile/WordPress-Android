@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 Translation-Revision-Date: 2020-04-24 07:55:35+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: sk
 -->
 <resources>
@@ -18,7 +18,6 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_walt_disney">Walt Disney</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
-    <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
     <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Poďme spolu niečo vybudovať.</string>
     <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Poďme spolu niečo vybudovať</string>
     <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať</string>
@@ -228,7 +227,6 @@ Language: sk
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
     <string name="reader_empty_followed_blogs_button_discover">Objavte webové stránky</string>
     <string name="reader_empty_followed_blogs_title">Žiadne sledované webové stránky</string>
-    <string name="reader_empty_followed_blogs_description">Zatiaľ nesledujete žiadne webové stránky. Prečo nezačať sledovať jednu práve teraz?</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
     <string name="activity_log_limited_content_on_free_plan">Keďže máte voľný plán, uvidíte vo svojich aktivitách obmedzené udalosti.</string>
@@ -685,9 +683,8 @@ Language: sk
     <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
-    <string name="copy_text">Kopírovať</string>
-    <string name="connect_site">Pripojte webovú stránku</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
+    <string name="connect_site">Pripojte webovú stránku</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vybračné zariadenie</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Vyber zvuk</string>
     <string name="notification_settings_category_sights_and_sounds">Vzhľady a Zvuky</string>

@@ -1,30 +1,34 @@
 package org.wordpress.android.ui.whatsnew
 
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.image.ImageType
 import javax.inject.Inject
 
 class FeatureAnnouncementListAdapter(
-    val activity: FragmentActivity
+    val fragment: Fragment
 ) : Adapter<RecyclerView.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private var viewModel: FeatureAnnouncementViewModel
     private val list = mutableListOf<FeatureAnnouncementItem>()
+    private var isFindOutMoreVisible = true
 
     init {
-        (activity.applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        (fragment.requireActivity().applicationContext as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(fragment, viewModelFactory)
                 .get(FeatureAnnouncementViewModel::class.java)
     }
 
@@ -34,7 +38,7 @@ class FeatureAnnouncementListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == itemCount - 1) {
+        if (isFindOutMoreVisible && position == itemCount - 1) {
             return VIEW_TYPE_FOOTER
         }
         return VIEW_TYPE_FEATURE
@@ -48,9 +52,16 @@ class FeatureAnnouncementListAdapter(
         }
     }
 
+    fun toggleFooterVisibility(isVisible: Boolean) {
+        isFindOutMoreVisible = isVisible
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
-        if (list.isNotEmpty()) {
+        if (list.isNotEmpty() && isFindOutMoreVisible) {
             return list.size + 1
+        } else if (list.isNotEmpty() && !isFindOutMoreVisible) {
+            return list.size
         }
 
         return 0
@@ -74,7 +85,8 @@ class FeatureAnnouncementListAdapter(
         parent: ViewGroup,
         val imageManager: ImageManager
     ) : RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.feature_announcement_list_item, parent, false)
+            LayoutInflater.from(parent.context)
+                    .inflate(R.layout.feature_announcement_list_item, parent, false)
     ) {
         private val featureIcon: ImageView = itemView.findViewById(R.id.feature_item_icon)
         private val title: TextView = itemView.findViewById(R.id.feature_title)
@@ -83,11 +95,25 @@ class FeatureAnnouncementListAdapter(
         fun bind(featureAnnouncementItem: FeatureAnnouncementItem) {
             title.text = featureAnnouncementItem.title
             subtitle.text = featureAnnouncementItem.subtitle
-            featureIcon.setImageResource(featureAnnouncementItem.iconResId)
+
+            if (!TextUtils.isEmpty(featureAnnouncementItem.iconUrl)) {
+                imageManager.loadIntoCircle(
+                        featureIcon, ImageType.PLAN,
+                        StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
+                )
+            } else {
+                imageManager.loadBase64IntoCircle(
+                        featureIcon, ImageType.PLAN,
+                        StringUtils.notNullStr(featureAnnouncementItem.iconBase64)
+                )
+            }
         }
     }
 
-    class FeatureAnnouncementFooterViewHolder(parent: ViewGroup, val viewModel: FeatureAnnouncementViewModel) :
+    class FeatureAnnouncementFooterViewHolder(
+        parent: ViewGroup,
+        val viewModel: FeatureAnnouncementViewModel
+    ) :
             RecyclerView.ViewHolder(
                     LayoutInflater.from(parent.context)
                             .inflate(R.layout.feature_announcement_list_footer, parent, false)

@@ -39,16 +39,18 @@ public class ReaderPostJobService extends JobService implements ServiceCompletio
                 action = UpdateAction.REQUEST_NEWER;
             }
 
-            EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
 
             if (params.getExtras().containsKey(ARG_TAG_PARAM_SLUG)) {
                 ReaderTag tag = getReaderTagFromBundleParams(params.getExtras());
+                EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action, tag));
                 mReaderPostLogic.performTask(params, action, tag, -1, -1);
             } else if (params.getExtras().containsKey(ARG_BLOG_ID)) {
                 long blogId = params.getExtras().getLong(ARG_BLOG_ID, 0);
+                EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
                 mReaderPostLogic.performTask(params, action, null, blogId, -1);
             } else if (params.getExtras().containsKey(ARG_FEED_ID)) {
                 long feedId = params.getExtras().getLong(ARG_FEED_ID, 0);
+                EventBus.getDefault().post(new ReaderEvents.UpdatePostsStarted(action));
                 mReaderPostLogic.performTask(params, action, null, -1, feedId);
             }
         }

@@ -408,6 +408,8 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         mBtnLikeComment.setOnClickListener(v -> likeComment(false));
 
         mBtnMoreComment.setOnClickListener(v -> showMoreMenu(v));
+        // hide more button until we know it can be enabled
+        mBtnMoreComment.setVisibility(View.GONE);
 
         setupSuggestionServiceAndAdapter();
 
@@ -1012,6 +1014,12 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
             }
         }
 
+        if (canShowMore()) {
+            mBtnMoreComment.setVisibility(View.VISIBLE);
+        } else {
+            mBtnMoreComment.setVisibility(View.GONE);
+        }
+
         mLayoutButtons.setVisibility(View.VISIBLE);
     }
 
@@ -1082,6 +1090,13 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     private boolean canLike() {
         return (mEnabledActions != null && mEnabledActions.contains(EnabledActions.ACTION_LIKE)
                 && mSite != null && SiteUtils.isAccessedViaWPComRest(mSite));
+    }
+
+    /*
+    * The more button contains controls which only moderates can use
+     */
+    private boolean canShowMore() {
+        return canModerate();
     }
 
     /*
@@ -1378,6 +1393,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
 
         MenuItem editMenuItem = morePopupMenu.getMenu().findItem(R.id.action_edit);
+        editMenuItem.setVisible(false);
         if (canEdit()) {
             editMenuItem.setVisible(true);
         }
@@ -1385,7 +1401,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
     }
 
     private void trashComment() {
-        if (mComment == null) {
+        if (!isAdded() && mComment == null) {
             return;
         }
 
