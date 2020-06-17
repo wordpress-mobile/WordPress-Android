@@ -1,3 +1,7 @@
+15.2
+-----
+* [**] Fixes tons of rendering issues in Reader post detail by changing the technical solution (shared CSS file).
+
 15.1
 -----
 * Fixes issue on Notifications tab when two screens were drawn on top of each other
