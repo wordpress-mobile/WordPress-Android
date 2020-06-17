@@ -191,12 +191,14 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                         stringDate,
                         parent.context.getString(subtitle))
             } else {
-                String.format(
-                        Locale.getDefault(),
-                        parent.context.getString(R.string.pages_item_subtitle_date_author),
-                        stringDate,
-                        author,
-                        parent.context.getString(subtitle!!))
+                subtitle?.let {
+                    String.format(
+                            Locale.getDefault(),
+                            parent.context.getString(R.string.pages_item_subtitle_date_author),
+                            stringDate,
+                            author,
+                            parent.context.getString(it))
+                }
             }
         }
     }

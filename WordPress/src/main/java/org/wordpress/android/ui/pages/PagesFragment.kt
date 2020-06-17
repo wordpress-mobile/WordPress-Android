@@ -280,9 +280,8 @@ class PagesFragment : Fragment() {
 
         viewModel.authorUIState.observe(activity, Observer { state ->
             state?.let {
-                val authorSelectionVisibility = if (state.isAuthorFilterVisible) View.VISIBLE else View.GONE
-                pages_author_selection.visibility = authorSelectionVisibility
-                pages_tab_layout_fading_edge.visibility = authorSelectionVisibility
+                uiHelpers.updateVisibility(pages_author_selection, state.isAuthorFilterVisible)
+                uiHelpers.updateVisibility(pages_tab_layout_fading_edge, state.isAuthorFilterVisible)
 
                 val tabLayoutPaddingStart =
                         if (state.isAuthorFilterVisible)
