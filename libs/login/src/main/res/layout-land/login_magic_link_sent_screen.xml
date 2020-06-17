@@ -24,7 +24,7 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label"
-            style="@style/LoginTheme.TextLabel"
+            style="@style/Widget.LoginFlow.TextView.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -33,7 +33,7 @@
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
-        style="@style/LoginTheme.BottomBar"
+        style="@style/Widget.LoginFlow.CardView.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
@@ -51,7 +51,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_enter_password"
-                style="@style/LoginTheme.Button.Secondary"
+                style="@style/Widget.LoginFlow.Button.Tertiary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -66,7 +66,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_open_email_client"
-                style="@style/LoginTheme.Button.Primary"
+                style="@style/Widget.LoginFlow.Button.Primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
