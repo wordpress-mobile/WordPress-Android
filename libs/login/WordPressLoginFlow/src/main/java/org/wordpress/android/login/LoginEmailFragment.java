@@ -43,6 +43,7 @@ import org.wordpress.android.fluxc.generated.AccountActionBuilder;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAvailabilityChecked;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
+import org.wordpress.android.login.util.ContextExtensionsKt;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -50,6 +51,7 @@ import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.NetworkUtils;
 
 import java.util.ArrayList;
@@ -225,10 +227,10 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         };
 
         continueTosButton.setOnClickListener(onClickListener);
-        continueTosButton.setText(formatUnderlinedText(R.string.continue_terms_of_service_text));
+        continueTosButton.setText(formatTosText(R.string.continue_terms_of_service_text));
 
         continueWithGoogleTosButton.setOnClickListener(onClickListener);
-        continueWithGoogleTosButton.setText(formatUnderlinedText(R.string.continue_with_google_terms_of_service_text));
+        continueWithGoogleTosButton.setText(formatTosText(R.string.continue_with_google_terms_of_service_text));
     }
 
     private void setupSocialButtons(Button continueWithGoogleButton) {
@@ -335,8 +337,14 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
     }
 
+    private Spanned formatTosText(int stringResId) {
+        final int primaryColorResId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.colorPrimary);
+        final String primaryColorHtml = HtmlUtils.colorResToHtmlColor(getContext(), primaryColorResId);
+        return Html.fromHtml(getString(stringResId, "<u><font color='" + primaryColorHtml + "'>", "</font></u>"));
+    }
+
     private Spanned formatUnderlinedText(int stringResId) {
-        return Html.fromHtml(String.format(getString(stringResId), "<u>", "</u>"));
+        return Html.fromHtml(getString(stringResId, "<u>", "</u>"));
     }
 
     private void onContinueClicked() {
@@ -480,7 +488,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showEmailError() {
         if (mCurrentEmailErrorRes != null) {
-             showEmailError(mCurrentEmailErrorRes);
+            showEmailError(mCurrentEmailErrorRes);
         }
     }
 
