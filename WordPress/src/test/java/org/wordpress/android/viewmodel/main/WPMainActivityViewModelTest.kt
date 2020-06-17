@@ -18,6 +18,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
@@ -142,19 +143,30 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `bottom sheet is visualized when user has full access to content`() {
+    fun `bottom sheet action is new story when new story is tapped`() {
+        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_STORY } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_STORY)
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_STORY)
+    }
+
+    @Test
+    fun `bottom sheet is visualized when user has full access to content and has all 3 options`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = true)
         assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test
-    fun `new post action is triggered from FAB when user has not full access to content`() {
+    fun `bottom sheet is visualized when user has partial access to content and has only 2 options`() {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = false)
-        assertThat(viewModel.isBottomSheetShowing.value).isNull()
-        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test

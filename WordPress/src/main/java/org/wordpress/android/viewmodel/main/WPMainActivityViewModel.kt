@@ -9,6 +9,7 @@ import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
@@ -52,38 +53,40 @@ class WPMainActivityViewModel @Inject constructor(
 
         setMainFabUiState(isFabVisible, hasFullAccessToContent)
 
-        loadMainActions()
+        loadMainActions(hasFullAccessToContent)
 
         checkForFeatureAnnouncements()
     }
 
-    private fun loadMainActions() {
+    private fun loadMainActions(hasFullAccessToContent: Boolean) {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(
-                CreateAction(
-                        actionType = NO_ACTION,
-                        iconRes = 0,
-                        labelRes = R.string.my_site_bottom_sheet_title,
-                        onClickAction = null
-                )
-        )
-        actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_POST,
-                        iconRes = R.drawable.ic_posts_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_post,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
-        actionsList.add(
-                CreateAction(
-                        actionType = CREATE_NEW_PAGE,
-                        iconRes = R.drawable.ic_pages_white_24dp,
-                        labelRes = R.string.my_site_bottom_sheet_add_page,
-                        onClickAction = ::onCreateActionClicked
-                )
-        )
+        actionsList.add(CreateAction(
+                actionType = NO_ACTION,
+                iconRes = 0,
+                labelRes = R.string.my_site_bottom_sheet_title,
+                onClickAction = null
+        ))
+        actionsList.add(CreateAction(
+                actionType = CREATE_NEW_POST,
+                iconRes = R.drawable.ic_posts_white_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_post,
+                onClickAction = ::onCreateActionClicked
+        ))
+        if (hasFullAccessToContent) {
+            actionsList.add(CreateAction(
+                    actionType = CREATE_NEW_PAGE,
+                    iconRes = R.drawable.ic_pages_white_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_page,
+                    onClickAction = ::onCreateActionClicked
+            ))
+        }
+        actionsList.add(CreateAction(
+                actionType = CREATE_NEW_STORY,
+                iconRes = R.drawable.ic_story_icon_24dp,
+                labelRes = R.string.my_site_bottom_sheet_add_story,
+                onClickAction = ::onCreateActionClicked
+        ))
 
         _mainActions.postValue(actionsList)
     }
@@ -109,16 +112,9 @@ class WPMainActivityViewModel @Inject constructor(
     fun onFabClicked(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
+        loadMainActions(hasFullAccessToContent)
 
-        // Currently this bottom sheet has only 2 options.
-        // We should evaluate to re-introduce the bottom sheet also for users without full access to content
-        // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
-        // See p5T066-1cA-p2/#comment-4463
-        if (hasFullAccessToContent) {
-            _isBottomSheetShowing.value = Event(true)
-        } else {
-            _createAction.postValue(CREATE_NEW_POST)
-        }
+        _isBottomSheetShowing.value = Event(true)
     }
 
     fun onPageChanged(showFab: Boolean, hasFullAccessToContent: Boolean) {

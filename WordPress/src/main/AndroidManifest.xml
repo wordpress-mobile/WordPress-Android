@@ -216,6 +216,15 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+
+        <!-- Story composer activity -->
+        <activity
+            android:name=".ui.stories.StoryComposerActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Immersive">
+        </activity>
+
         <!-- Workaround for old launcher icon pointing to .ui.posts.PostsActivity -->
         <activity-alias
             android:name=".ui.posts.PostsActivity"
