@@ -70,7 +70,7 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 # Google services configuration
 google-services.json
 
-# Fastlane 
+# Fastlane
 fastlane/.env*
 fastlane/report.xml
 fastlane/README.md
@@ -88,3 +88,6 @@ sentry.properties
 
 WordPress/release.jks
 WordPress/debug.keystore
+
+# Node & Danger
+node_modules/
