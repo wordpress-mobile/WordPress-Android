@@ -1,6 +1,5 @@
 package org.wordpress.android.viewmodel.posts
 
-import android.text.TextUtils
 import org.apache.commons.text.StringEscapeUtils
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
@@ -21,7 +20,6 @@ import org.wordpress.android.fluxc.model.post.PostStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus.UNKNOWN
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
-import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PostUtils
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -53,6 +51,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
@@ -80,6 +79,7 @@ class PostListItemUiStateHelper @Inject constructor(
         featuredImageUrl: String?,
         formattedDate: String,
         performingCriticalAction: Boolean,
+        isSearch: Boolean,
         uploadStatusTracker: PostModelUploadStatusTracker,
         onAction: (PostModel, PostListButtonType, AnalyticsTracker.Stat) -> Unit
     ): PostListItemUiState {
@@ -103,7 +103,13 @@ class PostListItemUiStateHelper @Inject constructor(
         val remotePostId = RemotePostId(RemoteId(post.remotePostId))
         val localPostId = LocalPostId(LocalId(post.id))
         val title = getTitle(post = post)
-        val dateAndAuthor = getDateAndAuthorLabel(formattedDate, post.authorDisplayName, authorFilterSelection)
+        val postInfo = getPostInfoLabels(
+                postStatus,
+                formattedDate,
+                post.authorDisplayName,
+                authorFilterSelection,
+                isSearch
+        )
         val statuses = getStatuses(
                 postStatus = postStatus,
                 isLocalDraft = post.isLocalDraft,
@@ -116,7 +122,13 @@ class PostListItemUiStateHelper @Inject constructor(
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
-                TRASHED -> {}
+                TRASHED -> {
+                    onAction.invoke(
+                            post,
+                            BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG,
+                            POST_LIST_ITEM_SELECTED
+                    )
+                }
                 UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
                         post,
                         BUTTON_EDIT,
@@ -130,7 +142,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 title = title,
                 excerpt = getExcerpt(post = post),
                 imageUrl = featuredImageUrl,
-                dateAndAuthor = dateAndAuthor,
+                postInfo = postInfo,
                 statuses = statuses,
                 statusesColor = statusesColor,
                 statusesDelimiter = statusesDelimeter,
@@ -153,19 +165,35 @@ class PostListItemUiStateHelper @Inject constructor(
         )
     }
 
-    private fun getDateAndAuthorLabel(
+    private fun getPostInfoLabels(
+        postStatus: PostStatus,
         formattedDate: String,
         displayName: String?,
-        authorFilterSelection: AuthorFilterSelection
-    ): UiString {
-        return when (authorFilterSelection) {
-            EVERYONE -> {
-                val joinedStrings = listOf(formattedDate, displayName).filterNot { TextUtils.isEmpty(it) }
-                        .joinToString(separator = "  ·  ")
-                UiStringText(joinedStrings)
-            }
-            ME -> UiStringText(formattedDate)
+        authorFilterSelection: AuthorFilterSelection,
+        isSearch: Boolean
+    ): List<UiString> {
+        val uiStrings: MutableList<UiString> = mutableListOf()
+
+        if (!formattedDate.isBlank()) {
+            uiStrings.add(UiStringText(formattedDate))
         }
+        if (authorFilterSelection == EVERYONE && !displayName.isNullOrBlank()) {
+            uiStrings.add(UiStringText(displayName))
+        }
+
+        if (isSearch) {
+            val postStatusText = when (postStatus) {
+                UNKNOWN -> R.string.unknown
+                PUBLISHED -> R.string.post_status_post_published
+                DRAFT -> R.string.post_status_draft
+                PRIVATE -> R.string.post_status_post_private
+                PENDING -> R.string.post_status_pending_review
+                TRASHED -> R.string.post_status_post_trashed
+                SCHEDULED -> R.string.post_status_post_scheduled
+            }
+            uiStrings.add(UiStringRes(postStatusText))
+        }
+        return uiStrings
     }
 
     private fun getTitle(post: PostModel): UiString {

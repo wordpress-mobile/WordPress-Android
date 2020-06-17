@@ -27,7 +27,6 @@ Language: cy_GB
     <string name="pending_draft_one_day_2">Wyddoch chi fod \'%1$s\' yn dal i fod yn ddrafft? Cyhoeddwch!</string>
     <string name="pending_draft_one_day_1">Cafodd \'%1$s\' ei ddrafftio ddoe. Peidiwch ag anghofio\'i gyhoeddi!</string>
     <string name="reader_photo_by">Llun gan %s</string>
-    <string name="reader_label_visit">Ymweld</string>
     <string name="swipe_for_more">Llusgo am rhagor</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf neu ddefnyddiwch y botwm gweithred uchaf i agor porwr yn lle hynny.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf.</string>

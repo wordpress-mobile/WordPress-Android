@@ -1,4 +1,0 @@
-14.9:
-<b>Peningkatan pada penyunting blok:</b> Blok Kutipan Menonjol yang baru, pilihan warna untuk blok Tombol, template halaman yang diperbarui.
-
-<b>Perbaikan pada penyunting blok:</b> Bug Pustaka Foto Gratis yang menyisipkan satu gambar meskipun ada beberapa yang dipilih, gagalnya pratinjau saat beralih ke penyunting klasik. Menghilangkan Tombol Langganan yang tidak fungsional dari template Blog.

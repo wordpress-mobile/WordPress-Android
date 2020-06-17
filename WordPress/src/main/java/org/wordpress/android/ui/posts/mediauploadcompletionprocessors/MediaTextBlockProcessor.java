@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts.mediauploadcompletionprocessors;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.jsoup.nodes.Document;
@@ -44,7 +45,8 @@ public class MediaTextBlockProcessor extends BlockProcessor {
     }
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
-        if (jsonAttributes.get("mediaId").getAsString().equals(mLocalId)) {
+        JsonElement id = jsonAttributes.get("mediaId");
+        if (id != null && id.getAsString().equals(mLocalId)) {
             jsonAttributes.addProperty("mediaId", Integer.parseInt(mRemoteId));
             return true;
         }

@@ -1,6 +1,14 @@
+15.2
+-----
+* [**] Block editor: Display content metrics information (blocks, words, characters count).
+* [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
+ 
 15.1
 -----
- 
+* Fixes issue on Notifications tab when two screens were drawn on top of each other
+* [**] Fix video thumbnails, settings and preview in Media section for private sites
+* [*] Support for breaking out of captions/citation authors by pressing enter on the following blocks: image, video, gallery, quote, and pullquote.
+
 15.0
 -----
 * [*] Fix wrong icon is used when a Password is visible
@@ -9,7 +17,6 @@
 * [**] Block Editor: Add support for changing overlay color settings in Cover block
 * [**] Block Editor: Add enter/exit animation in FloatingToolbar
 * [**] Block Editor: Block toolbar can now collapse when the block width is smaller than the toolbar content
-* [**] Block Editor: Creating undo levels less frequently
 * [**] Block Editor: Tooltip for page template selection buttons
 * [*] Block Editor: Fix merging of text blocks when text had active formatting (bold, italic, strike, link)
 * [*] Block Editor: Fix button alignment in page templates and make strings consistent
