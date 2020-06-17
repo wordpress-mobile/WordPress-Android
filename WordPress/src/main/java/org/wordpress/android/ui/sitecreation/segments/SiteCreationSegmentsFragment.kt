@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
+import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_segments_screen.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
