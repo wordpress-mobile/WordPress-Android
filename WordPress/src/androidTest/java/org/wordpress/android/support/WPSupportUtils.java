@@ -6,21 +6,26 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Checkable;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.AmbiguousViewMatcherException;
 import androidx.test.espresso.Espresso;
+import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.GeneralClickAction;
 import androidx.test.espresso.action.GeneralLocation;
 import androidx.test.espresso.action.Press;
 import androidx.test.espresso.action.Tap;
+import androidx.test.espresso.action.ViewActions;
+import androidx.test.espresso.matcher.ViewMatchers.Visibility;
 import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiSelector;
 
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -46,6 +51,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
@@ -53,13 +59,18 @@ import static androidx.test.runner.lifecycle.Stage.RESUMED;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
 
 
 public class WPSupportUtils {
     // HIGH-LEVEL METHODS
 
+    public static ViewInteraction visibleElementWithId(Integer elementID) {
+        return onView(allOf(withId(elementID), withEffectiveVisibility(Visibility.VISIBLE)));
+    }
+
     public static boolean isElementDisplayed(Integer elementID) {
-        return isElementDisplayed(onView(withId(elementID)));
+        return isElementDisplayed(visibleElementWithId(elementID));
     }
 
     public static boolean isElementDisplayed(ViewInteraction element) {
@@ -82,7 +93,7 @@ public class WPSupportUtils {
 
     public static void scrollToThenClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(scrollTo());
         clickOn(elementID);
     }
@@ -95,7 +106,7 @@ public class WPSupportUtils {
 
     public static void clickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        clickOn(onView(withId(elementID)));
+        clickOn(visibleElementWithId(elementID));
         idleFor(500); // allow for transitions
     }
 
@@ -128,6 +139,38 @@ public class WPSupportUtils {
                 rollbackAction);
     }
 
+    /** Ensures that a SwitchPreference isChecked is true or false regardless of the current value. This is useful to
+     * guarantee a particular resulting state where a previously toggled state may not be known.
+     * @param isChecked the value to set the preference to
+     * @return the ViewAction
+     */
+    public static ViewAction ensureSwitchPreferenceIsChecked(final boolean isChecked) {
+        return new ViewAction() {
+            @Override public BaseMatcher<View> getConstraints() {
+                return new BaseMatcher<View>() {
+                    @Override public boolean matches(Object item) {
+                        return isA(Checkable.class).matches(((View) item).findViewById(android.R.id.switch_widget));
+                    }
+
+                    @Override public void describeTo(Description description) {
+                        description.appendText("checkable");
+                    }
+                };
+            }
+
+            @Override public String getDescription() {
+                return "setChecked(" + isChecked + ")";
+            }
+
+            @Override public void perform(UiController uiController, View view) {
+                // perform click only if necessary
+                if (((Checkable) view.findViewById(android.R.id.switch_widget)).isChecked() != isChecked) {
+                    ViewActions.click().perform(uiController, view);
+                }
+            }
+        };
+    }
+
 
 
     private static boolean isResourceId(String text) {
@@ -154,7 +197,7 @@ public class WPSupportUtils {
 
     public static void longClickOn(Integer elementID) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID)).perform(longClick());
+        visibleElementWithId(elementID).perform(longClick());
     }
 
     public static void longClickOn(ViewInteraction element) {
@@ -186,7 +229,7 @@ public class WPSupportUtils {
 
     public static void populateTextField(Integer elementID, String text) {
         waitForElementToBeDisplayed(elementID);
-        onView(withId(elementID))
+        visibleElementWithId(elementID)
                 .perform(replaceText(text))
                 .perform(closeSoftKeyboard());
     }
@@ -311,11 +354,11 @@ public class WPSupportUtils {
         Integer maxTries = 10;
 
         for (Integer i = 0; i < 10; i++) {
-            onView(withId(elementID)).perform(swipeRight());
+            visibleElementWithId(elementID).perform(swipeRight());
         }
 
         while (!tabLayoutHasTextDisplayed(elementID, string) && tries < maxTries) {
-            onView(withId(elementID)).perform(swipeLeft());
+            visibleElementWithId(elementID).perform(swipeLeft());
             tries++;
         }
 

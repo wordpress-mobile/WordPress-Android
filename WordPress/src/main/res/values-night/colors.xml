@@ -41,4 +41,30 @@
 
     <color name="post_history_underlying_background">@color/gray_100</color>
 
+    <!-- Reader -->
+
+    <!-- Reader Following empty view -->
+    <color name="reader_following_empty_view_upper_right_plus">@color/red_70</color>
+    <color name="reader_following_empty_view_mid_left_plus">@color/celadon_60</color>
+    <color name="reader_following_empty_view_center_circle">@color/gray_90</color>
+    <color name="reader_following_empty_view_left_lower_plus">@color/orange_70</color>
+    <color name="reader_following_empty_view_outline">@color/transparent</color>
+    <color name="reader_following_empty_view_middle_plus">@color/gray_60</color>
+    <color name="reader_following_empty_view_background">@color/transparent</color>
+
+    <!-- Reader Post Card -->
+    <color name="reader_post_list_background">@color/gray_100</color>
+    <color name="reader_label_text">@color/gray_20</color>
+    <color name="reader_post_title">@color/gray_5</color>
+    <color name="reader_site_title">@color/gray_5</color>
+    <color name="reader_image_featured_border">@color/gray_80</color>
+    <color name="reader_image_avatar_or_blavatar_border">@color/gray_80</color>
+
+    <!-- Prepublishing Nudges -->
+    <color name="prepublishing_toolbar_icon_color">@color/gray_10</color>
+    <color name="prepublishing_action_type_enabled_color">@color/white</color>
+    <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
+    <color name="prepublishing_action_type_disabled_color">@color/gray_50</color>
+    <color name="prepublishing_action_result_disabled_color">@color/gray_50</color>
+
 </resources>

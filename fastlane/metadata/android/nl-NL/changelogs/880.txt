@@ -1,0 +1,4 @@
+15.0:
+Aanvullingen op de blokeditor: Nieuw Versblok. Ondersteuning voor overlaykleuren in het Omslagblok. Animatie starten/sluiten voor zwevende werkbalk. Tooltip voor selectieknoppen van paginasjabloon.
+Updates van de blokeditor: 'Blok naar prullenbak verplaatsen' in een menu dat via de blokwerkbalk geopend kan worden.
+Overige updates: Homepage-instellingen toegevoegd aan paginalijst en site-instellingen.

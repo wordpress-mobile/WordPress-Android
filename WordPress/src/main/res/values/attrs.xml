@@ -148,8 +148,12 @@
 
         <!-- Optional: Default is false. Locks the toolbar and prevents scroll to hide/reveal functionality -->
         <attr name="wpToolbarDisableScrollGestures" format="boolean"/>
-        <!-- Optional: Default to false. Activate filtering by Tabs instead of Spinner -->
-        <attr name="wpUseTabsForFiltering" format="boolean"/>
+        <!-- Optional: Default to false. Hide the AppBarLayout. This flag was added as part of
+        ReaderPostListFragment refactoring. We don't need to use the FilteredRecyclerView in the
+        Reader anymore, but since it's planned to iteratively rewrite the ReaderPostListFragment
+        it's not worth replacing the FilteredRecyclerView with something else now. Therefore we
+        opted for a simple flag which hides the filtering options from the FilteredRecyclerView -->
+        <attr name="wpHideAppBarLayout" format="boolean"/>
     </declare-styleable>
 
     <!--
