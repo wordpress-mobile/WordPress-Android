@@ -79,7 +79,7 @@ class EditorThemeStore
 
         when (response) {
             is Success -> {
-                val responseTheme = response.result.asJsonArray.first() ?: return
+                val responseTheme = response.result?.asJsonArray?.first() ?: return
                 val newTheme = Gson().fromJson(responseTheme, EditorTheme::class.java)
                 val existingTheme = editorThemeSqlUtils.getEditorThemeForSite(site)
                 if (newTheme != existingTheme) {
