@@ -100,7 +100,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
@@ -127,7 +127,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
@@ -174,7 +174,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
@@ -219,7 +219,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
@@ -262,7 +262,7 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
           at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
