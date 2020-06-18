@@ -46,7 +46,7 @@ class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStor
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
         val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
-        val videoOverlayVisbility = post.cardType == VIDEO
+        val videoOverlayVisibility = post.cardType == VIDEO
         val videoThumbnailUrl = post.takeIf { post.cardType == VIDEO }?.let { retrieveVideoThumbnailUrl() }
         // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
         val showMoreMenu = accountStore.hasAccessToken()
@@ -72,7 +72,7 @@ class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStor
                 photoTitle = photoTitle,
                 featuredImageUrl = featuredImageUrl,
                 thumbnailStripUrls = thumbnailStripUrls,
-                videoOverlayVisbility = videoOverlayVisbility,
+                videoOverlayVisbility = videoOverlayVisibility,
                 moreMenuVisbility = showMoreMenu,
                 discoverSection = discoverSection,
                 videoThumbnailUrl = videoThumbnailUrl
