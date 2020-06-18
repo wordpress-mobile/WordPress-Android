@@ -20,9 +20,10 @@ import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import java.lang.IllegalStateException
+import javax.inject.Inject
 
 @Reusable
-class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStore) {
+class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: AccountStore) {
     fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
