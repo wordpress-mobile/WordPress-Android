@@ -93,6 +93,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
 
+        val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
+
         ReaderPostUiState(
                 post.postId,
                 title = title,
@@ -103,8 +105,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                 avatarOrBlavatarUrl = avatarOrBlavatarUrl,
                 photoFrameVisibility = photoFrameVisibility,
                 photoTitle = photoTitle,
-                featuredImageUrl = featuredImageUrl
+                featuredImageUrl = featuredImageUrl,
+                thumbnailStripUrls = thumbnailStripUrls
         )
+    }
+
+    private fun retrieveGalleryThumbnailUrls(): List<String> {
+        // TODO malinjir Not yet implemented - Refactor ReaderThumbnailStrip.loadThumbnails()
+        return emptyList()
     }
 
     sealed class DiscoverUiState(
@@ -127,7 +135,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val blogName: String?,
             val photoFrameVisibility: Boolean,
             val photoTitle: String?,
-            val featuredImageUrl: String?
+            val featuredImageUrl: String?,
+            val thumbnailStripUrls: List<String>?
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
