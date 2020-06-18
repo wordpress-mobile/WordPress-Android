@@ -108,11 +108,21 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
         val videoOverlayVisbility = post.cardType == VIDEO
+        val videoThumbnailUrl = post.takeIf { post.cardType == VIDEO }?.let { retrieveVideoThumbnailUrl() }
         // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
         val showMoreMenu = accountStore.hasAccessToken()
 
         val discoverSection = post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
                 ?.let { buildDiscoverSectionUiState(post.discoverData) }
+
+        // TODO malinjir onPostContainer click
+
+        // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
+
+        // TODO malinjir bookmark action
+        // TODO malinjir reblog action
+        // TODO malinjir comments action
+        // TODO malinjir likes action
 
         ReaderPostUiState(
                 post.postId,
@@ -128,7 +138,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 thumbnailStripUrls = thumbnailStripUrls,
                 videoOverlayVisbility = videoOverlayVisbility,
                 showMoreMenu = showMoreMenu,
-                discoverSection = discoverSection
+                discoverSection = discoverSection,
+                videoThumbnailUrl = videoThumbnailUrl
         )
     }
 
@@ -149,6 +160,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                 discoverAvatarUrl = discoverAvatarUrl,
                 imageType = discoverAvatarImageType
         )
+    }
+
+    private fun retrieveVideoThumbnailUrl(): String? {
+        // TODO malinjir Not yet implemented - Refactor ReaderVideoUtils.retrieveVideoThumbnailUrl
+        return null
     }
 
     private fun retrieveGalleryThumbnailUrls(): List<String> {
@@ -179,6 +195,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val featuredImageUrl: String?,
             val thumbnailStripUrls: List<String>?,
             val videoOverlayVisbility: Boolean,
+            val videoThumbnailUrl: String?,
             val showMoreMenu: Boolean,
             val discoverSection: DiscoverLayoutUiState?
         ) : ReaderCardUiState() {
