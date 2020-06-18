@@ -160,6 +160,16 @@ public class ReaderActivityLauncher {
         }
     }
 
+    public static void closeReaderInterests(Fragment fragment) {
+        FragmentManager fm = fragment.getChildFragmentManager();
+        Fragment readerInterestsFragment = fm.findFragmentByTag(ReaderInterestsFragment.TAG);
+        if (readerInterestsFragment != null && readerInterestsFragment.isAdded()) {
+            fm.beginTransaction()
+              .remove(readerInterestsFragment)
+              .commitNow();
+        }
+    }
+
     /*
      * show comments for the passed Ids
      */

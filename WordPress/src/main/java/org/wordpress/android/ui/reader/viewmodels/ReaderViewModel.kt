@@ -14,7 +14,6 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -44,7 +43,7 @@ class ReaderViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     // TODO will depend on user tags
-    private var shouldShowReaderInterests: Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
+    private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -61,13 +60,16 @@ class ReaderViewModel @Inject constructor(
     private val _showReaderInterests = MutableLiveData<Event<Unit>>()
     val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
 
+    private val _closeReaderInterests = MutableLiveData<Event<Unit>>()
+    val closeReaderInterests: LiveData<Event<Unit>> = _closeReaderInterests
+
     init {
         EventBus.getDefault().register(this)
     }
 
     fun start() {
-        _uiState.value = InitialUiState
         if (shouldShowReaderInterests) {
+            _uiState.value = InitialUiState
             _showReaderInterests.value = Event(Unit)
         } else {
             if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
@@ -112,6 +114,14 @@ class ReaderViewModel @Inject constructor(
     fun onTagChanged(selectedTag: ReaderTag?) {
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
+    }
+
+    fun onCloseReaderInterests() {
+        shouldShowReaderInterests = false
+
+        _closeReaderInterests.value = Event(Unit)
+        _updateTags.value = Event(Unit)
+        loadTabs()
     }
 
     sealed class ReaderUiState(

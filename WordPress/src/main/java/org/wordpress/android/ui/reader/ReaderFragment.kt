@@ -153,6 +153,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             }
         })
 
+        viewModel.closeReaderInterests.observe(viewLifecycleOwner, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                ReaderActivityLauncher.closeReaderInterests(this)
+            }
+        })
+
         newsCardViewModel.openUrlEvent.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { url ->
                 val activity: Activity? = activity
