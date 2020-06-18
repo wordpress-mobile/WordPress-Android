@@ -22,8 +22,6 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
     project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-svg/android')
     include ':react-native-aztec'
     project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
-    include ':react-native-recyclerview-list'
-    project(':react-native-recyclerview-list').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-recyclerview-list/android')
     include ':react-native-gutenberg-bridge'
     project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
     include ':react-native-video'
