@@ -57,6 +57,12 @@ class ReaderPostRepository @Inject constructor(
         }
     }
 
+    private suspend fun getMockMissingParams() {
+        return withContext(ioDispatcher) {
+            mutableDiscoverFeed.postValue(
+                    ReaderDataWrapper.Error.MissingParams(Exception("BlogId is missing")))
+        }
+    }
     private suspend fun getMockInProgress() {
         return withContext(ioDispatcher) {
             mutableDiscoverFeed.postValue( ReaderDataWrapper.InProgress)
@@ -102,7 +108,7 @@ class ReaderPostRepository @Inject constructor(
         Log.i(javaClass.simpleName, request.toString())
         withContext(bgDispatcher) {
             delay(SECONDS.toMillis(5))
-            getMockError()
+            getMockMissingParams()
         }
     }
 
@@ -564,6 +570,10 @@ sealed class ReaderDataRequest(val action: UpdateAction) {
     class PostsForBlogRequest(val blogId: Long,  action: UpdateAction) : ReaderDataRequest(action)
     class PostsForFeedRequest(val feedId: Long,  action: UpdateAction) : ReaderDataRequest(action)
 
+    //todo build out the request - because we will need quite a bit of information to pull the
+    //data from the database tables (see ReaderPostAdapter for all the other stuff that we
+    //need. AUGH
+
     override fun toString(): String {
         return "${this.javaClass.simpleName}($action)"
     }
@@ -574,6 +584,7 @@ sealed class ReaderDataWrapper<out T : Any> {
     sealed class Error(val exception: Exception) : ReaderDataWrapper<Nothing>() {
         class NetworkError(exception: Exception) : Error(exception)
         class NotFoundError(exception: Exception) : Error(exception)
+        class MissingParams(exception: Exception) : Error(exception)
         // todo: we could identify errors and create classes as needed
     }
     object InProgress : ReaderDataWrapper<Nothing>()
