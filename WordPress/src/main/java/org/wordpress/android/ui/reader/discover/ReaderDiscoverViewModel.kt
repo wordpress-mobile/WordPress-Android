@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -11,8 +12,9 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,13 +48,37 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun loadPosts() {
-        // TODO we'll remove this method when the repositories start managing the requests automatically
+        // TODO malinjir we'll remove this method when the repositories start managing the requests automatically
         launch(bgDispatcher) {
             readerPostRepository.getDiscoveryFeed()
         }
     }
 
-    private fun mapPostToUiState(post: ReaderPost) = ReaderPostUiState(post.postId, UiStringText(post.title))
+    private fun mapPostToUiState(post: ReaderPost) {
+
+        val blogUrl = post.blogUrl?.let {
+            // TODO malinjir remove static access
+            UrlUtils.removeScheme(it)
+        }
+
+        // TODO malinjir remove static access
+        val dateLine = DateTimeUtils.javaDateToTimeSpan(
+                post.displayDate,
+                WordPress.getContext()
+        )
+
+        val avatarOrBlavatarUrl = post.blogImageUrl?.let {
+            // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
+            GravatarUtils.fixGravatarUrl(it, 9999)
+        }
+
+        ReaderPostUiState(
+                post.postId,
+                blogUrl = blogUrl,
+                dateLine = dateLine,
+                avatarOrBlavatarUrl = avatarOrBlavatarUrl
+        )
+    }
 
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
@@ -64,9 +90,13 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     sealed class ReaderCardUiState {
-        data class ReaderPostUiState(
+        class ReaderPostUiState(
             val id: Long,
-            val title: UiString
-        ) : ReaderCardUiState()
+            val dateLine: String,
+            val blogUrl: String? = null,
+            val avatarOrBlavatarUrl: String?
+        ) : ReaderCardUiState() {
+            val dotSeparatorVisibility: Boolean = blogUrl != null
+        }
     }
 }
