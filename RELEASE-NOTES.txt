@@ -1,5 +1,6 @@
 15.1
 -----
+* [**] Block Editor: Add support allowing Cover Block video uploads to complete after the editor has closed
 * Fixes issue on Notifications tab when two screens were drawn on top of each other
 * [**] Fix video thumbnails, settings and preview in Media section for private sites
 * [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
