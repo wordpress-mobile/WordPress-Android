@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -25,6 +26,7 @@ import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
+    private val accountStore: AccountStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -96,6 +98,8 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
         val videoOverlayVisbility = post.cardType == VIDEO
+        // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
+        val showMoreMenu = accountStore.hasAccessToken()
 
         ReaderPostUiState(
                 post.postId,
@@ -109,7 +113,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 photoTitle = photoTitle,
                 featuredImageUrl = featuredImageUrl,
                 thumbnailStripUrls = thumbnailStripUrls,
-                videoOverlayVisbility = videoOverlayVisbility
+                videoOverlayVisbility = videoOverlayVisbility,
+                showMoreMenu = showMoreMenu
         )
     }
 
@@ -140,7 +145,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val photoTitle: String?,
             val featuredImageUrl: String?,
             val thumbnailStripUrls: List<String>?,
-            val videoOverlayVisbility: Boolean
+            val videoOverlayVisbility: Boolean,
+            val showMoreMenu: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
