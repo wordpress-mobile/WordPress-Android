@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
@@ -42,6 +43,8 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
+    // TODO will depend on user tags
+    private var shouldShowReaderInterests: Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -55,15 +58,22 @@ class ReaderViewModel @Inject constructor(
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
+    private val _showReaderInterests = MutableLiveData<Event<Unit>>()
+    val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
+
     init {
         EventBus.getDefault().register(this)
     }
 
     fun start() {
         _uiState.value = InitialUiState
-        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-        if (initialized) return
-        loadTabs()
+        if (shouldShowReaderInterests) {
+            _showReaderInterests.value = Event(Unit)
+        } else {
+            if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+            if (initialized) return
+            loadTabs()
+        }
     }
 
     private fun loadTabs() {
