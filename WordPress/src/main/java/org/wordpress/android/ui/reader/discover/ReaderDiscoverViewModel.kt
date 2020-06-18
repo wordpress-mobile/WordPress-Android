@@ -82,43 +82,31 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
 
         // TODO malinjir remove static access
-        val dateLine = DateTimeUtils.javaDateToTimeSpan(
-                post.displayDate,
-                WordPress.getContext()
-        )
-
-        val avatarOrBlavatarUrl = post.takeIf { it.hasBlogImageUrl() }?.blogImageUrl?.let {
-            // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
-            GravatarUtils.fixGravatarUrl(it, 9999)
-        }
-
+        val dateLine = DateTimeUtils.javaDateToTimeSpan(post.displayDate, WordPress.getContext())
+        val avatarOrBlavatarUrl = post.takeIf { it.hasBlogImageUrl() }?.blogImageUrl
+                // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
+                ?.let { GravatarUtils.fixGravatarUrl(it, 9999) }
         val blogName = post.takeIf { it.hasBlogName() }?.blogName
-
         val excerpt = post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
         val title = post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
         // TODO malinjir `post.cardType != GALLERY` might not be needed
         val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage())
                 && post.cardType != GALLERY
         val photoTitle = post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
-
         val featuredImageUrl = post
                 // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
-
         val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
         val videoOverlayVisbility = post.cardType == VIDEO
         val videoThumbnailUrl = post.takeIf { post.cardType == VIDEO }?.let { retrieveVideoThumbnailUrl() }
         // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
         val showMoreMenu = accountStore.hasAccessToken()
-
         val discoverSection = post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
                 ?.let { buildDiscoverSectionUiState(post.discoverData) }
 
         // TODO malinjir onPostContainer click
-
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
-
         // TODO malinjir bookmark action
         // TODO malinjir reblog action
         // TODO malinjir comments action
@@ -137,7 +125,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                 featuredImageUrl = featuredImageUrl,
                 thumbnailStripUrls = thumbnailStripUrls,
                 videoOverlayVisbility = videoOverlayVisbility,
-                showMoreMenu = showMoreMenu,
+                moreMenuVisbility = showMoreMenu,
                 discoverSection = discoverSection,
                 videoThumbnailUrl = videoThumbnailUrl
         )
@@ -155,11 +143,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             else -> AVATAR
         }
         // TODO malinjir discoverLayout onClick listener.
-        return DiscoverLayoutUiState(
-                discoverText = discoverText,
-                discoverAvatarUrl = discoverAvatarUrl,
-                imageType = discoverAvatarImageType
-        )
+        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType)
     }
 
     private fun retrieveVideoThumbnailUrl(): String? {
@@ -184,20 +168,20 @@ class ReaderDiscoverViewModel @Inject constructor(
     sealed class ReaderCardUiState {
         data class ReaderPostUiState(
             val id: Long,
-            val title: String?,
-            val excerpt: String?,// mTxtText
             val dateLine: String,
-            val blogUrl: String?,
-            val avatarOrBlavatarUrl: String?,
+            val title: String?,
             val blogName: String?,
-            val photoFrameVisibility: Boolean,
+            val excerpt: String?,// mTxtText
+            val blogUrl: String?,
             val photoTitle: String?,
             val featuredImageUrl: String?,
-            val thumbnailStripUrls: List<String>?,
-            val videoOverlayVisbility: Boolean,
             val videoThumbnailUrl: String?,
-            val showMoreMenu: Boolean,
-            val discoverSection: DiscoverLayoutUiState?
+            val avatarOrBlavatarUrl: String?,
+            val thumbnailStripUrls: List<String>?,
+            val discoverSection: DiscoverLayoutUiState?,
+            val videoOverlayVisbility: Boolean,
+            val moreMenuVisbility: Boolean,
+            val photoFrameVisibility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
