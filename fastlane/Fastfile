@@ -214,19 +214,19 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # build_pre_releases
+  # build_and_upload_pre_releases
   # -----------------------------------------------------------------------------------
   # This lane builds the app it for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_pre_releases [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_pre_releases
-  # bundle exec fastlane build_pre_releases skip_confirm:true
+  # bundle exec fastlane build_and_upload_pre_releases
+  # bundle exec fastlane build_and_upload_pre_releases skip_confirm:true
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_pre_releases do | options |
+  lane :build_and_upload_pre_releases do | options |
     android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
