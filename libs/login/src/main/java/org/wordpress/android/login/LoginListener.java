@@ -79,6 +79,7 @@ public interface LoginListener {
     void doStartSignup();
     void helpSignupEmailScreen(String email);
     void helpSignupMagicLinkScreen(String email);
+    void helpSignupConfirmationScreen(String email);
     void showSignupMagicLink(String email);
     void showSignupSocial(String email, String displayName, String idToken, String photoUrl, String service);
     void showSignupToLoginMessage();
