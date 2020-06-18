@@ -2,6 +2,7 @@
 -----
 * [**] Block editor: Display content metrics information (blocks, words, characters count).
 * [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
+* [*] Block Editor: Fix handling of upload completion while re-opening the editor
  
 15.1
 -----
