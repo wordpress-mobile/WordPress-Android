@@ -24,35 +24,6 @@ import java.lang.IllegalStateException
 @Reusable
 class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStore) {
     fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
-        val blogUrl = post.takeIf { it.hasBlogUrl() }?.blogUrl?.let {
-            // TODO malinjir remove static access
-            UrlUtils.removeScheme(it)
-        }
-
-        // TODO malinjir remove static access
-        val dateLine = DateTimeUtils.javaDateToTimeSpan(post.displayDate, WordPress.getContext())
-        val avatarOrBlavatarUrl = post.takeIf { it.hasBlogImageUrl() }?.blogImageUrl
-                // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
-                ?.let { GravatarUtils.fixGravatarUrl(it, 9999) }
-        val blogName = post.takeIf { it.hasBlogName() }?.blogName
-        val excerpt = post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
-        val title = post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
-        // TODO malinjir `post.cardType != GALLERY` might not be needed
-        val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
-                post.cardType != GALLERY
-        val photoTitle = post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
-        val featuredImageUrl = post
-                // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
-                .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
-                ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
-        val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
-        val videoOverlayVisibility = post.cardType == VIDEO
-        val videoThumbnailUrl = post.takeIf { post.cardType == VIDEO }?.let { retrieveVideoThumbnailUrl() }
-        // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
-        val showMoreMenu = accountStore.hasAccessToken()
-        val discoverSection = post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
-                ?.let { buildDiscoverSectionUiState(post.discoverData) }
-
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
         // TODO malinjir bookmark action
@@ -61,23 +32,81 @@ class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStor
         // TODO malinjir likes action
 
         return ReaderPostUiState(
-                post.postId,
-                title = title,
-                excerpt = excerpt,
-                blogUrl = blogUrl,
-                blogName = blogName,
-                dateLine = dateLine,
-                avatarOrBlavatarUrl = avatarOrBlavatarUrl,
-                photoFrameVisibility = photoFrameVisibility,
-                photoTitle = photoTitle,
-                featuredImageUrl = featuredImageUrl,
-                thumbnailStripUrls = thumbnailStripUrls,
-                videoOverlayVisbility = videoOverlayVisibility,
-                moreMenuVisbility = showMoreMenu,
-                discoverSection = discoverSection,
-                videoThumbnailUrl = videoThumbnailUrl
+                id = post.postId,
+                blogUrl = buildBlogUrl(post),
+                dateLine = buildDateLine(post),
+                avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
+                blogName = buildBlogName(post),
+                excerpt = buildExcerpt(post),
+                title = buildTitle(post),
+                photoFrameVisibility = buildPhotoFrameVisbility(post),
+                photoTitle = buildPhotoTitle(post),
+                featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+                thumbnailStripUrls = buildThumbnailStripUrls(post),
+                videoOverlayVisbility = buildVideoOverlayVisbility(post),
+                // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
+                moreMenuVisbility = accountStore.hasAccessToken(),
+                videoThumbnailUrl = buildVideoThumbnailUrl(post),
+                discoverSection = buildDiscoverSection(post)
         )
     }
+
+    private fun buildBlogUrl(post: ReaderPost) = post
+            .takeIf { it.hasBlogUrl() }
+            ?.blogUrl
+            // TODO malinjir remove static access
+            ?.let { UrlUtils.removeScheme(it) }
+
+    private fun buildDiscoverSection(post: ReaderPost) =
+            post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
+                    ?.let { buildDiscoverSectionUiState(post.discoverData) }
+
+    private fun buildVideoThumbnailUrl(post: ReaderPost) =
+            post.takeIf { post.cardType == VIDEO }
+                    ?.let { retrieveVideoThumbnailUrl() }
+
+    private fun buildVideoOverlayVisbility(post: ReaderPost) = post.cardType == VIDEO
+
+    private fun buildThumbnailStripUrls(post: ReaderPost) =
+            post.takeIf { it.cardType == GALLERY }
+                    ?.let { retrieveGalleryThumbnailUrls() }
+
+    private fun buildFeaturedImageUrl(
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int
+    ): String? {
+        return post
+                // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
+                .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
+                ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
+    }
+
+    private fun buildPhotoTitle(post: ReaderPost) =
+            post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
+
+    // TODO malinjir `post.cardType != GALLERY` might not be needed
+    private fun buildPhotoFrameVisbility(post: ReaderPost) =
+            (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
+                    post.cardType != GALLERY
+
+    private fun buildTitle(post: ReaderPost) =
+            post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
+
+    private fun buildExcerpt(post: ReaderPost) =
+            post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
+
+    private fun buildBlogName(post: ReaderPost) = post.takeIf { it.hasBlogName() }?.blogName
+
+    private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
+            post.takeIf { it.hasBlogImageUrl() }
+                    ?.blogImageUrl
+                    // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
+                    ?.let { GravatarUtils.fixGravatarUrl(it, 9999) }
+
+    // TODO malinjir remove static access + remove context
+    private fun buildDateLine(post: ReaderPost) =
+            DateTimeUtils.javaDateToTimeSpan(post.displayDate, WordPress.getContext())
 
     private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
