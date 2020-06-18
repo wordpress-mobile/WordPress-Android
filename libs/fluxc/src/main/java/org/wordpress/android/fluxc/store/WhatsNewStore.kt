@@ -15,9 +15,7 @@ import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.whatsnew.WhatsNewRestClient
 import org.wordpress.android.fluxc.persistence.WhatsNewSqlUtils
 import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewErrorType.GENERIC_ERROR
-import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewErrorType.MALFORMED_APP_VERSION_NAME
 import org.wordpress.android.fluxc.tools.CoroutineEngine
-import org.wordpress.android.fluxc.utils.WhatsNewAppVersionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.API
@@ -64,15 +62,7 @@ class WhatsNewStore @Inject constructor(
 
     suspend fun fetchRemoteAnnouncements(versionName: String, appId: WhatsNewAppId) =
             coroutineEngine.withDefaultContext(T.API, this, "fetchWhatsNew") {
-                val normalizedVersionName = WhatsNewAppVersionUtils.normalizeVersion(versionName)
-                        ?: return@withDefaultContext OnWhatsNewFetched(
-                                fetchError = WhatsNewFetchError(
-                                        MALFORMED_APP_VERSION_NAME,
-                                        "App version ($versionName) name does not follow major.minor.patch format."
-                                )
-                        )
-
-                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(normalizedVersionName, appId)
+                val fetchedWhatsNewPayload = whatsNewRestClient.fetchWhatsNew(versionName, appId)
 
                 return@withDefaultContext if (!fetchedWhatsNewPayload.isError) {
                     val fetchedAnnouncements = fetchedWhatsNewPayload.whatsNewItems
@@ -116,8 +106,7 @@ class WhatsNewStore @Inject constructor(
     ) : OnChangedError
 
     enum class WhatsNewErrorType {
-        GENERIC_ERROR,
-        MALFORMED_APP_VERSION_NAME
+        GENERIC_ERROR
     }
 
     enum class WhatsNewAppId(val id: Int) {
