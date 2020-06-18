@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: bg
 -->
 <resources>
@@ -272,7 +272,6 @@ Language: bg
     <string name="pending_draft_one_week_2">\'%1$s\' все още е чернова. Не забравяйте да го публикувате.</string>
     <string name="pending_draft_one_week_1">Вашата чернова \'%1$s\' ви очаква да я публикувате!</string>
     <string name="reader_photo_by">Снимка от %s</string>
-    <string name="reader_label_visit">Посетете</string>
     <string name="swipe_for_more">Плъзнете за повече</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com или използвайте горния бутон, за да я отворите в браузъра.</string>
     <string name="reader_err_get_post_not_authorized_signin">Не сте оторизирани да разглеждате тази публикация. Опитайте да влезете в WordPress.com.</string>

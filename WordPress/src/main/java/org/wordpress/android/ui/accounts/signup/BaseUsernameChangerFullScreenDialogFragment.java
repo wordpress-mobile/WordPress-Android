@@ -337,16 +337,15 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             AppLog.e(T.API, "onUsernameSuggestionsFetched: " + event.error.type + " - " + event.error.message);
             showErrorDialog(new SpannedString(getString(R.string.username_changer_error_generic)));
         } else if (event.suggestions.size() == 0) {
-            showErrorDialog(
-                    Html.fromHtml(
-                            String.format(
-                                    getString(R.string.username_changer_error_none),
-                                    "<b>",
-                                    mUsernameSuggestionInput,
-                                    "</b>"
-                            )
-                    )
+            String error = String.format(
+                    getString(R.string.username_changer_error_none),
+                    "<b>",
+                    mUsernameSuggestionInput,
+                    "</b>"
             );
+            mUsernameView.setError(Html.fromHtml(
+                    error
+            ));
         } else {
             populateUsernameSuggestions(event.suggestions);
         }

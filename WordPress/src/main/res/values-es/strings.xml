@@ -1,23 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-23 09:12:51+0000
+Translation-Revision-Date: 2020-06-11 18:30:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: es
 -->
 <resources>
-    <string name="gutenberg_native_subscribe">Suscribirse</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Eliminar %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
+    <string name="gutenberg_native_move_s_up">Mover %s arriba</string>
+    <string name="gutenberg_native_move_s_right">Mover %s a la derecha</string>
+    <string name="gutenberg_native_move_s_left">Mover %s a la izquierda</string>
+    <string name="gutenberg_native_move_s_down">Mover %s abajo</string>
+    <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
+    <string name="gutenberg_native_insert_mention">Insertar una mención</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
+    <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
+    <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
+    <string name="pages_set_as_homepage">Establecer como página de inicio</string>
+    <string name="suggestion_no_matching_users">«No hay disponibles usuarios que coincidan.»</string>
+    <string name="suggestion_invalid_user">«%s no es un usuario válido»</string>
+    <string name="site_settings_select_page">Seleccionar la página</string>
+    <string name="site_settings_posts_page">Página de entradas</string>
+    <string name="site_settings_static_homepage">Página de inicio estática</string>
+    <string name="site_settings_classic_blog">Blog clásico</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">La página de inicio seleccionada y la página de entradas no pueden ser la misma.</string>
+    <string name="site_settings_failed_update_homepage_settings">Ha fallado la actualización de la página de inicio, comprueba tu conexión a internet</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">No se pueden guardar los ajustes de la página de inicio antes de que las páginas estén cargadas</string>
+    <string name="site_settings_failed_to_save_homepage_settings">No se pueden guardar los ajustes de la página de inicio</string>
+    <string name="site_settings_accept_homepage">Aceptar</string>
+    <string name="site_settings_failed_to_load_pages">Ha fallado la carga de las páginas</string>
+    <string name="site_settings_homepage_settings_description">Elige entre una página de inicio que muestre tus últimas publicaciones (blog clásico) o una página fija/estática.</string>
+    <string name="site_settings_homepage_settings">Ajustes de la página de inicio</string>
+    <string name="site_settings_homepage">Página de inicio</string>
+    <string name="page_posts_page_update_failed">Ha fallado la actualización de la página de entradas</string>
+    <string name="page_posts_page_successfully_updated">Página de entradas actualizada correctamente</string>
+    <string name="page_homepage_update_failed">Ha fallado la actualización de la página de inicio</string>
+    <string name="page_homepage_successfully_updated">Página de inicio actualizada correctamente</string>
+    <string name="page_cannot_set_posts_page">Para establecer la página de entradas, activa «Página de inicio estática» en los ajustes del sitio</string>
+    <string name="page_cannot_set_homepage">Para establecer la página de inicio, activa «Página de inicio estática» en los ajustes del sitio</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Bienvenido a nuestro nuevo blog</string>
+    <string name="gutenberg_native_select_a_color">Seleccionar un color</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dos veces para ir a los ajustes del color</string>
+    <string name="reader_empty_followed_blogs_description">Cuando sigas sitios, verás aquí su contenido</string>
+    <string name="feature_announcement_find_out_mode">Saber más</string>
+    <string name="feature_announcement_dialog_label">Qué hay de nuevo en WordPress</string>
+    <string name="insert_label_with_count">Insertar %d</string>
+    <string name="crop">recortar</string>
+    <string name="error_failed_to_load_into_file">Fallo al cargar en el archivo, por favor, inténtalo de nuevo.</string>
+    <string name="preview_image_thumbnail_description">Vista previa de la miniatura de la imagen</string>
+    <string name="photo_picker_use_media">Usar este medio</string>
+    <string name="photo_picker_use_video">Usar este vídeo</string>
+    <string name="photo_picker_photo_or_video_title">Elegir el medio</string>
+    <string name="photo_picker_video_title">Elegir el vídeo</string>
+    <string name="site_picker_ask_site_select">No se ha podido seleccionar el sitio. Por favor, inténtalo de nuevo.</string>
+    <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_reblog_error">Ha fallado reblog</string>
+    <string name="reader_no_site_to_reblog_action">Gestionar los sitios</string>
+    <string name="reader_no_site_to_reblog_detail">Una vez que crees un sitio en WordPress.com, puedes volver a publicar el contenido que te gusta en tu propio sitio.</string>
+    <string name="reader_no_site_to_reblog_title">No hay disponibles sitios WordPress.com</string>
+    <string name="whats_new_in_version_title">Qué hay de nuevo</string>
+    <string name="comment_q_action_copied_url">Copiada la dirección del enlace</string>
+    <string name="copy_link_address">Copiar la dirección del enlace</string>
+    <string name="comment_share_link_via">Compartir en</string>
+    <string name="comment_toast_err_share_intent">No se ha podido compartir</string>
+    <string name="button_insert">Insertar</string>
+    <string name="continue_label">Continuar</string>
+    <string name="copy_text">Copiar</string>
     <string name="gutenberg_native_number_of_columns">Número de columnas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover el bloque a la derecha desde la posición %1$s a la posición %2$s</string>
-    <string name="gutenberg_native_move_block_right">Mover el bloque a la derecha</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover el bloque a la izquierda desde la posición %1$s a la posición %2$s</string>
-    <string name="gutenberg_native_move_block_left">Mover bloque a la izquierda</string>
-    <string name="gutenberg_native_latest_blog_posts">Últimas entradas del blog</string>
-    <string name="gutenberg_native_follow_our_blog">Sigue nuestro blog</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toca dos veces para mover el bloque hacia la derecha</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toca dos veces para mover el bloque hacia la izquierda</string>
     <string name="gutenberg_native_columns_settings">Ajustes de las columnas</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Próximamente habrá ajustes para el color.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Creando el escritorio</string>
     <string name="new_site_creation_creating_site_loading_3">Configurar el tema</string>
@@ -40,7 +97,7 @@ Language: es
     <string name="media_accessing_failed">Ha fallado el acceso al contenido de un sitio privado. Algunos medios pueden no estar disponibles</string>
     <string name="media_accessing_progress">Accediendo al contenido de un sitio privado</string>
     <string name="error_failed_to_crop_and_save_image">Fallo al recortar y guardar la imagen, por favor, inténtalo de nuevo.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Fallo al insertar la imagen.\nPor favor, toca para volver a intentarlo.</string>
+    <string name="failed_to_load_image_tap_to_retry">Fallo al cargar la imagen.\nPor favor, toca para volver a intentarlo.</string>
     <string name="preview_image_description">Previsualizar la imagen</string>
     <string name="error_unknown_page_type">Formato de página desconocido</string>
     <string name="error_page_not_submitted">No hemos podido completar esta acción y no se ha enviado esta página a revisión.</string>
@@ -89,7 +146,7 @@ Language: es
     <string name="gutenberg_native_strategy">Estrategia</string>
     <string name="gutenberg_native_show_post_content">Mostrar el contenido de la entrada</string>
     <string name="gutenberg_native_services">Servicios</string>
-    <string name="gutenberg_native_samuel_the_dog">Samuel el Perro</string>
+    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
     <string name="gutenberg_native_sally_smith">Sally Smith</string>
     <string name="gutenberg_native_project_name">Nombre del proyecto</string>
     <string name="gutenberg_native_position_or_job_title">Puesto o título del trabajo</string>
@@ -97,17 +154,14 @@ Language: es
     <string name="gutenberg_native_only_show_excerpt">Mostrar solo el extracto</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mi porfolio presenta varios proyectos creados a lo largo de mi carrera. Mira a continuación mi información de contacto y ponte en contacto.</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
-    <string name="gutenberg_native_link_settings">Ajustes de los enlaces</string>
+    <string name="gutenberg_native_s_settings">Ajustes de %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hablemos 👋 No dudes en contactar en la siguiente información de contacto o envía un mensaje usando el formulario.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Vamos a construir algo juntos.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Vamos a construir algo juntos</string>
-    <string name="gutenberg_native_let_s_build_something_together">Vamos a construir algo juntos</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">¡Vamos a construir algo juntos!</string>
+    <string name="gutenberg_native_let_s_build_something_together">¡Vamos a construir algo juntos!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Son nuestras elecciones, Harry, las que muestran lo que realmente somos, mucho más que nuestras habilidades.</string>
     <string name="gutenberg_native_inspiration">Inspiración</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">¡Ponte en contacto!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">¡Ponte en contacto!</string>
     <string name="gutenberg_native_get_in_touch">Ponte en contacto</string>
     <string name="gutenberg_native_excerpt_length_words">Longitud del extracto (palabras)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Envíame un correo electrónico: &lt;a href=\"mailto:correo@ejemplo.es\">correo@ejemplo.es&lt;/a></string>
@@ -115,10 +169,6 @@ Language: es
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">No llores porque se ha acabado, sonríe porque ha pasado.</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
     <string name="gutenberg_native_city_10100">00000, Ciudad</string>
-    <string name="gutenberg_native_button_link_url">URL del enlace del botón</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Próximamente habrá ajustes para el color del botón.</string>
-    <string name="gutenberg_native_border_settings">Ajustes del borde</string>
-    <string name="gutenberg_native_border_radius">Radio del borde</string>
     <string name="gutenberg_native_add_paragraph_block">Añadir un bloque de párrafo</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Una breve descripción de los servicios que ofreces.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Una breve biografía sobre tu historial personal, tus logros clave o un hecho interesante.</string>
@@ -252,7 +302,6 @@ Language: es
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>
     <string name="gutenberg_native_s_block_empty">Bloque %s. Vacío</string>
     <string name="gutenberg_native_reset_block">Restablecer el bloque</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Eliminar el bloque de la fila %s</string>
     <string name="gutenberg_native_remove_annotations">Eliminar las notas</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el vídeo</string>
     <string name="gutenberg_native_problem_displaying_block">Problema al mostrar el bloque</string>
@@ -268,9 +317,7 @@ Language: es
     <string name="gutenberg_native_my_post_publish_panel">Mi panel de publicación de entradas</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel de ajustes de mis documentos</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover el bloque hacia arriba, de la fila %1$s a la fila %2$s</string>
-    <string name="gutenberg_native_move_block_up">Mover el bloque arriba</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo, de la fila %1$s a la fila %2$s</string>
-    <string name="gutenberg_native_move_block_down">Mover el bloque abajo</string>
     <string name="gutenberg_native_link_text">Texto del enlace</string>
     <string name="gutenberg_native_link_inserted">Enlace insertado</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
@@ -283,7 +330,6 @@ Language: es
     <string name="gutenberg_native_double_tap_to_select_an_image">Toca dos veces para seleccionar una imagen</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Toca dos veces para seleccionar un vídeo</string>
     <string name="gutenberg_native_double_tap_to_select">Toca dos veces para seleccionar</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Toca dos veces para eliminar el bloque</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Toca dos veces para rehacer el último cambio</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Toca dos veces para mover el bloque hacia arriba</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toca dos veces para mover el bloque hacia abajo</string>
@@ -293,7 +339,6 @@ Language: es
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Toca dos veces y mantén para editar</string>
     <string name="gutenberg_native_current_value_is_s">El valor actual es %s</string>
     <string name="gutenberg_native_content">Contenido…</string>
-    <string name="gutenberg_native_clear_all_settings">Vaciar todos los ajustes</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_annotations_sidebar">Barra lateral de notas</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
@@ -475,7 +520,7 @@ Language: es
     <string name="error_disabled_apis">No se pudieron recuperar los ajustes. Algunas APIs no están disponibles para la cuenta e ID de esta aplicación OAuth. </string>
     <string name="jetpack_connection_terms_and_conditions">Al configurar Jetpack aceptas nuestros %1$stérminos y condiciones%2$s</string>
     <string name="site_settings_disconnected_toast">No hay ninguna conexión. La edición está desactivada.</string>
-    <string name="site_settings_update_password_message">Para volver a conectar la aplicación a tu sitio alojado, introduce aquí la nueva contraseña del sitio.</string>
+    <string name="site_settings_update_password_message">Para volver a conectar la aplicación con tu sitio alojado, introduce aquí la nueva contraseña del sitio.</string>
     <string name="site_settings_password_updated">Contraseña actualizada</string>
     <string name="site_settings_password_dialog_title">Actualizar contraseña</string>
     <string name="domain_registration_registering_domain_name_progress_dialog_message">Registrando el nombre de dominio…</string>
@@ -620,14 +665,14 @@ Language: es
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre las herramientas de marketing y SEO de nuestros planes de pago.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automáticamente las nuevas entradas en tus cuentas de medios sociales.</string>
-    <string name="quick_start_dialog_customize_site_message">Configura fuentes, añade imágenes, y más.</string>
+    <string name="quick_start_dialog_customize_site_message">Retoca fuentes, añade imágenes y más.</string>
     <string name="quick_start_dialog_create_page_title">Crea una nueva página</string>
     <string name="quick_start_dialog_create_page_message">Añade una página con contenido clave - una página «Acerca de» es un gran comienzo.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa las estadísticas de tu sitio</string>
     <string name="quick_start_dialog_check_stats_message">Mantente al día sobre el rendimiento de tu sitio.</string>
     <string name="quick_start_dialog_browse_themes_title">Explorar temas</string>
     <string name="quick_start_dialog_browse_themes_message">Explora docenas de opciones de diseño y descubre el que se ajuste a ti.</string>
-    <string name="quick_start_dialog_remove_next_steps_message">Quitar los siguiente pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
+    <string name="quick_start_dialog_remove_next_steps_message">Eliminar los siguientes pasos ocultará todas las visitas guiadas de este sitio. Esta acción es irreversible.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Quitar los siguientes pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar esto</string>
     <string name="quick_start_complete_view_subtitle">Enhorabuena por completar tu lista. Un trabajo bien hecho.</string>
@@ -648,7 +693,7 @@ Language: es
     <string name="cancel_new_site_wizard_content_description">Cancelar el asistente de creación de sitios</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Estamos creando tu nuevo sitio</string>
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
-    <string name="notification_new_site_creation_title">Creación de un sitio</string>
+    <string name="notification_new_site_creation_title">Crear sitio</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
     <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en Internet.</string>
@@ -671,7 +716,7 @@ Language: es
     <string name="snackbar_conflict_web_version_discarded">Versión web descartada</string>
     <string name="snackbar_conflict_local_version_discarded">Versión local descartada</string>
     <string name="toast_conflict_updating_post">Actualizando contenido</string>
-    <string name="dialog_confirm_load_remote_post_discard_web">Descartar Web</string>
+    <string name="dialog_confirm_load_remote_post_discard_web">Descartar web</string>
     <string name="dialog_confirm_load_remote_post_discard_local">Descartar local</string>
     <string name="dialog_confirm_load_remote_post_body_2">Local\nGuardado el %s\n\nWeb\nGuardado el %s\n</string>
     <string name="dialog_confirm_load_remote_post_body">Este contenido tiene dos versiones en conflicto. Selecciona qué versión quieres descartar.\n</string>
@@ -690,7 +735,7 @@ Language: es
     <string name="stats_search_terms">Buscar términos</string>
     <string name="stats_videos_views_label">Vistas</string>
     <string name="stats_videos_title_label">Título</string>
-    <string name="stats_videos">Videos</string>
+    <string name="stats_videos">Vídeos</string>
     <string name="stats_country_views_label">Vistas</string>
     <string name="stats_country_label">País</string>
     <string name="stats_countries">Paises</string>
@@ -749,7 +794,7 @@ Language: es
     <string name="history_detail_button_previous">Anterior</string>
     <string name="history_detail_button_next">Siguiente</string>
     <string name="media_space_used">%1$s utilizado</string>
-    <string name="enter_wpcom_or_jetpack_site">Por favor, introduce un sitio WordPress WordPress.com o alojado conectado a Jetpack</string>
+    <string name="enter_wpcom_or_jetpack_site">Por favor, introduce un sitio WordPress WordPress.com o autoalojado conectado a Jetpack</string>
     <string name="history_loading_revision">Cargando revisión</string>
     <string name="history_loaded_revision">Revisión cargada</string>
     <string name="history_load_dialog_button_positive">Cargar</string>
@@ -767,11 +812,11 @@ Language: es
     <string name="pages_pending">Pendiente de revisión</string>
     <string name="pages_open_page_error">La página seleccionada no está disponible</string>
     <string name="news_card_announcement_action_sample_announcement">[Leer más]</string>
-    <string name="news_card_announcement_content_sample_announcement">[¿No tienes tiempo para leer ahora mismo?] No hay problema, guarda entradas para cuando puedas.]</string>
+    <string name="news_card_announcement_content_sample_announcement">[¿No tienes tiempo para leer ahora mismo? No hay problema, guarda entradas para cuando puedas.]</string>
     <string name="news_card_announcement_title_sample_announcement">[Nueva característica disponible]</string>
     <string name="pages_empty_trashed">No tienes ninguna página en la papelera</string>
     <string name="pages_empty_scheduled">No tienes ninguna página programada</string>
-    <string name="pages_empty_drafts">No tienes ninguna página en probador</string>
+    <string name="pages_empty_drafts">No tienes ninguna página en borrador</string>
     <string name="pages_empty_published">Todavía no has publicado ninguna página</string>
     <string name="pages_search_suggestion">Buscar páginas</string>
     <string name="pages_empty_search_result">Ninguna página coincide con tu búsqueda</string>
@@ -833,7 +878,7 @@ Language: es
     <string name="content_description_more">Más</string>
     <string name="my_site_create_new_site_title">No tienes sitios</string>
     <string name="reader_empty_followed_tags_title">No sigues etiquetas</string>
-    <string name="reader_empty_followed_tags_subtitle">Añade aquí etiquetas para descubrir entradas sobre tos temáticas favoritas</string>
+    <string name="reader_empty_followed_tags_subtitle">Añade aquí etiquetas para descubrir entradas sobre tus temáticas favoritas</string>
     <string name="login_to_to_connect_jetpack">Accede a la cuenta de WordPress.com que usaste para conectar Jetpack.</string>
     <string name="install_jetpack_retry">Reintentar</string>
     <string name="install_jetpack_continue">Configurar</string>
@@ -864,7 +909,6 @@ Language: es
     <string name="reader_empty_posts_liked_title">Nada que te gustó aún</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir a los siguientes</string>
     <string name="reader_empty_followed_blogs_button_discover">Descubre sitios</string>
-    <string name="reader_empty_followed_blogs_description">Aún no estás siguiendo a ningún sitio. ¿Por qué no sigues uno ahora?</string>
     <string name="reader_empty_followed_blogs_title">Sitios a los que no sigues</string>
     <string name="notifications_empty_likes">No hay me gusta aún</string>
     <string name="notifications_empty_followers">No hay seguidores aún</string>
@@ -885,7 +929,7 @@ Language: es
     <string name="support_identity_input_dialog_email_label">Correo electrónico</string>
     <string name="support_identity_input_dialog_enter_email">Por favor, introduce tu dirección de correo electrónico</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Para continuar, por favor, introduce tu dirección de correo electrónico y nombre</string>
-    <string name="support_push_notification_message">Nuevo mensaje de \'Ayuda y soporte\'</string>
+    <string name="support_push_notification_message">Nuevo mensaje de «Ayuda y soporte»</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_contact_email">Correo electrónico de contacto</string>
@@ -958,7 +1002,7 @@ Language: es
     <string name="post_submitted">Entrada enviada</string>
     <string name="login_email_button_signup">¿No tienes una cuenta? %1$s Regístrate %2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Una característica del plugin requiere que el sitio esté en buen estado.</string>
-    <string name="plugin_install_site_ineligible_not_domain_owner">Una característica del plugin necesita que la suscripción principal del dominio esté asociada con este usuario.</string>
+    <string name="plugin_install_site_ineligible_not_domain_owner">Una característica del plugin necesita que la suscripción del dominio principal esté asociada con este usuario.</string>
     <string name="plugin_install_site_ineligible_non_admin_user">Una característica del plugin necesita privilegios de administrador.</string>
     <string name="plugin_install_site_ineligible_no_vip_sites">El plugin no puede instalarse en sitios VIP.</string>
     <string name="plugin_install_site_ineligible_excessive_disk_space">El plugin no se puede instalar debido a las limitaciones de espacio del disco.</string>
@@ -991,7 +1035,7 @@ Language: es
     <string name="media_preview_title">%1$d de %2$d</string>
     <string name="stock_media_picker_initial_empty_subtext">Fotografías facilitadas por %s</string>
     <string name="stock_media_picker_initial_empty_text">Busca para encontrar fotografías gratuitas para añadir a tu biblioteca de medios</string>
-    <string name="stock_media_picker_search_hint">Búsqueda gratuita en la biblioteca de fotos</string>
+    <string name="stock_media_picker_search_hint">Búsqueda en la biblioteca de fotos gratuitas</string>
     <string name="photo_picker_stock_media">Selecciona de la biblioteca gratuita de fotos</string>
     <string name="error_save_empty_draft">No se puede guardar un borrador vacío</string>
     <string name="site_settings_quota_space_unlimited">%1$s de ilimitado</string>
@@ -1004,8 +1048,8 @@ Language: es
     <string name="show_more_desc">mostrar más</string>
     <string name="reader_photo_view_desc">foto</string>
     <string name="reader_list_item_suggestion_remove_desc">borrar</string>
-    <string name="photo_picker_thumbnail_desc">Reproducir video</string>
-    <string name="reader_cardview_post_play_video_desc">reproducir video destacado</string>
+    <string name="photo_picker_thumbnail_desc">Reproducir vídeo</string>
+    <string name="reader_cardview_post_play_video_desc">reproducir vídeo destacado</string>
     <string name="plugin_detail_logo_desc">logo del plugin</string>
     <string name="plugin_detail_banner_desc">banner del plugin</string>
     <string name="photo_picker_wpmedia_desc">elige desde medios de WordPress</string>
@@ -1016,7 +1060,7 @@ Language: es
     <string name="media_settings_image_preview_desc">previsualizar imagen</string>
     <string name="media_preview_desc">vista previa</string>
     <string name="media_preview_audio_desc">audio</string>
-    <string name="media_grid_item_play_video_desc">reproducir video</string>
+    <string name="media_grid_item_play_video_desc">reproducir vídeo</string>
     <string name="media_grid_item_trash_desc">papelera</string>
     <string name="media_grid_item_retry_desc">reintentar</string>
     <string name="media_grid_item_image_desc">vista previa de medios, nombre de archivo %s</string>
@@ -1116,7 +1160,6 @@ Language: es
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 entrada con 1 archivo sin subir</string>
     <string name="untitled_in_parentheses">(sin título)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
@@ -1269,7 +1312,7 @@ Language: es
     <string name="media_files_uploaded">%d archivos subidos</string>
     <string name="media_files_not_uploaded">%d archivos no subidos</string>
     <string name="remove_image_from_post">Quitar de la entrada</string>
-    <string name="confirm_remove_media_image">¿Quitamos esta imagen de la entrada?</string>
+    <string name="confirm_remove_media_image">¿Eliminar esta imagen de la entrada?</string>
     <string name="media_edit_customize_card_caption">Personalizar</string>
     <string name="media_edit_file_details_card_caption">Detalles del archivo</string>
     <string name="login_error_suffix">\n¿Quizás probando con otra cuenta?</string>
@@ -1286,14 +1329,14 @@ Language: es
     <string name="jetpack_disconnect_success_toast">Sitio desconectado</string>
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">¿Estás seguro de querer desconectar Jetpack del sitio?</string>
-    <string name="jetpack_disconnect_pref_title">Desconecta de WordPress.com</string>
+    <string name="jetpack_disconnect_pref_title">«Desconectar de WordPress.com»</string>
     <string name="site_settings_jetpack_whitelist_description">Puedes poner en lista blanca una dirección IP o series de direcciones, evitando que las bloquee Jetpack. Se aceptan IPv4 y IPv6. Para especificar un rango introduce  un valor inferior y un valor superior separados por guiones. Ejemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Requiere la identificación en dos pasos</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar cuentas usando el correo electrónico</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir el acceso con WordPress.com</string>
     <string name="jetpack_wpcom_sign_in_category_title">Acceso con WordPress.com</string>
     <string name="jetpack_brute_force_whitelist_title">Direcciones IP en lista blanca</string>
-    <string name="jetpack_prevent_brute_force_title">Bloquea intentos de acceso malisiosos</string>
+    <string name="jetpack_prevent_brute_force_title">Bloquea intentos de acceso maliciosos</string>
     <string name="jetpack_prevent_brute_force_category_title">Protección contra ataques de fuerza bruta</string>
     <string name="jetpack_send_wp_notifications_title">Enviar avisos instantáneos</string>
     <string name="jetpack_send_email_notifications_title">Enviar avisos por correo electrónico</string>
@@ -1307,7 +1350,7 @@ Language: es
     <string name="share_media_permission_required">Se requieren permisos para compartir imágenes o vídeos</string>
     <string name="invalid_ip_or_range">IP o rango de IP no válido</string>
     <string name="deleting_media_dlg">Eliminando</string>
-    <string name="confirm_delete_media_video">¿Borrar este video?</string>
+    <string name="confirm_delete_media_video">¿Borrar este vídeo?</string>
     <string name="confirm_delete_media_image">¿Eliminar esta imagen?</string>
     <string name="media_title_document_details">Detalles del documento</string>
     <string name="media_title_audio_details">Detalles del audio</string>
@@ -1322,7 +1365,6 @@ Language: es
     <string name="media_edit_filename_caption">Nombre del archivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy_text">Copiar</string>
     <string name="connect_site">Conectar el sitio</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Luz parpadeante</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibración del dispositivo</string>
@@ -1398,7 +1440,7 @@ Language: es
     <string name="login_promo_text_jetpack">Gestiona tu sitio con Jetpack instalado sobre la marcha - tienes WordPress en tu bolsillo.</string>
     <string name="login_promo_text_notifications">Tus avisos viajan contigo - ve los comentarios y «me gusta» a medida que ocurran.</string>
     <string name="login_promo_text_anytime">Revisa tus sitios favoritos y únete a la conversación en cualquier sitio, en cualquier momento.</string>
-    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real. </string>
+    <string name="login_promo_text_realtime">Observa a lectores de todo el mundo leyendo e interactuando con tu sitio - en tiempo real.</string>
     <string name="login_promo_text_onthego">Publica desde el parque. Bloguea desde el autobús. Comenta desde el café. WordPress está donde tú vas.</string>
     <string name="image_optimization_promo_desc">La optimización de imagen reduce las imágenes para que suban más rápido.\n\nPuedes cambiar esto en cualquier momento en los ajustes del sitio.</string>
     <string name="image_optimization_promo_title">¿Activar optimización de la imagen?</string>
@@ -1422,7 +1464,7 @@ Language: es
     <string name="post_status_publish_post">Publicar</string>
     <string name="change_location">Cambiar ubicación</string>
     <string name="remove_location">Borrar ubicación</string>
-    <string name="post_settings_error_placepicker_missing_play_services">No se ha podido abrir el selector de ubicación, no  disponible Google Play Services</string>
+    <string name="post_settings_error_placepicker_missing_play_services">No se ha podido abrir el selector de ubicación, Google Play Services no está disponible </string>
     <string name="post_settings_location">Ubicación</string>
     <string name="now">Ahora</string>
     <string name="post_settings_password_dialog_hint">Solo los que tengan esta contraseña pueden ver esta entrada</string>
@@ -1457,7 +1499,7 @@ Language: es
     <string name="reader_view_comments">Ver comentarios</string>
     <string name="site_settings_video_quality_hint">Calidad de los vídeos. Valores más altos implican vídeos de mejor calidad.</string>
     <string name="site_settings_video_width_hint">Redimensiona los vídeos en las entradas a este tamaño</string>
-    <string name="site_settings_optimize_video_summary">Activa la redimensión y compresión de vídeos</string>
+    <string name="site_settings_optimize_video_summary">Activar para redimensionar y comprimir los vídeos</string>
     <string name="site_settings_optimize_videos">Optimizar vídeos</string>
     <string name="draft_uploaded">Borrador subido</string>
     <string name="report_bug">Informar de fallo</string>
@@ -1480,7 +1522,7 @@ Language: es
     <string name="sharing_more_description">Un botón «Más» contiene un desplegable que muestra botones de compartir</string>
     <string name="sharing_sharing_buttons_description">Elige qué botones se mostrarán debajo de tus entradas</string>
     <string name="twitter_username">Usuario de Twitter</string>
-    <string name="sharing_comment_likes">Me gusta a comentarios</string>
+    <string name="sharing_comment_likes">«Me gusta» del comentario</string>
     <string name="button_style">Estilo del botón</string>
     <string name="label">Etiqueta</string>
     <string name="sharing_buttons">Botones de compartir</string>
@@ -1561,7 +1603,7 @@ Language: es
     <string name="media_upload_state_queued">En cola</string>
     <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidad de la imagen</string>
-    <string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
+    <string name="error_all_media_upload_canceled">Todos los archivos de medios se han cancelado debido a un error desconocido. Por favor, vuelve a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
     <string name="submit_for_review">Enviar</string>
     <string name="duplicate_site_detected">Se ha detectado un sitio duplicado.</string>
@@ -1587,7 +1629,7 @@ Language: es
     <string name="pending_draft_one_day_2">¿Sabías que «%1$s» está aún en borrador? ¡Publícala!</string>
     <string name="pending_draft_one_day_1">Ayer guardaste \'%1$s\' como borrador. ¡No olvides publicarla!</string>
     <string name="reader_photo_by">Foto de %s</string>
-    <string name="reader_label_visit">Visitar</string>
+    <string name="reader_label_visit">Visitar el sitio</string>
     <string name="swipe_for_more">Deslizar para ver más</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero o en su lugar usa el botón de acción arriba para abrir un navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">No estás autorizado a ver esta publicación. Prueba a iniciar sesión en WordPress.com primero.</string>
@@ -2012,7 +2054,7 @@ Language: es
     <string name="publisher">Autor:</string>
     <string name="reader_empty_posts_request_failed">No se pudieron recuperar las entradas</string>
     <string name="reader_page_recommended_blogs">Sitios que te podrían gustar</string>
-    <string name="error_copy_to_clipboard">Ocurrió un error al copiar el texto en el portapapeles</string>
+    <string name="error_copy_to_clipboard">Ha ocurrido un error al copiar el texto en el portapapeles</string>
     <string name="reader_empty_posts_in_blog">Este sitio está vacío</string>
     <string name="reader_label_new_posts">Nuevas entradas</string>
     <string name="logs_copied_to_clipboard">Los informes de la aplicación se han copiado al portapapeles</string>
@@ -2187,6 +2229,7 @@ Language: es
     <string name="reader_btn_unfollow">Siguiendo</string>
     <string name="reader_btn_follow">Seguir</string>
     <string name="reader_btn_share">Compartir</string>
+    <string name="reader_view_reblog">Reblog</string>
     <string name="reader_untitled_post">Sin título</string>
     <string name="comments_empty_list">No hay comentarios aún</string>
     <string name="empty_list_default">Esta lista esta vacía</string>

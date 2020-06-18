@@ -91,7 +91,7 @@ import org.wordpress.android.util.AppLog.LogLevel;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AppThemeUtils;
 import org.wordpress.android.util.BitmapLruCache;
-import org.wordpress.android.util.CrashLoggingUtils;
+import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -163,6 +163,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
     @Inject StoryMediaSaveUploadBridge mStoryMediaSaveUploadBridge;
+    @Inject CrashLogging mCrashLogging;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -232,14 +233,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         // This call needs be made before accessing any methods in android.webkit package
         setWebViewDataDirectorySuffixOnAndroidP();
 
-        CrashLoggingUtils.startCrashLogging(getContext());
-
         initWellSql();
 
         // Init Dagger
         initDaggerComponent();
         component().inject(this);
         mDispatcher.register(this);
+
+        mCrashLogging.start(getContext());
 
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
@@ -257,7 +258,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                 StringBuffer sb = new StringBuffer();
                 sb.append(logLevel.toString()).append("/").append(AppLog.TAG).append("-")
                   .append(tag.toString()).append(": ").append(message);
-                CrashLoggingUtils.log(sb.toString());
+                mCrashLogging.log(sb.toString());
             }
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
@@ -864,7 +865,6 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                     AppLog.d(T.MAIN, "ConnectionChangeReceiver successfully unregistered");
                 } catch (IllegalArgumentException e) {
                     AppLog.e(T.MAIN, "ConnectionChangeReceiver was already unregistered");
-                    CrashLoggingUtils.log(e);
                 }
             }
         }
