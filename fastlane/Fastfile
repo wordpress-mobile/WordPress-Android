@@ -291,7 +291,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   # upload_build_to_play_store
   # -----------------------------------------------------------------------------------
-  # This lane uploads the build for a given version to the given track
+  # This lane uploads the build to Play Store for the given version to the given track
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane upload_build_to_play_store version:<version> track:<track>
@@ -305,18 +305,21 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :upload_build_to_play_store do | options |
     project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
     aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version] }.aab")
-    UI.error("Unable to find a build artifact at #{aab_file_path}") unless File.exist? aab_file_path
-    upload_to_play_store(
-      package_name: 'org.wordpress.android',
-      aab: aab_file_path,
-      track: options[:upload_track],
-      release_status: 'draft',
-      skip_upload_metadata: true,
-      skip_upload_changelogs: true,
-      skip_upload_images: true,
-      skip_upload_screenshots: true,
-      json_key: './google-upload-credentials.json',
-    )
+    if File.exists? aab_file_path then
+      upload_to_play_store(
+        package_name: 'org.wordpress.android',
+        aab: aab_file_path,
+        track: options[:track],
+        release_status: 'draft',
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+        json_key: './google-upload-credentials.json',
+      )
+    else
+      UI.error("Unable to find a build artifact at #{aab_file_path}")
+    end
   end
 
   #####################################################################################
