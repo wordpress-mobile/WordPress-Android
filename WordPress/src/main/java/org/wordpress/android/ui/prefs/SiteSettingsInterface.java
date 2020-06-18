@@ -28,6 +28,8 @@ import org.wordpress.android.models.CategoryModel;
 import org.wordpress.android.models.JetpackSettingsModel;
 import org.wordpress.android.models.SiteSettingsModel;
 import org.wordpress.android.ui.plans.PlansConstants;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FormatUtils;
 import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.LocaleManager;
@@ -163,7 +165,7 @@ public abstract class SiteSettingsInterface {
      */
     protected abstract void fetchRemoteData();
 
-    protected final Context mContext;
+    protected Context mContext;
     protected final SiteModel mSite;
     protected final SiteSettingsListener mListener;
     protected final SiteSettingsModel mSettings;
@@ -193,6 +195,11 @@ public abstract class SiteSettingsInterface {
     protected void finalize() throws Throwable {
         mDispatcher.unregister(this);
         super.finalize();
+    }
+
+    public void clear() {
+        mDispatcher.unregister(this);
+        mContext = null;
     }
 
     public void saveSettings() {
@@ -1172,8 +1179,10 @@ public abstract class SiteSettingsInterface {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostFormatsChanged(OnPostFormatsChanged event) {
         if (event.isError()) {
+            AppLog.e(T.SETTINGS, "An error occurred while updating the post formats with type: " + event.error.type);
             return;
         }
+        AppLog.v(T.SETTINGS, "Post formats successfully fetched!");
         notifyUpdatedOnUiThread();
     }
 

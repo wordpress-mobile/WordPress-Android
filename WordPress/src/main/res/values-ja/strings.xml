@@ -1,23 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-30 08:54:12+0000
+Translation-Revision-Date: 2020-06-11 08:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ja_JP
 -->
 <resources>
-    <string name="gutenberg_native_subscribe">購読</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">%s を削除</string>
+    <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
+    <string name="gutenberg_native_move_s_up">%sを上に移動</string>
+    <string name="gutenberg_native_move_s_right">%sを右に移動</string>
+    <string name="gutenberg_native_move_s_left">%sを左に移動</string>
+    <string name="gutenberg_native_move_s_down">%sを下に移動</string>
+    <string name="gutenberg_native_try_a_starter_layout">スターターレイアウトを試す</string>
+    <string name="gutenberg_native_insert_mention">メンションを挿入</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">ダブルタップして「アクションシート」と利用可能オプションを開く</string>
+    <string name="pages_cannot_be_started">現在、一時的にページを開けません。後ほどもう一度お試しください</string>
+    <string name="pages_set_as_posts_page">投稿ページとして設定</string>
+    <string name="pages_set_as_homepage">ホームページに設定する</string>
+    <string name="suggestion_no_matching_users">「マッチするユーザーがいません」</string>
+    <string name="suggestion_invalid_user">「%s は有効なユーザーではありません」</string>
+    <string name="site_settings_select_page">ページを選択</string>
+    <string name="site_settings_posts_page">投稿ページ</string>
+    <string name="site_settings_static_homepage">固定ホームページ</string>
+    <string name="site_settings_classic_blog">クラシックブログ</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">ホームページと投稿用ページは同じものを選択できません。</string>
+    <string name="site_settings_failed_update_homepage_settings">ホームページ設定の更新に失敗しました。インターネット接続を確認してください。</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">ページを読み込む前にホームページ設定の保存はできません</string>
+    <string name="site_settings_failed_to_save_homepage_settings">ホームページ設定を保存できません</string>
+    <string name="site_settings_accept_homepage">承認</string>
+    <string name="site_settings_failed_to_load_pages">ページの読み込みに失敗しました</string>
+    <string name="site_settings_homepage_settings_description">最新の投稿を表示するホームページ (クラシックブログ) か固定ページから選択してください。</string>
+    <string name="site_settings_homepage_settings">ホームページ設定</string>
+    <string name="site_settings_homepage">ホームページ</string>
+    <string name="page_posts_page_update_failed">投稿ページの更新に失敗しました</string>
+    <string name="page_posts_page_successfully_updated">投稿ページの更新に成功しました</string>
+    <string name="page_homepage_update_failed">ホームページの更新に失敗しました</string>
+    <string name="page_homepage_successfully_updated">ホームページが正常に更新されました</string>
+    <string name="page_cannot_set_posts_page">「サイト設定」で「投稿」ページを「固定ホームページ」にするには</string>
+    <string name="page_cannot_set_homepage">「サイト設定」でホームページを「固定ホームページ」にするには</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">新しいブログへようこそ</string>
+    <string name="gutenberg_native_select_a_color">色を選択</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">ダブルタップして色設定に移動</string>
+    <string name="reader_empty_followed_blogs_description">サイトをフォローすると、こちらにコンテンツが表示されます</string>
+    <string name="feature_announcement_find_out_mode">詳細</string>
+    <string name="feature_announcement_dialog_label">WordPress の新機能</string>
+    <string name="insert_label_with_count">%d を挿入</string>
+    <string name="crop">切り取り</string>
+    <string name="error_failed_to_load_into_file">ファイルに読み込めませんでした。もう一度お試しください。</string>
+    <string name="preview_image_thumbnail_description">プレビュー画像のサムネイル</string>
+    <string name="photo_picker_use_media">このメディアを使用</string>
+    <string name="photo_picker_use_video">この動画を使用</string>
+    <string name="photo_picker_photo_or_video_title">メディアを選択</string>
+    <string name="photo_picker_video_title">動画を選択</string>
+    <string name="site_picker_ask_site_select">サイトを選択できませんでした。もう一度お試しください。</string>
+    <string name="sitepicker_continue_flow">次へ</string>
+    <string name="reader_reblog_error">リブログに失敗しました</string>
+    <string name="reader_no_site_to_reblog_action">サイトの管理</string>
+    <string name="reader_no_site_to_reblog_detail">WordPress.com サイトの作成後は、お気に入りのコンテンツを自分のサイトにリブログできます。</string>
+    <string name="reader_no_site_to_reblog_title">利用可能な WordPress.com サイトがありません</string>
+    <string name="whats_new_in_version_title">新機能</string>
+    <string name="comment_q_action_copied_url">リンクアドレスをコピーしました</string>
+    <string name="copy_link_address">リンクアドレスをコピー</string>
+    <string name="comment_share_link_via">次で共有</string>
+    <string name="comment_toast_err_share_intent">共有に失敗しました</string>
+    <string name="button_insert">挿入</string>
+    <string name="continue_label">次へ</string>
+    <string name="copy_text">コピー</string>
     <string name="gutenberg_native_number_of_columns">カラム数</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
-    <string name="gutenberg_native_move_block_right">ブロックを右に移動</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に左に移動</string>
-    <string name="gutenberg_native_move_block_left">ブロックを左に移動</string>
-    <string name="gutenberg_native_latest_blog_posts">最新のブログ投稿</string>
-    <string name="gutenberg_native_follow_our_blog">ブログをフォローする</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">ダブルタップしてブロックを右に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">ダブルタップしてブロックを左に移動</string>
     <string name="gutenberg_native_columns_settings">カラム設定</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">色設定機能がまもなく追加されます。</string>
     <string name="gutenberg_native_blog">ブログ</string>
     <string name="new_site_creation_creating_site_loading_4">ダッシュボードの作成</string>
     <string name="new_site_creation_creating_site_loading_3">テーマを設定する</string>
@@ -40,7 +97,7 @@ Language: ja_JP
     <string name="media_accessing_failed">非公開サイトのコンテンツにアクセスできませんでした。一部のメディアは利用できない場合があります</string>
     <string name="media_accessing_progress">非公開サイトのコンテンツへのアクセス</string>
     <string name="error_failed_to_crop_and_save_image">画像の切り抜きと保存に失敗しました。もう一度お試しください。</string>
-    <string name="failed_to_insert_image_tap_to_retry">画像を挿入できませんでした。\nタップして再試行してください。</string>
+    <string name="failed_to_load_image_tap_to_retry">画像の読み込みに失敗しました。\nタップして再試行してください。</string>
     <string name="preview_image_description">画像をプレビュー</string>
     <string name="error_unknown_page_type">ページのフォーマットが不明です</string>
     <string name="error_page_not_submitted">この操作を完了できなかったため、この確認用のページは送信されていません。</string>
@@ -97,17 +154,14 @@ Language: ja_JP
     <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">これまでのキャリアで制作してきたプロジェクトを、ポートフォリオにて紹介しています。下記のお問い合わせ先までご連絡ください。</string>
     <string name="gutenberg_native_link_to">リンク先</string>
-    <string name="gutenberg_native_link_settings">リンク設定</string>
+    <string name="gutenberg_native_s_settings">%s設定</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">詳細はご相談にて。ぜひお気軽に以下の連絡先にお問い合わせください。フォームでのご連絡もお待ちしています。</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">一緒につくりあげましょう。</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">一緒につくりあげましょう</string>
-    <string name="gutenberg_native_let_s_build_something_together">一緒につくりあげましょう</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">一緒に何かを作り上げましょう。</string>
+    <string name="gutenberg_native_let_s_build_something_together">一緒に何かを作り上げましょう。</string>
     <string name="gutenberg_native_juan_p_rez">フアン・ペレス</string>
     <string name="gutenberg_native_j_k_rowling">J.K.ローリング</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">ハリー、人が本当に何者であるかを示すのは、何ができるかではなく、どのような選択をするかなのだ。</string>
     <string name="gutenberg_native_inspiration">インスピレーション</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">お問い合わせ</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">お問い合わせ</string>
     <string name="gutenberg_native_get_in_touch">お問い合わせ</string>
     <string name="gutenberg_native_excerpt_length_words">抜粋の長さ (単語数)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">メール :&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -115,16 +169,12 @@ Language: ja_JP
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">終わったと嘆くより、機会に恵まれたと喜ぼう。</string>
     <string name="gutenberg_native_customize">カスタマイズ</string>
     <string name="gutenberg_native_city_10100">City, 10100</string>
-    <string name="gutenberg_native_button_link_url">ボタンへのリンク用 URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">ボタンの色設定機能がまもなく追加されます。</string>
-    <string name="gutenberg_native_border_settings">境界の設定</string>
-    <string name="gutenberg_native_border_radius">境界の半径</string>
     <string name="gutenberg_native_add_paragraph_block">段落ブロックを追加</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">サービス内容に関する簡単な説明。</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">個人的経歴、主な業績、興味深い事実を織り込んだ簡単な自己紹介。</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">提示したプロジェクトや作品の説明。</string>
-    <string name="gutenberg_native_555_555_1234">(555)555&#8211;1234</string>
+    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">投稿を作成</string>
     <string name="post_list_tab_trashed_posts">ゴミ箱に移動済み</string>
@@ -252,7 +302,6 @@ Language: ja_JP
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
     <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
     <string name="gutenberg_native_reset_block">ブロックをリセット</string>
-    <string name="gutenberg_native_remove_block_at_row_s">%s行目のブロックを削除</string>
     <string name="gutenberg_native_remove_annotations">注釈を削除</string>
     <string name="gutenberg_native_problem_opening_the_video">動画を開く際に問題が発生しました</string>
     <string name="gutenberg_native_problem_displaying_block">ブロックの表示中に問題が発生しました</string>
@@ -268,9 +317,7 @@ Language: ja_JP
     <string name="gutenberg_native_my_post_publish_panel">公開後パネル</string>
     <string name="gutenberg_native_my_document_setting_panel">ドキュメント設定パネル</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に上に移動します</string>
-    <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
-    <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
     <string name="gutenberg_native_link_text">リンク文字列</string>
     <string name="gutenberg_native_link_inserted">リンクを挿入しました</string>
     <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
@@ -283,7 +330,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_to_select_an_image">ダブルタップして画像を選択</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">ダブルタップして動画を選択</string>
     <string name="gutenberg_native_double_tap_to_select">ダブルタップして選択</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">ダブルタップしてブロックを削除</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">ダブルタップして前回の変更をやり直す</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">ダブルタップしてブロックを上に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">ダブルタップしてブロックを下に移動</string>
@@ -293,7 +339,6 @@ Language: ja_JP
     <string name="gutenberg_native_double_tap_and_hold_to_edit">ダブルタップと長押しで編集</string>
     <string name="gutenberg_native_current_value_is_s">現在の値 %s</string>
     <string name="gutenberg_native_content">コンテンツ…</string>
-    <string name="gutenberg_native_clear_all_settings">すべての設定を解除</string>
     <string name="gutenberg_native_choose_from_device">デバイスから選択</string>
     <string name="gutenberg_native_annotations_sidebar">注釈サイドバー</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">不明なエラーが発生しました。もう一度実行してください</string>
@@ -317,6 +362,8 @@ Language: ja_JP
     <string name="notifications_tab_dialog_master_hint_on">このサイトの通知タブで通知表示を無効にする</string>
     <string name="notifications_tab_dialog_master_status_off">このサイトの通知</string>
     <string name="notifications_tab_dialog_master_status_on">このサイトの通知</string>
+    <string name="dialog_gutenberg_informative_description_page">新しいページでブロックエディターを使用しています。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動してください。</string>
+    <string name="dialog_gutenberg_informative_description_post">新しい投稿でブロックエディターを使用しています。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動してください。</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -413,7 +460,7 @@ Language: ja_JP
     <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
     <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
-    <string name="stats_post_views_label">表示回数</string>
+    <string name="stats_post_views_label">表示数</string>
     <string name="stats_post_label">投稿</string>
     <string name="stats_list_item_description">%1$s:%2$s、%3$s:%4$s</string>
     <string name="stats_item_collapsed">項目を非表示にしました</string>
@@ -564,7 +611,7 @@ Language: ja_JP
     <string name="scheduled_for">予約済み:%s</string>
     <string name="stats_detail_recent_weeks">最近の週</string>
     <string name="stats_detail_average_views_per_day">平均表示数/日</string>
-    <string name="stats_months_and_years_views_label">表示回数</string>
+    <string name="stats_months_and_years_views_label">表示数</string>
     <string name="stats_months_and_years_period_label">期間</string>
     <string name="stats_detail_months_and_years">月と年</string>
     <string name="stats_insights_load_more">さらに読み込む</string>
@@ -636,7 +683,7 @@ Language: ja_JP
     <string name="notification_channel_reminder_title">リマインダー</string>
     <string name="stats_select_next_period_description">次の期間を選択</string>
     <string name="stats_select_previous_period_description">前の期間を選択</string>
-    <string name="stats_most_popular_percent_views">表示回数: %1$d%%</string>
+    <string name="stats_most_popular_percent_views">表示数: %1$d%%</string>
     <string name="stats_insights_popular">最も人気の時間</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
@@ -678,22 +725,24 @@ Language: ja_JP
     <string name="preference_strip_image_location">メディアから位置情報を削除する</string>
     <string name="stats_cannot_be_started">現在統計を開けません。後ほど、もう一度お試しください</string>
     <string name="gif_picker_endless_scroll_network_error">ネットワークエラーのため、一部のメディアを読み込めませんでした。</string>
-    <string name="stats_author_views_label">表示回数</string>
+    <string name="gif_picker_empty_search_list">検索と一致するメディアがありません</string>
+    <string name="gif_picker_initial_empty_text">GIF を検索してメディアライブラリに追加しましょう。</string>
+    <string name="stats_author_views_label">表示数</string>
     <string name="stats_author_label">投稿者</string>
     <string name="stats_authors">投稿者</string>
-    <string name="stats_search_terms_views_label">表示回数</string>
+    <string name="stats_search_terms_views_label">表示数</string>
     <string name="stats_search_terms_label">検索キーワード</string>
     <string name="stats_search_terms">検索キーワード</string>
-    <string name="stats_videos_views_label">表示回数</string>
+    <string name="stats_videos_views_label">表示数</string>
     <string name="stats_videos_title_label">タイトル</string>
     <string name="stats_videos">動画</string>
-    <string name="stats_country_views_label">表示回数</string>
+    <string name="stats_country_views_label">表示数</string>
     <string name="stats_country_label">国名</string>
     <string name="stats_countries">国</string>
     <string name="stats_clicks_label">クリック数</string>
     <string name="stats_clicks_link_label">リンク</string>
     <string name="stats_clicks">クリック数</string>
-    <string name="stats_referrer_views_label">表示回数</string>
+    <string name="stats_referrer_views_label">表示数</string>
     <string name="stats_referrer_label">リファラ</string>
     <string name="stats_referrers">リファラ</string>
     <string name="stats_posts_and_pages">投稿とページ</string>
@@ -715,9 +764,9 @@ Language: ja_JP
     <string name="stats_publicize_followers_label">フォロワー</string>
     <string name="stats_publicize_service_label">サービス</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
-    <string name="stats_tags_and_categories_views_label">表示回数</string>
+    <string name="stats_tags_and_categories_views_label">表示数</string>
     <string name="stats_tags_and_categories_title_label">タイトル</string>
-    <string name="stats_posts_and_pages_views_label">表示回数</string>
+    <string name="stats_posts_and_pages_views_label">表示数</string>
     <string name="stats_posts_and_pages_title_label">タイトル</string>
     <string name="stats_comments_label">コメント</string>
     <string name="stats_comments_title_label">タイトル</string>
@@ -860,7 +909,6 @@ Language: ja_JP
     <string name="reader_empty_posts_liked_title">「いいね」がつけられているものはまだありません</string>
     <string name="reader_empty_followed_blogs_button_followed">次に移動</string>
     <string name="reader_empty_followed_blogs_button_discover">サイトを見つける</string>
-    <string name="reader_empty_followed_blogs_description">フォローしているサイトはまだありません。すぐに1つのサイトをフォローしませんか ?</string>
     <string name="reader_empty_followed_blogs_title">フォロー中のサイトはまだありません</string>
     <string name="notifications_empty_likes">新しい「いいね」はまだついていません</string>
     <string name="notifications_empty_followers">フォロワーはまだいません</string>
@@ -1112,7 +1160,6 @@ Language: ja_JP
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1投稿、1ファイルが未アップロード</string>
     <string name="untitled_in_parentheses">(無題)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s、%2$s</string>
     <string name="latitude_longitude">%1$f、%2$f</string>
     <string name="site_creation_domain_finish_button">サイトの作成</string>
     <string name="notification_site_creation_created">続行するにはタップしてください。</string>
@@ -1318,7 +1365,6 @@ Language: ja_JP
     <string name="media_edit_filename_caption">ファイル名</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">代替テキスト</string>
-    <string name="copy_text">コピー</string>
     <string name="connect_site">サイトを連携</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">点滅</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">端末をバイブレート</string>
@@ -1583,7 +1629,7 @@ Language: ja_JP
     <string name="pending_draft_one_day_2">「%1$s」はまだ下書きの状態です。公開しましょう。</string>
     <string name="pending_draft_one_day_1">昨日「%1$s」の下書きを作成しました。公開するのを忘れないで下さい。</string>
     <string name="reader_photo_by">%s の写真</string>
-    <string name="reader_label_visit">表示</string>
+    <string name="reader_label_visit">サイトを表示</string>
     <string name="swipe_for_more">スワイプしてさらに表示</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">この投稿を表示する権限がありません。最初に WordPress.com へのログインを試みるか、代わりに上部の操作ボタンを使用してブラウザーを開いてください。</string>
     <string name="reader_err_get_post_not_authorized_signin">この投稿を表示する権限がありません。まず WordPress.com にログインしてみてください。</string>
@@ -2183,6 +2229,7 @@ Language: ja_JP
     <string name="reader_btn_unfollow">フォロー中</string>
     <string name="reader_btn_follow">フォロー</string>
     <string name="reader_btn_share">共有</string>
+    <string name="reader_view_reblog">リブログ</string>
     <string name="reader_untitled_post">(無題)</string>
     <string name="comments_empty_list">コメントはまだありません</string>
     <string name="empty_list_default">リストが空です</string>

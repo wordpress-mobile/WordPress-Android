@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: ms
 -->
 <resources>
@@ -80,7 +80,6 @@ Language: ms
     <string name="media_edit_filetype_caption">Jenis Fail</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Teks alt</string>
-    <string name="copy_text">Salin</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Lampu kelip</string>
     <string name="connect_site">Sambung Laman</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Gegarkan peranti</string>
@@ -342,7 +341,6 @@ Language: ms
     <string name="pending_draft_one_day_2">Tahukah anda bahawa \'%1$s\' masih lagi suatu draf? Terbitkannya!</string>
     <string name="pending_draft_one_day_1">Anda telah mendraf \'%1$s\' semalam. Jangan lupa untuk menerbitkannya!</string>
     <string name="reader_photo_by">Gambar oleh %s</string>
-    <string name="reader_label_visit">Lawat</string>
     <string name="swipe_for_more">Sapu untuk seterusnya</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu atau sebaliknya gunakan butang aksi di atas untuk membuka di pelayar.</string>
     <string name="reader_err_get_post_not_authorized_signin">Anda tidak dibenarkan melihat kiriman ini. Cuba daftar masuk ke WordPress.com dahulu.</string>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-31 06:52:54+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-06-01 20:35:46+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha
 Language: cs_CZ
 -->
 <resources>
@@ -485,7 +485,6 @@ Language: cs_CZ
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 příspěvek s 1 souborem nenahrán </string>
     <string name="untitled_in_parentheses">(bez názvu)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Vytvořit stránku</string>
     <string name="notification_site_creation_created">Dotkněte se pro pokračování.</string>
@@ -691,7 +690,6 @@ Language: cs_CZ
     <string name="media_edit_filename_caption">Jméno souboru</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternativní text</string>
-    <string name="copy_text">Kopírovat</string>
     <string name="connect_site">Web pro připojení</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikat světlem</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrovat zařízením</string>
@@ -955,7 +953,7 @@ Language: cs_CZ
     <string name="pending_draft_one_day_2">Věděli jste, že \'%1$s\' je stále koncept? Publikujte ho!</string>
     <string name="pending_draft_one_day_1">Vaše včerejší koncepty \'%1$s\'. Nezapomeňte je publikovat!</string>
     <string name="reader_photo_by">Fotka od %s</string>
-    <string name="reader_label_visit">Návštěva</string>
+    <string name="reader_label_visit">Zobrazit web</string>
     <string name="swipe_for_more">Přejetím více</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se nejdřív přihlásit na WordPress.com nebo použijte akční tlačítko nahoře v prohlížeči.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nemáte oprávnění pro zobrazení tohoto příspěvku. Zkuste se přihlásit nejdřív přihlásit WordPress.com.</string>

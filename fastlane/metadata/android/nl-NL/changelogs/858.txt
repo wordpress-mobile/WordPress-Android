@@ -1,6 +1,0 @@
-14.7:
-Blokeditor: Kolommenblok en startpaginasjabloon voor blogs toegevoegd. Knoppen voor startpaginasjablonen aangepast zodat ze geen pagina-content overlappen. Met 'Media kiezen vanuit apparaat' wordt een geïntegreerde WordPress-mediakiezer gebruikt, in plaats van de standaard kiezer van je apparaat.
-
-Bugfixes: Een bug die zorgde dat URL-instellingen werden weergegeven bij het wijzigen van de oriëntatie van een apparaat terwijl startpaginasjablonen werden bekeken.
-
-UI-verbeteringen: Je Gravatar is toegevoegd aan het menu Ik in Mijn site.
