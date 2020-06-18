@@ -56,7 +56,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun mapPostToUiState(post: ReaderPost) {
 
-        val blogUrl = post.blogUrl?.let {
+        val blogUrl = post.takeIf { it.hasBlogUrl() }?.blogUrl?.let {
             // TODO malinjir remove static access
             UrlUtils.removeScheme(it)
         }
@@ -67,7 +67,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                 WordPress.getContext()
         )
 
-        val avatarOrBlavatarUrl = post.blogImageUrl?.let {
+        val avatarOrBlavatarUrl = post.takeIf { it.hasBlogImageUrl() }?.blogImageUrl?.let {
             // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
             GravatarUtils.fixGravatarUrl(it, 9999)
         }
