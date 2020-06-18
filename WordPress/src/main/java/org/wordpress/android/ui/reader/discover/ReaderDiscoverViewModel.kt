@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
+import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderPost
@@ -30,6 +31,11 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
+        returns result based on device orientation */
+    private val photonWidth: Int = 500
+    private val photonHeight: Int = 500
 
     fun start() {
         if (isStarted) return
@@ -57,7 +63,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun mapPostToUiState(post: ReaderPost) {
-
         val blogUrl = post.takeIf { it.hasBlogUrl() }?.blogUrl?.let {
             // TODO malinjir remove static access
             UrlUtils.removeScheme(it)
@@ -83,6 +88,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                 && post.cardType != GALLERY
         val photoTitle = post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
+        val featuredImageUrl = post
+                // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
+                .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
+                ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
+
         ReaderPostUiState(
                 post.postId,
                 title = title,
@@ -92,7 +102,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 dateLine = dateLine,
                 avatarOrBlavatarUrl = avatarOrBlavatarUrl,
                 photoFrameVisibility = photoFrameVisibility,
-                photoTitle = photoTitle
+                photoTitle = photoTitle,
+                featuredImageUrl = featuredImageUrl
         )
     }
 
@@ -115,7 +126,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val avatarOrBlavatarUrl: String?,
             val blogName: String?,
             val photoFrameVisibility: Boolean,
-            val photoTitle: String?
+            val photoTitle: String?,
+            val featuredImageUrl: String?
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
