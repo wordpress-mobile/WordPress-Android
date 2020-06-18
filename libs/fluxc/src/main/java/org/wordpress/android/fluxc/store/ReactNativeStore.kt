@@ -211,6 +211,6 @@ class ReactNativeStore
 private fun Error.statusCode() = error.volleyError?.networkResponse?.statusCode
 
 sealed class ReactNativeFetchResponse {
-    class Success(val result: JsonElement) : ReactNativeFetchResponse()
+    class Success(val result: JsonElement?) : ReactNativeFetchResponse()
     class Error(val error: BaseNetworkError) : ReactNativeFetchResponse()
 }
