@@ -1,6 +1,0 @@
-14.7:
-Blockredigeraren: Nytt kolumnblock och mall för bloggstartsida. Justerat startsidans mallknappar så att de inte skymmer innehållet. ”Välj mediafil från enheten” öppnar WordPress egen mediaväljare i stället för enhetens standardverktyg.
-
-Felrättningar: URL-inställningar kunde tidigare visas om man växlade mellan liggande och stående vid förhandsvisning av startsidesmallar.
-
-Förbättrat användargränssnitt: Gravatar tillagt i menyn Jag under Min webbplats.

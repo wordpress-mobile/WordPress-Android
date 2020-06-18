@@ -30,6 +30,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void setContent(CharSequence text);
     public abstract CharSequence getTitle() throws EditorFragmentNotAddedException;
     public abstract CharSequence getContent(CharSequence originalContent) throws EditorFragmentNotAddedException;
+    public abstract void showContentInfo() throws EditorFragmentNotAddedException;
     public abstract LiveData<Editable> getTitleOrContentChanged();
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
@@ -199,6 +200,9 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
+        void getMention(Consumer<String> onResult);
+        void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
+        boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
     }
 
     /**

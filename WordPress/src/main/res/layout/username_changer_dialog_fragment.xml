@@ -35,7 +35,6 @@
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/textinputlayout_correction_margin_right"
             android:layout_toEndOf="@+id/icon"
             android:background="@android:color/transparent"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"

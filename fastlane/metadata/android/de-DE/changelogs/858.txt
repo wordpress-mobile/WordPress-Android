@@ -1,6 +1,0 @@
-14.7:
-Block-Editor: Spaltenblock und Seitenvorlage für Neueinsteiger für Blogs wurden hinzugefügt. Buttons der Seitenvorlage für Neueinsteiger wurden angepasst, um eine Überlappung mit dem Seiteninhalt zu vermeiden. „Medien vom Gerät auswählen“ öffnet eine integrierte WordPress-Medienauswahl, anstelle der Standardauswahl des Geräts.
-
-Fehlerkorrekturen: Ein Fehler, der dazu führte, dass ein Kästchen mit URL-Einstellungen erschien, sobald du während der Vorschau der Seitenvorlage für Neueinsteiger dein Gerät bewegt hast.
-
-Verbesserungen an der Benutzeroberfläche: Dein Gravatar wurde zum Menü unter „Meine Website“ hinzugefügt

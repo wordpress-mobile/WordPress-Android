@@ -1,0 +1,4 @@
+15.0:
+Añadido en el editor de bloques: Nuevo bloque de verso. Compatibilidad para colores de superposición en el bloque de cubierta. Animación de entrada/salida para la barra de herramientas flotante. Información emergente para los botones de selección de la plantilla de página.
+Actualizaciones del editor de bloques: «Bloque de papelera» en un menú accesible desde la barra de herramientas de bloques.
+Otras actualizaciones: Añadidos ajustes de la página de inicio a la lista de páginas y a los ajustes del sitio.

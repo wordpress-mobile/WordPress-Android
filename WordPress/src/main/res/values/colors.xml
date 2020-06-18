@@ -42,6 +42,13 @@
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
 
+    <!-- Prepublishing Nudges -->
+    <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
+    <color name="prepublishing_action_type_enabled_color">@color/black</color>
+    <color name="prepublishing_action_result_enabled_color">@color/gray_30</color>
+    <color name="prepublishing_action_type_disabled_color">@color/gray_10</color>
+    <color name="prepublishing_action_result_disabled_color">@color/gray_10</color>
+
     <!-- SEMANTIC -->
     <color name="accent">@color/pink_50</color>
     <color name="accent_0">@color/pink_0</color>
@@ -300,5 +307,24 @@
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
+
+    <!-- Reader -->
+
+    <!--Reader Following empty view -->
+    <color name="reader_following_empty_view_upper_right_plus">@color/yellow_0</color>
+    <color name="reader_following_empty_view_mid_left_plus">@color/green_0</color>
+    <color name="reader_following_empty_view_center_circle">@color/blue_0</color>
+    <color name="reader_following_empty_view_left_lower_plus">@color/pink_0</color>
+    <color name="reader_following_empty_view_outline">@color/gray_10</color>
+    <color name="reader_following_empty_view_middle_plus">@android:color/white</color>
+    <color name="reader_following_empty_view_background">@android:color/white</color>
+
+    <!--Reader Post Card -->
+    <color name="reader_post_list_background">@color/neutral_0</color>
+    <color name="reader_label_text">@color/gray_40</color>
+    <color name="reader_post_title">@color/gray_90</color>
+    <color name="reader_site_title">@color/gray_90</color>
+    <color name="reader_image_featured_border">@color/gray_0</color>
+    <color name="reader_image_avatar_or_blavatar_border">@color/gray_0</color>
 
 </resources>

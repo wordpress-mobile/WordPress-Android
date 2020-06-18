@@ -4,4 +4,5 @@
 	shallow = true
 [submodule "libs/portkey-android"]
 	path = libs/portkey-android
-	url = https://github.com/Automattic/portkey-android.git
+	url = ../../Automattic/portkey-android.git
+	shallow = true

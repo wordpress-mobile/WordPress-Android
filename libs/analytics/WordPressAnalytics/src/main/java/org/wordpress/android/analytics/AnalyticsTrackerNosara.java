@@ -465,6 +465,18 @@ public class AnalyticsTrackerNosara extends Tracker {
             case WELCOME_NO_SITES_INTERSTITIAL_ADD_SELF_HOSTED_SITE_TAPPED:
                 predefinedEventProperties.put("button", "add_self_hosted_site");
                 break;
+            case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
+                predefinedEventProperties.put("source", "app_upgrade");
+                break;
+            case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
+                predefinedEventProperties.put("source", "app_settings");
+                break;
+            case FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED:
+                predefinedEventProperties.put("button", "close_dialog");
+                break;
+            case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
+                predefinedEventProperties.put("button", "find_out_more");
+                break;
         }
 
         final String user;
@@ -793,10 +805,32 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_video_cant_optimize";
             case EDITOR_PUBLISHED_POST:
                 return "editor_post_published";
+            case EDITOR_POST_PUBLISH_TAPPED:
+                return "editor_post_publish_tapped";
+            case EDITOR_POST_SCHEDULE_CHANGED:
+                return "editor_post_schedule_changed";
+            case EDITOR_POST_VISIBILITY_CHANGED:
+                return "editor_post_visibility_changed";
+            case EDITOR_POST_TAGS_CHANGED:
+                return "editor_post_tags_changed";
+            case EDITOR_POST_PUBLISH_NOW_TAPPED:
+                return "editor_post_publish_now_tapped";
+            case EDITOR_POST_PASSWORD_CHANGED:
+                return "editor_post_password_changed";
             case EDITOR_UPDATED_POST:
                 return "editor_post_updated";
             case EDITOR_SCHEDULED_POST:
                 return "editor_post_scheduled";
+            case EDITOR_POST_CATEGORIES_ADDED:
+                return "editor_post_categories_added";
+            case EDITOR_POST_FORMAT_CHANGED:
+                return "editor_post_format_changed";
+            case EDITOR_POST_SLUG_CHANGED:
+                return "editor_post_slug_changed";
+            case EDITOR_POST_EXCERPT_CHANGED:
+                return "editor_post_excerpt_changed";
+            case EDITOR_POST_LOCATION_CHANGED:
+                return "editor_post_location_changed";
             case EDITOR_TAPPED_BLOCKQUOTE:
                 return "editor_button_tapped";
             case EDITOR_TAPPED_BOLD:
@@ -1740,6 +1774,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_save_remotely";
             case STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED:
                 return "story_post_error_snackbar_manage_tapped";
+            case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
+            case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
+                return "feature_announcement_shown";
+            case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
+            case FEATURE_ANNOUNCEMENT_CLOSE_DIALOG_BUTTON_TAPPED:
+                return "feature_announcement_button_tapped";
+            case OPENED_PLANS_COMPARISON:
+                return "plans_compare";
+            case PAGES_LIST_AUTHOR_FILTER_CHANGED:
+                return "pages_list_author_filter_changed";
         }
         return null;
     }

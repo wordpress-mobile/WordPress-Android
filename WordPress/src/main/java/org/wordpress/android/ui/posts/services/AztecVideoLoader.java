@@ -10,16 +10,22 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
+import org.wordpress.android.WordPress;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.ImageUtils;
 import org.wordpress.aztec.Html;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 public class AztecVideoLoader implements Html.VideoThumbnailGetter {
     private Context mContext;
     private final Drawable mLoadingInProgress;
+    @Inject AuthenticationUtils mAuthenticationUtils;
 
     public AztecVideoLoader(Context context, Drawable loadingInProgressDrawable) {
+        ((WordPress) WordPress.getContext().getApplicationContext()).component().inject(this);
         this.mContext = context;
         this.mLoadingInProgress = loadingInProgressDrawable;
     }
@@ -45,7 +51,7 @@ public class AztecVideoLoader implements Html.VideoThumbnailGetter {
                     return ThumbnailUtils.createVideoThumbnail(url, MediaStore.Images.Thumbnails.FULL_SCREEN_KIND);
                 }
 
-                return ImageUtils.getVideoFrameFromVideo(url, maxWidth);
+                return ImageUtils.getVideoFrameFromVideo(url, maxWidth, mAuthenticationUtils.getAuthHeaders(url));
             }
 
             protected void onPostExecute(Bitmap thumb) {
