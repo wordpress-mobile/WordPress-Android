@@ -11,6 +11,14 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_151"
+msgid ""
+"15.1:\n"
+"Block editor improvements: Scheduling, tag, and visibility settings pop up in the post editor and post list when you tap Publish — tweak them and tap “Publish Now” to complete publication. Pressing enter after adding a caption in Image, Video, Gallery, Quote, and Pullquote blocks automatically adds a new block.\n"
+"\n"
+"Fixes: Video thumbnails, settings, and preview display properly in the Media section on private sites. Notifications and Install Jetpack tabs no longer display on top of one another.\n"
+msgstr ""
+
 msgctxt "release_note_150"
 msgid ""
 "15.0:\n"
@@ -20,27 +28,21 @@ msgid ""
 "Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.\n"
 msgstr ""
 
-msgctxt "release_note_149"
+#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_short_151"
 msgid ""
-"14.9:\n"
-"<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.\n"
+"15.1:\n"
+"Improvements: Scheduling, tag, and visibility panel pops up in editor and post list pre-publication. Pressing enter after adding captions in Image, Video, Gallery, Quote, and Pullquote blocks adds a new block.\n"
 "\n"
-"<b>Block editor fixes:</b> Free Photo Library bug that inserted single images even if several were selected, preview failure when switching to the classic editor. Removed non-functional Subscription Button from Blog template.\n"
+"Fixes: Video thumbnails, settings, and preview display properly on private sites. Notifications and Install Jetpack tabs no longer overlay.\n"
 msgstr ""
 
-#. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "release_note_short_150"
 msgid ""
 "15.0:\n"
 "Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for Floating Toolbar. Tooltip for page template selection buttons.\n"
 "Block editor updates: “Trash block” in a menu reachable from the block toolbar.\n"
 "Other updates: Added homepage settings to pages list and to site settings.\n"
-msgstr ""
-
-msgctxt "release_note_short_149"
-msgid ""
-"14.9:\n"
-"<b>Block editor enhancements:</b> New Pullquote block, Button block color options, updated page templates.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
