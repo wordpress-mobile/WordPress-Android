@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 110
+        return 111
     }
 
     override fun getDbName(): String {
@@ -1220,6 +1220,20 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "VALUE TEXT NOT NULL," +
                                     "CHECK(TYPE IN (\"color\", \"gradient\") )," +
                                     "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
+                    )
+                }
+                110 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementModel")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeatureModel")
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
+                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION TEXT NOT NULL," +
+                                    "MAXIMUM_APP_VERSION TEXT NOT NULL,LOCALIZED INTEGER," +
+                                    "RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncementFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "ANNOUNCEMENT_ID INTEGER,TITLE TEXT,SUBTITLE TEXT,ICON_URL TEXT,ICON_BASE64 TEXT)"
                     )
                 }
             }
