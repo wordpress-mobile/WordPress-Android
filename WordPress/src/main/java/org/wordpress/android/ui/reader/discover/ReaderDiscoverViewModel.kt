@@ -72,9 +72,12 @@ class ReaderDiscoverViewModel @Inject constructor(
             GravatarUtils.fixGravatarUrl(it, 9999)
         }
 
+        val blogName = post.takeIf { it.hasBlogName() }?.blogName
+
         ReaderPostUiState(
                 post.postId,
                 blogUrl = blogUrl,
+                blogName = blogName,
                 dateLine = dateLine,
                 avatarOrBlavatarUrl = avatarOrBlavatarUrl
         )
@@ -93,8 +96,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         class ReaderPostUiState(
             val id: Long,
             val dateLine: String,
-            val blogUrl: String? = null,
-            val avatarOrBlavatarUrl: String?
+            val blogUrl: String?,
+            val avatarOrBlavatarUrl: String?,
+            val blogName: String?
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
