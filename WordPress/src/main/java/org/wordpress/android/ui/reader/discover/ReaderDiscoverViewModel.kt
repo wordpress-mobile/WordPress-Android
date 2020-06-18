@@ -77,6 +77,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         val excerpt = post.takeIf { post.cardType != ReaderCardType.PHOTO && post.hasExcerpt() }?.excerpt
         val title = post.takeIf { post.cardType != ReaderCardType.PHOTO && it.hasTitle() }?.title
+        // TODO malinjir `post.cardType != ReaderCardType.GALLERY` might not be needed
+        val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage())
+                && post.cardType != ReaderCardType.GALLERY
 
         ReaderPostUiState(
                 post.postId,
@@ -85,7 +88,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 blogUrl = blogUrl,
                 blogName = blogName,
                 dateLine = dateLine,
-                avatarOrBlavatarUrl = avatarOrBlavatarUrl
+                avatarOrBlavatarUrl = avatarOrBlavatarUrl,
+                photoFrameVisibility = photoFrameVisibility
         )
     }
 
@@ -106,7 +110,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val dateLine: String,
             val blogUrl: String?,
             val avatarOrBlavatarUrl: String?,
-            val blogName: String?
+            val blogName: String?,
+            val photoFrameVisibility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
