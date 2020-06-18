@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.MediaStore.FetchMediaListPayload
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
+import org.wordpress.android.ui.posts.editor.media.EditorType.POST_EDITOR
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -157,7 +158,7 @@ class EditorMediaTest : BaseUnitTest() {
                 // Assert
                 verify(addLocalMediaToPostUseCase).addNewMediaToEditorAsync(
                         eq(listOf(lastRecoredVideoUri)),
-                        anyOrNull(), anyBoolean(), anyOrNull()
+                        anyOrNull(), anyBoolean(), anyOrNull(), anyBoolean()
                 )
             }
 
@@ -409,7 +410,7 @@ class EditorMediaTest : BaseUnitTest() {
                     TEST_DISPATCHER,
                     TEST_DISPATCHER
             )
-            editorMedia.start(siteModel, editorMediaListener)
+            editorMedia.start(siteModel, editorMediaListener, POST_EDITOR)
             return editorMedia
         }
 
@@ -432,7 +433,8 @@ class EditorMediaTest : BaseUnitTest() {
                                 anyOrNull(),
                                 anyOrNull(),
                                 anyBoolean(),
-                                anyOrNull()
+                                anyOrNull(),
+                                anyBoolean()
                         )
                     }.thenReturn(resultForAddNewMediaToEditorAsync)
                 }

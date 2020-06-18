@@ -83,6 +83,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
+    </style>
+
     <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
         <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>

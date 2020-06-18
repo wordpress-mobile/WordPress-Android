@@ -146,6 +146,7 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
+import org.wordpress.android.ui.posts.editor.media.EditorType;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
 import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
@@ -548,7 +549,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
-        mEditorMedia.start(mSite, this);
+        mEditorMedia.start(mSite, this, EditorType.POST_EDITOR);
         startObserving();
 
         if (mHasSetPostContent = mEditorFragment != null) {

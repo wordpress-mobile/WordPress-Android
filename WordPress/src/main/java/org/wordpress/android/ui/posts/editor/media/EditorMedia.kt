@@ -35,6 +35,7 @@ import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialo
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
+import org.wordpress.android.ui.posts.editor.media.EditorType.POST_EDITOR
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -57,6 +58,11 @@ interface EditorMediaListener {
     fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
+}
+
+enum class EditorType {
+    POST_EDITOR,
+    STORY_EDITOR
 }
 
 class EditorMedia @Inject constructor(
@@ -84,6 +90,7 @@ class EditorMedia @Inject constructor(
 
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
+    private lateinit var editorType: EditorType
 
     private val deletedMediaItemIds = mutableListOf<String>()
 
@@ -100,9 +107,10 @@ class EditorMedia @Inject constructor(
     var droppedMediaUris: ArrayList<Uri> = ArrayList()
     // endregion
 
-    fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
+    fun start(site: SiteModel, editorMediaListener: EditorMediaListener, editorType: EditorType) {
         this.site = site
         this.editorMediaListener = editorMediaListener
+        this.editorType = editorType
         _uiState.value = AddingMediaIdle
     }
 
@@ -135,7 +143,8 @@ class EditorMedia @Inject constructor(
                     uriList,
                     site,
                     freshlyTaken,
-                    editorMediaListener
+                    editorMediaListener,
+                    (editorType == POST_EDITOR) // also start upload if this is a Posts editor
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
