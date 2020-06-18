@@ -47,7 +47,7 @@ public class ReaderPostServiceStarter {
             PersistableBundle extras = new PersistableBundle();
             extras.putInt(ARG_ACTION, action.ordinal());
             putReaderTagExtras(extras, tag);
-            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_TAG);
+            doScheduleJobWithBundle(context, extras, JOB_READER_POST_SERVICE_ID_TAG + tag.getTagSlug().hashCode());
         }
     }
 

@@ -369,7 +369,8 @@ class PostListViewModel @Inject constructor(
                         trackPostListAction(connector.site, buttonType, postModel, statEvent)
                         connector.postActionHandler.handlePostButton(buttonType, postModel)
                     },
-                    uploadStatusTracker = connector.uploadStatusTracker
+                    uploadStatusTracker = connector.uploadStatusTracker,
+                    isSearch = connector.postListType == SEARCH
             )
 
     private fun retryOnConnectionAvailableAfterRefreshError() {

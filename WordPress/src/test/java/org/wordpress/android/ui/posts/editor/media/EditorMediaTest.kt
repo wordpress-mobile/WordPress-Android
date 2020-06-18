@@ -30,6 +30,8 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiS
 import org.wordpress.android.ui.posts.editor.media.EditorType.POST_EDITOR
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 
@@ -388,7 +390,9 @@ class EditorMediaTest : BaseUnitTest() {
             editorMediaListener: EditorMediaListener = mock(),
             removeMediaUseCase: RemoveMediaUseCase = mock(),
             cleanUpMediaToPostAssociationUseCase: CleanUpMediaToPostAssociationUseCase = mock(),
-            reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase = mock()
+            reattachUploadingMediaUseCase: ReattachUploadingMediaUseCase = mock(),
+            analyticsTrackerWrapper: AnalyticsTrackerWrapper = mock(),
+            analyticsUtilsWrapper: AnalyticsUtilsWrapper = mock()
         ): EditorMedia {
             val editorMedia = EditorMedia(
                     updateMediaModelUseCase,
@@ -402,6 +406,9 @@ class EditorMediaTest : BaseUnitTest() {
                     cleanUpMediaToPostAssociationUseCase,
                     removeMediaUseCase,
                     reattachUploadingMediaUseCase,
+                    analyticsUtilsWrapper,
+                    analyticsTrackerWrapper,
+                    TEST_DISPATCHER,
                     TEST_DISPATCHER
             )
             editorMedia.start(siteModel, editorMediaListener, POST_EDITOR)

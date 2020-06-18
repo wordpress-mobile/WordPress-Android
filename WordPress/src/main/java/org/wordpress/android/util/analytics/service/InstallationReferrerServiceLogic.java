@@ -14,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashLoggingUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,8 +85,8 @@ public class InstallationReferrerServiceLogic {
                             mReferrerClient.endConnection();
                         } catch (RemoteException | IllegalStateException e) {
                             e.printStackTrace();
-                            CrashLoggingUtils.logException(e, T.UTILS);
-                            AppLog.e(T.UTILS, "installation referrer: " + e.getClass().getSimpleName() + " occurred");
+                            AppLog.e(T.UTILS,
+                                    "installation referrer: " + e.getClass().getSimpleName() + " occurred", e);
                         }
                         break;
                     case InstallReferrerResponse.FEATURE_NOT_SUPPORTED:
@@ -124,7 +123,6 @@ public class InstallationReferrerServiceLogic {
         try {
             mReferrerClient.startConnection(installReferrerStateListener);
         } catch (RuntimeException e) {
-            CrashLoggingUtils.logException(e, T.UTILS);
             AppLog.e(T.UTILS, "installation referrer start connection failed!", e);
             AnalyticsTracker.track(Stat.INSTALLATION_REFERRER_FAILED);
 

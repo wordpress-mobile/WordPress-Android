@@ -14,6 +14,7 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -47,6 +48,7 @@ import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -94,6 +96,8 @@ class PagesFragment : Fragment() {
 
     private var restorePreviousSearch = false
 
+    private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
+
     companion object {
         fun newInstance(): PagesFragment {
             return PagesFragment()
@@ -114,7 +118,7 @@ class PagesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
+        val nonNullActivity = requireActivity()
         (nonNullActivity.application as? WordPress)?.component()?.inject(this)
 
         initializeViews(nonNullActivity)
@@ -204,6 +208,16 @@ class PagesFragment : Fragment() {
             }
             return@setOnTouchListener false
         }
+
+        authorSelectionAdapter = AuthorSelectionAdapter(activity)
+        pages_author_selection.adapter = authorSelectionAdapter
+        pages_author_selection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                viewModel.updateAuthorFilterSelection(id)
+            }
+        }
     }
 
     private fun initializeSearchView() {
@@ -264,6 +278,25 @@ class PagesFragment : Fragment() {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
+        viewModel.authorUIState.observe(activity, Observer { state ->
+            state?.let {
+                uiHelpers.updateVisibility(pages_author_selection, state.isAuthorFilterVisible)
+                uiHelpers.updateVisibility(pages_tab_layout_fading_edge, state.isAuthorFilterVisible)
+
+                val tabLayoutPaddingStart =
+                        if (state.isAuthorFilterVisible)
+                            resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+                        else 0
+                tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
+
+                authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                    pages_author_selection.setSelection(selectionIndex)
+                }
+            }
+        })
+
         viewModel.start(site)
     }
 
@@ -292,17 +325,17 @@ class PagesFragment : Fragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.listState.observe(this, Observer {
+        viewModel.listState.observe(viewLifecycleOwner, Observer {
             refreshProgressBars(it)
         })
 
-        viewModel.createNewPage.observe(this, Observer {
+        viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
             QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, QuickStartTask.CREATE_NEW_PAGE, dispatcher,
                     viewModel.site, quickStartEvent, context)
             ActivityLauncher.addNewPageForResult(this, viewModel.site, PAGE_FROM_PAGES_LIST)
         })
 
-        viewModel.showSnackbarMessage.observe(this, Observer { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitleRes == null) {
@@ -315,25 +348,25 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.editPage.observe(this, Observer { (site, page, loadAutoRevision) ->
+        viewModel.editPage.observe(viewLifecycleOwner, Observer { (site, page, loadAutoRevision) ->
             page?.let {
                 ActivityLauncher.editPageForResult(this, site, page.id, loadAutoRevision)
             }
         })
 
-        viewModel.previewPage.observe(this, Observer { post ->
+        viewModel.previewPage.observe(viewLifecycleOwner, Observer { post ->
             post?.let {
                 previewPage(activity, post)
             }
         })
 
-        viewModel.browsePreview.observe(this, Observer { preview ->
+        viewModel.browsePreview.observe(viewLifecycleOwner, Observer { preview ->
             preview?.let {
                 ActivityLauncher.previewPostOrPageForResult(activity, viewModel.site, preview.post, preview.previewType)
             }
         })
 
-        viewModel.previewState.observe(this, Observer {
+        viewModel.previewState.observe(viewLifecycleOwner, Observer {
             progressDialog = progressDialogHelper.updateProgressDialogState(
                     activity,
                     progressDialog,
@@ -342,11 +375,11 @@ class PagesFragment : Fragment() {
             )
         })
 
-        viewModel.setPageParent.observe(this, Observer { page ->
+        viewModel.setPageParent.observe(viewLifecycleOwner, Observer { page ->
             page?.let { ActivityLauncher.viewPageParentForResult(this, page) }
         })
 
-        viewModel.isNewPageButtonVisible.observe(this, Observer { isVisible ->
+        viewModel.isNewPageButtonVisible.observe(viewLifecycleOwner, Observer { isVisible ->
             isVisible?.let {
                 if (isVisible) {
                     newPageButton.show()
@@ -356,7 +389,7 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.scrollToPage.observe(this, Observer { requestedPage ->
+        viewModel.scrollToPage.observe(viewLifecycleOwner, Observer { requestedPage ->
             requestedPage?.let { page ->
                 val pagerIndex = PagesPagerAdapter.pageTypes.indexOf(PageListType.fromPageStatus(page.status))
                 pagesPager.currentItem = pagerIndex
@@ -364,11 +397,11 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.dialogAction.observe(this, Observer {
+        viewModel.dialogAction.observe(viewLifecycleOwner, Observer {
             it?.show(activity, activity.supportFragmentManager, uiHelpers)
         })
 
-        viewModel.postUploadAction.observe(this, Observer {
+        viewModel.postUploadAction.observe(viewLifecycleOwner, Observer {
             it?.let { (post, site, data) ->
                 uploadUtilsWrapper.handleEditPostResultSnackbars(
                         activity,
@@ -393,7 +426,7 @@ class PagesFragment : Fragment() {
             }
         })
 
-        viewModel.uploadFinishedAction.observe(this, Observer {
+        viewModel.uploadFinishedAction.observe(viewLifecycleOwner, Observer {
             it?.let { (page, isError) ->
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
@@ -428,6 +461,7 @@ class PagesFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
+        tabContainer.visibility = View.VISIBLE
         searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
@@ -437,6 +471,7 @@ class PagesFragment : Fragment() {
     private fun showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
+        tabContainer.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
@@ -480,7 +515,7 @@ class PagesFragment : Fragment() {
                 )
 
                 WPDialogSnackbar.make(
-                        view!!.findViewById(R.id.coordinatorLayout), title,
+                        requireView().findViewById(R.id.coordinatorLayout), title,
                         resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
                 ).show()
             }

@@ -1,11 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-03-28 20:10:19+0000
-Plural-Forms: nplurals=2; plural=(n > 1);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-06-04 17:59:00+0000
+Plural-Forms: nplurals=2; plural=n > 1;
+Generator: GlotPress/3.0.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_remove_s">Remover %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
+    <string name="gutenberg_native_move_s_up">Mover %s para cima</string>
+    <string name="gutenberg_native_move_s_right">Mover %s para a direita</string>
+    <string name="gutenberg_native_move_s_left">Mover %s para a esquerda</string>
+    <string name="gutenberg_native_move_s_down">Mover %s para baixo</string>
+    <string name="gutenberg_native_try_a_starter_layout">Experimente começar com um modelo</string>
+    <string name="gutenberg_native_insert_mention">Inserir menção</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toque duas vezes para abrir a janela de ações com as opções disponíveis</string>
+    <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
+    <string name="pages_set_as_posts_page">Definir como página de posts</string>
+    <string name="pages_set_as_homepage">Definir como página inicial</string>
+    <string name="suggestion_no_matching_users">\"Nenhum usuário correspondente disponível\"</string>
+    <string name="suggestion_invalid_user">\"%s não é um usuário válido\"</string>
+    <string name="site_settings_select_page">Selecionar página</string>
+    <string name="site_settings_posts_page">Página de posts</string>
+    <string name="site_settings_static_homepage">Página inicial estática</string>
+    <string name="site_settings_classic_blog">Blog clássico</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">As páginas selecionadas como página inicial e página de posts não podem ser a mesma.</string>
+    <string name="site_settings_failed_update_homepage_settings">A atualização das configurações da página inicial falhou. Verifique sua conexão de internet</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Não é possível salvar as configurações da página inicial antes que as páginas sejam carregadas.</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Não é possível salvar as configurações da página inicial</string>
+    <string name="site_settings_accept_homepage">Aceitar</string>
+    <string name="site_settings_homepage_settings_description">Escolha entre uma página inicial que exiba seus posts mais recentes (blog clássico) ou uma página estática/fixa.</string>
+    <string name="site_settings_homepage_settings">Configurações da página inicial</string>
+    <string name="site_settings_homepage">Página inicial</string>
+    <string name="page_posts_page_successfully_updated">Página de posts atualizada</string>
+    <string name="page_homepage_update_failed">Atualização da página inicial falhou</string>
+    <string name="page_homepage_successfully_updated">Página inicial atualizada</string>
+    <string name="page_cannot_set_posts_page">Para definir uma \"Página de posts\" ative a opção \"Página inicial estática\" em \"Configurações do site\"</string>
+    <string name="page_cannot_set_homepage">Para definir uma \"Página inicial\" ative a opção \"Página inicial estática\" em \"Configurações do site\"</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Boas-vindas ao nosso novo blog</string>
+    <string name="gutenberg_native_select_a_color">Selecionar uma cor</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toque duas vezes para ir para as configurações de cor</string>
+    <string name="reader_empty_followed_blogs_description">Ao seguir sites, você verá o conteúdo deles aqui</string>
+    <string name="feature_announcement_find_out_mode">Saiba mais</string>
+    <string name="feature_announcement_dialog_label">O que há de novo no WordPress</string>
+    <string name="insert_label_with_count">Inserir %d</string>
+    <string name="crop">recortar</string>
+    <string name="preview_image_thumbnail_description">Visualizar miniatura da imagem</string>
+    <string name="photo_picker_use_media">Use esta mídia</string>
+    <string name="photo_picker_use_video">Usar este vídeo</string>
+    <string name="photo_picker_photo_or_video_title">Escolher mídia</string>
+    <string name="photo_picker_video_title">Escolher vídeo</string>
+    <string name="site_picker_ask_site_select">Não foi possível selecionar o site. Tente novamente.</string>
+    <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_no_site_to_reblog_action">Gerenciar sites</string>
+    <string name="reader_no_site_to_reblog_detail">Assim que você criar um site no WordPress.com, você poderá republicar o conteúdo que você curtir em seu próprio site.</string>
+    <string name="whats_new_in_version_title">Novidades</string>
+    <string name="comment_q_action_copied_url">Link copiado</string>
+    <string name="copy_link_address">Copiar link</string>
+    <string name="comment_share_link_via">Compartilhar por</string>
+    <string name="comment_toast_err_share_intent">Não é possível compartilhar </string>
+    <string name="button_insert">Inserir</string>
+    <string name="continue_label">Continuar</string>
+    <string name="copy_text">Copiar</string>
+    <string name="gutenberg_native_number_of_columns">Número de colunas</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover o bloco para a direita da posição %1$s para a posição %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover o bloco para a esquerda da posição %1$s para a posição %2$s</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toque duas vezes para mover o bloco para a direita</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toque duas vezes para mover o bloco para a esquerda</string>
+    <string name="gutenberg_native_columns_settings">Configurações de colunas</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Criando o painel</string>
+    <string name="new_site_creation_creating_site_loading_3">Configurando o tema</string>
+    <string name="new_site_creation_creating_site_loading_2">Adicionando recursos ao site</string>
+    <string name="new_site_creation_creating_site_loading_1">Criando um endereço para o site</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Seu site estará pronto em breve</string>
+    <string name="new_site_creation_creating_site_loading_title">Eba!\nQuase concluído</string>
+    <string name="pages_and_posts_cancel_auto_upload">Cancelar envio</string>
+    <string name="gif_list_search_returned_unknown_error">Houve um problema durante a solicitação</string>
+    <string name="gif_powered_by_tenor">Desenvolvido por Tenor</string>
+    <string name="gif_picker_search_hint">Pesquisar no Tenor</string>
+    <string name="photo_picker_gif">Escolher do Tenor</string>
+    <string name="weekday_saturday">Sábado</string>
+    <string name="weekday_friday">Sexta-feira</string>
+    <string name="weekday_thursday">Quinta-feira</string>
+    <string name="weekday_wednesday">Quarta-feira</string>
+    <string name="weekday_tuesday">Terça-feira</string>
+    <string name="weekday_monday">Segunda-feira</string>
+    <string name="weekday_sunday">Domingo</string>
+    <string name="media_accessing_progress">Acessando conteúdo de um site privado</string>
+    <string name="error_failed_to_crop_and_save_image">Falha ao cortar e salvar a imagem. Tente novamente mais tarde.</string>
+    <string name="failed_to_load_image_tap_to_retry">Falha ao carregar a imagem.\nToque para tentar novamente.</string>
+    <string name="preview_image_description">Visualizar imagem</string>
+    <string name="error_unknown_page_type">Formato de página desconhecido</string>
+    <string name="error_page_not_submitted">Não foi possível concluir essa ação e a página não foi enviada para revisão.</string>
+    <string name="error_page_not_scheduled">Não foi possível concluir essa ação e a página não foi agendada.</string>
+    <string name="error_page_not_published_private">Não foi possível concluir essa ação e essa página privada não foi publicada.</string>
+    <string name="error_page_not_published">Não foi possível concluir essa ação e a página não foi publicada.</string>
+    <string name="error_page_not_submitted_retrying">Não foi possível enviar esta página para revisão mas tentaremos novamente mais tarde.</string>
+    <string name="error_page_not_scheduled_retrying">Não foi possível agendar essa página mas tentaremos novamente mais tarde.</string>
+    <string name="error_page_not_published_retrying_private">Não foi possível publicar essa página privada mas tentaremos novamente mais tarde.</string>
+    <string name="error_page_not_published_retrying">Não foi possível publicar essa página mas tentaremos novamente mais tarde.</string>
+    <string name="error_media_recover_page_not_submitted">Não foi possível enviar essa mídia e a página não foi enviada para revisão.</string>
+    <string name="error_media_recover_page_not_scheduled">Não foi possível enviar essa mídia e agendar essa página.</string>
+    <string name="error_media_recover_page_not_published_private">Não foi possível enviar essa mídia e publicar essa página privada.</string>
+    <string name="error_media_recover_page_not_published">Não foi possível enviar essa mídia e publicar a página.</string>
+    <string name="page_waiting_for_connection_draft">Nós salvaremos seu rascunho quando o dispositivo se conectar novamente.</string>
+    <string name="page_waiting_for_connection_private">Publicaremos sua página privada quando o dispositivo se conectar novamente.</string>
+    <string name="page_waiting_for_connection_scheduled">Agendaremos sua página quando o dispositivo se conectar novamente.</string>
+    <string name="page_waiting_for_connection_pending">Enviaremos sua página para revisão quando o dispositivo se conectar novamente.</string>
+    <string name="page_waiting_for_connection_publish">Publicaremos a página quando o dispositivo se conectar novamente.</string>
+    <string name="page_queued">Página na fila</string>
+    <string name="page_uploading">Enviando página</string>
+    <string name="error_publish_page_no_network">O dispositivo está off-line. A página será salva localmente.</string>
+    <string name="local_page_autosave_revision_available">Há alterações não salvas nesta página</string>
+    <string name="editor_uploading_page">Sua página está sendo enviada</string>
+    <string name="editor_page_saved_locally">Página salva no dispositivo</string>
+    <string name="editor_page_saved_online">Página salva online</string>
+    <string name="app_theme_default">Definido pela economia de bateria</string>
+    <string name="app_theme_dark">Escuro</string>
+    <string name="app_theme_light">Claro</string>
+    <string name="app_theme">Aparência</string>
+    <string name="gutenberg_native_want_to_work_with_us">Quer trabalhar conosco?</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_team">Equipe</string>
+    <string name="gutenberg_native_success_message">Mensagem de sucesso</string>
+    <string name="gutenberg_native_strategy">Estratégia</string>
+    <string name="gutenberg_native_services">Serviços</string>
+    <string name="gutenberg_native_project_name">Título do projeto</string>
+    <string name="gutenberg_native_position_or_job_title">Posição ou título do cargo</string>
+    <string name="gutenberg_native_portfolio">Portfólio</string>
+    <string name="gutenberg_native_only_show_excerpt">Mostrar apenas o resumo</string>
+    <string name="gutenberg_native_link_to">Link para</string>
+    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_inspiration">Inspiração</string>
+    <string name="gutenberg_native_get_in_touch">Entre em contato</string>
+    <string name="gutenberg_native_excerpt_length_words">Tamanho do resumo (em palavras)</string>
+    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Entre em contato: &lt;a href=\"mailto:e-mail@exemplo.com\">e-mail@exemplo.com&lt;/a></string>
+    <string name="gutenberg_native_customize">Personalizar</string>
+    <string name="gutenberg_native_city_10100">Cidade, 01010&#8211;100</string>
+    <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
@@ -132,7 +266,6 @@ Language: pt_BR
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
     <string name="gutenberg_native_reset_block">Redefinir bloco</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Remover bloco na linha %s</string>
     <string name="gutenberg_native_remove_annotations">Remover anotações</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema ao abrir o vídeo</string>
     <string name="gutenberg_native_problem_displaying_block">Problema ao exibir o bloco</string>
@@ -148,9 +281,7 @@ Language: pt_BR
     <string name="gutenberg_native_my_post_publish_panel">Meu painel de publicação do post</string>
     <string name="gutenberg_native_my_document_setting_panel">Meu painel de configurações do documento</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloco acima da linha %1$s para a linha %2$s</string>
-    <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
-    <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
     <string name="gutenberg_native_link_text">Texto do link</string>
     <string name="gutenberg_native_link_inserted">Link adicionado</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
@@ -163,7 +294,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_select_an_image">Toque duas vezes para selecionar uma imagem</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Toque duas vezes para selecionar um vídeo</string>
     <string name="gutenberg_native_double_tap_to_select">Toque duas vezes para selecionar</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Toque duas vezes para remover o bloco</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Toque duas vezes para refazer a última alteração</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Toque duas vezes para mover o bloco para cima</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Toque duas vezes para mover o bloco para baixo</string>
@@ -173,7 +303,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Toque duas vezes e segure para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
     <string name="gutenberg_native_content">Conteúdo…</string>
-    <string name="gutenberg_native_clear_all_settings">Limpar todas as configurações</string>
     <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
     <string name="gutenberg_native_annotations_sidebar">Barra lateral de anotações</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ocorreu um erro desconhecido. Tente novamente.</string>
@@ -739,7 +868,6 @@ Language: pt_BR
     <string name="reader_empty_posts_liked_title">Nada foi curtido ainda</string>
     <string name="reader_empty_followed_blogs_button_followed">Ir para sites seguidos</string>
     <string name="reader_empty_followed_blogs_button_discover">Descubra sites</string>
-    <string name="reader_empty_followed_blogs_description">Você não está seguindo nenhum site ainda. Por que não começar a seguir um agora mesmo?</string>
     <string name="reader_empty_followed_blogs_title">Nenhum site seguido</string>
     <string name="notifications_empty_likes">Nenhuma curtida ainda</string>
     <string name="notifications_empty_followers">Nenhum seguidor ainda</string>
@@ -991,7 +1119,6 @@ Language: pt_BR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post com 1 arquivo não enviado</string>
     <string name="untitled_in_parentheses">(Sem título)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Criar site</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
@@ -1197,7 +1324,6 @@ Language: pt_BR
     <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="copy_text">Copiar</string>
     <string name="connect_site">Conectar site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Sinal luminoso</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>
@@ -1462,7 +1588,6 @@ Language: pt_BR
     <string name="pending_draft_one_day_2">Você sabia que \"%1$s\" ainda é um rascunho? Então é hora de publicar!</string>
     <string name="pending_draft_one_day_1">Você criou o rascunho \"%1$s\" ontem. Não se esqueça de publicá-lo!</string>
     <string name="reader_photo_by">Foto por %s</string>
-    <string name="reader_label_visit">Visite</string>
     <string name="swipe_for_more">Deslize para mais</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Você não tem permissão para ver este post. Tente fazer login em WordPress.com primeiro ou use o botão de ação no topo para abrir um navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">Você não tem permissão para ver este post. Tente fazer login em WordPress.com primeiro.</string>
@@ -2107,6 +2232,7 @@ Language: pt_BR
     <string name="pages">Páginas</string>
     <string name="no_network_title">Não há rede disponível </string>
     <string name="ok">OK</string>
+    <string name="done">concluído</string>
     <string name="link_enter_url">URL</string>
     <string name="app_title">WordPress para Android</string>
     <string name="tos">Termos de Serviço</string>

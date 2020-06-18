@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderRecommendBlogList;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.models.ReaderTagType;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
@@ -27,6 +28,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.LocaleManager;
 
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -199,6 +201,7 @@ public class ReaderUpdateLogic {
                         EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
                     }
                 }
+                AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);
             }
