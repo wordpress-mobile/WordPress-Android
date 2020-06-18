@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/site_creation_error_with_retry"
+        layout="@layout/fullscreen_error_with_retry"
         tools:visibility="gone" />
 
     <include

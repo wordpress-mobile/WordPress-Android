@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-12-08 17:50:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha
 Language: eu_ES
 -->
 <resources>
@@ -23,7 +23,6 @@ Language: eu_ES
     <string name="post_settings_post_format">Bidalketa formatua</string>
     <string name="sharing">Partekatzea</string>
     <string name="keep_editing">Jarraitu editatzen</string>
-    <string name="reader_label_visit">Bisitatu</string>
     <string name="reader_toast_err_comment_not_found">Ez da iruzkina aurkitu!</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com postontzia</string>
     <string name="reader_title_deeplink">WordPress Irakurtzailea</string>

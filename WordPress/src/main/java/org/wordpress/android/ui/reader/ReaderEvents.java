@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -45,14 +46,25 @@ public class ReaderEvents {
     }
 
     public static class UpdatePostsStarted {
+        private final ReaderTag mReaderTag;
         private final ReaderPostServiceStarter.UpdateAction mAction;
+
+        public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action, final ReaderTag readerTag) {
+            mAction = action;
+            mReaderTag = readerTag;
+        }
 
         public UpdatePostsStarted(ReaderPostServiceStarter.UpdateAction action) {
             mAction = action;
+            mReaderTag = null;
         }
 
         public ReaderPostServiceStarter.UpdateAction getAction() {
             return mAction;
+        }
+
+        public @Nullable ReaderTag getReaderTag() {
+            return mReaderTag;
         }
     }
 

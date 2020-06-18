@@ -191,7 +191,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             }
         });
 
-        if (enableMultiselect()) {
+        if (isMultiSelectEnabled()) {
             mTextPreview.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     previewSelection();
@@ -267,7 +267,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean enableMultiselect() {
+    private boolean isMultiSelectEnabled() {
         return mRequestCode == RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT;
     }
 
@@ -444,7 +444,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             }
 
             Intent intent = new Intent();
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 long[] idArray = new long[count];
                 for (int i = 0; i < count; i++) {
                     idArray[i] = event.mediaList.get(i).getMediaId();
@@ -501,7 +501,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
     private void notifySelectionCountChanged() {
         int numSelected = mAdapter.getSelectionCount();
         if (numSelected > 0) {
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 String labelAdd = String.format(getString(R.string.add_count), numSelected);
                 mTextAdd.setText(labelAdd);
 
@@ -601,7 +601,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
             boolean isSelected = isItemSelected(position);
             holder.mSelectionCountTextView.setSelected(isSelected);
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 if (isSelected) {
                     int count = mSelectedItems.indexOf(position) + 1;
                     String label = Integer.toString(count);
@@ -611,7 +611,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
                 }
             } else {
                 holder.mSelectionCountTextView.setVisibility(
-                        isSelected || enableMultiselect() ? View.VISIBLE : View.GONE);
+                        isSelected || isMultiSelectEnabled() ? View.VISIBLE : View.GONE);
             }
 
             float scale = isSelected ? SCALE_SELECTED : SCALE_NORMAL;
@@ -654,7 +654,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             if (!isValidPosition(position)) return;
 
             // if this is single select, make sure to deselect any existing selection
-            if (selected && !enableMultiselect() && !mSelectedItems.isEmpty()) {
+            if (selected && !isMultiSelectEnabled() && !mSelectedItems.isEmpty()) {
                 int prevPosition = mSelectedItems.get(0);
                 StockViewHolder prevHolder = (StockViewHolder) mRecycler.findViewHolderForAdapterPosition(prevPosition);
                 if (prevHolder != null) {
@@ -676,7 +676,7 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
             }
 
             // show and animate the count bubble
-            if (enableMultiselect()) {
+            if (isMultiSelectEnabled()) {
                 if (selected) {
                     String label = Integer.toString(mSelectedItems.indexOf(position) + 1);
                     holder.mSelectionCountTextView.setText(label);
