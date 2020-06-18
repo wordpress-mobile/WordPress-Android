@@ -75,7 +75,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val dateLine: String,
             val title: String?,
             val blogName: String?,
-            val excerpt: String?,// mTxtText
+            val excerpt: String?, // mTxtText
             val blogUrl: String?,
             val photoTitle: String?,
             val featuredImageUrl: String?,

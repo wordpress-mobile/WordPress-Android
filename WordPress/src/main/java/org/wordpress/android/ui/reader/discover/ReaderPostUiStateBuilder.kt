@@ -38,8 +38,8 @@ class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStor
         val excerpt = post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
         val title = post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
         // TODO malinjir `post.cardType != GALLERY` might not be needed
-        val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage())
-                && post.cardType != GALLERY
+        val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
+                post.cardType != GALLERY
         val photoTitle = post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
         val featuredImageUrl = post
                 // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
