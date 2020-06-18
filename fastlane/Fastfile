@@ -242,7 +242,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm> upload_to_play_store:<upload to play store>]
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
   #
   # Example:
   # bundle exec fastlane build_alpha
@@ -268,7 +268,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_beta [skip_confirm:<skip confirm> upload_to_play_store:<upload to play store>]
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
   #
   # Example:
   # bundle exec fastlane build_beta
