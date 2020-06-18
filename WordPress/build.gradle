@@ -147,6 +147,9 @@ android {
         exclude '**/libjscexecutor.so'
         exclude '**/libhermes-inspector.so'
         exclude '**/libhermes-executor-debug.so'
+
+        pickFirst 'META-INF/-no-jdk.kotlin_module'
+
     }
 
     bundle {
