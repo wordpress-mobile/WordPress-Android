@@ -11,6 +11,7 @@ data class WhatsNewAnnouncementModel(
     val announcementVersion: Int,
     val minimumAppVersion: String,
     val maximumAppVersion: String,
+    val appVersionTargets: List<String>,
     val detailsUrl: String?,
     val isLocalized: Boolean,
     val responseLocale: String,
