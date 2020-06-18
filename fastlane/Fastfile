@@ -52,7 +52,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # bundle exec fastlane code_freeze [update_release_branch_version:<update flag>] [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane code_freeze 
+  # bundle exec fastlane code_freeze
   # bundle exec fastlane code_freeze update_release_branch_version:false
   # bundle exec fastlane code_freeze skip_confirm:true
   #####################################################################################
@@ -60,13 +60,13 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :code_freeze do | options |
     gutenberg_dep_check()
     old_version = android_codefreeze_prechecks(options)
-   
+
     android_bump_version_release()
     new_version = android_get_app_version()
     android_update_release_notes(new_version: new_version)
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
-    
+
     localize_gutenberg(skip_module_update: true)
     localize_libs()
     ensure_git_status_clean()
@@ -74,7 +74,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
 #####################################################################################
-# update_appstore_strings 
+# update_appstore_strings
 # -----------------------------------------------------------------------------------
 # This lane gets the data from the txt files in the WordPress/metadata/ folder
 # and updates the .po file that is then picked by GlotPress for translations.
@@ -86,7 +86,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 # fastlane update_appstore_strings version:10.3
 #####################################################################################
   desc "Updates the PlayStoreStrings.po file"
-  lane :update_appstore_strings do |options| 
+  lane :update_appstore_strings do |options|
     prj_folder = Dir.pwd + "/.."
 
     files = {
@@ -110,10 +110,10 @@ ENV["HAS_ALPHA_VERSION"]="true"
       enhanced_app_store_screenshot_7: prj_folder + "/WordPress/metadata/enhanced_screenshot_7.html",
     }
 
-    android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po", 
-      source_files: files, 
+    android_update_metadata_source(po_file_path: prj_folder + "/WordPress/metadata/PlayStoreStrings.po",
+      source_files: files,
       release_version: options[:version])
-  end 
+  end
 
   #####################################################################################
   # new_beta_release
@@ -141,7 +141,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   # new_hotfix_release
   # -----------------------------------------------------------------------------------
-  # This lane updates the release branch for a new hotix release. 
+  # This lane updates the release branch for a new hotix release.
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane new_hotfix_release [skip_confirm:<skip confirm>] [version:<version>]
@@ -156,18 +156,18 @@ ENV["HAS_ALPHA_VERSION"]="true"
     android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
     android_tag_build(tag_alpha: false)
   end
-  
+
   #####################################################################################
   # finalize_release
   # -----------------------------------------------------------------------------------
   # This lane finalize a release: updates store metadata and runs the release checks
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane finalize_release [skip_confirm:<skip confirm>] 
+  # bundle exec fastlane finalize_release [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane finalize_release 
-  # bundle exec fastlane finalize_release skip_confirm:true 
+  # bundle exec fastlane finalize_release
+  # bundle exec fastlane finalize_release skip_confirm:true
   #####################################################################################
   desc "Updates store metadata and runs the release checks"
   lane :finalize_release do | options |
@@ -189,62 +189,64 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   # build_release
   # -----------------------------------------------------------------------------------
-  # This lane builds the final release of the app and uploads it 
+  # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane build_release [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_release 
-  # bundle exec fastlane build_release skip_confirm:true 
+  # bundle exec fastlane build_release
+  # bundle exec fastlane build_release skip_confirm:true
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_release do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+  lane :build_and_upload_release do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: false,
       beta: false,
       final: true)
     android_build_preflight()
-    
+
     # Create the file names
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+
+    upload_build_to_play_store(version: version["name"], track: "production")
   end
 
   #####################################################################################
-  # build_pre_releases
+  # build_and_upload_pre_releases
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for both internal and external distribution 
+  # This lane builds the app it for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_pre_releases [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>]
   #
   # Example:
-  # bundle exec fastlane build_pre_releases 
-  # bundle exec fastlane build_pre_releases skip_confirm:true 
+  # bundle exec fastlane build_and_upload_pre_releases
+  # bundle exec fastlane build_and_upload_pre_releases skip_confirm:true
   #####################################################################################
   desc "Builds and updates for distribution"
-  lane :build_pre_releases do | options |
-    android_build_prechecks(skip_confirm: options[:skip_confirm], 
+  lane :build_and_upload_pre_releases do | options |
+    android_build_prechecks(skip_confirm: options[:skip_confirm],
       alpha: true,
       beta: true,
       final: false)
     android_build_preflight()
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm])
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm])
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
   end
 
   #####################################################################################
   # build_alpha
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing  
+  # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
   #
   # Example:
-  # bundle exec fastlane build_alpha 
-  # bundle exec fastlane build_alpha skip_confirm:true 
+  # bundle exec fastlane build_alpha
+  # bundle exec fastlane build_alpha skip_confirm:true upload_to_play_store:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do | options |
@@ -254,19 +256,23 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=android_get_alpha_version()
     build_bundle(version: version, flavor:"Zalpha", buildType: "release")
+
+    if (options[:upload_to_play_store]) then
+        upload_build_to_play_store(version: version["name"], track: "alpha")
+    end
   end
 
   #####################################################################################
   # build_beta
   # -----------------------------------------------------------------------------------
-  # This lane builds the app it for internal testing  
+  # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
   #
   # Example:
-  # bundle exec fastlane build_beta 
-  # bundle exec fastlane build_beta skip_confirm:true 
+  # bundle exec fastlane build_beta
+  # bundle exec fastlane build_beta skip_confirm:true upload_to_play_store:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do | options |
@@ -276,10 +282,48 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
+
+    if (options[:upload_to_play_store]) then
+        upload_build_to_play_store(version: version["name"], track: "beta")
+    end
   end
 
   #####################################################################################
-  # download_metadata_string 
+  # upload_build_to_play_store
+  # -----------------------------------------------------------------------------------
+  # This lane uploads the build to Play Store for the given version to the given track
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane upload_build_to_play_store version:<version> track:<track>
+  #
+  # Example:
+  # bundle exec fastlane upload_build_to_play_store version:15.0 track:production
+  # bundle exec fastlane upload_build_to_play_store version:alpha-228 track:alpha
+  # bundle exec fastlane upload_build_to_play_store version:15.0-rc-1 track:beta
+  #####################################################################################
+  desc "Upload Build to Play Store"
+  lane :upload_build_to_play_store do | options |
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version] }.aab")
+    if File.exists? aab_file_path then
+      upload_to_play_store(
+        package_name: 'org.wordpress.android',
+        aab: aab_file_path,
+        track: options[:track],
+        release_status: 'draft',
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true,
+        skip_upload_screenshots: true,
+        json_key: './google-upload-credentials.json',
+      )
+    else
+      UI.error("Unable to find a build artifact at #{aab_file_path}")
+    end
+  end
+
+  #####################################################################################
+  # download_metadata_string
   # -----------------------------------------------------------------------------------
   # This lane downloads the translated metadata (release notes,
   # app store strings, title, etc.) from GlotPress and updates the local files
@@ -291,7 +335,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # fastlane download_metadata_string build_number:573 version:10.3
   #####################################################################################
   desc "Downloads translated metadata from GlotPress"
-  lane :download_metadata_strings do |options| 
+  lane :download_metadata_strings do |options|
     values = options[:version].split('.')
     files = {
       "release_note_#{values[0]}#{values[1]}" => {desc: "changelogs/#{options[:build_number]}.txt", max_size: 500, alternate_key:"release_note_short_#{values[0]}#{values[1]}"},
@@ -302,19 +346,19 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     delete_old_changelogs(build: options[:build_number])
     download_path=Dir.pwd + "/metadata/android"
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
-      target_files: files, 
+    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+      target_files: files,
       locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]},
       source_locale: "en-US",
       download_path: download_path)
-    
+
     android_create_xml_release_notes(download_path: download_path, build_number: "#{options[:build_number]}", locales: SUPPORTED_LOCALES.map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]})
     sh("git add #{download_path} && git commit -m \"Update metadata translations for #{options[:version]}\" && git push origin HEAD")
-  end 
+  end
 
 ########################################################################
 # Dependencies handling lanes
-######################################################################## 
+########################################################################
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
   libraries_strings_path = [
     {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
@@ -325,14 +369,14 @@ ENV["HAS_ALPHA_VERSION"]="true"
     if (options[:auto_commit]) then
        sh("cd .. && git add #{main_strings_path}")
        sh("git commit -m 'Update strings for translation'")
-       sh("git push origin HEAD") 
+       sh("git push origin HEAD")
     else
       UI.important("Your #{main_strings_path} has changed.")
       UI.input("Please, review the changes, commit them and press return to continue.")
     end
   end
 
-  
+
   desc "Merge libraries strings files into the main app one"
   lane :localize_libs do | options |
     if (an_localize_libs(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path)) then
@@ -348,7 +392,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     sh("cd .. && python ./tools/merge_strings_xml.py")
-    
+
     is_repo_clean = ("git status --porcelain").empty?
     unless is_repo_clean then
       commit_strings(options)
@@ -364,12 +408,12 @@ ENV["HAS_ALPHA_VERSION"]="true"
       diff_url = "https://patch-diff.githubusercontent.com/raw/wordpress-mobile/WordPress-Android/pull/#{pr_number}.diff"
     end
 
-    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path, diff_url: diff_url) 
-  end 
+    an_validate_lib_strings(app_strings_path: main_strings_path, libs_strings_path: libraries_strings_path, diff_url: diff_url)
+  end
 
 ########################################################################
 # Helper Lanes
-########################################################################  
+########################################################################
   desc "Get a list of pull request from `start_tag` to the current state"
   lane :get_pullrequests_list do | options |
     get_prs_list(repository:GHHELPER_REPO, start_tag:"#{options[:start_tag]}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list.txt")
@@ -422,7 +466,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   # gutenberg_dep_check
   # -----------------------------------------------------------------------------------
-  # Verifies that Gutenberg is on the last released version 
+  # Verifies that Gutenberg is on the last released version
   # -----------------------------------------------------------------------------------
   # Usage:
   # bundle exec fastlane gutenberg_dep_check
@@ -442,13 +486,13 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
       if (last_tag_hash != submodule_hash)
         error_message = "Gutenberg submodule hash is not on the last tag!\nSubmodule hash: #{submodule_hash}\nLast tag hash: #{last_tag_hash}"
-        UI.user_error!(error_message) unless UI.interactive? 
-        
+        UI.user_error!(error_message) unless UI.interactive?
+
         if (!UI.confirm("#{error_message}\nDo you want to continue anyway?"))
           UI.user_error!("Aborted by user request. Please fix Gutenberg reference and try again.")
         end
       else
-        UI.message("Gutenberg is on the last tag: #{last_tag_hash}.")  
+        UI.message("Gutenberg is on the last tag: #{last_tag_hash}.")
       end
     end
   end
@@ -480,7 +524,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh(command)
 
     sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
-    FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)  
+    FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)
     FileUtils.rm_rf("#{temp_dir}")
   end
 end
