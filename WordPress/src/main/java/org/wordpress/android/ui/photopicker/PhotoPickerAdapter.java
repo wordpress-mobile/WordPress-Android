@@ -286,6 +286,16 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         return (ThumbnailViewHolder) mRecycler.findViewHolderForAdapterPosition(position);
     }
 
+    boolean isVideoFileSelected() {
+        for (Integer position : mSelectedPositions) {
+            PhotoPickerItem item = getItemAtPosition(position);
+            if (item != null && item.mIsVideo) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @NonNull
     ArrayList<Uri> getSelectedURIs() {
         ArrayList<Uri> uriList = new ArrayList<>();

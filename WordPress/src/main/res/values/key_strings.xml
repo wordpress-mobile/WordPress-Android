@@ -92,6 +92,9 @@
     <string name="pref_key_web_address" translatable="false">wp_pref_key_web_address</string>
     <string name="pref_key_change_password" translatable="false">pref_key_change_password</string>
     <string name="pref_key_site_start_over_screen" translatable="false">wp_pref_key_site_start_over_screen</string>
+    <!-- Front page settings -->
+    <string name="pref_key_homepage" translatable="false">wp_pref_key_homepage</string>
+    <string name="pref_key_homepage_settings" translatable="false">wp_pref_key_homepage_settings</string>
     <!-- Speed up your site -->
     <string name="pref_key_lazy_load_images" translatable="false">wp_pref_lazy_load_images</string>
     <string name="pref_key_lazy_load_images_nested" translatable="false">wp_pref_lazy_load_images_nested</string>
