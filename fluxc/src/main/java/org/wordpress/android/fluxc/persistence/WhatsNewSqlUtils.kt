@@ -14,6 +14,10 @@ import javax.inject.Singleton
 @Singleton
 class WhatsNewSqlUtils
 @Inject constructor() {
+    companion object {
+        const val APP_VERSION_TARGETS_SEPARATOR = ";@;"
+    }
+
     fun hasCachedAnnouncements(): Boolean {
         return WellSql.select(WhatsNewAnnouncementBuilder::class.java).count() > 0
     }
@@ -74,19 +78,22 @@ class WhatsNewSqlUtils
         @Column var appVersionName: String = "",
         @Column var minimumAppVersion: String,
         @Column var maximumAppVersion: String,
+        @Column var appVersionTargets: String,
         @Column var localized: Boolean,
         @Column var responseLocale: String,
         @Column var detailsUrl: String? = null
     ) : Identifiable {
-        constructor() : this(-1, "", "", "", false, "", "")
+        constructor() : this(-1, "", "", "", "", false, "", "")
 
         fun build(featuresBuilders: List<WhatsNewAnnouncementFeatureBuilder>): WhatsNewAnnouncementModel {
             val features = featuresBuilders.map { it.build() }
+            val targetAppVersions = appVersionTargets.split(APP_VERSION_TARGETS_SEPARATOR).filter { it != "" }
             return WhatsNewAnnouncementModel(
                     appVersionName,
                     announcementId,
                     minimumAppVersion,
                     maximumAppVersion,
+                    targetAppVersions,
                     detailsUrl,
                     localized,
                     responseLocale,
@@ -143,6 +150,7 @@ class WhatsNewSqlUtils
                 appVersionName = this.appVersionName,
                 minimumAppVersion = this.minimumAppVersion,
                 maximumAppVersion = this.maximumAppVersion,
+                appVersionTargets = this.appVersionTargets.joinToString(APP_VERSION_TARGETS_SEPARATOR),
                 localized = this.isLocalized,
                 responseLocale = this.responseLocale,
                 detailsUrl = this.detailsUrl
