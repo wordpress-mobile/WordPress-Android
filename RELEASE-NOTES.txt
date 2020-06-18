@@ -4,6 +4,7 @@
 * [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
 * [**] Block Editor: Add support allowing Cover Block video uploads to complete after the editor has closed
 * [*] Block Editor: Fix handling of upload completion while re-opening the editor
+* [*] Fix crash when WordPress api response has an empty body
  
 15.1
 -----
