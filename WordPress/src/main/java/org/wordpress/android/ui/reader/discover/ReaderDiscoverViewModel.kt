@@ -8,6 +8,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.GALLERY
+import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -94,6 +95,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
 
         val thumbnailStripUrls = post.takeIf { it.cardType == GALLERY }?.let { retrieveGalleryThumbnailUrls() }
+        val videoOverlayVisbility = post.cardType == VIDEO
 
         ReaderPostUiState(
                 post.postId,
@@ -106,7 +108,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 photoFrameVisibility = photoFrameVisibility,
                 photoTitle = photoTitle,
                 featuredImageUrl = featuredImageUrl,
-                thumbnailStripUrls = thumbnailStripUrls
+                thumbnailStripUrls = thumbnailStripUrls,
+                videoOverlayVisbility = videoOverlayVisbility
         )
     }
 
@@ -136,7 +139,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val photoFrameVisibility: Boolean,
             val photoTitle: String?,
             val featuredImageUrl: String?,
-            val thumbnailStripUrls: List<String>?
+            val thumbnailStripUrls: List<String>?,
+            val videoOverlayVisbility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
