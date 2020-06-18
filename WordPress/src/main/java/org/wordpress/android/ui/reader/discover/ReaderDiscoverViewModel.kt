@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
+import org.wordpress.android.models.ReaderCardType
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -74,8 +75,13 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         val blogName = post.takeIf { it.hasBlogName() }?.blogName
 
+        val excerpt = post.takeIf { post.cardType != ReaderCardType.PHOTO && post.hasExcerpt() }?.excerpt
+        val title = post.takeIf { post.cardType != ReaderCardType.PHOTO && it.hasTitle() }?.title
+
         ReaderPostUiState(
                 post.postId,
+                title = title,
+                excerpt = excerpt,
                 blogUrl = blogUrl,
                 blogName = blogName,
                 dateLine = dateLine,
@@ -95,6 +101,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     sealed class ReaderCardUiState {
         class ReaderPostUiState(
             val id: Long,
+            val title: String?,
+            val excerpt: String?,// mTxtText
             val dateLine: String,
             val blogUrl: String?,
             val avatarOrBlavatarUrl: String?,
