@@ -2,6 +2,7 @@ package org.wordpress.android.viewmodel.pages
 
 import android.content.Intent
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
@@ -28,6 +29,7 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.StaticPage
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
 import org.wordpress.android.fluxc.store.SiteOptionsStore
@@ -42,7 +44,11 @@ import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.PublishedPage
+import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterSelection
+import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
@@ -69,10 +75,14 @@ class PagesViewModelTest {
     @Mock lateinit var siteOptionsStore: SiteOptionsStore
     @Mock lateinit var appLogWrapper: AppLogWrapper
     @Mock lateinit var siteStore: SiteStore
+    @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var viewModel: PagesViewModel
     private lateinit var listStates: MutableList<PageListState>
     private lateinit var pages: MutableList<List<PageModel>>
     private lateinit var searchPages: MutableList<SortedMap<PageListType, List<PageModel>>>
+    private lateinit var authorSelectionUpdated: MutableLiveData<AuthorFilterSelection>
+    private lateinit var authorUIState: MutableLiveData<PagesAuthorFilterUIState>
 
     @Before
     fun setUp() {
@@ -93,14 +103,20 @@ class PagesViewModelTest {
                 pageListEventListenerFactory = mock(),
                 siteOptionsStore = siteOptionsStore,
                 appLogWrapper = appLogWrapper,
-                siteStore = siteStore
+                siteStore = siteStore,
+                accountStore = accountStore,
+                prefs = appPrefsWrapper
         )
         listStates = mutableListOf()
         pages = mutableListOf()
         searchPages = mutableListOf()
+        authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+        authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
         viewModel.listState.observeForever { if (it != null) listStates.add(it) }
         viewModel.pages.observeForever { if (it != null) pages.add(it) }
         viewModel.searchPages.observeForever { if (it != null) searchPages.add(it) }
+        viewModel.authorSelectionUpdated.observeForever { if (it != null) authorSelectionUpdated.value = it }
+        viewModel.authorUIState.observeForever { if (it != null) authorUIState.value = it }
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -407,5 +423,66 @@ class PagesViewModelTest {
         )
 
         return pageModel
+    }
+
+    @Test
+    fun `when logged into a wpcom site with others edit, the author filter shows`() = test {
+        // Arrange
+        val wpcomSite = SiteModel()
+        wpcomSite.setIsWPCom(true)
+        wpcomSite.hasCapabilityEditOthersPages = true
+        setUpPageStoreWithASinglePage(wpcomSite)
+
+        whenever(appPrefsWrapper.postListAuthorSelection).thenReturn(EVERYONE)
+        // Act
+        viewModel.start(wpcomSite)
+
+        // Assert
+        assertThat(viewModel.authorUIState.value?.isAuthorFilterVisible).isEqualTo(true)
+    }
+
+    @Test
+    fun `when logged into a non wpcom site, the author filter does not show`() = test {
+        // Arrange
+        val wpcomSite = SiteModel()
+        wpcomSite.setIsWPCom(false)
+
+        // Act
+        viewModel.start(wpcomSite)
+
+        // Assert
+        assertThat(authorUIState.value?.isAuthorFilterVisible).isEqualTo(false)
+        assertThat(viewModel.authorUIState.value?.isAuthorFilterVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when logged into a wpcom site with no others edit, the author filter does not show`() = test {
+        // Arrange
+        val wpcomSite = SiteModel()
+        wpcomSite.setIsWPCom(true)
+        wpcomSite.hasCapabilityEditOthersPages = false
+        setUpPageStoreWithASinglePage(wpcomSite)
+
+        // Act
+        viewModel.start(wpcomSite)
+
+        // Assert
+        assertThat(viewModel.authorUIState.value?.isAuthorFilterVisible).isEqualTo(false)
+    }
+
+    @Test
+    fun `when prefs are saved, they match state`() = test {
+        // Arrange
+        val wpcomSite = SiteModel()
+        wpcomSite.setIsWPCom(true)
+        wpcomSite.hasCapabilityEditOthersPages = true
+        setUpPageStoreWithASinglePage(wpcomSite)
+
+        whenever(appPrefsWrapper.postListAuthorSelection).thenReturn(EVERYONE)
+        // Act
+        viewModel.start(wpcomSite)
+
+        // Assert
+        assertThat(viewModel.authorUIState.value?.authorFilterSelection).isEqualTo(EVERYONE)
     }
 }
