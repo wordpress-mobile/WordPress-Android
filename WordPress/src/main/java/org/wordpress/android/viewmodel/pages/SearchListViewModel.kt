@@ -119,7 +119,8 @@ class SearchListViewModel
                         ),
                         actionsEnabled = areActionsEnabled,
                         progressBarUiState = progressBarUiState,
-                        showOverlay = showOverlay
+                        showOverlay = showOverlay,
+                        author = post.authorDisplayName
                 )
             PageStatus.DRAFT, PageStatus.PENDING -> DraftPage(
                     remoteId = remoteId,
@@ -136,7 +137,8 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
             PageStatus.TRASHED -> TrashedPage(
                     remoteId = remoteId,
@@ -153,7 +155,8 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
             PageStatus.SCHEDULED -> ScheduledPage(
                     remoteId = remoteId,
@@ -170,7 +173,8 @@ class SearchListViewModel
                     ),
                     actionsEnabled = areActionsEnabled,
                     progressBarUiState = progressBarUiState,
-                    showOverlay = showOverlay
+                    showOverlay = showOverlay,
+                    author = post.authorDisplayName
             )
         }
     }

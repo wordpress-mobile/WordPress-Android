@@ -44,6 +44,11 @@
         </item>
 
         <item
+            android:id="@+id/menu_content_info"
+            android:title="@string/menu_content_info" >
+        </item>
+
+        <item
             android:id="@+id/menu_post_settings"
             android:title="@string/post_settings" >
         </item>
