@@ -645,6 +645,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void helpSignupConfirmationScreen(String email) {
+        viewHelpAndSupport(Origin.SIGNUP_CONFIRMATION);
+    }
+
+    @Override
     public void helpSocialEmailScreen(String email) {
         viewHelpAndSupport(Origin.LOGIN_SOCIAL);
     }
