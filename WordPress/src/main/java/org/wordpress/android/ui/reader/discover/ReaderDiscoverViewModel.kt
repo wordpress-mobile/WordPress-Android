@@ -75,7 +75,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun mapPostToUiState(post: ReaderPost) {
+    private fun mapPostToUiState(post: ReaderPost): ReaderPostUiState {
         val blogUrl = post.takeIf { it.hasBlogUrl() }?.blogUrl?.let {
             // TODO malinjir remove static access
             UrlUtils.removeScheme(it)
@@ -112,7 +112,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir comments action
         // TODO malinjir likes action
 
-        ReaderPostUiState(
+        return ReaderPostUiState(
                 post.postId,
                 title = title,
                 excerpt = excerpt,
