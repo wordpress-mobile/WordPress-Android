@@ -7,15 +7,15 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
-import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
+import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
@@ -138,5 +138,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
         )
         fragmentTransaction.replace(R.id.fragment_container, ReaderFragment(), tag).commit()
+    }
+
+    companion object {
+        const val TAG = "reader_interests_fragment_tag"
     }
 }

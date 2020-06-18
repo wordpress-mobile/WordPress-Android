@@ -23,7 +23,6 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
@@ -150,11 +149,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
         viewModel.showReaderInterests.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                val fragmentTransaction = parentFragmentManager.beginTransaction() // TODO: Temporary placement
-                fragmentTransaction
-                    .replace(R.id.fragment_container, ReaderInterestsFragment(), tag)
-                    .addToBackStack(null)
-                    .commit()
+                ReaderActivityLauncher.showReaderInterests(this)
             }
         })
 
