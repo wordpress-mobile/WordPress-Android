@@ -96,6 +96,7 @@ platform :android do
       clear_previous_screenshots: should_clear_previous_screenshots,
       locales: locales,
       test_instrumentation_runner: "org.wordpress.android.WordPressTestRunner",
+      use_adb_root: true
     }
 
     take_android_emulator_screenshots(devices: screenshot_devices, screenshot_options: screenshot_options)
@@ -108,13 +109,13 @@ platform :android do
   # This lane download the translated promo strings from the translation system
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane download_promo_strings 
+  # fastlane download_promo_strings
   #
   # Example:
   # fastlane download_promo_strings
   #####################################################################################
   desc "Downloads translated promo strings from the translation system"
-  lane :download_promo_strings do |options| 
+  lane :download_promo_strings do |options|
     files = {
       "play_store_screenshot_1" => {desc: "play_store_screenshot_2.txt"},
       "play_store_screenshot_2" => {desc: "play_store_screenshot_1.txt"},
@@ -135,12 +136,12 @@ platform :android do
       .select { |hsh| hsh[:promo_config] != false }
       .map {| hsh | [ hsh[:glotpress], hsh[:google_play] ]}
 
-    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/", 
-      target_files: files, 
+    gp_downloadmetadata(project_url: "https://translate.wordpress.org/projects/apps/android/release-notes/",
+      target_files: files,
       locales: locales,
       source_locale: "en-US",
       download_path: File.join(Dir.pwd, "/playstoreres/metadata"))
-  end 
+  end
 
   #####################################################################################
   # create_promo_screenshots
@@ -149,21 +150,21 @@ platform :android do
   # are taken by the screenshot lane
   # -----------------------------------------------------------------------------------
   # Usage:
-  # fastlane create_promo_screenshots 
+  # fastlane create_promo_screenshots
   #
   # Example:
   # fastlane create_promo_screenshots
   #####################################################################################
   desc "Creates promo screenshots"
-  lane :create_promo_screenshots do |options| 
-  
+  lane :create_promo_screenshots do |options|
+
     # Create a copy of the files to work with – this ensures that if we're doing multiple
     # screenshot generation tasks close together, we can keep reusing the same source files
     original_screenshot_directory = File.join(Dir.pwd, "metadata/android/")
     repaired_screenshot_directory = File.join(Dir.pwd, "metadata/tmp")
     FileUtils.rm_rf(repaired_screenshot_directory)
     FileUtils.copy_entry(original_screenshot_directory, repaired_screenshot_directory)
-    
+
     # Remove the timestamps from filenames to make them easier to work with
     Dir.glob(repaired_screenshot_directory + "/**/**")
     .select{ |entry|
@@ -196,7 +197,7 @@ platform :android do
         FileUtils.rm_rf(dir)
     }
 
-    # Run screenshots generator tool 
+    # Run screenshots generator tool
     promo_screenshots(
       orig_folder: repaired_screenshot_directory,
       metadata_folder: repaired_screenshot_directory,
@@ -206,7 +207,7 @@ platform :android do
 
     # Clean up the temp directory
     FileUtils.rm_rf(repaired_screenshot_directory)
-  end 
+  end
 
 
   #####################################################################################
