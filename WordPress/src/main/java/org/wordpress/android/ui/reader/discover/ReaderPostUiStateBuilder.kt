@@ -71,11 +71,7 @@ class ReaderPostUiStateBuilder constructor(private val accountStore: AccountStor
             post.takeIf { it.cardType == GALLERY }
                     ?.let { retrieveGalleryThumbnailUrls() }
 
-    private fun buildFeaturedImageUrl(
-        post: ReaderPost,
-        photonWidth: Int,
-        photonHeight: Int
-    ): String? {
+    private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
                 // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
