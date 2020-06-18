@@ -15,6 +15,13 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
+import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
+import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
+import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -25,6 +32,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -106,6 +114,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
+import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
@@ -1049,6 +1058,73 @@ class MySiteFragment : Fragment(),
                 }
             }
         }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: StorySaveResult) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (event.isSuccess()) {
+            // TODO WPSTORIES add TRACKS
+            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+            // TODO WPSTORIES probably we want to remove this snackbar given we want to immediately start uploading it
+            val snackbarMessage = String.format(
+                    getString(string.story_saving_snackbar_finished_successfully),
+                    getStoryAtIndex(event.storyIndex).title
+            )
+            uploadUtilsWrapper.showSnackbar(
+                    requireActivity().findViewById<View>(R.id.coordinator),
+                    snackbarMessage
+            )
+        } else {
+            // TODO WPSTORIES add TRACKS
+            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+            val errorText = String.format(
+                    getString(string.story_saving_snackbar_finished_with_error),
+                    getStoryAtIndex(event.storyIndex).title
+            )
+            val snackbarMessage = buildSnackbarErrorMessage(
+                    requireActivity(),
+                    allErrorsInResult(event.frameSaveResult).size,
+                    errorText
+            )
+            uploadUtilsWrapper.showSnackbarError(
+                    requireActivity().findViewById<View>(R.id.coordinator),
+                    snackbarMessage,
+                    string.story_saving_failed_quick_action_manage,
+                    View.OnClickListener { view: View? ->
+                        val intent = Intent(
+                                requireActivity(),
+                                StoryComposerActivity::class.java
+                        )
+                        intent.putExtra(KEY_STORY_SAVE_RESULT, event)
+                        // TODO add SITE param later when integrating with WPAndroid
+                        // notificationIntent.putExtra(WordPress.SITE, site)
+
+                        // we need to have a way to cancel the related error notification when the user comes
+                        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
+                        // errored story but the error notification will remain existing in the system dashboard)
+                        intent.action = getNotificationIdForError(event.storyIndex).toString() + ""
+
+                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+                        startActivity(intent)
+                    }
+            )
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onStorySaveStart(event: StorySaveProcessStart) {
+        EventBus.getDefault().removeStickyEvent(event)
+        val snackbarMessage = String.format(
+                getString(string.story_saving_snackbar_started),
+                getStoryAtIndex(event.storyIndex).title
+        )
+        uploadUtilsWrapper.showSnackbar(
+                requireActivity().findViewById<View>(R.id.coordinator),
+                snackbarMessage
+        )
     }
 
     override fun onPositiveClicked(instanceTag: String) {
