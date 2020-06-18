@@ -28,12 +28,15 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
 
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
     private lateinit var newsCardViewModel: NewsCardViewModel
 
@@ -43,7 +46,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                val selectedTag = it.readerTagList[position]
+                val currentUiState = it as ContentUiState
+                val selectedTag = currentUiState.readerTagList[position]
                 newsCardViewModel.onTagChanged(selectedTag)
                 viewModel.onTagChanged(selectedTag)
             }
@@ -113,7 +117,14 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
-                updateTabs(uiState)
+                when (it) {
+                    is InitialUiState -> {
+                    }
+                    is ContentUiState -> {
+                        updateTabs(it)
+                    }
+                }
+                uiHelpers.updateVisibility(app_bar, uiState.appBarVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }
         })
@@ -148,7 +159,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.start()
     }
 
-    private fun updateTabs(uiState: ReaderUiState) {
+    private fun updateTabs(uiState: ContentUiState) {
         val adapter = TabsAdapter(this, uiState.readerTagList)
         view_pager.adapter = adapter
 
