@@ -54,9 +54,12 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun mapPostToUiState(post: ReaderPost) = ReaderPostUiState(post.postId, UiStringText(post.title))
 
-    sealed class DiscoverUiState {
-        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState()
-        object LoadingUiState : DiscoverUiState()
+    sealed class DiscoverUiState(
+        val contentVisiblity: Boolean = false,
+        val progressVisibility: Boolean = false
+    ) {
+        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
+        object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
     }
 

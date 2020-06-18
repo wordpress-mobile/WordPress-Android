@@ -994,6 +994,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
+    public void showContentInfo() throws EditorFragmentNotAddedException {
+        // not implemented for Aztec
+    }
+
+    @Override
     public LiveData<Editable> getTitleOrContentChanged() {
         return mTextWatcher.getAfterTextChanged();
     }
