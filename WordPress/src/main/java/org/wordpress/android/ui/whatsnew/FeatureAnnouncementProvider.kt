@@ -35,6 +35,7 @@ class FeatureAnnouncementProvider @Inject constructor(
                 announcementVersion,
                 minimumAppVersion,
                 maximumAppVersion,
+                appVersionTargets,
                 detailsUrl,
                 isLocalized,
                 features.map { it.build() })

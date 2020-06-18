@@ -32,6 +32,7 @@ class FeatureAnnouncementValidityTest {
             1,
             "14.5",
             "14.7",
+            emptyList(),
             "https://wordpress.org/",
             true,
             testFeatures
@@ -42,6 +43,7 @@ class FeatureAnnouncementValidityTest {
             1,
             "14.5",
             "14.7",
+            emptyList(),
             "https://wordpress.org/",
             false,
             testFeatures
@@ -52,6 +54,7 @@ class FeatureAnnouncementValidityTest {
             1,
             "14.5",
             "14.7",
+            emptyList(),
             "https://wordpress.org/",
             true,
             emptyList()
@@ -62,6 +65,7 @@ class FeatureAnnouncementValidityTest {
             1,
             "14.0",
             "14.2",
+            emptyList(),
             "https://wordpress.org/",
             true,
             testFeatures
@@ -72,6 +76,7 @@ class FeatureAnnouncementValidityTest {
             1,
             "-1.0",
             "14.8",
+            emptyList(),
             "https://wordpress.org/",
             true,
             testFeatures
@@ -82,6 +87,18 @@ class FeatureAnnouncementValidityTest {
             1,
             "14.5",
             "-1.0",
+            emptyList(),
+            "https://wordpress.org/",
+            true,
+            testFeatures
+    )
+
+    private val targetsSpecificVersions = FeatureAnnouncement(
+            "14.7",
+            1,
+            "14.5",
+            "14.7",
+            listOf("alpha-centauri-1", "alpha-centauri-2"),
             "https://wordpress.org/",
             true,
             testFeatures
@@ -101,5 +118,9 @@ class FeatureAnnouncementValidityTest {
         assertThat(noMaxVersionAnnouncement.canBeDisplayedOnAppUpgrade("14.4")).isFalse()
         assertThat(noMaxVersionAnnouncement.canBeDisplayedOnAppUpgrade("14.5")).isTrue()
         assertThat(noMaxVersionAnnouncement.canBeDisplayedOnAppUpgrade("14.6")).isTrue()
+
+        assertThat(targetsSpecificVersions.canBeDisplayedOnAppUpgrade("alpha-centauri-1")).isTrue()
+        assertThat(targetsSpecificVersions.canBeDisplayedOnAppUpgrade("alpha-centauri-3")).isFalse()
+        assertThat(targetsSpecificVersions.canBeDisplayedOnAppUpgrade("14.6")).isTrue()
     }
 }

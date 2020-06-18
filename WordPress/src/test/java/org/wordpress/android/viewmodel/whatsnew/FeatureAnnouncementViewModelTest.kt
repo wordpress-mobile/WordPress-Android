@@ -62,6 +62,7 @@ class FeatureAnnouncementViewModelTest : BaseUnitTest() {
             1,
             "14.5",
             "14.7",
+            emptyList(),
             "https://wordpress.org/",
             true,
             testFeatures

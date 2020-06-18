@@ -46,6 +46,7 @@ class WPMainActivityViewModelTest {
             2,
             "14.5",
             "14.7",
+            emptyList(),
             "https://wordpress.org/",
             true,
             listOf(
