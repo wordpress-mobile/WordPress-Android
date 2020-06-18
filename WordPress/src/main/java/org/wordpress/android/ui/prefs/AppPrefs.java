@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
@@ -48,6 +49,7 @@ public class AppPrefs {
         // name of last shown activity
         LAST_ACTIVITY_STR,
 
+        READER_TAGS_UPDATE_TIMESTAMP,
         // last selected tag in the reader
         READER_TAG_NAME,
         READER_TAG_TYPE,
@@ -123,6 +125,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+        GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
 
@@ -221,6 +224,9 @@ public class AppPrefs {
 
         // last app version code feature announcement was shown for
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
+
+        // feature flag for Reader Improvements Phase 2
+        FF_READER_IMPROVEMENTS_PHASE_2
     }
 
     private static SharedPreferences prefs() {
@@ -848,6 +854,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
+    public static void setGutenbergStarterPageTemplatesTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, tooltipShown);
+    }
+
+    public static boolean getGutenbergStarterPageTemplatesTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, false);
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -1114,6 +1128,14 @@ public class AppPrefs {
         setInt(UndeletablePrefKey.LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE, version);
     }
 
+    public static long getReaderTagsUpdatedTimestamp() {
+        return getLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, -1);
+    }
+
+    public static void setReaderTagsUpdatedTimestamp(long timestamp) {
+        setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
+    }
+
     /*
      * adds a local site ID to the top of list of recently chosen sites
      */
@@ -1139,5 +1161,18 @@ public class AppPrefs {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Feature Flag for Reader Improvements Phase 2. Both BuildTime and RunTime feature flag is used.
+     *
+     * BuildTime feature flag is used to make sure we never enable the feature in production builds - even when the
+     * user manually overrides the shared preferences record using adb.
+     *
+     * RunTime feature flag is used for us to enable the feature during development.
+     */
+    public static boolean isReaderImprovementsPhase2Enabled() {
+        return BuildConfig.READER_IMPROVEMENTS_PHASE_2 && getBoolean(UndeletablePrefKey.FF_READER_IMPROVEMENTS_PHASE_2,
+                false);
     }
 }

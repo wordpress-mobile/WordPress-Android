@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_LIST_AUTHOR_FILTER_CHANGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_OPTIONS_PRESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_SEARCH_ACCESSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PAGES_TAB_PRESSED
@@ -19,11 +20,16 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.fluxc.store.SiteOptionsStore
+import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,18 +38,26 @@ import org.wordpress.android.ui.pages.PageItem.Action.DELETE_PERMANENTLY
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_DRAFT
 import org.wordpress.android.ui.pages.PageItem.Action.MOVE_TO_TRASH
 import org.wordpress.android.ui.pages.PageItem.Action.PUBLISH_NOW
+import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_HOMEPAGE
+import org.wordpress.android.ui.pages.PageItem.Action.SET_AS_POSTS_PAGE
 import org.wordpress.android.ui.pages.PageItem.Action.SET_PARENT
 import org.wordpress.android.ui.pages.PageItem.Action.VIEW_PAGE
 import org.wordpress.android.ui.pages.PageItem.Page
+import org.wordpress.android.ui.pages.PagesAuthorFilterUIState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.posts.AuthorFilterListItemUIState
+import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostInfoType
 import org.wordpress.android.ui.posts.PostListRemotePreviewState
 import org.wordpress.android.ui.posts.PostModelUploadStatusTracker
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
+import org.wordpress.android.ui.posts.getAuthorFilterItems
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.ui.uploads.UploadUtils
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.PAGES
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -74,6 +88,7 @@ private const val SEARCH_DELAY = 200L
 private const val SCROLL_DELAY = 200L
 private const val SNACKBAR_DELAY = 500L
 private const val SEARCH_COLLAPSE_DELAY = 500L
+private const val TRACKS_SELECTED_AUTHOR_FILTER = "author_filter_selection"
 
 typealias LoadAutoSaveRevision = Boolean
 
@@ -85,12 +100,17 @@ class PagesViewModel
     private val actionPerfomer: ActionPerformer,
     private val networkUtils: NetworkUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
+    private val siteStore: SiteStore,
     private val previewStateHelper: PreviewStateHelper,
     private val uploadStarter: UploadStarter,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val autoSaveConflictResolver: AutoSaveConflictResolver,
     val uploadStatusTracker: PostModelUploadStatusTracker,
     private val pageListEventListenerFactory: PageListEventListener.Factory,
+    private val siteOptionsStore: SiteOptionsStore,
+    private val appLogWrapper: AppLogWrapper,
+    private val accountStore: AccountStore,
+    private val prefs: AppPrefsWrapper,
     @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val defaultDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -185,6 +205,12 @@ class PagesViewModel
         )
     }
 
+    private val _authorSelectionUpdated = MutableLiveData<AuthorFilterSelection>()
+    val authorSelectionUpdated = _authorSelectionUpdated
+
+    private val _authorUIState = MutableLiveData<PagesAuthorFilterUIState>()
+    val authorUIState: LiveData<PagesAuthorFilterUIState> = _authorUIState
+
     data class BrowsePreview(
         val post: PostModel,
         val previewType: RemotePreviewType
@@ -203,10 +229,25 @@ class PagesViewModel
                 bgDispatcher = defaultDispatcher,
                 postStore = postStore,
                 eventBusWrapper = eventBusWrapper,
+                siteStore = siteStore,
                 site = site,
                 invalidateUploadStatus = this::handleInvalidateUploadStatus,
                 handleRemoteAutoSave = this::handleRemoveAutoSaveEvent,
-                handlePostUploadFinished = this::postUploadedFinished
+                handlePostUploadFinished = this::postUploadedFinished,
+                handleHomepageSettingsChange = this::handleHomepageSettingsChange
+        )
+
+        val authorFilterSelection: AuthorFilterSelection = if (isFilteringByAuthorSupported) {
+            prefs.postListAuthorSelection
+        } else {
+            AuthorFilterSelection.EVERYONE
+        }
+
+        _authorSelectionUpdated.value = authorFilterSelection
+        _authorUIState.value = PagesAuthorFilterUIState(
+                isAuthorFilterVisible = isFilteringByAuthorSupported,
+                authorFilterSelection = authorFilterSelection,
+                authorFilterItems = getAuthorFilterItems(authorFilterSelection, accountStore.account?.avatarUrl)
         )
     }
 
@@ -346,7 +387,9 @@ class PagesViewModel
         site: SiteModel,
         searchQuery: String
     ): SortedMap<PageListType, List<PageModel>> = withContext(defaultDispatcher) {
-        val list = pageStore.search(site, searchQuery).groupBy { PageListType.fromPageStatus(it.status) }
+        val list = pageStore.search(site, searchQuery)
+                .groupBy { PageListType.fromPageStatus(it.status) }
+
         return@withContext list.toSortedMap(
                 Comparator { previous, next ->
                     when {
@@ -394,6 +437,8 @@ class PagesViewModel
             PUBLISH_NOW -> publishPageNow(page.remoteId)
             DELETE_PERMANENTLY -> deletePage(page)
             CANCEL_AUTO_UPLOAD -> cancelPendingAutoUpload(LocalId(page.localId))
+            SET_AS_HOMEPAGE -> setHomepage(page.remoteId)
+            SET_AS_POSTS_PAGE -> setPostsPage(page.remoteId)
         }
         return true
     }
@@ -415,6 +460,64 @@ class PagesViewModel
             trackMenuSelectionEvent(SET_PARENT)
 
             _setPageParent.postValue(pageMap[page.remoteId])
+        }
+    }
+
+    private fun setHomepage(homepageId: Long) {
+        performIfNetworkAvailable {
+            if (site.showOnFront == PAGE.value) {
+                launch {
+                    val result = siteOptionsStore.updatePageOnFront(
+                            site,
+                            homepageId
+                    )
+                    val message = when (result.isError) {
+                        true -> {
+                            appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
+                            R.string.page_homepage_update_failed
+                        }
+                        false -> {
+                            R.string.page_homepage_successfully_updated
+                        }
+                    }
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                }
+            } else {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(
+                                messageRes = R.string.page_cannot_set_homepage
+                        )
+                )
+            }
+        }
+    }
+
+    private fun setPostsPage(remoteId: Long) {
+        performIfNetworkAvailable {
+            if (site.showOnFront == PAGE.value) {
+                launch {
+                    val result = siteOptionsStore.updatePageForPosts(
+                            site,
+                            remoteId
+                    )
+                    val message = when (result.isError) {
+                        true -> {
+                            appLogWrapper.d(PAGES, "${result.error.type}: ${result.error.message}")
+                            R.string.page_posts_page_update_failed
+                        }
+                        false -> {
+                            R.string.page_posts_page_successfully_updated
+                        }
+                    }
+                    _showSnackbarMessage.postValue(SnackbarMessageHolder(message))
+                }
+            } else {
+                _showSnackbarMessage.postValue(
+                        SnackbarMessageHolder(
+                                messageRes = R.string.page_cannot_set_posts_page
+                        )
+                )
+            }
         }
     }
 
@@ -709,6 +812,57 @@ class PagesViewModel
         }
     }
 
+    fun updateAuthorFilterSelection(selectionId: Long) {
+        val selection = AuthorFilterSelection.fromId(selectionId)
+
+        updateViewStateTriggerPagerChange(
+                authorFilterSelection = selection,
+                authorFilterItems = getAuthorFilterItems(selection, accountStore.account?.avatarUrl)
+        )
+        if (isFilteringByAuthorSupported) {
+            prefs.postListAuthorSelection = selection
+        }
+    }
+
+    /**
+     * Filtering by author is disable on:
+     * 1) Self-hosted sites - The XMLRPC api doesn't support filtering by author.
+     * 2) Jetpack sites - we need to pass in the self-hosted user id to be able to filter for authors
+     * which we currently can't
+     * 3) Sites on which the user doesn't have permissions to edit posts of other users.
+     *
+     * This behavior is consistent with Calypso and Posts as of 11/4/2019.
+     */
+    private val isFilteringByAuthorSupported: Boolean by lazy {
+        site.isWPCom && site.hasCapabilityEditOthersPages
+    }
+
+    private fun updateViewStateTriggerPagerChange(
+        isAuthorFilterVisible: Boolean? = null,
+        authorFilterSelection: AuthorFilterSelection? = null,
+        authorFilterItems: List<AuthorFilterListItemUIState>? = null
+    ) {
+        val currentState = requireNotNull(authorUIState.value) {
+            "updateViewStateTriggerPagerChange should not be called before the initial state is set"
+        }
+
+        _authorUIState.value = _authorUIState.value?.copy(
+                isAuthorFilterVisible = isAuthorFilterVisible ?: currentState.isAuthorFilterVisible,
+                authorFilterSelection = authorFilterSelection ?: currentState.authorFilterSelection,
+                authorFilterItems = authorFilterItems ?: currentState.authorFilterItems
+        )
+
+        if (authorFilterSelection != null && currentState.authorFilterSelection != authorFilterSelection) {
+            _authorSelectionUpdated.value = authorFilterSelection
+
+            AnalyticsUtils.trackWithSiteDetails(
+                    PAGES_LIST_AUTHOR_FILTER_CHANGED,
+                    site,
+                    mutableMapOf(TRACKS_SELECTED_AUTHOR_FILTER to authorFilterSelection.toString() as Any)
+            )
+        }
+    }
+
     // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -769,6 +923,13 @@ class PagesViewModel
         }
     }
 
+    private fun handleHomepageSettingsChange(siteModel: SiteModel) {
+        launch {
+            _site = siteModel
+            refreshPages()
+        }
+    }
+
     private suspend fun <T> MutableLiveData<T>.setOnUi(value: T) = withContext(coroutineContext) {
         setValue(value)
     }
@@ -778,6 +939,10 @@ class PagesViewModel
         launch {
             liveData.value = value
         }
+    }
+
+    fun shouldFilterByAuthor(): Boolean {
+        return authorUIState.value?.authorFilterSelection == AuthorFilterSelection.ME
     }
 }
 

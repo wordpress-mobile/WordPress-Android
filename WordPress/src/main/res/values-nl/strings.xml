@@ -1,23 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-13 08:54:11+0000
+Translation-Revision-Date: 2020-06-11 08:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: nl
 -->
 <resources>
-    <string name="gutenberg_native_subscribe">Abonneren</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Verwijder %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
+    <string name="gutenberg_native_move_s_up">Verplaats %s naar boven</string>
+    <string name="gutenberg_native_move_s_right">Verplaats %s naar rechts</string>
+    <string name="gutenberg_native_move_s_left">Verplaats %s naar links</string>
+    <string name="gutenberg_native_move_s_down">Verplaats %s naar beneden</string>
+    <string name="gutenberg_native_try_a_starter_layout">Probeer een starter lay-out</string>
+    <string name="gutenberg_native_insert_mention">Voeg vermelding in</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltik om actieblad te openen met beschikbare opties</string>
+    <string name="pages_cannot_be_started">We kunnen momenteel geen pagina\'s openen. Probeer het later opnieuw</string>
+    <string name="pages_set_as_posts_page">Instellen als berichtpagina</string>
+    <string name="pages_set_as_homepage">Instellen als homepage</string>
+    <string name="suggestion_no_matching_users">\'Geen overeenkomende gebruikers beschikbaar.\'</string>
+    <string name="suggestion_invalid_user">\'%s is geen geldige gebruiker.\'</string>
+    <string name="site_settings_select_page">Selecteer pagina</string>
+    <string name="site_settings_posts_page">Berichtenpagina</string>
+    <string name="site_settings_static_homepage">Statische homepage</string>
+    <string name="site_settings_classic_blog">Klassiek blog</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Geselecteerde homepage en pagina voor berichten kunnen niet hetzelfde zijn.</string>
+    <string name="site_settings_failed_update_homepage_settings">Bijwerken van homepage-instellingen mislukt. Controleer je internetverbinding.</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Kan homepage-instellingen niet opslaan voordat pagina\'s zijn geladen</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Kan homepagina instellingen niet opslaan</string>
+    <string name="site_settings_accept_homepage">Accepteren</string>
+    <string name="site_settings_failed_to_load_pages">Laden van pagina mislukt</string>
+    <string name="site_settings_homepage_settings_description">Kies uit een homepage waarop je nieuwste berichten (klassiek blog) of een vaste/statische pagina wordt weergegeven.</string>
+    <string name="site_settings_homepage_settings">Instellingen Homepage</string>
+    <string name="site_settings_homepage">Homepagina</string>
+    <string name="page_posts_page_update_failed">Berichtpagina bijwerken mislukt</string>
+    <string name="page_posts_page_successfully_updated">Berichtenpagina met succes bijgewerkt</string>
+    <string name="page_homepage_update_failed">Homepagina bijwerken mislukt</string>
+    <string name="page_homepage_successfully_updated">Homepagina met succes bijgewerkt</string>
+    <string name="page_cannot_set_posts_page">Instellingen</string>
+    <string name="page_cannot_set_homepage">Instellingen</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Welkom bij onze nieuwe blog</string>
+    <string name="gutenberg_native_select_a_color">Selecteer een kleur</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Tik tweemaal om naar de kleureninstellingen te gaan</string>
+    <string name="reader_empty_followed_blogs_description">Wanneer je sites volgt, zie je hier de content ervan</string>
+    <string name="crop">bijsnijden</string>
+    <string name="reader_no_site_to_reblog_action">Beheer sites</string>
     <string name="gutenberg_native_number_of_columns">Aantal kolommen</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Blok naar rechts verplaatsen van positie %1$s naar positie %2$s</string>
-    <string name="gutenberg_native_move_block_right">Blok naar rechts verplaatsen</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Blok naar links verplaatsen van positie %1$s naar positie %2$s</string>
-    <string name="gutenberg_native_move_block_left">Blok naar links verplaatsen</string>
-    <string name="gutenberg_native_latest_blog_posts">Nieuwste blogberichten</string>
-    <string name="gutenberg_native_follow_our_blog">Volg onze blog</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Tik tweemaal om het blok naar rechts te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Tik tweemaal om het blok naar links te verplaatsen</string>
     <string name="gutenberg_native_columns_settings">Kolominstellingen</string>
-    <string name="gutenberg_native_color_settings_are_coming_soon">Kleureninstellingen zijn binnenkort beschikbaar.</string>
     <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Dashboard aanmaken</string>
     <string name="new_site_creation_creating_site_loading_3">Thema configureren</string>
@@ -97,17 +132,14 @@ Language: nl
     <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
     <string name="gutenberg_native_link_to">Link naar</string>
-    <string name="gutenberg_native_link_settings">Link-instellingen</string>
+    <string name="gutenberg_native_s_settings">%s Instellingen</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Laten we samen wat bouwen.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Laten we samen wat opbouwen</string>
-    <string name="gutenberg_native_let_s_build_something_together">Laten we samen wat opbouwen</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Laten we samen wat bouwen!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Laten we samen wat bouwen!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Veel meer dan onze talenten, zijn het onze keuzes die bepalen wie we werkelijk zijn.</string>
     <string name="gutenberg_native_inspiration">Inspiratie</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Neem contact op!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Neem contact op!</string>
     <string name="gutenberg_native_get_in_touch">Neem contact op</string>
     <string name="gutenberg_native_excerpt_length_words">Lengte samenvatting (woorden)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Stuur me een e-mail: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -115,10 +147,6 @@ Language: nl
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Treur niet om wat voorbij is, lach omdat het gebeurd is.</string>
     <string name="gutenberg_native_customize">AANPASSEN</string>
     <string name="gutenberg_native_city_10100">Plaats, 1234 AB</string>
-    <string name="gutenberg_native_button_link_url">Knop URL-link</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Kleureninstellingen voor knoppen zijn binnenkort beschikbaar.</string>
-    <string name="gutenberg_native_border_settings">Instellingen rand</string>
-    <string name="gutenberg_native_border_radius">Radius rand</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraafblok toevoegen</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Een korte beschrijving van de services die je biedt.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Een korte bio met persoonlijke geschiedenis, belangrijke prestaties of een interessant weetje.</string>
@@ -252,7 +280,6 @@ Language: nl
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty">%s-blok. Leegmaken</string>
     <string name="gutenberg_native_reset_block">Blok resetten</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Blok verwijderen uit rij %s</string>
     <string name="gutenberg_native_remove_annotations">Aantekeningen verwijderen</string>
     <string name="gutenberg_native_problem_opening_the_video">Probleem bij het openen van de video</string>
     <string name="gutenberg_native_problem_displaying_block">Probleem bij het weergeven van het blok</string>
@@ -268,9 +295,7 @@ Language: nl
     <string name="gutenberg_native_my_post_publish_panel">Mijn venster voor publicatie van berichten</string>
     <string name="gutenberg_native_my_document_setting_panel">Mijn venster met documentinstellingen</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Blok omhoog bewegen van rij %1$s naar rij %2$s</string>
-    <string name="gutenberg_native_move_block_up">Blok omhoog verplaatsen</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blok omlaag bewegen van rij %1$s naar rij %2$s</string>
-    <string name="gutenberg_native_move_block_down">Blok omlaag verplaatsen</string>
     <string name="gutenberg_native_link_text">Tekst van link</string>
     <string name="gutenberg_native_link_inserted">Link ingevoerd</string>
     <string name="gutenberg_native_image_caption_s">Afbeelding vastleggen. %s</string>
@@ -283,7 +308,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_to_select_an_image">Tik tweemaal om een afbeelding te selecteren</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Tik tweemaal om een video te selecteren</string>
     <string name="gutenberg_native_double_tap_to_select">Tik tweemaal om te selecteren</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Tik tweemaal om het blok te verwijderen</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Tik tweemaal om laatste wijziging opnieuw uit te voeren</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Tik tweemaal om het blok omhoog te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Tik tweemaal om het blok omlaag te verplaatsen</string>
@@ -293,7 +317,6 @@ Language: nl
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Tik tweemaal en houd ingedrukt om te bewerken</string>
     <string name="gutenberg_native_current_value_is_s">Huidige waarde is %s</string>
     <string name="gutenberg_native_content">Inhoud…</string>
-    <string name="gutenberg_native_clear_all_settings">Alle instellingen wijzigen</string>
     <string name="gutenberg_native_choose_from_device">Kiezen op apparaat</string>
     <string name="gutenberg_native_annotations_sidebar">Sidebar met opmerkingen</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Er is een onbekende fout opgetreden. Probeer het nog eens.</string>
@@ -317,6 +340,7 @@ Language: nl
     <string name="notifications_tab_dialog_master_hint_on">Weergave van meldingen op het meldingentabblad van deze site uitschakelen</string>
     <string name="notifications_tab_dialog_master_status_off">Meldingen voor deze site</string>
     <string name="notifications_tab_dialog_master_status_on">Meldingen voor deze site</string>
+    <string name="dialog_gutenberg_informative_description_post">Je gebruikt nu de blokeditor voor nieuwe berichten,geweldig! Als je toch liever de klassieke editor gebruikt, ga dan naar \'Mijn site\' > \'Site instellingen\'.</string>
     <string name="pick_media">Afbeelding of video toevoegen</string>
     <string name="error_post_not_submitted_retrying">We konden dit bericht niet inzenden voor beoordeling, maar we proberen het later nog eens. </string>
     <string name="error_post_not_scheduled_retrying">We konden dit bericht niet inplannen, maar we proberen het later nog eens.</string>
@@ -438,8 +462,11 @@ Language: nl
     <string name="link_open_new_window">Open koppeling in een nieuw venster/tab</string>
     <string name="stats_widget_error_no_access_token">Log in op je WordPress.com-account om je statistieken te bekijken.</string>
     <string name="post_list_search_prompt">Berichten zoeken</string>
+    <string name="my_site_custom_domain_name">Alle WordPress.com abonnementen bevatten een eigen domeinnaam. Registreer nu je gratis premium domein.</string>
     <string name="stats_widget_minified_name">In een oogopslag</string>
     <string name="stats_widget_today_insights_name">Vandaag</string>
+    <string name="stats_widget_all_time_insights_name">All-time</string>
+    <string name="stats_widget_weekly_views_name">Bezichtigingen deze week</string>
     <string name="stats_widget_error_no_network">Geen netwerk beschikbaar</string>
     <string name="stats_widget_select_type">Type</string>
     <string name="stats_widget_select_color">Kleur</string>
@@ -449,6 +476,7 @@ Language: nl
     <string name="stats_widget_color">Kleur</string>
     <string name="stats_widget_site_caption">Selecteer je site</string>
     <string name="stats_widget_site">Site</string>
+    <string name="stats_widget_views_title">Bezichtingen deze week</string>
     <string name="stats_widget_add">Widget toevoegen</string>
     <string name="dialog_confirm_update_yes">Update nu</string>
     <string name="domain_contact_information_state_not_available_hint">Status (niet beschikbaar)</string>
@@ -494,6 +522,7 @@ Language: nl
     <string name="editor_failed_to_insert_media_tap_to_retry">Invoegen van media mislukt.\nTik om het opnieuw te proberen.</string>
     <string name="editor_uploading_draft">Je concept wordt geüpload</string>
     <string name="post_uploading_draft">Bezig met uploaden concept</string>
+    <string name="post_list_tab_drafts">Concepten</string>
     <string name="post_list_author_everyone">Iedereen</string>
     <string name="post_list_author_me">Ik</string>
     <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
@@ -501,6 +530,9 @@ Language: nl
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>
     <string name="stats_insights_social">Sociaal</string>
     <string name="stats_insights_annual_site_stats">Jaarlijkse sitestatistieken</string>
+    <string name="stats_view_follower_totals">Aantal volgers</string>
+    <string name="domain_suggestions_fetch_error">Domein suggesties konden niet geladen worden</string>
+    <string name="domain_suggestions_search_hint">Type een trefwoord voor meer ideeën</string>
     <string name="domains_suggestions_empty_list">Geen suggesties gevonden</string>
     <string name="register_domain">Registreer domein</string>
     <string name="jetpack_installed_message">Nu Jetpack is geïnstalleerd, hoeven we er alleen nog voor te zorgen dat alles goed ingesteld is. Dit duurt maar heel even.</string>
@@ -538,6 +570,7 @@ Language: nl
     <string name="plugin_install_custom_domain_required_dialog_register_btn">Domein registreren</string>
     <string name="plugin_install_custom_domain_required_dialog_message">Om plugins te installeren, moet er een aangepast domein aan je site zijn gekoppeld.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Plugin installeren</string>
+    <string name="new_site_creation_preview_subtitle">Je kunt de uitstraling van je site later aanpassen</string>
     <string name="publish_on">Publiceren op: %s</string>
     <string name="schedule_for">Ingepland voor: %s</string>
     <string name="published_on">Gepubliceerd op: %s</string>
@@ -569,6 +602,8 @@ Language: nl
     <string name="plans_loading_error_no_plans_subtitle">We kunnen abonnementen momenteel niet laden. Probeer het later opnieuw.</string>
     <string name="plans_loading_error_no_plans_title">Abonnementen kunnen niet worden geladen</string>
     <string name="plans_loading_error_network_title">Geen verbinding</string>
+    <string name="menu_switch_to_gutenberg_editor">Overschakelen naar de blok-editor</string>
+    <string name="menu_switch_to_aztec_editor">Overschakelen naar de klassieke editor</string>
     <string name="stats_loading_block_error">Er is een probleem opgetreden bij het laden van je gegevens. Vernieuw je pagina om het opnieuw te proberen.</string>
     <string name="stats_loading_error">Gegevens niet geladen</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bewerk nieuwe berichten en pagina\'s met de blok-editor</string>
@@ -619,6 +654,7 @@ Language: nl
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_clear_all_content_description">Wissen</string>
+    <string name="cancel_new_site_wizard_content_description">Annuleer  site aanmaak wizard</string>
     <string name="notification_new_site_creation_creating_site_subtitle">We maken je nieuwe site</string>
     <string name="notification_new_site_creation_failed">Er was een probleem</string>
     <string name="notification_new_site_creation_title">Maak een site</string>
@@ -627,9 +663,11 @@ Language: nl
     <string name="new_site_creation_domain_header_title">Kies een domeinnaam voor je site</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
     <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast - alle sites blijven zich ontwikkelen!</string>
+    <string name="new_site_creation_screen_title_step_count">%1$d van %2$d</string>
     <string name="stats_no_data_for_period">Geen gegevens voor deze periode</string>
     <string name="preference_strip_image_location">Locatie van media verwijderen</string>
     <string name="stats_cannot_be_started">We kunnen de statistieken momenteel niet openen. Probeer het later opnieuw</string>
+    <string name="stats_author_views_label">Weergaven</string>
     <string name="stats_author_label">Auteur</string>
     <string name="stats_authors">Auteurs</string>
     <string name="stats_search_terms_label">Zoekterm</string>
@@ -647,7 +685,10 @@ Language: nl
     <string name="stats_insights_tumblr">Tumblr</string>
     <string name="stats_insights_twitter">Twitter</string>
     <string name="stats_insights_facebook">Facebook</string>
+    <string name="stats_insights_view_more">Meer weergeven</string>
     <string name="stats_insights_tags_and_categories">Tags en categorieën</string>
+    <string name="stats_insights_all_time_stats">All-time</string>
+    <string name="stats_from_to_dates_in_week_label">%1$s - %2$s</string>
     <string name="stats_publicize_followers_label">Volgers</string>
     <string name="stats_category_folded_name">%1$s | %2$s</string>
     <string name="stats_tags_and_categories_title_label">Titel</string>
@@ -662,6 +703,7 @@ Language: nl
     <string name="stats_followers_count_message">Totaal %1$s volgers: %2$s</string>
     <string name="stats_followers_email">E-mail</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
+    <string name="stats_manage_insights">Beheer inzichten</string>
     <string name="stats_no_data_yet">Nog geen gegevens</string>
     <string name="menu_debug">Debug-menu</string>
     <string name="change_password_dialog_message">Wachtwoord wordt gewijzigd …</string>
@@ -735,6 +777,8 @@ Language: nl
     <string name="quick_start_dialog_view_site_title">Website bekijken</string>
     <string name="quick_start_dialog_view_site_message_short">Tik op %1$s Site bekijken %2$s om een voorbeeld te zien van je site</string>
     <string name="quick_start_dialog_share_site_title">Je site delen</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Tik op %1$s Delen %2$s om door te gaan</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Tik op %1$s Verbindingen %2$s om je socialmedia-accounts toe te voegen</string>
     <string name="quick_start_dialog_share_site_message">Koppel je site aan je social media-accounts en je site zal nieuwe berichten automatisch delen.</string>
     <string name="quick_start_dialog_publish_post_title">Een bericht publiceren</string>
     <string name="quick_start_dialog_publish_post_message_short">Tik op %1$s Bericht aanmaken %2$s om een nieuw bericht aan te maken</string>
@@ -750,6 +794,7 @@ Language: nl
     <string name="quick_start_dialog_customize_site_message_short_themes">Tik op %1$s Thema\'s %2$s om door te gaan</string>
     <string name="quick_start_dialog_customize_site_message_short_customize">Tik op %1$s Aanpassen %2$s om je site te personaliseren</string>
     <string name="quick_start_dialog_choose_theme_title">Kies een thema</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Tik op %1$s Thema\'s %2$s om nieuwe thema\'s te ontdekken</string>
     <string name="quick_start_dialog_choose_theme_message">Blader door al onze thema\'s om het thema te vinden dat perfect bij je past.</string>
     <string name="quick_start_button_positive">Starten</string>
     <string name="quick_start_button_negative_short">Annuleren</string>
@@ -766,6 +811,7 @@ Language: nl
     <string name="jetpack_installed">Jetpack geïnstalleerd</string>
     <string name="installing_jetpack_message">Jetpack installeren op je site. Het kan een aantal minuten duren voordat de installatie is afgerond.</string>
     <string name="installing_jetpack">Jetpack installeren</string>
+    <string name="install_jetpack_message">De inloggegevens voor je site zullen niet worden opgeslagen en worden alleen gebruikt om Jetpack te installeren.</string>
     <string name="install_jetpack">Jetpack installeren</string>
     <string name="jetpack">Jetpack</string>
     <string name="stats_jetpack_connection_faq">Veelgestelde vragen Jetpack</string>
@@ -787,7 +833,6 @@ Language: nl
     <string name="reader_empty_posts_liked_title">Nog niets geliket</string>
     <string name="reader_empty_followed_blogs_button_followed">Ga naar gevolgde site</string>
     <string name="reader_empty_followed_blogs_button_discover">Sites ontdekken</string>
-    <string name="reader_empty_followed_blogs_description">Je volgt nog geen sites. Waarom zou je er nu niet een gaan volgen?</string>
     <string name="reader_empty_followed_blogs_title">Geen gevolgde sites</string>
     <string name="notifications_empty_likes">Nog geen likes</string>
     <string name="notifications_empty_followers">Nog geen volgers</string>
@@ -1039,7 +1084,6 @@ Language: nl
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 bericht met 1 bestand niet geüpload</string>
     <string name="untitled_in_parentheses">(Zonder titel)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Creëer site </string>
     <string name="notification_site_creation_created">Klik om door te gaan.</string>
@@ -1276,6 +1320,7 @@ Language: nl
     <string name="login_site_address_help_title">Wat is mijn site-adres?</string>
     <string name="login_site_address_help">Hulp nodig bij het vinden van je site-adres?</string>
     <string name="login_site_address">Site-adres</string>
+    <string name="enter_site_address">Vul het adres van de WordPress site in die je wilt verbinden.</string>
     <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Al ingelogd op WordPress.com</string>
     <string name="login_continue">Doorgaan</string>
@@ -1483,7 +1528,7 @@ Language: nl
     <string name="pending_draft_one_day_2">Wist je dat \'%1$s\' nog steeds een concept is? Publiceren maar!</string>
     <string name="pending_draft_one_day_1">Je hebt gisteren \'%1$s\' opgeslagen als concept. Vergeet niet deze te publiceren!</string>
     <string name="reader_photo_by">Foto van %s</string>
-    <string name="reader_label_visit">Bezoek</string>
+    <string name="reader_label_visit">Bezoek de site</string>
     <string name="swipe_for_more">Veeg voor meer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
     <string name="reader_err_get_post_not_authorized_signin">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com.</string>
@@ -1821,7 +1866,10 @@ Language: nl
     <string name="notifications_no_search_results">Geen sites overeengekomen met \'%s\'</string>
     <string name="search_sites">Zoek sites</string>
     <string name="notifications_empty_view_reader">Ga naar Reader</string>
+    <string name="notifications_empty_action_followers_likes">Trek de aandacht: reageer op berichten die je hebt gelezen</string>
     <string name="notifications_empty_action_comments">Deelnemen aan een gesprek: reageer op berichten uit blogs die je volgt</string>
+    <string name="notifications_empty_action_unread">Breng het gesprek weer op gang: schrijf een nieuw bericht</string>
+    <string name="notifications_empty_action_all">Ga aan de slag! Reageer op berichten uit blogs die je volgt.</string>
     <string name="notifications_empty_comments">Nog geen reacties</string>
     <string name="notifications_empty_unread">Je bent helemaal up-to-date!</string>
     <string name="reader_short_comment_count_multi">%s Reacties</string>
@@ -1954,6 +2002,8 @@ Language: nl
     <string name="reader_empty_comments">Nog geen reacties</string>
     <string name="browse_our_faq_button">Bekijk onze FAQ</string>
     <string name="reader_menu_block_blog">Blokkeer deze site</string>
+    <string name="reader_toast_blog_blocked">Berichten van deze site zullen niet meer getoond worden</string>
+    <string name="reader_toast_err_block_blog">Blokkeren van deze site is mislukt</string>
     <string name="reader_toast_err_generic">Deze actie kan niet uitgevoerd worden</string>
     <string name="contact_us">Contact</string>
     <string name="schedule_verb">Inplannen</string>

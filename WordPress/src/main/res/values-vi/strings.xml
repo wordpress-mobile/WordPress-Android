@@ -59,7 +59,6 @@ Language: vi_VN
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
     <string name="reader_photo_by">Ảnh chụp bởi %s</string>
-    <string name="reader_label_visit">Ghé thăm</string>
     <string name="reader_toast_err_already_liked">Bạn đã thích bình luận đó rồi</string>
     <string name="reader_title_post_detail_wpcom">Bài viết trên WordPress.com</string>
     <string name="notifications_label_new_notifications_subtitle">Chạm để hiện chúng</string>

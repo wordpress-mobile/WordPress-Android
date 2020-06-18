@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!--
+       native reader dimens
+   -->
+    <dimen name="reader_card_elevation">1dp</dimen>
+
+</resources>

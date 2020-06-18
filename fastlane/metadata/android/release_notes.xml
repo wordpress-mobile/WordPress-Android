@@ -1,96 +1,103 @@
 <ar>
-14.8:
-<b>إضافات محرِّر المكوِّن:</b> يعرض مكوِّن الأزرار أزرارًا متعددة في صف واحد؛ وتقوم مكوِّنات الصورة بملء التسميات التوضيحية سابقًا عند توافرها؛ وتسمح مكوِّنات الغلاف بالرفع؛ ويمكن قص الصور المدرجة أو تكبيرها/تصغيرها أو تدويرها؛ ويتضمن مكوِّن العنوان خيارات المحاذاة.
-<b>تحسينات محرِّر المكوِّن:</b> تم تغيير موقع شريط الأدوات العائم، وإصلاح الخطأ الذي أدى إلى ظهور مسافات بيضاء في مكوِّنات النص، وإصلاح أيقونات شريط الأدوات مختلفة المحاذاة في وضع "من اليمين إلى اليسار".
-<b>تحديثات عامة</b> تمت إضافة وظيفة إعادة التدوين.
+15.0:
+إضافات محرِّر المكوّن: مكوِّن الشِعر الجديد. ادعم ألوان التراكب في مكوِّن "الغلاف". يمكنك إدخال/إنهاء رسم متحرك في شريط الأدوات العائم. تلميح الأداة لأزرار تحديد قالب الصفحة.
+- تحديثات محرِّر المكوّن: "مكوِّن سلة المهملات" في قائمة يمكن الوصول إليها من شريط أدوات المكوِّن.
+إصلاحات محرِّر المكوِّن: مشكلة دمج مكوِّن النص، ومحاذاة الزر في قوالب الصفحات، وتناقضات السلسلة.
+تحديثات أخرى: تمت إضافة إعدادات الصفحة الرئيسية إلى قائمة الصفحات وإعدادات الموقع. تم تحسين واجهة مستخدم القارئ.
 </ar>
 <de-DE>
-14.8:
-<b>Zum Block-Editor hinzugefügt:</b> Buttons-Block zeigt mehrere Buttons in einer Zeile an; Bild-Blöcke füllen Bildunterschriften automatisch aus, falls verfügbar; Überschriften-Block beinhaltet Ausrichtungs-Optionen.
-<b>Block-Editor-Verbesserungen:</b> Schwebende Werkzeugleiste neu platziert, Fehler behoben, wodurch es zu zusätzlichen Leerzeichen in Textblöcken kam, fehlerhaft ausgerichtete Icons in der Werkzeugleiste behoben im RTL-Modus.
-<b>Allgemeine Aktualisierungen:</b> Reblog-Funktionalität hinzugefügt.
+15.0:
+Neu im Block-Editor: Neuer Versblock. Support für Overlay-Farben im Cover-Block. Starten/Verlassen der Animation in der unverankerten Toolbar. Tooltip für Auswahlbuttons für die Seitenvorlage.
+Updates im Block-Editor: „Trash block“ (Block in Papierkorb verschieben) in einem Menü ist nun über die Block-Toolbar erreichbar.
+Weitere Updates: Startseite-Einstellungen wurden zur Seitenliste und den Website-Einstellungen hinzugefügt.
 </de-DE>
 <en-US>
-14.8:
-<b>Block editor additions:</b> Buttons block displays multiple buttons in a single row; Image blocks prefill captions when available; Cover blocks allow uploading; inserted images can be cropped, zoomed, or rotated; Heading block includes alignment options.
-<b>Block editor improvements:</b> Relocated floating toolbar, fixed bug impact white space in Text blocks, fixed misaligned toolbar icons in RTL mode.
-<b>General updates:</b> Added reblog functionality.
+15.0:
+Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.
+Block editor updates: “Trash block” in a menu reachable from the block toolbar.
+Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.
+Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.
 </en-US>
 <es-ES>
-14.8:
-<b>Añadidos al editor de bloques:</b> El bloque de botones muestra varios botones en una sola fila. Los bloques de imágenes llenan los subtítulos cuando están disponibles. Los bloques de cubierta permiten la subida. Las imágenes insertadas pueden ser recortadas, ampliadas o rotadas. El bloque de encabezado incluye opciones de alineación.
-<b>Mejoras en el editor de bloques:</b> Reubicación de la barra de herramientas flotante, corrección del fallo del espacio blanco que afecta a los bloques de texto, corrección de la alineación de los iconos de la barra de herramientas en el modo RTL.
-<b>Actualizaciones generales:</b> Añadida la funcionalidad de reblog.
+15.0:
+Añadido en el editor de bloques: Nuevo bloque de verso. Compatibilidad para colores de superposición en el bloque de cubierta. Animación de entrada/salida para la barra de herramientas flotante. Información emergente para los botones de selección de la plantilla de página.
+Actualizaciones del editor de bloques: «Bloque de papelera» en un menú accesible desde la barra de herramientas de bloques.
+Otras actualizaciones: Añadidos ajustes de la página de inicio a la lista de páginas y a los ajustes del sitio.
 </es-ES>
 <fr-CA>
-14.8 :
-<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
-<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
-<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
+15.0 :
+Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
+Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
+Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
 </fr-CA>
 <fr-FR>
-14.8 :
-<b>Ajouts au niveau de l’Éditeur de blocs :</b> Le bloc de boutons affiche plusieurs boutons sur une seule ligne ; les blocs d’image préremplissent les légendes le cas échéant ; les blocs de couverture permettent de charger des fichiers ; il est possible de cadrer, de zoomer ou de faire pivoter les images insérées ; le bloc d’en-tête inclut des options d’alignement.
-<b>Améliorations de l’éditeur de blocs :</b> Installation de la barre d’outils flottante à un nouvel emplacement, correction du bogue affectant les espaces dans les blocs de texte, correction du problème d’alignement des icônes de la barre d’outils en mode RTL.
-<b>Mises à jour générales :</b> Ajout de la fonctionnalité de reblog.
+15.0 :
+Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
+Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
+Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
 </fr-FR>
 <iw-IL>
-14.8:
-<b>תוספות לעורך הבלוקים:</b> בלוק הכפתורים מציג מספר כפתורים בשורה אחת; בלוג התמונה ממלא מראש את התיאורים כאשר אלה זמינים; בלוק הכיסוי מאפשר העלאה; אפשר לחתוך, להגדיל את מרחק התצוגה או לסובב תמונות שנוספו; בלוק הכותרת כולל אפשרויות יישור.
-<b>שיפורים בעורך הבלוקים:</b> שינינו את המיקום של סרגל הכלים הצף, תיקנו באגים שהשפיעו על הרווחים הלבנים בבלוקים של טקסט ותיקנו את היישור העקום של הסמלים בסרגל הכלים בתצוגה מימין לשמאל.
-<b>עדכונים כלליים:</b> נוספה פונקציולניות לפרסום בלוג מחדש.
+15.0:
+תוספות לעורך הבלוקים: בלוק פסוק חדש. תמיכה בצבעים של שכבות בבלוק כיסוי. אפשרות להנפשה של כניסה/יציאה בסרגל הכלים הצף. תיאורי כלי בכפתורי בחירה של תבניות עמוד.
+עדכונים בעורך הבלוקים: ניתן להגיע אל הפעולה 'להעביר את הבלוק לפח' בתפריט מסרגל הכלים של הבלוק.
+תיקונים בעורך הבלוקים: בעיה עם שילוב של בלוק טקסט, יישור כפתורים בתבניות עמוד, חוסר עקביות במחרוזות.
+עדכונים אחרים: הוספנו הגדרות של עמוד הבית ברשימת עמודים ובהגדרות האתר. ממשק משתמש משופר ב-Reader.
 </iw-IL>
 <id>
-14.8:
-<b>Tambahan pada penyunting blok:</b> Blok Tombol menampilkan beberapa tombol dalam satu baris, blok Gambar menuliskan keterangan jika ada, blok Sampul mengizinkan untuk mengunggah; gambar yang disisipkan dapat dipotong, diperbesar/diperkecil, atau diputar; blok Heading menyertakan pilihan penyelarasan.
-<b>Peningkatan pada penyunting blok:</b> Memindahkan bilah peralatan melayang, memperbaiki bug yang memengaruhi spasi putih di blok Teks, memperbaiki ikon bilah peralatan yang tidak selaras di mode RTL.
-<b>Pembaruan umum:</b> Menambahkan fungsionalitas reblog.
+15.0:
+Tambahan pada penyunting blok: Blok Bait baru. Dukungan untuk warna pelapis (overlay) pada blok Sampul. Animasi masuk/keluar untuk Bilah Peralatan Mengambang. Tip alat untuk tombol pemilihan template halaman.
+Pembaruan pada penyunting blok: “Blok Tempat Sampah” dalam menu yang dapat diakses dari bilah peralatan blok.
+Pembaruan lainnya: Penambahan pengaturan beranda ke daftar halaman dan ke pengaturan situs.
 </id>
 <it-IT>
-14.8:
-<b>Aggiunte all'editor a blocchi:</b> più pulsanti su una riga per il blocco Pulsanti; didascalie precompilate nei blocchi Immagine; caricamento nei blocchi Copertina; ritaglio, zoom o rotazione delle immagini; opzioni di allineamento per il blocco Titolo.
-<b>Miglioramenti all'editor a blocchi:</b> barra mobile riposizionata, corretto bug dello spazio bianco nei blocchi Testo, corrette icone della barra disallineate in modalità RTL.
-<b>Aggiornamenti generali:</b> aggiunta funzione di ripubblicazione.
+15.0:
+Aggiunte all'editor a blocchi: nuovo blocco Verso. Supporto per i colori di sovrapposizione nel blocco Copertina. Animazione di ingresso/uscita per la barra degli strumenti mobile. Tooltip per i pulsanti di selezione del modello di pagina.
+Aggiornamenti all'editor a blocchi: il "blocco Cestino" in un menu è raggiungibile dalla barra degli strumenti del blocco.
+Altri aggiornamenti: aggiunte impostazioni della homepage all'elenco di pagine e alle impostazioni del sito.
 </it-IT>
 <ja-JP>
-14.8:
-<b>ブロックエディターの追加機能:</b> ボタンブロックで、複数のボタンを1行に表示できます。画像ブロックで、キャプションがある場合自動で情報を追加します。カバーブロックのアップロードができます。挿入画像は、切り抜き、ズーム、回転できます。 見出しブロックに配置オプションが含まれています。
-<b>ブロックエディターの改善:</b> フローティングツールバーの再配置、テキストブロックのバグの影響による空白の修正、RTL モードでのツールバーアイコンの整列不良の修正。
-<b>一般的な更新:</b> リブログ機能を追加しました。
+15.0:
+ブロックエディター追加機能 :新しい詩ブロック。カバーブロックのオーバーレイの色をサポート。「フローティングツールバー」のアニメーションの開始 / 終了機能。ページテンプレートの選択ボタンのツールチップ。
+ブロックエディターの更新 :ブロックツールバーから選択できるメニューに「ブロック削除」を追加。
+ブロックエディターの修正 :テキストブロックのマージ問題、ページテンプレートのボタン配置、文字列の不一致。
+その他アップデート :ページリストとサイト設定にホームページ設定を追加。Reader の UI を改善。
 </ja-JP>
 <nl-NL>
-14.8:
-<b>Aanvullingen op de blokeditor:</b> Knopblokken geven meerdere knoppen op één rij weer; Afbeeldingenblokken vullen ondertitels in wanneer beschikbaar; Omslagblokken staan uploads toe; ingevoegde afbeeldingen kunnen bijgesneden, gezoomd of gedraaid worden; Kopblokken bevatten uitlijningsopties.
-<b>Verbeteringen aan de blokeditor:</b> Zwevende werkbalk verplaatst, bug die lege ruimte veranderde in Tekstblokken verwijderd, verkeerde uitlijning van werkbalkpictogrammen opgelost in RTL-modus.
-<b>Algemene updates:</b> Reblog-functionaliteit toegevoegd.
+15.0:
+Aanvullingen op de blokeditor: Nieuw Versblok. Ondersteuning voor overlaykleuren in het Omslagblok. Animatie starten/sluiten voor zwevende werkbalk. Tooltip voor selectieknoppen van paginasjabloon.
+Updates van de blokeditor: 'Blok naar prullenbak verplaatsen' in een menu dat via de blokwerkbalk geopend kan worden.
+Overige updates: Homepage-instellingen toegevoegd aan paginalijst en site-instellingen.
 </nl-NL>
 <ru-RU>
-14.8:
-<b>Добавления к редактору блоков:</b> Блок кнопок может показывать несколько кнопок в один ряд. Блок обложки позволяет загрузку файла. Вставленные изображения могут быть обрезаны, увеличены или повернуты. Блок заголовка включает возможности выравнивания.
-<b>Улучшения блоков:</b> Перемещена плавающая панель инструментов, исправлено пустое место в блоках текста, исправлены значки панели инструментов для RTL-языков.
-<b>Общее:</b> Добавлена возможность перепубликации (реблог).
+15.0:
+Редактор блоков, добавлено: Новый блок для стихов. Поддержка наложения цвета в блоке обложки. Анимация появления и скрытия для плавающей панели инструментов. Подсказки для кнопок выбора шаблонов.
+Обновлено: Удаление блока доступно в меню выбора блоков.
+Исправлено: Слияние текстовых блоков, выравнивание кнопок в шаблонах страниц, целостность строк.
+Другое: Добавлены настройки главной страницы в список страниц и настройки сайта. Улучшен интерфейс Чтива.
 </ru-RU>
 <sv-SE>
-14.8:
-<b>Nyheter i blockredigeraren:</b> Knappblock visar flera knappar i samma rad, Bildblock fyller i bildtexter automatiskt om det går, Cover-block tillåter uppladdning, bilder kan beskäras, zoomas och roteras, Rubrikblock hanterar textjustering.
-<b>Förbättringar i blockredigeraren:</b> Flytande verktygsfält flyttat, rättat fel med romrum i textblock, rättat justering av verktygsknappar i RTL-läge.
-<b>Allmänna uppdateringar:</b> Ny reblog-funktion.
+15.0:
+Nytt i blockredigeraren: Diktblock. Överläggsfärger i omslagsblocket. Animering av flytande verktygsfält. Inforuta vid val av sidmall.
+Uppdaterat i blockredigeraren: ”Kasta block” nås via menyn från blockets verktygsfält.
+Andra uppdateringar: Inställningar för startsidan har lagts till i sidlista och webbplatsinställningar.
 </sv-SE>
 <tr-TR>
-14.8:
-<b> Blok düzenleyici eklemeleri: </b> Düğme bloğu, tek bir satırda birden fazla düğme görüntüler; Görüntü blokları altyazıları mevcut olduğunda doldurur; Kapak blokları yüklemeye izin verir; eklenen görüntüler kırpılabilir, yakınlaştırılabilir veya döndürülebilir; Başlık bloğu hizalama seçeneklerini içerir.
-<b> Blok düzenleyici geliştirmeleri: </b> Yeniden yerleştirilmiş kayan araç çubuğu, metin bloklarında sabit hata etkisi beyaz alanı, RTL modunda sabit yanlış hizalanmış araç çubuğu simgeleri.
-<b> Genel güncellemeler: </b> Yeniden bloglama işlevi eklendi.
+15.0:
+Blok düzenleyici eklemeleri: Yeni Dörtlük bloku. Kapak blokunda katman renklerine yönelik destek. Kayan Araç Çubuğu için giriş/çıkış animasyonu. Sayfa şablonu seçim düğmeleri için araç ipucu.
+Blok düzenleyici güncellemeleri: Blok araç çubuğundan ulaşılabilen bir menüde “Çöp Kutusu bloku”.
+Diğer güncellemeler: Sayfalar listesine ve site ayarlarına ana sayfa ayarları eklendi.
 </tr-TR>
 <zh-CN>
-14.8：
-<b>区块编辑器添加内容：</b>按钮区块可在单个行中显示多个按钮；图片区块可预填充标题（如果有）；封面区块支持上传；插入的图片可以裁剪、缩放或旋转；标题区块包括对齐选项。
-<b>区块编辑器改进：</b>重新定位了浮动工具栏，修复了文本区块中影响空格的错误，修复了 RTL 模式中工具栏图标未对齐的问题。
-<b>常规更新：</b>添加了转载功能。
+15.0：
+区块编辑器新增内容：新的“诗篇”区块。在“封面”区块中支持叠加颜色。在浮动工具栏中增加了进入/退出动画。为页面模板选择按钮增加了工具提示。
+区块编辑器更新：“回收站区块”现在位于可通过区块工具栏访问的菜单中。
+区块编辑器修复：文本区块合并问题、页面模板中的按钮对齐问题、字符串不一致问题。
+其他更新：在页面列表和站点设置中增加了主页设置。改进了阅读器 UI。
 </zh-CN>
 <zh-TW>
-14.8：
-<b>區塊編輯器新增功能：</b>按鈕區塊可於單一列中顯示多個按鈕；圖片區塊會在有標題可用時預先填入標題內容；封面區塊提供上傳功能；插入的圖片可裁切、縮放或旋轉；標題包含對齊選項。
-<b>改善區塊編輯器：</b>重新調整浮動工具列的位置、修正導致文字區塊空白字元的錯誤，也已修復 RTL 模式中工具列圖示不一致的問題。
-<b>一般更新：</b>新增轉發文章功能。
+15.0：
+區塊編輯器新增功能：全新詩句區塊。為封面區塊提供覆疊色彩支援。浮動工具列的進入/退出動畫。頁面範本選擇按鈕的工具提示。
+區塊編輯器更新：可從區塊工具列存取選單中的「垃圾區塊」。
+區塊編輯器修正：文字區塊合併問題、頁面範本中的按鈕對齊問題、字串不一致問題。
+其他更新：在頁面清單和網站設定中新增首頁設定。改善的閱讀器 UI。
 </zh-TW>

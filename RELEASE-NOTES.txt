@@ -1,10 +1,35 @@
+15.2
+-----
+* [**] Block editor: Display content metrics information (blocks, words, characters count).
+* [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
+* [**] Block Editor: Add support allowing Cover Block video uploads to complete after the editor has closed
+* [*] Block Editor: Fix handling of upload completion while re-opening the editor
+ 
+15.1
+-----
+* Fixes issue on Notifications tab when two screens were drawn on top of each other
+* [**] Fix video thumbnails, settings and preview in Media section for private sites
+* [*] Support for breaking out of captions/citation authors by pressing enter on the following blocks: image, video, gallery, quote, and pullquote.
+
 15.0
 -----
- 
+* [*] Fix wrong icon is used when a Password is visible
+* [***] Block Editor: New block: Verse
+* [***] Block Editor: Trash icon that is used to remove blocks is moved to the new menu reachable via ellipsis button in the block toolbar
+* [**] Block Editor: Add support for changing overlay color settings in Cover block
+* [**] Block Editor: Add enter/exit animation in FloatingToolbar
+* [**] Block Editor: Block toolbar can now collapse when the block width is smaller than the toolbar content
+* [**] Block Editor: Tooltip for page template selection buttons
+* [*] Block Editor: Fix merging of text blocks when text had active formatting (bold, italic, strike, link)
+* [*] Block Editor: Fix button alignment in page templates and make strings consistent
+* [*] Block Editor: Add support for displaying radial gradients in Buttons and Cover blocks
+* [**] Add homepage settings to pages list and to site settings. Now it's possible to change your posts page and your homepage.
+* [*] Fix wrong icon is used when a Password is visible
+* [*] Reader: Improved UI of the post card in the post feeds.
+
 14.9
 -----
 * [*] Fix issue with Preview post not working after switching to classic editor from inside the post
-* [***] Block Editor: New block: Pullquote
 * [**] Block Editor: Add support for changing background and text color in Buttons block
 * [*] Block Editor: Fix the icons and buttons in Gallery, Paragraph, List and MediaText block on RTL mode
 * [**] Block Editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.

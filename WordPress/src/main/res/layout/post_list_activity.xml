@@ -49,7 +49,7 @@
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/post_list_author_selection"
-                android:layout_width="@dimen/posts_list_spinner_width"
+                android:layout_width="@dimen/author_spinner_width"
                 android:contentDescription="@string/post_list_author"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"

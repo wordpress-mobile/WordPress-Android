@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-24 07:55:35+0000
+Translation-Revision-Date: 2020-06-05 07:54:45+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha
 Language: sk
@@ -18,10 +18,9 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_walt_disney">Walt Disney</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
-    <string name="gutenberg_native_link_settings">Nastavenia odkazu</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Poďme spolu niečo vybudovať.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Poďme spolu niečo vybudovať</string>
-    <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať</string>
+    <string name="gutenberg_native_s_settings">Nastavenia %s</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Poďme spolu niečo vybudovať!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J. K. Rowling</string>
     <string name="reader_filter_empty_tags_action">Pridať značku</string>
@@ -227,7 +226,6 @@ Language: sk
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
     <string name="reader_empty_followed_blogs_button_discover">Objavte webové stránky</string>
-    <string name="reader_empty_followed_blogs_description">Zatiaľ nesledujete žiadne webové stránky. Prečo nezačať sledovať jednu práve teraz?</string>
     <string name="reader_empty_followed_blogs_title">Žiadne sledované webové stránky</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
@@ -479,7 +477,6 @@ Language: sk
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 príspevok s 1 súborom neboli nahrané</string>
     <string name="untitled_in_parentheses">(Bez názvu)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Vytvoriť webovú stránku</string>
     <string name="notification_site_creation_created">Klepnutím pokračujte.</string>
@@ -948,7 +945,7 @@ Language: sk
     <string name="pending_draft_one_day_2">Vedeli ste, že \'%1$s\' je stále konceptom? Zverejnite ho! </string>
     <string name="pending_draft_one_day_1">\'%1$s\' ste  včera uložili ako koncept. Nezabudnite ho zverejniť!</string>
     <string name="reader_photo_by">Fotografie od %s</string>
-    <string name="reader_label_visit">Navštívte</string>
+    <string name="reader_label_visit">Navštívte webstránku</string>
     <string name="swipe_for_more">Potiahnite prstom pre viac informácii </string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com alebo použite tlačidlo akcie a prehliadač sa otvorí.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com.</string>

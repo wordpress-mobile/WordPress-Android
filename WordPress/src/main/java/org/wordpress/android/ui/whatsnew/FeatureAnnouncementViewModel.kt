@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -18,6 +19,8 @@ import javax.inject.Named
 class FeatureAnnouncementViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentFeatureAnnouncement = MutableLiveData<FeatureAnnouncement>()
@@ -65,8 +68,12 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     private fun loadFeatures() {
         launch {
-            delay(3000)
-            _currentFeatureAnnouncement.value = featureAnnouncementProvider.getLatestFeatureAnnouncement()
+            val latestAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement()
+            if (latestAnnouncement != null) {
+                appPrefsWrapper.featureAnnouncementShownVersion = latestAnnouncement.announcementVersion
+                appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = buildConfigWrapper.getAppVersionCode()
+            }
+            _currentFeatureAnnouncement.value = latestAnnouncement
         }
     }
 
