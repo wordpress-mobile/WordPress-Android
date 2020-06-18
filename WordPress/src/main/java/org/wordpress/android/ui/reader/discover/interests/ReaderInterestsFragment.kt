@@ -13,6 +13,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import javax.inject.Inject
 
@@ -46,8 +48,20 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-            updateInterests(uiState.interestsUiState)
-            updateDoneButton(uiState.doneButtonUiState)
+            when (uiState) {
+                is InitialUiState -> {
+                    updateDoneButton(uiState.doneButtonUiState)
+                }
+                is ContentLoadSuccessUiState -> {
+                    updateDoneButton(uiState.doneButtonUiState)
+                    updateInterests(uiState.interestsUiState)
+                }
+            }
+            with(uiHelpers) {
+                updateVisibility(progress_bar, uiState.progressBarVisible)
+                updateVisibility(title, uiState.titleVisible)
+                updateVisibility(subtitle, uiState.subtitleVisible)
+            }
         })
 
         viewModel.navigateToDiscover.observe(viewLifecycleOwner, Observer { event ->
@@ -100,8 +114,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun navigateToDiscover() {
         val fragmentTransaction = parentFragmentManager.beginTransaction()
         fragmentTransaction.setCustomAnimations(
-            R.anim.fragment_close_enter, R.anim.fragment_close_exit,
-            R.anim.fragment_close_enter, R.anim.fragment_close_exit
+            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
+            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
         )
         fragmentTransaction.replace(R.id.fragment_container, ReaderFragment(), tag).commit()
     }
