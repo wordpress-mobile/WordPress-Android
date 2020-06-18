@@ -5,9 +5,9 @@ import com.android.volley.RequestQueue
 import com.google.gson.JsonElement
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.fail
 import junit.framework.AssertionFailedError
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.fail
 import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.fluxc.Dispatcher
@@ -58,7 +58,7 @@ class ReactNativeWPAPIRestClientTest {
 
         val expected = mock<ReactNativeFetchResponse>()
         val expectedJson = mock<JsonElement>()
-        val successHandler = { data: JsonElement ->
+        val successHandler = { data: JsonElement? ->
             if (data != expectedJson) fail("expected data was not passed to successHandler")
             expected
         }
@@ -69,7 +69,7 @@ class ReactNativeWPAPIRestClientTest {
 
     @Test
     fun `fetch handles failure response`() = test {
-        val successHandler = { _: JsonElement ->
+        val successHandler = { _: JsonElement? ->
             throw AssertionFailedError("successHandler should not have been called")
         }
 
@@ -180,7 +180,7 @@ class ReactNativeWPAPIRestClientTest {
     }
 
     private suspend fun verifyRestApi(
-        successHandler: (JsonElement) -> ReactNativeFetchResponse,
+        successHandler: (JsonElement?) -> ReactNativeFetchResponse,
         errorHandler: (BaseNetworkError) -> ReactNativeFetchResponse,
         expectedRestCallResponse: WPAPIResponse<JsonElement>,
         expected: ReactNativeFetchResponse
