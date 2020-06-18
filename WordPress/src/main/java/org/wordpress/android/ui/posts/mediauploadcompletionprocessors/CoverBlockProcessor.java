@@ -82,8 +82,8 @@ public class CoverBlockProcessor extends BlockProcessor {
                 }
             } else {
                 // replace background-image url in style attribute
-                String style = PATTERN_BACKGROUND_IMAGE_URL.matcher(targetDiv.attr("style"))
-                                                           .replaceFirst(String.format("background-image:url(%1$s)", mRemoteUrl));
+                String style = PATTERN_BACKGROUND_IMAGE_URL.matcher(targetDiv.attr("style")).replaceFirst(
+                        String.format("background-image:url(%1$s)", mRemoteUrl));
                 targetDiv.attr("style", style);
             }
 
