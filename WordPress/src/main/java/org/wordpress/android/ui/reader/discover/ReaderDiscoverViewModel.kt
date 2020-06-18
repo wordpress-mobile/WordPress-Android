@@ -5,7 +5,8 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
-import org.wordpress.android.models.ReaderCardType
+import org.wordpress.android.models.ReaderCardType.PHOTO
+import org.wordpress.android.models.ReaderCardType.GALLERY
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -75,11 +76,12 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         val blogName = post.takeIf { it.hasBlogName() }?.blogName
 
-        val excerpt = post.takeIf { post.cardType != ReaderCardType.PHOTO && post.hasExcerpt() }?.excerpt
-        val title = post.takeIf { post.cardType != ReaderCardType.PHOTO && it.hasTitle() }?.title
-        // TODO malinjir `post.cardType != ReaderCardType.GALLERY` might not be needed
+        val excerpt = post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
+        val title = post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
+        // TODO malinjir `post.cardType != GALLERY` might not be needed
         val photoFrameVisibility = (post.hasFeaturedVideo() || post.hasFeaturedImage())
-                && post.cardType != ReaderCardType.GALLERY
+                && post.cardType != GALLERY
+        val photoTitle = post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
         ReaderPostUiState(
                 post.postId,
@@ -89,7 +91,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                 blogName = blogName,
                 dateLine = dateLine,
                 avatarOrBlavatarUrl = avatarOrBlavatarUrl,
-                photoFrameVisibility = photoFrameVisibility
+                photoFrameVisibility = photoFrameVisibility,
+                photoTitle = photoTitle
         )
     }
 
@@ -111,7 +114,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val blogUrl: String?,
             val avatarOrBlavatarUrl: String?,
             val blogName: String?,
-            val photoFrameVisibility: Boolean
+            val photoFrameVisibility: Boolean,
+            val photoTitle: String?
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
         }
