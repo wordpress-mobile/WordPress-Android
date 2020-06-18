@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.text.Spanned
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -7,20 +8,29 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
-import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.GALLERY
+import org.wordpress.android.models.ReaderCardType.PHOTO
 import org.wordpress.android.models.ReaderCardType.VIDEO
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderPostDiscoverData
+import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
+import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
+import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.GravatarUtils
 import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.image.ImageType.AVATAR
+import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.lang.IllegalStateException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -101,6 +111,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
         val showMoreMenu = accountStore.hasAccessToken()
 
+        val discoverSection = post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
+                ?.let { buildDiscoverSectionUiState(post.discoverData) }
+
         ReaderPostUiState(
                 post.postId,
                 title = title,
@@ -114,7 +127,27 @@ class ReaderDiscoverViewModel @Inject constructor(
                 featuredImageUrl = featuredImageUrl,
                 thumbnailStripUrls = thumbnailStripUrls,
                 videoOverlayVisbility = videoOverlayVisbility,
-                showMoreMenu = showMoreMenu
+                showMoreMenu = showMoreMenu,
+                discoverSection = discoverSection
+        )
+    }
+
+    private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
+        // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
+        val discoverText = discoverData.attributionHtml
+        // TODO malinjir remove static access + use R.dimen.avatar_sz_small
+        val discoverAvatarUrl = GravatarUtils.fixGravatarUrl(discoverData.avatarUrl, 9999)
+        val discoverAvatarImageType = when (discoverData.discoverType) {
+            EDITOR_PICK -> AVATAR
+            SITE_PICK -> BLAVATAR
+            OTHER -> throw IllegalStateException("This could should be unreachable.")
+            else -> AVATAR
+        }
+        // TODO malinjir discoverLayout onClick listener.
+        return DiscoverLayoutUiState(
+                discoverText = discoverText,
+                discoverAvatarUrl = discoverAvatarUrl,
+                imageType = discoverAvatarImageType
         )
     }
 
@@ -133,7 +166,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     sealed class ReaderCardUiState {
-        class ReaderPostUiState(
+        data class ReaderPostUiState(
             val id: Long,
             val title: String?,
             val excerpt: String?,// mTxtText
@@ -146,9 +179,16 @@ class ReaderDiscoverViewModel @Inject constructor(
             val featuredImageUrl: String?,
             val thumbnailStripUrls: List<String>?,
             val videoOverlayVisbility: Boolean,
-            val showMoreMenu: Boolean
+            val showMoreMenu: Boolean,
+            val discoverSection: DiscoverLayoutUiState?
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
+
+            data class DiscoverLayoutUiState(
+                val discoverText: Spanned,
+                val discoverAvatarUrl: String,
+                val imageType: ImageType
+            )
         }
     }
 }
