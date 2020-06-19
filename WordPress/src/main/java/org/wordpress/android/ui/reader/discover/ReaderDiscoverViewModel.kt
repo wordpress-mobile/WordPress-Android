@@ -71,7 +71,8 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     sealed class ReaderCardUiState {
         data class ReaderPostUiState(
-            val id: Long,
+            val postId: Long,
+            val blogId: Long,
             val dateLine: String,
             val title: String?,
             val blogName: String?,

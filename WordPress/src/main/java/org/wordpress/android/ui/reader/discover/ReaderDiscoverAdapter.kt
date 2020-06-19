@@ -48,7 +48,9 @@ class ReaderDiscoverAdapter : Adapter<ReaderViewHolder>() {
                 return false
             }
             return when (oldItem) {
-                is ReaderPostUiState -> oldItem.id == (newItem as ReaderPostUiState).id
+                is ReaderPostUiState -> {
+                    oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
+                }
             }
         }
 

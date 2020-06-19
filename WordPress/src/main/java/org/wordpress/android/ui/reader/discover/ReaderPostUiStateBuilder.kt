@@ -37,7 +37,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         // TODO malinjir likes action
 
         return ReaderPostUiState(
-                id = post.postId,
+                postId = post.postId,
+                blogId = post.blogId,
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
