@@ -55,7 +55,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 isBookmarkList = false,
                                 onBookmarkClicked = this::onBookmarkClicked,
                                 onLikeClicked = this::onLikeClicked,
-                                onReblogClicked = this::onReblogClicked
+                                onReblogClicked = this::onReblogClicked,
+                                onCommentsClicked = this::onCommentsClicked
                         )
                     }
             )
@@ -71,6 +72,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
         // TODO malinjir implement action
     }
 
@@ -110,7 +115,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val photoFrameVisibility: Boolean,
             val bookmarkAction: ActionUiState,
             val likeAction: ActionUiState,
-            val reblogAction: ActionUiState
+            val reblogAction: ActionUiState,
+            val commentsAction: ActionUiState
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 

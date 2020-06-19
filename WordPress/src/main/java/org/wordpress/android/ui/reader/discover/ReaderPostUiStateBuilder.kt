@@ -41,7 +41,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         isBookmarkList: Boolean,
         onBookmarkClicked: (Long, Long, Boolean) -> Unit,
         onLikeClicked: (Long, Long, Boolean) -> Unit,
-        onReblogClicked: (Long, Long, Boolean) -> Unit
+        onReblogClicked: (Long, Long, Boolean) -> Unit,
+        onCommentsClicked: (Long, Long, Boolean) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
@@ -69,7 +70,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 discoverSection = buildDiscoverSection(post),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
                 likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked),
-                reblogAction = buildReblogSection(post, onReblogClicked)
+                reblogAction = buildReblogSection(post, onReblogClicked),
+                commentsAction = buildCommentsSection(post, isBookmarkList, onCommentsClicked)
         )
     }
 
@@ -209,6 +211,32 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return if (canReblog) {
             // TODO Add content description
             ActionUiState(isEnabled = true, onClicked = onReblogClicked)
+        } else {
+            ActionUiState(isEnabled = false)
+        }
+    }
+
+    private fun buildCommentsSection(
+        post: ReaderPost,
+        isBookmarkList: Boolean,
+        onCommentsClicked: (Long, Long, Boolean) -> Unit
+    ): ActionUiState {
+        val showComments = when {
+            /* TODO malinjir why we don't show comments on bookmark list??? I think we wanted
+                 to keep the card as simple as possible. However, since we are showing all the actions now, some of them
+                 are just disabled, I think it's ok to enable the action. */
+            post.isDiscoverPost || isBookmarkList -> false
+            !accountStore.hasAccessToken() -> post.numLikes > 0
+            else -> post.isWP && (post.isCommentsOpen || post.numReplies > 0)
+        }
+
+        // TODO Add content description
+        return if (showComments) {
+            ActionUiState(
+                    isEnabled = true,
+                    count = post.numReplies,
+                    onClicked = onCommentsClicked
+            )
         } else {
             ActionUiState(isEnabled = false)
         }
