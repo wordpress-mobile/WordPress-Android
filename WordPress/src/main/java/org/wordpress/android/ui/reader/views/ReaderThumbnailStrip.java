@@ -65,15 +65,17 @@ public class ReaderThumbnailStrip extends LinearLayout {
     }
 
     public void loadThumbnails(long blogId, long postId, boolean isPrivate) {
-        // get rid of any views already added
-        mView.removeAllViews();
-
-        // TODO malinjir Remove this loading image section and provide the images as parameters
         // get this post's content and scan it for images suitable in a gallery
         final String content = ReaderPostTable.getPostText(blogId, postId);
         final ReaderImageList imageList =
                 new ReaderImageScanner(content, isPrivate)
                         .getImageList(THUMBNAIL_STRIP_IMG_COUNT, MIN_GALLERY_IMAGE_WIDTH);
+        loadThumbnails(imageList, isPrivate);
+    }
+
+    public void loadThumbnails(ReaderImageList imageList, boolean isPrivate) {
+        // get rid of any views already added
+        mView.removeAllViews();
         if (imageList.size() < THUMBNAIL_STRIP_IMG_COUNT) {
             mView.setVisibility(View.GONE);
             return;
