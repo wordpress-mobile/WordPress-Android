@@ -500,10 +500,6 @@ public class ReaderPostRenderer {
                 .append(" }")
                 // horizontally center iframes
                 .append(" iframe { display: block; margin: 0 auto; }")
-                // make sure html5 videos fit the browser width and use 16:9 ratio (YouTube standard)
-                .append(" video {")
-                .append(" width: ").append(pxToDp(mResourceVars.mVideoWidthPx)).append("px !important;")
-                .append(" height: ").append(pxToDp(mResourceVars.mVideoHeightPx)).append("px !important; }")
                 // hide forms, form-related elements, legacy RSS sharing links and other ad-related content
                 // http://bit.ly/2FUTvsP
                 .append(" form, input, select, button textarea { display: none; }")
