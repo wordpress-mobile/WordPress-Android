@@ -44,7 +44,7 @@ class ReaderDiscoverViewModelTest {
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull()
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
     }

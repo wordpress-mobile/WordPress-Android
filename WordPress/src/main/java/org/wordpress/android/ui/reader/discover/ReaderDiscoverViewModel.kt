@@ -58,7 +58,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onLikeClicked = this::onLikeClicked,
                                 onReblogClicked = this::onReblogClicked,
                                 onCommentsClicked = this::onCommentsClicked,
-                                onItemClicked = this::onItemClicked
+                                onItemClicked = this::onItemClicked,
+                                onItemRendered = this::onItemRendered
                         )
                     }
             )
@@ -82,6 +83,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onItemClicked(post: ReaderPost) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemRendered(post: ReaderPost) {
         // TODO malinjir implement action
     }
 
@@ -123,7 +128,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
             val commentsAction: ActionUiState,
-            val onItemClicked: ((ReaderPost) -> Unit)
+            val onItemClicked: ((ReaderPost) -> Unit),
+            val onItemRendered: (ReaderPost) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
