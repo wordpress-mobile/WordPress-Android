@@ -773,7 +773,14 @@ public class MediaSettingsActivity extends LocaleAwareActivity
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
-                            delayedFinishWithError();
+                            if (isVideo()) {
+                                // for videos it's ok if we fail to load the thumbnail - can happen.
+                                // let's show a toast but let the user edit the media settings!
+                                ToastUtils.showToast(MediaSettingsActivity.this,
+                                        R.string.error_media_thumbnail_not_loaded);
+                            } else {
+                                delayedFinishWithError();
+                            }
                         }
                     }
                 });

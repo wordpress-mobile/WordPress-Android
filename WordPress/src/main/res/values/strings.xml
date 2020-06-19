@@ -1576,6 +1576,7 @@
     <string name="error_upload_page_media_param">There was an error uploading the media in this page: %s.</string>
     <string name="error_media_insufficient_fs_permissions">Read permission denied on device media</string>
     <string name="error_media_not_found">Media could not be found</string>
+    <string name="error_media_thumbnail_not_loaded">Media thumbnail could not be loaded</string>
     <string name="error_media_unauthorized">You don\'t have permission to view or edit media</string>
     <string name="error_media_parse_error">Unexpected response from server</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
