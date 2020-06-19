@@ -84,8 +84,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val avatarOrBlavatarUrl: String?,
             val thumbnailStripUrls: List<String>?,
             val discoverSection: DiscoverLayoutUiState?,
-            val videoOverlayVisbility: Boolean,
-            val moreMenuVisbility: Boolean,
+            val videoOverlayVisibility: Boolean,
+            val moreMenuVisibility: Boolean,
             val photoFrameVisibility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
