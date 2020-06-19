@@ -12,8 +12,11 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -26,7 +29,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val readerImageScannerProvider: ReaderImageScannerProvider
 ) {
     fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
         // TODO malinjir onPostContainer click
@@ -73,7 +77,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
             post.takeIf { it.cardType == GALLERY }
-                    ?.let { retrieveGalleryThumbnailUrls() }
+                    ?.let { retrieveGalleryThumbnailUrls(post) }
 
     private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
@@ -128,8 +132,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return null
     }
 
-    private fun retrieveGalleryThumbnailUrls(): List<String> {
-        // TODO malinjir Not yet implemented - Refactor ReaderThumbnailStrip.loadThumbnails()
-        return emptyList()
+    private fun retrieveGalleryThumbnailUrls(post: ReaderPost): GalleryThumbnailStripData {
+        // scan post content for images suitable in a gallery
+        val images = readerImageScannerProvider.createReaderImageScanner(post.text, post.isPrivate)
+                .getImageList(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)
+        return GalleryThumbnailStripData(images, post.isPrivate)
     }
 }

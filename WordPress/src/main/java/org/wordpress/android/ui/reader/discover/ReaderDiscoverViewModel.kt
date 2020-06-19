@@ -9,6 +9,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -81,13 +82,18 @@ class ReaderDiscoverViewModel @Inject constructor(
             val featuredImageUrl: String?,
             val videoThumbnailUrl: String?,
             val avatarOrBlavatarUrl: String?,
-            val thumbnailStripUrls: List<String>?,
+            val thumbnailStripSection: GalleryThumbnailStripData,
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisbility: Boolean,
             val moreMenuVisbility: Boolean,
             val photoFrameVisibility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
+
+            data class GalleryThumbnailStripData(
+                val images: ReaderImageList,
+                val isPrivate: Boolean
+            )
 
             data class DiscoverLayoutUiState(
                 val discoverText: Spanned,
