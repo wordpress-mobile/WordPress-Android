@@ -42,6 +42,7 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
+    private var isReaderInterestsShown: Boolean = false
     // TODO will depend on user tags
     private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
 
@@ -69,6 +70,8 @@ class ReaderViewModel @Inject constructor(
 
     fun start() {
         if (shouldShowReaderInterests) {
+            if (isReaderInterestsShown) return
+            isReaderInterestsShown = true
             _uiState.value = InitialUiState
             _showReaderInterests.value = Event(Unit)
         } else {
@@ -126,15 +129,20 @@ class ReaderViewModel @Inject constructor(
 
     sealed class ReaderUiState(
         open val searchIconVisible: Boolean,
-        val appBarVisible: Boolean = false
+        val appBarExpanded: Boolean = false,
+        val tabLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : ReaderUiState(searchIconVisible = false, appBarVisible = false)
+        object InitialUiState : ReaderUiState(
+            searchIconVisible = false,
+            appBarExpanded = false,
+            tabLayoutVisible = false
+        )
 
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
             override val searchIconVisible: Boolean
-        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarVisible = true)
+        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarExpanded = true, tabLayoutVisible = true)
     }
 
     override fun onCleared() {
