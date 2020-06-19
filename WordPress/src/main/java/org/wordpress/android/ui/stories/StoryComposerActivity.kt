@@ -7,8 +7,10 @@ import android.os.Bundle
 import android.webkit.URLUtil
 import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
+import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
+import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
@@ -31,6 +33,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaS
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
+import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
@@ -41,13 +44,20 @@ import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
 
-class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, MediaPickerProvider, EditorMediaListener {
+class StoryComposerActivity : ComposeLoopFrameActivity(),
+        SnackbarProvider,
+        MediaPickerProvider,
+        EditorMediaListener,
+        AuthenticationHeadersProvider,
+        NotificationIntentLoader {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
+    @Inject lateinit var authenticationUtils: AuthenticationUtils
+
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
     companion object {
@@ -71,6 +81,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
         (application as WordPress).component().inject(this)
         setSnackbarProvider(this)
         setMediaPickerProvider(this)
+        setAuthenticationProvider(this)
+        setNotificationExtrasLoader(this)
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -100,6 +112,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
                                 it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
                         )
                         editorMedia.onPhotoPickerMediaChosen(uriList)
+                    } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
+                        handleMediaPickerResult(it)
                     }
                 }
             }
@@ -220,5 +234,22 @@ class StoryComposerActivity : ComposeLoopFrameActivity(), SnackbarProvider, Medi
     private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
+    }
+
+    override fun getAuthHeaders(url: String): Map<String, String> {
+        return authenticationUtils.getAuthHeaders(url)
+    }
+
+    // NotificationIntentLoader
+    override fun loadIntentForErrorNotification(): Intent {
+        val notificationIntent = Intent(applicationContext, StoryComposerActivity::class.java)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        notificationIntent.putExtra(WordPress.SITE, site)
+        // TODO WPSTORIES add TRACKS
+        // add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+//        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+//        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+        return notificationIntent
     }
 }

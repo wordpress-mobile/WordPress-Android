@@ -1097,14 +1097,15 @@ class MySiteFragment : Fragment(),
                                 StoryComposerActivity::class.java
                         )
                         intent.putExtra(KEY_STORY_SAVE_RESULT, event)
-                        // TODO add SITE param later when integrating with WPAndroid
-                        // notificationIntent.putExtra(WordPress.SITE, site)
+                        intent.putExtra(WordPress.SITE, selectedSite)
 
                         // we need to have a way to cancel the related error notification when the user comes
                         // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
                         // errored story but the error notification will remain existing in the system dashboard)
                         intent.action = getNotificationIdForError(event.storyIndex).toString() + ""
 
+                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                        // is meant to be used for tracking purposes. Use it!
                         // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
                         //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
                         //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
