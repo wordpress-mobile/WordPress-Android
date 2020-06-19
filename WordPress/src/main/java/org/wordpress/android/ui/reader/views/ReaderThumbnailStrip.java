@@ -70,10 +70,10 @@ public class ReaderThumbnailStrip extends LinearLayout {
         final ReaderImageList imageList =
                 new ReaderImageScanner(content, isPrivate)
                         .getImageList(THUMBNAIL_STRIP_IMG_COUNT, MIN_GALLERY_IMAGE_WIDTH);
-        loadThumbnails(imageList, isPrivate);
+        loadThumbnails(imageList, isPrivate, content);
     }
 
-    public void loadThumbnails(ReaderImageList imageList, boolean isPrivate) {
+    public void loadThumbnails(ReaderImageList imageList, boolean isPrivate, String content) {
         // get rid of any views already added
         mView.removeAllViews();
         if (imageList.size() < THUMBNAIL_STRIP_IMG_COUNT) {
