@@ -11,16 +11,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -43,6 +41,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -72,7 +71,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     public static final String TAG = "login_username_password_fragment_tag";
 
-    private ScrollView mScrollView;
+    private NestedScrollView mScrollView;
     private WPLoginInputRow mUsernameInput;
     private WPLoginInputRow mPasswordInput;
 
@@ -123,9 +122,11 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     @Override
     protected void setupLabel(@NonNull TextView label) {
-        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
-            label.setText(getString(R.string.enter_credentials_for_site, mInputSiteAddress));
-        }
+        final boolean isWoo = mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE;
+        final int labelResId = isWoo ? R.string.enter_credentials_for_site : R.string.enter_account_info_for_site;
+        final String formattedSiteAddress =
+                UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(StringUtils.notNullStr(mInputSiteAddress)));
+        label.setText(getString(labelResId, formattedSiteAddress));
     }
 
     @Override
@@ -133,28 +134,6 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         // important for accessibility - talkback
         getActivity().setTitle(R.string.selfhosted_site_login_title);
         mScrollView = rootView.findViewById(R.id.scroll_view);
-
-        rootView.findViewById(R.id.login_site_title_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
-        rootView.findViewById(R.id.login_blavatar_static).setVisibility(mIsWpcom ? View.GONE : View.VISIBLE);
-        rootView.findViewById(R.id.login_blavatar).setVisibility(mIsWpcom ? View.VISIBLE : View.GONE);
-        rootView.findViewById(R.id.label).setVisibility(
-                (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) ? View.VISIBLE : View.GONE);
-
-        if (mSiteIconUrl != null) {
-            Glide.with(this)
-                 .load(mSiteIconUrl)
-                 .apply(RequestOptions.placeholderOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                 .apply(RequestOptions.errorOf(R.drawable.ic_placeholder_blavatar_grey_lighten_20_40dp))
-                 .into(((ImageView) rootView.findViewById(R.id.login_blavatar)));
-        }
-
-        TextView siteNameView = (rootView.findViewById(R.id.login_site_title));
-        siteNameView.setText(mSiteName);
-        siteNameView.setVisibility(mSiteName != null ? View.VISIBLE : View.GONE);
-
-        TextView siteAddressView = (rootView.findViewById(R.id.login_site_address));
-        siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
-        siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
         String inputSiteAddressWithoutProtocol = UrlUtils.removeScheme(mInputSiteAddress);
         mInputSiteAddressWithoutSuffix = (mEndpointAddress == null || mEndpointAddress.isEmpty())
@@ -182,12 +161,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         mPasswordInput.addTextChangedListener(this);
 
         mPasswordInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.forgot_password);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_reset_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -199,11 +174,21 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                 }
             }
         });
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override

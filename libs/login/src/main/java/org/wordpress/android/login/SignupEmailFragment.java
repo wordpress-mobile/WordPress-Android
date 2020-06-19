@@ -17,7 +17,9 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -71,7 +73,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
 
     @Override
     protected @LayoutRes int getContentLayout() {
-        return R.layout.signup_email_fragment;
+        return R.layout.signup_email_screen;
     }
 
     @Override
@@ -128,6 +130,11 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                 next(getCleanedEmail());
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.sign_up_label);
     }
 
     @Override
