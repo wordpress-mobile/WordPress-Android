@@ -40,7 +40,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
             // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onBookmarkClicked: (Long, Long, Boolean) -> Unit,
-        onLikeClicked: (Long, Long, Boolean) -> Unit
+        onLikeClicked: (Long, Long, Boolean) -> Unit,
+        onReblogClicked: (Long, Long, Boolean) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
@@ -67,7 +68,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
                 discoverSection = buildDiscoverSection(post),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
-                likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked)
+                likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked),
+                reblogAction = buildReblogSection(post, onReblogClicked)
         )
     }
 
@@ -194,6 +196,19 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ),
                     onClicked = if (accountStore.hasAccessToken()) onClicked else null
             )
+        } else {
+            ActionUiState(isEnabled = false)
+        }
+    }
+
+    private fun buildReblogSection(
+        post: ReaderPost,
+        onReblogClicked: (Long, Long, Boolean) -> Unit
+    ): ActionUiState {
+        val canReblog = !post.isPrivate && accountStore.hasAccessToken()
+        return if (canReblog) {
+            // TODO Add content description
+            ActionUiState(isEnabled = true, onClicked = onReblogClicked)
         } else {
             ActionUiState(isEnabled = false)
         }
