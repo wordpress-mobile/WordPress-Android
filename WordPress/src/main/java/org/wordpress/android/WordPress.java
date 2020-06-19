@@ -24,6 +24,10 @@ import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.provider.FontRequest;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.EmojiCompat.InitCallback;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -333,6 +337,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         mSystemNotificationsTracker.checkSystemNotificationsState();
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
 
+        initEmojiCompat();
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
@@ -780,6 +785,35 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         }
 
         return "";
+    }
+
+    private void initEmojiCompat() {
+        EmojiCompat.Config config;
+
+        // Use a downloadable font for EmojiCompat
+        FontRequest fontRequest = new FontRequest(
+                "com.google.android.gms.fonts",
+                "com.google.android.gms",
+                "Noto Color Emoji Compat",
+                R.array.com_google_android_gms_fonts_certs
+        );
+        config = new FontRequestEmojiCompatConfig(getApplicationContext(), fontRequest);
+        config.setReplaceAll(true);
+        config.setUseEmojiAsDefaultStyle(true);
+
+        config.registerInitCallback(new InitCallback() {
+            @Override public void onInitialized() {
+                super.onInitialized();
+                AppLog.d(T.MAIN, "EmojiCompat initialized");
+            }
+
+            @Override public void onFailed(@Nullable Throwable throwable) {
+                super.onFailed(throwable);
+                AppLog.d(T.MAIN, "EmojiCompat initialization failed: " + throwable.getMessage());
+            }
+        });
+
+        EmojiCompat.init(config);
     }
 
     @Override
