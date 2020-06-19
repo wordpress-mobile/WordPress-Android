@@ -72,7 +72,8 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     sealed class ReaderCardUiState {
         data class ReaderPostUiState(
-            val id: Long,
+            val postId: Long,
+            val blogId: Long,
             val dateLine: String,
             val title: String?,
             val blogName: String?,
@@ -84,8 +85,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val avatarOrBlavatarUrl: String?,
             val thumbnailStripSection: GalleryThumbnailStripData?,
             val discoverSection: DiscoverLayoutUiState?,
-            val videoOverlayVisbility: Boolean,
-            val moreMenuVisbility: Boolean,
+            val videoOverlayVisibility: Boolean,
+            val moreMenuVisibility: Boolean,
             val photoFrameVisibility: Boolean
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null

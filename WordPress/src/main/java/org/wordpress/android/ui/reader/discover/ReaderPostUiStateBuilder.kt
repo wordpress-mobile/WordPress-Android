@@ -42,20 +42,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
         // TODO malinjir likes action
 
         return ReaderPostUiState(
-                id = post.postId,
+                postId = post.postId,
+                blogId = post.blogId,
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
-                photoFrameVisibility = buildPhotoFrameVisbility(post),
+                photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
-                videoOverlayVisbility = buildVideoOverlayVisbility(post),
+                videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
-                moreMenuVisbility = accountStore.hasAccessToken(),
+                moreMenuVisibility = accountStore.hasAccessToken(),
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
                 discoverSection = buildDiscoverSection(post)
         )
@@ -74,7 +75,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { post.cardType == VIDEO }
                     ?.let { retrieveVideoThumbnailUrl() }
 
-    private fun buildVideoOverlayVisbility(post: ReaderPost) = post.cardType == VIDEO
+    private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
             post.takeIf { it.cardType == GALLERY }
@@ -82,7 +83,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
-                // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
     }
@@ -91,7 +91,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
     // TODO malinjir `post.cardType != GALLERY` might not be needed
-    private fun buildPhotoFrameVisbility(post: ReaderPost) =
+    private fun buildPhotoFrameVisibility(post: ReaderPost) =
             (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                     post.cardType != GALLERY
 
