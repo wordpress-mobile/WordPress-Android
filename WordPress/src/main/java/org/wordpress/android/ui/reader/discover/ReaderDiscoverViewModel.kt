@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -56,7 +57,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onBookmarkClicked = this::onBookmarkClicked,
                                 onLikeClicked = this::onLikeClicked,
                                 onReblogClicked = this::onReblogClicked,
-                                onCommentsClicked = this::onCommentsClicked
+                                onCommentsClicked = this::onCommentsClicked,
+                                onItemClicked = this::onItemClicked
                         )
                     }
             )
@@ -76,6 +78,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemClicked(post: ReaderPost) {
         // TODO malinjir implement action
     }
 
@@ -116,7 +122,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val bookmarkAction: ActionUiState,
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
-            val commentsAction: ActionUiState
+            val commentsAction: ActionUiState,
+            val onItemClicked: ((ReaderPost) -> Unit)
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
