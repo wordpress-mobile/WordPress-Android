@@ -82,7 +82,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val featuredImageUrl: String?,
             val videoThumbnailUrl: String?,
             val avatarOrBlavatarUrl: String?,
-            val thumbnailStripSection: GalleryThumbnailStripData,
+            val thumbnailStripSection: GalleryThumbnailStripData?,
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisbility: Boolean,
             val moreMenuVisbility: Boolean,
