@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
-import org.wordpress.android.WordPress
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -101,8 +101,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }
                     ?.blogImageUrl
-                    // TODO malinjir use R.dimen.avatar_sz_medium
-                    ?.let { gravatarUtilsWrapper.fixGravatarUrl(it, 9999) }
+                    ?.let { gravatarUtilsWrapper.fixGravatarUrlWithResource(it, R.dimen.avatar_sz_medium) }
 
     private fun buildDateLine(post: ReaderPost) =
             dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
@@ -110,8 +109,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
-        // TODO malinjir use R.dimen.avatar_sz_small
-        val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrl(discoverData.avatarUrl, 9999)
+        val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                discoverData.avatarUrl,
+                R.dimen.avatar_sz_small
+        )
         val discoverAvatarImageType = when (discoverData.discoverType) {
             EDITOR_PICK -> AVATAR
             SITE_PICK -> BLAVATAR
