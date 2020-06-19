@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.NewAccountResponsePayload;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload;
+import org.wordpress.android.fluxc.store.AccountStore.FetchAuthOptionsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.FetchUsernameSuggestionsPayload;
 import org.wordpress.android.fluxc.store.AccountStore.NewAccountPayload;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
@@ -72,7 +73,7 @@ public enum AccountAction implements IAction {
     UPDATE_SUBSCRIPTION_NOTIFICATION_POST,
     @Action
     FETCH_DOMAIN_CONTACT,
-    @Action(payloadType = String.class)
+    @Action(payloadType = FetchAuthOptionsPayload.class)
     FETCH_AUTH_OPTIONS,
 
     // Remote responses

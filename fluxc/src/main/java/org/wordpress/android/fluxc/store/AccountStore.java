@@ -246,6 +246,14 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class FetchAuthOptionsPayload extends Payload<BaseNetworkError> {
+        public FetchAuthOptionsPayload(String emailOrUsername) {
+            this.emailOrUsername = emailOrUsername;
+        }
+
+        public String emailOrUsername;
+    }
+
     public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
         public String site;
         public SubscriptionFrequency frequency;
@@ -924,7 +932,7 @@ public class AccountStore extends Store {
                 handleFetchedDomainContact((DomainContactPayload) payload);
                 break;
             case FETCH_AUTH_OPTIONS:
-                mAccountRestClient.fetchAuthOptions((String) payload);
+                createFetchAuthOptions((FetchAuthOptionsPayload) payload);
                 break;
             case FETCHED_AUTH_OPTIONS:
                 handleFetchedAuthOptions((FetchAuthOptionsResponsePayload) payload);
@@ -1329,6 +1337,10 @@ public class AccountStore extends Store {
 
     private void handleFetchedDomainContact(DomainContactPayload payload) {
         emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
+    }
+
+    private void createFetchAuthOptions(FetchAuthOptionsPayload payload) {
+        mAccountRestClient.fetchAuthOptions(payload.emailOrUsername);
     }
 
     private void handleFetchedAuthOptions(FetchAuthOptionsResponsePayload payload) {
