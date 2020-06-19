@@ -1,4 +1,0 @@
-14.9:
-<b>Förbättringar i blockredigeraren:</b> nytt block för framhävt citat, färginställningar för knappfärger. uppdaterade sidmallar.
-
-<b>Rättelser i blockredigeraren:</b> fel i katalogen för fria bilder infogade bara en bild även om fler var valda, förhandsvisning fungerade inte vid växling till den klassiska redigeraren. Vi har tagit bort prenumerera-knappen (som inte fungerade) ur bloggmallen.

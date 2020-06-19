@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-26 10:54:09+0000
+Translation-Revision-Date: 2020-06-10 13:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: he_IL
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">להסיר את %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
+    <string name="gutenberg_native_move_s_up">להזיז את %s למעלה</string>
+    <string name="gutenberg_native_move_s_right">להזיז את %s ימינה</string>
+    <string name="gutenberg_native_move_s_left">להזיז את %s שמאלה</string>
+    <string name="gutenberg_native_move_s_down">להזיז את %s למטה</string>
+    <string name="gutenberg_native_try_a_starter_layout">לנסות את הפריסה למתחילים</string>
+    <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות עם האפשרויות הזמינות</string>
+    <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
+    <string name="pages_set_as_posts_page">להגדיר כעמוד פוסטים</string>
+    <string name="pages_set_as_homepage">להגדיר כעמוד הבית</string>
+    <string name="suggestion_no_matching_users">\"לא נמצאו משתמשים מתאימים.\"</string>
+    <string name="suggestion_invalid_user">\"המשתמש %s לא חוקי\"</string>
+    <string name="site_settings_select_page">לבחור עמוד</string>
+    <string name="site_settings_posts_page">עמוד הפוסטים</string>
+    <string name="site_settings_static_homepage">עמוד בית קבוע</string>
+    <string name="site_settings_classic_blog">בלוג קלאסי</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">עמוד הבית והעמוד לפוסטים שנבחרו לא יכולים להיות זהים.</string>
+    <string name="site_settings_failed_update_homepage_settings">עדכון ההגדרות של עמוד הבית נכשל, כדאי לבדוק את החיבור לאינטרנט</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">לא ניתן היה לשמור את ההגדרות של עמוד הבית לפני טעינת העמודים</string>
+    <string name="site_settings_failed_to_save_homepage_settings">לא ניתן היה לשמור את ההגדרות של עמוד הבית</string>
+    <string name="site_settings_accept_homepage">אישור</string>
+    <string name="site_settings_failed_to_load_pages">טעינת העמוד נכשלה</string>
+    <string name="site_settings_homepage_settings_description">לבחור בין עמוד בית שמציג את הפוסטים האחרונים שלך (בלוג קלאסי) ובין עמוד קבוע/סטטי.</string>
+    <string name="site_settings_homepage_settings">הגדרות עמוד הבית</string>
+    <string name="site_settings_homepage">עמוד הבית</string>
+    <string name="page_posts_page_update_failed">העדכון של עמוד הפוסטים נכשל</string>
+    <string name="page_posts_page_successfully_updated">העדכון של עמוד הפוסטים בוצע בהצלחה</string>
+    <string name="page_homepage_update_failed">העדכון של עמוד הבית נכשל</string>
+    <string name="page_homepage_successfully_updated">העדכון של עמוד הבית בוצע בהצלחה</string>
+    <string name="page_cannot_set_posts_page">כדי להגדיר את עמוד הפוסטים, עליך להפעיל את \'עמוד בית קבוע\' בהגדרות האתר</string>
+    <string name="page_cannot_set_homepage">כדי להגדיר את עמוד הבית, עליך להפעיל את \'עמוד בית קבוע\' בהגדרות האתר</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">ברוך בואך אל הבלוג החדש שלנו</string>
     <string name="gutenberg_native_select_a_color">לבחור צבע</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
@@ -36,9 +71,7 @@ Language: he_IL
     <string name="copy_text">להעתיק</string>
     <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
-    <string name="gutenberg_native_move_block_right">להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">להזיז את הבלוק שמאלה מהמיקום %1$s למיקום %2$s</string>
-    <string name="gutenberg_native_move_block_left">להזיז את הבלוק שמאלה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">להקיש פעמיים כדי להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">להקיש פעמיים כדי להזיז את הבלוק שמאלה</string>
     <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
@@ -121,16 +154,14 @@ Language: he_IL
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
+    <string name="gutenberg_native_s_settings">%s הגדרות</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">נשמח לבנות משהו ביחד.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">נשמח לבנות משהו ביחד</string>
-    <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">נשמח לבנות משהו ביחד!</string>
+    <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד!</string>
     <string name="gutenberg_native_juan_p_rez">חואן פרז</string>
     <string name="gutenberg_native_j_k_rowling">ג\'יי קיי רולינג</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">הבחירות שלנו, הארי, משקפות מי אנחנו באמת הרבה יותר מהיכולות שלנו.</string>
     <string name="gutenberg_native_inspiration">השראה</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">מצפים לשמוע ממך!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">מצפים לשמוע ממך!</string>
     <string name="gutenberg_native_get_in_touch">מצפים לשמוע ממך</string>
     <string name="gutenberg_native_excerpt_length_words">אורך התקציר (מילים)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">שלחו לי אימייל: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -286,9 +317,7 @@ Language: he_IL
     <string name="gutenberg_native_my_post_publish_panel">החלונית של תוכן שפרסמתי</string>
     <string name="gutenberg_native_my_document_setting_panel">החלונית של הגדרות המסמכים שלי</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">להזיז את הבלוק למעלה משורה %1$s לשורה %2$s</string>
-    <string name="gutenberg_native_move_block_up">להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">להזיז את הבלוק למטה משורה %1$s לשורה %2$s</string>
-    <string name="gutenberg_native_move_block_down">להזיז את הבלוק למטה</string>
     <string name="gutenberg_native_link_text">טקסט לקישור</string>
     <string name="gutenberg_native_link_inserted">הקישור הוכנס</string>
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
@@ -310,7 +339,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_and_hold_to_edit">יש להקיש פעמיים ולהחזיק כדי לערוך</string>
     <string name="gutenberg_native_current_value_is_s">הערך הנוכחי הוא %s</string>
     <string name="gutenberg_native_content">תוכן…</string>
-    <string name="gutenberg_native_clear_all_settings">ניקוי כל ההגדרות</string>
     <string name="gutenberg_native_choose_from_device">לבחור מהמכשיר</string>
     <string name="gutenberg_native_annotations_sidebar">סרגל צדי להסברים</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">אירעה שגיאה לא מזוהה. יש לנסות שוב.</string>
@@ -1129,7 +1157,6 @@ Language: he_IL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">פוסט אחד עם קובץ אחד לא הועלה</string>
     <string name="untitled_in_parentheses">(ללא כותרת)</string>
     <string name="at_username">‎@‎%s‎</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="notification_site_creation_created">יש להקיש להמשך.</string>
@@ -1599,7 +1626,7 @@ Language: he_IL
     <string name="pending_draft_one_day_2">שמת לב ש-\'%1$s\' עדיין טיוטה בלבד? קדימה, לפרסם!</string>
     <string name="pending_draft_one_day_1">אתמול שמרת את \'%1$s\' בתור טיוטה. לא לשכוח לפרסם אותה!</string>
     <string name="reader_photo_by">צולם על ידי %s</string>
-    <string name="reader_label_visit">אל האתר</string>
+    <string name="reader_label_visit">לבקר באתר</string>
     <string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
     <string name="reader_err_get_post_not_authorized_signin">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה.</string>
@@ -1937,6 +1964,7 @@ Language: he_IL
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
     <string name="notifications_empty_view_reader">מעבר אל Reader</string>
+    <string name="notifications_empty_action_followers_likes">לבלוט בשטח: להוסיף תגובה על פוסטים שקראת</string>
     <string name="notifications_empty_action_comments">הצטרפות לדיון: הוספת תגובה על פוסטים בבלוגים תחת מעקב שלך</string>
     <string name="notifications_empty_action_unread">להכניס קצת עניין בדיון: כתיבת פוסט חדש</string>
     <string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>

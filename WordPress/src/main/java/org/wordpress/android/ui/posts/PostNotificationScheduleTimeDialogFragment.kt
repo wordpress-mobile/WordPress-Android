@@ -15,15 +15,27 @@ import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.Schedul
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.ONE_HOUR
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.TEN_MINUTES
 import org.wordpress.android.fluxc.store.PostSchedulingNotificationStore.SchedulingReminderModel.Period.WHEN_PUBLISHED
+import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
+import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel
 import javax.inject.Inject
 
 class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: EditPostPublishSettingsViewModel
+    private lateinit var viewModel: PublishSettingsViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(EditPostPublishSettingsViewModel::class.java)
+        val publishSettingsFragmentType = arguments?.getParcelable<PublishSettingsFragmentType>(
+                ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE
+        )
+
+        when (publishSettingsFragmentType) {
+            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                    .get(EditPostPublishSettingsViewModel::class.java)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                    .get(PrepublishingPublishSettingsViewModel::class.java)
+        }
+
         val alertDialogBuilder = MaterialAlertDialogBuilder(activity)
         val view = requireActivity().layoutInflater.inflate(R.layout.post_notification_type_selector, null)
                 as RadioGroup
@@ -70,14 +82,22 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "post_notification_time_dialog_fragment"
         const val ARG_NOTIFICATION_SCHEDULE_TIME = "notification_schedule_time"
+        private const val ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE = "publish_settings_fragment_type"
 
-        fun newInstance(period: SchedulingReminderModel.Period?): PostNotificationScheduleTimeDialogFragment {
+        fun newInstance(
+            period: SchedulingReminderModel.Period?,
+            publishSettingsFragmentType: PublishSettingsFragmentType
+        ): PostNotificationScheduleTimeDialogFragment {
             val fragment = PostNotificationScheduleTimeDialogFragment()
+            val args = Bundle()
+            args.putParcelable(
+                    ARG_PUBLISH_SETTINGS_FRAGMENT_TYPE,
+                    publishSettingsFragmentType
+            )
             period?.let {
-                val args = Bundle()
                 args.putString(ARG_NOTIFICATION_SCHEDULE_TIME, period.name)
-                fragment.arguments = args
             }
+            fragment.arguments = args
             return fragment
         }
     }
