@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -40,7 +41,9 @@ class ReaderDiscoverViewModelTest {
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(readerPostRepository, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
         whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
-        whenever(uiStateBuilder.mapPostToUiState(anyOrNull(), anyInt(), anyInt())).thenReturn(mock())
+        whenever(
+                uiStateBuilder.mapPostToUiState(anyOrNull(), anyInt(), anyInt(), anyBoolean(), anyOrNull(), anyOrNull())
+        ).thenReturn(mock())
     }
 
     @Test
