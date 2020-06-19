@@ -41,10 +41,8 @@ class ReaderViewModel @Inject constructor(
     private val readerTracker: ReaderTracker,
     private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
-    private var initialized: Boolean = false
-    private var isReaderInterestsShown: Boolean = false
-    // TODO will depend on user tags
-    private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
+    private var areTabsInitialised: Boolean = false
+    private var isChooseInterestsShown: Boolean = false
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -69,14 +67,18 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (shouldShowReaderInterests) {
-            if (isReaderInterestsShown) return
-            isReaderInterestsShown = true
-            _uiState.value = InitialUiState
+        if (areTabsInitialised || isChooseInterestsShown) return
+        _uiState.value = InitialUiState
+        loadUserTags()
+    }
+
+    private fun loadUserTags() {
+        val userTags = ReaderTagList() // TODO: get data from repo
+        if (userTags.isEmpty() && appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+            isChooseInterestsShown = true
             _showReaderInterests.value = Event(Unit)
         } else {
             if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-            if (initialized) return
             loadTabs()
         }
     }
@@ -90,8 +92,8 @@ class ReaderViewModel @Inject constructor(
                         tagList,
                         searchIconVisible = isSearchSupported()
                 )
-                if (!initialized) {
-                    initialized = true
+                if (!areTabsInitialised) {
+                    areTabsInitialised = true
                     initializeTabSelection(tagList)
                 }
             }
@@ -120,10 +122,9 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onCloseReaderInterests() {
-        shouldShowReaderInterests = false
-
         _closeReaderInterests.value = Event(Unit)
-        _updateTags.value = Event(Unit)
+
+        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         loadTabs()
     }
 
