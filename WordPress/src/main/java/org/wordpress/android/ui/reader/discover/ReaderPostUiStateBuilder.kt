@@ -153,12 +153,17 @@ class ReaderPostUiStateBuilder @Inject constructor(
         } else {
             R.string.reader_add_bookmark
         }
-        return ActionUiState(
-                isEnabled = !post.isDiscoverPost,
-                isSelected = post.isBookmarked,
-                contentDescription = UiStringRes(contentDescription),
-                onClicked = onClicked
-        )
+        // TODO malinjir shouldn't the action be disabled just for posts which don't have blog and post id?
+        return if (!post.isDiscoverPost) {
+            ActionUiState(
+                    isEnabled = true,
+                    isSelected = post.isBookmarked,
+                    contentDescription = UiStringRes(contentDescription),
+                    onClicked = onClicked
+            )
+        } else {
+            ActionUiState(isEnabled = false)
+        }
     }
 
     private fun buildLikeSection(
