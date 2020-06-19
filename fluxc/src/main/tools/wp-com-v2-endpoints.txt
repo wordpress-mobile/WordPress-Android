@@ -18,4 +18,6 @@
 
 /plans/mobile
 
+/mobile/feature-announcements/
+
 /me/gutenberg/
