@@ -23,7 +23,9 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentLoadSuccessUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
 @RunWith(MockitoJUnitRunner::class)
@@ -75,7 +77,7 @@ class ReaderInterestsViewModelTest {
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-            // Pause dispatcher so we can verify title, subtitles initial state
+            // Pause dispatcher so we can verify title initial state
             coroutineScope.pauseDispatcher()
 
             // Trigger data load
@@ -92,13 +94,13 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subtitles hidden on start become visible on successful data load`() {
+    fun `subtitle hidden on start become visible on successful data load`() {
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
 
-            // Pause dispatcher so we can verify title, subtitles initial state
+            // Pause dispatcher so we can verify subtitle initial state
             coroutineScope.pauseDispatcher()
 
             // Trigger data load
@@ -109,7 +111,7 @@ class ReaderInterestsViewModelTest {
             // Resume pending coroutines execution
             coroutineScope.resumeDispatcher()
 
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
         }
     }
 
@@ -125,13 +127,14 @@ class ReaderInterestsViewModelTest {
             initViewModel()
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interests).isEqualTo(mockInterests)
-            assertThat(viewModel.uiState.value).isInstanceOf(ContentLoadSuccessUiState::class.java)
+            assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                .isEqualTo(mockInterests)
 
-            val uiState = requireNotNull(viewModel.uiState.value) as ContentLoadSuccessUiState
-            assertThat(uiState.interestTags).isEqualTo(mockInterests)
-            assertThat(uiState.interestTagsUiState[0]).isInstanceOf(InterestUiState::class.java)
-            assertThat(uiState.interestTagsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
+            val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+            assertThat(uiState.interests).isEqualTo(mockInterests)
+            assertThat(uiState.interestsUiState[0]).isInstanceOf(InterestUiState::class.java)
+            assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
         }
 
     @ExperimentalCoroutinesApi
@@ -172,7 +175,8 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = true)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
+                .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(true)
         }
 
@@ -191,7 +195,8 @@ class ReaderInterestsViewModelTest {
             viewModel.onInterestAtIndexToggled(index = selectedIndex, isChecked = false)
 
             // Then
-            assertThat(requireNotNull(viewModel.uiState.value).interestsUiState[selectedIndex].isChecked)
+            assertThat(requireNotNull(viewModel.uiState.value as ContentUiState)
+                .interestsUiState[selectedIndex].isChecked)
                 .isEqualTo(false)
         }
 
@@ -264,6 +269,26 @@ class ReaderInterestsViewModelTest {
 
             // Then
             verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `data loading triggered on retry`() =
+        coroutineScope.runBlockingTest {
+            // Given
+            val uiStates = mutableListOf<UiState>()
+            viewModel.uiState.observeForever {
+                uiStates.add(it)
+            }
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            viewModel.onRetryButtonClick()
+
+            // Then
+            assertThat(uiStates.size).isEqualTo(2)
+            assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
         }
 
     private fun initViewModel() = viewModel.start()
