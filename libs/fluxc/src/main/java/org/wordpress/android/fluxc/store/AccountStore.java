@@ -30,7 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
-import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AuthOptionsPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.FetchAuthOptionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -927,7 +927,7 @@ public class AccountStore extends Store {
                 mAccountRestClient.fetchAuthOptions((String) payload);
                 break;
             case FETCHED_AUTH_OPTIONS:
-                handleFetchedAuthOptions((AuthOptionsPayload) payload);
+                handleFetchedAuthOptions((FetchAuthOptionsResponsePayload) payload);
                 break;
         }
     }
@@ -1331,7 +1331,7 @@ public class AccountStore extends Store {
         emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
     }
 
-    private void handleFetchedAuthOptions(AuthOptionsPayload payload) {
+    private void handleFetchedAuthOptions(FetchAuthOptionsResponsePayload payload) {
         OnAuthOptionsFetched event = new OnAuthOptionsFetched();
         if (payload.isError()) {
             event.error = payload.error;
