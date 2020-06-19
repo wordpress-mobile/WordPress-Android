@@ -13,7 +13,9 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_P
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -28,10 +30,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
+    fun mapPostToUiState(
+        post: ReaderPost,
+        photonWidth: Int,
+        photonHeight: Int,
+        onBookmarkClicked: (Long, Boolean) -> Unit
+    ): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
-        // TODO malinjir bookmark action
         // TODO malinjir reblog action
         // TODO malinjir comments action
         // TODO malinjir likes action
@@ -53,7 +59,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
                 moreMenuVisbility = accountStore.hasAccessToken(),
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
-                discoverSection = buildDiscoverSection(post)
+                discoverSection = buildDiscoverSection(post),
+                actionUiState = buildBookmarkPostSection(post, onBookmarkClicked)
         )
     }
 
@@ -131,5 +138,22 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun retrieveGalleryThumbnailUrls(): List<String> {
         // TODO malinjir Not yet implemented - Refactor ReaderThumbnailStrip.loadThumbnails()
         return emptyList()
+    }
+
+    private fun buildBookmarkPostSection(
+        post: ReaderPost,
+        onBookmarkClicked: (Long, Boolean) -> Unit
+    ): ActionUiState {
+        val contentDescription = if (post.isBookmarked) {
+            R.string.reader_remove_bookmark
+        } else {
+            R.string.reader_add_bookmark
+        }
+        return ActionUiState(
+                isEnabled = !post.isDiscoverPost,
+                isSelected = post.isBookmarked,
+                contentDescription = UiStringRes(contentDescription),
+                onClicked = onBookmarkClicked
+        )
     }
 }

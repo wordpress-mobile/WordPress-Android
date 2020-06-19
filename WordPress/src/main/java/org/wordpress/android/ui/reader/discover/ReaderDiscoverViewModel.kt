@@ -10,6 +10,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -86,7 +87,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisbility: Boolean,
             val moreMenuVisbility: Boolean,
-            val photoFrameVisibility: Boolean
+            val photoFrameVisibility: Boolean,
+            val actionUiState: ActionUiState
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
@@ -94,6 +96,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
                 val imageType: ImageType
+            )
+
+            data class ActionUiState(
+                val isEnabled: Boolean,
+                val isSelected: Boolean,
+                val contentDescription: UiString,
+                val count: String? = null,
+                val onClicked: (Long, Boolean) -> Unit
             )
         }
     }
