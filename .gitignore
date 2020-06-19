@@ -70,7 +70,7 @@ WordPress/src/main/res/values/com_crashlytics_export_strings.xml
 # Google services configuration
 google-services.json
 
-# Fastlane 
+# Fastlane
 fastlane/.env*
 fastlane/report.xml
 fastlane/README.md
@@ -78,6 +78,7 @@ fastlane/metadata/android/screenshots.html
 fastlane/metadata/android/*/images/
 fastlane/screenshots_orig
 default.profraw
+google-upload-credentials.json
 
 # Bundler
 /.bundle
