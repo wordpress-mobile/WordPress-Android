@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -15,7 +16,9 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
@@ -34,7 +37,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         photonWidth: Int,
         photonHeight: Int,
-        onBookmarkClicked: (Long, Boolean) -> Unit
+            // TODO malinjir try to refactor/remove this parameter
+        isBookmarkList: Boolean,
+        onBookmarkClicked: (Long, Long, Boolean) -> Unit,
+        onLikeClicked: (Long, Long, Boolean) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
@@ -60,7 +66,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 moreMenuVisibility = accountStore.hasAccessToken(),
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
                 discoverSection = buildDiscoverSection(post),
-                actionUiState = buildBookmarkPostSection(post, onBookmarkClicked)
+                bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
+                likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked)
         )
     }
 
@@ -140,10 +147,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return emptyList()
     }
 
-    private fun buildBookmarkPostSection(
-        post: ReaderPost,
-        onBookmarkClicked: (Long, Boolean) -> Unit
-    ): ActionUiState {
+    private fun buildBookmarkSection(post: ReaderPost, onClicked: (Long, Long, Boolean) -> Unit): ActionUiState {
         val contentDescription = if (post.isBookmarked) {
             R.string.reader_remove_bookmark
         } else {
@@ -153,7 +157,40 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 isEnabled = !post.isDiscoverPost,
                 isSelected = post.isBookmarked,
                 contentDescription = UiStringRes(contentDescription),
-                onClicked = onBookmarkClicked
+                onClicked = onClicked
         )
+    }
+
+    private fun buildLikeSection(
+        post: ReaderPost,
+        isBookmarkList: Boolean,
+        onClicked: (Long, Long, Boolean) -> Unit
+    ): ActionUiState {
+        val showLikes = when {
+            /* TODO malinjir why we don't show likes on bookmark list??? I think we wanted
+                 to keep the card as simple as possible. However, since we are showing all the actions now, some of them
+                 are just disabled, I think it's ok to enable the action. */
+            post.isDiscoverPost || isBookmarkList -> false
+            !accountStore.hasAccessToken() -> post.numLikes > 0
+            else -> post.canLikePost()
+        }
+
+        return if (showLikes) {
+            ActionUiState(
+                    isEnabled = true,
+                    isSelected = post.isLikedByCurrentUser,
+                    // TODO malinjir remove static access and reference to context
+                    contentDescription = UiStringText(
+                            ReaderUtils.getLongLikeLabelText(
+                                    WordPress.getContext(),
+                                    post.numLikes,
+                                    post.isLikedByCurrentUser
+                            )
+                    ),
+                    onClicked = if (accountStore.hasAccessToken()) onClicked else null
+            )
+        } else {
+            ActionUiState(isEnabled = false)
+        }
     }
 }

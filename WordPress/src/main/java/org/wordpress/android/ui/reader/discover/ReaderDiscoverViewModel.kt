@@ -48,10 +48,25 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
-                        postUiStateBuilder.mapPostToUiState(it, photonWidth, photonHeight)
+                        postUiStateBuilder.mapPostToUiState(
+                                post = it,
+                                photonWidth = photonWidth,
+                                photonHeight = photonHeight,
+                                isBookmarkList = false,
+                                onBookmarkClicked = this::onBookmarkClicked,
+                                onLikeClicked = this::onLikeClicked
+                        )
                     }
             )
         }
+    }
+
+    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
     }
 
     private fun loadPosts() {
@@ -88,7 +103,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val videoOverlayVisibility: Boolean,
             val moreMenuVisibility: Boolean,
             val photoFrameVisibility: Boolean,
-            val actionUiState: ActionUiState
+            val bookmarkAction: ActionUiState,
+            val likeAction: ActionUiState
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
@@ -100,10 +116,10 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class ActionUiState(
                 val isEnabled: Boolean,
-                val isSelected: Boolean,
-                val contentDescription: UiString,
-                val count: String? = null,
-                val onClicked: (Long, Boolean) -> Unit
+                val isSelected: Boolean? = false,
+                val contentDescription: UiString? = null,
+                val count: Int = 0,
+                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
             )
         }
     }
