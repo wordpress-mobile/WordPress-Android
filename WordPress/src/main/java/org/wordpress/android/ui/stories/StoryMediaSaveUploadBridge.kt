@@ -118,7 +118,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: StorySaveResult) {
         // only trigger the bridge preparation and the UploadService if the Story is now complete
-        // otherwise we can be receiving successful retry events for individual frames we shoulnd't care about just
+        // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
         // yet.
         if (isStorySuccessfullySavedAndComplete(event)) {
             // only remove it if it was successful - we want to keep it and show a snackbar once when the user
