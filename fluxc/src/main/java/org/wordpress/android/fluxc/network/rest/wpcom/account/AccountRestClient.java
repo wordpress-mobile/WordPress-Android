@@ -183,7 +183,7 @@ public class AccountRestClient extends BaseWPComRestClient {
         }
     }
 
-    public static class AuthOptionsPayload extends Payload<AuthOptionsError> {
+    public static class FetchAuthOptionsResponsePayload extends Payload<AuthOptionsError> {
         public boolean isPasswordless;
         public boolean isEmailVerified;
     }
@@ -917,10 +917,11 @@ public class AccountRestClient extends BaseWPComRestClient {
     }
 
     /**
-     * Performs an HTTP GET call to the v1.1 /users/$emailOrUsername/auth-options endpoint. Upon receiving
-     * a response (success or error) a {@link AccountAction#FETCHED_AUTH_OPTIONS} action is dispatched
-     * with a payload of type {@link AuthOptionsPayload}. {@link AuthOptionsPayload#isError()} can
-     * be used to determine the result of the request.
+     * Performs an HTTP GET call to the v1.1 /users/$emailOrUsername/auth-options endpoint. Upon receiving a response
+     * (success or error) a {@link AccountAction#FETCHED_AUTH_OPTIONS} action is dispatched with a payload of type
+     * {@link FetchAuthOptionsResponsePayload}.
+     *
+     * {@link FetchAuthOptionsResponsePayload#isError()} can be used to check the request result.
      */
     public void fetchAuthOptions(@NonNull String emailOrUsername) {
         final String url = WPCOMREST.users.emailOrUsername(emailOrUsername).auth_options.getUrlV1_1();
@@ -928,7 +929,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new Listener<AuthOptionsResponse>() {
                     @Override
                     public void onResponse(AuthOptionsResponse response) {
-                        AuthOptionsPayload payload = new AuthOptionsPayload();
+                        FetchAuthOptionsResponsePayload payload = new FetchAuthOptionsResponsePayload();
 
                         try {
                             payload.isPasswordless = response.getPasswordless();
@@ -945,7 +946,7 @@ public class AccountRestClient extends BaseWPComRestClient {
                 new WPComErrorListener() {
                     @Override
                     public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
-                        AuthOptionsPayload payload = new AuthOptionsPayload();
+                        FetchAuthOptionsResponsePayload payload = new FetchAuthOptionsResponsePayload();
                         payload.error = new AuthOptionsError(error.apiError, error.message);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedAuthOptionsAction(payload));
                     }
