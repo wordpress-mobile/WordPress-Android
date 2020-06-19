@@ -102,10 +102,10 @@ class FeatureAnnouncementListAdapter(
                         StringUtils.notNullStr(featureAnnouncementItem.iconUrl)
                 )
             } else {
-                imageManager.loadBase64IntoCircle(
-                        featureIcon, ImageType.PLAN,
-                        StringUtils.notNullStr(featureAnnouncementItem.iconBase64)
-                )
+                val originalBase64String = StringUtils.notNullStr(featureAnnouncementItem.iconBase64)
+                val sanitizedBase64String = originalBase64String.replace("data:image/png;base64,", "")
+
+                imageManager.loadBase64IntoCircle(featureIcon, ImageType.PLAN, sanitizedBase64String)
             }
         }
     }
