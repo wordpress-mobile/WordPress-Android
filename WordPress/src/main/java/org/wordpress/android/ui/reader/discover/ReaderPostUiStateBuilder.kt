@@ -40,13 +40,13 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
-                photoFrameVisibility = buildPhotoFrameVisbility(post),
+                photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 thumbnailStripUrls = buildThumbnailStripUrls(post),
-                videoOverlayVisbility = buildVideoOverlayVisbility(post),
+                videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
-                moreMenuVisbility = accountStore.hasAccessToken(),
+                moreMenuVisibility = accountStore.hasAccessToken(),
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
                 discoverSection = buildDiscoverSection(post)
         )
@@ -66,7 +66,7 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
             post.takeIf { post.cardType == VIDEO }
                     ?.let { retrieveVideoThumbnailUrl() }
 
-    private fun buildVideoOverlayVisbility(post: ReaderPost) = post.cardType == VIDEO
+    private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
             post.takeIf { it.cardType == GALLERY }
@@ -83,7 +83,7 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
             post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
     // TODO malinjir `post.cardType != GALLERY` might not be needed
-    private fun buildPhotoFrameVisbility(post: ReaderPost) =
+    private fun buildPhotoFrameVisibility(post: ReaderPost) =
             (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                     post.cardType != GALLERY
 
