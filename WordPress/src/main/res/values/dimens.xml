@@ -154,7 +154,8 @@
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
-    <dimen name="avatar_sz_login">100dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
@@ -326,7 +327,6 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
@@ -361,7 +361,6 @@
     <dimen name="plugin_banner_size">192dp</dimen>
 
     <dimen name="add_avatar_button_size">24dp</dimen>
-    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
 
     <dimen name="dialog_snackbar_content_padding">20dp</dimen>
     <dimen name="dialog_snackbar_max_icons_size">18dp</dimen>

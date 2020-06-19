@@ -45,7 +45,7 @@
     <string name="share_intent_screen_title">Pick site</string>
     <string name="edit_photo_screen_title">Edit Photo</string>
     <string name="notif_detail_screen_title">Notification detail %s</string>
-    
+
     <!-- general strings -->
     <string name="posts">Posts</string>
     <string name="sites">Sites</string>
@@ -1806,6 +1806,7 @@
     <string name="verification_code">Verification code</string>
     <string name="auth_required">Log in again to continue.</string>
     <string name="logging_in">Logging in</string>
+    <string name="reset_your_password">Reset your password</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="checking_email">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
@@ -1815,7 +1816,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
-    <string name="forgot_password">Lost your password?</string>
+    <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
@@ -2302,25 +2303,31 @@
     <string name="login_promo_title_36_percent">36% of the web is built on WordPress.</string>
     <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link">Send link</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="send_link" tools:ignore="UnusedResources">Send link</string>
+    <string name="enter_your_password_instead" tools:ignore="UnusedResources">Enter your password instead</string>
+    <string name="send_link_by_email">Send link by email</string>
+    <string name="or_type_your_password">Or type your password</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
+    <string name="get_started">Get Started</string>
     <string name="next">Next</string>
-    <string name="open_mail">Open mail</string>
+    <string name="open_mail" tools:ignore="UnusedResources">Open mail</string>
+    <string name="check_email">Check email</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
-    <string name="login_text_otp">Text me a code instead.</string>
-    <string name="login_text_otp_another">Text me another code instead.</string>
+    <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
-    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
+    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
     <string name="connect_more">Connect another site</string>
@@ -2331,10 +2338,11 @@
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help" tools:ignore="UnusedResources">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_find_your_site_adress">Find your site address</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
@@ -2348,6 +2356,8 @@
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="continue_google_button_suffix">Continue with Google</string>
+    <string name="login_or">or</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
@@ -2358,7 +2368,8 @@
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="send_verification_email">Send verification email</string>
-    <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources">Log in with your %1$s site credentials</string>
+    <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
     <string name="enter_site_credentials_instead">Log in with site credentials</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
@@ -2374,6 +2385,7 @@
     <string name="verification_2fa_screen_title">Code verification</string>
 
     <!-- Signup -->
+    <string name="sign_up_label">Sign Up</string>
     <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
@@ -2389,9 +2401,11 @@
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
+    <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>

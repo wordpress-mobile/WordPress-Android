@@ -387,15 +387,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
         if (getLoginPrologueFragment() == null) {
             // prologue fragment is not shown so, the email screen will be the initial screen on the fragment container
-            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, true), LoginEmailFragment.TAG);
+            showFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
+                    true, BuildConfig.UNIFIED_LOGIN_AVAILABLE), LoginEmailFragment.TAG);
 
             if (getLoginMode() == LoginMode.JETPACK_STATS) {
                 mIsJetpackConnect = true;
             }
         } else {
             // prologue fragment is shown so, slide in the email screen (and add to history)
-            slideInFragment(
-                    LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled, !mIsSiteLoginAvailableFromPrologue), true,
+            slideInFragment(LoginEmailFragment.newInstance(mIsSignupFromLoginEnabled,
+                    !mIsSiteLoginAvailableFromPrologue, BuildConfig.UNIFIED_LOGIN_AVAILABLE), true,
                     LoginEmailFragment.TAG);
         }
     }

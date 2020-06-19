@@ -117,12 +117,4 @@
         <item name="android:padding">0dp</item>
     </style>
 
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2">
-        <item name="android:textColor">@color/login_input_label_static_text_color</item>
-    </style>
-
-    <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
-
 </resources>

@@ -80,7 +80,7 @@ public class SignupMagicLinkFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.signup_magic_link, container, false);
+        View layout = inflater.inflate(R.layout.signup_magic_link_screen, container, false);
 
         mOpenMailButton = layout.findViewById(R.id.signup_magic_link_button);
         mOpenMailButton.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +113,7 @@ public class SignupMagicLinkFragment extends Fragment {
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.sign_up_label);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
