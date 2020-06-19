@@ -54,35 +54,42 @@ class ReactNativeStore
 
     private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
 
-    suspend fun executeRequest(site: SiteModel, pathWithParams: String): ReactNativeFetchResponse =
+    suspend fun executeRequest(
+        site: SiteModel,
+        pathWithParams: String,
+        enableCaching: Boolean = true
+    ): ReactNativeFetchResponse =
             coroutineEngine.withDefaultContext(AppLog.T.API, this, "executeRequest") {
                 return@withDefaultContext if (site.isUsingWpComRestApi) {
-                    executeWPComRequest(site, pathWithParams)
+                    executeWPComRequest(site, pathWithParams, enableCaching)
                 } else {
-                    executeWPAPIRequest(site, pathWithParams)
+                    executeWPAPIRequest(site, pathWithParams, enableCaching)
                 }
             }
 
     private suspend fun executeWPComRequest(
         site: SiteModel,
-        path: String
+        path: String,
+        enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
-        return wpComRestClient.fetch(url, params, ::Success, ::Error)
+        return wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
     }
 
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
-        pathWithParams: String
+        pathWithParams: String,
+        enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (path, params) = parsePathAndParams(pathWithParams)
-        return executeWPAPIRequest(site, path, params)
+        return executeWPAPIRequest(site, path, params, enableCaching)
     }
 
     private suspend fun executeWPAPIRequest(
         site: SiteModel,
         path: String,
-        params: Map<String, String>
+        params: Map<String, String>,
+        enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val usingSavedRestUrl = site.wpApiRestUrl != null
         if (!usingSavedRestUrl) {
@@ -100,7 +107,7 @@ class ReactNativeStore
             nonceMap[site] = wpAPIRestClient.requestNonce(site)
         }
 
-        val response = executeFetch(fullRestUrl, params, nonceMap[site]?.value)
+        val response = executeFetch(fullRestUrl, params, nonceMap[site]?.value, enableCaching)
         return when (response) {
             is Success -> response
 
@@ -115,7 +122,7 @@ class ReactNativeStore
                         // Try original call again if we have a new nonce
                         val nonceIsUpdated = newNonce != null && newNonce != previousNonce
                         if (nonceIsUpdated) {
-                            return executeFetch(fullRestUrl, params, nonceMap[site]?.value)
+                            return executeFetch(fullRestUrl, params, nonceMap[site]?.value, enableCaching)
                         }
                     }
                     response
@@ -130,7 +137,7 @@ class ReactNativeStore
                         // If we did the previous call with a saved rest url, try again by making
                         // recursive call. This time there is no saved rest url to use
                         // so the rest url will be retrieved using discovery
-                        executeWPAPIRequest(site, path, params)
+                        executeWPAPIRequest(site, path, params, enableCaching)
                     } else {
                         // Already used discovery to fetch the rest base url and still got 'not found', so
                         // just return the error response
@@ -148,9 +155,10 @@ class ReactNativeStore
     private suspend fun executeFetch(
         fullRestApiUrl: String,
         params: Map<String, String>,
-        nonce: String?
+        nonce: String?,
+        enableCaching: Boolean
     ): ReactNativeFetchResponse =
-            wpAPIRestClient.fetch(fullRestApiUrl, params, ::Success, ::Error, nonce)
+            wpAPIRestClient.fetch(fullRestApiUrl, params, ::Success, ::Error, nonce, enableCaching)
 
     private fun parseUrlAndParamsForWPCom(
         pathWithParams: String,
@@ -203,6 +211,6 @@ class ReactNativeStore
 private fun Error.statusCode() = error.volleyError?.networkResponse?.statusCode
 
 sealed class ReactNativeFetchResponse {
-    class Success(val result: JsonElement) : ReactNativeFetchResponse()
+    class Success(val result: JsonElement?) : ReactNativeFetchResponse()
     class Error(val error: BaseNetworkError) : ReactNativeFetchResponse()
 }
