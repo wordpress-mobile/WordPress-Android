@@ -14,16 +14,20 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @Reusable
-class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: AccountStore) {
+class ReaderPostUiStateBuilder @Inject constructor(
+    private val accountStore: AccountStore,
+    private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+) {
     fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
@@ -55,8 +59,7 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
     private fun buildBlogUrl(post: ReaderPost) = post
             .takeIf { it.hasBlogUrl() }
             ?.blogUrl
-            // TODO malinjir remove static access
-            ?.let { UrlUtils.removeScheme(it) }
+            ?.let { urlUtilsWrapper.removeScheme(it) }
 
     private fun buildDiscoverSection(post: ReaderPost) =
             post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
@@ -98,18 +101,17 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }
                     ?.blogImageUrl
-                    // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
-                    ?.let { GravatarUtils.fixGravatarUrl(it, 9999) }
+                    // TODO malinjir use R.dimen.avatar_sz_medium
+                    ?.let { gravatarUtilsWrapper.fixGravatarUrl(it, 9999) }
 
-    // TODO malinjir remove static access + remove context
     private fun buildDateLine(post: ReaderPost) =
-            DateTimeUtils.javaDateToTimeSpan(post.displayDate, WordPress.getContext())
+            dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
 
     private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
-        // TODO malinjir remove static access + use R.dimen.avatar_sz_small
-        val discoverAvatarUrl = GravatarUtils.fixGravatarUrl(discoverData.avatarUrl, 9999)
+        // TODO malinjir use R.dimen.avatar_sz_small
+        val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrl(discoverData.avatarUrl, 9999)
         val discoverAvatarImageType = when (discoverData.discoverType) {
             EDITOR_PICK -> AVATAR
             SITE_PICK -> BLAVATAR
