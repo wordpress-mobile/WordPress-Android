@@ -23,6 +23,7 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
@@ -149,13 +150,13 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
         viewModel.showReaderInterests.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.showReaderInterests(this)
+                showReaderInterests()
             }
         })
 
         viewModel.closeReaderInterests.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let {
-                ReaderActivityLauncher.closeReaderInterests(this)
+                closeReaderInterests()
             }
         })
 
@@ -189,6 +190,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
             }
+        }
+    }
+
+    private fun showReaderInterests() {
+        val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+        if (readerInterestsFragment == null) {
+            childFragmentManager.beginTransaction()
+                .replace(
+                    R.id.interests_fragment_container,
+                    ReaderInterestsFragment(),
+                    ReaderInterestsFragment.TAG
+                )
+                .commitNow()
+        }
+    }
+
+    private fun closeReaderInterests() {
+        val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+        if (readerInterestsFragment?.isAdded == true) {
+            childFragmentManager.beginTransaction()
+                .remove(readerInterestsFragment)
+                .commitNow()
         }
     }
 }
