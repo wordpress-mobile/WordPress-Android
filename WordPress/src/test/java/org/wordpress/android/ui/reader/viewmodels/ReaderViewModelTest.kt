@@ -28,6 +28,8 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -70,6 +72,7 @@ class ReaderViewModelTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
+        whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(false)
     }
 
     @Test
@@ -257,6 +260,130 @@ class ReaderViewModelTest {
 
         // Assert
         assertThat(state!!.searchIconVisible).isTrue()
+    }
+
+    @Test
+    fun `Search is disabled on start`() = testWithEmptyUserTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
+        assertThat((uiStates[0] as InitialUiState).searchIconVisible).isFalse()
+    }
+
+    @Test
+    fun `Tab layout is not visible on start`() = testWithEmptyUserTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
+        assertThat((uiStates[0] as InitialUiState).tabLayoutVisible).isFalse()
+    }
+
+    @Test
+    fun `App bar is not expanded on start`() = testWithEmptyUserTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates[0]).isInstanceOf(InitialUiState::class.java)
+        assertThat((uiStates[0] as InitialUiState).appBarExpanded).isFalse()
+    }
+
+    @Test
+    fun `Search is visible when loaded tags are NOT empty`() = testWithNonEmptyTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[1] as ContentUiState).tabLayoutVisible).isTrue()
+    }
+
+    @Test
+    fun `Tab layout is visible when loaded tags are NOT empty`() = testWithNonEmptyTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[1] as ContentUiState).tabLayoutVisible).isTrue()
+    }
+
+    @Test
+    fun `App bar is expanded when loaded tags are NOT empty`() = testWithNonEmptyTags {
+        // Arrange
+        val uiStates = mutableListOf<ReaderUiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        // Act
+        viewModel.start()
+
+        // Assert
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
+        assertThat((uiStates[1] as ContentUiState).appBarExpanded).isTrue()
+    }
+
+    @Test
+    fun `Choose interests screen shown if user's tags list is empty`() = testWithEmptyUserTags {
+        // Act
+        viewModel.start()
+        // Assert
+        assertThat(viewModel.showReaderInterests.value).isNotNull
+    }
+
+    @Test
+    fun `Choose interests screen closed when onCloseReaderInterests is invoked`() = testWithEmptyTags {
+        // Act
+        viewModel.onCloseReaderInterests()
+        // Assert
+        assertThat(viewModel.closeReaderInterests.value).isNotNull
+    }
+
+    @Test
+    fun `updateTabs invoked when onCloseReaderInterests is invoked`() = testWithEmptyTags {
+        // Act
+        viewModel.onCloseReaderInterests()
+        // Assert
+        assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
+    }
+
+    private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
+            block()
+        }
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
