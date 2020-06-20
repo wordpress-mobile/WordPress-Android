@@ -487,7 +487,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     reloadMediaGrid();
                 }
                 break;
-            case RequestCodes.GIF_PICKER:
+            case RequestCodes.GIF_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK
                     && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                     int[] mediaLocalIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
@@ -961,7 +961,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
             case ITEM_CHOOSE_GIF:
-                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
+                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_MULTI_SELECT);
                 break;
         }
     }
