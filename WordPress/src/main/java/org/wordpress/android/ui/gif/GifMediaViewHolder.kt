@@ -47,7 +47,8 @@ class GifMediaViewHolder(
     /**
      * The dimensions used for the ImageView
      */
-    thumbnailViewDimensions: ThumbnailViewDimensions
+    thumbnailViewDimensions: ThumbnailViewDimensions,
+    private val isMultiSelectEnabled: Boolean
 ) : LifecycleOwnerViewHolder<GifMediaViewModel>(itemView) {
     data class ThumbnailViewDimensions(val width: Int, val height: Int)
 
@@ -109,9 +110,21 @@ class GifMediaViewHolder(
     private fun updateNumberTextOnSelectionChange(isSelected: Boolean, animated: Boolean) {
         // The `isSelected` here changes the color of the text. It will be blue when selected.
         selectionNumberTextView.isSelected = isSelected
+        if (!isMultiSelectEnabled) {
+            selectionNumberTextView.visibility = if (isSelected) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+        }
 
         if (animated) {
-            AniUtils.startAnimation(selectionNumberTextView, R.anim.pop)
+            val animResId = if (isSelected && isMultiSelectEnabled) {
+                R.anim.pop_non_filled_after
+            } else {
+                R.anim.pop
+            }
+            AniUtils.startAnimation(selectionNumberTextView, animResId)
         }
     }
 
@@ -144,7 +157,8 @@ class GifMediaViewHolder(
             onClickListener: (GifMediaViewModel?) -> Unit,
             onLongClickListener: (GifMediaViewModel) -> Unit,
             parent: ViewGroup,
-            thumbnailViewDimensions: ThumbnailViewDimensions
+            thumbnailViewDimensions: ThumbnailViewDimensions,
+            isMultiSelectEnabled: Boolean
         ): GifMediaViewHolder {
             // We are intentionally reusing this layout since the UI is very similar.
             val view = LayoutInflater.from(parent.context)
@@ -154,7 +168,8 @@ class GifMediaViewHolder(
                     onClickListener = onClickListener,
                     onLongClickListener = onLongClickListener,
                     itemView = view,
-                    thumbnailViewDimensions = thumbnailViewDimensions
+                    thumbnailViewDimensions = thumbnailViewDimensions,
+                    isMultiSelectEnabled = isMultiSelectEnabled
             )
         }
     }
