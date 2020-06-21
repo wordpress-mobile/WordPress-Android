@@ -339,7 +339,6 @@ class GifPickerViewModel @Inject constructor(
                 val mutableGifMediaViewModel = it.value
                 if (mutableGifMediaViewModel is MutableGifMediaViewModel) {
                     mutableGifMediaViewModel.postIsSelected(false)
-                    mutableGifMediaViewModel.postSelectionNumber(null)
                 }
             }
         }
