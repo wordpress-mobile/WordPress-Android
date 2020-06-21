@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.media_picker_thumbnail.view.*
 import org.wordpress.android.R
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.getDistinct
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
@@ -86,14 +87,14 @@ class GifMediaViewHolder(
 
         // Immediately update the selection number and scale the thumbnail when a bind happens
         val isSelected = mediaViewModel?.isSelected?.value ?: false
-        updateNumberTextOnSelectionChange(isSelected = isSelected, animated = false)
+        updateSelectionIndicatorOnSelectionChange(isSelected = isSelected, animated = false)
         updateThumbnailOnSelectionChange(isSelected = isSelected, animated = false)
 
         // When the [isSelected] property changes later, update the selection number and scale the thumbnail
         mediaViewModel?.isSelected?.observe(this, Observer {
             val selected = it ?: false
 
-            updateNumberTextOnSelectionChange(isSelected = selected, animated = true)
+            updateSelectionIndicatorOnSelectionChange(isSelected = selected, animated = true)
             updateThumbnailOnSelectionChange(isSelected = selected, animated = true)
         })
 
@@ -107,7 +108,7 @@ class GifMediaViewHolder(
         imageManager.load(thumbnailView, PHOTO, mediaViewModel?.thumbnailUri.toString(), CENTER_CROP)
     }
 
-    private fun updateNumberTextOnSelectionChange(isSelected: Boolean, animated: Boolean) {
+    private fun updateSelectionIndicatorOnSelectionChange(isSelected: Boolean, animated: Boolean) {
         // The `isSelected` here changes the color of the text. It will be blue when selected.
         selectionNumberTextView.isSelected = isSelected
         if (!isMultiSelectEnabled) {
@@ -119,12 +120,15 @@ class GifMediaViewHolder(
         }
 
         if (animated) {
-            val animResId = if (isSelected && isMultiSelectEnabled) {
-                R.anim.pop_non_filled_after
+            if (!isMultiSelectEnabled) {
+                if (isSelected) {
+                    AniUtils.scaleIn(selectionNumberTextView, MEDIUM)
+                } else {
+                    AniUtils.scaleOut(selectionNumberTextView, MEDIUM)
+                }
             } else {
-                R.anim.pop
+                AniUtils.startAnimation(selectionNumberTextView, R.anim.pop)
             }
-            AniUtils.startAnimation(selectionNumberTextView, animResId)
         }
     }
 
