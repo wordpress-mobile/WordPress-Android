@@ -6,9 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.MediaUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -50,7 +48,6 @@ class CopyMediaToAppStorageUseCase @Inject constructor(
             // Ref: https://github.com/wordpress-mobile/WordPress-Android/issues/5823
             val errorMessage = "Can't download the image at: $mediaUri See issue #5823"
             AppLog.e(UTILS, errorMessage, e)
-            CrashLoggingUtils.logException(e, MEDIA, errorMessage)
             null
         }
     }
