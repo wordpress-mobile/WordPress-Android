@@ -1093,7 +1093,9 @@ class MySiteFragment : Fragment(),
                         // we need to have a way to cancel the related error notification when the user comes
                         // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
                         // errored story but the error notification will remain existing in the system dashboard)
-                        intent.action = getNotificationIdForError(event.storyIndex).toString() + ""
+                        intent.action = getNotificationIdForError(
+                                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                                event.storyIndex).toString() + ""
 
                         // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
                         // is meant to be used for tracking purposes. Use it!

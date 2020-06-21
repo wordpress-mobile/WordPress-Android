@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -28,6 +29,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
@@ -82,6 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -303,6 +307,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
 //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
+    }
+
+    override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
+        return NotificationsProcessingService
+            .getPendingIntentForNotificationDismiss(
+                applicationContext,
+                notificationId,
+                NotificationType.STORY_SAVE_ERROR
+            )
+    }
+
+    override fun setupErrorNotificationBaseId(): Int {
+        return BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
     }
 
     override fun loadMetadataForStory(index: StoryIndex): Bundle? {
