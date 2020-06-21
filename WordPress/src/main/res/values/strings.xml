@@ -2300,6 +2300,7 @@
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
     <string name="photo_picker_use_media">Use this media</string>
+    <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
     <string name="photo_picker_image_selected">,Selected</string>
