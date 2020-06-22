@@ -1,149 +1,306 @@
 package org.wordpress.android.ui.reader.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.async
+import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.json.JSONObject
+import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.SearchPostsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.SearchPostsStarted
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsStarted
-import org.wordpress.android.ui.reader.repository.ReaderDataRequest.DiscoverRequest
-import org.wordpress.android.ui.reader.repository.ReaderDataRequest.PostsForBlogRequest
-import org.wordpress.android.ui.reader.repository.ReaderDataRequest.PostsForFeedRequest
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.repository.ReaderDataRequest.PostsForTagRequest
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.DeprecationLevel.WARNING
+import kotlin.coroutines.CoroutineContext
 
 // todo: annmarie
 // todo: check for network connectivity
-// todo: add call to service
-// todo: add calls to db
-// todo: move all those classes/interfaces (at tht bottom) elsewhere
+// todo: move all those classes/interfaces (at the bottom) elsewhere
+// todo: remove debug log lines
 class ReaderPostRepository @Inject constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) {
-    private val mutableDiscoverFeed = ReactiveMutableLiveData<ReaderDataWrapper<*>>(
-            onActive = { onActive() }, onInactive = { onInactive() })
-    val discoverFeed: ReactiveMutableLiveData<ReaderDataWrapper<*>> = mutableDiscoverFeed
+) : CoroutineScope {
+    // Holds posts for ReaderTag
+    private val internalPostsForTag: HashMap<ReaderTag, ReaderData> = hashMapOf()
 
+    // externally exposed livedata
+    private val _postsForTag = ReactiveMutableLiveData<ReaderData>(
+            onActive = { onActivePostsForTag() }, onInactive = { onInactivePostsForTag() })
+    val postsForTag: ReactiveMutableLiveData<ReaderData> = _postsForTag
 
-    private suspend fun getMockDiscoverFeed() {
-        return withContext(ioDispatcher) {
-            mutableDiscoverFeed.postValue(
-                ReaderDataWrapper.Success(data = ReaderPostList.fromJson(JSONObject(discoverJson))))
-        }
-    }
+    private var readerTag: ReaderTag? = null
+    private var isStarted = false
 
-    private suspend fun getMockError() {
-        return withContext(ioDispatcher) {
-            mutableDiscoverFeed.postValue(
-                    ReaderDataWrapper.Error.NetworkError(Exception("There was a network error")))
-        }
-    }
-
-    private suspend fun getMockMissingParams() {
-        return withContext(ioDispatcher) {
-            mutableDiscoverFeed.postValue(
-                    ReaderDataWrapper.Error.MissingParams(Exception("BlogId is missing")))
-        }
-    }
-    private suspend fun getMockInProgress() {
-        return withContext(ioDispatcher) {
-            mutableDiscoverFeed.postValue( ReaderDataWrapper.InProgress)
-        }
-    }
-
-    // LiveData callbacks
-    // We can use the same active & inactive listeners across all live data
-    // Not sure if this is going to be used
-    private fun onActive() {
-            Log.i(javaClass.simpleName, "***=> OnActive reached")
+    fun start(startForTag: ReaderTag) {
+        if (isStarted) {
+            return
         }
 
-    private fun onInactive() {
-        Log.i(javaClass.simpleName, "***=> OnInactive reached")
-    }
-
-    suspend fun requestDiscoverFeed(request: DiscoverRequest) {
-        Log.i(javaClass.simpleName, request.toString())
-        withContext(bgDispatcher) {
-            delay(SECONDS.toMillis(5))
-            getMockInProgress()
-            delay(SECONDS.toMillis(5))
-            getMockDiscoverFeed()
-        }
-    }
-
-    suspend fun requestPostsForTag(request: PostsForTagRequest) {
-        Log.i(javaClass.simpleName, request.toString())
-        withContext(bgDispatcher) {
-            delay(SECONDS.toMillis(5))
-            getMockError()
-        }
-    }
-    suspend fun requestPostsForBlog(request: PostsForBlogRequest) {
-        Log.i(javaClass.simpleName, request.toString())
-        withContext(bgDispatcher) {
-            delay(SECONDS.toMillis(5))
-            getMockError()
-        }
-    }
-    suspend fun requestPostsForFeed(request: PostsForFeedRequest) {
-        Log.i(javaClass.simpleName, request.toString())
-        withContext(bgDispatcher) {
-            delay(SECONDS.toMillis(5))
-            getMockMissingParams()
-        }
-    }
-
-    fun start() {
+        isStarted = true
         eventBusWrapper.register(this)
+        readerTag = startForTag
     }
 
     fun stop() {
         eventBusWrapper.unregister(this)
+        parentJob.cancelChildren()
     }
+
+    // Notifications on observers
+    private fun onActivePostsForTag() {
+        loadPostsForTag()
+    }
+
+    private fun onInactivePostsForTag() {
+        // TODO: Not sure if we are going to use this callback method for anything
+    }
+
+    // Local storage calls a.k.a DB calls
+    private fun getPostsForTagFromLocalStorage(readerTag: ReaderTag): ReaderPostList {
+        return ReaderPostTable.getPostsWithTag(
+                readerTag,
+                MAX_ROWS,
+                EXCLUDE_TEXT_COLUMN
+        )
+    }
+
+    private fun getNumPostsForTagFromLocalStorage(readerTag: ReaderTag): Int {
+        return ReaderPostTable.getNumPostsWithTag(readerTag)
+    }
+
+    // The initial request is always REQUEST_NEWER, so make that the default
+    private fun requestPostsForTagFromRemoteStorage(
+        readerTag: ReaderTag,
+        updateAction: UpdateAction = REQUEST_NEWER
+    ) {
+        ReaderPostServiceStarter.startServiceForTag(
+                contextProvider.getContext(),
+                readerTag,
+                updateAction
+        )
+    }
+
+    private fun shouldAutoUpdateTag(readerTag: ReaderTag?): Boolean {
+        return if (readerTag == null) {
+            true
+        } else {
+            ReaderTagTable.shouldAutoUpdateTag(readerTag)
+        }
+    }
+
+    // Load posts
+    private fun loadPostsForTag() {
+        val tag = readerTag ?: return
+
+        launch {
+            val existsInternalPostsForTag = internalPostsForTag.contains(tag)
+            val refresh = shouldAutoUpdateTag(tag)
+
+            if (existsInternalPostsForTag) {
+                _postsForTag.postValue(internalPostsForTag[tag]?.copy(readerTag = tag))
+            } else {
+                val result = runCatching { getPostsForTag(tag) }
+                result.onSuccess {
+                    internalPostsForTag[tag] = it
+                    _postsForTag.postValue(internalPostsForTag[tag]?.copy(readerTag = tag))
+                }
+                        .onFailure {
+                            _postsForTag.postValue(
+                                    internalPostsForTag[tag]?.copy(
+                                            readerTag = tag,
+                                            status = ReaderDataStatus.Error.RetrievalError(
+                                                    Exception(it)
+                                            )
+                                    )
+                            )
+                        }
+            }
+            if (refresh) {
+                requestPostsForTagFromRemoteStorage(tag)
+            }
+        }
+    }
+
+    // Reload posts
+    private fun reloadPostsForTag() {
+        val tag = readerTag ?: return
+
+        launch {
+            val result = runCatching { getPostsForTag(tag) }
+            result.onSuccess {
+                internalPostsForTag[tag] = it
+                _postsForTag.postValue(internalPostsForTag[tag]?.copy(readerTag = tag))
+            }
+                    .onFailure {
+                        _postsForTag.postValue(
+                                internalPostsForTag[tag]?.copy(
+                                        readerTag = tag,
+                                        status = ReaderDataStatus.Error.RetrievalError(
+                                                Exception(it)
+                                        )
+                                )
+                        )
+                    }
+        }
+    }
+
+    // Need to get the count & the data at the same time together
+    // once you call await, you suspend the parent (the "withContext" until the value arrives)
+    // works like a future promise but with coroutines
+    private suspend fun getPostsForTag(readerTag: ReaderTag): ReaderData =
+            withContext(ioDispatcher) {
+                logCoroutine("getPostsForTag", coroutineContext)
+
+                val postsForTagFromLocalDeferred = async {
+                    logCoroutine("postsForTagFromLocalDeferred", coroutineContext)
+                    getPostsForTagFromLocalStorage(readerTag)
+                }
+
+                val totalPostsForTagFromLocalDeferred = async {
+                    logCoroutine("totalPostsForTagFromLocalDeferred", coroutineContext)
+                    getNumPostsForTagFromLocalStorage(readerTag)
+                }
+
+                val readerPostList = postsForTagFromLocalDeferred.await()
+                val totalEntriesForTag = totalPostsForTagFromLocalDeferred.await()
+
+                ReaderData(
+                        readerTag = null, data = readerPostList, totalEntries = totalEntriesForTag,
+                        state = ReaderDataState.Completed, status = ReaderDataStatus.Success
+                )
+            }
+
+    // public functions
+    fun requestPostsForTag(request: PostsForTagRequest) {
+        requestPostsForTagFromRemoteStorage(request.readerTag, request.action)
+        readerTag = request.readerTag
+    }
+
+    // coroutine related - there may be some injectables that I am not aware of - ask jirka
+    private val parentJob = SupervisorJob() // a job that can cancel all its children at once
+
+    private val coroutineExceptionHandler =
+            CoroutineExceptionHandler { context, throwable ->
+                throwable.printStackTrace()
+            }
+
+    override val coroutineContext: CoroutineContext
+        get() = ioDispatcher + parentJob + coroutineExceptionHandler
 
     // Event Bus events emitted from ReaderPostLogic (
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdatePostsStarted) {
-        Log.i(javaClass.simpleName, "***=> Received UpdatePostsStarted for ${event.readerTag?.tagNameForLog}")
+        val eventTag = event.readerTag ?: return
+        if (isCurrentTag(eventTag)) {
+            // ignore events not related to this instance of ReaderPostRepository
+            return
+        }
+        Log.i(
+             javaClass.simpleName,
+                "***=> Received UpdatePostsStarted for ${event.readerTag?.tagNameForLog}"
+        )
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
-        Log.i(javaClass.simpleName, "***=> Received UpdatePostsEnded for ${event.readerTag?.tagNameForLog}")
-        val stuff = event.result
+        if (event.readerTag != null && !isCurrentTag(event.readerTag)) {
+            // ignore events not related to this instance of ReaderPostRepository
+            return
+        }
+
+        Log.i(javaClass.simpleName, "***=> Received UpdatePostsEnded for Action ${event.action}")
+        Log.i(javaClass.simpleName,
+                "***=> Received UpdatePostsEnded for Tag ${event.readerTag?.tagNameForLog}"
+        )
+
+        event.result?.let {
+            when (it) {
+                HAS_NEW -> {
+                    Log.i(javaClass.simpleName, "***=> is new")
+                    reloadPostsForTag()
+                }
+                CHANGED -> {
+                    Log.i(javaClass.simpleName, "***=> is changed")
+                    reloadPostsForTag()
+                }
+                UNCHANGED -> {
+                    Log.i(javaClass.simpleName, "***=> is unchanged")
+                }
+                FAILED -> {
+                    Log.i(javaClass.simpleName, "***=> is failed")
+                    // todo: what are we doing about failures?
+                }
+            }
+        }
+    }
+
+    private fun isCurrentTag(tag: ReaderTag): Boolean {
+        return ReaderTag.isSameTag(tag, readerTag)
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: SearchPostsStarted) {
-        Log.i(javaClass.simpleName, "***=> Received SearchPostsStarted")
+        Log.i(javaClass.simpleName, "***=> TODO")
     }
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: SearchPostsEnded) {
-        Log.i(javaClass.simpleName, "***=> Received SearchPostsEnded")
+        Log.i(javaClass.simpleName, "***=> TODO")
     }
 
+    // Keep discover fragment working while testing
+    suspend fun getDiscoveryFeed(): LiveData<ReaderPostList> =
+            withContext(bgDispatcher) {
+                delay(SECONDS.toMillis(5))
+                getMockDiscoverFeed()
+            }
+
+    private suspend fun getMockDiscoverFeed(): LiveData<ReaderPostList> {
+        return withContext(ioDispatcher) {
+            mutableDiscoverFeed.postValue(ReaderPostList.fromJson(JSONObject(discoverJson)))
+            mutableDiscoverFeed
+        }
+    }
+
+    private val mutableDiscoverFeed = MutableLiveData<ReaderPostList>()
+    val discoveryFeed: MutableLiveData<ReaderPostList> = mutableDiscoverFeed
 
     companion object {
+        private const val EXCLUDE_TEXT_COLUMN = true
+        private const val MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
+
         const val discoverJson = "{\n" +
                 "  \"found\": 3978,\n" +
                 "  \"posts\": [\n" +
@@ -563,31 +720,59 @@ class ReaderPostRepository @Inject constructor(
     // Old Stub methods end
 }
 
-
+/***
+ * Used for data requests requested from the Reader repositories
+ */
 sealed class ReaderDataRequest(val action: UpdateAction) {
-    class DiscoverRequest(val interests: List<String>, action: UpdateAction) : ReaderDataRequest(action)
-    class PostsForTagRequest(val tag: ReaderTag,  action: UpdateAction) : ReaderDataRequest(action)
-    class PostsForBlogRequest(val blogId: Long,  action: UpdateAction) : ReaderDataRequest(action)
-    class PostsForFeedRequest(val feedId: Long,  action: UpdateAction) : ReaderDataRequest(action)
-
-    //todo build out the request - because we will need quite a bit of information to pull the
-    //data from the database tables (see ReaderPostAdapter for all the other stuff that we
-    //need. AUGH
+    class DiscoverRequest(val interests: List<String>, action: UpdateAction) : ReaderDataRequest(
+            action
+    )
+    class PostsForTagRequest(val readerTag: ReaderTag, action: UpdateAction) : ReaderDataRequest(
+            action
+    )
+    class PostsForBlogRequest(val blogId: Long, action: UpdateAction) : ReaderDataRequest(action)
+    class PostsForFeedRequest(val feedId: Long, action: UpdateAction) : ReaderDataRequest(action)
 
     override fun toString(): String {
         return "${this.javaClass.simpleName}($action)"
     }
 }
 
-sealed class ReaderDataWrapper<out T : Any> {
-    data class Success<out T : Any>(val data: T) : ReaderDataWrapper<T>()
-    sealed class Error(val exception: Exception) : ReaderDataWrapper<Nothing>() {
+private fun newReaderData() =
+        ReaderData(null, ReaderPostList(), null, ReaderDataState.Started, ReaderDataStatus.Success)
+
+// Contains the readerPostList, the total number of entries available at time of request which is
+// up for debate as a separate call - the reader adapter uses this value to determine UI features,
+// so quite possibly it should stay together
+// This data wrapper is by NO means FINAL
+// We need to decide how to return state/status & what that looks like
+//  Should it be part of the wrapper
+//  Should there be another observer
+data class ReaderData(
+    val readerTag: ReaderTag?, val data: ReaderPostList, val totalEntries: Int?,
+    val state: ReaderDataState, val status: ReaderDataStatus
+)
+
+sealed class ReaderDataState {
+    object Started : ReaderDataState()
+    object Completed : ReaderDataState()
+
+    override fun toString(): String {
+        return "${this.javaClass.simpleName})"
+    }
+}
+
+// need a way to get errors back to the caller, so they can make UI decisions for
+// communication back to the user. Super important.
+// Should the requester listen to a separate endpoint for requestErrors?
+sealed class ReaderDataStatus {
+    object Success : ReaderDataStatus()
+    sealed class Error(val exception: Exception) : ReaderDataStatus() {
         class NetworkError(exception: Exception) : Error(exception)
         class NotFoundError(exception: Exception) : Error(exception)
-        class MissingParams(exception: Exception) : Error(exception)
-        // todo: we could identify errors and create classes as needed
+        class MissingParamsError(exception: Exception) : Error(exception)
+        class RetrievalError(exception: Exception) : Error(exception)
     }
-    object InProgress : ReaderDataWrapper<Nothing>()
 
     override fun toString(): String {
         return "${this.javaClass.simpleName})"
@@ -598,15 +783,16 @@ sealed class ReaderDataWrapper<out T : Any> {
  * The main purpose is to monitor onActive and onInactive
  *  situations because they are unreachable using straight up LiveData
  */
-class ReactiveMutableLiveData<T>(private val onReactiveListener : OnReactiveListener):
+class ReactiveMutableLiveData<T>(private val onReactiveListener: OnReactiveListener) :
         MutableLiveData<T>() {
     // Allow a way to hook up the external listeners
     constructor(onActive: () -> Unit = {}, onInactive: () -> Unit = {}) : this(
             setReactiveListener(onActive, onInactive)
     )
+
     override fun onActive() {
         Log.i(javaClass.simpleName, "***=> OnActive")
-       onReactiveListener.onActive()
+        onReactiveListener.onActive()
     }
 
     override fun onInactive() {
@@ -619,7 +805,7 @@ class ReactiveMutableLiveData<T>(private val onReactiveListener : OnReactiveList
          * Creates a OnReactiveListener that can be passed into the constructor
          */
         fun setReactiveListener(onActive: () -> Unit, onInactive: () -> Unit): OnReactiveListener {
-            return object: OnReactiveListener {
+            return object : OnReactiveListener {
                 override fun onActive() {
                     onActive.invoke()
                 }
@@ -637,56 +823,12 @@ interface OnReactiveListener {
     fun onInactive()
 }
 
-// Bad Ideas
-// This may be a bad idea, but we have two options for getting requests to the repo
-// (1) Send a request through a single "invoke" method
-// (2) Use the discoverFeedRequest as a stream and process each as it comes it
-// Note: Track requests so we don't send duplicates, but each fragment/vm pair should
-// only request what is needed for their tab.
-// private val discoverFeedRequestObserver = Observer<DiscoverRequest> { request ->
-//    request?.let {
-//        Log.i(javaClass.simpleName, "***=> a request has been made for the discover feed")
-//    }
-// }
-// Bad Ideas for evebt bus listening based upon onAcitve or onInactive observers
-///**
-// * Check if the eventBus has been registered for this subscriber and if not, start it
-// * This fun is probably not be necc.
-// */
-//private fun setup() {
-//    // Make sure that EventBus is registered if not already
-//    if (EventBus.getDefault().isRegistered(this)) {
-//        return
-//    }
-//    start()
-//}
-//
-///**
-// * Iterate through the data and if no one is observering, shut down the bus - I wonder
-// * if that is an operation that we want to do over and over again. Good question to pose
-// * this fun is probably not necc.
-// */
-//private fun tearDown() {
-//    if (mutableDiscoverFeed.hasActiveObservers() || mutableDiscoverFeed.hasObservers()) {
-//        return
-//    }
-//    stop()
-//}
-// Old Stub methods start
-//    private val mutableDiscoverFeed = ReactiveMutableLiveData<ReaderPostList>(
-//            onActive = { onActive() }, onInactive = { onInactive() })
-//    val discoverFeed: ReactiveMutableLiveData<ReaderPostList> = mutableDiscoverFeed
-//
-//    suspend fun getDiscoveryFeed(): LiveData<ReaderPostList> =
-//            withContext(bgDispatcher) {
-//                delay(SECONDS.toMillis(5))
-//                getMockDiscoverFeed()
-//            }
-//
-//    private suspend fun getMockDiscoverFeed(): LiveData<ReaderPostList> {
-//        return withContext(ioDispatcher) {
-//            mutableDiscoverFeed.postValue( ReaderPostList.fromJson(JSONObject(discoverJson))))
-//        }
-//    }
+/** logs coroutine info for debugging */
 
-
+@Deprecated(level = WARNING, message = "For testing only and will be removed")
+fun logCoroutine(methodName: String, coroutineContext: CoroutineContext) {
+    Log.d(
+            "testCoroutine", "Thread for $methodName ${Thread.currentThread().name}" +
+            " and the context is $coroutineContext"
+    )
+}
