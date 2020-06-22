@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
-import org.wordpress.android.WordPress
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -14,16 +14,20 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
-import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.GravatarUtils
-import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.UrlUtilsWrapper
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
-import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @Reusable
-class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: AccountStore) {
+class ReaderPostUiStateBuilder @Inject constructor(
+    private val accountStore: AccountStore,
+    private val urlUtilsWrapper: UrlUtilsWrapper,
+    private val gravatarUtilsWrapper: GravatarUtilsWrapper,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+) {
     fun mapPostToUiState(post: ReaderPost, photonWidth: Int, photonHeight: Int): ReaderPostUiState {
         // TODO malinjir onPostContainer click
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
@@ -33,7 +37,8 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
         // TODO malinjir likes action
 
         return ReaderPostUiState(
-                id = post.postId,
+                postId = post.postId,
+                blogId = post.blogId,
                 blogUrl = buildBlogUrl(post),
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
@@ -55,8 +60,7 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
     private fun buildBlogUrl(post: ReaderPost) = post
             .takeIf { it.hasBlogUrl() }
             ?.blogUrl
-            // TODO malinjir remove static access
-            ?.let { UrlUtils.removeScheme(it) }
+            ?.let { urlUtilsWrapper.removeScheme(it) }
 
     private fun buildDiscoverSection(post: ReaderPost) =
             post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
@@ -74,7 +78,6 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
 
     private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
-                // TODO malinjir can we just check hasFeaturedImage or can it return true for video and gallery types?
                 .takeIf { (it.cardType == PHOTO || it.cardType == DEFAULT) && it.hasFeaturedImage() }
                 ?.getFeaturedImageForDisplay(photonWidth, photonHeight)
     }
@@ -98,18 +101,18 @@ class ReaderPostUiStateBuilder @Inject constructor(private val accountStore: Acc
     private fun buildAvatarOrBlavatarUrl(post: ReaderPost) =
             post.takeIf { it.hasBlogImageUrl() }
                     ?.blogImageUrl
-                    // TODO malinjir remove static access + use R.dimen.avatar_sz_medium
-                    ?.let { GravatarUtils.fixGravatarUrl(it, 9999) }
+                    ?.let { gravatarUtilsWrapper.fixGravatarUrlWithResource(it, R.dimen.avatar_sz_medium) }
 
-    // TODO malinjir remove static access + remove context
     private fun buildDateLine(post: ReaderPost) =
-            DateTimeUtils.javaDateToTimeSpan(post.displayDate, WordPress.getContext())
+            dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
 
     private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
-        // TODO malinjir remove static access + use R.dimen.avatar_sz_small
-        val discoverAvatarUrl = GravatarUtils.fixGravatarUrl(discoverData.avatarUrl, 9999)
+        val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
+                discoverData.avatarUrl,
+                R.dimen.avatar_sz_small
+        )
         val discoverAvatarImageType = when (discoverData.discoverType) {
             EDITOR_PICK -> AVATAR
             SITE_PICK -> BLAVATAR
