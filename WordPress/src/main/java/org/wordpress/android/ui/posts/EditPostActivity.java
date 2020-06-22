@@ -187,6 +187,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -362,6 +363,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReblogUtils mReblogUtils;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
+    @Inject TenorFeatureConfig mTenorFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2010,7 +2012,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
                                 themeBundle,
-                                BuildConfig.TENOR_AVAILABLE);
+                                mTenorFeatureConfig.isEnabled());
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
