@@ -4,7 +4,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings.Builder
 import org.wordpress.android.BuildConfig
-import org.wordpress.android.R
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.UTILS
 import javax.inject.Inject
@@ -20,7 +19,7 @@ class RemoteConfig
                 .setMinimumFetchIntervalInSeconds(BuildConfig.REMOTE_CONFIG_FETCH_INTERVAL)
                 .build()
         firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+        firebaseRemoteConfig.setDefaultsAsync(RemoteConfigDefaults.remoteConfigDefaults)
         firebaseRemoteConfig.fetchAndActivate()
                 .addOnCompleteListener { task: Task<Boolean?> ->
                     if (task.isSuccessful) {
