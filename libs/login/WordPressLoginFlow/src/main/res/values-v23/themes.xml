@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Overload of Login Theme -->
-    <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
+    <style name="Theme.LoginFlow" parent="Base.Theme.LoginFlow">
         <item name="android:statusBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>

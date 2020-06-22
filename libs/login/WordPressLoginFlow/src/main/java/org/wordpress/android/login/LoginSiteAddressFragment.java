@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -93,22 +95,28 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         }
         mSiteAddressInput.addTextChangedListener(this);
         mSiteAddressInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.login_site_address_help);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_site_address_help_button).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSiteAddressHelp();
             }
         });
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 discover();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override

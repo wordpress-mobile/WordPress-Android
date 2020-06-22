@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -57,10 +56,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onAfterLoad();
     }
 
-    public interface HeaderHandler {
-        RecyclerView.ViewHolder onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent,
-                                                   boolean attachToRoot);
-        void onBindViewHolder(RecyclerView.ViewHolder holder, SiteList sites);
+    public interface ViewHolderHandler<T extends RecyclerView.ViewHolder> {
+        T onCreateViewHolder(LayoutInflater layoutInflater, ViewGroup parent, boolean attachToRoot);
+
+        void onBindViewHolder(T holder, SiteList sites);
     }
 
     private final @LayoutRes int mItemLayoutReourceId;
@@ -76,7 +75,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final LayoutInflater mInflater;
     private final HashSet<Integer> mSelectedPositions = new HashSet<>();
-    private final HeaderHandler mHeaderHandler;
+    private final ViewHolderHandler mHeaderHandler;
+    private final ViewHolderHandler mFooterHandler;
 
     private boolean mIsMultiSelectEnabled;
     private final boolean mIsInSearchMode;
@@ -98,6 +98,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
+    private static final int VIEW_TYPE_FOOTER = 2;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -140,7 +141,20 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                              String lastSearch,
                              boolean isInSearchMode,
                              OnDataLoadedListener dataLoadedListener,
-                             HeaderHandler headerHandler,
+                             ViewHolderHandler<?> headerHandler,
+                             ArrayList<Integer> ignoreSitesIds) {
+        this(context, itemLayoutResourceId, currentLocalBlogId, lastSearch, isInSearchMode, dataLoadedListener,
+                headerHandler, null, ignoreSitesIds);
+    }
+
+    public SitePickerAdapter(Context context,
+                             @LayoutRes int itemLayoutResourceId,
+                             int currentLocalBlogId,
+                             String lastSearch,
+                             boolean isInSearchMode,
+                             OnDataLoadedListener dataLoadedListener,
+                             ViewHolderHandler<?> headerHandler,
+                             ViewHolderHandler<?> footerHandler,
                              ArrayList<Integer> ignoreSitesIds) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
@@ -165,6 +179,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         context.getResources().getInteger(R.integer.selected_list_item_opacity));
 
         mHeaderHandler = headerHandler;
+        mFooterHandler = footerHandler;
         mSelectedItemPos = getPositionOffset();
 
         mIgnoreSitesIds = ignoreSitesIds;
@@ -174,7 +189,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemCount() {
-        return (mHeaderHandler != null ? 1 : 0) + mSites.size();
+        return (mHeaderHandler != null ? 1 : 0) + mSites.size() + (mFooterHandler != null ? 1 : 0);
     }
 
     private int getSitesCount() {
@@ -183,8 +198,11 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public long getItemId(int position) {
-        if (mHeaderHandler != null && position == 0) {
-            return RecyclerView.NO_ID;
+        int viewType = getItemViewType(position);
+        if (viewType == VIEW_TYPE_HEADER) {
+            return -1;
+        } else if (viewType == VIEW_TYPE_FOOTER) {
+            return -2;
         } else {
             return getItem(position).mLocalId;
         }
@@ -192,10 +210,12 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        if (mHeaderHandler == null) {
-            return VIEW_TYPE_ITEM;
+        if (mHeaderHandler != null && position == 0) {
+            return VIEW_TYPE_HEADER;
+        } else if (mFooterHandler != null && position == getItemCount() - 1) {
+            return VIEW_TYPE_FOOTER;
         } else {
-            return position == 0 ? VIEW_TYPE_HEADER : VIEW_TYPE_ITEM;
+            return VIEW_TYPE_ITEM;
         }
     }
 
@@ -221,6 +241,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_HEADER) {
             return mHeaderHandler.onCreateViewHolder(mInflater, parent, false);
+        } else if (viewType == VIEW_TYPE_FOOTER) {
+            return mFooterHandler.onCreateViewHolder(mInflater, parent, false);
         } else {
             View itemView = mInflater.inflate(mItemLayoutReourceId, parent, false);
             return new SiteViewHolder(itemView);
@@ -236,12 +258,17 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
+        if (viewType == VIEW_TYPE_FOOTER) {
+            mFooterHandler.onBindViewHolder(viewHolder, mSites);
+            return;
+        }
+
         SiteRecord site = getItem(position);
 
         final SiteViewHolder holder = (SiteViewHolder) viewHolder;
         holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
         holder.mTxtDomain.setText(site.mHomeURL);
-        mImageManager.load(holder.mImgBlavatar, ImageType.BLAVATAR, site.mBlavatarUrl);
+        mImageManager.loadWithRoundedCorners(holder.mImgBlavatar, ImageType.BLAVATAR_ROUNDED, site.mBlavatarUrl);
 
 
         if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled)
@@ -255,8 +282,6 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder.mIsSiteHidden == null || holder.mIsSiteHidden != site.mIsHidden) {
             holder.mIsSiteHidden = site.mIsHidden;
             holder.mTxtTitle.setAlpha(site.mIsHidden ? mDisabledSiteOpacity : 1f);
-            holder.mTxtTitle
-                    .setTypeface(holder.mTxtTitle.getTypeface(), site.mIsHidden ? Typeface.NORMAL : Typeface.BOLD);
             holder.mImgBlavatar.setAlpha(site.mIsHidden ? mDisabledSiteOpacity : 1f);
         }
 

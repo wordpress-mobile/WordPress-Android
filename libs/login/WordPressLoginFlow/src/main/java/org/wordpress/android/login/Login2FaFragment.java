@@ -18,7 +18,9 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -89,7 +91,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     ArrayList<Integer> mOldSitesIDs;
 
-    private Button mSecondaryButton;
+    private Button mOtpButton;
     private String mEmailAddress;
     private String mIdToken;
     private String mNonce;
@@ -172,12 +174,10 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
         // restrict the allowed input chars to just numbers
         m2FaInput.getEditText().setKeyListener(DigitsKeyListener.getInstance("0123456789"));
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.login_text_otp);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        mOtpButton = rootView.findViewById(R.id.login_otp_button);
+        mOtpButton.setText(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp);
+        mOtpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isAdded()) {
@@ -185,14 +185,21 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 }
             }
         });
-        secondaryButton.setText(getString(mSentSmsCode ? R.string.login_text_otp_another : R.string.login_text_otp));
-        mSecondaryButton = secondaryButton;
+    }
 
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();
             }
         });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
     }
 
     @Override
@@ -516,7 +523,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
 
     private void setTextForSms() {
         mLabel.setText(getString(R.string.enter_verification_code_sms, mPhoneNumber));
-        mSecondaryButton.setText(getString(R.string.login_text_otp_another));
+        mOtpButton.setText(getString(R.string.login_text_otp_another));
         mSentSmsCode = true;
     }
 }

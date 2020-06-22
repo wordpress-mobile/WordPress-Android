@@ -10,16 +10,22 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.login.LoginWpcomService.LoginState;
 import org.wordpress.android.login.LoginWpcomService.OnCredentialsOK;
+import org.wordpress.android.login.util.AvatarHelper;
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 import org.wordpress.android.login.util.SiteUtils;
 import org.wordpress.android.login.widgets.WPLoginInputRow;
 import org.wordpress.android.login.widgets.WPLoginInputRow.OnEditorCommitListener;
@@ -145,16 +151,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     protected void setupContent(ViewGroup rootView) {
         // important for accessibility - talkback
         getActivity().setTitle(R.string.selfhosted_site_login_title);
-        ((TextView) rootView.findViewById(R.id.login_email)).setText(mEmailAddress);
 
         mPasswordInput = rootView.findViewById(R.id.login_password_row);
         mPasswordInput.setOnEditorCommitListener(this);
-    }
 
-    @Override
-    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
-        secondaryButton.setText(R.string.forgot_password);
-        secondaryButton.setOnClickListener(new OnClickListener() {
+        rootView.findViewById(R.id.login_reset_password).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mLoginListener != null) {
@@ -162,6 +163,28 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 }
             }
         });
+
+        final ProgressBar avatarProgressBar = rootView.findViewById(R.id.avatar_progress);
+        final ImageView avatarView = rootView.findViewById(R.id.gravatar);
+        final TextView emailView = rootView.findViewById(R.id.email);
+
+        emailView.setText(mEmailAddress);
+
+        AvatarHelper.loadAvatarFromEmail(this, mEmailAddress, avatarView, new AvatarRequestListener() {
+            @Override public void onRequestFinished() {
+                avatarProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    @Override
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        actionBar.setTitle(R.string.log_in);
+    }
+
+    @Override
+    protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
+        secondaryButton.setVisibility(View.GONE);
         primaryButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 next();

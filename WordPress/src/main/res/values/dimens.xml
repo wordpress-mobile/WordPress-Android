@@ -154,7 +154,8 @@
     <dimen name="avatar_sz_medium">38dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
-    <dimen name="avatar_sz_login">100dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
@@ -263,14 +264,13 @@
     <dimen name="me_list_row_padding_horizontal">@dimen/content_margin</dimen>
 
     <!--site picker-->
-    <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
-    <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <dimen name="site_list_item_height">64dp</dimen>
 
     <!-- Site Settings -->
     <dimen name="site_settings_divider_height">1dp</dimen>
@@ -327,7 +327,6 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
