@@ -601,7 +601,6 @@ public class ReaderPostListFragment extends Fragment
 
         mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
                 isFollowingScreen());
-        mNewPostsBar.clearAnimation();
     }
 
     @Override
@@ -752,6 +751,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
+        mNewPostsBar.clearAnimation();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }
