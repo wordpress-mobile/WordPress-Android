@@ -10,6 +10,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -47,10 +48,25 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
-                        postUiStateBuilder.mapPostToUiState(it, photonWidth, photonHeight)
+                        postUiStateBuilder.mapPostToUiState(
+                                post = it,
+                                photonWidth = photonWidth,
+                                photonHeight = photonHeight,
+                                isBookmarkList = false,
+                                onBookmarkClicked = this::onBookmarkClicked,
+                                onLikeClicked = this::onLikeClicked
+                        )
                     }
             )
         }
+    }
+
+    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
     }
 
     private fun loadPosts() {
@@ -86,7 +102,9 @@ class ReaderDiscoverViewModel @Inject constructor(
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisibility: Boolean,
             val moreMenuVisibility: Boolean,
-            val photoFrameVisibility: Boolean
+            val photoFrameVisibility: Boolean,
+            val bookmarkAction: ActionUiState,
+            val likeAction: ActionUiState
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
@@ -94,6 +112,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
                 val imageType: ImageType
+            )
+
+            data class ActionUiState(
+                val isEnabled: Boolean,
+                val isSelected: Boolean? = false,
+                val contentDescription: UiString? = null,
+                val count: Int = 0,
+                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
             )
         }
     }
