@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.EditText;
@@ -116,6 +117,15 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         mSecondaryButton = (Button) rootView.findViewById(R.id.secondary_button);
         setupBottomButtons(mSecondaryButton, mPrimaryButton);
 
+        // Set the primary button width to match_parent if the secondary button doesn't exist or isn't visible.
+        // This can be removed after we get rid of the unified flow feature flag.
+        if ((mSecondaryButton == null || mSecondaryButton.getVisibility() == View.GONE)
+            && (mPrimaryButton != null && mPrimaryButton.getVisibility() == View.VISIBLE)) {
+            final LayoutParams layoutParams = mPrimaryButton.getLayoutParams();
+            layoutParams.width = LayoutParams.MATCH_PARENT;
+            mPrimaryButton.setLayoutParams(layoutParams);
+        }
+
         return rootView;
     }
 
@@ -128,13 +138,21 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
+            buildToolbar(toolbar, actionBar);
         }
 
         if (savedInstanceState == null) {
             EditTextUtils.showSoftInput(getEditTextToFocusOnStart());
         }
+    }
+
+    protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        View toolbarIcon = toolbar.findViewById(R.id.toolbar_icon);
+        if (toolbarIcon != null) {
+            toolbarIcon.setVisibility(View.VISIBLE);
+        }
+        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     @Override

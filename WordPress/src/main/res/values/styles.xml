@@ -258,10 +258,6 @@
         <item name="backgroundTint">@color/secondary_disabled_selector</item>
     </style>
 
-    <style name="WordPress.Button.Primary.Unelevated" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="backgroundTint">@color/secondary_disabled_selector</item>
-    </style>
-
     <!-- NUX Styles -->
     <style name="WordPress.NUXPrimaryButton">
         <item name="android:textColor">@color/white_neutral_10_selector</item>
@@ -909,94 +905,25 @@
         <item name="android:layout_weight">20</item>
     </style>
 
-    <!-- Overload of Login Theme -->
-    <style name="Base.LoginTheme" parent="WordPress.NoActionBar">
-        <item name="android:statusBarColor">@android:color/black</item>
-    </style>
-
-    <style name="LoginTheme" parent="Base.LoginTheme">
-        <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
-    </style>
-
-    <style name="LoginTheme.ActionBar" parent="WordPress.ActionBar">
-        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
-    </style>
-
-    <style name="LoginTheme.Button.Primary" parent="WordPress.Button.Primary.Unelevated">
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-    </style>
-
-    <style name="LoginTheme.BottomBar" parent="@style/Widget.MaterialComponents.CardView">
-        <item name="cardElevation">@dimen/appbar_elevation</item>
-        <item name="cardCornerRadius">0dp</item>
-    </style>
-
-    <style name="LoginTheme.Button.Secondary" parent="@style/Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?attr/colorPrimary</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
-    </style>
-
-    <style name="LoginTheme.Button.SignUp" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-    </style>
-
-    <style name="LoginTheme.Button.LoginOption" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel.Icon">
-        <item name="tint">?attr/colorPrimary</item>
-        <item name="android:tintMode">src_in</item>
-    </style>
-
-    <style name="LoginTheme.TextLabel" parent="TextAppearance.MaterialComponents.Body2">
-        <item name="android:lineSpacingExtra">2dp</item>
-    </style>
-
-    <style name="LoginTheme.InputLabelStatic" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.EditText" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="startIconTint">?attr/colorPrimary</item>
-        <item name="endIconTint">?attr/colorPrimary</item>
-        <item name="endIconDrawable">@drawable/ic_arrow_left_white_24dp</item>
-    </style>
-
-    <style name="LoginTheme.PromoTitle" parent="TextAppearance.MaterialComponents.Headline4">
+    <!-- To use with the LoginFlow Theme -->
+    <style name="Widget.LoginFlow.TextView.PromoTitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:maxLines">2</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="android:textSize">@dimen/prologue_promo_title_size</item>
         <item name="fixWidowWords">true</item>
-        <item name="fontFamily">serif</item>
     </style>
 
-    <style name="LoginTheme.PromoText" parent="TextAppearance.MaterialComponents.Headline5">
+    <style name="Widget.LoginFlow.TextView.PromoSubtitle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:maxLines">2</item>
         <item name="autoSizeTextType">uniform</item>
         <item name="android:textSize">@dimen/prologue_promo_text_size</item>
         <item name="fixWidowWords">true</item>
-    </style>
-
-    <style name="LoginTheme.SiteTitle" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.SiteUrl" parent="TextAppearance.MaterialComponents.Body2" />
-
-    <style name="LoginTheme.Heading" parent="TextAppearance.MaterialComponents.Subtitle2" />
-
-    <style name="LoginTheme.Subhead" parent="TextAppearance.MaterialComponents.Subtitle1">
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="LoginTheme.Username" parent="TextAppearance.MaterialComponents.Subtitle1" />
-
-    <style name="LoginTheme.Footnote" parent="TextAppearance.MaterialComponents.Caption" />
-
-    <style name="LoginEpilogueSitesList">
-        <item name="colorControlHighlight">@android:color/transparent</item>
+        <item name="fontFamily">sans-serif</item>
     </style>
 
     <!-- Main actions styles -->

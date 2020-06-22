@@ -32,7 +32,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottom_buttons"
-        style="@style/LoginTheme.BottomBar"
+        style="@style/Widget.LoginFlow.CardView.BottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.CustomTarget
@@ -32,6 +33,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.DisplayUtils
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -144,6 +146,32 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .circleCrop()
                 .attachRequestListener(requestListener)
                 .addSignature(version)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUrl" into the ImageView and applies a rounded corner transformation. Adds placeholder
+     * and error placeholder depending on the ImageType.
+     *
+     * If no URL is provided, it only loads the placeholder
+     */
+    @JvmOverloads
+    fun loadWithRoundedCorners(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String = "",
+        cornerRadius: Int = 4,
+        scaleType: ScaleType = CENTER
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(imgUrl)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .applyScaleType(scaleType)
+                .transform(RoundedCorners(DisplayUtils.dpToPx(context, cornerRadius)))
                 .into(imageView)
                 .clearOnDetach()
     }
