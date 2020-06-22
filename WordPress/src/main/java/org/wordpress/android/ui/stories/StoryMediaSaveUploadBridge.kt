@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.Lifecycle.Event.ON_CREATE
 import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
@@ -55,6 +56,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 ) : CoroutineScope, LifecycleObserver, EditorMediaListener {
     // region Fields
     private var job: Job = Job()
+    private lateinit var appContext: Context
 
     override val coroutineContext: CoroutineContext
         get() = mainDispatcher + job
@@ -77,6 +79,10 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         eventBusWrapper.unregister(this)
     }
 
+    fun init(context: Context) {
+        appContext = context
+    }
+
     // region Adding new composed / processed frames to a Story post
     private fun addNewStoryFrameMediaItemsToPostAndUploadAsync(site: SiteModel, saveResult: StorySaveResult) {
         // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
@@ -96,14 +102,14 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     doUploadAfterAdding = true
             )
             postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
-            savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, site)
+            savePostToDbUseCase.savePostToDb(appContext, editPostRepository, site)
 
             if (networkUtils.isNetworkAvailable()) {
                 postUtils.trackSavePostAnalytics(
                         editPostRepository.getPost(),
                         site
                 )
-                uploadService.uploadPost(WordPress.getContext(), editPostRepository.id, true)
+                uploadService.uploadPost(appContext, editPostRepository.id, true)
                 // SAVED_ONLINE
             } else {
                 // SAVED_LOCALLY
