@@ -95,7 +95,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     editorMediaListener = this@StoryMediaSaveUploadBridge,
                     doUploadAfterAdding = true
             )
-            postUtils.preparePostForPublish(editPostRepository.getEditablePost()!!, site)
+            postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
             savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, site)
 
             if (networkUtils.isNetworkAvailable()) {
