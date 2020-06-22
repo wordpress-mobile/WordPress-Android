@@ -1066,15 +1066,6 @@ class MySiteFragment : Fragment(),
         if (event.isSuccess()) {
             // TODO WPSTORIES add TRACKS
             // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
-            // TODO WPSTORIES probably we want to remove this snackbar given we want to immediately start uploading it
-            val snackbarMessage = String.format(
-                    getString(string.story_saving_snackbar_finished_successfully),
-                    getStoryAtIndex(event.storyIndex).title
-            )
-            uploadUtilsWrapper.showSnackbar(
-                    requireActivity().findViewById<View>(R.id.coordinator),
-                    snackbarMessage
-            )
         } else {
             // TODO WPSTORIES add TRACKS
             // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
@@ -1102,7 +1093,9 @@ class MySiteFragment : Fragment(),
                         // we need to have a way to cancel the related error notification when the user comes
                         // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
                         // errored story but the error notification will remain existing in the system dashboard)
-                        intent.action = getNotificationIdForError(event.storyIndex).toString() + ""
+                        intent.action = getNotificationIdForError(
+                                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                                event.storyIndex).toString() + ""
 
                         // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
                         // is meant to be used for tracking purposes. Use it!

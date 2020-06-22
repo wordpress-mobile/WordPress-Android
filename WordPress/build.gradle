@@ -324,6 +324,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
     implementation "org.jsoup:jsoup:1.10.3"
+    implementation 'androidx.emoji:emoji:1.0.0'
 }
 
 configurations.all {

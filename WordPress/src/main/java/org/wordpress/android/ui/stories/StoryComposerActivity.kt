@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.app.PendingIntent
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -10,24 +11,39 @@ import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
+import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
 import com.wordpress.stories.compose.SnackbarProvider
+import com.wordpress.stories.compose.StoryDiscardListener
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryIndex
+import com.wordpress.stories.util.KEY_STORY_INDEX
+import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
+import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
+import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
@@ -49,7 +65,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         MediaPickerProvider,
         EditorMediaListener,
         AuthenticationHeadersProvider,
-        NotificationIntentLoader {
+        NotificationIntentLoader,
+        MetadataProvider,
+        StoryDiscardListener {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -57,23 +75,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
+    @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
+    @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
     companion object {
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
         // See https://wordpress.org/support/article/post-formats/
-        private val POST_FORMAT_WP_STORY_KEY = "wpstory"
-        private var testPost: PostModel? = null
-        // TODO CHANGE THIS so we obtain the Post fromm the StoryRepository
-        fun getTestPost(postStore: PostStore, site: SiteModel): PostModel {
-            if (testPost == null) {
-                testPost = postStore.instantiatePostModel(site, false, null, POST_FORMAT_WP_STORY_KEY)
-                // WARNING!: Stories are published by default, (these are different than normal posts)
-                testPost?.setStatus(PUBLISHED.toString())
-            }
-            return testPost!!
-        }
+        const val POST_FORMAT_WP_STORY_KEY = "wpstory"
+        private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
+        const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,11 +98,29 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMediaPickerProvider(this)
         setAuthenticationProvider(this)
         setNotificationExtrasLoader(this)
+        setMetadataProvider(this)
+        setStoryDiscardListener(this)
+        setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            var localPostId = getBackingPostIdFromIntent()
+            if (localPostId == 0) {
+                // Create a new post
+                saveInitialPost()
+            } else {
+                editPostRepository.loadPostByLocalPostId(localPostId)
+            }
+
+            if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+                val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+                systemNotificationsTracker.trackTappedNotification(notificationType)
+            }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
+                editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
+            }
         }
 
         editorMedia.start(site!!, this, STORY_EDITOR)
@@ -97,6 +130,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
+        outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -125,6 +159,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         super.onDestroy()
     }
 
+    private fun getBackingPostIdFromIntent(): Int {
+        var localPostId = intent.getIntExtra(KEY_POST_LOCAL_ID, 0)
+        if (localPostId == 0) {
+            if (intent.hasExtra(KEY_STORY_SAVE_RESULT)) {
+                val storySaveResult =
+                        intent.getParcelableExtra(KEY_STORY_SAVE_RESULT) as StorySaveResult?
+                storySaveResult?.let {
+                    localPostId = it.metadata?.getInt(KEY_POST_LOCAL_ID, 0) ?: 0
+                }
+            }
+        }
+        return localPostId
+    }
+
     override fun showProvidedSnackbar(message: String, actionLabel: String?, callback: () -> Unit) {
         // no op
         // no provided snackbar here given we're not using snackbars from within the Story Creation experience
@@ -143,8 +191,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 this,
                 MediaBrowserType.WP_STORIES_MEDIA_PICKER,
                 site,
-                getTestPost(postStore, site!!).id // TODO obtain the local PostId when integrating with FluxC model
-                // mEditPostRepository.id
+                null // this is not required, only used for featured image in normal Posts
         )
     }
 
@@ -202,6 +249,22 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
     }
 
+    private fun saveInitialPost() {
+        editPostRepository.set {
+            val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
+            post.setStatus(DRAFT.toString())
+            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
+            post
+        }
+        editPostRepository.savePostSnapshot()
+        // this is an artifact to be able to call savePostToDb()
+        // also, Story posts are always PUBLISHED
+        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
+        site?.let {
+            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
+        }
+    }
+
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
         val uriList = ArrayList<Uri>()
@@ -219,12 +282,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun getImmutablePost(): PostImmutableModel {
-        return Objects.requireNonNull(getTestPost(postStore, site!!))
+        return Objects.requireNonNull(editPostRepository.getPost()!!)
     }
 
     override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
         // TODO will implement when we support StoryPost editing
         // updateAndSavePostAsync(listener)
+        // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
+        listener?.onPostUpdatedFromUI()
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
@@ -240,16 +305,44 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return authenticationUtils.getAuthHeaders(url)
     }
 
-    // NotificationIntentLoader
+    // region NotificationIntentLoader
     override fun loadIntentForErrorNotification(): Intent {
         val notificationIntent = Intent(applicationContext, StoryComposerActivity::class.java)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         notificationIntent.putExtra(WordPress.SITE, site)
-        // TODO WPSTORIES add TRACKS
-        // add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-//        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-//        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+        // setup tracks NotificationType for Notification tracking. Note this doesn't use our interface.
+        val notificationType = NotificationType.STORY_FRAME_SAVE_ERROR
+        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
+    }
+
+    override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
+        return NotificationsProcessingService
+            .getPendingIntentForNotificationDismiss(
+                applicationContext,
+                notificationId,
+                NotificationType.STORY_SAVE_ERROR
+            )
+    }
+
+    override fun setupErrorNotificationBaseId(): Int {
+        return BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID
+    }
+    // endregion
+
+    override fun loadMetadataForStory(index: StoryIndex): Bundle? {
+        val bundle = Bundle()
+        bundle.putSerializable(WordPress.SITE, site)
+        bundle.putInt(KEY_STORY_INDEX, index)
+        bundle.putInt(KEY_POST_LOCAL_ID, editPostRepository.id)
+        return bundle
+    }
+
+    override fun onStoryDiscarded() {
+        // delete empty post from database
+        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
+        // TODO WPSTORIES add TRACKS LOOK BELOW LINE!!!
+        // mPostEditorAnalyticsSession.setOutcome(CANCEL)
     }
 }
