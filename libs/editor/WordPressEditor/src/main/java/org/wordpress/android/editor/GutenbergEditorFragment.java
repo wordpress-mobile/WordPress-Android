@@ -86,7 +86,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_TOKEN = "param_site_token";
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
-
+    private static final String ARG_SITE_USER_AGENT = "param_user_agent";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -131,7 +131,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String password,
                                                       String token,
                                                       boolean isSiteUsingWpComRestApi,
-                                                      @Nullable Bundle editorTheme) {
+                                                      @Nullable Bundle editorTheme,
+                                                      String userAgent) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -148,6 +149,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_SITE_TOKEN, token);
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
+        args.putString(ARG_SITE_USER_AGENT, userAgent);
         fragment.setArguments(args);
         return fragment;
     }
@@ -457,6 +459,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         String siteUsername = getArguments().getString(ARG_SITE_USERNAME);
         String sitePassword = getArguments().getString(ARG_SITE_PASSWORD);
         String siteToken = getArguments().getString(ARG_SITE_TOKEN);
+        String userAgent = getArguments().getString(ARG_SITE_USER_AGENT);
 
         Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
@@ -468,6 +471,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_AGENT, userAgent);
 
         startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
     }

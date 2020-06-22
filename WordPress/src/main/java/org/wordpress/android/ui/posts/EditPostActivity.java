@@ -2009,7 +2009,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
-                                themeBundle);
+                                themeBundle,
+                                WordPress.getUserAgent());
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());

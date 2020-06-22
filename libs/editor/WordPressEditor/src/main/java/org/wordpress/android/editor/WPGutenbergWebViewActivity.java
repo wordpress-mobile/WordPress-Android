@@ -1,7 +1,9 @@
 package org.wordpress.android.editor;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.webkit.WebView;
 
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.StringUtils;
@@ -20,6 +22,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ARG_AUTHENTICATION_TOKEN = "authenticated_token";
     public static final String ARG_URL_TO_LOAD = "url_to_load";
     public static final String ARG_IS_SITE_PRIVATE = "is_site_private";
+    public static final String ARG_USER_AGENT= "user_agent";
 
     public static final String ARG_BLOCK_ID = "block_id";
     public static final String ARG_BLOCK_NAME = "block_name";
@@ -29,13 +32,23 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     protected void loadUrl() {
         if (getIntent() != null
                 && getIntent().getExtras() != null) {
-            String siteUrl = getIntent().getExtras().getString(ARG_URL_TO_LOAD);
+
+            Bundle bundle = getIntent().getExtras();
+
+            WebView.setWebContentsDebuggingEnabled(true);
+
+            String siteUrl = bundle.getString(ARG_URL_TO_LOAD);
             String urlToLoad = siteUrl + "/wp-admin/post-new.php";
-            String username = getIntent().getExtras().getString(ARG_AUTHENTICATION_USER);
-            String password = getIntent().getExtras().getString(ARG_AUTHENTICATION_PASSWD);
-            String token = getIntent().getExtras().getString(ARG_AUTHENTICATION_TOKEN);
-            boolean isSitePrivate = getIntent().getExtras().getBoolean(ARG_IS_SITE_PRIVATE, false);
+            String username = bundle.getString(ARG_AUTHENTICATION_USER);
+            String password = bundle.getString(ARG_AUTHENTICATION_PASSWD);
+            String token = bundle.getString(ARG_AUTHENTICATION_TOKEN);
+            boolean isSitePrivate = bundle.getBoolean(ARG_IS_SITE_PRIVATE, false);
             String authenticationUrl = isSitePrivate ? siteUrl + "/wp-login.php" : WPCOM_LOGIN_URL;
+            String userAgent = bundle.getString(ARG_USER_AGENT);
+
+            // Request to login.php needs to carry the “User-Agent” along with the headers.
+            // If this is not the case, this request might be blocked by the backend.
+            mWebView.getSettings().setUserAgentString(userAgent);
 
             loadAuthenticatedUrl(authenticationUrl, urlToLoad, username, password, token);
         }
