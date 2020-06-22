@@ -127,7 +127,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         // only trigger the bridge preparation and the UploadService if the Story is now complete
         // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
         // yet.
-        if (isStorySuccessfullySavedAndComplete(event)) {
+        if (isStorySavingComplete(event)) {
             // only remove it if it was successful - we want to keep it and show a snackbar once when the user
             // comes back to the app if it wasn't, see MySiteFrament for details.
             eventBusWrapper.removeStickyEvent(event)
@@ -145,7 +145,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         }
     }
 
-    private fun isStorySuccessfullySavedAndComplete(event: StorySaveResult): Boolean {
+    private fun isStorySavingComplete(event: StorySaveResult): Boolean {
         return (event.isSuccess() &&
                 event.frameSaveResult.size == StoryRepository.getStoryAtIndex(event.storyIndex).frames.size)
     }
