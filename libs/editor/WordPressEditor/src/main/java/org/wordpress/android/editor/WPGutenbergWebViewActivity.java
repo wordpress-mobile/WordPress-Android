@@ -22,7 +22,7 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     public static final String ARG_AUTHENTICATION_TOKEN = "authenticated_token";
     public static final String ARG_URL_TO_LOAD = "url_to_load";
     public static final String ARG_IS_SITE_PRIVATE = "is_site_private";
-    public static final String ARG_USER_AGENT= "user_agent";
+    public static final String ARG_USER_AGENT = "user_agent";
 
     public static final String ARG_BLOCK_ID = "block_id";
     public static final String ARG_BLOCK_NAME = "block_name";
@@ -32,7 +32,6 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
     protected void loadUrl() {
         if (getIntent() != null
                 && getIntent().getExtras() != null) {
-
             Bundle bundle = getIntent().getExtras();
 
             WebView.setWebContentsDebuggingEnabled(true);
