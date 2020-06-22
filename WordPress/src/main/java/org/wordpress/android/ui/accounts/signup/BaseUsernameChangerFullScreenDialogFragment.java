@@ -211,6 +211,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
+    public void onDestroy() {
+        mGetSuggestionsHandler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onConfirmClicked(FullScreenDialogController controller) {
         ActivityUtils.hideKeyboard(getActivity());
 
