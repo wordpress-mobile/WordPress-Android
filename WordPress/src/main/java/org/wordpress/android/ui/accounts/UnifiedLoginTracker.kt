@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_FAILURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_STEP
-import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source.DEFAULT
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
@@ -13,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UnifiedLoginTracker
-@Inject constructor(private val analyticsTracker: AnalyticsTrackerWrapper, private val appLog: AppLogWrapper) {
+@Inject constructor(private val analyticsTracker: AnalyticsTrackerWrapper) {
     private var currentSource: Source = DEFAULT
     private var currentFlow: Flow? = null
     private var currentStep: Step? = null
@@ -32,7 +31,7 @@ class UnifiedLoginTracker
                         properties = buildDefaultParams()
                 )
             } else {
-                handleMissingFlow(step.value)
+                handleMissingFlowOrStep(step.value)
             }
         }
     }
@@ -51,7 +50,7 @@ class UnifiedLoginTracker
                     )
                 }
             } else {
-                handleMissingFlow("failure: $error")
+                handleMissingFlowOrStep("failure: $error")
             }
         }
     }
@@ -67,8 +66,8 @@ class UnifiedLoginTracker
         return params
     }
 
-    private fun handleMissingFlow(value: String?) {
-        val errorMessage = "Trying to log an event $value with a missing flow"
+    private fun handleMissingFlowOrStep(value: String?) {
+        val errorMessage = "Trying to log an event $value with a missing ${if (currentFlow == null) "flow" else "step"}"
         if (BuildConfig.DEBUG) {
             throw IllegalStateException(errorMessage)
         } else {
