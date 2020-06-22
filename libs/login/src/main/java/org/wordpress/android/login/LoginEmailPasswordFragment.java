@@ -315,7 +315,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case FAILURE_EMAIL_WRONG_PASSWORD:
                 onLoginFinished(false);
-                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showPasswordError();
                 break;
             case FAILURE_2FA:
@@ -334,12 +333,10 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case FAILURE_FETCHING_ACCOUNT:
                 onLoginFinished(false);
-                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.error_fetch_my_profile));
                 break;
             case FAILURE_CANNOT_ADD_DUPLICATE_SITE:
                 onLoginFinished(false);
-                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.cannot_add_duplicate_site));
                 break;
             case FAILURE_USE_WPCOM_USERNAME_INSTEAD_OF_EMAIL:
@@ -353,7 +350,6 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 break;
             case FAILURE:
                 onLoginFinished(false);
-                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 showError(getString(R.string.error_generic));
                 break;
             case SUCCESS:
