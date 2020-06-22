@@ -39,7 +39,7 @@ import kotlin.coroutines.CoroutineContext
  * StoryMediaSaveUploadBridge listens for StorySaveResult events triggered from the StorySaveService, and
  * then transforms its result data into something the UploadService can use to upload the Story frame media
  * first, then obtain the media Ids and collect them, and finally create a Post with the Story block (
- * (simple WP gallery for alpha) with he obtained media Ids.
+ * (simple WP gallery for alpha) with the obtained media Ids.
  * This is different than uploading media to a regular Post because we don't need to replace the URLs for final Urls as
  * we do in Aztec / Gutenberg.
  * The gallery is only a collection of media Ids, so we really need to first upload the Media, obtain the remote id,
