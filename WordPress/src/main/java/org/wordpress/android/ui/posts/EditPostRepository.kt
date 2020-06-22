@@ -24,7 +24,6 @@ import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult.Update
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -149,7 +148,6 @@ class EditPostRepository
                     Thread.currentThread().stackTrace
             )}"
             AppLog.e(T.EDITOR, message)
-            CrashLoggingUtils.log(message)
         }
         locked = lock
     }
