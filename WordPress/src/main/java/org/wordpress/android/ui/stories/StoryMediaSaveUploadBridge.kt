@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.uploads.UploadServiceFacade
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
@@ -50,6 +50,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private val uploadService: UploadServiceFacade,
     private val networkUtils: NetworkUtilsWrapper,
     private val postUtils: PostUtilsWrapper,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : CoroutineScope, LifecycleObserver, EditorMediaListener {
     // region Fields
@@ -63,7 +64,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
     fun onCreate(source: LifecycleOwner) {
-        EventBus.getDefault().register(this)
+        eventBusWrapper.register(this)
     }
 
     @Suppress("unused")
@@ -73,7 +74,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         // class, but leaving it here prepared for the case when this class is attached to some other LifeCycleOwner
         // other than the Application.
         cancelAddMediaToEditorActions()
-        EventBus.getDefault().unregister(this)
+        eventBusWrapper.unregister(this)
     }
 
     // region Adding new composed / processed frames to a Story post
@@ -123,7 +124,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         if (isStorySuccessfullySavedAndComplete(event)) {
             // only remove it if it was successful - we want to keep it and show a snackbar once when the user
             // comes back to the app if it wasn't, see MySiteFrament for details.
-            EventBus.getDefault().removeStickyEvent(event)
+            eventBusWrapper.removeStickyEvent(event)
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
