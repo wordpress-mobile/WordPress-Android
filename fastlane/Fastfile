@@ -464,7 +464,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   desc "Builds an app bundle"
   lane :build_for_translation_review do | options |
     cmd_params = ""
-    if (!options[:custom_version].nil?)
+    unless options[:custom_version].nil?
       UI.message("Building custom version: #{options[:custom_version]}") 
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
@@ -508,4 +508,3 @@ ENV["HAS_ALPHA_VERSION"]="true"
     FileUtils.rm_rf("#{temp_dir}")
   end
 end
-
