@@ -91,12 +91,20 @@ import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
-import org.wordpress.android.ui.posts.PostSettingsTagsActivity;
+import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PrepublishingHomeAdapter;
+import org.wordpress.android.ui.posts.PrepublishingHomeFragment;
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
+import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
+import org.wordpress.android.ui.posts.services.AztecVideoLoader;
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityAdapter;
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
@@ -165,6 +173,7 @@ import org.wordpress.android.ui.uploads.PostUploadHandler;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementListAdapter;
+import org.wordpress.android.util.CrashLogging;
 import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.image.getters.WPCustomImageGetter;
@@ -332,8 +341,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(EditPostSettingsFragment object);
 
-    void inject(PostSettingsTagsActivity object);
-
     void inject(PostsListActivity object);
 
     void inject(AuthorSelectionAdapter object);
@@ -500,6 +507,22 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(PageParentSearchFragment object);
 
+    void inject(PrepublishingBottomSheetFragment object);
+
+    void inject(PrepublishingHomeFragment object);
+
+    void inject(PrepublishingHomeAdapter object);
+
+    void inject(PrepublishingTagsFragment object);
+
+    void inject(PostSettingsTagsFragment object);
+
+    void inject(PrepublishingPublishSettingsFragment object);
+
+    void inject(PrepublishingVisibilityFragment object);
+
+    void inject(PrepublishingVisibilityAdapter object);
+
     void inject(AppSettingsActivity object);
 
     void inject(FeatureAnnouncementDialogFragment object);
@@ -515,6 +538,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderInterestsFragment object);
 
     void inject(HomepageSettingsDialog object);
+
+    void inject(CrashLogging object);
+
+    void inject(AztecVideoLoader object);
 
     void inject(PhotoPickerFragment object);
 

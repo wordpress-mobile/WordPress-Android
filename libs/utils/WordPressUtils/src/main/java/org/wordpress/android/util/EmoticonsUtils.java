@@ -72,6 +72,9 @@ public class EmoticonsUtils {
     }
 
     public static String lookupImageSmiley(String url, String ifNone) {
+        if (url == null) {
+            return ifNone;
+        }
         String file = url.substring(url.lastIndexOf("/") + 1);
         if (WP_SMILIES.containsKey(file)) {
             return WP_SMILIES.get(file);

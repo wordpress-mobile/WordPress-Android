@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-23 19:47:04+0000
+Translation-Revision-Date: 2020-06-11 16:54:11+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_remove_s">%s ögesini kaldır</string>
+    <string name="gutenberg_native_move_s_up">%s Blokunu Yukarı Taşı</string>
+    <string name="gutenberg_native_move_s_right">%s Blokunu Sağa Taşı</string>
+    <string name="gutenberg_native_move_s_left">%s Sola Taşı</string>
+    <string name="gutenberg_native_move_s_down">%s Blokunu Aşağı Taşı</string>
+    <string name="gutenberg_native_try_a_starter_layout">Başlangıç düzenini deneyin</string>
+    <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Uygun seçenekleri içeren Eylem Sayfasını açmak için iki kez dokunun</string>
+    <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
+    <string name="pages_set_as_posts_page">Yazılar Sayfası Yap</string>
+    <string name="pages_set_as_homepage">Ana Sayfa olarak ayarla</string>
+    <string name="suggestion_no_matching_users">“Eşleşen kullanıcı yok.”</string>
+    <string name="suggestion_invalid_user">“%s geçerli bir kullanıcı değil”</string>
+    <string name="site_settings_select_page">Sayfa seç</string>
+    <string name="site_settings_posts_page">Yazılar sayfası</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Sayfalar yüklenmeden önce ana sayfa ayarları kaydedilemez</string>
+    <string name="site_settings_accept_homepage">Kabul et</string>
+    <string name="site_settings_homepage_settings_description">En son gönderilerinizi görüntüleyen bir ana sayfa (klasik blog) veya sabit/statik bir sayfa seçin.</string>
+    <string name="site_settings_homepage_settings">Ana sayfa ayarları</string>
+    <string name="site_settings_homepage">Ana sayfa</string>
+    <string name="page_posts_page_update_failed">Gönderiler Sayfası güncellenemedi</string>
+    <string name="page_posts_page_successfully_updated">Gönderiler Sayfası başarıyla güncellendi</string>
+    <string name="page_homepage_update_failed">Ana Sayfa güncellenemedi</string>
+    <string name="page_homepage_successfully_updated">Ana Sayfa başarıyla güncellendi</string>
+    <string name="page_cannot_set_posts_page">Gönderiler sayfasını ayarlamak için Site Ayarları’nda “Statik Ana Sayfa” seçeneğini belirleyin</string>
+    <string name="page_cannot_set_homepage">Ana sayfa ayarlamak için Site Ayarları’nda “Statik Ana Sayfa” seçeneğini belirleyin</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">Yeni blogumuza hoşgeldiniz</string>
     <string name="gutenberg_native_select_a_color">Bir renk seçin</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
@@ -36,9 +64,7 @@ Language: tr
     <string name="copy_text">Kopyala</string>
     <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
-    <string name="gutenberg_native_move_block_right">Bloğu sağa taşı</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
-    <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
@@ -121,16 +147,14 @@ Language: tr
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
+    <string name="gutenberg_native_s_settings">%s ayarları</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Hadi birlikte bir şeyler oluşturalım.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Hadi Birlikte Bir Şeyler Oluşturalım</string>
-    <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Hadi birlikte bir şeyler oluşturalım.</string>
+    <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, gerçekten kim olduğumuzu gösteren becerilerimizden daha çok kendi seçimlerimizdir.</string>
     <string name="gutenberg_native_inspiration">İlham</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">İletişime Geçin!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">İletişime geçin!</string>
     <string name="gutenberg_native_get_in_touch">İletişime Geçin</string>
     <string name="gutenberg_native_excerpt_length_words">Alıntı uzunluğu (sözcük)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Bana e-posta gönderin: &lt;a href=\"mailto:mail@example.com\">eposta@ornek.com&lt;/a></string>
@@ -286,9 +310,7 @@ Language: tr
     <string name="gutenberg_native_my_post_publish_panel">Yayımlama sonrası panelim</string>
     <string name="gutenberg_native_my_document_setting_panel">Belge ayarları panelim</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
-    <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
-    <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
     <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
@@ -310,7 +332,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Düzenlemek için çift dokunup basılı tutun</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_content">İçerik…</string>
-    <string name="gutenberg_native_clear_all_settings">Tüm ayarları temizle</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
     <string name="gutenberg_native_annotations_sidebar">Ek Açıklamalar Kenar Çubuğu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
@@ -1132,7 +1153,6 @@ Language: tr
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 dosya ile 1 yazı karşıya yüklenmedi</string>
     <string name="untitled_in_parentheses">(İsimsiz)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Site oluştur</string>
     <string name="notification_site_creation_created">Devam etmek için dokunun.</string>
@@ -1602,7 +1622,7 @@ Language: tr
     <string name="pending_draft_one_day_2">Biliyor musunuz \'%1$s\'  hala bir taslak? Yayınlayın gitsin!</string>
     <string name="pending_draft_one_day_1">\'%1$s\' taslağını dün kaydettiniz. Yayınlamayı unutmayın!</string>
     <string name="reader_photo_by">%s tarafından çekilmiş fotoğraf</string>
-    <string name="reader_label_visit">Ziyaret et</string>
+    <string name="reader_label_visit">Siteyi ziyaret et</string>
     <string name="swipe_for_more">Daha fazlası için parmağınızı kaydırın</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin ya da üst eylem tuşu ile bir tarayıcı açmayı deneyin.</string>
     <string name="reader_err_get_post_not_authorized_signin">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin.</string>

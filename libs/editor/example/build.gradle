@@ -43,7 +43,7 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation project(":WordPressEditor")
-    implementation ('org.wordpress:utils:1.22')
+    implementation ('org.wordpress:utils:1.25')
     implementation 'com.android.volley:volley:1.1.1'
 
     // Test libraries

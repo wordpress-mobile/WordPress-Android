@@ -1,16 +1,16 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: aa1997a9f798eb17a08023cbe502a8cdffdb34f1
-  tag: 0.9.5
+  revision: 6c1fa45f3beb216f4f5d03346f2981f1024b799e
+  tag: 0.9.6
   specs:
-    fastlane-plugin-wpmreleasetoolkit (0.9.5)
+    fastlane-plugin-wpmreleasetoolkit (0.9.6)
       activesupport (~> 4)
       chroma (= 0.2.0)
       diffy (~> 3.3)
       git (~> 1.3)
       jsonlint
       nokogiri (>= 1.10.4)
-      octokit (~> 4.13)
+      octokit (~> 4.18)
       parallel (~> 1.14)
       progress_bar (~> 1.3)
       rake (~> 12.3)
