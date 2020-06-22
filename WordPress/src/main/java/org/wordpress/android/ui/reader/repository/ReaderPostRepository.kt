@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.viewmodel.ContextProvider
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
@@ -43,7 +44,6 @@ import kotlin.DeprecationLevel.WARNING
 import kotlin.coroutines.CoroutineContext
 
 // todo: annmarie
-// todo: check for network connectivity
 // todo: move all those classes/interfaces (at the bottom) elsewhere
 // todo: remove debug log lines
 class ReaderPostRepository @Inject constructor(
@@ -105,6 +105,9 @@ class ReaderPostRepository @Inject constructor(
         readerTag: ReaderTag,
         updateAction: UpdateAction = REQUEST_NEWER
     ) {
+        // todo: do we need to tell the caller that network is not available?
+        if (!NetworkUtils.isNetworkAvailable(contextProvider.getContext())) return
+
         ReaderPostServiceStarter.startServiceForTag(
                 contextProvider.getContext(),
                 readerTag,
