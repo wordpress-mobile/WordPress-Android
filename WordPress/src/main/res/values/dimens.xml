@@ -245,6 +245,8 @@
     <dimen name="stats_activity_box_size">12dp</dimen>
     <dimen name="stats_activity_box_end_margin">4dp</dimen>
     <dimen name="stats_map_legend_width">60dp</dimen>
+    <dimen name="stats_insights_news_card_width">288dp</dimen>
+    <dimen name="stats_insights_news_card_height">177dp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_content_height">108dp</dimen>

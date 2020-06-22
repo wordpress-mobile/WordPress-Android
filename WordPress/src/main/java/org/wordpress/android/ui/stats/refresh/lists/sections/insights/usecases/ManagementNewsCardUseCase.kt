@@ -38,7 +38,7 @@ class ManagementNewsCardUseCase
         val highlightedText = resourceProvider.getString(R.string.stats_management_add_new_stats_card)
         val newsCardMessage = resourceProvider.getString(R.string.stats_management_news_card_message, highlightedText)
         return listOf(
-                ImageItem(R.drawable.insights_management_feature_resource),
+                ImageItem(R.drawable.insights_management_feature_image),
                 Tag(R.string.stats_management_new),
                 BigTitle(R.string.stats_manage_your_stats),
                 Text(text = newsCardMessage, bolds = listOf(highlightedText)),
