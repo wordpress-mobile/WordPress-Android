@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -54,7 +55,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
                                 onBookmarkClicked = this::onBookmarkClicked,
-                                onLikeClicked = this::onLikeClicked
+                                onLikeClicked = this::onLikeClicked,
+                                onReblogClicked = this::onReblogClicked,
+                                onCommentsClicked = this::onCommentsClicked,
+                                onItemClicked = this::onItemClicked,
+                                onItemRendered = this::onItemRendered
                         )
                     }
             )
@@ -66,6 +71,22 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemClicked(post: ReaderPost) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemRendered(post: ReaderPost) {
         // TODO malinjir implement action
     }
 
@@ -104,7 +125,11 @@ class ReaderDiscoverViewModel @Inject constructor(
             val moreMenuVisibility: Boolean,
             val photoFrameVisibility: Boolean,
             val bookmarkAction: ActionUiState,
-            val likeAction: ActionUiState
+            val likeAction: ActionUiState,
+            val reblogAction: ActionUiState,
+            val commentsAction: ActionUiState,
+            val onItemClicked: ((ReaderPost) -> Unit),
+            val onItemRendered: (ReaderPost) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
