@@ -104,6 +104,7 @@ import org.wordpress.android.util.UploadWorker;
 import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
 
@@ -162,6 +163,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
     @Inject CrashLogging mCrashLogging;
+    @Inject AppConfig mAppConfig;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -790,6 +792,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
+        mAppConfig.refresh();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
