@@ -163,7 +163,8 @@ class UnifiedLoginTracker
         CONNECT_SITE("connect_site"),
         SELECT_AVATAR("select_avatar"),
         EDIT_USERNAME("edit_username"),
-        HELP_FINDING_SITE_ADDRESS("help_finding_site_address")
+        HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
+        SELECT_EMAIL_FIELD("select_email_field")
     }
 
     companion object {

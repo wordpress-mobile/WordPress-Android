@@ -334,4 +334,9 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     public void trackDismissDialog() {
         mUnifiedLoginTracker.trackClick(Click.DISMISS);
     }
+
+    @Override
+    public void trackEmailFieldClick() {
+        mUnifiedLoginTracker.trackClick(Click.SELECT_EMAIL_FIELD);
+    }
 }
