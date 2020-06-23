@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 111
+        return 112
     }
 
     override fun getDbName(): String {
@@ -1234,6 +1234,21 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL(
                             "CREATE TABLE WhatsNewAnnouncementFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                     "ANNOUNCEMENT_ID INTEGER,TITLE TEXT,SUBTITLE TEXT,ICON_URL TEXT,ICON_BASE64 TEXT)"
+                    )
+                }
+                111 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE WCProductTagModel (" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_TAG_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "DESCRIPTION TEXT," +
+                                    "COUNT INTEGER," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (REMOTE_TAG_ID, LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
                     )
                 }
             }
