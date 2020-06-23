@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -20,7 +21,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_SEARCH_AC
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -80,6 +80,7 @@ class PostListMainViewModel @Inject constructor(
     private val postListEventListenerFactory: PostListEventListener.Factory,
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -213,7 +214,8 @@ class PostListMainViewModel @Inject constructor(
         site: SiteModel,
         initPreviewState: PostListRemotePreviewState,
         currentBottomSheetPostId: LocalId,
-        editPostRepository: EditPostRepository
+        editPostRepository: EditPostRepository,
+        context: Context
     ) {
         this.site = site
         this.editPostRepository = editPostRepository
@@ -278,7 +280,7 @@ class PostListMainViewModel @Inject constructor(
 
         editPostRepository.run {
             postChanged.observe(this@PostListMainViewModel, Observer {
-                getEditablePost()?.let { post -> dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post)) }
+                savePostToDbUseCase.savePostToDb(context, editPostRepository, site)
             })
         }
     }
