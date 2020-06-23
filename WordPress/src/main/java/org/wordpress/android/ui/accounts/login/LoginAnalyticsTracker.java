@@ -327,7 +327,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override
     public void trackShowHelpClick() {
-        mUnifiedLoginTracker.trackClick(Click.SHOW_HELP);
         mUnifiedLoginTracker.track(Step.HELP);
+        mUnifiedLoginTracker.trackClick(Click.SHOW_HELP);
     }
 }

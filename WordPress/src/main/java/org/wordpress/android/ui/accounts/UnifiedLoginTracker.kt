@@ -32,7 +32,7 @@ class UnifiedLoginTracker
                         properties = buildDefaultParams()
                 )
             } else {
-                handleMissingFlowOrStep(step.value)
+                handleMissingFlowOrStep("step: ${step.value}")
             }
         }
     }
@@ -68,7 +68,7 @@ class UnifiedLoginTracker
                     )
                 }
             } else {
-                handleMissingFlow(click.value)
+                handleMissingFlowOrStep("click: ${click.value}")
             }
         }
     }
