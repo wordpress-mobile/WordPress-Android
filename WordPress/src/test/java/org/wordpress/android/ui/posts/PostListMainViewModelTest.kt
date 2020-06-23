@@ -18,7 +18,6 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -34,6 +33,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var editPostRepository: EditPostRepository
+    @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     private lateinit var viewModel: PostListMainViewModel
 
     @InternalCoroutinesApi
@@ -62,13 +62,14 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 bgDispatcher = Dispatchers.Unconfined,
                 postListEventListenerFactory = mock(),
                 uploadStarter = uploadStarter,
-                uploadActionUseCase = mock()
+                uploadActionUseCase = mock(),
+                savePostToDbUseCase = savePostToDbUseCase
         )
     }
 
     @Test
     fun `when started, it uploads all local drafts`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         verify(uploadStarter, times(1)).queueUploadFromSite(eq(site))
     }
@@ -76,7 +77,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is available for wpcom and jetpack sites`() {
         site.origin = SiteModel.ORIGIN_WPCOM_REST
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         var isSearchAvailable = false
         viewModel.isSearchAvailable.observeForever {
@@ -89,7 +90,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `search is not available for xmlrpc sites`() {
         site.origin = SiteModel.ORIGIN_XMLRPC
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         var isSearchAvailable = true
         viewModel.isSearchAvailable.observeForever {
@@ -102,7 +103,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -116,7 +117,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `expanding and collapsing search triggers isSearchExpanded`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         var isSearchExpanded = false
         viewModel.isSearchExpanded.observeForever {
@@ -134,7 +135,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     fun `expanding search after configuration change preserves search query`() {
         val testSearch = "keyword"
 
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
         var searchQuery: String? = null
         viewModel.searchQuery.observeForever {
@@ -157,7 +158,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `search is using compact view mode independently from normal post list`() {
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         assertThat(viewModel.viewLayoutType.value).isEqualTo(STANDARD) // default value
 
         var viewLayoutType: PostListViewLayoutType? = null
@@ -180,7 +181,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val bottomSheetPostId = LocalId(2)
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository, mock())
 
         // assert
         verify(editPostRepository, times(1)).loadPostByLocalPostId(any())
@@ -192,7 +193,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
         val bottomSheetPostId = LocalId(0)
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, bottomSheetPostId, editPostRepository, mock())
 
         // assert
         verify(editPostRepository, times(0)).loadPostByLocalPostId(any())
@@ -200,18 +201,18 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Test
-    fun `if post in EditPostRepository is modified then the dispatcher should update the post`() {
+    fun `if post in EditPostRepository is modified then the savePostToDbUseCase should update the post`() {
         // arrange
         val editPostRepository = EditPostRepository(mock(), mock(), mock(), TEST_DISPATCHER, TEST_DISPATCHER)
         editPostRepository.set { mock() }
         val action = { _: PostModel -> true }
 
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         // simulates the Publish Date, Status & Visibility or Tags being updated in the bottom sheet.
         editPostRepository.updateAsync(action, null)
 
         // assert
-        verify(dispatcher, times(1)).dispatch(any<Action<PostModel>>())
+        verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any(), any())
     }
 }
