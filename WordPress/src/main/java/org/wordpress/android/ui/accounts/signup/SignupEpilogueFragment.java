@@ -58,6 +58,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
@@ -178,6 +179,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.SELECT_AVATAR);
                 Intent intent = new Intent(getActivity(), PhotoPickerActivity.class);
                 intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
                 startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
@@ -223,6 +225,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mEditTextUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.EDIT_USERNAME);
                 launchDialog();
             }
         });
@@ -279,6 +282,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.CONTINUE);
                 updateAccountOrContinue();
             }
         });

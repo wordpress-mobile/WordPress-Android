@@ -16,6 +16,7 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_PAGED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
 import javax.inject.Inject
@@ -55,11 +56,13 @@ class LoginPrologueFragment : Fragment() {
         }
 
         first_button.setOnClickListener {
+            unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
             loginPrologueListener.showEmailLoginScreen()
         }
 
         second_button.setOnClickListener {
             if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
                 loginPrologueListener.loginViaSiteAddress()
             } else {
                 loginPrologueListener.doStartSignup()

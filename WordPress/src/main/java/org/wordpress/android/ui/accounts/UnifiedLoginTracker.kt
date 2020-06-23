@@ -141,6 +141,10 @@ class UnifiedLoginTracker
 
     enum class Click(val value: String) {
         SUBMIT("submit"),
+        CONTINUE("continue"),
+        DISMISS("dismiss"),
+        CONTINUE_WITH_WORDPRESS_COM("continue_with_wordpress_com"),
+        LOGIN_WITH_SITE_ADDRESS("login_with_site_address"),
         LOGIN_WITH_GOOGLE("login_with_google"),
         FORGOTTEN_PASSWORD("forgotten_password"),
         USE_PASSWORD_INSTEAD("use_password_instead"),
@@ -153,7 +157,12 @@ class UnifiedLoginTracker
         SUBMIT_2FA_CODE("submit_2fa_code"),
         CLICK_ON_LOGIN_SITE("click_on_login_site"),
         REQUEST_MAGIC_LINK("request_magic_link"),
-        LOGIN_WITH_PASSWORD("login_with_password")
+        LOGIN_WITH_PASSWORD("login_with_password"),
+        CREATE_NEW_SITE("create_new_site"),
+        ADD_SELF_HOSTED_SITE("add_self_hosted_site"),
+        CONNECT_SITE("connect_site"),
+        SELECT_AVATAR("select_avatar"),
+        EDIT_USERNAME("edit_username")
     }
 
     companion object {
