@@ -262,7 +262,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackUrlHelpScreenViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_HELP_SCREEN_VIEWED);
-        mUnifiedLoginTracker.track(Step.HELP);
     }
 
     @Override
@@ -327,7 +326,12 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override
     public void trackShowHelpClick() {
-        mUnifiedLoginTracker.track(Step.HELP);
         mUnifiedLoginTracker.trackClick(Click.SHOW_HELP);
+        mUnifiedLoginTracker.track(Step.HELP);
+    }
+
+    @Override
+    public void trackDismissDialog() {
+        mUnifiedLoginTracker.trackClick(Click.DISMISS);
     }
 }

@@ -627,6 +627,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void helpFindingSiteAddress(String username, SiteStore siteStore) {
+        mUnifiedLoginTracker.trackClick(Click.HELP_FINDING_SITE_ADDRESS);
         mZendeskHelper.createNewTicket(this, Origin.LOGIN_SITE_ADDRESS, null);
     }
 

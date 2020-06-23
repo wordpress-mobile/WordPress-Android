@@ -162,7 +162,8 @@ class UnifiedLoginTracker
         ADD_SELF_HOSTED_SITE("add_self_hosted_site"),
         CONNECT_SITE("connect_site"),
         SELECT_AVATAR("select_avatar"),
-        EDIT_USERNAME("edit_username")
+        EDIT_USERNAME("edit_username"),
+        HELP_FINDING_SITE_ADDRESS("help_finding_site_address")
     }
 
     companion object {

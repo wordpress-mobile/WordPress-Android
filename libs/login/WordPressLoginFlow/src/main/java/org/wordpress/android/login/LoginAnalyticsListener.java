@@ -67,4 +67,6 @@ public interface LoginAnalyticsListener {
     void trackLoginWithPasswordClick();
 
     void trackShowHelpClick();
+
+    void trackDismissDialog();
 }
