@@ -192,6 +192,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -200,8 +201,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.getEditText().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAnalyticsListener.trackSelectEmailField();
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
-                    mAnalyticsListener.trackEmailFieldClick();
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }

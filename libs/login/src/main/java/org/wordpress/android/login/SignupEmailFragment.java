@@ -102,6 +102,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -111,7 +112,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
             @Override
             public void onClick(View view) {
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
-                    mAnalyticsListener.trackEmailFieldClick();
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -329,6 +330,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
         PendingIntent intent = Auth.CredentialsApi.getHintPickerIntent(mGoogleApiClient, hintRequest);
 
         try {
+            mAnalyticsListener.trackShowEmailHints();
             startIntentSenderForResult(intent.getIntentSender(), EMAIL_CREDENTIALS_REQUEST_CODE, null, 0, 0, 0, null);
         } catch (IntentSender.SendIntentException exception) {
             AppLog.d(T.NUX, LOG_TAG + "Could not start email hint picker" + exception);
@@ -345,10 +347,12 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
                 return;
             }
             if (resultCode == RESULT_OK) {
+                mAnalyticsListener.trackPickEmailFromHint();
                 Credential credential = data.getParcelableExtra(Credential.EXTRA_KEY);
                 mEmailInput.getEditText().setText(credential.getId());
                 next(getCleanedEmail());
             } else {
+                mAnalyticsListener.trackDismissDialog();
                 mHasDismissedEmailHints = true;
                 mEmailInput.getEditText().postDelayed(new Runnable() {
                     @Override
