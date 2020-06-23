@@ -22,6 +22,15 @@ object AvatarHelper {
     ) {
         val avatarSize = fragment.resources.getDimensionPixelSize(R.dimen.avatar_sz_login)
         val avatarUrl = FakeGravatarUtils.gravatarFromEmail(email, avatarSize, STATUS_404)
+        loadAvatarFromUrl(fragment, avatarUrl, avatarView, listener)
+    }
+
+    @JvmStatic fun loadAvatarFromUrl(
+        fragment: Fragment,
+        avatarUrl: String?,
+        avatarView: ImageView,
+        listener: AvatarRequestListener
+    ) {
         Glide.with(fragment)
                 .load(avatarUrl)
                 .apply(RequestOptions.circleCropTransform())
