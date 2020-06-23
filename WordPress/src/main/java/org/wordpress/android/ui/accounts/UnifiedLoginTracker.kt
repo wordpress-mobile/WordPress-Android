@@ -136,7 +136,8 @@ class UnifiedLoginTracker
         USERNAME_PASSWORD("username_password"),
         SUCCESS("success"),
         HELP("help"),
-        TWO_FACTOR_AUTHENTICATION("2fa")
+        TWO_FACTOR_AUTHENTICATION("2fa"),
+        SHOW_EMAIL_HINTS("SHOW_EMAIL_HINTS")
     }
 
     enum class Click(val value: String) {
@@ -164,7 +165,8 @@ class UnifiedLoginTracker
         SELECT_AVATAR("select_avatar"),
         EDIT_USERNAME("edit_username"),
         HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
-        SELECT_EMAIL_FIELD("select_email_field")
+        SELECT_EMAIL_FIELD("select_email_field"),
+        PICK_EMAIL_FROM_HINT("pick_email_from_hint")
     }
 
     companion object {

@@ -70,5 +70,9 @@ public interface LoginAnalyticsListener {
 
     void trackDismissDialog();
 
-    void trackEmailFieldClick();
+    void trackSelectEmailField();
+
+    void trackPickEmailFromHint();
+
+    void trackShowEmailHints();
 }

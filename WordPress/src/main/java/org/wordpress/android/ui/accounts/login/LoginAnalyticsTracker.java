@@ -336,7 +336,17 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackEmailFieldClick() {
+    public void trackSelectEmailField() {
         mUnifiedLoginTracker.trackClick(Click.SELECT_EMAIL_FIELD);
+    }
+
+    @Override
+    public void trackPickEmailFromHint() {
+        mUnifiedLoginTracker.trackClick(Click.PICK_EMAIL_FROM_HINT);
+    }
+
+    @Override
+    public void trackShowEmailHints() {
+        mUnifiedLoginTracker.track(Step.SHOW_EMAIL_HINTS);
     }
 }
