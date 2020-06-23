@@ -23,6 +23,8 @@
     </item>
     <item name="disabled_alpha" format="float" type="dimen">0.12</item>
 
+    <item name="emphasis_low" format="float" type="dimen">0.20</item>
+
     <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
