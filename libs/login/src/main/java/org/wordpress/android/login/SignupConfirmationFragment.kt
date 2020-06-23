@@ -153,7 +153,7 @@ class SignupConfirmationFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.help) {
             if (mLoginListener != null) {
-                 mLoginListener?.helpSignupConfirmationScreen(mEmail)
+                mLoginListener?.helpSignupConfirmationScreen(mEmail)
             }
             return true
         }
