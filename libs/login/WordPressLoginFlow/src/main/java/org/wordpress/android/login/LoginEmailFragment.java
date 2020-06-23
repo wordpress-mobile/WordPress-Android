@@ -531,7 +531,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     private void showEmailError(int messageId) {
         mCurrentEmailErrorRes = messageId;
-        mEmailInput.setError(getString(messageId));
+        String errorMessage = getString(messageId);
+        mAnalyticsListener.trackFailure(errorMessage);
+        mEmailInput.setError(errorMessage);
     }
 
     private void showErrorDialog(String message) {

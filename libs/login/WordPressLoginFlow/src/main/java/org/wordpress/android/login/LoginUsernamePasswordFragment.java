@@ -405,6 +405,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     private void showUsernameError(String errorMessage) {
+        mAnalyticsListener.trackFailure(errorMessage);
         mUsernameInput.setError(errorMessage);
         mPasswordInput.setError(null);
 
@@ -415,6 +416,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
 
     private void showPasswordError(String errorMessage) {
         mUsernameInput.setError(null);
+        mAnalyticsListener.trackFailure(errorMessage);
         mPasswordInput.setError(errorMessage);
 
         if (errorMessage != null) {
