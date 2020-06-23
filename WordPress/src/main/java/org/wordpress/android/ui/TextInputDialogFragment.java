@@ -23,6 +23,8 @@ public class TextInputDialogFragment extends DialogFragment {
     private static final String IS_MULTILINE_TAG = "is_multiline";
     private static final String CALLBACK_ID_TAG = "callback_id";
 
+    public static final String TAG = "text_input_dialog_fragment";
+
     public static TextInputDialogFragment newInstance(String title,
                                                       String initialText,
                                                       String hint,

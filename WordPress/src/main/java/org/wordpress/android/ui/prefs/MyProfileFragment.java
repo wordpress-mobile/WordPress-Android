@@ -29,8 +29,6 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 public class MyProfileFragment extends Fragment implements TextInputDialogFragment.Callback {
-    private static final String DIALOG_TAG = "DIALOG";
-
     private WPTextView mFirstName;
     private WPTextView mLastName;
     private WPTextView mDisplayName;
@@ -145,7 +143,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
                     hint, isMultiline,
                     textView.getId());
             inputDialog.setTargetFragment(MyProfileFragment.this, 0);
-            inputDialog.show(getFragmentManager(), DIALOG_TAG);
+            inputDialog.show(getFragmentManager(), TextInputDialogFragment.TAG);
         };
     }
 
