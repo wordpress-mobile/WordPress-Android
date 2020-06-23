@@ -34,8 +34,6 @@ public class WPGutenbergWebViewActivity extends GutenbergWebViewActivity {
                 && getIntent().getExtras() != null) {
             Bundle bundle = getIntent().getExtras();
 
-            WebView.setWebContentsDebuggingEnabled(true);
-
             String siteUrl = bundle.getString(ARG_URL_TO_LOAD);
             String urlToLoad = siteUrl + "/wp-admin/post-new.php";
             String username = bundle.getString(ARG_AUTHENTICATION_USER);
