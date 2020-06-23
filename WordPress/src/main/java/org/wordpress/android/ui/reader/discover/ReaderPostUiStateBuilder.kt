@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCa
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -60,6 +62,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
+                featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
                 thumbnailStripUrls = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu

@@ -11,6 +11,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -117,6 +118,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val blogUrl: String?,
             val photoTitle: String?,
             val featuredImageUrl: String?,
+            val featuredImageCornerRadius: UiDimen,
             val videoThumbnailUrl: String?,
             val avatarOrBlavatarUrl: String?,
             val thumbnailStripUrls: List<String>?,
@@ -141,7 +143,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class ActionUiState(
                 val isEnabled: Boolean,
-                val isSelected: Boolean? = false,
+                val isSelected: Boolean = false,
                 val contentDescription: UiString? = null,
                 val count: Int = 0,
                 val onClicked: ((Long, Long, Boolean) -> Unit)? = null
