@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.prefs;
+package org.wordpress.android.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -16,19 +16,19 @@ import org.wordpress.android.R;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.widgets.WPTextView;
 
-public class ProfileInputDialogFragment extends DialogFragment {
+public class TextInputDialogFragment extends DialogFragment {
     private static final String TITLE_TAG = "title";
     private static final String INITIAL_TEXT_TAG = "initial_text";
     private static final String HINT_TAG = "hint";
     private static final String IS_MULTILINE_TAG = "is_multiline";
     private static final String CALLBACK_ID_TAG = "callback_id";
 
-    public static ProfileInputDialogFragment newInstance(String title,
-                                                         String initialText,
-                                                         String hint,
-                                                         boolean isMultiline,
-                                                         int callbackId) {
-        ProfileInputDialogFragment profileInputDialogFragment = new ProfileInputDialogFragment();
+    public static TextInputDialogFragment newInstance(String title,
+                                                      String initialText,
+                                                      String hint,
+                                                      boolean isMultiline,
+                                                      int callbackId) {
+        TextInputDialogFragment textInputDialogFragment = new TextInputDialogFragment();
         Bundle args = new Bundle();
 
         args.putString(TITLE_TAG, title);
@@ -37,21 +37,21 @@ public class ProfileInputDialogFragment extends DialogFragment {
         args.putBoolean(IS_MULTILINE_TAG, isMultiline);
         args.putInt(CALLBACK_ID_TAG, callbackId);
 
-        profileInputDialogFragment.setArguments(args);
-        return profileInputDialogFragment;
+        textInputDialogFragment.setArguments(args);
+        return textInputDialogFragment;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         //noinspection InflateParams
-        View promptView = layoutInflater.inflate(R.layout.my_profile_dialog, null);
+        View promptView = layoutInflater.inflate(R.layout.text_input_dialog, null);
         AlertDialog.Builder alertDialogBuilder = new MaterialAlertDialogBuilder(getActivity());
         alertDialogBuilder.setView(promptView);
 
-        final WPTextView textView = promptView.findViewById(R.id.my_profile_dialog_label);
-        final EditText editText = promptView.findViewById(R.id.my_profile_dialog_input);
-        final WPTextView hintView = promptView.findViewById(R.id.my_profile_dialog_hint);
+        final WPTextView textView = promptView.findViewById(R.id.text_input_dialog_label);
+        final EditText editText = promptView.findViewById(R.id.text_input_dialog_input);
+        final WPTextView hintView = promptView.findViewById(R.id.text_input_dialog_hint);
 
         Bundle args = getArguments();
         String title = args.getString(TITLE_TAG);
@@ -82,7 +82,7 @@ public class ProfileInputDialogFragment extends DialogFragment {
                                           .onSuccessfulInput(editText.getText().toString(), callbackId);
                               } else {
                                   AppLog.e(AppLog.T.UTILS,
-                                           "Target fragment doesn't implement ProfileInputDialogFragment.Callback");
+                                           "Target fragment doesn't implement TextInputDialogFragment.Callback");
                               }
                           })
                           .setNegativeButton(R.string.cancel,

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.ui.TextInputDialogFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -27,7 +28,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
+public class MyProfileFragment extends Fragment implements TextInputDialogFragment.Callback {
     private static final String DIALOG_TAG = "DIALOG";
 
     private WPTextView mFirstName;
@@ -138,7 +139,7 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
         return v -> {
-            ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
+            TextInputDialogFragment inputDialog = TextInputDialogFragment.newInstance(dialogTitle,
                     textView.getText()
                             .toString(),
                     hint, isMultiline,
