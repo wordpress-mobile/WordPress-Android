@@ -42,7 +42,7 @@ class ReaderPostViewHolder(
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)
         uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
-        // TODO malinjir onItemClicked
+        post_container.setOnClickListener { state.onItemClicked(uiState.postId, uiState.blogId) }
 
         // Discover section
         initDiscoverSection(state)
@@ -53,7 +53,7 @@ class ReaderPostViewHolder(
         initActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
         initActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
 
-        // TODO malinjir onItemRendered
+        state.onItemRendered.invoke(uiState.postId, uiState.blogId)
     }
 
     private fun initFeaturedImage(state: ReaderPostUiState) {

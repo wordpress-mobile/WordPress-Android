@@ -45,8 +45,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onLikeClicked: (Long, Long, Boolean) -> Unit,
         onReblogClicked: (Long, Long, Boolean) -> Unit,
         onCommentsClicked: (Long, Long, Boolean) -> Unit,
-        onItemClicked: (ReaderPost) -> Unit,
-        onItemRendered: (ReaderPost) -> Unit
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (Long, Long) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 

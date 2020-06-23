@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -13,6 +12,8 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -83,12 +84,12 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir implement action
     }
 
-    private fun onItemClicked(post: ReaderPost) {
-        // TODO malinjir implement action
+    private fun onItemClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemClicked")
     }
 
-    private fun onItemRendered(post: ReaderPost) {
-        // TODO malinjir implement action
+    private fun onItemRendered(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemRendered")
     }
 
     private fun loadPosts() {
@@ -130,8 +131,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
             val commentsAction: ActionUiState,
-            val onItemClicked: ((ReaderPost) -> Unit),
-            val onItemRendered: (ReaderPost) -> Unit
+            val onItemClicked: ((Long, Long) -> Unit),
+            val onItemRendered: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
