@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/one_line_list_item_height"
+    android:background="?selectableItemBackground">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/footer_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:layout_marginStart="@dimen/margin_extra_large"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?colorPrimary"
+        tools:text="@string/connect_site" />
+
+</FrameLayout>
