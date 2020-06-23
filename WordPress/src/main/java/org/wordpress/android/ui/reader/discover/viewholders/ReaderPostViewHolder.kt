@@ -47,7 +47,7 @@ class ReaderPostViewHolder(
         // Discover section
         initDiscoverSection(state)
 
-        // Actoin buttons section
+        // Action buttons section
         initActionButton(uiState.postId, uiState.blogId, uiState.likeAction, count_likes)
         initActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
         initActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
