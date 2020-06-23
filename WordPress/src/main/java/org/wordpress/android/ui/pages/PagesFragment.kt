@@ -14,6 +14,7 @@ import android.view.MenuItem.OnActionExpandListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
@@ -47,6 +48,7 @@ import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
+import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
@@ -93,6 +95,8 @@ class PagesFragment : Fragment() {
     private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
+
+    private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
 
     companion object {
         fun newInstance(): PagesFragment {
@@ -204,6 +208,16 @@ class PagesFragment : Fragment() {
             }
             return@setOnTouchListener false
         }
+
+        authorSelectionAdapter = AuthorSelectionAdapter(activity)
+        pages_author_selection.adapter = authorSelectionAdapter
+        pages_author_selection.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                viewModel.updateAuthorFilterSelection(id)
+            }
+        }
     }
 
     private fun initializeSearchView() {
@@ -263,6 +277,25 @@ class PagesFragment : Fragment() {
             restorePreviousSearch = true
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
+
+        viewModel.authorUIState.observe(activity, Observer { state ->
+            state?.let {
+                uiHelpers.updateVisibility(pages_author_selection, state.isAuthorFilterVisible)
+                uiHelpers.updateVisibility(pages_tab_layout_fading_edge, state.isAuthorFilterVisible)
+
+                val tabLayoutPaddingStart =
+                        if (state.isAuthorFilterVisible)
+                            resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
+                        else 0
+                tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
+
+                authorSelectionAdapter.updateItems(state.authorFilterItems)
+
+                authorSelectionAdapter.getIndexOfSelection(state.authorFilterSelection)?.let { selectionIndex ->
+                    pages_author_selection.setSelection(selectionIndex)
+                }
+            }
+        })
 
         viewModel.start(site)
     }
@@ -428,6 +461,7 @@ class PagesFragment : Fragment() {
     private fun hideSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.VISIBLE
         tabLayout.visibility = View.VISIBLE
+        tabContainer.visibility = View.VISIBLE
         searchFrame.visibility = View.GONE
         if (myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.collapseActionView()
@@ -437,6 +471,7 @@ class PagesFragment : Fragment() {
     private fun showSearchList(myActionMenuItem: MenuItem) {
         pagesPager.visibility = View.GONE
         tabLayout.visibility = View.GONE
+        tabContainer.visibility = View.GONE
         searchFrame.visibility = View.VISIBLE
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
