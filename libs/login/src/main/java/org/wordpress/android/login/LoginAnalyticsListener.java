@@ -69,4 +69,6 @@ public interface LoginAnalyticsListener {
     void trackShowHelpClick();
 
     void trackDismissDialog();
+
+    void trackEmailFieldClick();
 }

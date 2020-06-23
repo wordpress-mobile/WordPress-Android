@@ -201,6 +201,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onClick(View view) {
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackEmailFieldClick();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
