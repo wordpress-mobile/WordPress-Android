@@ -144,6 +144,15 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
             switch (getLoginMode()) {
                 case FULL:
+                    mIsSignupFromLoginEnabled = true;
+                    mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
+                    showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                        mIsSmartLockTriggeredFromPrologue = true;
+                        mIsSiteLoginAvailableFromPrologue = true;
+                        initSmartLockIfNotFinished(true);
+                    }
+                    break;
                 case WPCOM_LOGIN_ONLY:
                     mIsSignupFromLoginEnabled = true;
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);

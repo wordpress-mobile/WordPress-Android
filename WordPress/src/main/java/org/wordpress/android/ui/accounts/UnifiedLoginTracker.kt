@@ -63,6 +63,7 @@ class UnifiedLoginTracker
         DEEPLINK("deeplink"),
         REAUTHENTICATION("reauthentication"),
         SELF_HOSTED("self_hosted"),
+        ADD_WORDPRESS_COM_ACCOUNT("add_wordpress_com_account"),
         DEFAULT("default")
     }
 
