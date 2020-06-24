@@ -149,7 +149,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             mShouldWatchText = savedInstanceState.getBoolean(KEY_SHOULD_WATCH_TEXT);
             mUsernameSelected = savedInstanceState.getString(KEY_USERNAME_SELECTED);
             mUsernameSelectedIndex = savedInstanceState.getInt(KEY_USERNAME_SELECTED_INDEX);
-            setUsernameSuggestions(savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS));
+            ArrayList<String> suggestions = savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS);
+            if (suggestions != null) {
+                setUsernameSuggestions(suggestions);
+            } else {
+                getUsernameSuggestions(mUsernameSuggestionInput);
+            }
 
             if (mIsShowingDismissDialog) {
                 showDismissDialog();
