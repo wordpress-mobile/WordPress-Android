@@ -445,6 +445,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAnalyticsListener.emailFormScreenResumed();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);

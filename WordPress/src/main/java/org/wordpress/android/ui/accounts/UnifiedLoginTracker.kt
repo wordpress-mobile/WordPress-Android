@@ -107,6 +107,10 @@ class UnifiedLoginTracker
         currentFlow = Flow.values().find { it.value == value }
     }
 
+    fun setFlow(flow: Flow) {
+        currentFlow = flow
+    }
+
     fun getSource(): Source = currentSource
     fun getFlow(): Flow? = currentFlow
 

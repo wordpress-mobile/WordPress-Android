@@ -186,6 +186,12 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAnalyticsListener.emailFormScreenResumed();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_REQUESTED_EMAIL, mRequestedEmail);

@@ -349,4 +349,9 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     public void trackShowEmailHints() {
         mUnifiedLoginTracker.track(Step.SHOW_EMAIL_HINTS);
     }
+
+    @Override
+    public void emailFormScreenResumed() {
+        mUnifiedLoginTracker.setFlow(Flow.WORDPRESS_COM);
+    }
 }

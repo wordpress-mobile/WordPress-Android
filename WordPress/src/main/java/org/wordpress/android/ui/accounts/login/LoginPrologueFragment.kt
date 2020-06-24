@@ -92,6 +92,11 @@ class LoginPrologueFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        unifiedLoginTracker.setFlow(Flow.PROLOGUE)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         // important for accessibility - talkback
