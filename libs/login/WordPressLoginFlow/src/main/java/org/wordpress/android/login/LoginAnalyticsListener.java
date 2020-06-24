@@ -81,4 +81,6 @@ public interface LoginAnalyticsListener {
     void trackEmailSignupConfirmationViewed();
 
     void trackSocialSignupConfirmationViewed();
+
+    void trackCreateAccountClick();
 }
