@@ -5,12 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -48,10 +50,45 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
-                        postUiStateBuilder.mapPostToUiState(it, photonWidth, photonHeight)
+                        postUiStateBuilder.mapPostToUiState(
+                                post = it,
+                                photonWidth = photonWidth,
+                                photonHeight = photonHeight,
+                                isBookmarkList = false,
+                                onBookmarkClicked = this::onBookmarkClicked,
+                                onLikeClicked = this::onLikeClicked,
+                                onReblogClicked = this::onReblogClicked,
+                                onCommentsClicked = this::onCommentsClicked,
+                                onItemClicked = this::onItemClicked,
+                                onItemRendered = this::onItemRendered
+                        )
                     }
             )
         }
+    }
+
+    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemClicked(post: ReaderPost) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemRendered(post: ReaderPost) {
+        // TODO malinjir implement action
     }
 
     private fun loadPosts() {
@@ -87,7 +124,13 @@ class ReaderDiscoverViewModel @Inject constructor(
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisibility: Boolean,
             val moreMenuVisibility: Boolean,
-            val photoFrameVisibility: Boolean
+            val photoFrameVisibility: Boolean,
+            val bookmarkAction: ActionUiState,
+            val likeAction: ActionUiState,
+            val reblogAction: ActionUiState,
+            val commentsAction: ActionUiState,
+            val onItemClicked: ((ReaderPost) -> Unit),
+            val onItemRendered: (ReaderPost) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
@@ -100,6 +143,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
                 val imageType: ImageType
+            )
+
+            data class ActionUiState(
+                val isEnabled: Boolean,
+                val isSelected: Boolean? = false,
+                val contentDescription: UiString? = null,
+                val count: Int = 0,
+                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
             )
         }
     }
