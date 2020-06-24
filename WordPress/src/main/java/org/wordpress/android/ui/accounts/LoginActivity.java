@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.credentials.Credential;
@@ -27,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
 import org.wordpress.android.login.Login2FaFragment;
 import org.wordpress.android.login.LoginAnalyticsListener;
@@ -41,6 +41,7 @@ import org.wordpress.android.login.LoginSiteAddressFragment;
 import org.wordpress.android.login.LoginUsernamePasswordFragment;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment;
 import org.wordpress.android.login.SignupBottomSheetDialogFragment.SignupSheetListener;
+import org.wordpress.android.login.SignupConfirmationFragment;
 import org.wordpress.android.login.SignupEmailFragment;
 import org.wordpress.android.login.SignupGoogleFragment;
 import org.wordpress.android.login.SignupMagicLinkFragment;
@@ -224,6 +225,13 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    private void addGoogleFragment(GoogleFragment googleFragment, String tag) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        googleFragment.setRetainInstance(true);
+        fragmentTransaction.add(googleFragment, tag);
+        fragmentTransaction.commit();
     }
 
     private LoginPrologueFragment getLoginPrologueFragment() {
@@ -437,13 +445,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_SOCIAL_BUTTON_TAPPED);
 
         if (NetworkUtils.checkConnection(this)) {
-            SignupGoogleFragment signupGoogleFragment;
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            signupGoogleFragment = new SignupGoogleFragment();
-            signupGoogleFragment.setRetainInstance(true);
-            fragmentTransaction.add(signupGoogleFragment, SignupGoogleFragment.TAG);
-            fragmentTransaction.commit();
+            addGoogleFragment(new SignupGoogleFragment(), SignupGoogleFragment.TAG);
         }
     }
 
@@ -483,6 +485,20 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void gotUnregisteredEmail(String email) {
+        SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
+        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
+    }
+
+    @Override
+    public void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
+                                             String service) {
+        SignupConfirmationFragment signupConfirmationFragment =
+                SignupConfirmationFragment.newInstance(email, displayName, idToken, photoUrl, service);
+        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
+    }
+
+    @Override
     public void loginViaSiteAddress() {
         LoginSiteAddressFragment loginSiteAddressFragment = new LoginSiteAddressFragment();
         slideInFragment(loginSiteAddressFragment, true, LoginSiteAddressFragment.TAG);
@@ -518,6 +534,14 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         SignupMagicLinkFragment signupMagicLinkFragment = SignupMagicLinkFragment.newInstance(email, mIsJetpackConnect,
                 mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null);
         slideInFragment(signupMagicLinkFragment, true, SignupMagicLinkFragment.TAG);
+    }
+
+    @Override
+    public void showSignupSocial(String email, String displayName, String idToken, String photoUrl, String service) {
+        if (GoogleFragment.SERVICE_TYPE_GOOGLE.equals(service)) {
+            addGoogleFragment(SignupGoogleFragment.newInstance(email, displayName, idToken, photoUrl),
+                    SignupGoogleFragment.TAG);
+        }
     }
 
     @Override
@@ -646,19 +670,18 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void helpSignupConfirmationScreen(String email) {
+        viewHelpAndSupport(Origin.SIGNUP_CONFIRMATION);
+    }
+
+    @Override
     public void helpSocialEmailScreen(String email) {
         viewHelpAndSupport(Origin.LOGIN_SOCIAL);
     }
 
     @Override
     public void addGoogleLoginFragment() {
-        LoginGoogleFragment loginGoogleFragment;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        loginGoogleFragment = LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled);
-        loginGoogleFragment.setRetainInstance(true);
-        fragmentTransaction.add(loginGoogleFragment, LoginGoogleFragment.TAG);
-        fragmentTransaction.commit();
+        addGoogleFragment(LoginGoogleFragment.newInstance(mIsSignupFromLoginEnabled), LoginGoogleFragment.TAG);
     }
 
     @Override

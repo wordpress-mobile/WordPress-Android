@@ -581,11 +581,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         switch (event.type) {
             case EMAIL:
                 if (event.isAvailable) {
+                    ActivityUtils.hideKeyboardForced(mEmailInput);
                     if (mIsSignupFromLoginEnabled) {
-                        mLoginListener.showSignupMagicLink(event.value);
+                        if (mLoginListener != null) {
+                            mLoginListener.gotUnregisteredEmail(event.value);
+                        }
                     } else {
                         // email address is available on wpcom, so apparently the user can't login with that one.
-                        ActivityUtils.hideKeyboardForced(mEmailInput);
                         mAnalyticsListener.trackFailure("Email not registered WP.com");
                         showEmailError(R.string.email_not_registered_wpcom);
                     }
