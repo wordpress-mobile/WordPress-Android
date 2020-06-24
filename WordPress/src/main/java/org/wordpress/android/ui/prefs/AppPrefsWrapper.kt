@@ -142,6 +142,8 @@ class AppPrefsWrapper @Inject constructor() {
     fun setReaderTag(selectedTag: ReaderTag?) = AppPrefs.setReaderTag(selectedTag)
     fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
 
+    fun isReaderImprovementsPhase2Enabled(): Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
