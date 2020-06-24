@@ -20,16 +20,17 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         val order: Int
     ) {
         CREATE_SITE("create_site", CUSTOMIZE, 0),
-        UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 1),
-        CHOOSE_THEME("choose_theme", CUSTOMIZE, 2),
-        CUSTOMIZE_SITE("customize_site", CUSTOMIZE, 3),
-        CREATE_NEW_PAGE("create_new_page", CUSTOMIZE, 4),
-        VIEW_SITE("view_site", CUSTOMIZE, 5),
-        ENABLE_POST_SHARING("enable_post_sharing", GROW, 6),
-        PUBLISH_POST("publish_post", GROW, 7),
-        FOLLOW_SITE("follow_site", GROW, 8),
-        CHECK_STATS("check_stats", GROW, 9),
-        EXPLORE_PLANS("explore_plans", GROW, 10);
+        UPDATE_SITE_TITLE("update_site_title", CUSTOMIZE, 1),
+        UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 2),
+        CHOOSE_THEME("choose_theme", CUSTOMIZE, 3),
+        CUSTOMIZE_SITE("customize_site", CUSTOMIZE, 4),
+        CREATE_NEW_PAGE("create_new_page", CUSTOMIZE, 5),
+        VIEW_SITE("view_site", CUSTOMIZE, 6),
+        ENABLE_POST_SHARING("enable_post_sharing", GROW, 7),
+        PUBLISH_POST("publish_post", GROW, 8),
+        FOLLOW_SITE("follow_site", GROW, 9),
+        CHECK_STATS("check_stats", GROW, 10),
+        EXPLORE_PLANS("explore_plans", GROW, 11);
 
         override fun toString(): String {
             return string
