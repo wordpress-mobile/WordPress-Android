@@ -313,7 +313,7 @@ jobs:
       APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
