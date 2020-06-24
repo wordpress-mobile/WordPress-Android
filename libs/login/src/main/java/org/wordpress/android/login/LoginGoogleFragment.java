@@ -197,7 +197,6 @@ public class LoginGoogleFragment extends GoogleFragment {
                         event.error.type.toString(), event.error.message);
             }
 
-            mAnalyticsListener.trackFailure(event.error.type.name());
             switch (event.error.type) {
                 // WordPress account exists with input email address, but not connected.
                 case USER_EXISTS:
