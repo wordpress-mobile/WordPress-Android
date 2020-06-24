@@ -226,7 +226,10 @@ public class AppPrefs {
         LAST_FEATURE_ANNOUNCEMENT_APP_VERSION_CODE,
 
         // feature flag for Reader Improvements Phase 2
-        FF_READER_IMPROVEMENTS_PHASE_2
+        FF_READER_IMPROVEMENTS_PHASE_2,
+
+        // timestamp of the last update of the reader css styles
+        READER_CSS_UPDATED_TIMESTAMP
     }
 
     private static SharedPreferences prefs() {
@@ -1134,6 +1137,14 @@ public class AppPrefs {
 
     public static void setReaderTagsUpdatedTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_TAGS_UPDATE_TIMESTAMP, timestamp);
+    }
+
+    public static long getReaderCssUpdatedTimestamp() {
+        return getLong(UndeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
+    }
+
+    public static void setReaderCssUpdatedTimestamp(long timestamp) {
+        setLong(UndeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
     }
 
     /*

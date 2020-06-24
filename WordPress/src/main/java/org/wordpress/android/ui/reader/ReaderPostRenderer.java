@@ -50,9 +50,11 @@ public class ReaderPostRenderer {
     private String mRenderedHtml;
     private ImageSizeMap mAttachmentSizes;
     private FeaturedImageUtils mFeaturedImageUtils;
+    private ReaderCssProvider mCssProvider;
 
     @SuppressLint("SetJavaScriptEnabled")
-    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, FeaturedImageUtils featuredImageUtils) {
+    public ReaderPostRenderer(ReaderWebView webView, ReaderPost post, FeaturedImageUtils featuredImageUtils,
+                              ReaderCssProvider cssProvider) {
         if (webView == null) {
             throw new IllegalArgumentException("ReaderPostRenderer requires a webView");
         }
@@ -64,6 +66,7 @@ public class ReaderPostRenderer {
         mWeakWebView = new WeakReference<>(webView);
         mResourceVars = new ReaderResourceVars(webView.getContext());
         mFeaturedImageUtils = featuredImageUtils;
+        mCssProvider = cssProvider;
 
         mMinFullSizeWidthDp = pxToDp(mResourceVars.mFullSizeImageWidthPx / 3);
         mMinMidSizeWidthDp = mMinFullSizeWidthDp / 2;
@@ -362,7 +365,7 @@ public class ReaderPostRenderer {
         // title isn't necessary, but it's invalid html5 without one
         sbHtml.append("<title>Reader Post</title>")
               .append("<link rel=\"stylesheet\" type=\"text/css\"\n"
-                      + "          href=\"https://wordpress.com/calypso/reader-mobile.css\">");
+                      + "          href=\"" + mCssProvider.getCssUrl() + "\">");
         // https://developers.google.com/chrome/mobile/docs/webview/pixelperfect
         sbHtml.append("<meta name='viewport' content='width=device-width, initial-scale=1'>")
               .append("<style type='text/css'>");
