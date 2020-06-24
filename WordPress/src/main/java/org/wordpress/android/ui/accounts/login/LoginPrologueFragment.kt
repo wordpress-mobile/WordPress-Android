@@ -94,7 +94,7 @@ class LoginPrologueFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        unifiedLoginTracker.setFlow(Flow.PROLOGUE)
+        unifiedLoginTracker.setFlowAndStep(Flow.PROLOGUE, PROLOGUE)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

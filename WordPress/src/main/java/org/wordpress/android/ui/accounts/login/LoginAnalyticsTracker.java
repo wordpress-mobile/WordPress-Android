@@ -352,6 +352,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override
     public void emailFormScreenResumed() {
-        mUnifiedLoginTracker.setFlow(Flow.WORDPRESS_COM);
+        mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM, Step.START);
     }
 }
