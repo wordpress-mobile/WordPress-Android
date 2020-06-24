@@ -132,7 +132,8 @@ class UnifiedLoginTracker
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
-        SIGNUP("signup")
+        SIGNUP("signup"),
+        GOOGLE_SIGNUP("google_signup")
     }
 
     enum class Step(val value: String) {
