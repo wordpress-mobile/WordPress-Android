@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.toolbar_login.*
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromEmail
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
+import javax.inject.Inject
 
 class SignupConfirmationFragment : Fragment() {
     private var mLoginListener: LoginListener? = null
@@ -27,6 +28,8 @@ class SignupConfirmationFragment : Fragment() {
     private var mPhotoUrl: String? = null
     private var mService: String? = null
     private var mIsSocialSignup: Boolean = false
+
+    @Inject lateinit var mAnalyticsListener: LoginAnalyticsListener
 
     companion object {
         const val TAG = "signup_confirmation_fragment_tag"
@@ -131,7 +134,11 @@ class SignupConfirmationFragment : Fragment() {
         }
 
         if (savedInstanceState == null) {
-            // TODO Track screen
+            if (mIsSocialSignup) {
+                mAnalyticsListener.trackSocialSignupConfirmationViewed()
+            } else {
+                mAnalyticsListener.trackEmailSignupConfirmationViewed()
+            }
         }
     }
 
