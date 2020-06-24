@@ -122,6 +122,7 @@ class SignupConfirmationFragment : Fragment() {
             label.setText(R.string.signup_confirmation_message)
             signup_confirmation_button.setText(R.string.create_account)
             signup_confirmation_button.setOnClickListener {
+                mAnalyticsListener.trackCreateAccountClick()
                 mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
             }
         } else {
@@ -129,6 +130,7 @@ class SignupConfirmationFragment : Fragment() {
             label.setText(R.string.signup_confirmation_magic_link_message)
             signup_confirmation_button.setText(R.string.send_link_by_email)
             signup_confirmation_button.setOnClickListener {
+                mAnalyticsListener.trackRequestMagicLinkClick()
                 mLoginListener?.showSignupMagicLink(mEmail)
             }
         }
@@ -159,6 +161,7 @@ class SignupConfirmationFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick()
             if (mLoginListener != null) {
                 mLoginListener?.helpSignupConfirmationScreen(mEmail)
             }
