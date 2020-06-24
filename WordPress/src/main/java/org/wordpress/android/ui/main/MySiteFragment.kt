@@ -696,6 +696,12 @@ class MySiteFragment : Fragment(),
                     val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
                     showSiteIconProgressBar(true)
                     updateSiteIconMediaId(mediaId)
+                } else if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
+                    ActivityLauncher.addNewStoryForResult(
+                            activity,
+                            selectedSite,
+                            PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+                    )
                 } else {
                     val mediaUriStringsArray = data.getStringArrayExtra(
                             PhotoPickerActivity.EXTRA_MEDIA_URIS
