@@ -140,7 +140,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
-        editorMedia.start(site!!, this, STORY_EDITOR)
+        editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
         postEditorAnalyticsSession?.start(null)
         startObserving()
     }
