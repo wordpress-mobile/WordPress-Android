@@ -2306,6 +2306,7 @@
     <string name="send_link" tools:ignore="UnusedResources">Send link</string>
     <string name="enter_your_password_instead" tools:ignore="UnusedResources">Enter your password instead</string>
     <string name="send_link_by_email">Send link by email</string>
+    <string name="create_account">Create account</string>
     <string name="or_type_your_password">Or type your password</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
@@ -2403,6 +2404,8 @@
     <string name="signup_magic_link_error_button_positive">Retry</string>
     <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
+    <string name="signup_confirmation_magic_link_message">We’ll email you a magic link to create your new WordPress.com account.</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
@@ -2411,11 +2414,11 @@
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google…</string>
-    <string name="signin_with_google_progress">Signing in with Google…</string>
     <string name="content_description_add_avatar">Add avatar</string>
     <!-- Screen titles -->
     <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="signup_confirmation_title">Signup confirmation</string>
 
     <string name="continue_with_wpcom">Continue with WordPress.com</string>
     <string name="enter_your_site_address">Enter your site address</string>
