@@ -75,4 +75,6 @@ public interface LoginAnalyticsListener {
     void trackPickEmailFromHint();
 
     void trackShowEmailHints();
+
+    void emailFormScreenResumed();
 }
