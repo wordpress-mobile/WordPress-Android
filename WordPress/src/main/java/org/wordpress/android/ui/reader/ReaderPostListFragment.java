@@ -751,6 +751,7 @@ public class ReaderPostListFragment extends Fragment
     @Override
     public void onStop() {
         super.onStop();
+        mNewPostsBar.clearAnimation();
         mDispatcher.unregister(this);
         EventBus.getDefault().unregister(this);
     }

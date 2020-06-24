@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-20 15:34:10+0000
+Translation-Revision-Date: 2020-06-09 18:59:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Hiqe %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
+    <string name="gutenberg_native_move_s_up">Ngjite %s Sipër</string>
+    <string name="gutenberg_native_move_s_right">Shpjere %s Djathtas</string>
+    <string name="gutenberg_native_move_s_left">Shpjere %s Majtas</string>
+    <string name="gutenberg_native_move_s_down">Ule %s Poshtë</string>
+    <string name="gutenberg_native_try_a_starter_layout">Provoni një skemë sa për fillim</string>
+    <string name="gutenberg_native_insert_mention">Futni përmendje</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Poshtme me mundësitë e gatshme</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Veprimeve me mundësitë e gatshme</string>
+    <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
+    <string name="pages_set_as_posts_page">Caktojeni Faqe Postimesh</string>
+    <string name="pages_set_as_homepage">Caktojeni si Faqen hyrëse</string>
+    <string name="suggestion_no_matching_users">\"S’ka përdorues me përputhje.\"</string>
+    <string name="suggestion_invalid_user">\"%s s’është përdorues i vlefshëm\"</string>
+    <string name="site_settings_select_page">Përzgjidhe Faqen</string>
+    <string name="site_settings_posts_page">Faqe Postimesh</string>
+    <string name="site_settings_static_homepage">Faqe Hyrëse Statike</string>
+    <string name="site_settings_classic_blog">Blog Klasik</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Faqja hyrëse e përzgjedhur dhe faqja e përzgjedhur për postime s’mund të jenë e njëjta.</string>
+    <string name="site_settings_failed_update_homepage_settings">Përditësimi i rregullimeve të faqes hyrëse dështoi, kontrolloni lidhjen tuaj në internet</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">S’mund të ruhen rregullime faqeje hyrëse përpara se të ngarkohen faqe</string>
+    <string name="site_settings_failed_to_save_homepage_settings">S’ruhen dot rregullime faqeje hyrëse</string>
+    <string name="site_settings_accept_homepage">Pranoje</string>
+    <string name="site_settings_failed_to_load_pages">Ngarkimi i faqeve dështoi</string>
+    <string name="site_settings_homepage_settings_description">Zgjidhni prej një faqeje hyrëse që shfaq postimet tuaja më të reja (blog klasik) ose një faqe të fiksuar / statike.</string>
+    <string name="site_settings_homepage_settings">Rregullime Faqeje Hyrëse</string>
+    <string name="site_settings_homepage">Faqe Hyrëse</string>
+    <string name="page_posts_page_update_failed">Përditësimi i Faqes Postime dështoi</string>
+    <string name="page_posts_page_successfully_updated">Faqja Postime u përditësua me sukses</string>
+    <string name="page_homepage_update_failed">Përditësimi i faqes hyrëse dështoi</string>
+    <string name="page_homepage_successfully_updated">Faqja hyrëse u krijua me sukses</string>
+    <string name="page_cannot_set_posts_page">Që të caktoni faqe Postimesh, aktivizoni te Rregullime Sajti \"Faqe hyrëse Statike\"</string>
+    <string name="page_cannot_set_homepage">Që të caktoni Faqe hyrëse, aktivizoni te Rregullime Sajti \"Faqe hyrëse Statike\"</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">Mirë se vini te blogu ynë i ri</string>
     <string name="gutenberg_native_select_a_color">Përzgjidhni një ngjyrë</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Prekeni dyfish që të kaloni te rregullimet e ngjyrave</string>
@@ -36,9 +71,7 @@ Language: sq_AL
     <string name="copy_text">Kopjoje</string>
     <string name="gutenberg_native_number_of_columns">Numër shtyllash</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Kaloje bllokun djathtas nga pozicioni %1$s sipër në pozicionin %2$s</string>
-    <string name="gutenberg_native_move_block_right">Shpjere bllokun djathtas</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Kaloje bllokun majtas nga pozicioni %1$s në pozicionin %2$s</string>
-    <string name="gutenberg_native_move_block_left">Shpjere bllokun majtas</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Që ta lëvizni bllokun djathtas, prekeni dyfish</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Që ta lëvizni bllokun majtas, prekeni dyfish</string>
     <string name="gutenberg_native_columns_settings">Rregullime Shtyllash</string>
@@ -79,7 +112,7 @@ Language: sq_AL
     <string name="error_media_recover_page_not_scheduled">S’e ngarkuam dot këtë media dhe s’e vumë në plan këtë faqe.</string>
     <string name="error_media_recover_page_not_published_private">S’e ngarkuam dot këtë media dhe s’e botuam këtë faqe private.</string>
     <string name="error_media_recover_page_not_published">S’e ngarkuam dot këtë media dhe s’e botuam faqen.</string>
-    <string name="page_waiting_for_connection_draft">Do ta ruajmë skicën tuaj kur pajisja juaj të jetë sërish në linjë.</string>
+    <string name="page_waiting_for_connection_draft">Do ta ruajmë skicën tuaj, kur pajisja juaj të jetë sërish në linjë</string>
     <string name="page_waiting_for_connection_private">Do ta botojmë faqen tuaj private kur pajisja juaj të jetë sërish në linjë.</string>
     <string name="page_waiting_for_connection_scheduled">Do ta vëmë në plan faqen tuaj kur pajisja juaj të jetë sërish në linjë.</string>
     <string name="page_waiting_for_connection_pending">Do ta parashtrojmë për shqyrtim faqen tuaj kur pajisja juaj të jetë sërish në linjë.</string>
@@ -121,16 +154,14 @@ Language: sq_AL
     <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoli im paraqet projekte të ndryshme të krijuar përgjatë karrierës time. Shihni të dhëna kontakti më poshtë dhe lidhuni me mua.</string>
     <string name="gutenberg_native_link_to">Lidhje Te</string>
+    <string name="gutenberg_native_s_settings">Rregullime %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ta bisedojmë 👋 Mos ngurroni të lidheni me ne përmes të dhënave të kontaktit më poshtë, ose dërgoni një mesazh duke përdorur formularin.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Le të ngremë diçka bashkë</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Le të Ngremë Diçka Bashkë</string>
-    <string name="gutenberg_native_let_s_build_something_together">Le të ngremë diçka bashkë</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Le të ngremë diçka bashkë!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Le të ngremë diçka bashkë!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harri, janë zgjedhjet tona ato që tregojnë vërtet se ç’jemi, shumë më tepër se aftësitë tona.</string>
     <string name="gutenberg_native_inspiration">Frymëzim</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Lidhuni!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Lidhuni!</string>
     <string name="gutenberg_native_get_in_touch">Lidhuni</string>
     <string name="gutenberg_native_excerpt_length_words">Gjatësi copëzash (fjalë)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Dërgomëni email: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -286,9 +317,7 @@ Language: sq_AL
     <string name="gutenberg_native_my_post_publish_panel">Paneli im i botimit të postimeve</string>
     <string name="gutenberg_native_my_document_setting_panel">Paneli Im i Rregullimeve Për Dokumente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s sipër te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_up">Shpjere bllokun më sipër</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Kaloje bllokun nga rreshti %1$s poshtë te rreshti %2$s</string>
-    <string name="gutenberg_native_move_block_down">Shpjere bllokun më poshtë</string>
     <string name="gutenberg_native_link_text">Tekst lidhjeje</string>
     <string name="gutenberg_native_link_inserted">Lidhja u fut</string>
     <string name="gutenberg_native_image_caption_s">Titull figure. %s</string>
@@ -310,7 +339,6 @@ Language: sq_AL
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Për përpunim, prekeni dyfish dhe mbajeni të prekur</string>
     <string name="gutenberg_native_current_value_is_s">Vlera e tanishme është %s</string>
     <string name="gutenberg_native_content">Lëndë…</string>
-    <string name="gutenberg_native_clear_all_settings">Spastroji Krejt Rregullimet</string>
     <string name="gutenberg_native_choose_from_device">Zgjidhni nga pajisje</string>
     <string name="gutenberg_native_annotations_sidebar">Anështyllë Shënimesh</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ndodhi një gabim i panjohur. Ju lutemi, riprovoni.</string>
@@ -1132,7 +1160,6 @@ Language: sq_AL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 postim me 1 kartelë të pangarkuar</string>
     <string name="untitled_in_parentheses">(Pa titull)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Krijoje sajtin</string>
     <string name="notification_site_creation_created">Prekeni që të vazhdohet.</string>
@@ -1602,7 +1629,7 @@ Language: sq_AL
     <string name="pending_draft_one_day_2">E dinit se \'%1$s\' është ende skicë? Botojeni de!</string>
     <string name="pending_draft_one_day_1">Dje hartuat \'%1$s\'. Mos harroni ta botoni!</string>
     <string name="reader_photo_by">Foto nga %s</string>
-    <string name="reader_label_visit">Vizitë</string>
+    <string name="reader_label_visit">Vizitoni sajtin</string>
     <string name="swipe_for_more">Për më tepër, fërkojeni</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">S’jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com, ose përdorni butonin e sipërm të veprimeve që të hapni një shfletues.</string>
     <string name="reader_err_get_post_not_authorized_signin">S’jeni i autorizuar ta shihni këtë postim. Provoni së pari të hyni në WordPress.com.</string>

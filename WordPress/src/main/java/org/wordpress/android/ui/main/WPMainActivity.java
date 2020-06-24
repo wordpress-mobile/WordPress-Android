@@ -182,6 +182,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
+    private final Handler mHandler = new Handler();
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -228,20 +229,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mBottomNav.init(getSupportFragmentManager(), this);
 
         mConnectionBar = findViewById(R.id.connection_bar);
-        mConnectionBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // slide out the bar on click, then re-check connection after a brief delay
-                AniUtils.animateBottomBar(mConnectionBar, false);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isFinishing()) {
-                            checkConnection();
-                        }
-                    }
-                }, 2000);
-            }
+        mConnectionBar.setOnClickListener(v -> {
+            // slide out the bar on click, then re-check connection after a brief delay
+            AniUtils.animateBottomBar(mConnectionBar, false);
+            mHandler.postDelayed(() -> {
+                if (!isFinishing()) {
+                    checkConnection();
+                }
+            }, 2000);
         });
 
         mIsMagicLinkLogin = getIntent().getBooleanExtra(ARG_IS_MAGIC_LINK_LOGIN, false);
@@ -693,6 +688,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         mDispatcher.unregister(this);
+        mHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
