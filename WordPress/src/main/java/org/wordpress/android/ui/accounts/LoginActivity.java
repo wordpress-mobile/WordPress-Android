@@ -145,15 +145,12 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
             switch (getLoginMode()) {
                 case FULL:
-                case WPCOM_LOGIN_ONLY:
-                    mIsSignupFromLoginEnabled = true;
                     mUnifiedLoginTracker.setSource(Source.DEFAULT);
-                    showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
-                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-                        mIsSmartLockTriggeredFromPrologue = true;
-                        mIsSiteLoginAvailableFromPrologue = true;
-                        initSmartLockIfNotFinished(true);
-                    }
+                    loginFromPrologue();
+                    break;
+                case WPCOM_LOGIN_ONLY:
+                    mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
+                    loginFromPrologue();
                     break;
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
@@ -193,6 +190,16 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                 mUnifiedLoginTracker.setSource(source);
             }
             mUnifiedLoginTracker.setFlow(savedInstanceState.getString(KEY_UNIFIED_TRACKER_FLOW));
+        }
+    }
+
+    private void loginFromPrologue() {
+        mIsSignupFromLoginEnabled = true;
+        showFragment(new LoginPrologueFragment(), LoginPrologueFragment.TAG);
+        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            mIsSmartLockTriggeredFromPrologue = true;
+            mIsSiteLoginAvailableFromPrologue = true;
+            initSmartLockIfNotFinished(true);
         }
     }
 
