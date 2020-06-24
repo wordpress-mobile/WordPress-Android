@@ -88,7 +88,7 @@ class LoginPrologueFragment : Fragment() {
 
         if (savedInstanceState == null) {
             AnalyticsTracker.track(LOGIN_PROLOGUE_VIEWED)
-            unifiedLoginTracker.track(Flow.GET_STARTED, PROLOGUE)
+            unifiedLoginTracker.track(Flow.PROLOGUE, PROLOGUE)
         }
     }
 

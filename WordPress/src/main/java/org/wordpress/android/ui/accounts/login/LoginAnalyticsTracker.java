@@ -40,7 +40,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackEmailFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
-        mUnifiedLoginTracker.track(Flow.GET_STARTED, Step.START);
+        mUnifiedLoginTracker.track(Flow.WORDPRESS_COM, Step.START);
     }
 
     @Override
