@@ -285,4 +285,9 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
         // Not used in WordPress app
     }
+
+    @Override
+    public void trackFailure(String message) {
+        mUnifiedLoginTracker.trackFailure(message);
+    }
 }

@@ -854,6 +854,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void onGoogleSignupError(String msg) {
+        mUnifiedLoginTracker.trackFailure(msg);
         // Only show the error dialog if the activity is still active
         if (!getSupportFragmentManager().isStateSaved()) {
             BasicFragmentDialog dialog = new BasicFragmentDialog();

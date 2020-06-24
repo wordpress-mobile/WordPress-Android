@@ -309,6 +309,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
             HashMap<String, String> errorProperties = new HashMap<>();
             errorProperties.put(ERROR_KEY, event.error.message);
             mAnalyticsListener.trackMagicLinkFailed(errorProperties);
+            mAnalyticsListener.trackFailure(event.error.message);
 
             AppLog.e(AppLog.T.API, "OnAuthEmailSent has error: " + event.error.type + " - " + event.error.message);
             if (isAdded()) {

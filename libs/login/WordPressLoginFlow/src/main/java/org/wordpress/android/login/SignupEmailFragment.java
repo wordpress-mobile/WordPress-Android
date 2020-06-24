@@ -247,6 +247,7 @@ public class SignupEmailFragment extends LoginBaseFormFragment<LoginListener> im
     }
 
     private void showErrorEmail(String message) {
+        mAnalyticsListener.trackFailure(message);
         mEmailInput.setError(message);
     }
 

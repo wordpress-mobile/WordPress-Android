@@ -25,7 +25,7 @@ class PostSignupInterstitialViewModel
 
     fun onInterstitialShown() {
         analyticsTracker.track(WELCOME_NO_SITES_INTERSTITIAL_SHOWN)
-        unifiedLoginTracker.track(SUCCESS)
+        unifiedLoginTracker.track(step = SUCCESS)
         appPrefs.shouldShowPostSignupInterstitial = false
     }
 

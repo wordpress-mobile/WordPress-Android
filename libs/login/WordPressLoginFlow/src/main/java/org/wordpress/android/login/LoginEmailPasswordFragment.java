@@ -267,10 +267,13 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     }
 
     private void showPasswordError() {
-        mPasswordInput.setError(getString(R.string.password_incorrect));
+        String message = getString(R.string.password_incorrect);
+        mAnalyticsListener.trackFailure(message);
+        mPasswordInput.setError(message);
     }
 
     private void showError(String error) {
+        mAnalyticsListener.trackFailure(error);
         mPasswordInput.setError(error);
     }
 
@@ -341,6 +344,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
                 mLoginListener.loginViaWpcomUsernameInstead();
                 ToastUtils.showToast(getContext(), R.string.error_user_username_instead_of_email, Duration.LONG);
 
+                mAnalyticsListener.trackFailure(loginState.getStep().name());
                 // consume the state so we don't re-redirect to username login if user backs up
                 LoginWpcomService.clearLoginServiceState();
                 break;
