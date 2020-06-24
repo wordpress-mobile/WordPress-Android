@@ -27,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
@@ -38,6 +39,7 @@ class ReaderInterestsViewModelTest {
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var viewModel: ReaderInterestsViewModel
+    @Mock lateinit var parentViewModel: ReaderViewModel
 
     @Mock lateinit var readerTagRepository: ReaderTagRepository
 
@@ -239,7 +241,7 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `navigation to discover triggered on done button click`() =
+    fun `close reader interests screen triggered on done button click`() =
         coroutineScope.runBlockingTest {
             // Given
             val mockInterests = getMockInterests()
@@ -250,7 +252,7 @@ class ReaderInterestsViewModelTest {
             viewModel.onDoneButtonClick()
 
             // Then
-            assertThat(requireNotNull(viewModel.navigateToDiscover.value).peekContent()).isNotNull
+            verify(parentViewModel, times(1)).onCloseReaderInterests()
         }
 
     @ExperimentalCoroutinesApi
@@ -291,7 +293,7 @@ class ReaderInterestsViewModelTest {
             assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
         }
 
-    private fun initViewModel() = viewModel.start()
+    private fun initViewModel() = viewModel.start(parentViewModel)
 
     private fun getMockInterests() =
         ReaderTagList().apply {

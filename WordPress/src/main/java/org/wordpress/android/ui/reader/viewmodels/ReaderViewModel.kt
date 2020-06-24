@@ -20,6 +20,8 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -40,6 +42,9 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
+    private var isReaderInterestsShown: Boolean = false
+    // TODO will depend on user tags
+    private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -53,21 +58,34 @@ class ReaderViewModel @Inject constructor(
     private val _showSearch = MutableLiveData<Event<Unit>>()
     val showSearch: LiveData<Event<Unit>> = _showSearch
 
+    private val _showReaderInterests = MutableLiveData<Event<Unit>>()
+    val showReaderInterests: LiveData<Event<Unit>> = _showReaderInterests
+
+    private val _closeReaderInterests = MutableLiveData<Event<Unit>>()
+    val closeReaderInterests: LiveData<Event<Unit>> = _closeReaderInterests
+
     init {
         EventBus.getDefault().register(this)
     }
 
     fun start() {
-        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
-        if (initialized) return
-        loadTabs()
+        if (shouldShowReaderInterests) {
+            if (isReaderInterestsShown) return
+            isReaderInterestsShown = true
+            _uiState.value = InitialUiState
+            _showReaderInterests.value = Event(Unit)
+        } else {
+            if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
+            if (initialized) return
+            loadTabs()
+        }
     }
 
     private fun loadTabs() {
         launch {
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
-                _uiState.value = ReaderUiState(
+                _uiState.value = ContentUiState(
                         tagList.map { it.label },
                         tagList,
                         searchIconVisible = isSearchSupported()
@@ -101,11 +119,31 @@ class ReaderViewModel @Inject constructor(
         appPrefsWrapper.setReaderTag(selectedTag)
     }
 
-    data class ReaderUiState(
-        val tabTitles: List<String>,
-        val readerTagList: ReaderTagList,
-        val searchIconVisible: Boolean
-    )
+    fun onCloseReaderInterests() {
+        shouldShowReaderInterests = false
+
+        _closeReaderInterests.value = Event(Unit)
+        _updateTags.value = Event(Unit)
+        loadTabs()
+    }
+
+    sealed class ReaderUiState(
+        open val searchIconVisible: Boolean,
+        val appBarExpanded: Boolean = false,
+        val tabLayoutVisible: Boolean = false
+    ) {
+        object InitialUiState : ReaderUiState(
+            searchIconVisible = false,
+            appBarExpanded = false,
+            tabLayoutVisible = false
+        )
+
+        data class ContentUiState(
+            val tabTitles: List<String>,
+            val readerTagList: ReaderTagList,
+            override val searchIconVisible: Boolean
+        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarExpanded = true, tabLayoutVisible = true)
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -120,7 +158,8 @@ class ReaderViewModel @Inject constructor(
 
     fun selectedTabChange(tag: ReaderTag) {
         uiState.value?.let {
-            val position = it.readerTagList.indexOfTagName(tag.tagSlug)
+            val currentUiState = it as ContentUiState
+            val position = currentUiState.readerTagList.indexOfTagName(tag.tagSlug)
             _selectTab.postValue(Event(position))
         }
     }
