@@ -129,6 +129,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
                 systemNotificationsTracker.trackTappedNotification(notificationType)
             }
+            // now see if we need to handle information coming from the MediaPicker to populate
+            handleMediaPickerIntentData(intent)
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
@@ -155,7 +157,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         data?.let {
             when (requestCode) {
                 RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> {
-                    handleMediaPickerResult(it)
+                    handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
                     if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
@@ -164,7 +166,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         )
                         editorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                        handleMediaPickerResult(it)
+                        handleMediaPickerIntentData(it)
                     }
                 }
             }
@@ -218,7 +220,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return true
     }
 
-    fun handleMediaPickerResult(data: Intent) {
+    fun handleMediaPickerIntentData(data: Intent) {
         // TODO move this to EditorMedia
         val ids = ListUtils.fromLongArray(
                 data.getLongArrayExtra(

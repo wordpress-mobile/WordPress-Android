@@ -681,6 +681,23 @@ public class ActivityLauncher {
             Activity activity,
             SiteModel site,
             PagePostCreationSourcesDetail source,
+            long[] mediaIds
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void addNewStoryWithMediaUrisForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
             String[] mediaUris
     ) {
         if (site == null) {

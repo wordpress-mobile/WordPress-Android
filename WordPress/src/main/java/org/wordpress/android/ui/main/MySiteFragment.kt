@@ -692,36 +692,23 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                    val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
-                    showSiteIconProgressBar(true)
-                    updateSiteIconMediaId(mediaId)
-                } else if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
-                    ActivityLauncher.addNewStoryForResult(
-                            activity,
-                            selectedSite,
-                            PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-                    )
-                } else {
-                    val mediaUriStringsArray = data.getStringArrayExtra(
-                            PhotoPickerActivity.EXTRA_MEDIA_URIS
-                    )
-                    if (mediaUriStringsArray.isNullOrEmpty()) {
-                        AppLog.e(
-                                UTILS,
-                                "Can't resolve picked or captured image"
-                        )
-                        return
-                    }
-
-                    if (isWPStoriesMediaBrowserTypeResult(data)) {
-                        ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                                activity,
-                                selectedSite,
-                                PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
-                                mediaUriStringsArray
-                        )
+                if (!handleMediaPickerResultForStories(data)) {
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
+                        showSiteIconProgressBar(true)
+                        updateSiteIconMediaId(mediaId)
                     } else {
+                        val mediaUriStringsArray = data.getStringArrayExtra(
+                                PhotoPickerActivity.EXTRA_MEDIA_URIS
+                        )
+                        if (mediaUriStringsArray.isNullOrEmpty()) {
+                            AppLog.e(
+                                    UTILS,
+                                    "Can't resolve picked or captured image"
+                            )
+                            return
+                        }
+
                         val source = PhotoPickerMediaSource.fromString(
                                 data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
                         )
@@ -778,6 +765,51 @@ class MySiteFragment : Fragment(),
         if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
             val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
             return browserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER
+        }
+        return false
+    }
+
+    /*
+        return true if MediaPickerResult was handled
+     */
+    private fun handleMediaPickerResultForStories(data: Intent): Boolean {
+        if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
+            ActivityLauncher.addNewStoryForResult(
+                    activity,
+                    selectedSite,
+                    PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+            )
+            return true
+        } else if (isWPStoriesMediaBrowserTypeResult(data)) {
+            if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
+                ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                        activity,
+                        selectedSite,
+                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        data.getLongArrayExtra(
+                                MediaBrowserActivity.RESULT_IDS
+                        )
+                )
+                return true
+            } else {
+                val mediaUriStringsArray = data.getStringArrayExtra(
+                        PhotoPickerActivity.EXTRA_MEDIA_URIS
+                )
+                if (mediaUriStringsArray.isNullOrEmpty()) {
+                    AppLog.e(
+                            UTILS,
+                            "Can't resolve picked or captured image"
+                    )
+                    return false
+                }
+                ActivityLauncher.addNewStoryWithMediaUrisForResult(
+                        activity,
+                        selectedSite,
+                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        mediaUriStringsArray
+                )
+                return true
+            }
         }
         return false
     }
