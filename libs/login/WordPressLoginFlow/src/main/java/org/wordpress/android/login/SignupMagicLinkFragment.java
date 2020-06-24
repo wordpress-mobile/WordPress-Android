@@ -157,6 +157,7 @@ public class SignupMagicLinkFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick();
             if (mLoginListener != null) {
                 mLoginListener.helpSignupMagicLinkScreen(mEmail);
             }
