@@ -149,7 +149,7 @@ public class MeFragment extends Fragment implements MainToolbarFragment, WPMainA
             if (mAccountStore.hasAccessToken()) {
                 signOutWordPressComWithConfirmation();
             } else {
-                ActivityLauncher.showSignInForResult(getActivity());
+                ActivityLauncher.showSignInForResult(getActivity(), true);
             }
         });
 
