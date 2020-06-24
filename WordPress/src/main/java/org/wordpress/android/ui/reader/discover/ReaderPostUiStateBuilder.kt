@@ -17,11 +17,11 @@ import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
-import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
 import org.wordpress.android.util.UrlUtilsWrapper
