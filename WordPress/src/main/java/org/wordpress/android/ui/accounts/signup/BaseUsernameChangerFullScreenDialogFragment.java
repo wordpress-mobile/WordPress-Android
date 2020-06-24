@@ -153,6 +153,7 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
             if (suggestions != null) {
                 setUsernameSuggestions(suggestions);
             } else {
+                mUsernameSuggestionInput = getUsernameQueryFromDisplayName();
                 getUsernameSuggestions(mUsernameSuggestionInput);
             }
 
