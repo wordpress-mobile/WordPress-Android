@@ -97,6 +97,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_OUTPUT_FILE_EXTENSION;
+import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
 
@@ -791,6 +792,7 @@ public class ActivityLauncher {
 
     public static void showSignInForResult(Activity activity) {
         Intent intent = new Intent(activity, LoginActivity.class);
+        WPCOM_LOGIN_ONLY.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 

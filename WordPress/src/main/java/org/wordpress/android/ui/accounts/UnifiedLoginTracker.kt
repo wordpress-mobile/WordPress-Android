@@ -98,11 +98,13 @@ class UnifiedLoginTracker
         DEEPLINK("deeplink"),
         REAUTHENTICATION("reauthentication"),
         SELF_HOSTED("self_hosted"),
+        ADD_WORDPRESS_COM_ACCOUNT("add_wordpress_com_account"),
         DEFAULT("default")
     }
 
     enum class Flow(val value: String) {
-        GET_STARTED("get_started"),
+        PROLOGUE("prologue"),
+        WORDPRESS_COM("wordpress_com"),
         GOOGLE_LOGIN("google_login"),
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
