@@ -32,13 +32,33 @@ import dagger.android.support.AndroidSupportInjection;
 public class SignupGoogleFragment extends GoogleFragment {
     private static final String OLD_SITES_IDS = "old_sites_ids";
     private static final String SIGN_UP_REQUESTED = "sign_up_requested";
+
+    private static final String ARG_GOOGLE_EMAIL = "ARG_GOOGLE_EMAIL";
+    private static final String ARG_DISPLAY_NAME = "ARG_DISPLAY_NAME";
+    private static final String ARG_ID_TOKEN = "ARG_ID_TOKEN";
+    private static final String ARG_PHOTO_URL = "ARG_PHOTO_URL";
+    private static final String ARG_FORCE_SIGNUP_AT_START = "ARG_FORCE_SIGNUP_AT_START";
+
     private ArrayList<Integer> mOldSitesIds;
     private ProgressDialog mProgressDialog;
     private boolean mSignupRequested;
+    private boolean mForceSignupAtStart;
 
     private static final int REQUEST_SIGNUP = 1002;
 
     public static final String TAG = "signup_google_fragment_tag";
+
+    public static SignupGoogleFragment newInstance(String email, String displayName, String idToken, String photoUrl) {
+        SignupGoogleFragment fragment = new SignupGoogleFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_GOOGLE_EMAIL, email);
+        args.putString(ARG_DISPLAY_NAME, displayName);
+        args.putString(ARG_ID_TOKEN, idToken);
+        args.putString(ARG_PHOTO_URL, photoUrl);
+        args.putBoolean(ARG_FORCE_SIGNUP_AT_START, true);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -46,6 +66,14 @@ public class SignupGoogleFragment extends GoogleFragment {
         mProgressDialog = ProgressDialog.show(
                 getActivity(), null, getString(R.string.signup_with_google_progress), true, false, null);
         super.onAttach(context);
+        Bundle args = getArguments();
+        if (args != null) {
+            mDisplayName = args.getString(ARG_DISPLAY_NAME);
+            mGoogleEmail = args.getString(ARG_GOOGLE_EMAIL);
+            mIdToken = args.getString(ARG_ID_TOKEN);
+            mPhotoUrl = args.getString(ARG_PHOTO_URL);
+            mForceSignupAtStart = args.getBoolean(ARG_FORCE_SIGNUP_AT_START);
+        }
     }
 
     @Override public void onCreate(Bundle savedInstanceState) {
@@ -70,13 +98,17 @@ public class SignupGoogleFragment extends GoogleFragment {
 
     @Override
     protected void startFlow() {
-        if (!mSignupRequested) {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow");
-            mSignupRequested = true;
-            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, REQUEST_SIGNUP);
+        if (mForceSignupAtStart) {
+            dispatchSocialSignup(mIdToken);
         } else {
-            AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow called, but is already in progress");
+            if (!mSignupRequested) {
+                AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow");
+                mSignupRequested = true;
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, REQUEST_SIGNUP);
+            } else {
+                AppLog.d(T.MAIN, "GOOGLE SIGNUP: startFlow called, but is already in progress");
+            }
         }
     }
 
@@ -104,10 +136,9 @@ public class SignupGoogleFragment extends GoogleFragment {
                                         account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
                             }
 
-                            PushSocialPayload payload = new PushSocialPayload(mIdToken, SERVICE_TYPE_GOOGLE);
                             AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - dispatching SocialSignupAction");
-                            mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
-                            mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
+
+                            dispatchSocialSignup(mIdToken);
                         } catch (NullPointerException exception) {
                             AppLog.d(T.MAIN, "GOOGLE SIGNUP: sign up result returned - NPE");
                             AppLog.e(T.NUX, "Cannot get ID token from Google signup account.", exception);
@@ -179,6 +210,12 @@ public class SignupGoogleFragment extends GoogleFragment {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    private void dispatchSocialSignup(String idToken) {
+        PushSocialPayload payload = new PushSocialPayload(idToken, SERVICE_TYPE_GOOGLE);
+        mDispatcher.dispatch(AccountActionBuilder.newPushSocialSignupAction(payload));
+        mOldSitesIds = SiteUtils.getCurrentSiteIds(mSiteStore, false);
     }
 
     @SuppressWarnings("unused")
