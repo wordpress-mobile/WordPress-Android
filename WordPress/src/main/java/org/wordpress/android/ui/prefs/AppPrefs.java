@@ -140,6 +140,9 @@ public class AppPrefs {
 
         // Keep the local_blog_id + local_post_id values that have HW Acc. turned off
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
+
+        // timestamp of the last update of the reader css styles
+        READER_CSS_UPDATED_TIMESTAMP
     }
 
     /**
@@ -227,9 +230,6 @@ public class AppPrefs {
 
         // feature flag for Reader Improvements Phase 2
         FF_READER_IMPROVEMENTS_PHASE_2,
-
-        // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP
     }
 
     private static SharedPreferences prefs() {
@@ -1140,11 +1140,11 @@ public class AppPrefs {
     }
 
     public static long getReaderCssUpdatedTimestamp() {
-        return getLong(UndeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
+        return getLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, 0);
     }
 
     public static void setReaderCssUpdatedTimestamp(long timestamp) {
-        setLong(UndeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
+        setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
     }
 
     /*
