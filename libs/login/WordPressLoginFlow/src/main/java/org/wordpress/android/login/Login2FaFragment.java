@@ -181,6 +181,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
             @Override
             public void onClick(View v) {
                 if (isAdded()) {
+                    mAnalyticsListener.trackSendCodeWithTextClicked();
                     doAuthAction(R.string.requesting_otp, "", true);
                 }
             }
@@ -285,6 +286,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     }
 
     protected void next() {
+        mAnalyticsListener.trackSubmit2faCodeClicked();
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             show2FaError(getString(R.string.login_empty_2fa));
             return;

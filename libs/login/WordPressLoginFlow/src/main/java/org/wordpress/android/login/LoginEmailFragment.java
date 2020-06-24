@@ -192,6 +192,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus && !mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -200,7 +201,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.getEditText().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAnalyticsListener.trackSelectEmailField();
                 if (!mIsDisplayingEmailHints && !mHasDismissedEmailHints) {
+                    mAnalyticsListener.trackSelectEmailField();
                     mIsDisplayingEmailHints = true;
                     getEmailHints();
                 }
@@ -253,6 +256,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         siteLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                mAnalyticsListener.trackClickOnLoginSiteClicked();
                 if (mLoginListener != null) {
                     LoginMode loginMode = mLoginListener.getLoginMode();
                     if (loginMode == LoginMode.JETPACK_STATS) {
@@ -441,6 +445,12 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAnalyticsListener.emailFormScreenResumed();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList(KEY_OLD_SITES_IDS, mOldSitesIDs);
@@ -464,6 +474,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     }
 
     protected void next(String email) {
+        mAnalyticsListener.trackSubmitClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }

@@ -99,6 +99,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         rootView.findViewById(R.id.login_site_address_help_button).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackShowHelpClick();
                 showSiteAddressHelp();
             }
         });
@@ -181,6 +182,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
         if (!NetworkUtils.checkConnection(getActivity())) {
             return;
         }
+        mAnalyticsListener.trackSubmitClicked();
 
         mLoginBaseDiscoveryListener = this;
 

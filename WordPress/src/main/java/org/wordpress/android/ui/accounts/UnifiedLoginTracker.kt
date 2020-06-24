@@ -2,6 +2,7 @@ package org.wordpress.android.ui.accounts
 
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_FAILURE
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_INTERACTION
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.UNIFIED_LOGIN_STEP
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Source.DEFAULT
 import org.wordpress.android.util.AppLog
@@ -31,7 +32,7 @@ class UnifiedLoginTracker
                         properties = buildDefaultParams()
                 )
             } else {
-                handleMissingFlowOrStep(step.value)
+                handleMissingFlowOrStep("step: ${step.value}")
             }
         }
     }
@@ -51,6 +52,23 @@ class UnifiedLoginTracker
                 }
             } else {
                 handleMissingFlowOrStep("failure: $error")
+            }
+        }
+    }
+
+    fun trackClick(click: Click) {
+        if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+            if (currentFlow != null && currentStep != null) {
+                currentFlow?.let {
+                    analyticsTracker.track(
+                            stat = UNIFIED_LOGIN_INTERACTION,
+                            properties = buildDefaultParams().apply {
+                                put(CLICK, click.value)
+                            }
+                    )
+                }
+            } else {
+                handleMissingFlowOrStep("click: ${click.value}")
             }
         }
     }
@@ -89,6 +107,11 @@ class UnifiedLoginTracker
         currentFlow = Flow.values().find { it.value == value }
     }
 
+    fun setFlowAndStep(flow: Flow, step: Step) {
+        currentFlow = flow
+        currentStep = step
+    }
+
     fun getSource(): Source = currentSource
     fun getFlow(): Flow? = currentFlow
 
@@ -120,7 +143,37 @@ class UnifiedLoginTracker
         USERNAME_PASSWORD("username_password"),
         SUCCESS("success"),
         HELP("help"),
-        TWO_FACTOR_AUTHENTICATION("2fa")
+        TWO_FACTOR_AUTHENTICATION("2fa"),
+        SHOW_EMAIL_HINTS("SHOW_EMAIL_HINTS")
+    }
+
+    enum class Click(val value: String) {
+        SUBMIT("submit"),
+        CONTINUE("continue"),
+        DISMISS("dismiss"),
+        CONTINUE_WITH_WORDPRESS_COM("continue_with_wordpress_com"),
+        LOGIN_WITH_SITE_ADDRESS("login_with_site_address"),
+        LOGIN_WITH_GOOGLE("login_with_google"),
+        FORGOTTEN_PASSWORD("forgotten_password"),
+        USE_PASSWORD_INSTEAD("use_password_instead"),
+        TERMS_OF_SERVICE_CLICKED("terms_of_service_clicked"),
+        SIGNUP_WITH_EMAIL("signup_with_email"),
+        SIGNUP_WITH_GOOGLE("signup_with_google"),
+        OPEN_EMAIL_CLIENT("open_email_client"),
+        SHOW_HELP("show_help"),
+        SEND_CODE_WITH_TEXT("send_code_with_text"),
+        SUBMIT_2FA_CODE("submit_2fa_code"),
+        CLICK_ON_LOGIN_SITE("click_on_login_site"),
+        REQUEST_MAGIC_LINK("request_magic_link"),
+        LOGIN_WITH_PASSWORD("login_with_password"),
+        CREATE_NEW_SITE("create_new_site"),
+        ADD_SELF_HOSTED_SITE("add_self_hosted_site"),
+        CONNECT_SITE("connect_site"),
+        SELECT_AVATAR("select_avatar"),
+        EDIT_USERNAME("edit_username"),
+        HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
+        SELECT_EMAIL_FIELD("select_email_field"),
+        PICK_EMAIL_FROM_HINT("pick_email_from_hint")
     }
 
     companion object {
@@ -128,5 +181,6 @@ class UnifiedLoginTracker
         private const val FLOW = "flow"
         private const val STEP = "step"
         private const val FAILURE = "failure"
+        private const val CLICK = "click"
     }
 }

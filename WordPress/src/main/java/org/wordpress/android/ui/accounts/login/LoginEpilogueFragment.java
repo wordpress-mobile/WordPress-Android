@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.login.LoginBaseFormFragment;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
@@ -103,6 +104,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
     @Override
     protected void setupBottomButtons(Button secondaryButton, Button primaryButton) {
         primaryButton.setOnClickListener(v -> {
+            mUnifiedLoginTracker.trackClick(Click.CONTINUE);
             if (mLoginEpilogueListener != null) {
                 mLoginEpilogueListener.onContinue();
             }
@@ -236,6 +238,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
         holder.itemView.setVisibility(mShowAndReturn ? View.GONE : View.VISIBLE);
         holder.itemView.setOnClickListener(v -> {
             if (mLoginEpilogueListener != null) {
+                mUnifiedLoginTracker.trackClick(Click.CONNECT_SITE);
                 mLoginEpilogueListener.onConnectAnotherSite();
             }
         });

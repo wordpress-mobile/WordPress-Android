@@ -119,6 +119,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         mRequestMagicLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackRequestMagicLinkClick();
                 if (mLoginListener != null) {
                     if (NetworkUtils.checkConnection(getActivity())) {
                         showMagicLinkRequestProgressDialog();
@@ -135,6 +136,7 @@ public class LoginMagicLinkRequestFragment extends Fragment {
         view.findViewById(R.id.login_enter_password).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAnalyticsListener.trackLoginWithPasswordClick();
                 if (mLoginListener != null) {
                     mLoginListener.usePasswordInstead(mEmail);
                 }

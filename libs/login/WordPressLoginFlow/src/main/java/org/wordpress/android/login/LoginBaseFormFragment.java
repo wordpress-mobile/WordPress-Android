@@ -218,6 +218,7 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick();
             onHelp();
             return true;
         }
