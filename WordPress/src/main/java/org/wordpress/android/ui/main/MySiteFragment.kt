@@ -1427,6 +1427,7 @@ class MySiteFragment : Fragment(),
                 return
             }
 
+            my_site_title_label.text = input
             selectedSite?.name = input
             // save the site locally with updated title
             dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(selectedSite))
