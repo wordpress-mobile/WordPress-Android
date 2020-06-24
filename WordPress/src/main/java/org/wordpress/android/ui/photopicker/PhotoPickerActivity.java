@@ -317,7 +317,9 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         } else {
             Intent intent = new Intent()
                     .putExtra(EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
-                    .putExtra(EXTRA_MEDIA_SOURCE, source.name());
+                    .putExtra(EXTRA_MEDIA_SOURCE, source.name())
+                    // set the browserType in the result, so caller can distinguish and handle things as needed
+                    .putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
             setResult(RESULT_OK, intent);
             finish();
         }

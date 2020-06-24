@@ -81,6 +81,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -846,7 +847,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
-            ActivityLauncher.addNewStoryForResult(this, site, source);
+            ActivityLauncher.showPhotoPickerForResult(
+                    this,
+                    MediaBrowserType.WP_STORIES_MEDIA_PICKER,
+                    site,
+                    null // this is not required, only used for featured image in normal Posts
+            );
         }
     }
 

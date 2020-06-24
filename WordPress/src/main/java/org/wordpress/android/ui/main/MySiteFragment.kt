@@ -87,6 +87,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
@@ -94,6 +95,8 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.media.MediaBrowserActivity
+import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -704,24 +707,34 @@ class MySiteFragment : Fragment(),
                         )
                         return
                     }
-                    val source = PhotoPickerMediaSource.fromString(
-                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
-                    )
-                    val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
-                    AnalyticsTracker.track(stat)
-                    val imageUri = Uri.parse(mediaUriStringsArray[0])
-                    if (imageUri != null) {
-                        val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
-                                activity, imageUri
-                        ) { uri: Uri ->
-                            showSiteIconProgressBar(true)
-                            startCropActivity(uri)
-                        }
-                        if (!didGoWell) {
-                            AppLog.e(
-                                    UTILS,
-                                    "Can't download picked or captured image"
-                            )
+
+                    if (isWPStoriesMediaBrowserTypeResult(data)) {
+                        ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                                activity,
+                                selectedSite,
+                                PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                                mediaUriStringsArray
+                        )
+                    } else {
+                        val source = PhotoPickerMediaSource.fromString(
+                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                        )
+                        val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
+                        AnalyticsTracker.track(stat)
+                        val imageUri = Uri.parse(mediaUriStringsArray[0])
+                        if (imageUri != null) {
+                            val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
+                                    activity, imageUri
+                            ) { uri: Uri ->
+                                showSiteIconProgressBar(true)
+                                startCropActivity(uri)
+                            }
+                            if (!didGoWell) {
+                                AppLog.e(
+                                        UTILS,
+                                        "Can't download picked or captured image"
+                                )
+                            }
                         }
                     }
                 }
@@ -753,6 +766,14 @@ class MySiteFragment : Fragment(),
                 requestEmailValidation(requireContext(), email)
             }
         }
+    }
+
+    private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
+        if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
+            val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
+            return browserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER
+        }
+        return false
     }
 
     override fun onConfirm(result: Bundle?) {

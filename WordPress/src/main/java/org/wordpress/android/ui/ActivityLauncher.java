@@ -677,6 +677,23 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
+    public static void addNewStoryWithMediaIdsForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
+            String[] mediaUris
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS, mediaUris);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
         editPostOrPageForResult(new Intent(activity, EditPostActivity.class), activity, site, post.getId(), false);
     }
