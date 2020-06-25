@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -22,6 +23,7 @@ public class TextInputDialogFragment extends DialogFragment {
     private static final String HINT_TAG = "hint";
     private static final String IS_MULTILINE_TAG = "is_multiline";
     private static final String CALLBACK_ID_TAG = "callback_id";
+    private static final String IS_INPUT_ENABLED = "is_input_enabled";
 
     public static final String TAG = "text_input_dialog_fragment";
 
@@ -29,6 +31,7 @@ public class TextInputDialogFragment extends DialogFragment {
                                                       String initialText,
                                                       String hint,
                                                       boolean isMultiline,
+                                                      boolean isInputEnabled,
                                                       int callbackId) {
         TextInputDialogFragment textInputDialogFragment = new TextInputDialogFragment();
         Bundle args = new Bundle();
@@ -38,6 +41,7 @@ public class TextInputDialogFragment extends DialogFragment {
         args.putString(HINT_TAG, hint);
         args.putBoolean(IS_MULTILINE_TAG, isMultiline);
         args.putInt(CALLBACK_ID_TAG, callbackId);
+        args.putBoolean(IS_INPUT_ENABLED, isInputEnabled);
 
         textInputDialogFragment.setArguments(args);
         return textInputDialogFragment;
@@ -77,6 +81,9 @@ public class TextInputDialogFragment extends DialogFragment {
             editText.setSelection(0, initialText.length());
         }
 
+        boolean isInputEnabled = args.getBoolean(IS_INPUT_ENABLED);
+        editText.setEnabled(isInputEnabled);
+
         alertDialogBuilder.setCancelable(true)
                           .setPositiveButton(android.R.string.ok, (dialog, id) -> {
                               if (getTargetFragment() instanceof Callback) {
@@ -90,7 +97,15 @@ public class TextInputDialogFragment extends DialogFragment {
                           .setNegativeButton(R.string.cancel,
                                   (dialog, id) -> dialog.cancel());
 
-        return alertDialogBuilder.create();
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.setOnShowListener(dialog -> {
+            Button positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            if (positiveButton != null) {
+                positiveButton.setEnabled(isInputEnabled);
+            }
+        });
+
+        return alertDialog;
     }
 
     public interface Callback {
