@@ -119,23 +119,25 @@ class ReaderPostViewHolder(
     private fun loadVideoThumbnail(state: ReaderPostUiState) {
         /* TODO ideally, we'd be passing just a thumbnail url in the UiState. However, the code for retrieving
             thumbnail from full video URL needs to be fully refactored. */
-        ReaderVideoUtils.retrieveVideoThumbnailUrl(state.fullVideoUrl, object : VideoThumbnailUrlListener {
-            override fun showThumbnail(thumbnailUrl: String) {
-                imageManager.loadImageWithCorners(
-                        image_featured,
-                        READER,
-                        thumbnailUrl,
-                        uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
-                )
-            }
+        state.fullVideoUrl?.let { videoUrl ->
+            ReaderVideoUtils.retrieveVideoThumbnailUrl(videoUrl, object : VideoThumbnailUrlListener {
+                override fun showThumbnail(thumbnailUrl: String) {
+                    imageManager.loadImageWithCorners(
+                            image_featured,
+                            READER,
+                            thumbnailUrl,
+                            uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                    )
+                }
 
-            override fun showPlaceholder() {
-                imageManager.load(image_featured, VIDEO)
-            }
+                override fun showPlaceholder() {
+                    imageManager.load(image_featured, VIDEO)
+                }
 
-            override fun cacheThumbnailUrl(thumbnailUrl: String) {
-                ReaderThumbnailTable.addThumbnail(state.postId, state.fullVideoUrl, thumbnailUrl)
-            }
-        })
+                override fun cacheThumbnailUrl(thumbnailUrl: String) {
+                    ReaderThumbnailTable.addThumbnail(state.postId, videoUrl, thumbnailUrl)
+                }
+            })
+        }
     }
 }
