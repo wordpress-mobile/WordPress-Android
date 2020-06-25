@@ -54,7 +54,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onCommentsClicked: (Long, Long, Boolean) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (Long, Long) -> Unit,
-        onDiscoverSectionClicked: (Long, Long) -> Unit
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 
@@ -81,7 +82,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 reblogAction = buildReblogSection(post, onReblogClicked),
                 commentsAction = buildCommentsSection(post, isBookmarkList, onCommentsClicked),
                 onItemClicked = onItemClicked,
-                onItemRendered = onItemRendered
+                onItemRendered = onItemRendered,
+                onMoreButtonClicked = onMoreButtonClicked
         )
     }
 

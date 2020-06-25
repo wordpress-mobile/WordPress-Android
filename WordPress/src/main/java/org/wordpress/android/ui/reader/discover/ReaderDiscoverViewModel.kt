@@ -65,6 +65,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onItemClicked = this::onItemClicked,
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
+                                onMoreButtonClicked = this::onMoreButtonClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     }
@@ -98,6 +99,10 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onDiscoverClicked(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnDiscoverClicked")
+    }
+
+    private fun onMoreButtonClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
     private fun loadPosts() {
@@ -139,8 +144,9 @@ class ReaderDiscoverViewModel @Inject constructor(
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
             val commentsAction: ActionUiState,
-            val onItemClicked: ((Long, Long) -> Unit),
-            val onItemRendered: (Long, Long) -> Unit
+            val onItemClicked: (Long, Long) -> Unit,
+            val onItemRendered: (Long, Long) -> Unit,
+            val onMoreButtonClicked: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
