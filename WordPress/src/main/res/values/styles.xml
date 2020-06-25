@@ -84,6 +84,7 @@
     </style>
 
     <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
+        <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
     <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
