@@ -64,6 +64,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onCommentsClicked = this::onCommentsClicked,
                                 onItemClicked = this::onItemClicked,
                                 onItemRendered = this::onItemRendered,
+                                onDiscoverSectionClicked = this::onDiscoverClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     }
@@ -93,6 +94,10 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onItemRendered(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemRendered")
+    }
+
+    private fun onDiscoverClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnDiscoverClicked")
     }
 
     private fun loadPosts() {
@@ -147,7 +152,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             data class DiscoverLayoutUiState(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
-                val imageType: ImageType
+                val imageType: ImageType,
+                val onDiscoverClicked: ((Long, Long) -> Unit)
             )
 
             data class ActionUiState(

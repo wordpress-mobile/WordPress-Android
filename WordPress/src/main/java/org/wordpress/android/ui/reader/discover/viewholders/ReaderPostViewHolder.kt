@@ -94,7 +94,9 @@ class ReaderPostViewHolder(
                     state.discoverSection.discoverAvatarUrl
             )
         }
-        // TODO malinjir handle on discover click
+        layout_discover.setOnClickListener {
+            state.discoverSection?.onDiscoverClicked?.invoke(state.postId, state.blogId)
+        }
     }
 
     private fun updateActionButton(postId: Long, blogId: Long, state: ActionUiState, view: View) {

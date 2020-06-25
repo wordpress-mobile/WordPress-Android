@@ -44,16 +44,17 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         photonWidth: Int,
         photonHeight: Int,
-        // TODO malinjir try to refactor/remove this parameter
+            // TODO malinjir try to refactor/remove this parameter
         postListType: ReaderPostListType,
-        // TODO malinjir try to refactor/remove this parameter
+            // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onBookmarkClicked: (Long, Long, Boolean) -> Unit,
         onLikeClicked: (Long, Long, Boolean) -> Unit,
         onReblogClicked: (Long, Long, Boolean) -> Unit,
         onCommentsClicked: (Long, Long, Boolean) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
-        onItemRendered: (Long, Long) -> Unit
+        onItemRendered: (Long, Long) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 
@@ -74,7 +75,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
-                discoverSection = buildDiscoverSection(post),
+                discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
                 likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked),
                 reblogAction = buildReblogSection(post, onReblogClicked),
@@ -89,9 +90,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ?.blogUrl
             ?.let { urlUtilsWrapper.removeScheme(it) }
 
-    private fun buildDiscoverSection(post: ReaderPost) =
+    private fun buildDiscoverSection(post: ReaderPost, onDiscoverSectionClicked: (Long, Long) -> Unit) =
             post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
-                    ?.let { buildDiscoverSectionUiState(post.discoverData) }
+                    ?.let { buildDiscoverSectionUiState(post.discoverData, onDiscoverSectionClicked) }
 
     private fun buildVideoThumbnailUrl(post: ReaderPost) =
             post.takeIf { post.cardType == VIDEO }
@@ -132,7 +133,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost) =
             dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
 
-    private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
+    private fun buildDiscoverSectionUiState(
+        discoverData: ReaderPostDiscoverData,
+        onDiscoverSectionClicked: (Long, Long) -> Unit
+    ): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -145,8 +149,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             OTHER -> throw IllegalStateException("This could should be unreachable.")
             else -> AVATAR
         }
-        // TODO malinjir discoverLayout onClick listener.
-        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType)
+        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
     }
 
     private fun retrieveVideoThumbnailUrl(): String? {
