@@ -92,11 +92,11 @@ class EditorThemeSqlUtils {
         override fun getId() = mId
 
         fun toEditorTheme(
-            storedColors: List<EditorThemeElementBuilder>?,
-            storedGradients: List<EditorThemeElementBuilder>?
+            storedColors: List<EditorThemeElementBuilder>,
+            storedGradients: List<EditorThemeElementBuilder>
         ): EditorTheme {
-            val colors = storedColors?.mapNotNull { it.toEditorThemeElement() }
-            val gradients = storedGradients?.mapNotNull { it.toEditorThemeElement() }
+            val colors = if (storedColors.count() > 0) storedColors.mapNotNull { it.toEditorThemeElement() } else null
+            val gradients = if (storedColors.count() > 0) storedGradients.mapNotNull { it.toEditorThemeElement() } else null
             val editorThemeSupport = EditorThemeSupport(colors, gradients)
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
