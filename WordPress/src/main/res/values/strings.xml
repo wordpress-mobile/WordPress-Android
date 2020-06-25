@@ -1907,8 +1907,8 @@
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
     <string name="my_site_title_changer_dialog_title">@string/site_settings_title_title</string>
-    <string name="my_site_title_changer_dialog_hint">Your site title is shown at the top of your site and in the Reader</string>
-    <string name="my_site_title_changer_dialog_not_allowed_hint">The site title can only be changed by a user with the administrator role.</string>
+    <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
 
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
