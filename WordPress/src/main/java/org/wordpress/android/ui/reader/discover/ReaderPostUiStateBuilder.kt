@@ -112,7 +112,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildPhotoTitle(post: ReaderPost) =
             post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
-    // TODO malinjir `post.cardType != GALLERY` might not be needed
     private fun buildPhotoFrameVisibility(post: ReaderPost) =
             (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                     post.cardType != GALLERY
