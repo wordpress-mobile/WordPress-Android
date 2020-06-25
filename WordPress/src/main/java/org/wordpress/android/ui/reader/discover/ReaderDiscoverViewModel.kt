@@ -146,7 +146,8 @@ class ReaderDiscoverViewModel @Inject constructor(
 
             data class GalleryThumbnailStripData(
                 val images: ReaderImageList,
-                val isPrivate: Boolean
+                val isPrivate: Boolean,
+                val content: String // needs to be here as it's required by ReaderThumbnailStrip
             )
 
             data class DiscoverLayoutUiState(

@@ -35,7 +35,10 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(image_video_overlay, state.videoOverlayVisibility)
         uiHelpers.setTextOrHide(text_photo_title, state.photoTitle)
         uiHelpers.updateVisibility(frame_photo, state.photoFrameVisibility)
-        // TODO malinjir thumbnail gallery strip
+        uiHelpers.updateVisibility(thumbnail_strip, state.thumbnailStripSection != null)
+        state.thumbnailStripSection?.let {
+            thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
+        }
         // TODO malinjir video thumbnail
 
         // Content section

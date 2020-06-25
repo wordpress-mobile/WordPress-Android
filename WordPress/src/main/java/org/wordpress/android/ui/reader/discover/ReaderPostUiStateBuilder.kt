@@ -161,7 +161,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         // scan post content for images suitable in a gallery
         val images = readerImageScannerProvider.createReaderImageScanner(post.text, post.isPrivate)
                 .getImageList(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)
-        return GalleryThumbnailStripData(images, post.isPrivate)
+        return GalleryThumbnailStripData(images, post.isPrivate, post.text)
     }
 
     private fun buildBookmarkSection(post: ReaderPost, onClicked: (Long, Long, Boolean) -> Unit): ActionUiState {
