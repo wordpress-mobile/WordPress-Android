@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -48,6 +49,47 @@ class ReaderInterestsViewModelTest {
     fun setUp() {
         viewModel = ReaderInterestsViewModel(readerTagRepository)
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getUserTags invoked on start`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            initViewModel()
+
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getInterests invoked if empty user tags received from repo`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            initViewModel()
+
+            // Then
+            verify(readerTagRepository, times(1)).getInterests()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `close reader screen triggered if non empty user tags are received from repo`() =
+        testWithNonEmptyUserTags {
+            // When
+            initViewModel()
+
+            // Then
+            verify(parentViewModel, times(1)).onCloseReaderInterests()
+        }
 
     @ExperimentalCoroutinesApi
     @Test
@@ -297,6 +339,18 @@ class ReaderInterestsViewModelTest {
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             whenever(readerTagRepository.getUserTags()).thenReturn(ReaderTagList())
+            block()
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        coroutineScope.runBlockingTest {
+            val nonEmptyUserTags = ReaderTagList().apply {
+                this.add(mock())
+                this.add(mock())
+            }
+            whenever(readerTagRepository.getUserTags()).thenReturn(nonEmptyUserTags)
             block()
         }
     }
