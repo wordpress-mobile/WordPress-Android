@@ -280,7 +280,7 @@ class PostListMainViewModel @Inject constructor(
 
         editPostRepository.run {
             postChanged.observe(this@PostListMainViewModel, Observer {
-                savePostToDbUseCase.savePostToDb(context, editPostRepository, site)
+                savePostToDbUseCase.savePostToDb(editPostRepository, site)
             })
         }
     }

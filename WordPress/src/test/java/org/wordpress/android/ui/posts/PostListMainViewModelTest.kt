@@ -213,6 +213,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
         editPostRepository.updateAsync(action, null)
 
         // assert
-        verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any(), any())
+        verify(savePostToDbUseCase, times(1)).savePostToDb(any(), any())
     }
 }
