@@ -174,9 +174,9 @@ class ReactNativeStore
     private fun parsePathAndParams(pathWithParams: String): Pair<String, Map<String, String>> {
         val uri = Uri.parse(pathWithParams)
         val paramMap = uri.queryParameterNames.map { name ->
-            name to uri.getQueryParameter(name)
+            name to requireNotNull(uri.getQueryParameter(name))
         }.toMap()
-        return Pair(uri.path, paramMap)
+        return Pair(requireNotNull(uri.path), paramMap)
     }
 
     private fun persistSiteSafely(site: SiteModel) {
