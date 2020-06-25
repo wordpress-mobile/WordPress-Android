@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_P
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
@@ -43,7 +44,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
         post: ReaderPost,
         photonWidth: Int,
         photonHeight: Int,
-            // TODO malinjir try to refactor/remove this parameter
+        // TODO malinjir try to refactor/remove this parameter
+        postListType: ReaderPostListType,
+        // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onBookmarkClicked: (Long, Long, Boolean) -> Unit,
         onLikeClicked: (Long, Long, Boolean) -> Unit,
@@ -66,11 +69,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-                featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
+                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
-                // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
-                moreMenuVisibility = accountStore.hasAccessToken(),
+                moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
                 videoThumbnailUrl = buildVideoThumbnailUrl(post),
                 discoverSection = buildDiscoverSection(post),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
