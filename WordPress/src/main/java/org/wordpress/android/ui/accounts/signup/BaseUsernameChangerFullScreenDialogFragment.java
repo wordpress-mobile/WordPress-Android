@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -135,20 +136,26 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
-    public void onViewCreated(final FullScreenDialogController controller) {
+    public void setController(final FullScreenDialogController controller) {
         mDialogController = controller;
     }
 
     @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState != null) {
             mIsShowingDismissDialog = savedInstanceState.getBoolean(KEY_IS_SHOWING_DISMISS_DIALOG);
             mShouldWatchText = savedInstanceState.getBoolean(KEY_SHOULD_WATCH_TEXT);
             mUsernameSelected = savedInstanceState.getString(KEY_USERNAME_SELECTED);
             mUsernameSelectedIndex = savedInstanceState.getInt(KEY_USERNAME_SELECTED_INDEX);
-            setUsernameSuggestions(savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS));
+            ArrayList<String> suggestions = savedInstanceState.getStringArrayList(KEY_USERNAME_SUGGESTIONS);
+            if (suggestions != null) {
+                setUsernameSuggestions(suggestions);
+            } else {
+                mUsernameSuggestionInput = getUsernameQueryFromDisplayName();
+                getUsernameSuggestions(mUsernameSuggestionInput);
+            }
 
             if (mIsShowingDismissDialog) {
                 showDismissDialog();
@@ -210,6 +217,12 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
     }
 
     @Override
+    public void onDestroy() {
+        mGetSuggestionsHandler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onConfirmClicked(FullScreenDialogController controller) {
         ActivityUtils.hideKeyboard(getActivity());
 
@@ -244,7 +257,9 @@ public abstract class BaseUsernameChangerFullScreenDialogFragment extends Dagger
         outState.putBoolean(KEY_SHOULD_WATCH_TEXT, false);
         outState.putString(KEY_USERNAME_SELECTED, mUsernameSelected);
         outState.putInt(KEY_USERNAME_SELECTED_INDEX, mUsernameSelectedIndex);
-        outState.putStringArrayList(KEY_USERNAME_SUGGESTIONS, new ArrayList<>(mUsernamesAdapter.mItems));
+        if (mUsernamesAdapter != null) {
+            outState.putStringArrayList(KEY_USERNAME_SUGGESTIONS, new ArrayList<>(mUsernamesAdapter.mItems));
+        }
     }
 
     @Override

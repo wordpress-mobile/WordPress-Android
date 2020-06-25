@@ -202,8 +202,8 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.showDevOptionsDialog();
     }
 
-    public void appendUploadMediaFiles(ArrayList<Media> mediaList) {
-        mWPAndroidGlueCode.appendUploadMediaFiles(mediaList);
+    public void appendMediaFiles(ArrayList<Media> mediaList) {
+        mWPAndroidGlueCode.appendMediaFiles(mediaList);
     }
 
     public void mediaFileUploadProgress(final int mediaId, final float progress) {

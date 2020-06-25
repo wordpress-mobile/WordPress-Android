@@ -5,6 +5,14 @@ orbs:
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@3.4.2
 
+parameters:
+  translation_review_build:
+    type: boolean
+    default: false
+  translation_review_lang_id:
+    type: string
+    default: all-lang
+
 commands:
   copy-gradle-properties:
     steps:
@@ -302,9 +310,54 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+  translation-review-build:
+    executor:
+      name: android/default
+      api-version: "28"
+    environment:
+      APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
+    steps:
+      - git/shallow-checkout
+      - checkout-gutenberg-mobile-submodule-only
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
+          name: Build APK
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            TODAY_DATE=$(date +'%Y%m%d')
+            VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
+            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
+
+            bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
+      - android/save-gradle-cache
+      - run:
+          name: Prepare APK
+          command: |
+            mkdir -p Artifacts
+            mv WordPress/build/outputs/apk/jalapeno/debug/org.wordpress.android-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - run: 
+          name: Upload APK
+          command: |
+            curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
+      - store_artifacts:
+          path: Artifacts
+          destination: Artifacts
 
 workflows:
   wordpress_android:
+    unless: << pipeline.parameters.translation_review_build >>
     jobs:
       - gutenberg-bundle-build
       - strings-check
@@ -337,6 +390,7 @@ workflows:
                 - develop
                 - /^release.*/
   Optional Tests:
+    unless: << pipeline.parameters.translation_review_build >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -349,3 +403,7 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
+  Translation Review Build:
+    when: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - translation-review-build
