@@ -354,4 +354,19 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     public void emailFormScreenResumed() {
         mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM, Step.START);
     }
+
+    @Override
+    public void trackEmailSignupConfirmationViewed() {
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.START);
+    }
+
+    @Override
+    public void trackSocialSignupConfirmationViewed() {
+        mUnifiedLoginTracker.track(Flow.GOOGLE_SIGNUP, Step.START);
+    }
+
+    @Override
+    public void trackCreateAccountClick() {
+        mUnifiedLoginTracker.trackClick(Click.CREATE_ACCOUNT);
+    }
 }

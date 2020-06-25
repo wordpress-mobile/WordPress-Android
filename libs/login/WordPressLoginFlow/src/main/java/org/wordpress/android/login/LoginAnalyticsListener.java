@@ -77,4 +77,10 @@ public interface LoginAnalyticsListener {
     void trackShowEmailHints();
 
     void emailFormScreenResumed();
+
+    void trackEmailSignupConfirmationViewed();
+
+    void trackSocialSignupConfirmationViewed();
+
+    void trackCreateAccountClick();
 }

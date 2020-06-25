@@ -132,7 +132,8 @@ class UnifiedLoginTracker
         LOGIN_MAGIC_LINK("login_magic_link"),
         LOGIN_PASSWORD("login_password"),
         LOGIN_SITE_ADDRESS("login_site_address"),
-        SIGNUP("signup")
+        SIGNUP("signup"),
+        GOOGLE_SIGNUP("google_signup")
     }
 
     enum class Step(val value: String) {
@@ -173,7 +174,8 @@ class UnifiedLoginTracker
         EDIT_USERNAME("edit_username"),
         HELP_FINDING_SITE_ADDRESS("help_finding_site_address"),
         SELECT_EMAIL_FIELD("select_email_field"),
-        PICK_EMAIL_FROM_HINT("pick_email_from_hint")
+        PICK_EMAIL_FROM_HINT("pick_email_from_hint"),
+        CREATE_ACCOUNT("create_account")
     }
 
     companion object {

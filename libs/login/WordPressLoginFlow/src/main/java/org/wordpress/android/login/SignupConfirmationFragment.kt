@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.toolbar_login.*
 import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromEmail
 import org.wordpress.android.login.util.AvatarHelper.loadAvatarFromUrl
+import javax.inject.Inject
 
 class SignupConfirmationFragment : Fragment() {
     private var mLoginListener: LoginListener? = null
@@ -27,6 +28,8 @@ class SignupConfirmationFragment : Fragment() {
     private var mPhotoUrl: String? = null
     private var mService: String? = null
     private var mIsSocialSignup: Boolean = false
+
+    @Inject lateinit var mAnalyticsListener: LoginAnalyticsListener
 
     companion object {
         const val TAG = "signup_confirmation_fragment_tag"
@@ -119,6 +122,7 @@ class SignupConfirmationFragment : Fragment() {
             label.setText(R.string.signup_confirmation_message)
             signup_confirmation_button.setText(R.string.create_account)
             signup_confirmation_button.setOnClickListener {
+                mAnalyticsListener.trackCreateAccountClick()
                 mLoginListener?.showSignupSocial(mEmail, mDisplayName, mIdToken, mPhotoUrl, mService)
             }
         } else {
@@ -126,12 +130,17 @@ class SignupConfirmationFragment : Fragment() {
             label.setText(R.string.signup_confirmation_magic_link_message)
             signup_confirmation_button.setText(R.string.send_link_by_email)
             signup_confirmation_button.setOnClickListener {
+                mAnalyticsListener.trackRequestMagicLinkClick()
                 mLoginListener?.showSignupMagicLink(mEmail)
             }
         }
 
         if (savedInstanceState == null) {
-            // TODO Track screen
+            if (mIsSocialSignup) {
+                mAnalyticsListener.trackSocialSignupConfirmationViewed()
+            } else {
+                mAnalyticsListener.trackEmailSignupConfirmationViewed()
+            }
         }
     }
 
@@ -152,6 +161,7 @@ class SignupConfirmationFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick()
             if (mLoginListener != null) {
                 mLoginListener?.helpSignupConfirmationScreen(mEmail)
             }
