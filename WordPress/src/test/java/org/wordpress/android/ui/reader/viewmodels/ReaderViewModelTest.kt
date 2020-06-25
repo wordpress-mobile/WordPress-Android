@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
@@ -70,14 +71,15 @@ class ReaderViewModelTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
+        whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(false)
     }
 
     @Test
-    fun `updateTags invoked on first start`() = testWithEmptyTags {
+    fun `updateTags invoked on reader tab content is first displayed`() = testWithEmptyTags {
         // Arrange
         whenever(appPrefsWrapper.readerTagsUpdatedTimestamp).thenReturn(-1)
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
     }
@@ -87,7 +89,7 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.readerTagsUpdatedTimestamp).thenReturn(DUMMY_CURRENT_TIME - UPDATE_TAGS_THRESHOLD + 1)
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNull()
     }
@@ -97,32 +99,36 @@ class ReaderViewModelTest {
         // Arrange
         whenever(appPrefsWrapper.readerTagsUpdatedTimestamp).thenReturn(DUMMY_CURRENT_TIME - UPDATE_TAGS_THRESHOLD - 1)
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(viewModel.updateTags.value?.getContentIfNotHandled()).isNotNull
     }
 
     @Test
-    fun `UiState is NOT updated when loaded tags are empty`() = test {
+    fun `UiState is NOT updated with content state when loaded tags are empty`() = test {
         // Arrange
+        var state: ReaderUiState? = null
+        viewModel.uiState.observeForever {
+            state = it
+        }
         whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(ReaderTagList())
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
-        assertThat(viewModel.uiState.value).isNull()
+        assertThat(state).isNotInstanceOf(ContentUiState::class.java)
     }
 
     @Test
-    fun `UiState is updated in start() when loaded tags are NOT empty`() = testWithNonEmptyTags {
+    fun `UiState is updated with content state when loaded tags are NOT empty`() = testWithNonEmptyTags {
         // Arrange
         var state: ReaderUiState? = null
         viewModel.uiState.observeForever {
             state = it
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
-        assertThat(state).isNotNull
+        assertThat(state).isInstanceOf(ContentUiState::class.java)
     }
 
     @Test
@@ -135,7 +141,7 @@ class ReaderViewModelTest {
         // Act
         viewModel.onTagsUpdated(mock())
         // Assert
-        assertThat(state).isNotNull
+        assertThat(state).isInstanceOf(ContentUiState::class.java)
     }
 
     @Test
@@ -158,7 +164,7 @@ class ReaderViewModelTest {
             tabPosition = it.getContentIfNotHandled()
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(tabPosition).isEqualTo(3)
     }
@@ -173,7 +179,7 @@ class ReaderViewModelTest {
             tabPosition = it.getContentIfNotHandled()
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(tabPosition).isGreaterThan(-1)
     }
@@ -186,7 +192,7 @@ class ReaderViewModelTest {
             tabPosition = it.getContentIfNotHandled()
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         // Assert
         assertThat(tabPosition).isNull()
     }
@@ -207,7 +213,7 @@ class ReaderViewModelTest {
         }
 
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
         viewModel.selectedTabChange(readerTag)
 
         // Assert
@@ -238,7 +244,7 @@ class ReaderViewModelTest {
             state = it
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
 
         // Assert
         assertThat(state!!.searchIconVisible).isFalse()
@@ -253,10 +259,19 @@ class ReaderViewModelTest {
             state = it
         }
         // Act
-        viewModel.start()
+        triggerReaderTabContentDisplay()
 
         // Assert
         assertThat(state!!.searchIconVisible).isTrue()
+    }
+
+    private fun triggerReaderTabContentDisplay() {
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+            viewModel.start()
+            viewModel.onCloseReaderInterests()
+        } else {
+            viewModel.start()
+        }
     }
 
     private fun <T> testWithEmptyTags(block: suspend CoroutineScope.() -> T) {
