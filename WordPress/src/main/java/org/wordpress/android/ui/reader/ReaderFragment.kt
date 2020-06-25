@@ -31,8 +31,6 @@ import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.LoadingTabsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.LoadingUserTagsUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
@@ -121,14 +119,13 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
                 when (it) {
-                    is InitialUiState, LoadingUserTagsUiState, LoadingTabsUiState -> {
+                    is InitialUiState -> {
                     }
                     is ContentUiState -> {
                         updateTabs(it)
                     }
                 }
                 app_bar.setExpanded(uiState.appBarExpanded)
-                uiHelpers.updateVisibility(progress_bar, uiState.progressBarVisible)
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }

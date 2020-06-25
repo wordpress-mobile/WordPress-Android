@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -23,8 +22,6 @@ import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.LoadingTabsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.LoadingUserTagsUiState
 import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -45,7 +42,9 @@ class ReaderViewModel @Inject constructor(
     private val accountStore: AccountStore
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
-    private var readerInterestsShowing: Boolean = false
+    private var isReaderInterestsShown: Boolean = false
+    // TODO will depend on user tags
+    private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -70,42 +69,20 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (uiState.value == LoadingUserTagsUiState ||
-                uiState.value == LoadingTabsUiState ||
-                readerInterestsShowing) {
-            return
+        if (shouldShowReaderInterests) {
+            if (isReaderInterestsShown) return
+            isReaderInterestsShown = true
+            _uiState.value = InitialUiState
+            _showReaderInterests.value = Event(Unit)
         } else {
             if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
             if (initialized) return
-        }
-
-        _uiState.value = InitialUiState
-        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
-            loadUserTags()
-        } else {
             loadTabs()
         }
     }
 
-    private fun loadUserTags() {
-        _uiState.value = LoadingUserTagsUiState
-        launch {
-            val userTags = ReaderTagList() // TODO: get list from repository
-            delay(2000) // TODO: remove
-
-            if (userTags.isEmpty()) {
-                readerInterestsShowing = true
-                _showReaderInterests.value = Event(Unit)
-            } else {
-                loadTabs()
-            }
-        }
-    }
-
     private fun loadTabs() {
-        _uiState.value = LoadingTabsUiState
         launch {
-            delay(2000) // TODO: temporary delay
             val tagList = loadReaderTabsUseCase.loadTabs()
             if (tagList.isNotEmpty()) {
                 _uiState.value = ContentUiState(
@@ -143,34 +120,29 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onCloseReaderInterests() {
-        readerInterestsShowing = false
+        shouldShowReaderInterests = false
 
         _closeReaderInterests.value = Event(Unit)
+        _updateTags.value = Event(Unit)
         loadTabs()
     }
 
     sealed class ReaderUiState(
-        open val searchIconVisible: Boolean = false,
+        open val searchIconVisible: Boolean,
         val appBarExpanded: Boolean = false,
-        val tabLayoutVisible: Boolean = false,
-        val progressBarVisible: Boolean = false
+        val tabLayoutVisible: Boolean = false
     ) {
-        object InitialUiState : ReaderUiState()
-
-        object LoadingUserTagsUiState : ReaderUiState(progressBarVisible = true)
-
-        object LoadingTabsUiState : ReaderUiState(appBarExpanded = true, progressBarVisible = true)
+        object InitialUiState : ReaderUiState(
+            searchIconVisible = false,
+            appBarExpanded = false,
+            tabLayoutVisible = false
+        )
 
         data class ContentUiState(
             val tabTitles: List<String>,
             val readerTagList: ReaderTagList,
             override val searchIconVisible: Boolean
-        ) : ReaderUiState(
-            searchIconVisible = searchIconVisible,
-            appBarExpanded = true,
-            tabLayoutVisible = true,
-            progressBarVisible = false
-        )
+        ) : ReaderUiState(searchIconVisible = searchIconVisible, appBarExpanded = true, tabLayoutVisible = true)
     }
 
     override fun onCleared() {
