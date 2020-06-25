@@ -674,6 +674,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
