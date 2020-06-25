@@ -67,7 +67,7 @@ class RemoteConfigProcessor : AbstractProcessor() {
         } catch (e: Exception) {
             processingEnv.messager.printMessage(
                     Kind.ERROR,
-                    "Failed to generate remote config check: ${e.toString()}"
+                    "Failed to generate remote config check: $e"
             )
         }
     }

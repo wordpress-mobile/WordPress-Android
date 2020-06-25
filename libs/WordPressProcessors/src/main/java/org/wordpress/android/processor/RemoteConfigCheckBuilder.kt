@@ -51,7 +51,8 @@ class RemoteConfigCheckBuilder(private val remoteFeatures: List<TypeName>) {
         val stringBuilder = StringBuilder()
         remoteFeatures.forEach { feature ->
             stringBuilder.appendln("if (${feature.first}.remoteField == null) {")
-            stringBuilder.appendln("    throw IllegalArgumentException(\"\"\"${feature.second} needs to define remoteField\"\"\")")
+            val error = "    throw IllegalArgumentException(\"\"\"${feature.second} needs to define remoteField\"\"\")"
+            stringBuilder.appendln(error)
             stringBuilder.appendln("}")
         }
         return CodeBlock.of(stringBuilder.toString().trimIndent())
