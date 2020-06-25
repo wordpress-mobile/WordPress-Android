@@ -46,6 +46,8 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState;
+import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
@@ -74,6 +76,10 @@ import org.wordpress.android.util.image.ImageType;
 import java.util.HashSet;
 
 import javax.inject.Inject;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function2;
+import kotlin.jvm.functions.Function3;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
@@ -130,6 +136,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
+    @Inject ReaderPostUiStateBuilder mReaderPostUiStateBuilder;
 
     /*
      * cross-post
@@ -445,6 +452,33 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post == null) {
             return;
         }
+
+        Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> null;
+        Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> null;
+        Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> null;
+        Function3<Long, Long, Boolean, Unit> onCommentClicked = (postId, blogId, aBoolean) -> null;
+        Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> null;
+        Function2<Long, Long, Unit> onItemRendered = (postId, blogId) -> null;
+        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> null;
+        Function2<Long, Long, Unit> onMoreButtonClicked = (postId, blogId) -> null;
+
+        ReaderPostUiState uiState = mReaderPostUiStateBuilder
+                .mapPostToUiState(
+                        post,
+                        mPhotonWidth,
+                        mPhotonHeight,
+                        postListType,
+                        isBookmarksList(),
+                        onBookmarkClicked,
+                        onLikeClicked,
+                        onReblogClicked,
+                        onCommentClicked,
+                        onItemClicked,
+                        onItemRendered,
+                        onDiscoverSectionClicked,
+                        onMoreButtonClicked
+                );
+
 
         // Set title below thumbnail strip if card type is GALLERY
         View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
