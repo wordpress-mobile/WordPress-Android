@@ -532,11 +532,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onDiscoverSectionClicked,
                         onMoreButtonClicked
                 );
-
-        showLikes(holder, post);
-        showComments(holder, post);
-        showReblogButton(holder, post);
-        initBookmarkButton(position, holder, post);
     }
 
     /*
@@ -828,74 +823,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void showLikes(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canShowLikes;
-        if (post.isDiscoverPost() || isBookmarksList()) {
-            canShowLikes = false;
-        } else if (mIsLoggedOutReader) {
-            canShowLikes = post.numLikes > 0;
-        } else {
-            canShowLikes = post.canLikePost();
-        }
-
-        if (canShowLikes) {
-            holder.mLikeCount.setCount(post.numLikes);
-            holder.mLikeCount.setSelected(post.isLikedByCurrentUser);
-            holder.mLikeCount.setEnabled(true);
-            holder.mLikeCount.setContentDescription(ReaderUtils.getLongLikeLabelText(holder.mPostContainer.getContext(),
-                    post.numLikes,
-                    post.isLikedByCurrentUser));
-            // can't like when logged out
-            if (!mIsLoggedOutReader) {
-                holder.mLikeCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toggleLike(v.getContext(), holder, post);
-                    }
-                });
-            }
-        } else {
-            holder.mLikeCount.setEnabled(false);
-            holder.mLikeCount.setOnClickListener(null);
-        }
-    }
-
-    private void initBookmarkButton(final int position, final ReaderPostViewHolder holder, final ReaderPost post) {
-        updateBookmarkView(holder, post);
-        holder.mBtnBookmark.setOnClickListener(new OnClickListener() {
-            @Override public void onClick(View v) {
-                toggleBookmark(post.blogId, post.postId);
-                if (isBookmarksList()) {
-                    // automatically starts the expand/collapse animations
-                    notifyItemChanged(position);
-                } else {
-                    // notifyItemChanged highlights the item for a bit, we need to manually updateTheView to prevent it
-                    updateBookmarkView(holder, getItem(position));
-                }
-            }
-        });
-    }
-
-    private void updateBookmarkView(final ReaderPostViewHolder holder, final ReaderPost post) {
-        final ImageView bookmarkButton = holder.mBtnBookmark;
-        Context context = holder.mBtnBookmark.getContext();
-
-        boolean canBookmarkPost = !post.isDiscoverPost();
-        if (canBookmarkPost) {
-            bookmarkButton.setEnabled(true);
-        } else {
-            bookmarkButton.setEnabled(false);
-        }
-
-        if (post.isBookmarked) {
-            bookmarkButton.setSelected(true);
-            bookmarkButton.setContentDescription(context.getString(R.string.reader_remove_bookmark));
-        } else {
-            bookmarkButton.setSelected(false);
-            bookmarkButton.setContentDescription(context.getString(R.string.reader_add_bookmark));
-        }
-    }
-
     /**
      * Creates 'Removed [post title]' text, with the '[post title]' in bold.
      */
@@ -907,49 +834,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         str.setSpan(new StyleSpan(Typeface.BOLD), removedString.length(), removedPostTitle.length(),
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         return str;
-    }
-
-    private void showComments(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canShowComments;
-        if (post.isDiscoverPost() || isBookmarksList()) {
-            canShowComments = false;
-        } else if (mIsLoggedOutReader) {
-            canShowComments = post.numReplies > 0;
-        } else {
-            canShowComments = post.isWP() && (post.isCommentsOpen || post.numReplies > 0);
-        }
-
-        if (canShowComments) {
-            holder.mCommentCount.setCount(post.numReplies);
-            holder.mCommentCount.setEnabled(true);
-            holder.mCommentCount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ReaderActivityLauncher.showReaderComments(v.getContext(), post.blogId, post.postId);
-                }
-            });
-        } else {
-            holder.mCommentCount.setEnabled(false);
-            holder.mCommentCount.setOnClickListener(null);
-        }
-    }
-
-    /**
-     * Sets reblog button visibility and action
-     *
-     * @param holder the view holder
-     * @param post   the current reader post
-     */
-    private void showReblogButton(final ReaderPostViewHolder holder, final ReaderPost post) {
-        boolean canBeReblogged = !mIsLoggedOutReader && !post.isPrivate;
-        if (canBeReblogged) {
-            holder.mReblog.setCount(0);
-            holder.mReblog.setEnabled(true);
-            holder.mReblog.setOnClickListener(v -> mReblogActionListener.reblog(post));
-        } else {
-            holder.mReblog.setEnabled(false);
-            holder.mReblog.setOnClickListener(null);
-        }
     }
 
     /*
@@ -983,7 +867,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
         if (updatedPost != null && position > -1) {
             mPosts.set(position, updatedPost);
-            showLikes(holder, updatedPost);
+            notifyItemChanged(position);
         }
     }
 
