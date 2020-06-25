@@ -128,7 +128,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val photoTitle: String?,
             val featuredImageUrl: String?,
             val featuredImageCornerRadius: UiDimen,
-            val videoThumbnailUrl: String?,
+            val fullVideoUrl: String?,
             val avatarOrBlavatarUrl: String?,
             val thumbnailStripSection: GalleryThumbnailStripData?,
             val discoverSection: DiscoverLayoutUiState?,

@@ -5,14 +5,18 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
+import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.READER
+import org.wordpress.android.util.image.ImageType.VIDEO
 
 class ReaderPostViewHolder(
     private val uiHelpers: UiHelpers,
@@ -39,7 +43,7 @@ class ReaderPostViewHolder(
         state.thumbnailStripSection?.let {
             thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
         }
-        // TODO malinjir video thumbnail
+        loadVideoThumbnail(state)
 
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)
@@ -110,5 +114,28 @@ class ReaderPostViewHolder(
         view.isSelected = state.isSelected
         view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
         view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.isSelected) }
+    }
+
+    private fun loadVideoThumbnail(state: ReaderPostUiState) {
+        /* TODO ideally, we'd be passing just a thumbnail url in the UiState. However, the code for retrieving
+            thumbnail from full video URL needs to be fully refactored. */
+        ReaderVideoUtils.retrieveVideoThumbnailUrl(state.fullVideoUrl, object : VideoThumbnailUrlListener {
+            override fun showThumbnail(thumbnailUrl: String) {
+                imageManager.loadImageWithCorners(
+                        image_featured,
+                        READER,
+                        thumbnailUrl,
+                        uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
+                )
+            }
+
+            override fun showPlaceholder() {
+                imageManager.load(image_featured, VIDEO)
+            }
+
+            override fun cacheThumbnailUrl(thumbnailUrl: String) {
+                ReaderThumbnailTable.addThumbnail(state.postId, state.fullVideoUrl, thumbnailUrl)
+            }
+        })
     }
 }

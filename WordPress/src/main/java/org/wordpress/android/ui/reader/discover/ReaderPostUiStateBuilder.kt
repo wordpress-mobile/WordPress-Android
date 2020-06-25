@@ -74,7 +74,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
-                videoThumbnailUrl = buildVideoThumbnailUrl(post),
+                fullVideoUrl = buildFullVideoUrl(post),
                 discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
                 likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked),
@@ -94,9 +94,9 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
                     ?.let { buildDiscoverSectionUiState(post.discoverData, onDiscoverSectionClicked) }
 
-    private fun buildVideoThumbnailUrl(post: ReaderPost) =
+    private fun buildFullVideoUrl(post: ReaderPost) =
             post.takeIf { post.cardType == VIDEO }
-                    ?.let { retrieveVideoThumbnailUrl() }
+                    ?.let { post.featuredVideo }
 
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
@@ -150,11 +150,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
             else -> AVATAR
         }
         return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
-    }
-
-    private fun retrieveVideoThumbnailUrl(): String? {
-        // TODO malinjir Not yet implemented - Refactor ReaderVideoUtils.retrieveVideoThumbnailUrl
-        return null
     }
 
     private fun retrieveGalleryThumbnailUrls(post: ReaderPost): GalleryThumbnailStripData {
