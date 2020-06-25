@@ -488,7 +488,27 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> null;
+        Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> {
+            ReaderPostDiscoverData discoverData = post.getDiscoverData();
+            switch (discoverData.getDiscoverType()) {
+                case EDITOR_PICK:
+                    if (mPostSelectedListener != null) {
+                        mPostSelectedListener.onPostSelected(post);
+                    }
+                    break;
+                case SITE_PICK:
+                    if (blogId != 0) {
+                        ReaderActivityLauncher.showReaderBlogPreview(ctx, blogId);
+                    } else if (discoverData.hasBlogUrl()) {
+                        ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
+                    }
+                    break;
+                case OTHER:
+                    //noop
+                    break;
+            }
+            return Unit.INSTANCE;
+        };
         Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
             if (mOnPostPopupListener != null) {
                 mOnPostPopupListener.onShowPostPopup(view, post);
