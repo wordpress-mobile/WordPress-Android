@@ -183,6 +183,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
+    @Inject internal lateinit var readerCssProvider: ReaderCssProvider
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1351,7 +1352,7 @@ class ReaderPostDetailFragment : Fragment(),
             scrollView.visibility = View.VISIBLE
 
             // render the post in the webView
-            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
+            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)
 
             // if the post is from private atomic site postpone render until we have a special access cookie
             if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
