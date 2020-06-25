@@ -1213,16 +1213,24 @@ class MySiteFragment : Fragment(),
         val focusPointSize = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
         val horizontalOffset: Int
         val verticalOffset: Int
-        if (isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
-            horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
-                    .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
-            verticalOffset = 0
-        } else if (activeTutorialPrompt!!.task == UPLOAD_SITE_ICON) {
-            horizontalOffset = focusPointSize
-            verticalOffset = -focusPointSize / 2
-        } else {
-            horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
-            verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+        when {
+            isTargetingBottomNavBar(activeTutorialPrompt!!.task) -> {
+                horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
+                        .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
+                verticalOffset = 0
+            }
+            activeTutorialPrompt!!.task == UPLOAD_SITE_ICON -> {
+                horizontalOffset = focusPointSize
+                verticalOffset = -focusPointSize / 2
+            }
+            activeTutorialPrompt!!.task == VIEW_SITE -> { // focus point might be hidden behind FAB
+                horizontalOffset = (focusPointSize / 0.5).toInt()
+                verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+            }
+            else -> {
+                horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
+                verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+            }
         }
         addQuickStartFocusPointAboveTheView(
                 parentView, quickStartTarget, horizontalOffset,
