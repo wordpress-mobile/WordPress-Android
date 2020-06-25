@@ -129,8 +129,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
                 systemNotificationsTracker.trackTappedNotification(notificationType)
             }
-            // now see if we need to handle information coming from the MediaPicker to populate
-            handleMediaPickerIntentData(intent)
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
@@ -143,6 +141,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
         postEditorAnalyticsSession?.start(null)
         startObserving()
+    }
+
+    override fun onLoadFromIntent(intent: Intent) {
+        super.onLoadFromIntent(intent)
+        // now see if we need to handle information coming from the MediaPicker to populate
+        handleMediaPickerIntentData(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
