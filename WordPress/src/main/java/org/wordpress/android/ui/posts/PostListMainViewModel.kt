@@ -184,7 +184,7 @@ class PostListMainViewModel @Inject constructor(
                 hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                triggerPublishAction = this::setupBottomSheetPostAndShow,
+                triggerPublishAction = this::setupCurrentPostAndShowBottomsheet,
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
@@ -435,7 +435,7 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
-    fun setupBottomSheetPostAndShow(post: PostModel) {
+    fun setupCurrentPostAndShowBottomsheet(post: PostModel) {
         currentBottomSheetPostId = LocalId(post.id)
         editPostRepository.loadPostByLocalPostId(post.id)
         publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, true)
