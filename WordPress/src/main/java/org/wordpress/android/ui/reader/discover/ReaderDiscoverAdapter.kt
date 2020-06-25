@@ -5,15 +5,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderViewHolder.ReaderPostViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 
 private const val postViewType: Int = 1
 
-class ReaderDiscoverAdapter : Adapter<ReaderViewHolder>() {
+class ReaderDiscoverAdapter(
+    private val uiHelpers: UiHelpers,
+    private val imageManager: ImageManager
+) : Adapter<ReaderViewHolder>() {
     private val items = mutableListOf<ReaderCardUiState>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReaderViewHolder {
         return when (viewType) {
-            postViewType -> ReaderPostViewHolder(parent)
+            postViewType -> ReaderPostViewHolder(
+                    uiHelpers,
+                    imageManager,
+                    parent
+            )
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
