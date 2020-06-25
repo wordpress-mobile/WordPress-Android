@@ -33,7 +33,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.dateLine)
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { state.onMoreButtonClicked.invoke(uiState.postId, uiState.blogId) }
+        image_more.setOnClickListener { state.onMoreButtonClicked.invoke(uiState.postId, uiState.blogId, image_more) }
 
         // Featured image section
         updateFeaturedImage(state)

@@ -102,7 +102,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnDiscoverClicked")
     }
 
-    private fun onMoreButtonClicked(postId: Long, blogId: Long) {
+    // TODO malinjir get rid of the view reference
+    private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
