@@ -140,7 +140,7 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
             TextInputDialogFragment inputDialog = TextInputDialogFragment.newInstance(dialogTitle,
                     textView.getText()
                             .toString(),
-                    hint, isMultiline,
+                    hint, isMultiline, true,
                     textView.getId());
             inputDialog.setTargetFragment(MyProfileFragment.this, 0);
             inputDialog.show(getFragmentManager(), TextInputDialogFragment.TAG);

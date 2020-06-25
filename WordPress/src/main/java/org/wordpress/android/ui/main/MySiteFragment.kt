@@ -228,6 +228,8 @@ class MySiteFragment : Fragment(),
             } else {
                 row_activity_log.visibility = View.VISIBLE
             }
+
+            my_site_title_label.isClickable = SiteUtils.isAccessedViaWPComRest(site)
         }
         updateQuickStartContainer()
         if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
@@ -489,11 +491,6 @@ class MySiteFragment : Fragment(),
     }
 
     private fun showTitleChangerDialog() {
-        // if site is self hosted we don't do anything on the tap
-        if (!SiteUtils.isAccessedViaWPComRest(selectedSite)) {
-            return
-        }
-
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             WPSnackbar.make(
                     snackbar_anchor,
@@ -504,21 +501,18 @@ class MySiteFragment : Fragment(),
         }
 
         val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
-
-        if (!canEditTitle) {
-            WPSnackbar.make(
-                    snackbar_anchor,
-                    R.string.error_update_site_title_permission,
-                    getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
-            ).show()
-            return
+        val hint = if (canEditTitle) {
+            getString(R.string.my_site_title_changer_dialog_hint)
+        } else {
+            getString(R.string.my_site_title_changer_dialog_not_allowed_hint)
         }
 
         val inputDialog = TextInputDialogFragment.newInstance(
-                getString(R.string.site_settings_title_title),
+                getString(R.string.my_site_title_changer_dialog_title),
                 selectedSite?.name,
-                "",
+                hint,
                 false,
+                canEditTitle,
                 my_site_title_label.id
         )
         inputDialog.setTargetFragment(this@MySiteFragment, 0)
