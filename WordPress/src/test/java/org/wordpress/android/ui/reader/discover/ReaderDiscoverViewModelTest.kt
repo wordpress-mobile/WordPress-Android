@@ -22,7 +22,10 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
+import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -30,23 +33,27 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var readerPostRepository: ReaderPostRepository
+    @Mock private lateinit var readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory
+    @Mock private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
 
-    private val fakeDiscoverFeed = MutableLiveData<ReaderPostList>()
+    private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderPostList>()
+    private val communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
 
     @Before
     fun setUp() = test {
-        viewModel = ReaderDiscoverViewModel(readerPostRepository, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
-        whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
+        whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
+        viewModel = ReaderDiscoverViewModel(readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
+        whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
+        whenever(readerDiscoverRepository.communicationChannel).thenReturn(communicationChannel)
     }
 
     @Test

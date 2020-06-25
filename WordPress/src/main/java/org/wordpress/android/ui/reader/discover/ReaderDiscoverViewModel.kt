@@ -5,14 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.reader.ReaderConstants.KEY_DISCOVER
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
-import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -20,7 +17,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerPostRepositoryFactory: ReaderPostRepository.Factory,
+    private val readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -35,7 +32,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
-    private lateinit var readerPostRepository: ReaderPostRepository
+    private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
 
     fun start() {
         if (isStarted) return
@@ -47,11 +44,13 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun init() {
         // Start with loading state
         _uiState.value = LoadingUiState
-        readerPostRepository = readerPostRepositoryFactory.create(ReaderUtils.createTagFromTagName(KEY_DISCOVER, ReaderTagType.DEFAULT))
-        readerPostRepository.start()
+
+        // Get the correct repository
+        readerDiscoverRepository = readerDiscoverRepositoryFactory.create()
+        readerDiscoverRepository.start()
 
         // Listen to changes to the discover feed
-        _uiState.addSource(readerPostRepository.postsForTag) { posts ->
+        _uiState.addSource(readerDiscoverRepository.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
                         postUiStateBuilder.mapPostToUiState(
@@ -70,7 +69,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
 
-        readerPostRepository.communicationChannel.observeForever { data ->
+        readerDiscoverRepository.communicationChannel.observeForever { data ->
             data?.let {
                 // TODO listen for communications from the reeaderPostRepository, but not 4ever!
             }
