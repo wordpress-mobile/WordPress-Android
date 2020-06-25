@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.view.View
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -55,7 +56,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (Long, Long) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (Long, Long) -> Unit
+        onMoreButtonClicked: (Long, Long, View) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 

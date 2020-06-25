@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -146,7 +147,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val commentsAction: ActionUiState,
             val onItemClicked: (Long, Long) -> Unit,
             val onItemRendered: (Long, Long) -> Unit,
-            val onMoreButtonClicked: (Long, Long) -> Unit
+            val onMoreButtonClicked: (Long, Long, View) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 

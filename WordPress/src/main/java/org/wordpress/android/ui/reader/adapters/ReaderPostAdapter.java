@@ -489,7 +489,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> null;
-        Function2<Long, Long, Unit> onMoreButtonClicked = (postId, blogId) -> {
+        Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
             if (mOnPostPopupListener != null) {
                 mOnPostPopupListener.onShowPostPopup(view, post);
             }
