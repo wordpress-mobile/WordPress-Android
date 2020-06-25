@@ -21,7 +21,6 @@ class ReaderPostViewHolder(
 ) : ReaderViewHolder(parentView, R.layout.reader_cardview_post) {
     override fun onBind(uiState: ReaderCardUiState) {
         val state = uiState as ReaderPostUiState
-        // TODO malinjir handle mRootLayoutConstraintSet - see ReaderPostAdapter line 450
 
         // Header section
         updateAvatarOrBlavatar(state)
