@@ -197,48 +197,12 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if PostStatus is DRAFT and Publish Date is in the past then call publish immediately use case`() {
-        // arrange
-        val editPostRepository: EditPostRepository = mock()
-        whenever(editPostRepository.status).thenReturn(DRAFT)
-        whenever(editPostRepository.dateCreated).thenReturn("")
-        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(true)
-
+    fun `if setupBottomSheetPostAndShow is triggered then call publish immediately use case`() {
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.showPrepublishingBottomSheet(mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
+        viewModel.setupBottomSheetPostAndShow(mock())
 
         // assert
         verify(publishPostImmediatelyUseCase, times(1)).updatePostToPublishImmediately(any(), any())
-    }
-
-    @Test
-    fun `if PostStatus is DRAFT and Publish Date is is in the future then don't call publish immediately use case`() {
-        // arrange
-        val editPostRepository: EditPostRepository = mock()
-        whenever(editPostRepository.status).thenReturn(DRAFT)
-        whenever(editPostRepository.dateCreated).thenReturn("")
-        whenever(postUtilsWrapper.isPublishDateInThePast(any())).thenReturn(false)
-
-        // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.showPrepublishingBottomSheet(mock())
-
-        // assert
-        verify(publishPostImmediatelyUseCase, never()).updatePostToPublishImmediately(any(), any())
-    }
-
-    @Test
-    fun `if PostStatus is PRIVATE then don't call publish immediately use case`() {
-        // arrange
-        val editPostRepository: EditPostRepository = mock()
-        whenever(editPostRepository.status).thenReturn(PRIVATE)
-
-        // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository)
-        viewModel.showPrepublishingBottomSheet(mock())
-
-        // assert
-        verify(publishPostImmediatelyUseCase, never()).updatePostToPublishImmediately(any(), any())
     }
 }

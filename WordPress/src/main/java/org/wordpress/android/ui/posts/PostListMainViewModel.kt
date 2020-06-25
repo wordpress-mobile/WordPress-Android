@@ -184,7 +184,7 @@ class PostListMainViewModel @Inject constructor(
                 hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
-                triggerPublishAction = this::showPrepublishingBottomSheet,
+                triggerPublishAction = this::setupBottomSheetPostAndShow,
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
@@ -435,18 +435,11 @@ class PostListMainViewModel @Inject constructor(
         )
     }
 
-    fun showPrepublishingBottomSheet(post: PostModel) {
+    fun setupBottomSheetPostAndShow(post: PostModel) {
         currentBottomSheetPostId = LocalId(post.id)
         editPostRepository.loadPostByLocalPostId(post.id)
-        draftPostShouldPublishImmediately()
+        publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, true)
         _openPrepublishingBottomSheet.postValue(Event(Unit))
-    }
-
-    private fun draftPostShouldPublishImmediately() {
-        if (editPostRepository.status == PostStatus.DRAFT &&
-                postUtilsWrapper.isPublishDateInThePast(editPostRepository.dateCreated)) {
-            publishPostImmediatelyUseCase.updatePostToPublishImmediately(editPostRepository, true)
-        }
     }
 
     /**
