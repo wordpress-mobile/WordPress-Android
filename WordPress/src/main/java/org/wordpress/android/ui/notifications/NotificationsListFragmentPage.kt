@@ -47,7 +47,8 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.CrashLoggingUtils.Companion.log
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -132,7 +133,8 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onDataLoaded(itemsCount: Int) {
         if (!isAdded) {
-            log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
+            AppLog.d(T.NOTIFS,
+                    "NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
         }
         if (itemsCount > 0) {
             hideEmptyView()

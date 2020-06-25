@@ -1,4 +1,0 @@
-14.9:
-<b>Verbesserungen am Block-Editor:</b> Neuer Pullquote-Block, Farbauswahl im Button-Block, aktualisierte Seitenvorlagen.
-
-<b>Problembehebungen am Block-Editor:</b> Der Fehler, der dazu führte, dass im kostenlosen Fotoarchiv immer nur ein einzelnes Bild eingefügt wurde, auch wenn mehrere ausgewählt wurden, und der Fehler bei der Vorschau beim Wechsel zum klassischen Editor wurden behoben. Der nichtfunktionale Button zum Abonnieren wurde von der Blog-Vorlage entfernt.

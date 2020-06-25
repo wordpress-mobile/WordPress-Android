@@ -1,4 +1,0 @@
-14.9:
-<b>Verbeteringen aan de blokeditor:</b> Nieuw Pull-quote-blok, kleurenopties voor het Knopblok, bijgewerkte paginasjablonen.
-
-<b>Fixes van de blokeditor:</b> Bug van de Gratis fotobibliotheek die één afbeelding invoegde terwijl er meerdere waren geselecteerd, fout bij de voorbeeldweergave wanneer naar de klassieke editor werd overgeschakeld. Niet-werkende abonneerknop verwijderd uit blogsjabloon.

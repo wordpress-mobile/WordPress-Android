@@ -69,6 +69,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged;
 import org.wordpress.android.ui.LocaleAwareActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaPreviewActivity.MediaPreviewSwiped;
+import org.wordpress.android.ui.utils.AuthenticationUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -150,6 +151,7 @@ public class MediaSettingsActivity extends LocaleAwareActivity
     @Inject MediaStore mMediaStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject AuthenticationUtils mAuthenticationUtils;
 
     /**
      * @param activity    calling activity
@@ -771,7 +773,14 @@ public class MediaSettingsActivity extends LocaleAwareActivity
                                 AppLog.e(T.MEDIA, e);
                             }
                             showProgress(false);
-                            delayedFinishWithError();
+                            if (isVideo()) {
+                                // for videos it's ok if we fail to load the thumbnail - can happen.
+                                // let's show a toast but let the user edit the media settings!
+                                ToastUtils.showToast(MediaSettingsActivity.this,
+                                        R.string.error_media_thumbnail_not_loaded);
+                            } else {
+                                delayedFinishWithError();
+                            }
                         }
                     }
                 });
@@ -786,7 +795,11 @@ public class MediaSettingsActivity extends LocaleAwareActivity
             @Override
             public void run() {
                 int width = DisplayUtils.getDisplayPixelWidth(MediaSettingsActivity.this);
-                final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(mMedia.getUrl(), width);
+                final Bitmap thumb = ImageUtils.getVideoFrameFromVideo(
+                        mMedia.getUrl(),
+                        width,
+                        mAuthenticationUtils.getAuthHeaders(mMedia.getUrl())
+                );
                 if (thumb != null) {
                     runOnUiThread(() -> {
                         if (!isFinishing()) {

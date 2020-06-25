@@ -1,3 +1,3 @@
-Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for Floating Toolbar. Tooltip for page template selection buttons.
-Block editor updates: “Trash block” in a menu reachable from the block toolbar.
-Other updates: Added homepage settings to pages list and to site settings.
+Improvements: Scheduling, tag, and visibility panel pops up in editor and post list pre-publication. Pressing enter after adding captions in Image, Video, Gallery, Quote, and Pullquote blocks adds a new block.
+
+Fixes: Video thumbnails, settings, and preview display properly on private sites. Notifications and Install Jetpack tabs no longer overlay.

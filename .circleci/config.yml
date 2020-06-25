@@ -5,44 +5,47 @@ orbs:
   bundle-install: toshimaru/bundle-install@0.3.1
   slack: circleci/slack@3.4.2
 
+parameters:
+  translation_review_build:
+    type: boolean
+    default: false
+  translation_review_lang_id:
+    type: string
+    default: all-lang
+
 commands:
   copy-gradle-properties:
     steps:
       - run:
           name: Setup gradle.properties
           command: cp gradle.properties-example gradle.properties
-  yarn-install:
+  npm-install:
     steps:
       - restore_cache:
-          name: Restore Yarn Cache
+          name: Restore NPM Cache
           keys:
-            - yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/yarn.lock" }}
+            - npm-i18n-v1-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/package-lock.json" }}
       - run:
-          name: Yarn Install
+          name: NPM Install
           working_directory: libs/gutenberg-mobile
-          command: yarn install --frozen-lockfile --prefer-offline --network-concurrency 1
+          command: npm ci --prefer-offline
       - save_cache:
-          name: Save Yarn Cache
-          key: yarn-i18n-v4-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/yarn.lock" }}
+          name: Save NPM Cache
+          key: npm-i18n-v1-cache-v{{ .Environment.CACHE_TRIGGER_VERSION }}-job-{{ .Environment.CIRCLE_JOB }}-{{ checksum "libs/gutenberg-mobile/package-lock.json" }}
           paths:
-            - libs/gutenberg-mobile/node_modules
+            - ~/.npm
             - libs/gutenberg-mobile/i18n-cache/data
   checkout-submodules:
     steps:
       - run:
           name: Checkout submodules
-          command: git submodule update --init --recursive
-  checkout-gutenberg-mobile-submodule-only:
+          command: git submodule update --init --recursive --depth 1
+  npm-bundle-android:
     steps:
       - run:
-          name: Checkout gutenberg-mobile submodule (no recursive)
-          command: git submodule update --init
-  yarn-bundle-android:
-    steps:
-      - run:
-          name: Yarn bundle Android
+          name: Npm bundle Android
           working_directory: libs/gutenberg-mobile
-          command: yarn bundle:android
+          command: npm run bundle:android
   save-gutenberg-bundle-cache:
     steps:
       - run:
@@ -54,7 +57,7 @@ commands:
           name: Cache JS Bundle
           key: android-js-bundle-{{ checksum "gutenberg_submodule_hash" }}
           paths:
-            - libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+            - libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle
   restore-gutenberg-bundle-cache:
     steps:
       - run:
@@ -77,21 +80,21 @@ jobs:
       - run:
           name: Abort If JS Bundle Exists
           command: |
-            if [ -f "libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle" ]; then
+            if [ -f "libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle" ]; then
               echo "Gutenberg-Mobile bundle already in cache, no need to create a new one."
               circleci-agent step halt
             else
               echo "Gutenberg-Mobile bundle not found in cache. Proceeding to generate new bundle"
             fi
       - checkout-submodules
-      - yarn-install
-      - yarn-bundle-android
+      - npm-install
+      - npm-bundle-android
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Move bundle to assets folder
-          command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build/assets/index.android.bundle
+          command: mv libs/gutenberg-mobile/bundle/android/App.js libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets/index.android.bundle
       - save-gutenberg-bundle-cache
   test:
     executor:
@@ -99,15 +102,15 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Test WordPress
           environment:
@@ -126,15 +129,15 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Checkstyle
           environment:
@@ -169,7 +172,7 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - bundle-install/bundle-install:
           cache_key_prefix: installable-build
       - run:
@@ -179,9 +182,9 @@ jobs:
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Build APK
           environment:
@@ -218,15 +221,15 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Build
           environment:
@@ -261,15 +264,15 @@ jobs:
       api-version: "28"
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - attach_workspace:
-          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/assets
       - run:
           name: Build
           environment:
@@ -293,7 +296,7 @@ jobs:
       - image: circleci/ruby:2.6.4
     steps:
       - git/shallow-checkout
-      - checkout-gutenberg-mobile-submodule-only
+      - checkout-submodules
       - run:
           name: Install bundler
           command: gem install bundler --version 2.0.2
@@ -302,9 +305,54 @@ jobs:
       - run:
           name: Validate login strings
           command: bundle exec fastlane validate_login_strings pr_url:$CIRCLE_PULL_REQUEST
+  translation-review-build:
+    executor:
+      name: android/default
+      api-version: "28"
+    environment:
+      APP_VERSION_PREFIX: << pipeline.parameters.translation_review_lang_id >>
+    steps:
+      - git/shallow-checkout
+      - checkout-submodules
+      - bundle-install/bundle-install:
+          cache_key_prefix: installable-build
+      - run:
+          name: Copy Secrets
+          command: bundle exec fastlane run configure_apply
+      - android/restore-gradle-cache
+      - restore-gutenberg-bundle-cache
+      - run:
+          name: Ensure assets folder exists
+          command: mkdir -p libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - attach_workspace:
+          at: libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/assets
+      - run:
+          name: Build APK
+          environment:
+            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
+          command: |
+            TODAY_DATE=$(date +'%Y%m%d')
+            VERSION_NAME="${APP_VERSION_PREFIX}-build-${TODAY_DATE}-${CIRCLE_BUILD_NUM}"
+            echo "export VERSION_NAME=$VERSION_NAME" >> $BASH_ENV
+
+            bundle exec fastlane build_for_translation_review custom_version:"$VERSION_NAME"
+      - android/save-gradle-cache
+      - run:
+          name: Prepare APK
+          command: |
+            mkdir -p Artifacts
+            mv WordPress/build/outputs/apk/jalapeno/debug/org.wordpress.android-jalapeno-debug.apk "Artifacts/WordPress-${VERSION_NAME}.apk"
+      - run: 
+          name: Upload APK
+          command: |
+            curl --http1.1 https://${APPET_TOKEN}@api.appetize.io/v1/apps/${APPET_APPID} -F "file=@Artifacts/WordPress-${VERSION_NAME}.apk" -F "platform=android"
+      - store_artifacts:
+          path: Artifacts
+          destination: Artifacts
 
 workflows:
   wordpress_android:
+    unless: << pipeline.parameters.translation_review_build >>
     jobs:
       - gutenberg-bundle-build
       - strings-check
@@ -337,6 +385,7 @@ workflows:
                 - develop
                 - /^release.*/
   Optional Tests:
+    unless: << pipeline.parameters.translation_review_build >>
     #Optionally run connected tests on PRs
     jobs:
       - Hold:
@@ -349,3 +398,7 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
+  Translation Review Build:
+    when: << pipeline.parameters.translation_review_build >>
+    jobs:
+      - translation-review-build

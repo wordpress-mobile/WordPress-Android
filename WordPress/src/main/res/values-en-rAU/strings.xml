@@ -808,7 +808,6 @@ Language: en_AU
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
@@ -1278,7 +1277,6 @@ Language: en_AU
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
     <string name="reader_photo_by">Photo by %s</string>
-    <string name="reader_label_visit">Visit</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_authorized_signin">You\'re not authorised to view this post. Try signing in to WordPress.com first.</string>
