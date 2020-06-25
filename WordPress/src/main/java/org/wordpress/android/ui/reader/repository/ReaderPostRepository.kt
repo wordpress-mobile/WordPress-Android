@@ -32,9 +32,10 @@ import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
 import org.wordpress.android.util.EventBusWrapper
-import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -43,6 +44,7 @@ class ReaderPostRepository
 constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val bgDispatcher: CoroutineDispatcher,
     private val ioDispatcher: CoroutineDispatcher,
     private val readerTag: ReaderTag
@@ -100,7 +102,7 @@ constructor(
     private fun requestPostsForTagFromRemoteStorage(
         updateAction: UpdateAction = REQUEST_NEWER
     ) {
-        if (!NetworkUtils.isNetworkAvailable(contextProvider.getContext())) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
             _communicationChannel.postValue(
                     Event(ReaderRepositoryCommunication.Error.NetworkUnavailable)
             )
@@ -217,7 +219,7 @@ constructor(
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdatePostsStarted) {
         val eventTag = event.readerTag ?: return
-        if (isCurrentTag(eventTag)) {
+        if (isTag(eventTag)) {
             // ignore events not related to this instance of ReaderPostRepository
             return
         }
@@ -229,7 +231,7 @@ constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
-        if (event.readerTag != null && !isCurrentTag(event.readerTag)) {
+        if (event.readerTag != null && !isTag(event.readerTag)) {
             // ignore events not related to this instance of ReaderPostRepository
             return
         }
@@ -261,7 +263,7 @@ constructor(
         }
     }
 
-    private fun isCurrentTag(tag: ReaderTag): Boolean {
+    private fun isTag(tag: ReaderTag): Boolean {
         return ReaderTag.isSameTag(tag, readerTag)
     }
 
@@ -284,6 +286,7 @@ constructor(
     @Inject constructor(
         private val contextProvider: ContextProvider,
         private val eventBusWrapper: EventBusWrapper,
+        private val networkUtilsWrapper: NetworkUtilsWrapper,
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
     ) {
@@ -291,6 +294,7 @@ constructor(
             return ReaderPostRepository(
                     contextProvider,
                     eventBusWrapper,
+                    networkUtilsWrapper,
                     bgDispatcher,
                     ioDispatcher,
                     readerTag
@@ -328,45 +332,4 @@ sealed class ReaderRepositoryCommunication {
     }
 }
 
-// todo: Annmarie - where should this class live and the listener
-/** ReactiveMutableLiveData is a handy extension of MutableLiveData.
- * The main purpose is to monitor onActive and onInactive
- *  situations because they are unreachable using straight up LiveData
- */
-class ReactiveMutableLiveData<T>(private val onReactiveListener: OnReactiveListener) :
-        MutableLiveData<T>() {
-    // Allow a way to hook up the external listeners
-    constructor(onActive: () -> Unit = {}, onInactive: () -> Unit = {}) : this(
-            setReactiveListener(onActive, onInactive)
-    )
 
-    override fun onActive() {
-        onReactiveListener.onActive()
-    }
-
-    override fun onInactive() {
-        onReactiveListener.onInactive()
-    }
-
-    companion object {
-        /**
-         * Creates a OnReactiveListener that can be passed into the constructor
-         */
-        fun setReactiveListener(onActive: () -> Unit, onInactive: () -> Unit): OnReactiveListener {
-            return object : OnReactiveListener {
-                override fun onActive() {
-                    onActive.invoke()
-                }
-
-                override fun onInactive() {
-                    onInactive.invoke()
-                }
-            }
-        }
-    }
-}
-
-interface OnReactiveListener {
-    fun onActive()
-    fun onInactive()
-}
