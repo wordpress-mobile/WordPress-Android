@@ -35,7 +35,7 @@ if (project.ext.buildGutenbergFromSource) {
     def nodeModulesDir = new File('libs/gutenberg-mobile/node_modules')
     if (!nodeModulesDir.exists()) {
         def message = "Attempting to build Gutenberg from source without a libs/gutenberg-mobile/node_modules directory. \
-Either run `yarn install` manually within libs/gutenberg-mobile or disable building Gutenberg from source by \
+Either run `npm install` manually within libs/gutenberg-mobile or disable building Gutenberg from source by \
 setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
         throw new GradleException(message)
     }
