@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -20,7 +18,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCa
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
-import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -37,7 +35,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val readerImageScannerProvider: ReaderImageScannerProvider
+    private val readerImageScannerProvider: ReaderImageScannerProvider,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
@@ -198,13 +197,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ActionUiState(
                     isEnabled = true,
                     isSelected = post.isLikedByCurrentUser,
-                    // TODO malinjir remove static access and reference to context
                     contentDescription = UiStringText(
-                            ReaderUtils.getLongLikeLabelText(
-                                    WordPress.getContext(),
-                                    post.numLikes,
-                                    post.isLikedByCurrentUser
-                            )
+                            readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
                     ),
                     onClicked = if (accountStore.hasAccessToken()) onClicked else null
             )
