@@ -67,6 +67,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
+    var readerCssUpdatedTimestamp: Long
+        get() = AppPrefs.getReaderCssUpdatedTimestamp()
+        set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
