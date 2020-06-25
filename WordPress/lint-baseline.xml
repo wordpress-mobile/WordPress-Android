@@ -57,7 +57,7 @@
         errorLine1="            view.setPadding("
         errorLine2="            ^">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="550"
             column="13"/>
     </issue>
@@ -3927,7 +3927,7 @@
         errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
         errorLine2="                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
             line="53"
             column="48"/>
     </issue>
@@ -3943,7 +3943,7 @@
         errorLine1="                Layout.BREAK_STRATEGY_SIMPLE : Layout.BREAK_STRATEGY_HIGH_QUALITY;"
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactTextInputShadowNodeFork.java"
             line="53"
             column="17"/>
     </issue>
@@ -3959,7 +3959,7 @@
         errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="337"
             column="43"/>
     </issue>
@@ -3975,7 +3975,7 @@
         errorLine1="                view.setJustificationMode(Layout.JUSTIFICATION_MODE_NONE);"
         errorLine2="                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="342"
             column="43"/>
     </issue>
@@ -3991,7 +3991,7 @@
         errorLine1="        classpath &apos;com.android.tools.build:gradle:3.4.2&apos;"
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-gutenberg-bridge/android/build.gradle"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build.gradle"
             line="18"
             column="9"/>
     </issue>
@@ -4007,7 +4007,7 @@
         errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.0.0&apos;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/build.gradle"
             line="104"
             column="5"/>
     </issue>
@@ -4023,7 +4023,7 @@
         errorLine1="    implementation &apos;androidx.appcompat:appcompat:1.0.0&apos;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/build.gradle"
             line="109"
             column="5"/>
     </issue>
@@ -4039,7 +4039,7 @@
         errorLine1="    implementation &apos;androidx.recyclerview:recyclerview:1.0.0&apos;"
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/build.gradle"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/build.gradle"
             line="110"
             column="5"/>
     </issue>
@@ -4055,7 +4055,7 @@
         errorLine1="    @ReactProp(name = PROP_TEXT)"
         errorLine2="                      ~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecTextShadowNode.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecTextShadowNode.java"
             line="18"
             column="23"/>
     </issue>
@@ -4071,7 +4071,7 @@
         errorLine1="    private HashMap&lt;Integer, Media> mMediaToAddAfterMounting = new HashMap&lt;>();"
         errorLine2="                                                               ~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-gutenberg-bridge/android/src/main/java/org/wordpress/mobile/WPAndroidGlue/WPAndroidGlueCode.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/src/main/java/org/wordpress/mobile/WPAndroidGlue/WPAndroidGlueCode.java"
             line="85"
             column="64"/>
     </issue>
@@ -4087,7 +4087,7 @@
         url="http://developer.android.com/design/style/iconography.html"
         urls="http://developer.android.com/design/style/iconography.html">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-hdpi/ic_launcher.png"/>
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/res/drawable-hdpi/ic_launcher.png"/>
     </issue>
 
     <issue
@@ -4101,7 +4101,7 @@
         url="http://developer.android.com/design/style/iconography.html"
         urls="http://developer.android.com/design/style/iconography.html">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-mdpi/ic_launcher.png"/>
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/res/drawable-mdpi/ic_launcher.png"/>
     </issue>
 
     <issue
@@ -4115,7 +4115,7 @@
         url="http://developer.android.com/design/style/iconography.html"
         urls="http://developer.android.com/design/style/iconography.html">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-xhdpi/ic_launcher.png"/>
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/res/drawable-xhdpi/ic_launcher.png"/>
     </issue>
 
     <issue
@@ -4129,7 +4129,7 @@
         url="http://developer.android.com/design/style/iconography.html"
         urls="http://developer.android.com/design/style/iconography.html">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/res/drawable-xxhdpi/ic_launcher.png"/>
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/res/drawable-xxhdpi/ic_launcher.png"/>
     </issue>
 
     <issue
@@ -4143,7 +4143,7 @@
         errorLine1="public class ReactAztecText extends AztecText {"
         errorLine2="             ~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecText.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecText.java"
             line="49"
             column="14"/>
     </issue>
@@ -4159,7 +4159,7 @@
         errorLine1="                    (int) update.getPaddingLeft(),"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="551"
             column="27"/>
     </issue>
@@ -4175,7 +4175,7 @@
         errorLine1="                    (int) update.getPaddingRight(),"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
-            file="../libs/gutenberg-mobile/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
+            file="../libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android/src/main/java/org/wordpress/mobile/ReactNativeAztec/ReactAztecManager.java"
             line="553"
             column="27"/>
     </issue>

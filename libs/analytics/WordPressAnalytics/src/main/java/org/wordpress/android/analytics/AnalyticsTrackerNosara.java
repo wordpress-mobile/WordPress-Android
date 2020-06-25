@@ -1485,6 +1485,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
+            case FEATURE_FLAG_SET:
+                return "feature_flag_set";
+            case EXPERIMENT_VARIANT_SET:
+                return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
                 return "traintracks_render";
             case TRAIN_TRACKS_INTERACT:
