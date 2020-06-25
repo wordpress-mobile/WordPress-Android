@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
@@ -62,7 +63,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onReblogClicked = this::onReblogClicked,
                                 onCommentsClicked = this::onCommentsClicked,
                                 onItemClicked = this::onItemClicked,
-                                onItemRendered = this::onItemRendered
+                                onItemRendered = this::onItemRendered,
+                                postListType = TAG_FOLLOWED
                         )
                     }
             )
