@@ -24,7 +24,7 @@ class ReaderPostViewHolder(
         // TODO malinjir handle mRootLayoutConstraintSet - see ReaderPostAdapter line 450
 
         // Header section
-        initAvatarOrBlavatar(state)
+        updateAvatarOrBlavatar(state)
         uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogName)
         uiHelpers.setTextOrHide(text_blog_url, state.blogUrl)
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
@@ -32,7 +32,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
 
         // Featured image section
-        initFeaturedImage(state)
+        updateFeaturedImage(state)
         uiHelpers.updateVisibility(image_video_overlay, state.videoOverlayVisibility)
         uiHelpers.setTextOrHide(text_photo_title, state.photoTitle)
         uiHelpers.updateVisibility(frame_photo, state.photoFrameVisibility)
@@ -45,18 +45,18 @@ class ReaderPostViewHolder(
         post_container.setOnClickListener { state.onItemClicked(uiState.postId, uiState.blogId) }
 
         // Discover section
-        initDiscoverSection(state)
+        updateDiscoverSection(state)
 
         // Action buttons section
-        initActionButton(uiState.postId, uiState.blogId, uiState.likeAction, count_likes)
-        initActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
-        initActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
-        initActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.likeAction, count_likes)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.reblogAction, reblog)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
+        updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
 
         state.onItemRendered.invoke(uiState.postId, uiState.blogId)
     }
 
-    private fun initFeaturedImage(state: ReaderPostUiState) {
+    private fun updateFeaturedImage(state: ReaderPostUiState) {
         uiHelpers.updateVisibility(image_featured, state.featuredImageUrl != null)
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_featured)
@@ -70,7 +70,7 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun initAvatarOrBlavatar(state: ReaderPostUiState) {
+    private fun updateAvatarOrBlavatar(state: ReaderPostUiState) {
         uiHelpers.updateVisibility(image_avatar_or_blavatar, state.avatarOrBlavatarUrl != null)
         if (state.avatarOrBlavatarUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_avatar_or_blavatar)
@@ -82,7 +82,7 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun initDiscoverSection(state: ReaderPostUiState) {
+    private fun updateDiscoverSection(state: ReaderPostUiState) {
         uiHelpers.updateVisibility(layout_discover, state.discoverSection != null)
         uiHelpers.setTextOrHide(text_discover, state.discoverSection?.discoverText)
         if (state.discoverSection?.discoverAvatarUrl == null) {
@@ -98,7 +98,7 @@ class ReaderPostViewHolder(
         // TODO malinjir handle on discover click
     }
 
-    private fun initActionButton(postId: Long, blogId: Long, state: ActionUiState, view: View) {
+    private fun updateActionButton(postId: Long, blogId: Long, state: ActionUiState, view: View) {
         if (view is ReaderIconCountView) {
             view.setCount(state.count)
         }
