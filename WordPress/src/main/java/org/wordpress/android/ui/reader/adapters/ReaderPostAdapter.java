@@ -452,15 +452,49 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post == null) {
             return;
         }
+        Context ctx = WordPress.getContext(); // TODO use view context
 
-        Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> null;
-        Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> null;
-        Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> null;
-        Function3<Long, Long, Boolean, Unit> onCommentClicked = (postId, blogId, aBoolean) -> null;
-        Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> null;
-        Function2<Long, Long, Unit> onItemRendered = (postId, blogId) -> null;
+        Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> {
+            toggleBookmark(post.blogId, post.postId);
+            notifyItemChanged(position);
+            return Unit.INSTANCE;
+        };
+        Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> {
+            toggleLike(ctx, holder, post);
+            return Unit.INSTANCE;
+        };
+        Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> {
+            mReblogActionListener.reblog(post);
+            return Unit.INSTANCE;
+        };
+        Function3<Long, Long, Boolean, Unit> onCommentClicked = (postId, blogId, aBoolean) -> {
+            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
+            return Unit.INSTANCE;
+        };
+        Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
+            if (mPostSelectedListener != null) {
+                mPostSelectedListener.onPostSelected(post);
+            }
+            return Unit.INSTANCE;
+        };
+        Function2<Long, Long, Unit> onItemRendered = (postId, blogId) -> {
+            checkLoadMore(position);
+
+            // if we haven't already rendered this post and it has a "railcar" attached to it, add it
+            // to the rendered list and record the TrainTracks render event
+            if (post.hasRailcar() && !mRenderedIds.contains(post.getPseudoId())) {
+                mRenderedIds.add(post.getPseudoId());
+                AnalyticsUtils.trackRailcarRender(post.getRailcarJson());
+            }
+            return Unit.INSTANCE;
+        };
         Function2<Long, Long, Unit> onDiscoverSectionClicked = (postId, blogId) -> null;
-        Function2<Long, Long, Unit> onMoreButtonClicked = (postId, blogId) -> null;
+        Function2<Long, Long, Unit> onMoreButtonClicked = (postId, blogId) -> {
+            if (mOnPostPopupListener != null) {
+                mOnPostPopupListener.onShowPostPopup(view, post);
+            }
+            return Unit.INSTANCE;
+        };
 
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
