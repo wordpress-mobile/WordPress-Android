@@ -73,7 +73,6 @@
                     android:id="@+id/site_info_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_medium"
                     android:orientation="vertical"
                     android:paddingEnd="@dimen/content_margin"
                     android:paddingStart="@dimen/content_margin">
@@ -83,12 +82,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/margin_small_medium"
                         android:background="?attr/selectableItemBackground"
                         android:ellipsize="end"
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:textAlignment="center"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingStart="@dimen/margin_extra_large"
                         android:textAppearance="?attr/textAppearanceHeadline6"
                         tools:text="Example" />
 
@@ -97,7 +98,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="@dimen/margin_small"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:layout_marginTop="@dimen/margin_extra_small"
+                        android:paddingTop="@dimen/margin_extra_small"
+                        android:paddingBottom="@dimen/margin_extra_small"
                         android:background="?attr/selectableItemBackground"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
@@ -113,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:layout_marginBottom="@dimen/margin_extra_medium_large"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
@@ -121,6 +126,7 @@
                     android:text="@string/my_site_btn_switch_site" />
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:id="@+id/quick_action_buttons_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
