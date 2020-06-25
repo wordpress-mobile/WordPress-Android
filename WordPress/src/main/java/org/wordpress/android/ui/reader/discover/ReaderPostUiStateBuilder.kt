@@ -68,7 +68,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
-                thumbnailStripUrls = buildThumbnailStripUrls(post),
+                thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
                 moreMenuVisibility = accountStore.hasAccessToken(),
