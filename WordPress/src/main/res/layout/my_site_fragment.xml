@@ -661,10 +661,4 @@
         app:aevSubtitle="@string/my_site_create_new_site"
         app:aevTitle="@string/my_site_create_new_site_title" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/snackbar_anchor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
-
 </RelativeLayout>

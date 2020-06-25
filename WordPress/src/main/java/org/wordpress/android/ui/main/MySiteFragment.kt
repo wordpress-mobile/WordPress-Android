@@ -493,7 +493,7 @@ class MySiteFragment : Fragment(),
     private fun showTitleChangerDialog() {
         if (!NetworkUtils.isNetworkAvailable(activity)) {
             WPSnackbar.make(
-                    snackbar_anchor,
+                    requireActivity().findViewById(R.id.coordinator),
                     R.string.error_network_connection,
                     getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
             ).show()
@@ -1414,7 +1414,7 @@ class MySiteFragment : Fragment(),
         if (callbackId == my_site_title_label.id && selectedSite != null) {
             if (!NetworkUtils.isNetworkAvailable(activity)) {
                 WPSnackbar.make(
-                        snackbar_anchor,
+                        requireActivity().findViewById(R.id.coordinator),
                         R.string.error_update_site_title_network,
                         getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
                 ).show()
