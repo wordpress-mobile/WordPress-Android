@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCa
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -57,7 +58,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemRendered: (Long, Long) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
         onMoreButtonClicked: (Long, Long, View) -> Unit,
-        onVideoOverlayClicked: (Long, Long) -> Unit
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 
@@ -86,8 +88,20 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 onItemClicked = onItemClicked,
                 onItemRendered = onItemRendered,
                 onMoreButtonClicked = onMoreButtonClicked,
-                onVideoOverlayClicked = onVideoOverlayClicked
+                onVideoOverlayClicked = onVideoOverlayClicked,
+                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
         )
+    }
+
+    private fun buildOnPostHeaderViewClicked(
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType
+    ): PostHeaderClickData? {
+        return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
+            PostHeaderClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
+        } else {
+            null
+        }
     }
 
     private fun buildBlogUrl(post: ReaderPost) = post

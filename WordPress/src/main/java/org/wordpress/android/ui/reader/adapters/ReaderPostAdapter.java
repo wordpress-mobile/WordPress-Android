@@ -14,9 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -46,13 +43,10 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCa
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
-import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
-import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
-import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -62,7 +56,6 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
@@ -176,36 +169,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtRemovedPostTitle = itemView.findViewById(R.id.removed_post_title);
             mRemovedPostContainer = itemView.findViewById(R.id.removed_item_container);
             mUndoRemoveAction = itemView.findViewById(R.id.undo_remove);
-        }
-    }
-
-    /*
-     * full post
-     */
-    private class ReaderPostViewHolderLegacy extends RecyclerView.ViewHolder {
-
-
-        ReaderPostViewHolderLegacy(View itemView) {
-            super(itemView);
-            // show author/blog link as disabled if we're previewing a blog, otherwise show
-            // blog preview when the post header is clicked
-            if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
-                int color = ContextExtensionsKt.getColorFromAttribute(itemView.getContext(), R.attr.colorOnSurface);
-                mTxtAuthorAndBlogName.setTextColor(color);
-                // remove the ripple background
-                postHeaderView.setBackground(null);
-            } else {
-                postHeaderView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        int position = getAdapterPosition();
-                        ReaderPost post = getItem(position);
-                        if (post != null) {
-                            ReaderActivityLauncher.showReaderBlogPreview(view.getContext(), post);
-                        }
-                    }
-                });
-            }
         }
     }
 
@@ -434,6 +397,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
 
+        Function2<Long, Long, Unit> onPostHeaderClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderBlogPreview(ctx, post);
+            return Unit.INSTANCE;
+        };
+
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
                         post,
@@ -449,7 +417,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onItemRendered,
                         onDiscoverSectionClicked,
                         onMoreButtonClicked,
-                        onVideoOverlayClicked
+                        onVideoOverlayClicked,
+                        onPostHeaderClicked
                 );
         holder.onBind(uiState);
     }
