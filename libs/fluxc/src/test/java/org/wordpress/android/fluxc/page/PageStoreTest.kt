@@ -123,6 +123,28 @@ class PageStoreTest {
     }
 
     @Test
+    fun requestPagesFetchesFromServerAndReturnsEventFromTwoRequests() = test {
+        val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
+        var firstEvent: OnPostChanged? = null
+        var secondEvent: OnPostChanged? = null
+        val firstJob = launch {
+            firstEvent = store.requestPagesFromServer(site)
+        }
+        val secondJob = launch {
+            secondEvent = store.requestPagesFromServer(site)
+        }
+        delay(10)
+        store.onPostChanged(expected)
+        delay(10)
+        firstJob.join()
+        secondJob.join()
+
+        assertThat(firstEvent).isEqualTo(expected)
+        assertThat(secondEvent).isEqualTo(expected)
+        verify(dispatcher).dispatch(any())
+    }
+
+    @Test
     fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
         val firstEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, true)
         val lastEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
