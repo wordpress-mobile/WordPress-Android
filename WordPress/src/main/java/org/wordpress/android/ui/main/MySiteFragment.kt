@@ -61,6 +61,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
@@ -1213,16 +1214,24 @@ class MySiteFragment : Fragment(),
         val focusPointSize = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
         val horizontalOffset: Int
         val verticalOffset: Int
-        if (isTargetingBottomNavBar(activeTutorialPrompt!!.task)) {
-            horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
-                    .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
-            verticalOffset = 0
-        } else if (activeTutorialPrompt!!.task == UPLOAD_SITE_ICON) {
-            horizontalOffset = focusPointSize
-            verticalOffset = -focusPointSize / 2
-        } else {
-            horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
-            verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+        when {
+            isTargetingBottomNavBar(activeTutorialPrompt!!.task) -> {
+                horizontalOffset = quickStartTarget.width / 2 - focusPointSize + resources
+                        .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
+                verticalOffset = 0
+            }
+            activeTutorialPrompt!!.task == UPLOAD_SITE_ICON -> {
+                horizontalOffset = focusPointSize
+                verticalOffset = -focusPointSize / 2
+            }
+            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
+                horizontalOffset = -focusPointSize / 4
+                verticalOffset = -focusPointSize / 4
+            }
+            else -> {
+                horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
+                verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+            }
         }
         addQuickStartFocusPointAboveTheView(
                 parentView, quickStartTarget, horizontalOffset,
