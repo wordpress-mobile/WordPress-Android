@@ -150,6 +150,9 @@ android {
         exclude '**/libjscexecutor.so'
         exclude '**/libhermes-inspector.so'
         exclude '**/libhermes-executor-debug.so'
+
+        pickFirst 'META-INF/-no-jdk.kotlin_module'
+
     }
 
     bundle {
@@ -268,7 +271,7 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidxTestVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
-    androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
+    androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"
