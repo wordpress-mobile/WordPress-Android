@@ -373,8 +373,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     break;
                 case SITE_PICK:
-                    if (blogId != 0) {
-                        ReaderActivityLauncher.showReaderBlogPreview(ctx, blogId);
+                    if (discoverData.getBlogId() != 0) {
+                        ReaderActivityLauncher.showReaderBlogPreview(ctx, discoverData.getBlogId());
                     } else if (discoverData.hasBlogUrl()) {
                         ReaderActivityLauncher.openUrl(ctx, discoverData.getBlogUrl());
                     }
