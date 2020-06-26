@@ -1229,7 +1229,9 @@ class MySiteFragment : Fragment(),
                 verticalOffset = -focusPointSize / 4
             }
             else -> {
-                horizontalOffset = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
+                horizontalOffset = resources.getDimensionPixelOffset(
+                        R.dimen.quick_start_focus_point_my_site_right_offset
+                )
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
         }
