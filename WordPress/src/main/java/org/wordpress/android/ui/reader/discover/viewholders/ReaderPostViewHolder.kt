@@ -13,6 +13,7 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.READER
@@ -23,8 +24,14 @@ class ReaderPostViewHolder(
     private val imageManager: ImageManager,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_cardview_post) {
+
+    init {
+        layout_discover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
+        image_more.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+    }
     override fun onBind(uiState: ReaderCardUiState) {
         val state = uiState as ReaderPostUiState
+        // TODO malinjir animate like button on click
 
         // Header section
         updateAvatarOrBlavatar(state)

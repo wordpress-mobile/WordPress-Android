@@ -9,7 +9,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,10 +23,8 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.ReaderThumbnailTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
-import org.wordpress.android.models.ReaderCardType;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderPostDiscoverData;
 import org.wordpress.android.models.ReaderPostList;
@@ -36,7 +33,6 @@ import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.reader.ReaderAnim;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
@@ -48,26 +44,24 @@ import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils;
-import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener;
 import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderIconCountView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderThumbnailStrip;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.DateTimeUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.image.ImageManager;
@@ -83,6 +77,7 @@ import kotlin.jvm.functions.Function3;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
+    private final UiHelpers mUiHelpers;
     private NewsCardListener mNewsCardListener;
     private ReaderTag mCurrentTag;
     private long mCurrentBlogId;
@@ -187,7 +182,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * full post
      */
-    private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
+    private class ReaderPostViewHolderLegacy extends RecyclerView.ViewHolder {
         final View mPostContainer;
 
         private final ConstraintLayout mRootLayout;
@@ -220,7 +215,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         private final ReaderThumbnailStrip mThumbnailStrip;
 
-        ReaderPostViewHolder(View itemView) {
+        ReaderPostViewHolderLegacy(View itemView) {
             super(itemView);
 
             mPostContainer = itemView.findViewById(R.id.post_container);
@@ -254,9 +249,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
 
             View postHeaderView = itemView.findViewById(R.id.layout_post_header);
-
-            ViewUtilsKt.expandTouchTargetArea(mLayoutDiscover, R.dimen.reader_discover_layout_extra_padding, true);
-            ViewUtilsKt.expandTouchTargetArea(mImgMore, R.dimen.reader_more_image_extra_padding, false);
 
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
@@ -372,8 +364,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_removed_post, parent, false);
                 return new ReaderRemovedPostViewHolder(postView);
             default:
-                postView = LayoutInflater.from(context).inflate(R.layout.reader_cardview_post, parent, false);
-                return new ReaderPostViewHolder(postView);
+                return new ReaderPostViewHolder(mUiHelpers, mImageManager, parent);
         }
     }
 
@@ -460,7 +451,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> {
-            toggleLike(ctx, holder, post);
+            toggleLike(ctx, post);
             return Unit.INSTANCE;
         };
         Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> {
@@ -532,6 +523,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onDiscoverSectionClicked,
                         onMoreButtonClicked
                 );
+        holder.onBind(uiState);
     }
 
     /*
@@ -545,72 +537,20 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void showDiscoverData(final ReaderPostViewHolder postHolder,
-                                  final ReaderPost post) {
-        final ReaderPostDiscoverData discoverData = post.getDiscoverData();
-        if (discoverData == null) {
-            postHolder.mLayoutDiscover.setVisibility(View.GONE);
-            return;
-        }
-
-        postHolder.mLayoutDiscover.setVisibility(View.VISIBLE);
-        postHolder.mTxtDiscover.setText(discoverData.getAttributionHtml());
-
-        switch (discoverData.getDiscoverType()) {
-            case EDITOR_PICK:
-                mImageManager.loadIntoCircle(postHolder.mImgDiscoverAvatar, ImageType.AVATAR,
-                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
-                // tapping an editor pick opens the source post, which is handled by the existing
-                // post selection handler
-                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mPostSelectedListener != null) {
-                            mPostSelectedListener.onPostSelected(post);
-                        }
-                    }
-                });
-                break;
-
-            case SITE_PICK:
-                // BLAVATAR
-                mImageManager.load(postHolder.mImgDiscoverAvatar, ImageType.BLAVATAR,
-                        GravatarUtils.fixGravatarUrl(discoverData.getAvatarUrl(), mAvatarSzSmall));
-                // site picks show "Visit [BlogName]" link - tapping opens the blog preview if
-                // we have the blogId, if not show blog in internal webView
-                postHolder.mLayoutDiscover.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (discoverData.getBlogId() != 0) {
-                            ReaderActivityLauncher.showReaderBlogPreview(v.getContext(), discoverData.getBlogId());
-                        } else if (discoverData.hasBlogUrl()) {
-                            ReaderActivityLauncher.openUrl(v.getContext(), discoverData.getBlogUrl());
-                        }
-                    }
-                });
-                break;
-
-            case OTHER:
-            default:
-                mImageManager.cancelRequestAndClearImageView(postHolder.mImgDiscoverAvatar);
-                // something else, so hide discover section
-                postHolder.mLayoutDiscover.setVisibility(View.GONE);
-                break;
-        }
-    }
-
     // ********************************************************************************************
 
     public ReaderPostAdapter(
             Context context,
             ReaderPostListType postListType,
             ImageManager imageManager,
+            UiHelpers uiHelpers,
             boolean isMainReader
     ) {
         super();
         ((WordPress) context.getApplicationContext()).component().inject(this);
         this.mImageManager = imageManager;
         mPostListType = postListType;
+        mUiHelpers = uiHelpers;
         mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
         mMarginExtraLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
@@ -839,14 +779,13 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, ReaderPostViewHolder holder, ReaderPost post) {
+    private void toggleLike(Context context, ReaderPost post) {
         if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
 
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         boolean isAskingToLike = !isCurrentlyLiked;
-        ReaderAnim.animateLikeButton(holder.mLikeCount.getImageView(), isAskingToLike);
 
         if (!ReaderPostActions.performLikeAction(post, isAskingToLike, mAccountStore.getAccount().getUserId())) {
             ToastUtils.showToast(context, R.string.reader_toast_err_generic);

@@ -2006,6 +2006,7 @@ public class ReaderPostListFragment extends Fragment
                     context,
                     getPostListType(),
                     mImageManager,
+                    mUiHelpers,
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);
