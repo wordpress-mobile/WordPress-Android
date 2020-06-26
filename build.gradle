@@ -55,7 +55,7 @@ allprojects {
 
             maven {
                 // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/libs/gutenberg-mobile/node_modules/react-native/android"
+                url "$rootDir/libs/gutenberg-mobile/gutenberg/node_modules/react-native/android"
             }
         } else {
             maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
