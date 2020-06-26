@@ -31,9 +31,7 @@ data class EncryptedLog(
 }
 
 @Table
-@RawConstraints(
-        "UNIQUE(UUID) ON CONFLICT REPLACE"
-)
+@RawConstraints("UNIQUE(UUID) ON CONFLICT REPLACE")
 class EncryptedLogModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
     @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var uuid: String? = null
