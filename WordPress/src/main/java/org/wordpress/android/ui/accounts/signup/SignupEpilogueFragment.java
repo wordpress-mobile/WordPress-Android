@@ -676,10 +676,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             UCrop.Options options = new UCrop.Options();
             options.setShowCropGrid(false);
             options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
-                    context,
-                    android.R.attr.statusBarColor));
+                    context, android.R.attr.statusBarColor
+            ));
             options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
-            options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnPrimarySurface));
+            options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
+                    context, R.attr.colorOnPrimarySurface
+            ));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);
 
