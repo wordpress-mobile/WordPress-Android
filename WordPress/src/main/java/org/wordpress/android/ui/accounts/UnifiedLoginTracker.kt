@@ -163,7 +163,6 @@ class UnifiedLoginTracker
         SHOW_HELP("show_help"),
         SEND_CODE_WITH_TEXT("send_code_with_text"),
         SUBMIT_2FA_CODE("submit_2fa_code"),
-        CLICK_ON_LOGIN_SITE("click_on_login_site"),
         REQUEST_MAGIC_LINK("request_magic_link"),
         LOGIN_WITH_PASSWORD("login_with_password"),
         CREATE_NEW_SITE("create_new_site"),

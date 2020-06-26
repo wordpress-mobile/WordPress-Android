@@ -304,11 +304,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackClickOnLoginSiteClicked() {
-        mUnifiedLoginTracker.trackClick(Click.CLICK_ON_LOGIN_SITE);
-    }
-
-    @Override
     public void trackSubmitClicked() {
         mUnifiedLoginTracker.trackClick(Click.SUBMIT);
     }

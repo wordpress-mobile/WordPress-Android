@@ -58,8 +58,6 @@ public interface LoginAnalyticsListener {
 
     void trackSubmit2faCodeClicked();
 
-    void trackClickOnLoginSiteClicked();
-
     void trackSubmitClicked();
 
     void trackRequestMagicLinkClick();
