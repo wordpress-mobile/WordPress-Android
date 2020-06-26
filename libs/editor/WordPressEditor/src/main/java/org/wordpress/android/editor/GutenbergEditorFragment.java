@@ -137,7 +137,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       @Nullable Bundle editorTheme,
                                                       String userAgent,
                                                       boolean tenorEnabled) {
-
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
