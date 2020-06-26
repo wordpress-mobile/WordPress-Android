@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
@@ -13,10 +14,14 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
@@ -31,8 +36,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val accountStore: AccountStore,
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val readerImageScannerProvider: ReaderImageScannerProvider
 ) {
+    // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
         post: ReaderPost,
         photonWidth: Int,
@@ -43,8 +50,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onLikeClicked: (Long, Long, Boolean) -> Unit,
         onReblogClicked: (Long, Long, Boolean) -> Unit,
         onCommentsClicked: (Long, Long, Boolean) -> Unit,
-        onItemClicked: (ReaderPost) -> Unit,
-        onItemRendered: (ReaderPost) -> Unit
+        onItemClicked: (Long, Long) -> Unit,
+        onItemRendered: (Long, Long) -> Unit
     ): ReaderPostUiState {
         // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
 
@@ -60,7 +67,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-                thumbnailStripUrls = buildThumbnailStripUrls(post),
+                featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
+                thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
                 moreMenuVisibility = accountStore.hasAccessToken(),
@@ -92,7 +100,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
             post.takeIf { it.cardType == GALLERY }
-                    ?.let { retrieveGalleryThumbnailUrls() }
+                    ?.let { retrieveGalleryThumbnailUrls(post) }
 
     private fun buildFeaturedImageUrl(post: ReaderPost, photonWidth: Int, photonHeight: Int): String? {
         return post
@@ -146,9 +154,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return null
     }
 
-    private fun retrieveGalleryThumbnailUrls(): List<String> {
-        // TODO malinjir Not yet implemented - Refactor ReaderThumbnailStrip.loadThumbnails()
-        return emptyList()
+    private fun retrieveGalleryThumbnailUrls(post: ReaderPost): GalleryThumbnailStripData {
+        // scan post content for images suitable in a gallery
+        val images = readerImageScannerProvider.createReaderImageScanner(post.text, post.isPrivate)
+                .getImageList(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)
+        return GalleryThumbnailStripData(images, post.isPrivate)
     }
 
     private fun buildBookmarkSection(post: ReaderPost, onClicked: (Long, Long, Boolean) -> Unit): ActionUiState {

@@ -64,7 +64,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         boolean onDismissClicked(FullScreenDialogController controller);
 
-        void onViewCreated(FullScreenDialogController controller);
+        void setController(FullScreenDialogController controller);
     }
 
     public interface FullScreenDialogController {
@@ -181,7 +181,7 @@ public class FullScreenDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        ((FullScreenDialogContent) getContent()).onViewCreated(mController);
+        ((FullScreenDialogContent) getContent()).setController(mController);
     }
 
     @Override
