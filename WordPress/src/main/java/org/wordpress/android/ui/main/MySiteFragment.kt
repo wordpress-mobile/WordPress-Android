@@ -66,6 +66,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -321,7 +322,10 @@ class MySiteFragment : Fragment(),
     }
 
     private fun setupClickListeners() {
-        my_site_title_label.setOnClickListener { showTitleChangerDialog() }
+        my_site_title_label.setOnClickListener {
+            completeQuickStarTask(UPDATE_SITE_TITLE)
+            showTitleChangerDialog()
+        }
         my_site_subtitle_label.setOnClickListener { viewSite() }
         switch_site.setOnClickListener { showSitePicker() }
         row_view_site.setOnClickListener { viewSite() }
@@ -1259,11 +1263,15 @@ class MySiteFragment : Fragment(),
             }
             activeTutorialPrompt!!.task == UPLOAD_SITE_ICON -> {
                 horizontalOffset = focusPointSize
-                verticalOffset = -focusPointSize / 2
+                verticalOffset = -(focusPointSize / 0.5).toInt()
             }
             activeTutorialPrompt!!.task == VIEW_SITE -> { // focus point might be hidden behind FAB
                 horizontalOffset = (focusPointSize / 0.5).toInt()
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+            }
+            activeTutorialPrompt!!.task == UPDATE_SITE_TITLE -> { // focus point might be hidden behind FAB
+                horizontalOffset = focusPointSize
+                verticalOffset = -focusPointSize / 2
             }
             else -> {
                 horizontalOffset =
@@ -1361,11 +1369,21 @@ class MySiteFragment : Fragment(),
             return
         }
         showQuickStartFocusPoint()
-        val shortQuickStartMessage = stylizeQuickStartPrompt(
-                requireActivity(),
-                activeTutorialPrompt!!.shortMessagePrompt,
-                activeTutorialPrompt!!.iconId
-        )
+        val shortQuickStartMessage =
+                if (activeTutorialPrompt?.task == UPDATE_SITE_TITLE) {
+                    stylizeQuickStartPrompt(
+                            requireActivity(),
+                            activeTutorialPrompt!!.shortMessagePrompt,
+                            activeTutorialPrompt!!.iconId,
+                            my_site_title_label.text.toString()
+                    )
+                } else {
+                    stylizeQuickStartPrompt(
+                            requireActivity(),
+                            activeTutorialPrompt!!.shortMessagePrompt,
+                            activeTutorialPrompt!!.iconId
+                    )
+                }
         val promptSnackbar = WPDialogSnackbar.make(
                 requireActivity().findViewById(R.id.coordinator),
                 shortQuickStartMessage, resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
