@@ -1187,12 +1187,12 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">?selectableItemBackground</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingRight">@dimen/margin_extra_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingLeft">@dimen/margin_extra_large</item>
     </style>
 
     <style name="ZendeskSdkTheme.Light.RequestList.AvatarText" parent="@style/TextAppearance.MaterialComponents.Body2">
@@ -1201,8 +1201,6 @@
 
     <style name="ZendeskSdkTheme.Light.Request.Message.SystemMessage" parent="@style/TextAppearance.MaterialComponents.Body1" tools:ignore="UnusedResources">
         <item name="android:lineSpacingExtra">8dp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ZendeskSdkTheme.Light.RequestList.Subject" parent="@style/TextAppearance.MaterialComponents.Body2">
@@ -1215,8 +1213,6 @@
 
     <style name="ZendeskSdkTheme.Light.Request.Date" parent="@style/TextAppearance.MaterialComponents.Body2">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textStyle">normal</item>
     </style>
 
     <style name="ZendeskRequestListButton" parent="@style/WordPress.Button.Primary" />
