@@ -61,8 +61,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
-        // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
-
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
