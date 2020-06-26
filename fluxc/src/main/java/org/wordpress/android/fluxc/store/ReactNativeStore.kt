@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 import com.google.gson.JsonElement
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
@@ -33,9 +34,10 @@ class ReactNativeStore
     private val wpAPIRestClient: ReactNativeWPAPIRestClient,
     private val discoveryWPAPIRestClient: DiscoveryWPAPIRestClient,
     private val coroutineEngine: CoroutineEngine,
-    private val nonceMap: MutableMap<SiteModel, Nonce> = mutableMapOf(),
-    private val currentTimeMillis: () -> Long,
-    private val sitePersistanceFunction: (site: SiteModel) -> Int
+    private val nonceMap: MutableMap<SiteModel, Nonce>,
+    private val currentTimeMillis: () -> Long = System::currentTimeMillis,
+    private val sitePersistanceFunction: (site: SiteModel) -> Int = SiteSqlUtils::insertOrUpdateSite,
+    private val uriParser: (string: String) -> Uri = Uri::parse
 ) {
     @Inject constructor(
         wpComRestClient: ReactNativeWPComRestClient,
@@ -47,9 +49,7 @@ class ReactNativeStore
             wpAPIRestClient,
             discoveryWPAPIRestClient,
             coroutineEngine,
-            mutableMapOf(),
-            System::currentTimeMillis,
-            SiteSqlUtils::insertOrUpdateSite
+            mutableMapOf()
     )
 
     private val WPCOM_ENDPOINT = "https://public-api.wordpress.com"
@@ -73,7 +73,11 @@ class ReactNativeStore
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (url, params) = parseUrlAndParamsForWPCom(path, site.siteId)
-        return wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
+        return if (url != null) {
+            wpComRestClient.fetch(url, params, ::Success, ::Error, enableCaching)
+        } else {
+            urlParseError(path)
+        }
     }
 
     private suspend fun executeWPAPIRequest(
@@ -82,7 +86,18 @@ class ReactNativeStore
         enableCaching: Boolean
     ): ReactNativeFetchResponse {
         val (path, params) = parsePathAndParams(pathWithParams)
-        return executeWPAPIRequest(site, path, params, enableCaching)
+        return if (path != null) {
+            executeWPAPIRequest(site, path, params, enableCaching)
+        } else {
+            urlParseError(pathWithParams)
+        }
+    }
+
+    private fun urlParseError(path: String): Error {
+        val error = BaseNetworkError(GenericErrorType.UNKNOWN).apply {
+            message = "Failed to parse URI from $path"
+        }
+        return Error(error)
     }
 
     private suspend fun executeWPAPIRequest(
@@ -163,20 +178,24 @@ class ReactNativeStore
     private fun parseUrlAndParamsForWPCom(
         pathWithParams: String,
         wpComSiteId: Long
-    ): Pair<String, Map<String, String>> =
+    ): Pair<String?, Map<String, String>> =
             parsePathAndParams(pathWithParams).let { (path, params) ->
-                val newPath = path
-                        .replace("wp/v2".toRegex(), "wp/v2/sites/$wpComSiteId")
-                val url = slashJoin(WPCOM_ENDPOINT, newPath)
+                val url = path?.let {
+                    val newPath = it
+                            .replace("wp/v2".toRegex(), "wp/v2/sites/$wpComSiteId")
+                    slashJoin(WPCOM_ENDPOINT, newPath)
+                }
                 Pair(url, params)
             }
 
-    private fun parsePathAndParams(pathWithParams: String): Pair<String, Map<String, String>> {
-        val uri = Uri.parse(pathWithParams)
-        val paramMap = uri.queryParameterNames.map { name ->
-            name to requireNotNull(uri.getQueryParameter(name))
+    private fun parsePathAndParams(pathWithParams: String): Pair<String?, Map<String, String>> {
+        val uri = uriParser(pathWithParams)
+        val paramMap = uri.queryParameterNames.mapNotNull { key ->
+            uri.getQueryParameter(key)?.let { value ->
+                key to value
+            }
         }.toMap()
-        return Pair(requireNotNull(uri.path), paramMap)
+        return Pair(uri.path, paramMap)
     }
 
     private fun persistSiteSafely(site: SiteModel) {
