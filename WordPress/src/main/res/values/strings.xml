@@ -1609,6 +1609,7 @@
     <string name="error_generic_error_retrying">We couldn\'t complete this action, but we\'ll try again later. </string>
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
+    <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
@@ -1905,6 +1906,9 @@
     <string name="my_site_icon_dialog_remove_button">Remove</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
+    <string name="my_site_title_changer_dialog_title">@string/site_settings_title_title</string>
+    <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
 
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
