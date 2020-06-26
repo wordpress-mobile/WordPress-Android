@@ -19,6 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
+import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.FetchPages
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
@@ -30,6 +31,7 @@ import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.model.page.PageStatus.SCHEDULED
 import org.wordpress.android.fluxc.model.page.PageStatus.TRASHED
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.utils.CurrentDateUtils
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore
 import org.wordpress.android.fluxc.store.PostStore
@@ -41,11 +43,14 @@ import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
 import org.wordpress.android.fluxc.test
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @RunWith(MockitoJUnitRunner::class)
 class PageStoreTest {
     @Mock lateinit var postStore: PostStore
+    @Mock lateinit var currentDateUtils: CurrentDateUtils
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var site: SiteModel
     private lateinit var actionCaptor: KArgumentCaptor<Action<Any>>
@@ -82,7 +87,7 @@ class PageStoreTest {
         actionCaptor = argumentCaptor()
         val pages = listOf(pageWithoutQuery, pageWithQuery, pageWithoutTitle)
         whenever(postStore.getPagesForSite(site)).thenReturn(pages)
-        store = PageStore(postStore, PostSqlUtils(), dispatcher, initCoroutineEngine())
+        store = PageStore(postStore, PostSqlUtils(), dispatcher, currentDateUtils, initCoroutineEngine())
     }
 
     @Test
@@ -111,7 +116,7 @@ class PageStoreTest {
         val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
         var event: OnPostChanged? = null
         val job = launch {
-            event = store.requestPagesFromServer(site)
+            event = store.requestPagesFromServer(site, true)
         }
         delay(10)
         store.onPostChanged(expected)
@@ -128,10 +133,10 @@ class PageStoreTest {
         var firstEvent: OnPostChanged? = null
         var secondEvent: OnPostChanged? = null
         val firstJob = launch {
-            firstEvent = store.requestPagesFromServer(site)
+            firstEvent = store.requestPagesFromServer(site, true)
         }
         val secondJob = launch {
-            secondEvent = store.requestPagesFromServer(site)
+            secondEvent = store.requestPagesFromServer(site, true)
         }
         delay(10)
         store.onPostChanged(expected)
@@ -145,12 +150,63 @@ class PageStoreTest {
     }
 
     @Test
+    fun `request pages returns cached result when there is recent call`() = test {
+        initNow(hour = 8, minute = 0)
+        val firstJob = launch {
+            store.requestPagesFromServer(site, forced = true)
+        }
+        delay(10)
+        store.onPostChanged(OnPostChanged(FetchPages, 5, false))
+        delay(10)
+        firstJob.join()
+        initNow(hour = 8, minute = 59)
+
+        val secondEvent = store.requestPagesFromServer(site, forced = false)
+
+        assertThat(secondEvent.causeOfChange).isEqualTo(CauseOfOnPostChanged.HasCachedData)
+        assertThat(secondEvent.rowsAffected).isEqualTo(0)
+        verify(dispatcher).dispatch(any())
+    }
+
+    @Test
+    fun `request pages fetches data when there is no recent call`() = test {
+        val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
+        var secondEvent: OnPostChanged? = null
+        initNow(hour = 8, minute = 0)
+        val firstJob = launch {
+            store.requestPagesFromServer(site, forced = true)
+        }
+        delay(10)
+        store.onPostChanged(expected)
+        delay(10)
+        firstJob.join()
+        initNow(hour = 9, minute = 0)
+
+        val secondJob = launch {
+            secondEvent = store.requestPagesFromServer(site, forced = false)
+        }
+        delay(10)
+        store.onPostChanged(expected)
+        delay(10)
+        secondJob.join()
+
+        assertThat(secondEvent).isEqualTo(expected)
+        verify(dispatcher, times(2)).dispatch(any())
+    }
+
+    private fun initNow(hour: Int, minute: Int) {
+        val now = Calendar.getInstance(Locale.UK)
+        now.set(2020, 1, 1, hour, minute)
+        whenever(currentDateUtils.getCurrentCalendar()).thenReturn(now)
+    }
+
+    @Test
     fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
         val firstEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, true)
         val lastEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
         var event: OnPostChanged? = null
         val job = launch {
-            event = store.requestPagesFromServer(site)
+            event = store.requestPagesFromServer(site, true)
         }
         delay(10)
         store.onPostChanged(firstEvent)
@@ -213,7 +269,7 @@ class PageStoreTest {
     fun requestPagesAndVerifyAllPageTypesPresent() = test {
         val event = OnPostChanged(CauseOfOnPostChanged.FetchPages, 4, false)
         launch {
-            store.requestPagesFromServer(site)
+            store.requestPagesFromServer(site, true)
         }
         delay(10)
         store.onPostChanged(event)

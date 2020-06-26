@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.utils.CurrentDateUtils
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
@@ -21,6 +22,7 @@ import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +35,7 @@ class PageStore @Inject constructor(
     private val postStore: PostStore,
     private val postSqlUtils: PostSqlUtils,
     private val dispatcher: Dispatcher,
+    private val currentDateUtils: CurrentDateUtils,
     private val coroutineEngine: CoroutineEngine
 ) {
     companion object {
@@ -50,6 +53,7 @@ class PageStore @Inject constructor(
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var updatePostContinuation: Continuation<OnPostChanged>? = null
 
+    private var lastFetchTime: Calendar? = null
     private var fetchingSite: SiteModel? = null
 
     init {
@@ -198,12 +202,24 @@ class PageStore @Inject constructor(
                 }
             }
 
-    suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
-        fetchingSite = site
-        if (postLoadContinuations.isEmpty()) {
-            fetchPages(site, false)
+    suspend fun requestPagesFromServer(site: SiteModel, forced: Boolean): OnPostChanged {
+        if (!forced && hasRecentCall() && getPagesFromDb(site).isNotEmpty()) {
+            return OnPostChanged(CauseOfOnPostChanged.HasCachedData, 0)
         }
-        postLoadContinuations.add(cont)
+        return suspendCoroutine { cont ->
+            fetchingSite = site
+            if (postLoadContinuations.isEmpty()) {
+                lastFetchTime = currentDateUtils.getCurrentCalendar()
+                fetchPages(site, false)
+            }
+            postLoadContinuations.add(cont)
+        }
+    }
+
+    private fun hasRecentCall(): Boolean {
+        val currentCalendar = currentDateUtils.getCurrentCalendar()
+        currentCalendar.add(Calendar.HOUR, -1)
+        return lastFetchTime?.after(currentCalendar) ?: false
     }
 
     /**

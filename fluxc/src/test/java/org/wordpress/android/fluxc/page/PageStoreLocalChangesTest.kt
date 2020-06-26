@@ -27,7 +27,8 @@ class PageStoreLocalChangesTest {
             postStore = mock(),
             dispatcher = mock(),
             coroutineEngine = initCoroutineEngine(),
-            postSqlUtils = postSqlUtils
+            postSqlUtils = postSqlUtils,
+            currentDateUtils = mock()
     )
 
     @Before
