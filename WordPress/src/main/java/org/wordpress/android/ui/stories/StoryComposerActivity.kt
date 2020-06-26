@@ -302,7 +302,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         addFramesToStoryFromMediaUriList(uriList)
-        setDefaultSelectionAndUpdateBackgroundSurfaceUI()
+        setDefaultSelectionAndUpdateBackgroundSurfaceUI(uriList)
     }
 
     override fun getImmutablePost(): PostImmutableModel {
