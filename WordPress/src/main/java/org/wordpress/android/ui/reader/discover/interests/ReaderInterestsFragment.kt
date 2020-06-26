@@ -114,7 +114,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             false
         ) as Chip
         with(chip) {
-            layoutDirection = View.LAYOUT_DIRECTION_LOCALE
             tag = titleTag
             setOnCheckedChangeListener { compoundButton, isChecked ->
                 if (compoundButton.isPressed) {

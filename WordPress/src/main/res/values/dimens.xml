@@ -203,7 +203,7 @@
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_chip_height">38dp</dimen>
+    <dimen name="reader_chip_height">44dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
