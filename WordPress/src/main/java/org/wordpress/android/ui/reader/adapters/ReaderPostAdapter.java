@@ -328,7 +328,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (post == null) {
             return;
         }
-        Context ctx = WordPress.getContext(); // TODO use view context
+        Context ctx = holder.getViewContext();
 
         Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> {
             toggleBookmark(post.blogId, post.postId);

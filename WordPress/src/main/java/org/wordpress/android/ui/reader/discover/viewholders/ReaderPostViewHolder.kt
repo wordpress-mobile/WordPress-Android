@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.reader_cardview_post.*
@@ -25,6 +26,7 @@ class ReaderPostViewHolder(
     private val imageManager: ImageManager,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_cardview_post) {
+    val viewContext: Context = post_container.context
 
     init {
         layout_discover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
