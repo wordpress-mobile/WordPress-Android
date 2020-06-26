@@ -216,6 +216,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     contentDescription = UiStringText(
                             readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
                     ),
+                    count = post.numLikes,
                     onClicked = if (accountStore.hasAccessToken()) onClicked else null
             )
         } else {
