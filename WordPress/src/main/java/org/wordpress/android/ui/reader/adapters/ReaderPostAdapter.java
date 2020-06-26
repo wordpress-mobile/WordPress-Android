@@ -336,7 +336,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> {
-            toggleLike(ctx, post);
+            toggleLike(ctx, post, position, holder);
             return Unit.INSTANCE;
         };
         Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> {
@@ -676,7 +676,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     /*
      * triggered when user taps the like button (textView)
      */
-    private void toggleLike(Context context, ReaderPost post) {
+    private void toggleLike(Context context, ReaderPost post, int listPosition, ReaderPostViewHolder holder) {
         if (post == null || !NetworkUtils.checkConnection(context)) {
             return;
         }
@@ -699,11 +699,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         // update post in array and on screen
-        int position = mPosts.indexOfPost(post);
+        int positionInReaderPostList = mPosts.indexOfPost(post);
         ReaderPost updatedPost = ReaderPostTable.getBlogPost(post.blogId, post.postId, true);
-        if (updatedPost != null && position > -1) {
-            mPosts.set(position, updatedPost);
-            notifyItemChanged(position);
+        if (updatedPost != null && positionInReaderPostList > -1) {
+            mPosts.set(positionInReaderPostList, updatedPost);
+            renderPost(listPosition, holder);
         }
     }
 
