@@ -258,7 +258,6 @@ Language: sr_RS
     <string name="httppassword">HTTP лозинка</string>
     <string name="httpuser">HTTP корисничко име</string>
     <string name="error_media_upload">Дошло је до грешке током отпремања медија</string>
-    <string name="publish_date">Објављено</string>
     <string name="incorrect_credentials">Неисправно корисничко име или лозинка.</string>
     <string name="username">Корисничко име</string>
     <string name="password">Лозинка</string>

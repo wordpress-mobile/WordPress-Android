@@ -343,7 +343,6 @@ Language: hi_IN
     <string name="httppassword">एचटीटीपी कूटशब्द</string>
     <string name="httpuser">एचटीटीपी उपयोगकर्ता नाम</string>
     <string name="error_media_upload">मीडिया अपलोड करने के दौरान एक त्रुटि हुई</string>
-    <string name="publish_date">प्रकाशित करे</string>
     <string name="incorrect_credentials">गलत उपयोगकर्ता नाम या कूटशब्द.</string>
     <string name="username">उपयोगकर्ता नाम</string>
     <string name="password">कूटशब्द</string>

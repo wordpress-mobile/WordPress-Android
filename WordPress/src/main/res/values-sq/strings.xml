@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-09 18:59:56+0000
+Translation-Revision-Date: 2020-06-17 09:37:18+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë, mundeni edhe ta përpunoni këtë bllok duke përdorur shfletuesin e pajisjes.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Përpunojeni bllokun në shfletues</string>
+    <string name="gutenberg_native_dismiss">Hidhe tej</string>
+    <string name="prepublishing_nudges_visibility_password">Mbrojtur me Fjalëkalim</string>
+    <string name="prepublishing_nudges_home_tags_not_set">E pacaktuar</string>
+    <string name="prepublishing_tags_description">Etiketat ndihmojnë t’u tregohet lexuesve se për çfarë është një postim.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Botoje</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Shtoni Etiketa</string>
+    <string name="prepublishing_nudges_back_button">Mbrapsht</string>
+    <string name="prepublishing_nudges_home_save_button">Ruaje Tani</string>
+    <string name="prepublishing_nudges_home_submit_button">Parashtroje Tani</string>
+    <string name="prepublishing_nudges_home_schedule_button">Planifikoje Tani</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publikim te</string>
+    <string name="prepublishing_nudges_tags_action">Etiketa</string>
+    <string name="prepublishing_nudges_publish_action">Datë Botimi</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Anuloje</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Shpjere te Skica</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Postimet e shpënë në hedhurina s’mund të përpunohen. Doni të ndryshohet gjendja e këtij postimi në “skicë”, që të mund të merreni me të?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Të kalohet postimi te Skicat?</string>
+    <string name="reader_label_choose_your_interests">Zgjidhni ç’ju intereson</string>
+    <string name="reader_label_discover_follow_tags">Zbuloni dhe ndiqni etiketat që keni për zemër</string>
+    <string name="reader_choose_interests_content_description">Zgjidhni ç’ju intereson</string>
+    <string name="reader_btn_done">U bë</string>
+    <string name="reader_btn_select_few_interests">Që të vazhdohet, përzgjidhni ndoca</string>
+    <string name="post_status_post_published">Të botuar</string>
+    <string name="post_status_post_trashed">Shpënë te Hedhurinat</string>
+    <string name="post_status_post_scheduled">Të planifikuar</string>
+    <string name="publish_date">Datë Botimi</string>
+    <string name="ccpa_privacy_notice_read">Lexoni shënimin CCPA mbi privatësinë</string>
+    <string name="ccpa_privacy_notice_caption">Ligji i Privatësisë së Konsumatorit në Kaliforni (\"CCPA\") kërkon prej nesh t’u japim banuesve në Kaliforni disa të dhëna shtesë rreth kategorive të të dhënave personale që grumbullojmë dhe ndajmë me të tjerë, prej nga i marrim këto të dhëna personale, dhe si dhe pse i përdorim.</string>
+    <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
+    <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
+    <string name="update_now">Përditësojeni Tani</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Hiqe %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
@@ -284,7 +317,7 @@ Language: sq_AL
     <string name="reader_my_likes_display_name">Pëlqime</string>
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë mundeni ta përpunoni këtë postim edhe në internet.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë mundeni ta përpunoni këtë postim edhe në internet.</string>
     <string name="gutenberg_native_ungroup">Hiqi Grupin</string>
     <string name="gutenberg_native_translate">Përktheni</string>
     <string name="gutenberg_native_title">Titull:</string>
@@ -507,10 +540,6 @@ Language: sq_AL
     <string name="stats_widget_all_time_title">Për krejt kohën</string>
     <string name="stats_widget_views_title">Parje Këtë Javë</string>
     <string name="stats_widget_add">Shtoni widget</string>
-    <string name="dialog_confirm_update_yes">Përditësoje tani</string>
-    <string name="dialog_confirm_update_message_page">Kjo faqe e botuar do të përditësohet menjëherë.</string>
-    <string name="dialog_confirm_update_message_post">Ky postim i botuar do të përditësohet menjëherë.</string>
-    <string name="dialog_confirm_update_title">Gati për ta Përditësuar?</string>
     <string name="plugin_fetching_error_after_at">Rifreskimi i hollësive të shtojcës do më shumë kohë se zakonisht. Ju lutemi, rikontrolloni më vonë.</string>
     <string name="plugin_install_site_ineligible_default_error">Nëse sapo e regjistruat një emër përkatësie, Ju lutemi, pritni deri sa të përfundojmë ujdisjen e saj dhe riprovoni.\n\nNë të kundërt, duket si diç shkoi ters dhe veçoria e shtojcës mund të mos jetë e përdorshme në këtë sajt.</string>
     <string name="domain_contact_information_state_not_available_hint">Gjendje (S’dihet)</string>
@@ -823,7 +852,6 @@ Language: sq_AL
     <string name="pages_delete_permanently">Fshije Përgjithmonë</string>
     <string name="pages_move_to_trash">Shpjere te Hedhurinat</string>
     <string name="pages_move_to_draft">Shpjere te Skica</string>
-    <string name="pages_publish_now">Botoje Që Tani</string>
     <string name="pages_set_parent">Caktoje prind</string>
     <string name="pages_view">Shihni</string>
     <string name="pages_trashed">Shpënë te Hedhurinat</string>
@@ -1076,7 +1104,6 @@ Language: sq_AL
     <string name="menu_html_mode_done_snackbar">U kalua nën mënyrën HTML</string>
     <string name="menu_html_mode">Mënyra HTML</string>
     <string name="menu_preview">Paraparje</string>
-    <string name="menu_publish_now">Botoje Që Tani</string>
     <string name="menu_save_as_draft">Ruaje si Skicë</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1166,6 @@ Language: sq_AL
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d faqe, dhe ende %2$d nga %3$d kartela gjithsej</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 postim, dhe ende %1$d nga %2$d kartela gjithsej</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 faqe, dhe ende %1$d nga %2$d kartela gjithsej</string>
-    <string name="dialog_confirm_publish_yes">Botoje që tani</string>
-    <string name="dialog_confirm_publish_message_page">Kjo faqe do të botohet menjëherë.</string>
-    <string name="dialog_confirm_publish_message_post">Ky postim do të botohet menjëherë.</string>
-    <string name="dialog_confirm_publish_title">Gati për Botim?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d postime / faqe të pangarkuara</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d faqe të pangarkuara</string>
     <string name="media_file_page_singular_only_not_uploaded">1 faqe e pangarkuar</string>
@@ -1477,7 +1500,6 @@ Language: sq_AL
     <string name="post_settings_not_set">S’është e Caktuar</string>
     <string name="post_settings_more_options">Më Tepër Mundësi</string>
     <string name="post_settings_categories_and_tags">Kategori &amp; Etiketa</string>
-    <string name="post_settings_status">Gjendje</string>
     <string name="notifications_tab_title_all">Krejt</string>
     <string name="top_level_category_name">Shkalla e epërme</string>
     <string name="category_parent">Kategori mëmë (opsional):</string>
@@ -1601,7 +1623,6 @@ Language: sq_AL
     <string name="media_upload_state_deleting">Po fshihet</string>
     <string name="media_upload_state_uploading">Po ngarkohet</string>
     <string name="media_upload_state_queued">Në radhë</string>
-    <string name="keep_editing">Vazhdoni përpunimin</string>
     <string name="image_quality">Cilësi Figure</string>
     <string name="error_all_media_upload_canceled">Krejt ngarkimet e mediave u anuluan për shkak të një gabimi të panjohur. Ju lutemi, riprovoni t’i ringarkoni</string>
     <string name="error_unknown_post_type">Format i panjohur postimesh</string>
@@ -2264,7 +2285,6 @@ Language: sq_AL
     <string name="httppassword">Fjalëkalim HTTP</string>
     <string name="httpuser">Emër përdoruesi HTTP</string>
     <string name="error_media_upload">Ndodhi një gabim gjatë ngarkimit të medias</string>
-    <string name="publish_date">Botoje</string>
     <string name="incorrect_credentials">Emër përdoruesi ose fjalëkalim i pasaktë.</string>
     <string name="log_in">Hyni</string>
     <string name="username">Emër përdoruesi</string>
@@ -2301,6 +2321,7 @@ Language: sq_AL
     <string name="no">Jo</string>
     <string name="yes">Po</string>
     <string name="notification_settings">Rregullime Njoftimesh</string>
+    <string name="publish_now">Botoje Që Tani</string>
     <string name="reply">Përgjigjuni</string>
     <string name="on">on</string>
     <string name="preview">Paraparje</string>
