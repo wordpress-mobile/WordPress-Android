@@ -500,7 +500,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mTxtPhotoTitle.setText(post.getTitle());
             mImageManager.loadImageWithCorners(
                 holder.mImgFeatured,
-                ImageType.READER,
+                ImageType.PHOTO_ROUNDED_CORNERS,
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                 imgFeaturedCornerRadius
             );
@@ -528,7 +528,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override public void showThumbnail(String thumbnailUrl) {
                         mImageManager.loadImageWithCorners(
                             holder.mImgFeatured,
-                            ImageType.READER,
+                            ImageType.PHOTO_ROUNDED_CORNERS,
                             thumbnailUrl,
                             imgFeaturedCornerRadius
                         );
@@ -547,7 +547,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (post.hasFeaturedImage()) {
                 mImageManager.loadImageWithCorners(
                     holder.mImgFeatured,
-                    ImageType.READER,
+                    ImageType.PHOTO_ROUNDED_CORNERS,
                     post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                     imgFeaturedCornerRadius
                 );

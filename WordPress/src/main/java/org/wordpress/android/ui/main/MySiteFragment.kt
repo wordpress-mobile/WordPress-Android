@@ -1228,6 +1228,10 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }
+            activeTutorialPrompt!!.task == VIEW_SITE -> { // focus point might be hidden behind FAB
+                horizontalOffset = (focusPointSize / 0.5).toInt()
+                verticalOffset = (quickStartTarget.height - focusPointSize) / 2
+            }
             else -> {
                 horizontalOffset = resources.getDimensionPixelOffset(
                         R.dimen.quick_start_focus_point_my_site_right_offset
