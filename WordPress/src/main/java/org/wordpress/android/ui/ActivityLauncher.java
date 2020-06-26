@@ -791,8 +791,14 @@ public class ActivityLauncher {
     }
 
     public static void showSignInForResult(Activity activity) {
+        showSignInForResult(activity, false);
+    }
+
+    public static void showSignInForResult(Activity activity, boolean isWpComOnly) {
         Intent intent = new Intent(activity, LoginActivity.class);
-        WPCOM_LOGIN_ONLY.putInto(intent);
+        if (isWpComOnly) {
+            WPCOM_LOGIN_ONLY.putInto(intent);
+        }
         activity.startActivityForResult(intent, RequestCodes.ADD_ACCOUNT);
     }
 
