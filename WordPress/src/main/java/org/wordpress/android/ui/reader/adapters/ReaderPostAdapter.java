@@ -380,7 +380,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                     break;
                 case OTHER:
-                    //noop
+                    // noop
                     break;
             }
             return Unit.INSTANCE;
