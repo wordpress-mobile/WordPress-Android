@@ -77,7 +77,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginMagicLinkExited() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        mUnifiedLoginTracker.trackClick(Click.USE_PASSWORD_INSTEAD);
     }
 
     @Override

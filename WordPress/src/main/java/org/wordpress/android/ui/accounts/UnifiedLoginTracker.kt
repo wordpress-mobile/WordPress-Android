@@ -156,7 +156,6 @@ class UnifiedLoginTracker
         LOGIN_WITH_SITE_ADDRESS("login_with_site_address"),
         LOGIN_WITH_GOOGLE("login_with_google"),
         FORGOTTEN_PASSWORD("forgotten_password"),
-        USE_PASSWORD_INSTEAD("use_password_instead"),
         TERMS_OF_SERVICE_CLICKED("terms_of_service_clicked"),
         SIGNUP_WITH_EMAIL("signup_with_email"),
         SIGNUP_WITH_GOOGLE("signup_with_google"),
