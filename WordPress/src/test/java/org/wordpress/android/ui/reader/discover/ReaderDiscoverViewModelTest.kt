@@ -45,7 +45,8 @@ class ReaderDiscoverViewModelTest {
     @Before
     fun setUp() = test {
         whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
-        viewModel = ReaderDiscoverViewModel(readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = ReaderDiscoverViewModel(
+                readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
         whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(

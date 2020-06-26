@@ -82,11 +82,12 @@ abstract class BaseReaderRepository(
             return
         }
 
+        if (!event.readerTag.isDiscover) return
+
         // todo: annmarie remove log lines
-        Log.i(javaClass.simpleName, "***=> Received UpdatePostsEnded for Action ${event.action}")
-        Log.i(javaClass.simpleName,
-                "***=> Received UpdatePostsEnded for Tag ${event.readerTag?.tagNameForLog}"
-        )
+        Log.i(javaClass.simpleName, "***=> Received UpdatePostsEnded for " +
+                " Tag: ${event.readerTag?.tagNameForLog}" +
+                " Action ${event.action}")
 
         event.result?.let {
             when (it) {

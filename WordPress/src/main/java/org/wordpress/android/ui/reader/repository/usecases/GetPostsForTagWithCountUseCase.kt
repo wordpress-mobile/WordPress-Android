@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository
+package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
@@ -10,7 +10,7 @@ import org.wordpress.android.modules.BG_THREAD
 import javax.inject.Inject
 import javax.inject.Named
 
-class FetchPostsForTagWithCountUseCase @Inject constructor(
+class GetPostsForTagWithCountUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(bgDispatcher) {
     suspend fun fetch(readerTag: ReaderTag): Pair<ReaderPostList, Int> =
@@ -19,7 +19,8 @@ class FetchPostsForTagWithCountUseCase @Inject constructor(
                     ReaderPostTable.getPostsWithTag(
                             readerTag,
                             MAX_ROWS,
-                            EXCLUDE_TEXT_COLUMN)
+                            EXCLUDE_TEXT_COLUMN
+                    )
                 }
 
                 val totalPostsForTagFromLocalDeferred = async {

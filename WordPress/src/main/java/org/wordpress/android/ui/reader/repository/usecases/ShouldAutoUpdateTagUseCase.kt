@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository
+package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.datasets.ReaderTagTable

@@ -9,10 +9,10 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryUseCaseType.FETCH_NUM_POSTS_BY_TAG
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryUseCaseType.FETCH_POSTS_BY_TAG
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryUseCaseType.FETCH_POSTS_BY_TAG_WITH_COUNT
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryUseCaseType.SHOULD_AUTO_UDPATE_TAG
+import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
+import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
+import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
+import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -28,28 +28,18 @@ class ReaderDiscoverRepository constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val contextProvider: ContextProvider,
     private val readerTag: ReaderTag,
-    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val fetchNumPostsForTagUseCase: FetchNumPostsForTagUseCase,
+    private val getPostsForTagUseCase: GetPostsForTagUseCase,
+    private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val fetchPostsForTagWithCountUseCase: FetchPostsForTagWithCountUseCase
+    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
 ) : BaseReaderRepository(eventBusWrapper,
         networkUtilsWrapper,
         contextProvider) {
-    private val discoverPostsMap: HashMap<ReaderTag, ReaderPostList> = hashMapOf()
-    private val readerRepositoryUseCases:
-            HashMap<ReaderRepositoryUseCaseType, ReaderRepositoryDispatchingUseCase> = hashMapOf()
     private var isStarted = false
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: ReactiveMutableLiveData<ReaderPostList> = _discoverFeed
-
-    init {
-        readerRepositoryUseCases[FETCH_POSTS_BY_TAG] = fetchPostsForTagUseCase
-        readerRepositoryUseCases[FETCH_NUM_POSTS_BY_TAG] = fetchNumPostsForTagUseCase
-        readerRepositoryUseCases[SHOULD_AUTO_UDPATE_TAG] = shouldAutoUpdateTagUseCase
-        readerRepositoryUseCases[FETCH_POSTS_BY_TAG_WITH_COUNT] = fetchPostsForTagWithCountUseCase
-    }
 
     override fun start() {
         if (isStarted) return
@@ -59,7 +49,10 @@ class ReaderDiscoverRepository constructor(
     }
 
     override fun stop() {
-        readerRepositoryUseCases.values.forEach { it.stop() }
+        getPostsForTagUseCase.stop()
+        getNumPostsForTagUseCase.stop()
+        shouldAutoUpdateTagUseCase.stop()
+        getPostsForTagWithCountUseCase.stop()
     }
 
     override fun getTag(): ReaderTag {
@@ -93,17 +86,14 @@ class ReaderDiscoverRepository constructor(
 
     private fun loadPosts() {
         GlobalScope.launch(bgDispatcher) {
-            val existsInMemory = discoverPostsMap[readerTag]?.let {
+            val existsInMemory = discoverFeed.value?.let {
                 !it.isEmpty()
             } ?: false
             val refresh = shouldAutoUpdateTagUseCase.fetch(readerTag)
 
-            if (existsInMemory) {
-                _discoverFeed.postValue(discoverPostsMap[readerTag])
-            } else {
-                val result = fetchPostsForTagUseCase.fetch(readerTag)
-                discoverPostsMap[readerTag] = result
-                _discoverFeed.postValue(discoverPostsMap[readerTag])
+            if (!existsInMemory) {
+                val result = getPostsForTagUseCase.fetch(readerTag)
+                _discoverFeed.postValue(result)
             }
 
             if (refresh) {
@@ -114,9 +104,8 @@ class ReaderDiscoverRepository constructor(
 
     private fun reloadPosts() {
         GlobalScope.launch(bgDispatcher) {
-            val result = fetchPostsForTagUseCase.fetch(readerTag)
-            discoverPostsMap[readerTag] = result
-            _discoverFeed.postValue(discoverPostsMap[readerTag])
+            val result = getPostsForTagUseCase.fetch(readerTag)
+            _discoverFeed.postValue(result)
         }
     }
 
@@ -127,14 +116,14 @@ class ReaderDiscoverRepository constructor(
         private val networkUtilsWrapper: NetworkUtilsWrapper,
         private val contextProvider: ContextProvider,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
-        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val fetchNumPostsForTagUseCase: FetchNumPostsForTagUseCase,
+        private val getPostsForTagUseCase: GetPostsForTagUseCase,
+        private val fetchNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val fetchPostsForTagWithCountUseCase: FetchPostsForTagWithCountUseCase
+        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
-            val tag = readerTag ?:
-            readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_DISCOVER, DEFAULT)
+            val tag = readerTag
+                    ?: readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_DISCOVER, DEFAULT)
 
             return ReaderDiscoverRepository(
                     bgDispatcher,
@@ -142,10 +131,10 @@ class ReaderDiscoverRepository constructor(
                     networkUtilsWrapper,
                     contextProvider,
                     tag,
-                    fetchPostsForTagUseCase,
+                    getPostsForTagUseCase,
                     fetchNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    fetchPostsForTagWithCountUseCase
+                    getPostsForTagWithCountUseCase
             )
         }
     }
