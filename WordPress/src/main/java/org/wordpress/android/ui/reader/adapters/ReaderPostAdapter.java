@@ -183,73 +183,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * full post
      */
     private class ReaderPostViewHolderLegacy extends RecyclerView.ViewHolder {
-        final View mPostContainer;
 
-        private final ConstraintLayout mRootLayout;
-        private final ConstraintSet mRootLayoutConstraintSet = new ConstraintSet();
-
-        private final TextView mTxtTitle;
-        private final TextView mTxtText;
-        private final TextView mTxtAuthorAndBlogName;
-        private final TextView mTxtBlogUrl;
-        private final TextView mDotSeparator;
-        private final TextView mTxtDateline;
-
-        private final ReaderIconCountView mReblog;
-        private final ReaderIconCountView mCommentCount;
-        private final ReaderIconCountView mLikeCount;
-        private final ImageView mBtnBookmark;
-
-        private final ImageView mImgMore;
-        private final ImageView mImgVideoOverlay;
-
-        private final ImageView mImgFeatured;
-        private final ImageView mImgAvatarOrBlavatar;
-
-        private final Group mFramePhoto;
-        private final TextView mTxtPhotoTitle;
-
-        private final View mLayoutDiscover;
-        private final ImageView mImgDiscoverAvatar;
-        private final TextView mTxtDiscover;
-
-        private final ReaderThumbnailStrip mThumbnailStrip;
 
         ReaderPostViewHolderLegacy(View itemView) {
             super(itemView);
-
-            mPostContainer = itemView.findViewById(R.id.post_container);
-            mRootLayout = itemView.findViewById(R.id.root_layout);
-            mRootLayoutConstraintSet.clone(mRootLayout);
-
-            mTxtTitle = itemView.findViewById(R.id.text_title);
-            mTxtText = itemView.findViewById(R.id.text_excerpt);
-            mTxtAuthorAndBlogName = itemView.findViewById(R.id.text_author_and_blog_name);
-            mTxtBlogUrl = itemView.findViewById(R.id.text_blog_url);
-            mDotSeparator = itemView.findViewById(R.id.dot_separator);
-            mTxtDateline = itemView.findViewById(R.id.text_dateline);
-
-            mReblog = itemView.findViewById(R.id.reblog);
-            mCommentCount = itemView.findViewById(R.id.count_comments);
-            mLikeCount = itemView.findViewById(R.id.count_likes);
-            mBtnBookmark = itemView.findViewById(R.id.bookmark);
-
-            mFramePhoto = itemView.findViewById(R.id.frame_photo);
-            mTxtPhotoTitle = itemView.findViewById(R.id.text_photo_title);
-            mImgFeatured = itemView.findViewById(R.id.image_featured);
-            mImgVideoOverlay = itemView.findViewById(R.id.image_video_overlay);
-
-            mImgAvatarOrBlavatar = itemView.findViewById(R.id.image_avatar_or_blavatar);
-            mImgMore = itemView.findViewById(R.id.image_more);
-
-            mLayoutDiscover = itemView.findViewById(R.id.layout_discover);
-            mImgDiscoverAvatar = itemView.findViewById(R.id.image_discover_avatar);
-            mTxtDiscover = itemView.findViewById(R.id.text_discover);
-
-            mThumbnailStrip = itemView.findViewById(R.id.thumbnail_strip);
-
-            View postHeaderView = itemView.findViewById(R.id.layout_post_header);
-
             // show author/blog link as disabled if we're previewing a blog, otherwise show
             // blog preview when the post header is clicked
             if (getPostListType() == ReaderTypes.ReaderPostListType.BLOG_PREVIEW) {
@@ -269,21 +206,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
             }
-
-            // play the featured video when the overlay image is tapped - note that the overlay
-            // image only appears when there's a featured video
-            mImgVideoOverlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (post != null && post.hasFeaturedVideo()) {
-                        ReaderActivityLauncher.showReaderVideoViewer(view.getContext(), post.getFeaturedVideo());
-                    }
-                }
-            });
-
-            ReaderUtils.setBackgroundToRoundRipple(mImgMore);
         }
     }
 
@@ -507,6 +429,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
 
+        Function2<Long, Long, Unit> onVideoOverlayClicked = (postId, blogId) -> {
+            ReaderActivityLauncher.showReaderBlogPreview(ctx, post);
+            return Unit.INSTANCE;
+        };
+
         ReaderPostUiState uiState = mReaderPostUiStateBuilder
                 .mapPostToUiState(
                         post,
@@ -521,7 +448,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onItemClicked,
                         onItemRendered,
                         onDiscoverSectionClicked,
-                        onMoreButtonClicked
+                        onMoreButtonClicked,
+                        onVideoOverlayClicked
                 );
         holder.onBind(uiState);
     }

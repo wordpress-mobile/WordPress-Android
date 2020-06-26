@@ -67,6 +67,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
                                 onMoreButtonClicked = this::onMoreButtonClicked,
+                                onVideoOverlayClicked = this::onVideoOverlayClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     }
@@ -87,6 +88,10 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
     }
 
@@ -148,7 +153,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             val commentsAction: ActionUiState,
             val onItemClicked: (Long, Long) -> Unit,
             val onItemRendered: (Long, Long) -> Unit,
-            val onMoreButtonClicked: (Long, Long, View) -> Unit
+            val onMoreButtonClicked: (Long, Long, View) -> Unit,
+            val onVideoOverlayClicked: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
