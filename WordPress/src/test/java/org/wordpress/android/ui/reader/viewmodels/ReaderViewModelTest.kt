@@ -72,7 +72,6 @@ class ReaderViewModelTest {
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         whenever(appPrefsWrapper.getReaderTag()).thenReturn(null)
-        whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(false)
     }
 
     @Test
@@ -359,11 +358,9 @@ class ReaderViewModelTest {
     }
 
     private fun triggerReaderTabContentDisplay() {
+        viewModel.start()
         if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
-            viewModel.start()
             viewModel.onCloseReaderInterests()
-        } else {
-            viewModel.start()
         }
     }
 
