@@ -46,7 +46,7 @@ class PageStore @Inject constructor(
         )
     }
 
-    private var postLoadContinuation: Continuation<OnPostChanged>? = null
+    private var postLoadContinuations: MutableList<Continuation<OnPostChanged>> = mutableListOf()
     private var deletePostContinuation: Continuation<OnPostChanged>? = null
     private var updatePostContinuation: Continuation<OnPostChanged>? = null
 
@@ -195,8 +195,10 @@ class PageStore @Inject constructor(
 
     suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
         fetchingSite = site
-        postLoadContinuation = cont
-        fetchPages(site, false)
+        if (postLoadContinuations.isEmpty()) {
+            fetchPages(site, false)
+        }
+        postLoadContinuations.add(cont)
     }
 
     /**
@@ -234,8 +236,8 @@ class PageStore @Inject constructor(
                 if (event.canLoadMore && fetchingSite != null) {
                     fetchPages(fetchingSite!!, true)
                 } else {
-                    postLoadContinuation?.resume(event)
-                    postLoadContinuation = null
+                    postLoadContinuations.forEach { it.resume(event) }
+                    postLoadContinuations.clear()
                     fetchingSite = null
                 }
             }
