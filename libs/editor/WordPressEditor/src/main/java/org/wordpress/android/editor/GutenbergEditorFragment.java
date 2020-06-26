@@ -87,11 +87,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
+    private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
+
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
+    private static final String GIF_MEDIA = "GIF_MEDIA";
 
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
@@ -132,7 +135,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String token,
                                                       boolean isSiteUsingWpComRestApi,
                                                       @Nullable Bundle editorTheme,
-                                                      String userAgent) {
+                                                      String userAgent,
+                                                      boolean tenorEnabled) {
+
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -150,6 +155,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
         args.putString(ARG_SITE_USER_AGENT, userAgent);
+        args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -354,6 +360,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
                         if (mediaSource.equals(MEDIA_SOURCE_STOCK_MEDIA)) {
                             mEditorFragmentListener.onAddStockMediaClicked(allowMultipleSelection);
+                        } else if (mediaSource.equals(GIF_MEDIA)) {
+                            mEditorFragmentListener.onAddGifClicked(allowMultipleSelection);
                         }
                     }
                 },
@@ -502,13 +510,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         Bundle arguments = getArguments();
         boolean supportStockPhotos = arguments != null && arguments.getBoolean(ARG_SITE_USING_WPCOM_REST_API);
+        boolean supportGifs = arguments != null && arguments.getBoolean(ARG_TENOR_ENABLED);
         if (activity != null) {
+            String packageName = activity.getApplication().getPackageName();
             if (supportStockPhotos) {
-                String packageName = activity.getApplication().getPackageName();
                 int stockMediaResourceId =
                         getResources().getIdentifier("photo_picker_stock_media", "string", packageName);
 
                 otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_STOCK_MEDIA, getString(stockMediaResourceId)));
+            }
+            if (supportGifs) {
+                int gifMediaResourceId =
+                        getResources().getIdentifier("photo_picker_gif", "string", packageName);
+                otherMediaOptions.add(new MediaOption(GIF_MEDIA, getString(gifMediaResourceId)));
             }
         } else {
             AppLog.e(T.EDITOR, "Failed to initialize other media options because the activity is null");

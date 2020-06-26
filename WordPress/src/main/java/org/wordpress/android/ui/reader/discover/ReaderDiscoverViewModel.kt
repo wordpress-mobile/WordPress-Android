@@ -9,7 +9,12 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.utils.UiDimen
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -47,10 +52,45 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
-                        postUiStateBuilder.mapPostToUiState(it, photonWidth, photonHeight)
+                        postUiStateBuilder.mapPostToUiState(
+                                post = it,
+                                photonWidth = photonWidth,
+                                photonHeight = photonHeight,
+                                isBookmarkList = false,
+                                onBookmarkClicked = this::onBookmarkClicked,
+                                onLikeClicked = this::onLikeClicked,
+                                onReblogClicked = this::onReblogClicked,
+                                onCommentsClicked = this::onCommentsClicked,
+                                onItemClicked = this::onItemClicked,
+                                onItemRendered = this::onItemRendered
+                        )
                     }
             )
         }
+    }
+
+    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
+        // TODO malinjir implement action
+    }
+
+    private fun onItemClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemClicked")
+    }
+
+    private fun onItemRendered(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemRendered")
     }
 
     private fun loadPosts() {
@@ -80,20 +120,40 @@ class ReaderDiscoverViewModel @Inject constructor(
             val blogUrl: String?,
             val photoTitle: String?,
             val featuredImageUrl: String?,
+            val featuredImageCornerRadius: UiDimen,
             val videoThumbnailUrl: String?,
             val avatarOrBlavatarUrl: String?,
-            val thumbnailStripUrls: List<String>?,
+            val thumbnailStripSection: GalleryThumbnailStripData?,
             val discoverSection: DiscoverLayoutUiState?,
             val videoOverlayVisibility: Boolean,
             val moreMenuVisibility: Boolean,
-            val photoFrameVisibility: Boolean
+            val photoFrameVisibility: Boolean,
+            val bookmarkAction: ActionUiState,
+            val likeAction: ActionUiState,
+            val reblogAction: ActionUiState,
+            val commentsAction: ActionUiState,
+            val onItemClicked: ((Long, Long) -> Unit),
+            val onItemRendered: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
+
+            data class GalleryThumbnailStripData(
+                val images: ReaderImageList,
+                val isPrivate: Boolean
+            )
 
             data class DiscoverLayoutUiState(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
                 val imageType: ImageType
+            )
+
+            data class ActionUiState(
+                val isEnabled: Boolean,
+                val isSelected: Boolean = false,
+                val contentDescription: UiString? = null,
+                val count: Int = 0,
+                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
             )
         }
     }

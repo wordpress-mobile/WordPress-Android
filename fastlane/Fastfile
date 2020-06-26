@@ -497,6 +497,30 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
   end
 
+  #####################################################################################
+  # build_for_translation_review
+  # -----------------------------------------------------------------------------------
+  # This lane builds an app bundle with pending translations
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane build_for_translation_review [custom_version:<custom_version>]
+  #####################################################################################
+  desc "Builds an app bundle"
+  lane :build_for_translation_review do | options |
+    cmd_params = ""
+    unless options[:custom_version].nil?
+      UI.message("Building custom version: #{options[:custom_version]}") 
+      cmd_params=" -PversionName=\"#{options[:custom_version]}\""
+    end
+
+    sh("../tools/update-translations.sh")
+    sh("../tools/update-translations.sh waiting")
+    sh("../tools/update-translations.sh fuzzy")
+
+    android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
+    sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")
+  end 
+
 #####################################################################################
 # Private lanes
 #####################################################################################
@@ -528,4 +552,3 @@ ENV["HAS_ALPHA_VERSION"]="true"
     FileUtils.rm_rf("#{temp_dir}")
   end
 end
-
