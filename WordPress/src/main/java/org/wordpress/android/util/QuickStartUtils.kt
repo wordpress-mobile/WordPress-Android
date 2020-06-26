@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -58,13 +59,18 @@ class QuickStartUtils {
          * @param context Context used to access resources
          * @param messageId resources id of the message to display
          * @param iconId resource if of the icon that goes before the highlighted area
+         * @param actionName String that would be displayed in bold, will only work if message contains %1$s %2$s %3$s
          */
         @JvmStatic
         @JvmOverloads
-        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1): Spannable {
+        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1, actionName: String? = null): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
-            var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
+            var formattedMessage = if (actionName == null) {
+                context.resources.getString(messageId, spanTagOpen, spanTagEnd)
+            } else {
+                context.resources.getString(messageId, spanTagOpen, actionName, spanTagEnd)
+            }
 
             val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 
@@ -245,6 +251,7 @@ class QuickStartUtils {
         fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
@@ -266,6 +273,7 @@ class QuickStartUtils {
                 // completed when Quick Start v2 begins since it is initiated when a new site is created.  The task case
                 // is included here for completeness.
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
                 CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED
@@ -283,6 +291,7 @@ class QuickStartUtils {
         private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
+                UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
                 VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
                 CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
                 CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
