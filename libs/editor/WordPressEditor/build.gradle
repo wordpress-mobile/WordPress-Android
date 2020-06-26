@@ -67,7 +67,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'org.apache.commons:commons-lang3:3.5'
     implementation 'com.android.volley:volley:1.1.1'
-    implementation 'org.wordpress:utils:1.22'
+    implementation 'org.wordpress:utils:1.25'
 
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
         exclude group: "com.android.volley"
@@ -75,7 +75,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    implementation (project(':react-native-gutenberg-bridge')) {
+    implementation (project(':@wordpress_react-native-bridge')) {
         exclude group: 'com.squareup.okhttp3'
         exclude group: "com.android.volley"
         exclude group: 'com.google.code.findbugs'

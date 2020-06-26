@@ -19,8 +19,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActionableEmptyView
-import org.wordpress.android.ui.gif.GifMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.gif.GifMediaViewHolder.ThumbnailViewDimensions
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtils
@@ -48,6 +49,8 @@ class GifPickerActivity : LocaleAwareActivity() {
 
     private lateinit var viewModel: GifPickerViewModel
 
+    private var isMultiSelectEnabled: Boolean = false
+
     private val gridColumnCount: Int by lazy { if (DisplayUtils.isLandscape(this)) 4 else 3 }
 
     /**
@@ -63,9 +66,11 @@ class GifPickerActivity : LocaleAwareActivity() {
         (application as WordPress).component().inject(this)
 
         val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        val requestCode = intent.getIntExtra(KEY_REQUEST_CODE, 0)
+        isMultiSelectEnabled = requestCode == RequestCodes.GIF_PICKER_MULTI_SELECT
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GifPickerViewModel::class.java)
-        viewModel.setup(site)
+        viewModel.start(site, isMultiSelectEnabled)
 
         // We are intentionally reusing this layout since the UI is very similar.
         setContentView(R.layout.media_picker_activity)
@@ -106,7 +111,8 @@ class GifPickerActivity : LocaleAwareActivity() {
                         viewModel.retryAllFailedRangeLoads()
                     }
                 },
-                onMediaViewLongClickListener = { showPreview(listOf(it)) }
+                onMediaViewLongClickListener = { showPreview(listOf(it)) },
+                isMultiSelectEnabled = isMultiSelectEnabled
         )
 
         recycler.apply {
@@ -153,10 +159,26 @@ class GifPickerActivity : LocaleAwareActivity() {
      * Configure the selection bar and its labels when the [GifPickerViewModel] selected items change
      */
     private fun initializeSelectionBar() {
-        viewModel.selectionBarIsVisible.observe(this, Observer {
-            // Do nothing if the [viewModel.selectionBarIsVisible] has not been initialized with a value yet. The
-            // selection bar is hidden by default anyway so we don't need to worry in this case.
-            val isVisible = it ?: return@Observer
+        viewModel.selectionBarUiModel.observe(this, Observer { uiModel ->
+            if (uiModel.isMultiselectEnabled) {
+                // Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".
+                //
+                // We do not change to labels back to the original text if the number of items go back to zero because that
+                // causes a weird UX. The selection bar is animated to disappear at that time and it looks weird if the labels
+                // change to just "Add" and "Preview" too.
+                val selectedCount = uiModel.numberOfSelectedImages
+                if (selectedCount > 0) {
+                    text_preview.text = getString(R.string.preview_count, selectedCount)
+                    text_add.text = getString(R.string.add_count, selectedCount)
+                }
+            } else {
+                // When in single selection mode we only show  ADD label
+                text_add.text = getString(R.string.photo_picker_use_gif)
+                text_add.visibility = View.VISIBLE
+                text_preview.visibility = View.GONE
+            }
+
+            val isVisible = uiModel.isVisible
             val selectionBar: ViewGroup = container_selection_bar
 
             // Do nothing if the selection bar is already in the visibility state that we want it to be
@@ -176,19 +198,6 @@ class GifPickerActivity : LocaleAwareActivity() {
                 AniUtils.animateBottomBar(selectionBar, false)
 
                 recyclerViewLayoutParams.addRule(RelativeLayout.ABOVE, 0)
-            }
-        })
-
-        // Update the "Add" and "Preview" labels to include the number of items. For example, "Add 7" and "Preview 7".
-        //
-        // We do not change to labels back to the original text if the number of items go back to zero because that
-        // causes a weird UX. The selection bar is animated to disappear at that time and it looks weird if the labels
-        // change to just "Add" and "Preview" too.
-        viewModel.selectedMediaViewModelList.observe(this, Observer {
-            val selectedCount = it?.size ?: 0
-            if (selectedCount > 0) {
-                text_preview.text = getString(R.string.preview_count, selectedCount)
-                text_add.text = getString(R.string.add_count, selectedCount)
             }
         })
     }
@@ -366,5 +375,6 @@ class GifPickerActivity : LocaleAwareActivity() {
          * Added to this Activity's result as an Int array [org.wordpress.android.fluxc.model.MediaModel] `id` values.
          */
         const val KEY_SAVED_MEDIA_MODEL_LOCAL_IDS = "saved_media_model_local_ids"
+        const val KEY_REQUEST_CODE = "gif_picker_key_request_code"
     }
 }

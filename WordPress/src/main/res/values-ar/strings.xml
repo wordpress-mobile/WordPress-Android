@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-28 00:46:30+0000
+Translation-Revision-Date: 2020-06-09 16:54:11+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha
 Language: ar
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">إزالة %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
+    <string name="gutenberg_native_move_s_up">نقل %s إلى الأعلى</string>
+    <string name="gutenberg_native_move_s_right">نقل %s إلى اليمين</string>
+    <string name="gutenberg_native_move_s_left">نقل %s إلى اليسار</string>
+    <string name="gutenberg_native_move_s_down">نقل %s إلى الأسفل</string>
+    <string name="gutenberg_native_try_a_starter_layout">تجربة تخطيط بدء العمل</string>
+    <string name="gutenberg_native_insert_mention">إدراج إشارة</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">النقر المزدوج لفتح ورقة الإجراءات التي تحتوي على خيارات متوافرة</string>
+    <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
+    <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
+    <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
+    <string name="suggestion_no_matching_users">\"لا يتوافر أي مستخدمين متطابقين\".</string>
+    <string name="suggestion_invalid_user">\"إنَّ %s مستخدم غير صالح\"</string>
+    <string name="site_settings_select_page">تحديد صفحة</string>
+    <string name="site_settings_posts_page">صفحة المقالات</string>
+    <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
+    <string name="site_settings_classic_blog">المدونة التقليدية</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">يتعذر أن تتشابه الصفحة الرئيسية المحدَّدة مع صفحة المقالات.</string>
+    <string name="site_settings_failed_update_homepage_settings">فشل تحديث إعدادات الصفحة الرئيسية، تحقَّق من اتصالك بالإنترنت</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">يتعذر حفظ إعدادات الصفحة الرئيسية قبل تحميل الصفحات</string>
+    <string name="site_settings_failed_to_save_homepage_settings">يتعذر حفظ إعدادات الصفحة الرئيسية</string>
+    <string name="site_settings_accept_homepage">موافقة</string>
+    <string name="site_settings_failed_to_load_pages">فشل تحميل الصفحات</string>
+    <string name="site_settings_homepage_settings_description">اختر من صفحة رئيسية تعرض أحدث مقالاتك (مدونة تقليدية) أو صفحة ثابتة/ساكنة.</string>
+    <string name="site_settings_homepage_settings">إعدادات الصفحة الرئيسية</string>
+    <string name="site_settings_homepage">الصفحة الرئيسية</string>
+    <string name="page_posts_page_update_failed">فشل تحديث صفحة المقالات</string>
+    <string name="page_posts_page_successfully_updated">تم تحديث صفحة المقالات بنجاح</string>
+    <string name="page_homepage_update_failed">فشل تحديث الصفحة الرئيسية</string>
+    <string name="page_homepage_successfully_updated">تم تحديث الصفحة الرئيسية بنجاح</string>
+    <string name="page_cannot_set_posts_page">لتعيين صفحة المقالات، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
+    <string name="page_cannot_set_homepage">لتعيين صفحة رئيسية، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">مرحبًا بك في مدونتنا الجديدة</string>
     <string name="gutenberg_native_select_a_color">تحديد لون</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
@@ -36,9 +71,7 @@ Language: ar
     <string name="copy_text">نسخ</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع %2$s</string>
-    <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليسار من الموضع %1$s إلى الموضع %2$s</string>
-    <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">الضغط المزدوج لنقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_columns_settings">إعدادات الأعمدة</string>
@@ -121,16 +154,14 @@ Language: ar
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
     <string name="gutenberg_native_link_to">رابط لـ</string>
+    <string name="gutenberg_native_s_settings">إعدادات %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">دعونا نبني شيئًا معًا.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">دعونا نبني شيئًا معًا</string>
-    <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">دعونا نبني شيئًا معًا!</string>
+    <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا!</string>
     <string name="gutenberg_native_juan_p_rez">خوان بيريز</string>
     <string name="gutenberg_native_j_k_rowling">ج.ك. رولينج</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">هاري، إن اختياراتنا هي التي تظهر ما نحن عليه بالفعل، أكثر بكثير من قدراتنا.</string>
     <string name="gutenberg_native_inspiration">الإلهام</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">ابق على اتصال!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">ابق على اتصال!</string>
     <string name="gutenberg_native_get_in_touch">ابق على اتصال</string>
     <string name="gutenberg_native_excerpt_length_words">طول المقتطف (كلمات)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">راسلني عبر البريد: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -286,9 +317,7 @@ Language: ar
     <string name="gutenberg_native_my_post_publish_panel">لوحة النشر اللاحق الخاصة بي</string>
     <string name="gutenberg_native_my_document_setting_panel">لوحة تعيين مستنداتي</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أعلى من الصف %1$s إلى الصف %2$s</string>
-    <string name="gutenberg_native_move_block_up">تحريك المكوّن لأعلى</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
-    <string name="gutenberg_native_move_block_down">تحريك المكوّن لأسفل</string>
     <string name="gutenberg_native_link_text">نص الرابط</string>
     <string name="gutenberg_native_link_inserted">تمّ إدراج الرابط</string>
     <string name="gutenberg_native_image_caption_s">تسمية توضيحية للصورة. %s</string>
@@ -310,7 +339,6 @@ Language: ar
     <string name="gutenberg_native_double_tap_and_hold_to_edit">الضغط المزدوج مع الاستمرار للتحرير</string>
     <string name="gutenberg_native_current_value_is_s">القيمة الحالية هي %s</string>
     <string name="gutenberg_native_content">المحتوى…</string>
-    <string name="gutenberg_native_clear_all_settings">مسح كل الإعدادات</string>
     <string name="gutenberg_native_choose_from_device">الاختيار من الجهاز</string>
     <string name="gutenberg_native_annotations_sidebar">الشريط الجانبي للتعليقات التوضيحية</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">حدث خطأ غير معروف. يُرجى المحاولة مرة أخرى.</string>
@@ -1132,7 +1160,6 @@ Language: ar
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">لم يتم رفع مقالة واحدة مع ملف واحد</string>
     <string name="untitled_in_parentheses">(بدون عنوان)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s، %2$s</string>
     <string name="latitude_longitude">%1$f، %2$f</string>
     <string name="site_creation_domain_finish_button">إنشاء موقع</string>
     <string name="notification_site_creation_created">انقر للمتابعة.</string>
@@ -1602,7 +1629,7 @@ Language: ar
     <string name="pending_draft_one_day_2">هل تعرف أنّ \"%1$s\" لا تزال مسودة؟ انشر!</string>
     <string name="pending_draft_one_day_1">قمت بصياغة \"%1$s\" في صورة مسودة أمس. لا تنس أن تنشرها!</string>
     <string name="reader_photo_by">صورة بواسطة %s</string>
-    <string name="reader_label_visit">تفضل بزيارة</string>
+    <string name="reader_label_visit">زيارة الموقع</string>
     <string name="swipe_for_more">التمرير سريعًا للاطلاع على المزيد</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">لست مخولاً لعرض هذه المقالة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً أو استخدم زر \"الإجراء\" في الجزء العلوي لفتح متصفح ما بدلاً من ذلك.</string>
     <string name="reader_err_get_post_not_authorized_signin">لست مخولاً لعرض هذه المقالة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً.</string>

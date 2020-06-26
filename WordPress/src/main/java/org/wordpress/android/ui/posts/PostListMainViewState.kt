@@ -34,14 +34,14 @@ sealed class AuthorFilterListItemUIState(
     data class Everyone(override val isSelected: Boolean, @DrawableRes val imageRes: Int) :
             AuthorFilterListItemUIState(
                     id = EVERYONE.id,
-                    text = UiStringRes(R.string.post_list_author_everyone),
+                    text = UiStringRes(R.string.everyone),
                     isSelected = isSelected
             )
 
     data class Me(val avatarUrl: String?, override val isSelected: Boolean) :
             AuthorFilterListItemUIState(
                     id = ME.id,
-                    text = UiStringRes(R.string.post_list_author_me),
+                    text = UiStringRes(R.string.me),
                     isSelected = isSelected
             )
 }

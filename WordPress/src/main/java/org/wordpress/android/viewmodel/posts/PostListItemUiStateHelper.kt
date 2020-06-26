@@ -51,6 +51,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
@@ -121,7 +122,13 @@ class PostListItemUiStateHelper @Inject constructor(
         val statusesDelimeter = UiStringRes(R.string.multiple_status_label_delimiter)
         val onSelected = {
             when (postStatus) {
-                TRASHED -> {}
+                TRASHED -> {
+                    onAction.invoke(
+                            post,
+                            BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG,
+                            POST_LIST_ITEM_SELECTED
+                    )
+                }
                 UNKNOWN, PUBLISHED, DRAFT, PRIVATE, PENDING, SCHEDULED -> onAction.invoke(
                         post,
                         BUTTON_EDIT,
