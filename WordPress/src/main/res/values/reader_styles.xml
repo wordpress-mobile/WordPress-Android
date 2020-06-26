@@ -118,12 +118,13 @@
     <style name="ReaderTextView.Interests.Title" parent="ReaderTextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_medium_large</item>
         <item name="android:fontFamily">serif</item>
         <item name="android:gravity">start</item>
         <item name="android:includeFontPadding">false</item>>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="ReaderTextView.Interests.SubTitle" parent="ReaderTextView">
@@ -134,6 +135,8 @@
         <item name="android:includeFontPadding">false</item>>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <!-- EditTexts -->
