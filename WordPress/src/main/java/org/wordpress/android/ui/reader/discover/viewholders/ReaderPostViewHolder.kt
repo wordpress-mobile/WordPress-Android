@@ -12,7 +12,7 @@ import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.util.image.ImageType.READER
+import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
 
 class ReaderPostViewHolder(
     private val uiHelpers: UiHelpers,
@@ -63,7 +63,7 @@ class ReaderPostViewHolder(
         } else {
             imageManager.loadImageWithCorners(
                     image_featured,
-                    READER,
+                    PHOTO_ROUNDED_CORNERS,
                     state.featuredImageUrl,
                     uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
