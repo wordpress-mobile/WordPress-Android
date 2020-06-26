@@ -13,6 +13,13 @@ enum class QuickStartMySitePrompts constructor(
     val shortMessagePrompt: Int,
     val iconId: Int
 ) {
+    UPDATE_SITE_TITLE_TUTORIAL(
+            QuickStartTask.UPDATE_SITE_TITLE,
+            R.id.my_site_scroll_view_root,
+            R.id.my_site_title_label,
+            R.string.quick_start_dialog_update_site_title_message_short,
+            -1
+    ),
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
             R.id.my_site_scroll_view_root,
