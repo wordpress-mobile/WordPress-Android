@@ -201,13 +201,13 @@ Language: pt_BR
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Não chore por que acabou. Sorria porque aconteceu.</string>
     <string name="gutenberg_native_customize">Personalizar</string>
-    <string name="gutenberg_native_city_10100">Cidade, 01010-100</string>
+    <string name="gutenberg_native_city_10100">Cidade, 01010&#8211;100</string>
     <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Uma pequena descrição dos serviços que você oferece.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Uma pequena biografia com sua história pessoal, conquistas ou fatos interessantes.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:email@exemplo.com.br\">email@exemplo.com.br&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Uma descrição do projeto e trabalhos apresentados.</string>
-    <string name="gutenberg_native_555_555_1234">(11) 1234-5678</string>
+    <string name="gutenberg_native_555_555_1234">(11) 1234&#8211;5678</string>
     <string name="gutenberg_native_10_street_road">Avenida Paulista, 1</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
