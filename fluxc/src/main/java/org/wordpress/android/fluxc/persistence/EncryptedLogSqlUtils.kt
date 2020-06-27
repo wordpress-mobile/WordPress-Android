@@ -1,9 +1,11 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.EncryptedLogModelTable
+import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.EncryptedLog
 import org.wordpress.android.fluxc.model.EncryptedLogModel
+import org.wordpress.android.fluxc.model.EncryptedLogUploadState
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -26,6 +28,18 @@ class EncryptedLogSqlUtils @Inject constructor() {
                 .endWhere()
                 .execute()
     }
+
+    // TODO: Add a unit test for this
+    fun getEncryptedLogsForUploadState(uploadState: EncryptedLogUploadState): List<EncryptedLog> =
+            WellSql.select(EncryptedLogModel::class.java)
+                    .where()
+                    .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, uploadState.value)
+                    .endWhere()
+                    .orderBy(EncryptedLogModelTable.DATE_CREATED, SelectQuery.ORDER_ASCENDING)
+                    .asModel
+                    .map {
+                        EncryptedLog.fromEncryptedLogModel(it)
+                    }
 
     private fun getEncryptedLogModel(uuid: String): EncryptedLogModel? {
         return WellSql.select(EncryptedLogModel::class.java)
