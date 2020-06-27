@@ -86,7 +86,7 @@ class EncryptedLogSqlUtilsTest {
         dateCreated: Date = Date(),
         uuid: String = TEST_UUID,
         filePath: String = TEST_FILE_PATH,
-        uploadState: EncryptedLogUploadState = EncryptedLogUploadState.DEFAULT
+        uploadState: EncryptedLogUploadState = EncryptedLogUploadState.CREATED
     ) = EncryptedLog(
             // Bypass the annoying milliseconds comparison issue
             dateCreated = Date.from(dateCreated.toInstant().truncatedTo(ChronoUnit.SECONDS)),
