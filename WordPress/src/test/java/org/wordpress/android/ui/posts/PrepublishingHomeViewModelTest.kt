@@ -2,14 +2,18 @@ package org.wordpress.android.ui.posts
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
@@ -25,6 +29,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiS
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -36,8 +41,10 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
     @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
+    @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Mock lateinit var site: SiteModel
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
@@ -45,7 +52,9 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getPostVisibilityUseCase,
                 postSettingsUtils,
                 getButtonUiStateUseCase,
-                mock()
+                mock(),
+                storyRepositoryWrapper,
+                TEST_DISPATCHER
         )
         whenever(
                 getButtonUiStateUseCase.getUiState(
@@ -60,6 +69,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
+        whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn("")
     }
 
     @Test
@@ -337,7 +347,47 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         assertThat(getStoryTitleUiStateList()).isEmpty()
     }
 
+    @Test
+    fun `verify that if storyThumbnailUrl is set to StoryTitleUiState`() {
+        val storyThumbnailUrl = "/example.png"
+        whenever(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()).thenReturn(storyThumbnailUrl)
+
+        viewModel.start(editPostRepository, site, true)
+
+        assertThat(getStoryTitleUiState()?.storyThumbnailUrl).isEqualTo(storyThumbnailUrl)
+    }
+
+    @Test
+    fun `verify that if currentStoryTitle is set then storyTitle shouldn't be null`() {
+        val storyTitle = "Story Title"
+        whenever(storyRepositoryWrapper.getCurrentStoryTitle()).thenReturn(storyTitle)
+
+        viewModel.start(editPostRepository, site, true)
+
+        assertThat(getStoryTitleUiState()?.storyTitle).isNotNull()
+    }
+
+    @Test
+    fun `verify that if currentStoryTitle is null then storyTitle should be null`() {
+        whenever(storyRepositoryWrapper.getCurrentStoryTitle()).thenReturn(null)
+
+        viewModel.start(editPostRepository, site, true)
+
+        assertThat(getStoryTitleUiState()?.storyTitle).isNull()
+    }
+
+    @Test
+    fun `verify that if storyTitleChanged then setCurrentStoryTitle is called`() {
+        val storyTitle = "Story Title"
+
+        viewModel.start(editPostRepository, site, true)
+        getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+
+        verify(storyRepositoryWrapper).setCurrentStoryTitle(eq(storyTitle))
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
+    private fun getStoryTitleUiState() = getStoryTitleUiStateList()?.first()
     private fun getStoryTitleUiStateList() =
             viewModel.uiState.value?.filterIsInstance(StoryTitleUiState::class.java)
 
