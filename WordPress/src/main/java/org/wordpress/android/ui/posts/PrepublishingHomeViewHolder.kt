@@ -13,6 +13,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -44,6 +45,16 @@ sealed class PrepublishingHomeViewHolder(
 
             actionType.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionTypeColor))
             actionResult.setTextColor(ContextCompat.getColor(itemView.context, uiState.actionResultColor))
+        }
+    }
+
+    class PrepublishingStoryTitleItemViewHolder(
+        parentView: ViewGroup,
+        val uiHelpers: UiHelpers,
+        val imageManager: ImageManager
+    ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_story_title_list_item) {
+        override fun onBind(uiState: PrepublishingHomeItemUiState) {
+            uiState as StoryTitleUiState
         }
     }
 
