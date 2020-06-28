@@ -3,18 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/story_title_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_extra_large"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:paddingTop="@dimen/margin_medium"
+        android:paddingBottom="@dimen/margin_medium"
         app:layout_constraintTop_toBottomOf="@id/bottom_sheet_handle">
 
         <FrameLayout
             android:id="@+id/story_thumbnail_layout"
-            android:layout_width="@dimen/min_touch_target_sz"
+            android:layout_width="@dimen/prepublishing_story_title_thumbnail_width"
             android:layout_height="@dimen/prepublishing_story_title_thumbnail_height"
             android:layout_marginBottom="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/margin_extra_large"
@@ -44,20 +47,24 @@
                 tools:srcCompat="@tools:sample/avatars" />
         </FrameLayout>
 
-        <com.google.android.material.textview.MaterialTextView
+        <EditText
             android:id="@+id/story_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_extra_large"
-            android:layout_marginStart="@dimen/margin_medium"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:fontFamily="serif"
             android:hint="@string/prepublishing_nudges_story_title_hint"
+            android:inputType="textMultiLine"
+            android:maxLines="3"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceHeadline5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/story_thumbnail_layout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/story_thumbnail_layout"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include

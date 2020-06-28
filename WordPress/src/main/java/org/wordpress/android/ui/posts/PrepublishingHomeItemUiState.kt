@@ -21,7 +21,7 @@ sealed class PrepublishingHomeItemUiState {
     data class StoryTitleUiState(
         val hasStoryThumbnail: Boolean,
         val storyThumbnailUrl: String,
-        val onStoryTitleChanged: () -> String
+        val onStoryTitleChanged: (String) -> Unit
     ) :
             PrepublishingHomeItemUiState()
 

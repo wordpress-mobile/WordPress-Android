@@ -13,6 +13,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TA
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -49,8 +50,13 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
-            add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
+            val isStory=true
 
+            if (isStory) {
+                add(StoryTitleUiState(true, "https://via.placeholder.com/150", {}))
+            } else {
+                add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
+            }
             add(
                     HomeUiState(
                             actionType = VISIBILITY,
@@ -59,7 +65,6 @@ class PrepublishingHomeViewModel @Inject constructor(
                             onActionClicked = ::onActionClicked
                     )
             )
-
             if (editPostRepository.status != PostStatus.PRIVATE) {
                 add(
                         HomeUiState(
