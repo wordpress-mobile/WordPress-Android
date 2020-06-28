@@ -142,10 +142,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
-            HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(),
-                    PrepublishingHomeFragment.TAG
-            )
+            HOME -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingHomeFragment.newInstance(isStoryPost),
+                        PrepublishingHomeFragment.TAG
+                )
+            }
             PrepublishingScreen.PUBLISH -> Pair(
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
@@ -201,13 +206,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+        const val IS_STORY_POST = "prepublishing_bottom_sheet_is_story_post"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) =
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
                 PrepublishingBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
                         putBoolean(IS_PAGE, isPage)
+                        putBoolean(IS_STORY_POST, isStoryPost)
                     }
                 }
     }
