@@ -16,6 +16,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
+import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
@@ -28,7 +29,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val storyRepositoryWrapper: StoryRepositoryWrapper
 ) : ViewModel() {
     private var isStarted = false
 
@@ -52,7 +54,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             // TODO WPSTORIES this logic is removed in upcoming PRs. Used here for demo purposes.
             if (isStoryPost) {
-                add(StoryTitleUiState("https://via.placeholder.com/150", {}))
+                add(StoryTitleUiState(storyRepositoryWrapper.getCurrentStoryThumbnailUrl(), {}))
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
