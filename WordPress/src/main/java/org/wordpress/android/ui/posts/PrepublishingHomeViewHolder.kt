@@ -17,6 +17,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -58,7 +59,6 @@ sealed class PrepublishingHomeViewHolder(
     ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_story_title_list_item) {
         private val storyTitle: TextView = itemView.findViewById(R.id.story_title)
         private val thumbnail: ImageView = itemView.findViewById(R.id.story_thumbnail)
-        private val thumbnailLayout: View = itemView.findViewById(R.id.story_thumbnail_layout)
 
         private val thumbnailCornerRadius = parentView.context.resources.getDimension(R.dimen.prepublishing_site_blavatar_corner_radius)
                 .toInt()
@@ -66,18 +66,15 @@ sealed class PrepublishingHomeViewHolder(
         override fun onBind(uiState: PrepublishingHomeItemUiState) {
             uiState as StoryTitleUiState
 
-            uiHelpers.updateVisibility(thumbnailLayout, uiState.hasStoryThumbnail)
-
-            if (uiState.hasStoryThumbnail) {
-                imageManager.loadImageWithCorners(
-                        thumbnail,
-                        ImageType.IMAGE,
-                        uiState.storyThumbnailUrl,
-                        thumbnailCornerRadius
-                )
-            }
+            imageManager.loadImageWithCorners(
+                    thumbnail,
+                    ImageType.IMAGE,
+                    uiState.storyThumbnailUrl,
+                    thumbnailCornerRadius
+            )
 
             storyTitle.requestFocus()
+            ActivityUtils.showKeyboard(storyTitle)
             storyTitle.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

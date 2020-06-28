@@ -41,22 +41,22 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _onSubmitButtonClicked = MutableLiveData<Event<PublishPost>>()
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
-    fun start(editPostRepository: EditPostRepository, site: SiteModel) {
+    fun start(editPostRepository: EditPostRepository, site: SiteModel, isStory: Boolean) {
         if (isStarted) return
         isStarted = true
 
-        setupHomeUiState(editPostRepository, site)
+        setupHomeUiState(editPostRepository, site, isStory)
     }
 
-    private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
+    private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel, isStory: Boolean) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
-            val isStory=true
-
+            // TODO WPSTORIES this logic is removed in upcoming PRs. Used here for demo purposes.
             if (isStory) {
-                add(StoryTitleUiState(true, "https://via.placeholder.com/150", {}))
+                add(StoryTitleUiState("https://via.placeholder.com/150", {}))
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
+
             add(
                     HomeUiState(
                             actionType = VISIBILITY,
@@ -96,7 +96,8 @@ class PrepublishingHomeViewModel @Inject constructor(
                                 ?: run { UiStringRes(R.string.prepublishing_nudges_home_tags_not_set) },
                         actionClickable = true,
                         onActionClicked = ::onActionClicked
-                ))
+                )
+                )
             }
 
             add(getButtonUiStateUseCase.getUiState(editPostRepository, site) { publishPost ->
