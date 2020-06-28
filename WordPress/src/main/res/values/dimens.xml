@@ -506,5 +506,8 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
+    <dimen name="story_thumbnail_margin">3dp</dimen>
+    <dimen name="thumbnail_background_margin">10dp</dimen>
 
 </resources>
