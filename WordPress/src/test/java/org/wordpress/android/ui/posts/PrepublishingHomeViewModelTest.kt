@@ -21,6 +21,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
@@ -67,7 +68,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 3
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
@@ -82,7 +83,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HomeUiState::class.java)?.size).isEqualTo(
@@ -96,7 +97,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(editPostRepository.isPage).thenReturn(false)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         // assert
         assertThat(getHomeUiState(TAGS)).isNotNull()
@@ -108,7 +109,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         // assert
         assertThat(getHomeUiState(TAGS)).isNull()
@@ -120,7 +121,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 1
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.size).isEqualTo(
@@ -134,7 +135,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionsAmount = 1
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
 
         // assert
         assertThat(viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.size).isEqualTo(
@@ -148,7 +149,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = PUBLISH
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
         val publishAction = getHomeUiState(expectedActionType)
         publishAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -162,7 +163,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = VISIBILITY
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
         val visibilityAction = getHomeUiState(expectedActionType)
         visibilityAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -176,7 +177,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         val expectedActionType = VISIBILITY
 
         // act
-        viewModel.start(mock(), site)
+        viewModel.start(mock(), site, false)
         val tagsAction = getHomeUiState(expectedActionType)
         tagsAction?.onActionClicked?.invoke(expectedActionType)
 
@@ -191,7 +192,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn(expectedLabel)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val publishAction = getHomeUiState(PUBLISH)
 
         // assert
@@ -205,7 +206,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(getPostTagsUseCase.getTags(editPostRepository)).thenReturn(expectedTags)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val tagsAction = getHomeUiState(TAGS)
 
         // assert
@@ -218,7 +219,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(getPostTagsUseCase.getTags(editPostRepository)).thenReturn(null)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val tagsAction = getHomeUiState(TAGS)
 
         // assert
@@ -233,7 +234,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.iconUrl).thenReturn(null)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val headerUiState = getHeaderUiState()
 
         // assert
@@ -247,7 +248,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.iconUrl).thenReturn(expectedIconUrl)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val headerUiState = getHeaderUiState()
 
         // assert
@@ -261,7 +262,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         whenever(site.name).thenReturn(expectedName)
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val headerUiState = getHeaderUiState()
 
         // assert
@@ -277,7 +278,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         }
 
         // act
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
         val buttonUiState = getButtonUiState()
         buttonUiState?.onButtonClicked?.invoke(true)
 
@@ -289,7 +290,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     fun `verify that PUBLISH action is unclickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         val uiState = getHomeUiState(PUBLISH)
 
@@ -300,7 +301,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     fun `verify that TAGS action is clickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         val uiState = getHomeUiState(TAGS)
 
@@ -311,14 +312,34 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     fun `verify that VISIBILITY action is clickable if PostStatus is PRIVATE`() {
         whenever(editPostRepository.status).thenReturn(PRIVATE)
 
-        viewModel.start(editPostRepository, site)
+        viewModel.start(editPostRepository, site, false)
 
         val uiState = getHomeUiState(VISIBILITY)
 
         assertThat(uiState?.actionClickable).isTrue()
     }
 
+    @Test
+    fun `verify that if isStoryPost is true then StoryTitleUiState is created`() {
+        val expectedIsStoryPost = true
+
+        viewModel.start(editPostRepository, site, expectedIsStoryPost)
+
+        assertThat(getStoryTitleUiStateList()).isNotEmpty
+    }
+
+    @Test
+    fun `verify that if isStoryPost is false then StoryTitleUiState is not created`() {
+        val expectedIsStoryPost = false
+
+        viewModel.start(editPostRepository, site, expectedIsStoryPost)
+
+        assertThat(getStoryTitleUiStateList()).isEmpty()
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
+    private fun getStoryTitleUiStateList() =
+            viewModel.uiState.value?.filterIsInstance(StoryTitleUiState::class.java)
 
     private fun getButtonUiState(): ButtonUiState? {
         return viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.first()
