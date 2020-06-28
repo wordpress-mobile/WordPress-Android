@@ -63,9 +63,14 @@ class PrepublishingHomeViewModel @Inject constructor(
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
-                add(StoryTitleUiState(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()) { storyTitle ->
-                    onStoryTitleChanged(storyTitle)
-                })
+                add(
+                        StoryTitleUiState(
+                                storyTitle = storyRepositoryWrapper.getCurrentStoryTitle()
+                                        ?.let { storyTitle -> UiStringText(storyTitle) },
+                                storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
+                        ) { storyTitle ->
+                            onStoryTitleChanged(storyTitle)
+                        })
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
@@ -122,7 +127,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         _uiState.postValue(prepublishingHomeUiStateList)
     }
 
-    fun onStoryTitleChanged(storyTitle: String) {
+    private fun onStoryTitleChanged(storyTitle: String) {
         updateStoryTitleJob?.cancel()
         updateStoryTitleJob = launch(bgDispatcher) {
             delay(THROTTLE_DELAY)

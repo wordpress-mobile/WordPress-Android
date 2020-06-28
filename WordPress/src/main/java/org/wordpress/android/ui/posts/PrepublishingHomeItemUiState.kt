@@ -20,6 +20,7 @@ sealed class PrepublishingHomeItemUiState {
 
     data class StoryTitleUiState(
         val storyThumbnailUrl: String,
+        val storyTitle: UiStringText? = null,
         val onStoryTitleChanged: (String) -> Unit
     ) :
             PrepublishingHomeItemUiState()

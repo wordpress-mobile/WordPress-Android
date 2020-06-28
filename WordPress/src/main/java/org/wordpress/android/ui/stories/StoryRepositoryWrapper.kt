@@ -6,4 +6,5 @@ import javax.inject.Inject
 class StoryRepositoryWrapper @Inject constructor() {
     fun setCurrentStoryTitle(title: String) = StoryRepository.setCurrentStoryTitle(title)
     fun getCurrentStoryThumbnailUrl() = StoryRepository.getCurrentStoryThumbnailUrl()
+    fun getCurrentStoryTitle() = StoryRepository.getCurrentStoryTitle()
 }
