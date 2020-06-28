@@ -41,8 +41,10 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
@@ -70,7 +72,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         AuthenticationHeadersProvider,
         NotificationIntentLoader,
         MetadataProvider,
-        StoryDiscardListener {
+        StoryDiscardListener, EditPostActivityHook {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -78,13 +80,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
-    @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+
+    override fun getSite() = site
+    override fun getEditPostRepository() = editPostRepository
 
     companion object {
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
