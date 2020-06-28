@@ -2,11 +2,15 @@ package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
@@ -22,7 +26,11 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
+import javax.inject.Named
+
+private const val THROTTLE_DELAY = 500L
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
@@ -30,9 +38,11 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val storyRepositoryWrapper: StoryRepositoryWrapper
-) : ViewModel() {
+    private val storyRepositoryWrapper: StoryRepositoryWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
+    private var updateStoryTitleJob: Job? = null
 
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = _uiState
@@ -52,9 +62,10 @@ class PrepublishingHomeViewModel @Inject constructor(
 
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
-            // TODO WPSTORIES this logic is removed in upcoming PRs. Used here for demo purposes.
             if (isStoryPost) {
-                add(StoryTitleUiState(storyRepositoryWrapper.getCurrentStoryThumbnailUrl(), {}))
+                add(StoryTitleUiState(storyRepositoryWrapper.getCurrentStoryThumbnailUrl()) { storyTitle ->
+                    onStoryTitleChanged(storyTitle)
+                })
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
@@ -109,6 +120,19 @@ class PrepublishingHomeViewModel @Inject constructor(
         }.toList()
 
         _uiState.postValue(prepublishingHomeUiStateList)
+    }
+
+    fun onStoryTitleChanged(storyTitle: String) {
+        updateStoryTitleJob?.cancel()
+        updateStoryTitleJob = launch(bgDispatcher) {
+            delay(THROTTLE_DELAY)
+            storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        updateStoryTitleJob?.cancel()
     }
 
     private fun onActionClicked(actionType: ActionType) {
