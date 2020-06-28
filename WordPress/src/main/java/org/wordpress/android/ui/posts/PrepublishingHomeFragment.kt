@@ -75,8 +75,8 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        val isStory = true
-        viewModel.start(getEditPostRepository(), getSite(), true)
+        val isStoryPost = true
+        viewModel.start(getEditPostRepository(), getSite(), isStoryPost)
     }
 
     private fun getSite(): SiteModel {
