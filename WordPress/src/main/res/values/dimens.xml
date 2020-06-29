@@ -112,6 +112,10 @@
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
 
+    <!-- left/right margin for reader interests content -->
+    <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
+    <dimen name="interests_done_button_margin">@dimen/margin_medium_large</dimen>
+
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>

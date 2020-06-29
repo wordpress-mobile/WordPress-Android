@@ -32,14 +32,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="@dimen/content_margin" />
+                app:layout_constraintGuide_begin="@dimen/interests_content_margin" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="@dimen/content_margin" />
+                app:layout_constraintGuide_end="@dimen/interests_content_margin" />
 
             <com.google.android.material.textview.MaterialTextView
                 style="@style/ReaderTextView.Interests.Title"
@@ -93,8 +93,8 @@
         android:id="@+id/bottom_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:contentPaddingLeft="@dimen/margin_medium"
-        app:contentPaddingRight="@dimen/margin_medium"
+        app:contentPaddingLeft="@dimen/margin_medium_large"
+        app:contentPaddingRight="@dimen/margin_medium_large"
         app:cardCornerRadius="0dp"
         app:cardElevation="@dimen/appbar_elevation"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,8 +106,8 @@
             style="@style/WordPress.ReaderPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/content_margin"
-            android:layout_marginEnd="@dimen/content_margin"
+            android:layout_marginStart="@dimen/interests_done_button_margin"
+            android:layout_marginEnd="@dimen/interests_done_button_margin"
             android:layout_marginTop="@dimen/margin_medium_large"
             android:layout_marginBottom="@dimen/margin_medium_large"
             android:enabled="false"
