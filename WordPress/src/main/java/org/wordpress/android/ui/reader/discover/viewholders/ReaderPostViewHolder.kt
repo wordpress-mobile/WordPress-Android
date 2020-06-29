@@ -136,7 +136,7 @@ class ReaderPostViewHolder(
         view.isEnabled = state.isEnabled
         view.isSelected = state.isSelected
         view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
-        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.isSelected, state.type) }
+        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
     }
 
     private fun loadVideoThumbnail(state: ReaderPostUiState) {

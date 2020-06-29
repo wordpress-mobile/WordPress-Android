@@ -68,7 +68,6 @@ import javax.inject.Inject;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
-import kotlin.jvm.functions.Function4;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
@@ -331,8 +330,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         Context ctx = holder.getViewContext();
-        Function4<Long, Long, Boolean, ReaderPostCardActionType, Unit> onButtonClicked =
-                (postId, blogId, selected, type) -> {
+        Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
+                (postId, blogId, type) -> {
                     //noinspection EnumSwitchStatementWhichMissesCases
                     switch (type) {
                         case BOOKMARK:

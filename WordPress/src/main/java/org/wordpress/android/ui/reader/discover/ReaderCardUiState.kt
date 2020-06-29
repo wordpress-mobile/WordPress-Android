@@ -65,7 +65,7 @@ sealed class ReaderCardUiState {
 
 sealed class ReaderPostCardAction {
     abstract val type: ReaderPostCardActionType
-    open val onClicked: ((Long, Long, Boolean, ReaderPostCardActionType) -> Unit)? = null
+    open val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
     open val isSelected: Boolean = false
 
     data class PrimaryAction(
@@ -74,7 +74,7 @@ sealed class ReaderPostCardAction {
         val count: Int = 0,
         override val isSelected: Boolean = false,
         override val type: ReaderPostCardActionType,
-        override val onClicked: ((Long, Long, Boolean, ReaderPostCardActionType) -> Unit)? = null
+        override val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
     ) : ReaderPostCardAction()
 
     data class SecondaryAction(
@@ -84,7 +84,7 @@ sealed class ReaderPostCardAction {
         @AttrRes val iconColor: Int = labelColor,
         override val isSelected: Boolean = false,
         override val type: ReaderPostCardActionType,
-        override val onClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        override val onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) : ReaderPostCardAction()
 }
 

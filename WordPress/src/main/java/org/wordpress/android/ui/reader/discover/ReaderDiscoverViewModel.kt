@@ -77,7 +77,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onButtonClicked(postId: Long, blogId: Long, selected: Boolean, type: ReaderPostCardActionType) {
+    private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         when (type) {
             FOLLOW -> TODO()
             SITE_NOTIFICATIONS -> TODO()

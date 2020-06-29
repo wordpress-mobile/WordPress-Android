@@ -54,7 +54,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         postListType: ReaderPostListType,
             // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
-        onButtonClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (Long, Long) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
@@ -184,7 +184,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildBookmarkSection(
         post: ReaderPost,
-        onClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val contentDescription = if (post.isBookmarked) {
             R.string.reader_remove_bookmark
@@ -208,7 +208,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildLikeSection(
         post: ReaderPost,
         isBookmarkList: Boolean,
-        onClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val showLikes = when {
             /* TODO malinjir why we don't show likes on bookmark list??? I think we wanted
@@ -237,7 +237,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
     private fun buildReblogSection(
         post: ReaderPost,
-        onReblogClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        onReblogClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val canReblog = !post.isPrivate && accountStore.hasAccessToken()
         return if (canReblog) {
@@ -251,7 +251,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildCommentsSection(
         post: ReaderPost,
         isBookmarkList: Boolean,
-        onCommentsClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        onCommentsClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
         val showComments = when {
             /* TODO malinjir why we don't show comments on bookmark list??? I think we wanted

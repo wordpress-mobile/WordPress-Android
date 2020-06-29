@@ -18,7 +18,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
     fun buildMoreMenuItems(
         post: ReaderPost,
         postListType: ReaderPostListType,
-        onButtonClicked: (Long, Long, Boolean, ReaderPostCardActionType) -> Unit
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
         if (ReaderPostTable.isPostFollowed(post)) {
