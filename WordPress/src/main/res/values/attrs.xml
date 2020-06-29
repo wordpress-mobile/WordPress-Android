@@ -15,6 +15,10 @@
     <attr name="wpColorWarningLight" format="reference|color" />
     <attr name="wpColorActionModeIcon" format="reference|color" />
 
+    <!-- Gutenberg colors-->
+    <attr name="colorGutenbergDivider" format="reference|color" />
+    <attr name="colorGutenbergBackground" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />
