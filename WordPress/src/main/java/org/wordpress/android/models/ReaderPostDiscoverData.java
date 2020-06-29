@@ -174,12 +174,12 @@ public class ReaderPostDiscoverData {
                         // "Visit [BlogName]" - opens blog preview when tapped
                         html = String.format(context.getString(R.string.reader_discover_visit_blog), blog);
                     } else {
-                        return null;
+                        html = "";
                     }
                     break;
 
                 default:
-                    return null;
+                    html = "";
             }
 
             mAttributionHtml = Html.fromHtml(html);
