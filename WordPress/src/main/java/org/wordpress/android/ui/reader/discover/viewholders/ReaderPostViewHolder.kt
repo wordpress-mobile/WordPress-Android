@@ -147,7 +147,7 @@ class ReaderPostViewHolder(
                 override fun showThumbnail(thumbnailUrl: String) {
                     imageManager.loadImageWithCorners(
                             image_featured,
-                            READER,
+                            PHOTO_ROUNDED_CORNERS,
                             thumbnailUrl,
                             uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
                     )
