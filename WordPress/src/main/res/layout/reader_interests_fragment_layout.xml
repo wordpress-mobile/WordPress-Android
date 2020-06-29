@@ -21,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/margin_extra_large"
-            android:paddingEnd="@dimen/margin_medium"
-            android:paddingStart="@dimen/margin_medium"
+            android:paddingEnd="@dimen/margin_medium_large"
+            android:paddingStart="@dimen/margin_medium_large"
             android:paddingTop="@dimen/margin_extra_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -103,15 +103,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/done_button"
-            style="@style/WordPress.Button.Primary"
+            style="@style/WordPress.ReaderPrimaryButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/content_margin"
             android:layout_marginEnd="@dimen/content_margin"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            android:layout_marginBottom="@dimen/margin_extra_large"
+            android:layout_marginTop="@dimen/margin_medium_large"
+            android:layout_marginBottom="@dimen/margin_medium_large"
             android:enabled="false"
-            android:textAllCaps="false"
             android:text="@string/reader_btn_select_few_interests" />
 
     </com.google.android.material.card.MaterialCardView>

@@ -139,6 +139,12 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
+    <!-- Buttons -->
+    <style name="WordPress.ReaderPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- EditTexts -->
 
     <style name="ReaderEditText">
