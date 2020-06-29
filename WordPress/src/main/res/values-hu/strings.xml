@@ -94,7 +94,6 @@ Language: hu
     <string name="httpuser">HTTP felhasználónév</string>
     <string name="httppassword">HTTP jelszó</string>
     <string name="error_media_upload">Hiba történt a média feltöltése közben</string>
-    <string name="publish_date">Közzététel</string>
     <string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
     <string name="password">Jelszó</string>
     <string name="username">Felhasználó név</string>

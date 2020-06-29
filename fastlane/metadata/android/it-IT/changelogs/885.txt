@@ -1,0 +1,4 @@
+15.1:
+Miglioramenti: pianificazione, tag e pop up del pannello della visibilità nell'editor e nella prepubblicazione dell'elenco degli articoli. Premendo il tasto per l'inserimento dopo aver aggiunto didascalie in un blocco Immagine, Video, Galleria, Citazione o Citazione evidenziata si aggiunge un nuovo blocco.
+
+Correzioni: miniature dei video, impostazioni e anteprima visualizzati in modo corretto sui siti privati. Le schede Notifiche e Installazione di Jetpack non sono più sovrapposte
