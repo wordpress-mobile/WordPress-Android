@@ -131,6 +131,7 @@
 
 /users/new/
 /users/social/new
+/users/$emailOrUsername#String/auth-options
 
 /activity-log/$site/rewind/to/$rewind_ID#String
 

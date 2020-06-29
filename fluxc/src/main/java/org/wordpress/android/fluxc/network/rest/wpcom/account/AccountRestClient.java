@@ -41,6 +41,8 @@ import org.wordpress.android.fluxc.store.AccountStore.AccountSocialErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameActionType;
 import org.wordpress.android.fluxc.store.AccountStore.AccountUsernameError;
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction;
+import org.wordpress.android.fluxc.store.AccountStore.AuthOptionsError;
+import org.wordpress.android.fluxc.store.AccountStore.AuthOptionsErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactError;
 import org.wordpress.android.fluxc.store.AccountStore.DomainContactErrorType;
 import org.wordpress.android.fluxc.store.AccountStore.IsAvailableError;
@@ -179,6 +181,11 @@ public class AccountRestClient extends BaseWPComRestClient {
         public DomainContactPayload(@NonNull DomainContactError error) {
             this.error = error;
         }
+    }
+
+    public static class FetchAuthOptionsResponsePayload extends Payload<AuthOptionsError> {
+        public boolean isPasswordless;
+        public boolean isEmailVerified;
     }
 
     public static class NewAccountResponsePayload extends Payload<NewUserError> {
@@ -905,6 +912,43 @@ public class AccountRestClient extends BaseWPComRestClient {
                                 new DomainContactError(DomainContactErrorType.GENERIC_ERROR, error.message);
                         DomainContactPayload payload = new DomainContactPayload(contactError);
                         mDispatcher.dispatch(AccountActionBuilder.newFetchedDomainContactAction(payload));
+                    }
+                }));
+    }
+
+    /**
+     * Performs an HTTP GET call to the v1.1 /users/$emailOrUsername/auth-options endpoint. Upon receiving a response
+     * (success or error) a {@link AccountAction#FETCHED_AUTH_OPTIONS} action is dispatched with a payload of type
+     * {@link FetchAuthOptionsResponsePayload}.
+     *
+     * {@link FetchAuthOptionsResponsePayload#isError()} can be used to check the request result.
+     */
+    public void fetchAuthOptions(@NonNull String emailOrUsername) {
+        final String url = WPCOMREST.users.emailOrUsername(emailOrUsername).auth_options.getUrlV1_1();
+        addUnauthedRequest(WPComGsonRequest.buildGetRequest(url, null, AuthOptionsResponse.class,
+                new Listener<AuthOptionsResponse>() {
+                    @Override
+                    public void onResponse(AuthOptionsResponse response) {
+                        FetchAuthOptionsResponsePayload payload = new FetchAuthOptionsResponsePayload();
+
+                        try {
+                            payload.isPasswordless = response.getPasswordless();
+                            payload.isEmailVerified = response.getEmail_verified();
+                        } catch (NullPointerException e) {
+                            String message = "Received empty response to " + url;
+                            AppLog.e(T.API, message, e);
+                            payload.error = new AuthOptionsError(AuthOptionsErrorType.GENERIC_ERROR, message);
+                        }
+
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedAuthOptionsAction(payload));
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        FetchAuthOptionsResponsePayload payload = new FetchAuthOptionsResponsePayload();
+                        payload.error = new AuthOptionsError(error.apiError, error.message);
+                        mDispatcher.dispatch(AccountActionBuilder.newFetchedAuthOptionsAction(payload));
                     }
                 }));
     }
