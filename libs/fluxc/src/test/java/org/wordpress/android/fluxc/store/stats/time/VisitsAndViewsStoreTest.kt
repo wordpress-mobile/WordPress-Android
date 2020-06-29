@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.store.StatsStore.StatsError
 import org.wordpress.android.fluxc.store.StatsStore.StatsErrorType.API_ERROR
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import java.util.Date
 import kotlin.test.assertEquals
@@ -44,6 +45,7 @@ class VisitsAndViewsStoreTest {
     @Mock lateinit var statsUtils: StatsUtils
     @Mock lateinit var currentTimeProvider: CurrentTimeProvider
     @Mock lateinit var mapper: TimeStatsMapper
+    @Mock lateinit var appLogWrapper: AppLogWrapper
     private lateinit var store: VisitsAndViewsStore
     @Before
     fun setUp() {
@@ -53,7 +55,8 @@ class VisitsAndViewsStoreTest {
                 mapper,
                 statsUtils,
                 currentTimeProvider,
-                initCoroutineEngine()
+                initCoroutineEngine(),
+                appLogWrapper
         )
         val currentDate = Date(0)
         whenever(currentTimeProvider.currentDate).thenReturn(currentDate)

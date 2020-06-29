@@ -30,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushSocialResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountPushUsernameResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.AccountRestPayload;
+import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.FetchAuthOptionsResponsePayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.DomainContactPayload;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailable;
 import org.wordpress.android.fluxc.network.rest.wpcom.account.AccountRestClient.IsAvailableResponsePayload;
@@ -245,6 +246,14 @@ public class AccountStore extends Store {
         }
     }
 
+    public static class FetchAuthOptionsPayload extends Payload<BaseNetworkError> {
+        public FetchAuthOptionsPayload(String emailOrUsername) {
+            this.emailOrUsername = emailOrUsername;
+        }
+
+        public String emailOrUsername;
+    }
+
     public static class UpdateSubscriptionPayload extends Payload<BaseNetworkError> {
         public String site;
         public SubscriptionFrequency frequency;
@@ -396,6 +405,11 @@ public class AccountStore extends Store {
             this.contactModel = contactModel;
             this.error = error;
         }
+    }
+
+    public static class OnAuthOptionsFetched extends OnChanged<AuthOptionsError> {
+        public boolean isPasswordless;
+        public boolean isEmailVerified;
     }
 
     public static class OnDiscoveryResponse extends OnChanged<DiscoveryError> {
@@ -667,6 +681,38 @@ public class AccountStore extends Store {
         GENERIC_ERROR;
     }
 
+    public static class AuthOptionsError implements OnChangedError {
+        @NonNull public AuthOptionsErrorType type;
+        @Nullable public String message;
+
+        public AuthOptionsError(@Nullable String type, @Nullable String message) {
+            this.type = AuthOptionsErrorType.fromString(type);
+            this.message = message;
+        }
+
+        public AuthOptionsError(@NonNull AuthOptionsErrorType type, @Nullable String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
+    public enum AuthOptionsErrorType {
+        UNKNOWN_USER,
+        GENERIC_ERROR;
+
+        public static AuthOptionsErrorType fromString(String string) {
+            if (string != null) {
+                for (AuthOptionsErrorType v : AuthOptionsErrorType.values()) {
+                    if (string.equalsIgnoreCase(v.name())) {
+                        return v;
+                    }
+                }
+            }
+
+            return GENERIC_ERROR;
+        }
+    }
+
     public static class AuthEmailError implements OnChangedError {
         public AuthEmailErrorType type;
         public String message;
@@ -884,6 +930,12 @@ public class AccountStore extends Store {
                 break;
             case FETCHED_DOMAIN_CONTACT:
                 handleFetchedDomainContact((DomainContactPayload) payload);
+                break;
+            case FETCH_AUTH_OPTIONS:
+                createFetchAuthOptions((FetchAuthOptionsPayload) payload);
+                break;
+            case FETCHED_AUTH_OPTIONS:
+                handleFetchedAuthOptions((FetchAuthOptionsResponsePayload) payload);
                 break;
         }
     }
@@ -1285,5 +1337,20 @@ public class AccountStore extends Store {
 
     private void handleFetchedDomainContact(DomainContactPayload payload) {
         emitChange(new OnDomainContactFetched(payload.contactModel, payload.error));
+    }
+
+    private void createFetchAuthOptions(FetchAuthOptionsPayload payload) {
+        mAccountRestClient.fetchAuthOptions(payload.emailOrUsername);
+    }
+
+    private void handleFetchedAuthOptions(FetchAuthOptionsResponsePayload payload) {
+        OnAuthOptionsFetched event = new OnAuthOptionsFetched();
+        if (payload.isError()) {
+            event.error = payload.error;
+        } else {
+            event.isPasswordless = payload.isPasswordless;
+            event.isEmailVerified = payload.isEmailVerified;
+        }
+        emitChange(event);
     }
 }
