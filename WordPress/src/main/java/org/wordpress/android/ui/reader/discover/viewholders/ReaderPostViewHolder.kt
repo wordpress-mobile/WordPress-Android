@@ -18,7 +18,7 @@ import org.wordpress.android.util.expandTouchTargetArea
 import org.wordpress.android.util.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
-import org.wordpress.android.util.image.ImageType.READER
+import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
 import org.wordpress.android.util.image.ImageType.VIDEO
 
 class ReaderPostViewHolder(
@@ -92,7 +92,7 @@ class ReaderPostViewHolder(
         } else {
             imageManager.loadImageWithCorners(
                     image_featured,
-                    READER,
+                    PHOTO_ROUNDED_CORNERS,
                     state.featuredImageUrl,
                     uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
