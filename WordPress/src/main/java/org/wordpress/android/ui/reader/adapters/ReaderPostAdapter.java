@@ -436,10 +436,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mUiHelpers = uiHelpers;
-        mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMarginExtraLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
-        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
