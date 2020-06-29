@@ -25,12 +25,14 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
+import org.wordpress.android.util.KeyboardResizeViewUtil
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingViewModel
+    private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
     private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
@@ -59,7 +61,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        val view = inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        keyboardResizeViewUtil = KeyboardResizeViewUtil(requireActivity(), view)
+        keyboardResizeViewUtil.enable()
+        return view
     }
 
     override fun onResume() {
