@@ -17,12 +17,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.PostImmutableModel
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.PostUtils.WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER
 import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
@@ -60,6 +58,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Inject lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
+    @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
@@ -148,13 +147,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
         // Create a gallery shortcode and placeholders for Media Ids
-        val idsString = mediaFiles.map {
-            WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER + it.value.id.toString()
-        }.joinToString(separator = ",")
-        editPostRepository.update { postModel: PostModel ->
-            postModel.setContent("[gallery type=\"slideshow\" ids=\"$idsString\"]")
-            true
-        }
+        saveStoryGutenbergBlockUseCase.buildWPGallery(editPostRepository, mediaFiles)
     }
 
     override fun getImmutablePost(): PostImmutableModel {
