@@ -60,7 +60,8 @@ sealed class PrepublishingHomeViewHolder(
         private val storyTitle: TextView = itemView.findViewById(R.id.story_title)
         private val thumbnail: ImageView = itemView.findViewById(R.id.story_thumbnail)
 
-        private val thumbnailCornerRadius = parentView.context.resources.getDimension(R.dimen.prepublishing_site_blavatar_corner_radius)
+        private val thumbnailCornerRadius =
+                parentView.context.resources.getDimension(R.dimen.prepublishing_site_blavatar_corner_radius)
                 .toInt()
 
         override fun onBind(uiState: PrepublishingHomeItemUiState) {

@@ -22,7 +22,6 @@ private const val homeItemViewType: Int = 2
 private const val submitButtonViewType: Int = 3
 private const val storyTitleViewType: Int = 4
 
-
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
     @Inject lateinit var uiHelpers: UiHelpers
