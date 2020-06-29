@@ -33,7 +33,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     private val currentBottomSheetPostId = LocalId(0)
     @Mock lateinit var uploadStarter: UploadStarter
     @Mock lateinit var publishPostImmediatelyUseCase: PublishPostImmediatelyUseCase
-    @Mock lateinit var postUtilsWrapper: PostUtilsWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
@@ -223,7 +222,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Test
     fun `if setupBottomSheetPostAndShow is triggered then call publish immediately use case`() {
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock(), mock())
         viewModel.setupCurrentPostAndShowBottomsheet(mock())
 
         // assert
