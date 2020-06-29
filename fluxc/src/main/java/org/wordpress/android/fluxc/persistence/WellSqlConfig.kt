@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 107
+        return 112
     }
 
     override fun getDbName(): String {
@@ -1016,7 +1016,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 91 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT NULL")
+                    db.execSQL("ALTER TABLE WCOrderModel ADD SHIPPING_LINES TEXT")
                 }
                 92 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductModel ADD DATE_ON_SALE_FROM TEXT")
@@ -1075,7 +1075,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductModel ADD MENU_ORDER INTEGER")
                 }
                 102 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
-                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT STRING")
+                    db.execSQL("ALTER TABLE WCProductModel ADD BUTTON_TEXT TEXT")
                 }
                 103 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD URL TEXT")
@@ -1120,6 +1120,136 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE SiteModel ADD SHOW_ON_FRONT TEXT")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_ON_FRONT INTEGER")
                     db.execSQL("ALTER TABLE SiteModel ADD PAGE_FOR_POSTS INTEGER")
+                }
+                107 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
+                    db.execSQL("CREATE TABLE WCProductVariationModel (" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "REMOTE_VARIATION_ID INTEGER," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "ON_SALE INTEGER," +
+                            "PURCHASABLE INTEGER," +
+                            "VIRTUAL INTEGER," +
+                            "DOWNLOADABLE INTEGER," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY INTEGER," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "IMAGE TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
+                }
+                108 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductVariationModel")
+                    db.execSQL("CREATE TABLE WCProductVariationModel (" +
+                            "LOCAL_SITE_ID INTEGER," +
+                            "REMOTE_PRODUCT_ID INTEGER," +
+                            "REMOTE_VARIATION_ID INTEGER," +
+                            "DATE_CREATED TEXT NOT NULL," +
+                            "DATE_MODIFIED TEXT NOT NULL," +
+                            "DESCRIPTION TEXT NOT NULL," +
+                            "PERMALINK TEXT NOT NULL," +
+                            "SKU TEXT NOT NULL," +
+                            "STATUS TEXT NOT NULL," +
+                            "PRICE TEXT NOT NULL," +
+                            "REGULAR_PRICE TEXT NOT NULL," +
+                            "SALE_PRICE TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO TEXT NOT NULL," +
+                            "DATE_ON_SALE_FROM_GMT TEXT NOT NULL," +
+                            "DATE_ON_SALE_TO_GMT TEXT NOT NULL," +
+                            "ON_SALE INTEGER," +
+                            "PURCHASABLE INTEGER," +
+                            "VIRTUAL INTEGER," +
+                            "DOWNLOADABLE INTEGER," +
+                            "TAX_STATUS TEXT NOT NULL," +
+                            "TAX_CLASS TEXT NOT NULL," +
+                            "DOWNLOAD_LIMIT INTEGER," +
+                            "DOWNLOAD_EXPIRY INTEGER," +
+                            "DOWNLOADS TEXT NOT NULL," +
+                            "BACKORDERS TEXT NOT NULL," +
+                            "BACKORDERS_ALLOWED INTEGER," +
+                            "BACKORDERED INTEGER," +
+                            "SHIPPING_CLASS TEXT NOT NULL," +
+                            "SHIPPING_CLASS_ID INTEGER," +
+                            "MANAGE_STOCK INTEGER," +
+                            "STOCK_QUANTITY INTEGER," +
+                            "STOCK_STATUS TEXT NOT NULL," +
+                            "IMAGE TEXT NOT NULL," +
+                            "WEIGHT TEXT NOT NULL," +
+                            "LENGTH TEXT NOT NULL," +
+                            "WIDTH TEXT NOT NULL," +
+                            "HEIGHT TEXT NOT NULL," +
+                            "MENU_ORDER INTEGER," +
+                            "ATTRIBUTES TEXT NOT NULL," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT)")
+                }
+                109 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE EditorTheme(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "STYLESHEET TEXT," +
+                                    "VERSION TEXT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE EditorThemeElement(" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "THEME_ID INTEGER," +
+                                    "TYPE TEXT NOT NULL," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "VALUE TEXT NOT NULL," +
+                                    "CHECK(TYPE IN (\"color\", \"gradient\") )," +
+                                    "FOREIGN KEY(THEME_ID) REFERENCES EditorTheme(_id) ON DELETE CASCADE)"
+                    )
+                }
+                110 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementModel")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeatureModel")
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
+                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION TEXT NOT NULL," +
+                                    "MAXIMUM_APP_VERSION TEXT NOT NULL,LOCALIZED INTEGER," +
+                                    "RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncementFeature (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "ANNOUNCEMENT_ID INTEGER,TITLE TEXT,SUBTITLE TEXT,ICON_URL TEXT,ICON_BASE64 TEXT)"
+                    )
+                }
+                111 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE WCProductTagModel (" +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_TAG_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "DESCRIPTION TEXT," +
+                                    "COUNT INTEGER," +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "FOREIGN KEY(LOCAL_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "UNIQUE (REMOTE_TAG_ID, LOCAL_SITE_ID) " +
+                                    "ON CONFLICT REPLACE)"
+                    )
                 }
             }
         }
