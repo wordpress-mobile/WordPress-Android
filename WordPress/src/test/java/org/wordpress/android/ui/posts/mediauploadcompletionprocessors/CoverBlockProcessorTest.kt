@@ -60,4 +60,12 @@ class CoverBlockProcessorTest {
         val processedBlock = processor.processBlock(TestContent.oldCoverBlockStyleOrderWithSpace)
         Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockStyleOrderWithoutSpace)
     }
+
+    @Test
+    fun `processBlock works with videos`() {
+        whenever(mediaFile.fileURL).thenReturn(TestContent.remoteVideoUrl)
+        processor = CoverBlockProcessor(TestContent.localMediaId, mediaFile, mediaUploadCompletionProcessor)
+        val processedBlock = processor.processBlock(TestContent.oldCoverBlockWithVideo)
+        Assertions.assertThat(processedBlock).isEqualTo(TestContent.newCoverBlockWithVideo)
+    }
 }

@@ -92,9 +92,9 @@ class StorePostViewModelTest : BaseUnitTest() {
 
     @Test
     fun `saves post to DB`() {
-        viewModel.savePostToDb(context, postRepository, site)
+        viewModel.savePostToDb(postRepository, site)
 
-        verify(savePostToDbUseCase).savePostToDb(context, postRepository, site)
+        verify(savePostToDbUseCase).savePostToDb(postRepository, site)
     }
 
     @Test
@@ -206,7 +206,7 @@ class StorePostViewModelTest : BaseUnitTest() {
                 site
         )
 
-        verify(savePostToDbUseCase).savePostToDb(context, postRepository, site)
+        verify(savePostToDbUseCase).savePostToDb(postRepository, site)
         assertThat(result).isEqualTo(SAVED_LOCALLY)
         verifyZeroInteractions(postUtils)
         verifyZeroInteractions(uploadService)
@@ -224,7 +224,7 @@ class StorePostViewModelTest : BaseUnitTest() {
                 site
         )
 
-        verify(savePostToDbUseCase).savePostToDb(context, postRepository, site)
+        verify(savePostToDbUseCase).savePostToDb(postRepository, site)
         assertThat(result).isEqualTo(SAVED_ONLINE)
         verify(postUtils).trackSavePostAnalytics(postModel, site)
         verify(uploadService).uploadPost(context, postId, isFirstTimePublish)

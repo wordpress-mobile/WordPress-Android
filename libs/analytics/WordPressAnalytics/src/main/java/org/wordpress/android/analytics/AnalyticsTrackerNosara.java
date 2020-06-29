@@ -1485,6 +1485,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
+            case FEATURE_FLAG_SET:
+                return "feature_flag_set";
+            case EXPERIMENT_VARIANT_SET:
+                return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
                 return "traintracks_render";
             case TRAIN_TRACKS_INTERACT:
@@ -1770,6 +1774,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "feature_announcement_button_tapped";
             case OPENED_PLANS_COMPARISON:
                 return "plans_compare";
+            case PAGES_LIST_AUTHOR_FILTER_CHANGED:
+                return "pages_list_author_filter_changed";
         }
         return null;
     }

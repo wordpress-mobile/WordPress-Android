@@ -26,7 +26,8 @@ sealed class PageItem(open val type: Type) {
         open var actionsEnabled: Boolean,
         open val tapActionEnabled: Boolean,
         open val progressBarUiState: ProgressBarUiState,
-        open val showOverlay: Boolean
+        open val showOverlay: Boolean,
+        open val author: String?
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -42,7 +43,8 @@ sealed class PageItem(open val type: Type) {
         override val actions: Set<Action>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
-        override val showOverlay: Boolean
+        override val showOverlay: Boolean,
+        override val author: String? = null
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -56,7 +58,8 @@ sealed class PageItem(open val type: Type) {
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay
+            showOverlay = showOverlay,
+            author = author
     )
 
     data class DraftPage(
@@ -71,7 +74,8 @@ sealed class PageItem(open val type: Type) {
         override val actions: Set<Action>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
-        override val showOverlay: Boolean
+        override val showOverlay: Boolean,
+        override val author: String? = null
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -85,7 +89,8 @@ sealed class PageItem(open val type: Type) {
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay
+            showOverlay = showOverlay,
+            author = author
     )
 
     data class ScheduledPage(
@@ -100,7 +105,8 @@ sealed class PageItem(open val type: Type) {
         override val actions: Set<Action>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
-        override val showOverlay: Boolean
+        override val showOverlay: Boolean,
+        override val author: String? = null
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -114,7 +120,8 @@ sealed class PageItem(open val type: Type) {
             actionsEnabled = actionsEnabled,
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay
+            showOverlay = showOverlay,
+            author = author
     )
 
     data class TrashedPage(
@@ -129,7 +136,8 @@ sealed class PageItem(open val type: Type) {
         override val actions: Set<Action>,
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
-        override val showOverlay: Boolean
+        override val showOverlay: Boolean,
+        override val author: String? = null
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -143,7 +151,9 @@ sealed class PageItem(open val type: Type) {
             actionsEnabled = actionsEnabled,
             tapActionEnabled = false,
             progressBarUiState = progressBarUiState,
-            showOverlay = showOverlay
+            showOverlay = showOverlay,
+            author = author
+
     )
 
     data class ParentPage(

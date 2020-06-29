@@ -26,12 +26,18 @@ class ReaderTagRepository @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     private val mutableRecommendedInterests = MutableLiveData<ReaderTagList>()
-    val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
+    private val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
 
     suspend fun getInterests(): ReaderTagList =
             withContext(ioDispatcher) {
                 delay(SECONDS.toMillis(5))
                 getMockInterests()
+            }
+
+    suspend fun getUserTags(isEmpty: Boolean = true): ReaderTagList =
+            withContext(ioDispatcher) {
+                delay(SECONDS.toMillis(5))
+                getMockUserTags(isEmpty)
             }
 
     // todo: full implementation needed
@@ -51,6 +57,14 @@ class ReaderTagRepository @Inject constructor(
         return withContext(ioDispatcher) {
             mutableRecommendedInterests.postValue(getMockInterests())
             recommendedInterests
+        }
+    }
+
+    private fun getMockUserTags(isEmpty: Boolean): ReaderTagList {
+        return if (isEmpty) {
+            ReaderTagList()
+        } else {
+            getMockInterests()
         }
     }
 

@@ -1,11 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-04 17:59:00+0000
+Translation-Revision-Date: 2020-06-19 12:04:31+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar este bloco no navegador.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloco no navegador</string>
+    <string name="gutenberg_native_dismiss">Dispensar</string>
+    <string name="prepublishing_nudges_visibility_password">Protegido por senha</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
+    <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Adicionar tags</string>
+    <string name="prepublishing_nudges_back_button">Voltar</string>
+    <string name="prepublishing_nudges_home_save_button">Salvar agora</string>
+    <string name="prepublishing_nudges_home_submit_button">Enviar agora</string>
+    <string name="prepublishing_nudges_home_schedule_button">Agendar agora</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publicando para</string>
+    <string name="prepublishing_nudges_tags_action">Tags</string>
+    <string name="prepublishing_nudges_publish_action">Data de publicação</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover para rascunhos</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Posts na lixeira não podem ser editados. Você deseja alterar o status deste post para rascunho para que possa editá-lo?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover post para rascunhos?</string>
+    <string name="reader_label_choose_your_interests">Escolha seus interesses</string>
+    <string name="reader_label_discover_follow_tags">Descubra e siga tags que você ama</string>
+    <string name="reader_choose_interests_content_description">Escolher seus interesses</string>
+    <string name="reader_btn_done">Concluído</string>
+    <string name="reader_btn_select_few_interests">Selecione alguns para continuar</string>
+    <string name="post_status_post_published">Publicado</string>
+    <string name="post_status_post_trashed">Na lixeira</string>
+    <string name="post_status_post_scheduled">Agendado</string>
+    <string name="publish_date">Data de publicação</string>
+    <string name="ccpa_privacy_notice_read">Leia o aviso de privacidade CCPA</string>
+    <string name="ccpa_privacy_notice_caption">O California Consumer Privacy Act (\"CCPA\") requer que informemos os residentes no estado da Califórnia mais detalhes sobre os tipos de informações pessoais coletadas e compartilhadas no aplicativo, onde conseguimos esses dados e como e por que são usados.</string>
+    <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuários na Califórnia</string>
+    <string name="status_and_visibility">Status e visibilidade</string>
+    <string name="update_now">Atualizar agora</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Remover %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
     <string name="gutenberg_native_move_s_up">Mover %s para cima</string>
@@ -30,9 +64,11 @@ Language: pt_BR
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Não é possível salvar as configurações da página inicial antes que as páginas sejam carregadas.</string>
     <string name="site_settings_failed_to_save_homepage_settings">Não é possível salvar as configurações da página inicial</string>
     <string name="site_settings_accept_homepage">Aceitar</string>
+    <string name="site_settings_failed_to_load_pages">O carregamento de páginas falhou</string>
     <string name="site_settings_homepage_settings_description">Escolha entre uma página inicial que exiba seus posts mais recentes (blog clássico) ou uma página estática/fixa.</string>
     <string name="site_settings_homepage_settings">Configurações da página inicial</string>
     <string name="site_settings_homepage">Página inicial</string>
+    <string name="page_posts_page_update_failed">Atualização da página de posts falhou</string>
     <string name="page_posts_page_successfully_updated">Página de posts atualizada</string>
     <string name="page_homepage_update_failed">Atualização da página inicial falhou</string>
     <string name="page_homepage_successfully_updated">Página inicial atualizada</string>
@@ -46,6 +82,7 @@ Language: pt_BR
     <string name="feature_announcement_dialog_label">O que há de novo no WordPress</string>
     <string name="insert_label_with_count">Inserir %d</string>
     <string name="crop">recortar</string>
+    <string name="error_failed_to_load_into_file">Falha ao carregar para um arquivo. Tente novamente.</string>
     <string name="preview_image_thumbnail_description">Visualizar miniatura da imagem</string>
     <string name="photo_picker_use_media">Use esta mídia</string>
     <string name="photo_picker_use_video">Usar este vídeo</string>
@@ -53,8 +90,10 @@ Language: pt_BR
     <string name="photo_picker_video_title">Escolher vídeo</string>
     <string name="site_picker_ask_site_select">Não foi possível selecionar o site. Tente novamente.</string>
     <string name="sitepicker_continue_flow">Continuar</string>
+    <string name="reader_reblog_error">Falha ao reblogar</string>
     <string name="reader_no_site_to_reblog_action">Gerenciar sites</string>
     <string name="reader_no_site_to_reblog_detail">Assim que você criar um site no WordPress.com, você poderá republicar o conteúdo que você curtir em seu próprio site.</string>
+    <string name="reader_no_site_to_reblog_title">Nenhum site WordPress.com disponível</string>
     <string name="whats_new_in_version_title">Novidades</string>
     <string name="comment_q_action_copied_url">Link copiado</string>
     <string name="copy_link_address">Copiar link</string>
@@ -88,6 +127,7 @@ Language: pt_BR
     <string name="weekday_tuesday">Terça-feira</string>
     <string name="weekday_monday">Segunda-feira</string>
     <string name="weekday_sunday">Domingo</string>
+    <string name="media_accessing_failed">Falha ao acessar o conteúdo do site privado. Alguns arquivos podem estar indisponíveis.</string>
     <string name="media_accessing_progress">Acessando conteúdo de um site privado</string>
     <string name="error_failed_to_crop_and_save_image">Falha ao cortar e salvar a imagem. Tente novamente mais tarde.</string>
     <string name="failed_to_load_image_tap_to_retry">Falha ao carregar a imagem.\nToque para tentar novamente.</string>
@@ -115,31 +155,60 @@ Language: pt_BR
     <string name="error_publish_page_no_network">O dispositivo está off-line. A página será salva localmente.</string>
     <string name="local_page_autosave_revision_available">Há alterações não salvas nesta página</string>
     <string name="editor_uploading_page">Sua página está sendo enviada</string>
+    <string name="editor_page_saved_locally_failed_media">A página tem envios de mídias não concluídos e foi salva localmente</string>
     <string name="editor_page_saved_locally">Página salva no dispositivo</string>
     <string name="editor_page_saved_online">Página salva online</string>
+    <string name="quickpress_shortcut_activity_label">Selecione blog para atalho QuickPress</string>
     <string name="app_theme_default">Definido pela economia de bateria</string>
     <string name="app_theme_dark">Escuro</string>
     <string name="app_theme_light">Claro</string>
     <string name="app_theme">Aparência</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Você fez alterações nessa página recentemente mas não as salvou. Escolha uma versão para carregar:\n</string>
+    <string name="gutenberg_native_what_people_say">O que dizem sobre nós</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Nós oferecemos uma variedade de serviços para te ajudar a alcançar seus objetivos. Não tem certeza o que deseja ou quanto custa? Podemos te explicar quais os melhores serviços para você e os preços de cada um. Entre em contato abaixo.</string>
+    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Somos uma pequena equipe de profissionais talentosos. Nós amamos o que fazemos e fazemos tudo com paixão. Estamos ansiosos para trabalhar com você.</string>
+    <string name="gutenberg_native_warning_message">Mensagem de alerta</string>
     <string name="gutenberg_native_want_to_work_with_us">Quer trabalhar conosco?</string>
     <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Visitantes desejarão saber quem está do outro lado da página. Use este espaço para escrever algo sobre você, seu site, seu negócio ou qualquer coisa que deseje. Use os depoimentos abaixo para adicionar citações.</string>
+    <string name="gutenberg_native_usa">Brasil</string>
+    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Isso é um conteúdo de exemplo incluído no modelo para ilustrar seus recursos. Remova ou o substitua com suas próprias palavras e mídias.</string>
+    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">A melhor maneira de começar é parar de planejar e começar a executar.</string>
     <string name="gutenberg_native_team">Equipe</string>
     <string name="gutenberg_native_success_message">Mensagem de sucesso</string>
     <string name="gutenberg_native_strategy">Estratégia</string>
+    <string name="gutenberg_native_show_post_content">Mostrar conteúdo do post</string>
     <string name="gutenberg_native_services">Serviços</string>
+    <string name="gutenberg_native_samuel_the_dog">João da Silva</string>
+    <string name="gutenberg_native_sally_smith">Maria Aparecida</string>
     <string name="gutenberg_native_project_name">Título do projeto</string>
     <string name="gutenberg_native_position_or_job_title">Posição ou título do cargo</string>
     <string name="gutenberg_native_portfolio">Portfólio</string>
     <string name="gutenberg_native_only_show_excerpt">Mostrar apenas o resumo</string>
+    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Meu portfólio exibe diversos projetos feitos durante minha carreira. Veja minhas informações de contato abaixo e fale comigo.</string>
     <string name="gutenberg_native_link_to">Link para</string>
+    <string name="gutenberg_native_s_settings">Configurações de %s</string>
+    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Vamos conversar 👋 Não hesite em entrar em contato usando as informações abaixo ou me envie uma mensagem usando o formulário de contato.</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Vamos construir algo juntos!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Vamos construir algo juntos!</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pires</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">São as nossas escolhas que revelam o que realmente somos, muito mais do que as nossas qualidades.</string>
     <string name="gutenberg_native_inspiration">Inspiração</string>
     <string name="gutenberg_native_get_in_touch">Entre em contato</string>
     <string name="gutenberg_native_excerpt_length_words">Tamanho do resumo (em palavras)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Entre em contato: &lt;a href=\"mailto:e-mail@exemplo.com\">e-mail@exemplo.com&lt;/a></string>
+    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Não chore por que acabou. Sorria porque aconteceu.</string>
     <string name="gutenberg_native_customize">Personalizar</string>
     <string name="gutenberg_native_city_10100">Cidade, 01010&#8211;100</string>
     <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Uma pequena descrição dos serviços que você oferece.</string>
+    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Uma pequena biografia com sua história pessoal, conquistas ou fatos interessantes.</string>
+    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:email@exemplo.com.br\">email@exemplo.com.br&lt;/a></string>
+    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Uma descrição do projeto e trabalhos apresentados.</string>
+    <string name="gutenberg_native_555_555_1234">(11) 1234&#8211;5678</string>
+    <string name="gutenberg_native_10_street_road">Avenida Paulista, 1</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="post_list_tab_scheduled_posts">Agendado</string>
@@ -248,7 +317,7 @@ Language: pt_BR
     <string name="reader_my_likes_display_name">Curtidas</string>
     <string name="site_cannot_be_loaded">Não conseguimos carregar os dados de seu site no momento. Tente novamente mais tarde.</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de mídia do WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar o post no navegador.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar o post no navegador.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traduzir</string>
     <string name="gutenberg_native_title">Título:</string>
@@ -326,6 +395,8 @@ Language: pt_BR
     <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
     <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
     <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
+    <string name="dialog_gutenberg_informative_description_page">Agora você está usando o editor de blocos para novas páginas.Ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Agora você está usando o editor de blocos para novos posts. Ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
@@ -469,10 +540,6 @@ Language: pt_BR
     <string name="stats_widget_all_time_title">Até o momento</string>
     <string name="stats_widget_views_title">Visualizações nessa semana</string>
     <string name="stats_widget_add">Adicionar widget</string>
-    <string name="dialog_confirm_update_yes">Atualize agora</string>
-    <string name="dialog_confirm_update_message_page">Essa página publicada será atualizada imediatamente.</string>
-    <string name="dialog_confirm_update_message_post">Esse post publicado será atualizado imediatamente.</string>
-    <string name="dialog_confirm_update_title">Tudo pronto para atualizar?</string>
     <string name="plugin_fetching_error_after_at">Atualizar detalhes de plugins demorar mais do que o normal. Verifique novamente mais tarde.</string>
     <string name="plugin_install_site_ineligible_default_error">Se você tenha registrado um novo domínio, aguarde enquanto finalizamos sua configuração e tente novamente mais tarde.\n\nCaso contrário, pode ser que algo tenha dado errado e plugins não estejam disponíveis para esse site.</string>
     <string name="domain_contact_information_state_not_available_hint">Estado (indisponível)</string>
@@ -686,6 +753,9 @@ Language: pt_BR
     <string name="stats_no_data_for_period">Nenhum dado para esse período</string>
     <string name="preference_strip_image_location">Remover localização de mídia</string>
     <string name="stats_cannot_be_started">Não conseguimos abrir as estatísticas agora. Tente novamente mais tarde.</string>
+    <string name="gif_picker_endless_scroll_network_error">Alguns arquivos não puderam ser enviados devido a problemas com a conexão.</string>
+    <string name="gif_picker_empty_search_list">Nenhuma mídia corresponde à sua pesquisa</string>
+    <string name="gif_picker_initial_empty_text">Pesquisar para encontrar gifs para adicionar à sua biblioteca de mídias.</string>
     <string name="stats_author_views_label">Visualizações</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autores</string>
@@ -782,7 +852,6 @@ Language: pt_BR
     <string name="pages_delete_permanently">Excluir permanentemente</string>
     <string name="pages_move_to_trash">Mover para lixeira</string>
     <string name="pages_move_to_draft">Mover para rascunho</string>
-    <string name="pages_publish_now">Publicar agora</string>
     <string name="pages_set_parent">Configurar ascendente</string>
     <string name="pages_view">Ver</string>
     <string name="pages_trashed">Lixeira</string>
@@ -1035,7 +1104,6 @@ Language: pt_BR
     <string name="menu_html_mode_done_snackbar">Mudar para o modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Visualizar</string>
-    <string name="menu_publish_now">Publicar agora</string>
     <string name="menu_save_as_draft">Salvar como rascunho</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1098,10 +1166,6 @@ Language: pt_BR
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d páginas e %2$d de %3$d arquivos restantes</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post e %1$d de %2$d arquivos restantes</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 página e %1$d de %2$d arquivos restantes</string>
-    <string name="dialog_confirm_publish_yes">Publicar agora</string>
-    <string name="dialog_confirm_publish_message_page">Esta página será publicada imediatamente.</string>
-    <string name="dialog_confirm_publish_message_post">Este post será publicado imediatamente.</string>
-    <string name="dialog_confirm_publish_title">Pronto para publicar?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / páginas não enviados</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas não enviadas</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página não enviada</string>
@@ -1436,7 +1500,6 @@ Language: pt_BR
     <string name="post_settings_not_set">Não configurado</string>
     <string name="post_settings_more_options">Mais opções</string>
     <string name="post_settings_categories_and_tags">Categorias e tags</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Todas</string>
     <string name="top_level_category_name">Primeiro nível</string>
     <string name="category_parent">Categoria ascendente (opcional):</string>
@@ -1560,7 +1623,6 @@ Language: pt_BR
     <string name="media_upload_state_deleting">Excluindo</string>
     <string name="media_upload_state_uploading">Fazendo upload</string>
     <string name="media_upload_state_queued">Em espera</string>
-    <string name="keep_editing">Continuar editando</string>
     <string name="image_quality">Qualidade da imagem</string>
     <string name="error_all_media_upload_canceled">Todos os uploads de mídia foram cancelados devido a um erro desconhecido. Tente fazer upload novamente</string>
     <string name="error_unknown_post_type">Formato de post desconhecido</string>
@@ -1588,6 +1650,7 @@ Language: pt_BR
     <string name="pending_draft_one_day_2">Você sabia que \"%1$s\" ainda é um rascunho? Então é hora de publicar!</string>
     <string name="pending_draft_one_day_1">Você criou o rascunho \"%1$s\" ontem. Não se esqueça de publicá-lo!</string>
     <string name="reader_photo_by">Foto por %s</string>
+    <string name="reader_label_visit">Visitar site</string>
     <string name="swipe_for_more">Deslize para mais</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Você não tem permissão para ver este post. Tente fazer login em WordPress.com primeiro ou use o botão de ação no topo para abrir um navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">Você não tem permissão para ver este post. Tente fazer login em WordPress.com primeiro.</string>
@@ -2187,6 +2250,7 @@ Language: pt_BR
     <string name="reader_btn_unfollow">Seguindo</string>
     <string name="reader_btn_follow">Seguir </string>
     <string name="reader_btn_share">Compartilhar</string>
+    <string name="reader_view_reblog">Reblogar</string>
     <string name="reader_untitled_post">(Sem título)</string>
     <string name="comments_empty_list">Nenhum comentário ainda</string>
     <string name="empty_list_default">Esta lista está vazia</string>
@@ -2221,7 +2285,6 @@ Language: pt_BR
     <string name="httppassword">Senha HTTP</string>
     <string name="httpuser">Usuário HTTP</string>
     <string name="error_media_upload">Ocorreu um erro durante o envio de mídia</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Usuário ou senha incorreta.</string>
     <string name="log_in">Fazer login</string>
     <string name="username">Usuário</string>
@@ -2258,6 +2321,7 @@ Language: pt_BR
     <string name="no">Não</string>
     <string name="yes">Sim</string>
     <string name="notification_settings">Configurações de notificações</string>
+    <string name="publish_now">Publicar agora</string>
     <string name="reply">Responder</string>
     <string name="on">Ativado</string>
     <string name="preview">Pré-visualizar</string>

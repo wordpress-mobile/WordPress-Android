@@ -63,17 +63,21 @@ import org.wordpress.android.editor.EditorImagePreviewListener;
 import org.wordpress.android.editor.EditorImageSettingsListener;
 import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
+import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.GutenbergEditorFragment;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.EditorThemeActionBuilder;
 import org.wordpress.android.fluxc.generated.PostActionBuilder;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged;
 import org.wordpress.android.fluxc.model.CauseOfOnPostChanged.RemoteAutoSavePost;
+import org.wordpress.android.fluxc.model.EditorTheme;
+import org.wordpress.android.fluxc.model.EditorThemeSupport;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.PostImmutableModel;
@@ -83,6 +87,9 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.PrivateAtomicCookie;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
+import org.wordpress.android.fluxc.store.EditorThemeStore;
+import org.wordpress.android.fluxc.store.EditorThemeStore.FetchEditorThemePayload;
+import org.wordpress.android.fluxc.store.EditorThemeStore.OnEditorThemeChanged;
 import org.wordpress.android.fluxc.store.MediaStore;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
@@ -159,7 +166,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AutolinkUtils;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
@@ -181,6 +187,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -323,6 +330,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+    private Handler mShowPrepublishingBottomSheetHandler;
+    private Runnable mShowPrepublishingBottomSheetRunnable;
+
     private boolean mHtmlModeMenuStateOn = false;
 
     @Inject Dispatcher mDispatcher;
@@ -331,6 +341,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject PostStore mPostStore;
     @Inject MediaStore mMediaStore;
     @Inject UploadStore mUploadStore;
+    @Inject EditorThemeStore mEditorThemeStore;
     @Inject FluxCImageLoader mImageLoader;
     @Inject ShortcutUtils mShortcutUtils;
     @Inject QuickStartStore mQuickStartStore;
@@ -355,6 +366,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReblogUtils mReblogUtils;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
+    @Inject TenorFeatureConfig mTenorFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -589,6 +601,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             setupViewPager();
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+
+        setupPrepublishingBottomSheetRunnable();
     }
 
     @SuppressWarnings("unused")
@@ -691,7 +705,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mSite);
+            mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -772,6 +786,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
+        }
+
+        if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
+            mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
     }
 
@@ -983,7 +1001,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     ActivityLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
                     break;
                 case GIF:
-                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
+                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
                     break;
             }
         } else {
@@ -1067,6 +1085,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         shouldSwitchToGutenbergBeVisible(mEditorFragment, mSite)
                 );
             }
+        }
+
+        MenuItem contentInfo = menu.findItem(R.id.menu_content_info);
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            contentInfo.setOnMenuItemClickListener((menuItem) -> {
+                try {
+                    mEditorFragment.showContentInfo();
+                } catch (EditorFragmentNotAddedException e) {
+                    ToastUtils.showToast(WordPress.getContext(), R.string.toast_content_info_failed);
+                }
+                return true;
+            });
+        } else {
+            contentInfo.setVisible(false); // only show the menu item when for Gutenberg
         }
 
         return super.onPrepareOptionsMenu(menu);
@@ -1262,8 +1294,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private void logWrongMenuState(String logMsg) {
         AppLog.w(T.EDITOR, logMsg);
-        // Lets record this event in Sentry
-        CrashLoggingUtils.logException(new IllegalStateException(logMsg), T.EDITOR);
     }
 
     private void showEmptyPostErrorForSecondaryAction() {
@@ -1642,10 +1672,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
                 @Override
                 public void log(@NotNull String s) {
-                    // For now, we're wrapping up the actual log into an exception to reduce possibility
-                    // of information not travelling to our Crash Logging Service.
-                    // For more info: http://bit.ly/2oJHMG7 and http://bit.ly/2oPOtFX
-                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(s), T.EDITOR);
+                    AppLog.e(T.EDITOR, s);
                 }
 
                 @Override
@@ -1653,7 +1680,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (isError8828(throwable)) {
                         return;
                     }
-                    CrashLoggingUtils.logException(new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR);
+                    AppLog.e(T.EDITOR, throwable);
                 }
 
                 @Override
@@ -1661,8 +1688,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     if (isError8828(throwable)) {
                         return;
                     }
-                    CrashLoggingUtils.logException(
-                            new AztecEditorFragment.AztecLoggingException(throwable), T.EDITOR, s);
+                    AppLog.e(T.EDITOR, s);
                 }
             });
         }
@@ -1783,17 +1809,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
+    private void setupPrepublishingBottomSheetRunnable() {
+        mShowPrepublishingBottomSheetHandler = new Handler();
+        mShowPrepublishingBottomSheetRunnable = () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                    PrepublishingBottomSheetFragment.TAG);
+            if (fragment == null) {
+                PrepublishingBottomSheetFragment prepublishingFragment =
+                        PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
+                prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+            }
+        };
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
-
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                PrepublishingBottomSheetFragment.TAG);
-        if (fragment == null) {
-            PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
-            prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
-        }
+        long delayMs = 100;
+        mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
     }
 
     @Override public void onSubmitButtonClicked(boolean publishPost) {
@@ -1975,8 +2008,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
-                        boolean isWpCom = getSite().isWPCom();
+                        boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+
+                        EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
+                        Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
@@ -1990,7 +2027,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi);
+                                isSiteUsingWpComRestApi,
+                                themeBundle,
+                                WordPress.getUserAgent(),
+                                mTenorFeatureConfig.isEnabled());
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2330,7 +2370,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
-                case RequestCodes.GIF_PICKER:
+                case RequestCodes.GIF_PICKER_SINGLE_SELECT:
                     if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                         int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         mEditorMedia.addGifMediaToPostAsync(localIds);
@@ -2588,6 +2628,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
+    public void onAddGifClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection);
+    }
+
+    @Override
     public void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError) {
         if (mSite != null) {
             mReactNativeRequestHandler.performGetRequest(path, mSite, onResult, onError);
@@ -2792,6 +2837,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         refreshEditorContent();
         // probably here is best for Gutenberg to start interacting with
         if (mShowGutenbergEditor && mEditorFragment instanceof GutenbergEditorFragment) {
+            refreshEditorTheme();
             List<MediaModel> failedMedia =
                     mMediaStore.getMediaForPostWithState(mEditPostRepository.getPost(), MediaUploadState.FAILED);
             if (failedMedia != null && !failedMedia.isEmpty()) {
@@ -3013,6 +3059,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    private void refreshEditorTheme() {
+        FetchEditorThemePayload payload = new FetchEditorThemePayload(mSite);
+        mDispatcher.dispatch(EditorThemeActionBuilder.newFetchEditorThemeAction(payload));
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
+    public void onEditorThemeChanged(OnEditorThemeChanged event) {
+        if (!(mEditorFragment instanceof EditorThemeUpdateListener)) return;
+
+        if (mSite.getId() != event.getSiteId()) return;
+        EditorTheme editorTheme = event.getEditorTheme();
+
+        if (editorTheme == null) return;
+        EditorThemeSupport editorThemeSupport = editorTheme.getThemeSupport();
+        ((EditorThemeUpdateListener) mEditorFragment)
+                    .onEditorThemeUpdated(editorThemeSupport.toBundle());
+    }
     // EditPostActivityHook methods
 
     @Override
@@ -3071,12 +3135,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public Consumer<Exception> getExceptionLogger() {
-        return (Exception e) -> CrashLoggingUtils.logException(e, T.EDITOR);
+        return (Exception e) -> AppLog.e(T.EDITOR, e);
     }
 
     @Override
     public Consumer<String> getBreadcrumbLogger() {
-        return CrashLoggingUtils::log;
+        return (String s) -> AppLog.e(T.EDITOR, s);
     }
 
     private void updateAddingMediaToEditorProgressDialogState(ProgressDialogUiState uiState) {

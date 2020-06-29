@@ -285,7 +285,6 @@ Language: da_DK
     <string name="httppassword">HTTP-adgangskode</string>
     <string name="httpuser">HTTP-brugernavn</string>
     <string name="error_media_upload">Der opstod en fejl under overførsel af medie</string>
-    <string name="publish_date">Udgiv</string>
     <string name="incorrect_credentials">Forkert brugernavn eller adgangskode.</string>
     <string name="password">Kodeord</string>
     <string name="username">Brugernavn</string>
