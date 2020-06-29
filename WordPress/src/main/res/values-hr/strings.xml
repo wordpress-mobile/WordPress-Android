@@ -437,7 +437,6 @@ Language: hr
     <string name="httppassword">HTTP lozinka</string>
     <string name="httpuser">HTTP korisničko ime</string>
     <string name="error_media_upload">Dogodila se greška tijekom prijenosa medijskog zapisa</string>
-    <string name="publish_date">Objavi</string>
     <string name="incorrect_credentials">Neispravno korisničko ime ili lozinka.</string>
     <string name="password">Lozinka</string>
     <string name="username">Korisničko ime</string>

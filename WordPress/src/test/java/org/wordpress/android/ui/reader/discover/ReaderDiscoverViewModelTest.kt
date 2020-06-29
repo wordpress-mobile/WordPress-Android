@@ -2,6 +2,8 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -9,6 +11,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
@@ -27,6 +31,7 @@ class ReaderDiscoverViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var readerPostRepository: ReaderPostRepository
+    @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
 
     private val fakeDiscoverFeed = MutableLiveData<ReaderPostList>()
 
@@ -34,8 +39,14 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ReaderDiscoverViewModel(readerPostRepository, TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = ReaderDiscoverViewModel(readerPostRepository, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
         whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
+        whenever(
+                uiStateBuilder.mapPostToUiState(
+                        anyOrNull(), anyInt(), anyInt(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+                )
+        ).thenReturn(mock())
     }
 
     @Test

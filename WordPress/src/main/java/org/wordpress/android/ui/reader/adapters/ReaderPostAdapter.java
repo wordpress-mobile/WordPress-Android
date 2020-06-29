@@ -15,8 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -183,9 +181,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private class ReaderPostViewHolder extends RecyclerView.ViewHolder {
         final View mPostContainer;
 
-        private final ConstraintLayout mRootLayout;
-        private final ConstraintSet mRootLayoutConstraintSet = new ConstraintSet();
-
         private final TextView mTxtTitle;
         private final TextView mTxtText;
         private final TextView mTxtAuthorAndBlogName;
@@ -217,8 +212,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
 
             mPostContainer = itemView.findViewById(R.id.post_container);
-            mRootLayout = itemView.findViewById(R.id.root_layout);
-            mRootLayoutConstraintSet.clone(mRootLayout);
 
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtText = itemView.findViewById(R.id.text_excerpt);
@@ -446,18 +439,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
 
-        // Set title below thumbnail strip if card type is GALLERY
-        View txtTitlePreviousView = post.getCardType() == ReaderCardType.GALLERY
-                ? holder.mThumbnailStrip : holder.mImgFeatured;
-        holder.mRootLayoutConstraintSet.connect(
-                holder.mTxtTitle.getId(),
-                ConstraintSet.TOP,
-                txtTitlePreviousView.getId(),
-                ConstraintSet.BOTTOM,
-                mMarginExtraLarge
-        );
-        holder.mRootLayoutConstraintSet.applyTo(holder.mRootLayout);
-
         String urlString = "";
         if (post.hasBlogUrl()) {
             urlString = UrlUtils.removeScheme(post.getBlogUrl());
@@ -500,7 +481,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.mTxtPhotoTitle.setText(post.getTitle());
             mImageManager.loadImageWithCorners(
                 holder.mImgFeatured,
-                ImageType.READER,
+                ImageType.PHOTO_ROUNDED_CORNERS,
                 post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                 imgFeaturedCornerRadius
             );
@@ -528,7 +509,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     @Override public void showThumbnail(String thumbnailUrl) {
                         mImageManager.loadImageWithCorners(
                             holder.mImgFeatured,
-                            ImageType.READER,
+                            ImageType.PHOTO_ROUNDED_CORNERS,
                             thumbnailUrl,
                             imgFeaturedCornerRadius
                         );
@@ -547,7 +528,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else if (post.hasFeaturedImage()) {
                 mImageManager.loadImageWithCorners(
                     holder.mImgFeatured,
-                    ImageType.READER,
+                    ImageType.PHOTO_ROUNDED_CORNERS,
                     post.getFeaturedImageForDisplay(mPhotonWidth, mPhotonHeight),
                     imgFeaturedCornerRadius
                 );
