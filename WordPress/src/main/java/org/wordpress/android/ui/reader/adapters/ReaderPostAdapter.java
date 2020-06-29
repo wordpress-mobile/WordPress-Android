@@ -39,7 +39,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState;
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;

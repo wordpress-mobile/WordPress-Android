@@ -3,8 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers

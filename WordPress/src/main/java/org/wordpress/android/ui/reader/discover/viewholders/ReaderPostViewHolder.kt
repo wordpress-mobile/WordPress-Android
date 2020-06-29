@@ -7,9 +7,9 @@ import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderThumbnailTable
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
