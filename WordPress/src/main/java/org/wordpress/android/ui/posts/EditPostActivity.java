@@ -2028,6 +2028,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
                                 themeBundle,
+                                WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled());
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
