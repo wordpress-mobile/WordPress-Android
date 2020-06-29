@@ -9,7 +9,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.ActionUiState
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -129,14 +129,14 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun updateActionButton(postId: Long, blogId: Long, state: ActionUiState, view: View) {
+    private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
         if (view is ReaderIconCountView) {
             view.setCount(state.count)
         }
         view.isEnabled = state.isEnabled
         view.isSelected = state.isSelected
         view.contentDescription = state.contentDescription?.let { uiHelpers.getTextOfUiString(view.context, it) }
-        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.isSelected) }
+        view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.isSelected, state.type) }
     }
 
     private fun loadVideoThumbnail(state: ReaderPostUiState) {

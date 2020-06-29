@@ -40,6 +40,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
@@ -67,6 +68,7 @@ import javax.inject.Inject;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
+import kotlin.jvm.functions.Function4;
 
 public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ImageManager mImageManager;
@@ -329,24 +331,28 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         Context ctx = holder.getViewContext();
-
-        Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> {
-            toggleLike(ctx, post, position, holder);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> {
-            mReblogActionListener.reblog(post);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onCommentClicked = (postId, blogId, aBoolean) -> {
-            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
-            return Unit.INSTANCE;
-        };
+        Function4<Long, Long, Boolean, ReaderPostCardActionType, Unit> onButtonClicked =
+                (postId, blogId, selected, type) -> {
+                    //noinspection EnumSwitchStatementWhichMissesCases
+                    switch (type) {
+                        case BOOKMARK:
+                            toggleBookmark(post.blogId, post.postId);
+                            notifyItemChanged(position);
+                            break;
+                        case LIKE:
+                            toggleLike(ctx, post, position, holder);
+                            break;
+                        case REBLOG:
+                            mReblogActionListener.reblog(post);
+                            break;
+                        case COMMENTS:
+                            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
+                            break;
+                        default:
+                            throw new IllegalArgumentException("onClick invoked with an unexpected type: " + type);
+                    }
+                    return Unit.INSTANCE;
+                };
         Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
             if (mPostSelectedListener != null) {
                 mPostSelectedListener.onPostSelected(post);
@@ -409,10 +415,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mPhotonHeight,
                         postListType,
                         isBookmarksList(),
-                        onBookmarkClicked,
-                        onLikeClicked,
-                        onReblogClicked,
-                        onCommentClicked,
+                        onButtonClicked,
                         onItemClicked,
                         onItemRendered,
                         onDiscoverSectionClicked,
