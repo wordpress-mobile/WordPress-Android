@@ -62,7 +62,6 @@ Language: uz
     <string name="httppassword">HTTP parol</string>
     <string name="httpuser">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
-    <string name="publish_date">Chop etish</string>
     <string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
     <string name="log_in">Kirish</string>
     <string name="password">Parol</string>
