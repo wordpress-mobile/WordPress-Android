@@ -221,8 +221,11 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `if setupBottomSheetPostAndShow is triggered then call publish immediately use case`() {
+        // arrange
+        whenever(editPostRepository.postChanged).thenReturn(mock())
+
         // act
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, mock(), mock())
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
         viewModel.setupCurrentPostAndShowBottomsheet(mock())
 
         // assert
