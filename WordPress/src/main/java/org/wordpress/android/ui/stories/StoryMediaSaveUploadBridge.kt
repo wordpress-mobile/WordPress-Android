@@ -60,6 +60,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     @Inject lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
 
+    // TODO remove this variable. We only need to remember this so we can tell if this is the alpha test site
+    private lateinit var currentSiteModel: SiteModel
+
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
     fun onCreate(source: LifecycleOwner) {
@@ -133,6 +136,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             EventBus.getDefault().removeStickyEvent(event)
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
+                currentSiteModel = site
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
                 // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
@@ -147,7 +151,17 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
         // Create a gallery shortcode and placeholders for Media Ids
-        saveStoryGutenbergBlockUseCase.buildWPGallery(editPostRepository, mediaFiles)
+        // TODO remove this code, for now it checks whether this is one of our test sites that supports
+        // the new GB block or not. Fallbacks to WP Gallery when not the case.
+        // is it the test site or not?
+        // https://dekervit.wpsandbox.me/
+        // https://particular-wildcat.jurassic.ninja/
+        if (isThisAnAlphaTestSite(mediaFiles.entries.iterator().next().value)) {
+            saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(editPostRepository, mediaFiles)
+        } else {
+            // just create a WP Gallery
+            saveStoryGutenbergBlockUseCase.buildWPGalleryInPost(editPostRepository, mediaFiles)
+        }
     }
 
     override fun getImmutablePost(): PostImmutableModel {
@@ -162,5 +176,15 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
         // no op
+    }
+
+    private fun isThisAnAlphaTestSite(mediaFile: MediaFile): Boolean {
+        val siteUrl = requireNotNull(currentSiteModel.url)
+        return (Uri.parse(siteUrl).host in alphaSites && mediaFile.blogId.toInt() == currentSiteModel.id)
+    }
+
+    companion object {
+        val alphaSites =
+                arrayOf("particular-wildcat.jurassic.ninja", "dekervit.wpsandbox.me")
     }
 }
