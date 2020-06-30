@@ -13,7 +13,7 @@ enum class ImageType {
     BLAVATAR_CIRCULAR,
     IMAGE,
     PHOTO,
-    READER,
+    PHOTO_ROUNDED_CORNERS,
     PLAN,
     PLUGIN,
     THEME,

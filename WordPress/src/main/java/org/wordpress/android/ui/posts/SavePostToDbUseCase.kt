@@ -15,10 +15,10 @@ class SavePostToDbUseCase
     private val uploadUtils: UploadUtilsWrapper,
     private val dateTimeUtils: DateTimeUtilsWrapper,
     private val dispatcher: Dispatcher,
-    private val pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper
+    private val pendingDraftsNotificationsUtils: PendingDraftsNotificationsUtilsWrapper,
+    private val context: Context
 ) {
     fun savePostToDb(
-        context: Context,
         postRepository: EditPostRepository,
         site: SiteModel
     ) {
@@ -43,14 +43,13 @@ class SavePostToDbUseCase
                 post.setIsLocallyChanged(true)
             }
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601())
-            handlePendingDraftNotifications(context, postRepository)
+            handlePendingDraftNotifications(postRepository)
             postRepository.savePostSnapshot()
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
         }
     }
 
     private fun handlePendingDraftNotifications(
-        context: Context,
         editPostRepository: EditPostRepository
     ) {
         if (editPostRepository.status == PostStatus.DRAFT) {

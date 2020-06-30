@@ -7,4 +7,8 @@ class BuildConfigWrapper @Inject constructor() {
     fun getAppVersionCode(): Int {
         return BuildConfig.VERSION_CODE
     }
+
+    fun getAppVersionName(): String {
+        return BuildConfig.VERSION_NAME
+    }
 }

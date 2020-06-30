@@ -68,7 +68,8 @@ class FeatureAnnouncementViewModel @Inject constructor(
 
     private fun loadFeatures() {
         launch {
-            val latestAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement()
+            val latestAnnouncement = featureAnnouncementProvider.getLatestFeatureAnnouncement(true)
+                    ?: featureAnnouncementProvider.getLatestFeatureAnnouncement(false) // fallback to remote just in case. Should not happen.
             if (latestAnnouncement != null) {
                 appPrefsWrapper.featureAnnouncementShownVersion = latestAnnouncement.announcementVersion
                 appPrefsWrapper.lastFeatureAnnouncementAppVersionCode = buildConfigWrapper.getAppVersionCode()
