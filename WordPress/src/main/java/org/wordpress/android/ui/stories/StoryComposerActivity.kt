@@ -27,8 +27,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -45,6 +44,7 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
@@ -90,6 +90,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    @Inject lateinit var postUtilsWrapper: PostUtilsWrapper
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -289,14 +290,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private fun saveInitialPost() {
         editPostRepository.set {
             val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(DRAFT.toString())
+            post.setStatus(PostStatus.DRAFT.toString())
             post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
             post
         }
         editPostRepository.savePostSnapshot()
         // this is an artifact to be able to call savePostToDb()
-        // also, Story posts are always PUBLISHED
-        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
         site?.let {
             savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
         }
@@ -417,6 +416,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        prepareAndProcessStoryPostForPublishing()
+    }
+
+    private fun prepareAndProcessStoryPostForPublishing() {
+        editPostRepository.update { postModel ->
+            postUtilsWrapper.preparePostForPublish(
+                    postModel,
+                    requireNotNull(site)
+            )
+        }
         processStorySaving()
     }
 }
