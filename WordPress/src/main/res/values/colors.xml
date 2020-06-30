@@ -6,6 +6,7 @@
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
+    <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>
     <color name="background_notification_unread">#e6eff3</color>
     <color name="background_shortcut">#f5f5f5</color>

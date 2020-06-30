@@ -1,3 +1,6 @@
+15.3
+-----
+ 
 15.2
 -----
 * [**] Fixes tons of rendering issues in Reader post detail by changing the technical solution (shared CSS file).

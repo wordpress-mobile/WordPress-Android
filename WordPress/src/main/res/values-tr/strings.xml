@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-11 16:54:11+0000
+Translation-Revision-Date: 2020-06-25 14:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için çok çalışıyoruz. Bu arada, bu bloğu cihazınızın web tarayıcısını kullanarak da düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Bloğu tarayıcıda düzenle</string>
+    <string name="gutenberg_native_dismiss">Kapat</string>
+    <string name="prepublishing_nudges_visibility_password">Parola korumalı</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
+    <string name="prepublishing_tags_description">Etiketler okuyuculara bir yazının ne hakkında olduğunu söylemeye yardımcı olur.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Yayınla</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Etiketleri ekle</string>
+    <string name="prepublishing_nudges_back_button">Geri</string>
+    <string name="prepublishing_nudges_home_save_button">Şimdi kaydet</string>
+    <string name="prepublishing_nudges_home_submit_button">Şimdi gönder</string>
+    <string name="prepublishing_nudges_home_schedule_button">Şimdi zamanla</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Şuraya yayımlanıyor:</string>
+    <string name="prepublishing_nudges_tags_action">Etiketler</string>
+    <string name="prepublishing_nudges_publish_action">Yayımlama tarihi</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">İptal</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Çöpe atılan yazılar düzenlenemez. Üzerinde çalışabilmek için bu yazının durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
+    <string name="reader_label_choose_your_interests">İlgi alanlarınızı seçin</string>
+    <string name="reader_label_discover_follow_tags">Sevdiğiniz etiketleri keşfedin ve takip edin</string>
+    <string name="reader_choose_interests_content_description">İlgi alanlarınızı seçin</string>
+    <string name="reader_btn_done">Tamamlandı</string>
+    <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
+    <string name="post_status_post_published">Yayımlandı</string>
+    <string name="post_status_post_trashed">Çöpe taşındı</string>
+    <string name="post_status_post_scheduled">Zamanlandı</string>
+    <string name="publish_date">Yayımlama tarihi</string>
+    <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
+    <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı gerektirir.</string>
+    <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
+    <string name="status_and_visibility">Durum ve görünürlük</string>
+    <string name="update_now">Şimdi güncelle</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">%s ögesini kaldır</string>
+    <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
     <string name="gutenberg_native_move_s_up">%s Blokunu Yukarı Taşı</string>
     <string name="gutenberg_native_move_s_right">%s Blokunu Sağa Taşı</string>
     <string name="gutenberg_native_move_s_left">%s Sola Taşı</string>
@@ -22,9 +57,14 @@ Language: tr
     <string name="suggestion_invalid_user">“%s geçerli bir kullanıcı değil”</string>
     <string name="site_settings_select_page">Sayfa seç</string>
     <string name="site_settings_posts_page">Yazılar sayfası</string>
+    <string name="site_settings_static_homepage">Sabit ana sayfa</string>
+    <string name="site_settings_classic_blog">Klasik blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
+    <string name="site_settings_failed_update_homepage_settings">Ana sayfa ayarları güncellenemedi, internet bağlantınızı kontrol edin</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Sayfalar yüklenmeden önce ana sayfa ayarları kaydedilemez</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Ana sayfa ayarları kaydedilemiyor</string>
     <string name="site_settings_accept_homepage">Kabul et</string>
+    <string name="site_settings_failed_to_load_pages">Sayfalar yüklemesi başarısız</string>
     <string name="site_settings_homepage_settings_description">En son gönderilerinizi görüntüleyen bir ana sayfa (klasik blog) veya sabit/statik bir sayfa seçin.</string>
     <string name="site_settings_homepage_settings">Ana sayfa ayarları</string>
     <string name="site_settings_homepage">Ana sayfa</string>
@@ -277,7 +317,7 @@ Language: tr
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu gönderiyi web’de de düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu yazıyı webde de düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_title">Başlık:</string>
@@ -500,10 +540,6 @@ Language: tr
     <string name="stats_widget_all_time_title">Tüm zamanlar</string>
     <string name="stats_widget_views_title">Bu Haftadan Görünümler</string>
     <string name="stats_widget_add">Pencere öğesi ekle</string>
-    <string name="dialog_confirm_update_yes">Şimdi güncelle</string>
-    <string name="dialog_confirm_update_message_page">Yayınlanan bu sayfa hemen güncellenecek.</string>
-    <string name="dialog_confirm_update_message_post">Yayınlanan bu gönderi hemen güncellenecek.</string>
-    <string name="dialog_confirm_update_title">Güncellemeye Hazır mısınız?</string>
     <string name="plugin_fetching_error_after_at">Eklenti ayrıntılarının yenilenmesi normalden daha uzun sürer. Lütfen daha sonra tekrar kontrol edin.</string>
     <string name="plugin_install_site_ineligible_default_error">Bir alan adı kaydettirdiyseniz lütfen kayıt tamamlanana kadar bekleyin ve ardından yeniden deneyin.\n\nAksi takdirde, bir şeyler yanlış gitmiş olabilir ve eklenti özelliği bu site için kullanılamayabilir.</string>
     <string name="domain_contact_information_state_not_available_hint">Eyalet (mevcut değil)</string>
@@ -816,7 +852,6 @@ Language: tr
     <string name="pages_delete_permanently">Kalıcı olarak sil</string>
     <string name="pages_move_to_trash">Çöpe taşı</string>
     <string name="pages_move_to_draft">Taslağa taşı</string>
-    <string name="pages_publish_now">Şimdi yayınla</string>
     <string name="pages_set_parent">Ebeveyn belirle</string>
     <string name="pages_view">Görüntüle</string>
     <string name="pages_trashed">Çöpe atıldı</string>
@@ -1069,7 +1104,6 @@ Language: tr
     <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML modu</string>
     <string name="menu_preview">Önizleme</string>
-    <string name="menu_publish_now">Şimdi yayınla</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1132,10 +1166,6 @@ Language: tr
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d sayfa ve %2$d / %3$d dosya kaldı</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 yazı ve %1$d / %2$d dosya kaldı</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 sayfa ve %1$d / %2$d dosya kaldı</string>
-    <string name="dialog_confirm_publish_yes">Şimdi yayınla</string>
-    <string name="dialog_confirm_publish_message_page">Bu sayfa hemen yayınlanacak.</string>
-    <string name="dialog_confirm_publish_message_post">Bu yazı hemen yayınlanacak.</string>
-    <string name="dialog_confirm_publish_title">Yayınlanmaya hazır mı?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d yazı/sayfa karşıya yüklenmedi</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sayfa karşıya yüklenmedi</string>
     <string name="media_file_page_singular_only_not_uploaded">1 sayfa karşıya yüklenmedi</string>
@@ -1470,7 +1500,6 @@ Language: tr
     <string name="post_settings_not_set">Belirlenmemiş</string>
     <string name="post_settings_more_options">Daha fazla seçenek</string>
     <string name="post_settings_categories_and_tags">Kategoriler ve etiketler</string>
-    <string name="post_settings_status">Durum</string>
     <string name="notifications_tab_title_all">Tümü</string>
     <string name="top_level_category_name">Üst seviye</string>
     <string name="category_parent">Üst kategori (tercihe bağlı):</string>
@@ -1594,7 +1623,6 @@ Language: tr
     <string name="media_upload_state_deleting">Siliniyor</string>
     <string name="media_upload_state_uploading">Yükleniyor</string>
     <string name="media_upload_state_queued">Sırada</string>
-    <string name="keep_editing">Düzenlemeye devam et</string>
     <string name="image_quality">Görsel kalitesi</string>
     <string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
@@ -2257,7 +2285,6 @@ Language: tr
     <string name="httppassword">HTTP parolası</string>
     <string name="httpuser">HTTP kullanıcı adı</string>
     <string name="error_media_upload">Ortam dosyası yüklenirken bir hata oluştu</string>
-    <string name="publish_date">Yayımla</string>
     <string name="incorrect_credentials">Geçersiz kullanıcı adı veya parola.</string>
     <string name="log_in">Giriş yap</string>
     <string name="username">Kullanıcı adı</string>
@@ -2294,6 +2321,7 @@ Language: tr
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
     <string name="notification_settings">Bildirim ayarları</string>
+    <string name="publish_now">Şimdi yayınla</string>
     <string name="reply">Cevapla</string>
     <string name="on">üstünde</string>
     <string name="preview">Önizleme</string>
