@@ -509,7 +509,6 @@
     <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
     <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
     <dimen name="story_thumbnail_margin">6dp</dimen>
-    <dimen name="prepublishing_story_title_thumbnail_corner_radius">4dp</dimen>
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
 </resources>
