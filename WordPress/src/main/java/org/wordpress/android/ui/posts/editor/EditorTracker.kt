@@ -72,7 +72,11 @@ class EditorTracker @Inject constructor(
     }
 
     @JvmOverloads
-    fun trackEditorEvent(event: TrackableEvent, editorName: String, properties: MutableMap<String, String> = mutableMapOf()) {
+    fun trackEditorEvent(
+        event: TrackableEvent,
+        editorName: String,
+        properties: MutableMap<String, String> = mutableMapOf()
+    ) {
         val currentStat = when (event) {
             TrackableEvent.BOLD_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_BOLD
             TrackableEvent.BLOCKQUOTE_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_BLOCKQUOTE
@@ -105,8 +109,10 @@ class EditorTracker @Inject constructor(
             TrackableEvent.UNDERLINE_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_UNDERLINE
             TrackableEvent.REDO_TAPPED -> Stat.EDITOR_TAPPED_REDO
             TrackableEvent.UNDO_TAPPED -> Stat.EDITOR_TAPPED_UNDO
-            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED -> Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED
-            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN -> Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN
+            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED ->
+                Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED
+            TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN ->
+                Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN
         }
 
         if (properties.isEmpty()) {
