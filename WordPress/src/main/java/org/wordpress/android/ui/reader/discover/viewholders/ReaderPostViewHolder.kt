@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
@@ -172,7 +171,7 @@ class ReaderPostViewHolder(
     private fun onMoreClicked(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
         // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
         val listPopup = ListPopupWindow(v.context)
-        listPopup.width = v.context.resources.getDimensionPixelSize(dimen.menu_item_width)
+        listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
         listPopup.setAdapter(ReaderMenuAdapter(v.context, uiHelpers, actions))
         listPopup.setDropDownGravity(Gravity.END)
         listPopup.anchorView = v
