@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
+import android.view.View
+import androidx.annotation.AttrRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -66,6 +68,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
                                 onMoreButtonClicked = this::onMoreButtonClicked,
+                                onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                onPostHeaderViewClicked = this::onPostHeaderClicked,
                                 postListType = TAG_FOLLOWED
                         )
                     }
@@ -89,6 +93,14 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir implement action
     }
 
+    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
+        // TODO malinjir implement action
+    }
+
+    private fun onPostHeaderClicked(postId: Long, blogId: Long) {
+        // TODO malinjir implement action
+    }
+
     private fun onItemClicked(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemClicked")
     }
@@ -101,7 +113,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnDiscoverClicked")
     }
 
-    private fun onMoreButtonClicked(postId: Long, blogId: Long) {
+    // TODO malinjir get rid of the view reference
+    private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
         AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
@@ -144,11 +157,18 @@ class ReaderDiscoverViewModel @Inject constructor(
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
             val commentsAction: ActionUiState,
+            val postHeaderClickData: PostHeaderClickData?,
             val onItemClicked: (Long, Long) -> Unit,
             val onItemRendered: (Long, Long) -> Unit,
-            val onMoreButtonClicked: (Long, Long) -> Unit
+            val onMoreButtonClicked: (Long, Long, View) -> Unit,
+            val onVideoOverlayClicked: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
+
+            data class PostHeaderClickData(
+                val onPostHeaderViewClicked: ((Long, Long) -> Unit)?,
+                @AttrRes val background: Int
+            )
 
             data class GalleryThumbnailStripData(
                 val images: ReaderImageList,

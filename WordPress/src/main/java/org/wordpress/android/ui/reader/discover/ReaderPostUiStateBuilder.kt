@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.view.View
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCa
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
@@ -55,10 +57,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onItemClicked: (Long, Long) -> Unit,
         onItemRendered: (Long, Long) -> Unit,
         onDiscoverSectionClicked: (Long, Long) -> Unit,
-        onMoreButtonClicked: (Long, Long) -> Unit
+        onMoreButtonClicked: (Long, Long, View) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
-        // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
-
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
@@ -83,8 +85,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 commentsAction = buildCommentsSection(post, isBookmarkList, onCommentsClicked),
                 onItemClicked = onItemClicked,
                 onItemRendered = onItemRendered,
-                onMoreButtonClicked = onMoreButtonClicked
+                onMoreButtonClicked = onMoreButtonClicked,
+                onVideoOverlayClicked = onVideoOverlayClicked,
+                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
         )
+    }
+
+    private fun buildOnPostHeaderViewClicked(
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType
+    ): PostHeaderClickData? {
+        return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
+            PostHeaderClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
+        } else {
+            null
+        }
     }
 
     private fun buildBlogUrl(post: ReaderPost) = post
@@ -201,6 +216,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     contentDescription = UiStringText(
                             readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
                     ),
+                    count = post.numLikes,
                     onClicked = if (accountStore.hasAccessToken()) onClicked else null
             )
         } else {

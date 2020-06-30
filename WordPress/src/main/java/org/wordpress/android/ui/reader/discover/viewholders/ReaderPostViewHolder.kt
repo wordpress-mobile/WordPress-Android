@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.reader_cardview_post.*
@@ -13,6 +14,8 @@ import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.expandTouchTargetArea
+import org.wordpress.android.util.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.image.ImageType.PHOTO_ROUNDED_CORNERS
@@ -23,8 +26,16 @@ class ReaderPostViewHolder(
     private val imageManager: ImageManager,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_cardview_post) {
+    val viewContext: Context = post_container.context
+
+    init {
+        layout_discover.expandTouchTargetArea(R.dimen.reader_discover_layout_extra_padding, true)
+        image_more.expandTouchTargetArea(R.dimen.reader_more_image_extra_padding, false)
+    }
+
     override fun onBind(uiState: ReaderCardUiState) {
         val state = uiState as ReaderPostUiState
+        // TODO malinjir animate like button on click
 
         // Header section
         updateAvatarOrBlavatar(state)
@@ -33,7 +44,18 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.dateLine)
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { state.onMoreButtonClicked.invoke(uiState.postId, uiState.blogId) }
+        image_more.setOnClickListener { state.onMoreButtonClicked.invoke(uiState.postId, uiState.blogId, image_more) }
+        layout_post_header.setBackgroundResource(
+                layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
+        )
+        uiState.postHeaderClickData?.onPostHeaderViewClicked?.let {
+            layout_post_header.setOnClickListener {
+                uiState.postHeaderClickData.onPostHeaderViewClicked.invoke(uiState.postId, uiState.blogId)
+            }
+        } ?: run {
+            layout_post_header.setOnClickListener(null)
+            layout_post_header.isClickable = false
+        }
 
         // Featured image section
         updateFeaturedImage(state)
