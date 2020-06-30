@@ -481,6 +481,16 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_AGENT, userAgent);
 
         startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
+
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("block", blockName);
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN, properties);
+    }
+
+    private void trackWebViewClosed(String action) {
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("action", action);
+        mEditorFragmentListener.onTrackableEvent(TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED, properties);
     }
 
     @Override
@@ -492,6 +502,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                trackWebViewClosed("save");
+            } else {
+                trackWebViewClosed("dismiss");
             }
         }
     }
