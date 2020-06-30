@@ -1,0 +1,4 @@
+15.1:
+Block editor improvements: Scheduling, tag, and visibility settings pop up in the post editor and post list when you tap Publish — tweak them and tap “Publish Now” to complete publication. Pressing enter after adding a caption in Image, Video, Gallery, Quote, and Pullquote blocks automatically adds a new block.
+
+Fixes: Video thumbnails, settings, and preview display properly in the Media section on private sites. Notifications and Install Jetpack tabs no longer display on top of one another.

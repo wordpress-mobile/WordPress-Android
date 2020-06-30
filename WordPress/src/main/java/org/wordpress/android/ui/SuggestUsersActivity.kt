@@ -1,12 +1,13 @@
 package org.wordpress.android.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.database.DataSetObserver
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.suggest_users_activity.*
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.widgets.SuggestionAutoCompleteText
 
 class SuggestUsersActivity : LocaleAwareActivity() {
     private var suggestionServiceConnectionManager: SuggestionServiceConnectionManager? = null
@@ -46,6 +48,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
 
     private fun initializeActivity(siteModel: SiteModel) {
         siteId = siteModel.siteId
+
         initializeSuggestionAdapter(siteModel)
 
         rootView.setOnClickListener {
@@ -61,21 +64,18 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 finishWithId(suggestionUserId)
             }
 
+            setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_UP) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        return@setOnKeyListener exitIfOnlyOneMatchingUser()
+                    }
+                }
+                false
+            }
+
             setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
-                        suggestionAdapter?.getItem(0)?.userLogin
-                    } else {
-                        null
-                    }
-                    if (onlySuggestedUser != null) {
-                        finishWithId(onlySuggestedUser)
-                    } else {
-                        // If there is not exactly 1 suggestion, notify that entered text is not a valid user
-                        val message = getString(R.string.suggestion_invalid_user, text)
-                        ToastUtils.showToast(this@SuggestUsersActivity, message)
-                    }
-                    true
+                    exitIfOnlyOneMatchingUser()
                 } else {
                     false
                 }
@@ -86,8 +86,6 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 // the dropdown to always be visible.
                 post { showDropDown() }
             }
-
-            setDropDownBackgroundDrawable(ColorDrawable(0))
 
             // Insure the text always starts with an "@"
             addTextChangedListener(object : TextWatcher {
@@ -116,21 +114,44 @@ class SuggestUsersActivity : LocaleAwareActivity() {
                 setSelection(1)
             }
 
+            updateEmptyView()
             post { requestFocus() }
+            showDropdownOnTouch()
+        }
+    }
 
-            setOnTouchListener { _, _ ->
-                // Prevent touching the view from dismissing the suggestion list if it's not empty
-                if (adapter.count > 0) {
-                    showDropDown()
-                }
-                false
+    private fun exitIfOnlyOneMatchingUser(): Boolean {
+        val onlySuggestedUser = if (suggestionAdapter?.count == 1) {
+            suggestionAdapter?.getItem(0)?.userLogin
+        } else {
+            null
+        }
+
+        if (onlySuggestedUser != null) {
+            finishWithId(onlySuggestedUser)
+        } else {
+            // If there is not exactly 1 suggestion, notify that entered text is not a valid user
+            val message = getString(R.string.suggestion_invalid_user, autocompleteText.text)
+            ToastUtils.showToast(this@SuggestUsersActivity, message)
+        }
+
+        return onlySuggestedUser != null
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun SuggestionAutoCompleteText.showDropdownOnTouch() {
+        setOnTouchListener { _, _ ->
+            // Prevent touching the view from dismissing the suggestion list if it's not empty
+            if (!adapter.isEmpty) {
+                showDropDown()
             }
+            false
         }
     }
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.do_nothing, R.anim.fade_out)
+        overridePendingTransition(R.anim.do_nothing, R.anim.do_nothing)
     }
 
     private fun finishWithId(userId: String?) {
@@ -141,19 +162,22 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     }
 
     private fun initializeSuggestionAdapter(site: SiteModel) {
-        if (!SiteUtils.isAccessedViaWPComRest(site)) {
-            AppLog.d(AppLog.T.EDITOR, "Cannot setup user suggestions for non-WPCom site")
-        } else {
+        if (SiteUtils.isAccessedViaWPComRest(site)) {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
-            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)
-            adapter?.registerDataSetObserver(object : DataSetObserver() {
-                override fun onChanged() {
-                    updateEmptyViewVisibility(adapter.isEmpty)
-                }
-                override fun onInvalidated() {
-                    updateEmptyViewVisibility(true)
-                }
-            })
+            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)?.apply {
+                setBackgroundColorAttr(R.attr.colorGutenbergBackground)
+
+                registerDataSetObserver(object : DataSetObserver() {
+                    override fun onChanged() {
+                        updateEmptyView()
+                    }
+
+                    override fun onInvalidated() {
+                        updateEmptyView()
+                    }
+                })
+            }
+
             autocompleteText.setAdapter(adapter)
 
             suggestionServiceConnectionManager = connectionManager
@@ -161,11 +185,21 @@ class SuggestUsersActivity : LocaleAwareActivity() {
         }
     }
 
-    private fun updateEmptyViewVisibility(isVisible: Boolean) {
-        empty_view.visibility = if (isVisible) {
-            View.VISIBLE
+    private fun updateEmptyView() {
+        val hasSuggestions = suggestionAdapter?.suggestionList?.isNotEmpty() == true
+        val showingSuggestions = suggestionAdapter?.isEmpty == false
+
+        val viewText = if (hasSuggestions) {
+            R.string.suggestion_no_matching_users
         } else {
+            R.string.loading
+        }
+        empty_view.text = getString(viewText)
+
+        empty_view.visibility = if (showingSuggestions) {
             View.GONE
+        } else {
+            View.VISIBLE
         }
     }
 
