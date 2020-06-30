@@ -484,13 +484,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         HashMap<String, String> properties = new HashMap<>();
         properties.put("block", blockName);
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN, properties);
+        mEditorFragmentListener.onTrackableEvent(
+                TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
+                properties);
     }
 
     private void trackWebViewClosed(String action) {
         HashMap<String, String> properties = new HashMap<>();
         properties.put("action", action);
-        mEditorFragmentListener.onTrackableEvent(TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED, properties);
+        mEditorFragmentListener.onTrackableEvent(
+                TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
+                properties);
     }
 
     @Override
