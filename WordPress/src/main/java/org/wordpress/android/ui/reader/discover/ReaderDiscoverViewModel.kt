@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
@@ -62,7 +63,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onReblogClicked = this::onReblogClicked,
                                 onCommentsClicked = this::onCommentsClicked,
                                 onItemClicked = this::onItemClicked,
-                                onItemRendered = this::onItemRendered
+                                onItemRendered = this::onItemRendered,
+                                onDiscoverSectionClicked = this::onDiscoverClicked,
+                                onMoreButtonClicked = this::onMoreButtonClicked,
+                                postListType = TAG_FOLLOWED
                         )
                     }
             )
@@ -93,6 +97,14 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnItemRendered")
     }
 
+    private fun onDiscoverClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnDiscoverClicked")
+    }
+
+    private fun onMoreButtonClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnMoreButtonClicked")
+    }
+
     private fun loadPosts() {
         // TODO malinjir we'll remove this method when the repositories start managing the requests automatically
         launch(bgDispatcher) {
@@ -121,7 +133,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             val photoTitle: String?,
             val featuredImageUrl: String?,
             val featuredImageCornerRadius: UiDimen,
-            val videoThumbnailUrl: String?,
+            val fullVideoUrl: String?,
             val avatarOrBlavatarUrl: String?,
             val thumbnailStripSection: GalleryThumbnailStripData?,
             val discoverSection: DiscoverLayoutUiState?,
@@ -132,20 +144,23 @@ class ReaderDiscoverViewModel @Inject constructor(
             val likeAction: ActionUiState,
             val reblogAction: ActionUiState,
             val commentsAction: ActionUiState,
-            val onItemClicked: ((Long, Long) -> Unit),
-            val onItemRendered: (Long, Long) -> Unit
+            val onItemClicked: (Long, Long) -> Unit,
+            val onItemRendered: (Long, Long) -> Unit,
+            val onMoreButtonClicked: (Long, Long) -> Unit
         ) : ReaderCardUiState() {
             val dotSeparatorVisibility: Boolean = blogUrl != null
 
             data class GalleryThumbnailStripData(
                 val images: ReaderImageList,
-                val isPrivate: Boolean
+                val isPrivate: Boolean,
+                val content: String // needs to be here as it's required by ReaderThumbnailStrip
             )
 
             data class DiscoverLayoutUiState(
                 val discoverText: Spanned,
                 val discoverAvatarUrl: String,
-                val imageType: ImageType
+                val imageType: ImageType,
+                val onDiscoverClicked: ((Long, Long) -> Unit)
             )
 
             data class ActionUiState(
