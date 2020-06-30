@@ -1580,6 +1580,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void updateAndSavePostAsync() {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
