@@ -126,7 +126,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     override fun onDestroyView() {
         swipeToRefreshHelper = null
-        notifications_list.adapter = null
+        notifications_list?.adapter = null
         notesAdapter = null
         super.onDestroyView()
     }
@@ -170,7 +170,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         clearPendingNotificationsItemsOnUI()
-        val layoutManager = notifications_list.layoutManager as LinearLayoutManager
+        val layoutManager = notifications_list?.layoutManager as LinearLayoutManager
         if (layoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
             layoutManager.smoothScrollToPosition(notifications_list, null, 0)
         }
@@ -204,7 +204,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            notifications_list.removeOnScrollListener(this)
+            notifications_list?.removeOnScrollListener(this)
             clearPendingNotificationsItemsOnUI()
         }
     }
@@ -344,11 +344,11 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_in)
-        layout_new_notificatons.visibility = View.VISIBLE
+        layout_new_notificatons?.visibility = View.VISIBLE
     }
 
     private fun showNewUnseenNotificationsUI() {
-        if (!isAdded || notifications_list.layoutManager == null) {
+        if (!isAdded || notifications_list?.layoutManager == null) {
             return
         }
         notifications_list?.clearOnScrollListeners()
