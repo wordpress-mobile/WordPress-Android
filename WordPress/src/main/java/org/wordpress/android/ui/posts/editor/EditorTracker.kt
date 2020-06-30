@@ -75,7 +75,7 @@ class EditorTracker @Inject constructor(
     fun trackEditorEvent(
         event: TrackableEvent,
         editorName: String,
-        properties: MutableMap<String, String> = mutableMapOf()
+        properties: Map<String, String> = mapOf()
     ) {
         val currentStat = when (event) {
             TrackableEvent.BOLD_BUTTON_TAPPED -> Stat.EDITOR_TAPPED_BOLD
@@ -115,11 +115,7 @@ class EditorTracker @Inject constructor(
                 Stat.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN
         }
 
-        if (properties.isEmpty()) {
-            analyticsTrackerWrapper.track(currentStat, mapOf("editor" to editorName))
-        } else {
-            properties.put("editor", editorName)
-            analyticsTrackerWrapper.track(currentStat, properties)
-        }
+        val updatedProperties = properties + ("editor" to editorName)
+        analyticsTrackerWrapper.track(currentStat, updatedProperties)
     }
 }
