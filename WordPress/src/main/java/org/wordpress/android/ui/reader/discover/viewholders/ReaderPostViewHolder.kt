@@ -1,15 +1,36 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.content.Context
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.ListPopupWindow
 import kotlinx.android.synthetic.main.reader_cardview_post.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderThumbnailTable
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_BLOCK
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_FOLLOW
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_SHARE
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_UNFOLLOW
+import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter.ITEM_VISIT
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -44,7 +65,7 @@ class ReaderPostViewHolder(
         uiHelpers.updateVisibility(dot_separator, state.dotSeparatorVisibility)
         uiHelpers.setTextOrHide(text_dateline, state.dateLine)
         uiHelpers.updateVisibility(image_more, state.moreMenuVisibility)
-        image_more.setOnClickListener { state.onMoreButtonClicked.invoke(uiState.postId, uiState.blogId, image_more) }
+        image_more.setOnClickListener { onMoreClicked(uiState, uiState.moreMenuItems, it) }
         layout_post_header.setBackgroundResource(
                 layout_post_header.context.getDrawableResIdFromAttribute(uiState.postHeaderClickData?.background ?: 0)
         )
@@ -162,5 +183,41 @@ class ReaderPostViewHolder(
                 }
             })
         }
+    }
+
+    private fun onMoreClicked(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
+        // TODO malinjir the popup menu was reused from the legacy implementation. It needs to be refactored.
+        val listPopup = ListPopupWindow(v.context)
+        listPopup.width = v.context.resources.getDimensionPixelSize(dimen.menu_item_width)
+        listPopup.setAdapter(ReaderMenuAdapter(v.context, actions.map {
+            when(it.type){
+                FOLLOW -> if(it.isSelected) {
+                        ITEM_UNFOLLOW
+                    } else {
+                        ITEM_FOLLOW
+                    }
+
+                SITE_NOTIFICATIONS ->
+                    if(it.isSelected) {
+                        ITEM_NOTIFICATIONS_OFF
+                    } else {
+                        ITEM_NOTIFICATIONS_ON
+                    }
+
+                SHARE -> ITEM_SHARE
+                VISIT_SITE -> ITEM_VISIT
+                BLOCK_SITE -> ITEM_BLOCK
+                LIKE, BOOKMARK, REBLOG, COMMENTS -> throw IllegalStateException("Unexpected type")
+            }
+        }))
+        listPopup.setDropDownGravity(Gravity.END)
+        listPopup.anchorView = v
+        listPopup.isModal = true
+        listPopup.setOnItemClickListener { _, _, position, _ ->
+            listPopup.dismiss()
+            val item = actions[position]
+            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+        }
+        listPopup.show()
     }
 }
