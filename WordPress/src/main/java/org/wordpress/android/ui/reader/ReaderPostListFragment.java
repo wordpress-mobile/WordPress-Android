@@ -12,14 +12,12 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,7 +26,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -96,7 +93,6 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
-import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
@@ -2589,83 +2585,83 @@ public class ReaderPostListFragment extends Fragment
      */
     @Override
     public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) {
-            return;
-        }
-
-        List<Integer> menuItems = new ArrayList<>();
-
-        if (ReaderPostTable.isPostFollowed(post)) {
-            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-
-            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-            if (post.blogId != post.feedId) {
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
-                } else {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
-                }
-            }
-        } else {
-            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
-        }
-
-        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
-        menuItems.add(ReaderMenuAdapter.ITEM_VISIT);
-
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-        }
-
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
-        listPopup.setDropDownGravity(Gravity.END);
-        listPopup.setAnchorView(view);
-        listPopup.setModal(true);
-        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isAdded()) {
-                    return;
-                }
-
-                listPopup.dismiss();
-                switch ((int) id) {
-                    case ReaderMenuAdapter.ITEM_FOLLOW:
-                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
-                        onFollowingTapped();
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_BLOCK:
-                        blockBlogForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                        updateSubscription(SubscriptionAction.NEW, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_SHARE:
-                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
-                        sharePost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_VISIT:
-                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-                        ReaderActivityLauncher.openPost(view.getContext(), post);
-                        break;
-                }
-            }
-        });
-        listPopup.show();
+//        if (view == null || post == null || !isAdded()) {
+//            return;
+//        }
+//
+//        List<Integer> menuItems = new ArrayList<>();
+//
+//        if (ReaderPostTable.isPostFollowed(post)) {
+//            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
+//
+//            // When blogId and feedId are not equal, post is not a feed so show notifications option.
+//            if (post.blogId != post.feedId) {
+//                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+//                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+//                } else {
+//                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+//                }
+//            }
+//        } else {
+//            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+//        }
+//
+//        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
+//        menuItems.add(ReaderMenuAdapter.ITEM_VISIT);
+//
+//        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
+//            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
+//        }
+//
+//        Context context = view.getContext();
+//        final ListPopupWindow listPopup = new ListPopupWindow(context);
+//        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
+//        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
+//        listPopup.setDropDownGravity(Gravity.END);
+//        listPopup.setAnchorView(view);
+//        listPopup.setModal(true);
+//        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                if (!isAdded()) {
+//                    return;
+//                }
+//
+//                listPopup.dismiss();
+//                switch ((int) id) {
+//                    case ReaderMenuAdapter.ITEM_FOLLOW:
+//                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
+//                        toggleFollowStatusForPost(post);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
+//                        onFollowingTapped();
+//                        toggleFollowStatusForPost(post);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_BLOCK:
+//                        blockBlogForPost(post);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
+//                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
+//                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
+//                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
+//                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
+//                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
+//                        updateSubscription(SubscriptionAction.NEW, post.blogId);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_SHARE:
+//                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+//                        sharePost(post);
+//                        break;
+//                    case ReaderMenuAdapter.ITEM_VISIT:
+//                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+//                        ReaderActivityLauncher.openPost(view.getContext(), post);
+//                        break;
+//                }
+//            }
+//        });
+//        listPopup.show();
     }
 
     @Override
