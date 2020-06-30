@@ -1,0 +1,4 @@
+15.1:
+Verbeteringen: het venster voor planning, tags en zichtbaarheid komt tevoorschijn in de editor en in de voorpublicatie van berichtlijsten. Door op enter te drukken na het toevoegen van bijschriften aan een Afbeelding-, Video-, Galerij-, Citaat- en Pullquote-blok wordt een nieuw blok toegevoegd.
+
+Fixes: video-miniatuurweergaven, instellingen en voorbeeldweergaven worden nu op de juiste manier weergegeven op privésites. Geen overlap meer van de tabbladen Meldingen en Installeren van Jetpack.

@@ -1,0 +1,4 @@
+15.1:
+İyileştirmeler: Zamanlama, etiket ve görünürlük paneli, editör ve yazı listesi ön yayınında açılır. Görsel, video, galeri, alıntı ve tanıtım bloklarına başlıkı ekledikten sonra enter tuşuna basıldığında yeni bir blok eklenir.
+
+Düzeltmeler: Video küçük resimleri, ayarları ve önizlemesi özel sitelerde düzgün bir şekilde görüntülenir. Bildirimler ve Jetpack yükle sekmeleri artık üst üste binmiyor.
