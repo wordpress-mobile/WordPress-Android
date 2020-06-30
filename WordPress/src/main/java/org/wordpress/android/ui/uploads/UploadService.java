@@ -611,10 +611,7 @@ public class UploadService extends Service {
 
             if (POST_FORMAT_WP_STORY_KEY.compareTo(post.getPostFormat()) == 0) {
                 processor.replaceMediaLocalIdWithRemoteMediaIdInPost(
-                        post,
-                        String.valueOf(media.getId()),
-                        String.valueOf(media.getMediaId())
-                );
+                        post, FluxCUtils.mediaFileFromMediaModel(media));
             } else {
                 // actually replace the media ID with the media uri
                 processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
