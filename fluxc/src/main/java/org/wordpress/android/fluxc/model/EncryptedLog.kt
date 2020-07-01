@@ -11,13 +11,14 @@ import java.util.Date
 
 /**
  * [EncryptedLog] and [EncryptedLogModel] are tied to each other, any change in one should be reflected in the other.
- * Within the app, [EncryptedLog] should be used, for DB interactions [EncryptedLogModel] should be used.
+ * [EncryptedLog] should be used within the app, [EncryptedLogModel] should be used for DB interactions.
  */
 data class EncryptedLog(
-    val dateCreated: Date,
     val uuid: String,
     val file: File,
-    val uploadState: EncryptedLogUploadState
+    val dateCreated: Date = Date(),
+    val uploadState: EncryptedLogUploadState = EncryptedLogUploadState.CREATED,
+    val failedCount: Int = 0
 ) {
     companion object {
         fun fromEncryptedLogModel(encryptedLogModel: EncryptedLogModel) = EncryptedLog(
@@ -25,7 +26,8 @@ data class EncryptedLog(
                 // Crash if values are missing which shouldn't happen if there are no logic errors
                 uuid = encryptedLogModel.uuid!!,
                 file = File(encryptedLogModel.filePath),
-                uploadState = encryptedLogModel.uploadState
+                uploadState = encryptedLogModel.uploadState,
+                failedCount = encryptedLogModel.failedCount
         )
     }
 }
@@ -33,10 +35,11 @@ data class EncryptedLog(
 @Table
 @RawConstraints("UNIQUE(UUID) ON CONFLICT REPLACE")
 class EncryptedLogModel(@PrimaryKey @Column private var id: Int = 0) : Identifiable {
-    @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var uuid: String? = null
     @Column var filePath: String? = null
+    @Column var dateCreated: String? = null // ISO 8601-formatted date in UTC, e.g. 1955-11-05T14:15:00Z
     @Column var uploadStateDbValue: Int = EncryptedLogUploadState.CREATED.value
+    @Column var failedCount: Int = 0
 
     override fun getId(): Int = id
 
@@ -56,10 +59,11 @@ class EncryptedLogModel(@PrimaryKey @Column private var id: Int = 0) : Identifia
 
     companion object {
         fun fromEncryptedLog(encryptedLog: EncryptedLog) = EncryptedLogModel().also {
-            it.dateCreated = DateTimeUtils.iso8601UTCFromDate(encryptedLog.dateCreated)
             it.uuid = encryptedLog.uuid
             it.filePath = encryptedLog.file.path
+            it.dateCreated = DateTimeUtils.iso8601UTCFromDate(encryptedLog.dateCreated)
             it.uploadStateDbValue = encryptedLog.uploadState.value
+            it.failedCount = encryptedLog.failedCount
         }
     }
 }
