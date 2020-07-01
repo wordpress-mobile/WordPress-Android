@@ -1776,6 +1776,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plans_compare";
             case PAGES_LIST_AUTHOR_FILTER_CHANGED:
                 return "pages_list_author_filter_changed";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN:
+                return "gutenberg_unsupported_block_webview_shown";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
+                return "gutenberg_unsupported_block_webview_closed";
         }
         return null;
     }

@@ -1,21 +1,18 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.text.Spanned
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
-import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
-import org.wordpress.android.ui.utils.UiDimen
-import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -62,7 +59,12 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onReblogClicked = this::onReblogClicked,
                                 onCommentsClicked = this::onCommentsClicked,
                                 onItemClicked = this::onItemClicked,
-                                onItemRendered = this::onItemRendered
+                                onItemRendered = this::onItemRendered,
+                                onDiscoverSectionClicked = this::onDiscoverClicked,
+                                onMoreButtonClicked = this::onMoreButtonClicked,
+                                onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                postListType = TAG_FOLLOWED
                         )
                     }
             )
@@ -85,12 +87,29 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir implement action
     }
 
+    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
+        // TODO malinjir implement action
+    }
+
+    private fun onPostHeaderClicked(postId: Long, blogId: Long) {
+        // TODO malinjir implement action
+    }
+
     private fun onItemClicked(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemClicked")
     }
 
     private fun onItemRendered(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemRendered")
+    }
+
+    private fun onDiscoverClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnDiscoverClicked")
+    }
+
+    // TODO malinjir get rid of the view reference
+    private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
+        AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
     private fun loadPosts() {
@@ -107,54 +126,5 @@ class ReaderDiscoverViewModel @Inject constructor(
         data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
-    }
-
-    sealed class ReaderCardUiState {
-        data class ReaderPostUiState(
-            val postId: Long,
-            val blogId: Long,
-            val dateLine: String,
-            val title: String?,
-            val blogName: String?,
-            val excerpt: String?, // mTxtText
-            val blogUrl: String?,
-            val photoTitle: String?,
-            val featuredImageUrl: String?,
-            val featuredImageCornerRadius: UiDimen,
-            val videoThumbnailUrl: String?,
-            val avatarOrBlavatarUrl: String?,
-            val thumbnailStripSection: GalleryThumbnailStripData?,
-            val discoverSection: DiscoverLayoutUiState?,
-            val videoOverlayVisibility: Boolean,
-            val moreMenuVisibility: Boolean,
-            val photoFrameVisibility: Boolean,
-            val bookmarkAction: ActionUiState,
-            val likeAction: ActionUiState,
-            val reblogAction: ActionUiState,
-            val commentsAction: ActionUiState,
-            val onItemClicked: ((Long, Long) -> Unit),
-            val onItemRendered: (Long, Long) -> Unit
-        ) : ReaderCardUiState() {
-            val dotSeparatorVisibility: Boolean = blogUrl != null
-
-            data class GalleryThumbnailStripData(
-                val images: ReaderImageList,
-                val isPrivate: Boolean
-            )
-
-            data class DiscoverLayoutUiState(
-                val discoverText: Spanned,
-                val discoverAvatarUrl: String,
-                val imageType: ImageType
-            )
-
-            data class ActionUiState(
-                val isEnabled: Boolean,
-                val isSelected: Boolean = false,
-                val contentDescription: UiString? = null,
-                val count: Int = 0,
-                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
-            )
-        }
     }
 }

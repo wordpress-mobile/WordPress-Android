@@ -145,6 +145,7 @@ public class ReaderPostDiscoverData {
      */
     private transient Spanned mAttributionHtml;
 
+    @NonNull
     public Spanned getAttributionHtml() {
         if (mAttributionHtml == null) {
             String html;
@@ -165,7 +166,7 @@ public class ReaderPostDiscoverData {
                         // "Originally posted by [AuthorName]"
                         html = String.format(context.getString(R.string.reader_discover_attribution_author), author);
                     } else {
-                        return null;
+                        html = "";
                     }
                     break;
 
@@ -174,12 +175,12 @@ public class ReaderPostDiscoverData {
                         // "Visit [BlogName]" - opens blog preview when tapped
                         html = String.format(context.getString(R.string.reader_discover_visit_blog), blog);
                     } else {
-                        return null;
+                        html = "";
                     }
                     break;
 
                 default:
-                    return null;
+                    html = "";
             }
 
             mAttributionHtml = Html.fromHtml(html);

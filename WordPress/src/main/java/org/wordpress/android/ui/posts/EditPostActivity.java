@@ -2022,7 +2022,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
-                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
@@ -2904,6 +2904,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
         }
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
     // FluxC events

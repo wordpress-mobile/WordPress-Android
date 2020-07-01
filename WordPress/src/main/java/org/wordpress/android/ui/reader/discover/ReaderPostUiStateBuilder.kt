@@ -1,9 +1,8 @@
 package org.wordpress.android.ui.reader.discover
 
+import android.view.View
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
-import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderCardType.DEFAULT
 import org.wordpress.android.models.ReaderCardType.GALLERY
@@ -15,12 +14,14 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_P
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
 import org.wordpress.android.ui.reader.ReaderConstants
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.ActionUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.ActionUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.PostHeaderClickData
 import org.wordpress.android.ui.reader.utils.ReaderImageScannerProvider
-import org.wordpress.android.ui.reader.utils.ReaderUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -37,7 +38,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val urlUtilsWrapper: UrlUtilsWrapper,
     private val gravatarUtilsWrapper: GravatarUtilsWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val readerImageScannerProvider: ReaderImageScannerProvider
+    private val readerImageScannerProvider: ReaderImageScannerProvider,
+    private val readerUtilsWrapper: ReaderUtilsWrapper
 ) {
     // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
@@ -45,16 +47,20 @@ class ReaderPostUiStateBuilder @Inject constructor(
         photonWidth: Int,
         photonHeight: Int,
             // TODO malinjir try to refactor/remove this parameter
+        postListType: ReaderPostListType,
+            // TODO malinjir try to refactor/remove this parameter
         isBookmarkList: Boolean,
         onBookmarkClicked: (Long, Long, Boolean) -> Unit,
         onLikeClicked: (Long, Long, Boolean) -> Unit,
         onReblogClicked: (Long, Long, Boolean) -> Unit,
         onCommentsClicked: (Long, Long, Boolean) -> Unit,
         onItemClicked: (Long, Long) -> Unit,
-        onItemRendered: (Long, Long) -> Unit
+        onItemRendered: (Long, Long) -> Unit,
+        onDiscoverSectionClicked: (Long, Long) -> Unit,
+        onMoreButtonClicked: (Long, Long, View) -> Unit,
+        onVideoOverlayClicked: (Long, Long) -> Unit,
+        onPostHeaderViewClicked: (Long, Long) -> Unit
     ): ReaderPostUiState {
-        // TODO malinjir on item rendered callback -> handle load more event and trackRailcarRender
-
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
@@ -67,20 +73,33 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
-                featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
+                featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
-                // TODO malinjir Consider adding `postListType == ReaderPostListType.TAG_FOLLOWED` to showMoreMenu
-                moreMenuVisibility = accountStore.hasAccessToken(),
-                videoThumbnailUrl = buildVideoThumbnailUrl(post),
-                discoverSection = buildDiscoverSection(post),
+                moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
+                fullVideoUrl = buildFullVideoUrl(post),
+                discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
                 bookmarkAction = buildBookmarkSection(post, onBookmarkClicked),
                 likeAction = buildLikeSection(post, isBookmarkList, onLikeClicked),
                 reblogAction = buildReblogSection(post, onReblogClicked),
                 commentsAction = buildCommentsSection(post, isBookmarkList, onCommentsClicked),
                 onItemClicked = onItemClicked,
-                onItemRendered = onItemRendered
+                onItemRendered = onItemRendered,
+                onMoreButtonClicked = onMoreButtonClicked,
+                onVideoOverlayClicked = onVideoOverlayClicked,
+                postHeaderClickData = buildOnPostHeaderViewClicked(onPostHeaderViewClicked, postListType)
         )
+    }
+
+    private fun buildOnPostHeaderViewClicked(
+        onPostHeaderViewClicked: (Long, Long) -> Unit,
+        postListType: ReaderPostListType
+    ): PostHeaderClickData? {
+        return if (postListType != ReaderPostListType.BLOG_PREVIEW) {
+            PostHeaderClickData(onPostHeaderViewClicked, android.R.attr.selectableItemBackground)
+        } else {
+            null
+        }
     }
 
     private fun buildBlogUrl(post: ReaderPost) = post
@@ -88,13 +107,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ?.blogUrl
             ?.let { urlUtilsWrapper.removeScheme(it) }
 
-    private fun buildDiscoverSection(post: ReaderPost) =
+    private fun buildDiscoverSection(post: ReaderPost, onDiscoverSectionClicked: (Long, Long) -> Unit) =
             post.takeIf { post.isDiscoverPost && post.discoverData.discoverType != OTHER }
-                    ?.let { buildDiscoverSectionUiState(post.discoverData) }
+                    ?.let { buildDiscoverSectionUiState(post.discoverData, onDiscoverSectionClicked) }
 
-    private fun buildVideoThumbnailUrl(post: ReaderPost) =
+    private fun buildFullVideoUrl(post: ReaderPost) =
             post.takeIf { post.cardType == VIDEO }
-                    ?.let { retrieveVideoThumbnailUrl() }
+                    ?.let { post.featuredVideo }
 
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
@@ -111,7 +130,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildPhotoTitle(post: ReaderPost) =
             post.takeIf { it.cardType == PHOTO && it.hasTitle() }?.title
 
-    // TODO malinjir `post.cardType != GALLERY` might not be needed
     private fun buildPhotoFrameVisibility(post: ReaderPost) =
             (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                     post.cardType != GALLERY
@@ -132,7 +150,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildDateLine(post: ReaderPost) =
             dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
 
-    private fun buildDiscoverSectionUiState(discoverData: ReaderPostDiscoverData): DiscoverLayoutUiState {
+    private fun buildDiscoverSectionUiState(
+        discoverData: ReaderPostDiscoverData,
+        onDiscoverSectionClicked: (Long, Long) -> Unit
+    ): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
         val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
@@ -145,20 +166,14 @@ class ReaderPostUiStateBuilder @Inject constructor(
             OTHER -> throw IllegalStateException("This could should be unreachable.")
             else -> AVATAR
         }
-        // TODO malinjir discoverLayout onClick listener.
-        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType)
-    }
-
-    private fun retrieveVideoThumbnailUrl(): String? {
-        // TODO malinjir Not yet implemented - Refactor ReaderVideoUtils.retrieveVideoThumbnailUrl
-        return null
+        return DiscoverLayoutUiState(discoverText, discoverAvatarUrl, discoverAvatarImageType, onDiscoverSectionClicked)
     }
 
     private fun retrieveGalleryThumbnailUrls(post: ReaderPost): GalleryThumbnailStripData {
         // scan post content for images suitable in a gallery
         val images = readerImageScannerProvider.createReaderImageScanner(post.text, post.isPrivate)
                 .getImageList(ReaderConstants.THUMBNAIL_STRIP_IMG_COUNT, ReaderConstants.MIN_GALLERY_IMAGE_WIDTH)
-        return GalleryThumbnailStripData(images, post.isPrivate)
+        return GalleryThumbnailStripData(images, post.isPrivate, post.text)
     }
 
     private fun buildBookmarkSection(post: ReaderPost, onClicked: (Long, Long, Boolean) -> Unit): ActionUiState {
@@ -198,14 +213,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ActionUiState(
                     isEnabled = true,
                     isSelected = post.isLikedByCurrentUser,
-                    // TODO malinjir remove static access and reference to context
                     contentDescription = UiStringText(
-                            ReaderUtils.getLongLikeLabelText(
-                                    WordPress.getContext(),
-                                    post.numLikes,
-                                    post.isLikedByCurrentUser
-                            )
+                            readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
                     ),
+                    count = post.numLikes,
                     onClicked = if (accountStore.hasAccessToken()) onClicked else null
             )
         } else {
