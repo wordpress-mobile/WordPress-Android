@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-230"
+            versionName "alpha-231"
         }
-        versionCode 884
+        versionCode 887
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -87,9 +87,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.1-rc-2"
+                versionName "15.2-rc-1"
             }
-            versionCode 883
+            versionCode 886
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
@@ -150,6 +150,9 @@ android {
         exclude '**/libjscexecutor.so'
         exclude '**/libhermes-inspector.so'
         exclude '**/libhermes-executor-debug.so'
+
+        pickFirst 'META-INF/-no-jdk.kotlin_module'
+
     }
 
     bundle {
@@ -268,7 +271,7 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidxTestVersion"
     androidTestImplementation "androidx.test:rules:$androidxTestVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxTestVersion"
-    androidTestImplementation 'tools.fastlane:screengrab:1.2.0',  {
+    androidTestImplementation 'tools.fastlane:screengrab:2.0.0',  {
         exclude group: 'com.android.support.test.uiautomator', module: 'uiautomator-v18'
     }
     androidTestImplementation "androidx.work:work-testing:$androidxWorkVersion"

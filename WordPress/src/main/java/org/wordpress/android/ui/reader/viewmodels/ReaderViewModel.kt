@@ -43,8 +43,6 @@ class ReaderViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
-    // TODO will depend on user tags
-    private var shouldShowReaderInterests: Boolean = appPrefsWrapper.isReaderImprovementsPhase2Enabled()
 
     private val _uiState = MutableLiveData<ReaderUiState>()
     val uiState: LiveData<ReaderUiState> = _uiState.distinct()
@@ -69,7 +67,7 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun start() {
-        if (shouldShowReaderInterests) {
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
             if (isReaderInterestsShown) return
             isReaderInterestsShown = true
             _uiState.value = InitialUiState
@@ -77,6 +75,7 @@ class ReaderViewModel @Inject constructor(
         } else {
             if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
             if (initialized) return
+            _uiState.value = InitialUiState
             loadTabs()
         }
     }
@@ -120,10 +119,8 @@ class ReaderViewModel @Inject constructor(
     }
 
     fun onCloseReaderInterests() {
-        shouldShowReaderInterests = false
-
         _closeReaderInterests.value = Event(Unit)
-        _updateTags.value = Event(Unit)
+        if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         loadTabs()
     }
 

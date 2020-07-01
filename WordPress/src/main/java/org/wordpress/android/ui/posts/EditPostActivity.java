@@ -705,7 +705,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mSite);
+            mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -2022,12 +2022,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
-                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
                                 themeBundle,
+                                WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled());
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
@@ -2903,6 +2904,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
         }
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
     // FluxC events

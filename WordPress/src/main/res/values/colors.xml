@@ -6,6 +6,7 @@
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
+    <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>
     <color name="background_notification_unread">#e6eff3</color>
     <color name="background_shortcut">#f5f5f5</color>
@@ -321,10 +322,5 @@
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
-    <color name="reader_label_text">@color/gray_40</color>
-    <color name="reader_post_title">@color/gray_90</color>
-    <color name="reader_site_title">@color/gray_90</color>
-    <color name="reader_image_featured_border">@color/gray_0</color>
-    <color name="reader_image_avatar_or_blavatar_border">@color/gray_0</color>
 
 </resources>

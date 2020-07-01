@@ -36,7 +36,6 @@ Language: is
     <string name="media_upload_state_deleting">Eyði</string>
     <string name="media_upload_state_uploading">Hlaða upp</string>
     <string name="media_upload_state_queued">Í biðröð</string>
-    <string name="keep_editing">Halda áfram að breyta</string>
     <string name="error_all_media_upload_canceled">Hætt hefur verið við allar upphleðslur á skrám vegna óþekktrar villu. Vinsamlegast reyndu aftur að hlaða upp.</string>
     <string name="error_unknown_post_type">Óþekkt færslusnið</string>
     <string name="submit_for_review">Áfram</string>
@@ -651,7 +650,6 @@ Language: is
     <string name="httppassword">HTTP lykilorð</string>
     <string name="httpuser">HTTP notandanafn</string>
     <string name="error_media_upload">Villa kom upp við upphleðslu á skrá</string>
-    <string name="publish_date">Birta</string>
     <string name="incorrect_credentials">Rangt notandanafn eða lykilorð.</string>
     <string name="username">Notandanafn</string>
     <string name="password">Lykilorð</string>

@@ -271,6 +271,7 @@
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
+    <dimen name="my_site_bottom_spacing">64dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>

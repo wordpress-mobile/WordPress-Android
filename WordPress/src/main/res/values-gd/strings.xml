@@ -261,7 +261,6 @@ Language: gd_GB
     <string name="httpuser">Ainm-cleachdaiche HTTP</string>
     <string name="httppassword">Facal-faire HTTP</string>
     <string name="error_media_upload">Thachair mearachd fhad \'s a bha sinn a\' luchdadh suas meadhan</string>
-    <string name="publish_date">Foillsich</string>
     <string name="incorrect_credentials">Ainm-cleachdaiche no facal-faire cearr.</string>
     <string name="password">Facal-faire</string>
     <string name="username">Ainm-cleachdaiche</string>

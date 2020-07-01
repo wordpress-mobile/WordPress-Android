@@ -39,7 +39,7 @@
             android:id="@+id/image_avatar_or_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:importantForAccessibility="no"
-            android:background="@drawable/bg_reader_avatar_or_blavatar_with_border"
+            android:background="@drawable/bg_oval_stroke_placeholder_1dp"
             android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@+id/guideline_beginning"
@@ -146,10 +146,11 @@
             android:contentDescription="@null"
             android:cropToPadding="true"
             android:padding="@dimen/reader_image_featured_border_width"
-            android:background="@drawable/bg_reader_image_featured"
+            android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
+            app:layout_constraintBottom_toTopOf="@id/text_title"
             app:layout_constraintTop_toBottomOf="@+id/layout_post_header" />
 
         <ImageView
@@ -209,19 +210,19 @@
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+            app:layout_constraintBottom_toTopOf="@+id/text_title"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
             android:includeFontPadding="false"
             android:textAlignment="viewStart"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
-            app:layout_constraintTop_toBottomOf="@+id/frame_photo"
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView

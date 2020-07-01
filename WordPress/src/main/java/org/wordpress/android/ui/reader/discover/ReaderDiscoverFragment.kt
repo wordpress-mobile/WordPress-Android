@@ -13,11 +13,13 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: ReaderDiscoverViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
 
     private fun setupViews() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = ReaderDiscoverAdapter()
+        recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
     }
 
     private fun initViewModel() {
