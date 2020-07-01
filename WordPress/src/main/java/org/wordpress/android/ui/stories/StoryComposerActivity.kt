@@ -416,16 +416,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
-        prepareAndProcessStoryPostForPublishing()
-    }
-
-    private fun prepareAndProcessStoryPostForPublishing() {
-        editPostRepository.update { postModel ->
-            postUtilsWrapper.preparePostForPublish(
-                    postModel,
-                    requireNotNull(site)
-            )
-        }
         processStorySaving()
     }
 }
