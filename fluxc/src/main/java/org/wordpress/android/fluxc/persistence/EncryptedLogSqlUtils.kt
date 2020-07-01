@@ -6,6 +6,8 @@ import com.yarolegovich.wellsql.WellSql
 import org.wordpress.android.fluxc.model.EncryptedLog
 import org.wordpress.android.fluxc.model.EncryptedLogModel
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState
+import org.wordpress.android.fluxc.model.EncryptedLogUploadState.FAILED
+import org.wordpress.android.fluxc.model.EncryptedLogUploadState.QUEUED
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,25 +23,34 @@ class EncryptedLogSqlUtils @Inject constructor() {
         return getEncryptedLogModel(uuid)?.let { EncryptedLog.fromEncryptedLogModel(it) }
     }
 
-    fun deleteEncryptedLog(uuid: String) {
+    // TODO: Update the tests for this
+    fun deleteEncryptedLogs(encryptedLogList: List<EncryptedLog>) {
+        if (encryptedLogList.isEmpty()) {
+            return
+        }
         WellSql.delete(EncryptedLogModel::class.java)
                 .where()
-                .equals(EncryptedLogModelTable.UUID, uuid)
+                .equals(EncryptedLogModelTable.UUID, encryptedLogList.map { it.uuid })
                 .endWhere()
                 .execute()
     }
 
     // TODO: Add a unit test for this
-    fun getEncryptedLogsForUploadState(uploadState: EncryptedLogUploadState): List<EncryptedLog> =
-            WellSql.select(EncryptedLogModel::class.java)
-                    .where()
-                    .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, uploadState.value)
-                    .endWhere()
-                    .orderBy(EncryptedLogModelTable.DATE_CREATED, SelectQuery.ORDER_ASCENDING)
-                    .asModel
-                    .map {
-                        EncryptedLog.fromEncryptedLogModel(it)
-                    }
+    fun getEncryptedLogsForUpload(): List<EncryptedLog> {
+        val uploadStates = listOf(QUEUED, FAILED).map { it.value }
+        return WellSql.select(EncryptedLogModel::class.java)
+                .where()
+                .isIn(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, uploadStates)
+                .endWhere()
+                // Queued status should have priority over failed status
+                .orderBy(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, SelectQuery.ORDER_ASCENDING)
+                // First log that's queued should have priority
+                .orderBy(EncryptedLogModelTable.DATE_CREATED, SelectQuery.ORDER_ASCENDING)
+                .asModel
+                .map {
+                    EncryptedLog.fromEncryptedLogModel(it)
+                }
+    }
 
     private fun getEncryptedLogModel(uuid: String): EncryptedLogModel? {
         return WellSql.select(EncryptedLogModel::class.java)
