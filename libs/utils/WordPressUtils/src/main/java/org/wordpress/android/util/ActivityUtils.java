@@ -49,6 +49,19 @@ public class ActivityUtils {
         inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
     }
 
+    /**
+     * Shows the keyboard for the given {@link View} using the {@link InputMethodManager#SHOW_FORCED} flag,
+     * which means the user has performed an operation that forced the keyboard to be opened.
+     */
+    public static void showKeyboardForced(@Nullable final View view) {
+        if (view == null) {
+            return;
+        }
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
     public static boolean isDeepLinking(Intent intent) {
         return Intent.ACTION_VIEW.equals(intent.getAction());
     }
