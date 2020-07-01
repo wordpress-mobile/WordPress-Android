@@ -19,9 +19,9 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
-//TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
+// TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
 @Reusable
-class ReaderPostCardActions @Inject constructor(
+class ReaderPostCardActionsHandler @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val readerActivityLauncher: ReaderActivityLauncherWrapper
 ) {

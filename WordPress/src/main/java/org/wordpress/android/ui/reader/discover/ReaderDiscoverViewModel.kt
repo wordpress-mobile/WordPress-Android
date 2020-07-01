@@ -21,7 +21,7 @@ import javax.inject.Named
 class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
-    private val readerPostCardActions: ReaderPostCardActions,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -74,7 +74,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
             val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActions.onAction(post, type)
+            readerPostCardActionsHandler.onAction(post, type)
         }
     }
 
