@@ -10,7 +10,7 @@ All issues should have a label for the general area of the app it corresponds to
 Useful links to find issues that need labels:
 
 * [Unlabeled issues](https://github.com/wordpress-mobile/WordPress-Android/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20no%3Alabel)
-* [Issues with no Type label](https://github.com/wordpress-mobile/WordPress-Android/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+-label%3A%22%5BType%5D+Broken+Window%22+-label%3A%22%5BType%5D+Bug%22+-label%3A%22%5BType%5D+Content+Loss%22+-label%3A%22%5BType%5D+Crash%22+-label%3A%22%5BType%5D+Enhancement%22+-label%3A%22%5BType%5D+Question%22+-label%3A%22%5BType%5D+Task%22+-label%3A%22%5BType%5D+Discovery%22+)
+* [Issues with no Type label](https://github.com/wordpress-mobile/WordPress-Android/issues?q=is%3Aopen+is%3Aissue+-label%3A%22%5BType%5D+ANR%22+-label%3A%22%5BType%5D+Broken+Window%22+-label%3A%22%5BType%5D+Bug%22+-label%3A%22%5BType%5D+Content+Loss%22+-label%3A%22%5BType%5D+Crash%22+-label%3A%22%5BType%5D+Enhancement%22+-label%3A%22%5BType%5D+Question%22+-label%3A%22%5BType%5D+Task%22+-label%3A%22%5BType%5D+Discovery%22+)
 
 ## Prioritization
 Bug reports (issues with the  `[Type] Bug` label) should also have a Priority label. Priority is assigned based on severity and impact:
