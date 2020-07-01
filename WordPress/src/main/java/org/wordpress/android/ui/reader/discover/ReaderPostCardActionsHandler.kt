@@ -1,11 +1,14 @@
 package org.wordpress.android.ui.reader.discover
 
 import android.content.ActivityNotFoundException
-import dagger.Reusable
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_VISITED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.ReaderActivityLauncherWrapper
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
@@ -17,14 +20,16 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NO
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 // TODO malinjir start using this class in legacy ReaderPostAdapter and ReaderPostListFragment
-@Reusable
 class ReaderPostCardActionsHandler @Inject constructor(
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val readerActivityLauncher: ReaderActivityLauncherWrapper
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) {
+    private val _navigationEvents = MutableLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
     fun onAction(post: ReaderPost, type: ReaderPostCardActionType) {
         when (type) {
             FOLLOW -> handleFollowClicked(post)
@@ -50,7 +55,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private fun handleShareClicked(post: ReaderPost) {
         analyticsTrackerWrapper.track(SHARED_ITEM_READER, post.blogId)
         try {
-            readerActivityLauncher.sharePost(post)
+            _navigationEvents.postValue(Event(SharePost(post)))
         } catch (ex: ActivityNotFoundException) {
             // TODO malinjir show toast - R.string.reader_toast_err_share_intent
         }
@@ -58,7 +63,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     private fun handleVisitSiteClicked(post: ReaderPost) {
         analyticsTrackerWrapper.track(READER_ARTICLE_VISITED)
-        readerActivityLauncher.openPost(post)
+        _navigationEvents.postValue(Event(OpenPost(post)))
     }
 
     private fun handleBlockSiteClicked(postId: Long, blogId: Long) {
@@ -78,6 +83,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleCommentsClicked(postId: Long, blogId: Long) {
-        readerActivityLauncher.showReaderComments(blogId, postId)
+        _navigationEvents.postValue(Event(ShowReaderComments(blogId, postId)))
     }
 }

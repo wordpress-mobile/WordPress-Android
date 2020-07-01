@@ -14,6 +14,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,6 +30,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
     /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
         returns result based on device orientation */
@@ -67,6 +71,9 @@ class ReaderDiscoverViewModel @Inject constructor(
                         )
                     }
             )
+        }
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            _navigationEvents.value = event
         }
     }
 
