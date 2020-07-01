@@ -44,7 +44,6 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
-import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
@@ -90,7 +89,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
-    @Inject lateinit var postUtilsWrapper: PostUtilsWrapper
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
