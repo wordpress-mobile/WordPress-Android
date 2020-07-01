@@ -1,6 +1,5 @@
 15.3
 -----
-* [***] Block Editor: Add support for editing blocks which are not yet fully supported on the mobile editor.
  
 15.2
 -----
