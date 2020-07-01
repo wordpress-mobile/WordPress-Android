@@ -2,8 +2,10 @@ package org.wordpress.android.ui.notifications.adapters;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +79,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     private FILTERS mCurrentFilter = FILTERS.FILTER_ALL;
+    private ReloadNotesFromDBTask mReloadNotesFromDBTask;
 
     public interface DataLoadedListener {
         void onDataLoaded(int itemsCount);
@@ -339,8 +342,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mOnNoteClickListener = mNoteClickListener;
     }
 
+    public void cleanUp() {
+        if (mReloadNotesFromDBTask != null && mReloadNotesFromDBTask.getStatus() != Status.FINISHED) {
+            mReloadNotesFromDBTask.cancel(true);
+            mReloadNotesFromDBTask = null;
+        }
+    }
+
     public void reloadNotesFromDBAsync() {
-        new ReloadNotesFromDBTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
+        mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private class ReloadNotesFromDBTask extends AsyncTask<Void, Void, ArrayList<Note>> {

@@ -125,8 +125,9 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onDestroyView() {
+        notesAdapter!!.cleanUp()
         swipeToRefreshHelper = null
-        notifications_list?.adapter = null
+        notifications_list.adapter = null
         notesAdapter = null
         super.onDestroyView()
     }
@@ -170,7 +171,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         clearPendingNotificationsItemsOnUI()
-        val layoutManager = notifications_list?.layoutManager as LinearLayoutManager
+        val layoutManager = notifications_list.layoutManager as LinearLayoutManager
         if (layoutManager.findFirstCompletelyVisibleItemPosition() > 0) {
             layoutManager.smoothScrollToPosition(notifications_list, null, 0)
         }
@@ -204,7 +205,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     private val mOnScrollListener: OnScrollListener = object : OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-            notifications_list?.removeOnScrollListener(this)
+            notifications_list.removeOnScrollListener(this)
             clearPendingNotificationsItemsOnUI()
         }
     }
@@ -232,8 +233,12 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     private fun hideEmptyView() {
         if (isAdded) {
-            actionable_empty_view?.visibility = View.GONE
-            notifications_list?.visibility = View.VISIBLE
+            if (actionable_empty_view == null) {
+                AppLog.d(T.NOTIFS,
+                        "NotificationsListFragmentPage.hideEmptyView view is null.")
+            }
+            actionable_empty_view.visibility = View.GONE
+            notifications_list.visibility = View.VISIBLE
         }
     }
 
@@ -280,22 +285,22 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
         @StringRes buttonResId: Int = 0
     ) {
         if (isAdded) {
-            actionable_empty_view?.visibility = View.VISIBLE
-            notifications_list?.visibility = View.GONE
-            actionable_empty_view?.title?.setText(titleResId)
+            actionable_empty_view.visibility = View.VISIBLE
+            notifications_list.visibility = View.GONE
+            actionable_empty_view.title.setText(titleResId)
             if (descriptionResId != 0) {
-                actionable_empty_view?.subtitle?.setText(descriptionResId)
-                actionable_empty_view?.subtitle?.visibility = View.VISIBLE
+                actionable_empty_view.subtitle.setText(descriptionResId)
+                actionable_empty_view.subtitle.visibility = View.VISIBLE
             } else {
-                actionable_empty_view?.subtitle?.visibility = View.GONE
+                actionable_empty_view.subtitle.visibility = View.GONE
             }
             if (buttonResId != 0) {
-                actionable_empty_view?.button?.setText(buttonResId)
-                actionable_empty_view?.button?.visibility = View.VISIBLE
+                actionable_empty_view.button.setText(buttonResId)
+                actionable_empty_view.button.visibility = View.VISIBLE
             } else {
-                actionable_empty_view?.button?.visibility = View.GONE
+                actionable_empty_view.button.visibility = View.GONE
             }
-            actionable_empty_view?.button?.setOnClickListener { performActionForActiveFilter() }
+            actionable_empty_view.button.setOnClickListener { performActionForActiveFilter() }
         }
     }
 
@@ -336,7 +341,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             }
             else -> showEmptyView(R.string.notifications_empty_list)
         }
-        actionable_empty_view?.image?.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
+        actionable_empty_view.image.visibility = if (DisplayUtils.isLandscape(context)) View.GONE else View.VISIBLE
     }
 
     private fun showNewNotificationsBar() {
@@ -344,22 +349,22 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         AniUtils.startAnimation(layout_new_notificatons, R.anim.notifications_bottom_bar_in)
-        layout_new_notificatons?.visibility = View.VISIBLE
+        layout_new_notificatons.visibility = View.VISIBLE
     }
 
     private fun showNewUnseenNotificationsUI() {
-        if (!isAdded || notifications_list?.layoutManager == null) {
+        if (!isAdded || notifications_list.layoutManager == null) {
             return
         }
-        notifications_list?.clearOnScrollListeners()
-        notifications_list?.postDelayed({
+        notifications_list.clearOnScrollListeners()
+        notifications_list.postDelayed({
             if (isAdded) {
-                notifications_list?.addOnScrollListener(mOnScrollListener)
+                notifications_list.addOnScrollListener(mOnScrollListener)
             }
         }, 1000L)
-        val first = notifications_list?.layoutManager!!.getChildAt(0)
+        val first = notifications_list.layoutManager!!.getChildAt(0)
         // Show new notifications bar if first item is not visible on the screen.
-        if (first != null && notifications_list?.layoutManager!!.getPosition(first) > 0) {
+        if (first != null && notifications_list.layoutManager!!.getPosition(first) > 0) {
             showNewNotificationsBar()
         }
     }
@@ -391,7 +396,7 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
                             )
                     val note = NotificationsTable.getNoteById(event.noteId)
                     if (note != null) {
-                        notesAdapter?.replaceNote(note)
+                        notesAdapter!!.replaceNote(note)
                     }
                 }
         ) {
