@@ -12,6 +12,6 @@
     <dimen name="notifications_content_margin">@dimen/content_margin_tablet</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_tablet</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_tablet</dimen>
-    <dimen name="interests_content_margin">@dimen/margin_extra_extra_medium_large</dimen>
+    <dimen name="interests_content_margin">@dimen/margin_extra_extra_large</dimen>
 
 </resources>
