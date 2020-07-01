@@ -233,10 +233,6 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     private fun hideEmptyView() {
         if (isAdded) {
-            if (actionable_empty_view == null) {
-                AppLog.d(T.NOTIFS,
-                        "NotificationsListFragmentPage.hideEmptyView view is null.")
-            }
             actionable_empty_view.visibility = View.GONE
             notifications_list.visibility = View.VISIBLE
         }
