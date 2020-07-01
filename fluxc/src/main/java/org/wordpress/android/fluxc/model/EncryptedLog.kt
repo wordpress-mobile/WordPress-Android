@@ -70,5 +70,6 @@ class EncryptedLogModel(@PrimaryKey @Column private var id: Int = 0) : Identifia
 
 enum class EncryptedLogUploadState(val value: Int) {
     QUEUED(1),
-    FAILED(2)
+    UPLOADING(2),
+    FAILED(3)
 }

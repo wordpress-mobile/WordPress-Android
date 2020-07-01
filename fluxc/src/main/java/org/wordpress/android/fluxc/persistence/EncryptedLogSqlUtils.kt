@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.EncryptedLogModel
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState.FAILED
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState.QUEUED
+import org.wordpress.android.fluxc.model.EncryptedLogUploadState.UPLOADING
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +23,12 @@ class EncryptedLogSqlUtils @Inject constructor() {
     fun getEncryptedLog(uuid: String): EncryptedLog? {
         return getEncryptedLogModel(uuid)?.let { EncryptedLog.fromEncryptedLogModel(it) }
     }
+
+    fun getNumberOfEncryptedLogsUploading(): Long = WellSql.select(EncryptedLogModel::class.java)
+            .where()
+            .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, UPLOADING)
+            .endWhere()
+            .count()
 
     // TODO: Update the tests for this
     fun deleteEncryptedLogs(encryptedLogList: List<EncryptedLog>) {
