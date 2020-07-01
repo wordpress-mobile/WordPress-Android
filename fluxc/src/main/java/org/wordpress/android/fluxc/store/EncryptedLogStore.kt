@@ -3,6 +3,7 @@ package org.wordpress.android.fluxc.store
 import org.wordpress.android.fluxc.model.EncryptedLog
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState
 import org.wordpress.android.fluxc.model.EncryptedLogUploadState.NEEDS_UPLOAD
+import org.wordpress.android.fluxc.model.EncryptedLogUploadState.UPLOAD_FAILED
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
 import java.io.File
@@ -10,6 +11,10 @@ import java.util.Date
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val MAX_FAIL_COUNT = 3
+
+//TODO: Add EncryptedLogModel DB migration
 
 @Singleton
 class EncryptedLogStore @Inject constructor(
@@ -28,10 +33,8 @@ class EncryptedLogStore @Inject constructor(
      */
     fun newLogFile(): EncryptedLog {
         val encryptedLog = EncryptedLog(
-                dateCreated = Date(),
                 uuid = UUID.randomUUID().toString(),
-                file = File(""), // TODO: Give proper path
-                uploadState = EncryptedLogUploadState.CREATED
+                file = File("") // TODO: Give proper path
         )
         encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog)
         return encryptedLog
@@ -45,7 +48,12 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
-    private suspend fun uploadNext(): EncryptedLog {
+    private suspend fun uploadNextWithBackOffTiming() {
+        // TODO: Add a backoff timer
+        uploadNext()
+    }
+
+    private suspend fun uploadNext() {
         // TODO: Don't upload if we are already uploading something
         val list = encryptedLogSqlUtils.getEncryptedLogsForUploadState(uploadState = NEEDS_UPLOAD)
         list.forEach { encryptedLog ->
@@ -54,20 +62,26 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private suspend fun handleSuccessfulUpload(encryptedLog: EncryptedLog) {
-        deleteFile(encryptedLog.file)
-        encryptedLogSqlUtils.deleteEncryptedLog(encryptedLog.uuid)
+        deleteEncryptedLog(encryptedLog)
         uploadNext()
     }
 
     private suspend fun handleFailedUpload(encryptedLog: EncryptedLog) {
-        // TODO: increase failed count
-        // TODO: Delete the file and db record if the failed count is more than the limit
-        // TODO: Add a backoff timer and consider skipping the upload for the specific log for a bit
-        // TODO: Handle known server errors (might change above todos ^)
-        uploadNext()
+        // TODO: Handle known server errors. If the upload failed for a temporary reason, don't increase failed count
+        // TODO: and just queue it again with a back off timer
+        val updatedEncryptedLog = encryptedLog.copy(
+                failedCount = encryptedLog.failedCount + 1,
+                uploadState = UPLOAD_FAILED
+        )
+        if (updatedEncryptedLog.failedCount >= MAX_FAIL_COUNT) {
+            // If a log failed to upload too many times, assume we can't upload it
+            deleteEncryptedLog(updatedEncryptedLog)
+        }
+        uploadNextWithBackOffTiming()
     }
 
-    private suspend fun deleteFile(file: File) {
-        // TODO
+    private suspend fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
+        // TODO: Delete log file
+        encryptedLogSqlUtils.deleteEncryptedLog(encryptedLog.uuid)
     }
 }
