@@ -74,8 +74,8 @@ sealed class PrepublishingHomeViewHolder(
                     thumbnailCornerRadius
             )
 
-            uiState.storyTitle?.let { storyTitle ->
-                uiHelpers.getTextOfUiString(parent.context, storyTitle)
+            uiState.storyTitle?.let { title ->
+                storyTitle.text = uiHelpers.getTextOfUiString(parent.context, title)
             }
             storyTitle.requestFocus()
             ActivityUtils.showKeyboard(storyTitle)
