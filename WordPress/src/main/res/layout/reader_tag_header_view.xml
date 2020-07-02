@@ -1,43 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_tag_info"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/reader_tag_header_height"
     android:background="@color/white">
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/text_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:shadowColor="@color/neutral_70"
+        android:shadowDx="@dimen/reader_photo_title_shadow_offset"
+        android:shadowDy="@dimen/reader_photo_title_shadow_offset"
+        android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
+        android:textSize="@dimen/text_sz_double_extra_large"
+        app:layout_constraintBottom_toTopOf="@+id/follow_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="text_tag" />
 
     <org.wordpress.android.ui.reader.views.ReaderFollowButton
         android:id="@+id/follow_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/reader_card_content_padding"
-        android:padding="@dimen/reader_follow_button_padding" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_tag" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_tag_header_image_height"
-        android:layout_below="@+id/follow_button"
-        android:layout_marginBottom="@dimen/margin_extra_small">
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:drawablePadding="@dimen/margin_small"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:shadowColor="@color/neutral_70"
-            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
-            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
-            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textSize="@dimen/text_sz_double_extra_large"
-            tools:text="text_tag"
-            android:drawableStart="@drawable/ic_tag_white_24dp"/>
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
