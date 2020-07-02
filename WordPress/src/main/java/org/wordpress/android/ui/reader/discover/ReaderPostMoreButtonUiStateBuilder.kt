@@ -2,7 +2,6 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
@@ -29,7 +28,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
-                            label = UiStringRes(string.reader_btn_unfollow),
+                            label = UiStringRes(R.string.reader_btn_unfollow),
                             labelColor = R.attr.wpColorSuccess,
                             iconRes = R.drawable.ic_reader_following_white_24dp,
                             isSelected = true,
@@ -43,7 +42,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
                     menuItems.add(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,
-                                    label = UiStringRes(string.reader_btn_notifications_off),
+                                    label = UiStringRes(R.string.reader_btn_notifications_off),
                                     labelColor = R.attr.wpColorSuccess,
                                     iconRes = R.drawable.ic_bell_white_24dp,
                                     isSelected = true,
@@ -54,7 +53,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
                     menuItems.add(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,
-                                    label = UiStringRes(string.reader_btn_notifications_on),
+                                    label = UiStringRes(R.string.reader_btn_notifications_on),
                                     labelColor = R.attr.colorOnSurface,
                                     iconRes = R.drawable.ic_bell_white_24dp,
                                     iconColor = R.attr.wpColorOnSurfaceMedium,
@@ -68,7 +67,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
-                            label = UiStringRes(string.reader_btn_follow),
+                            label = UiStringRes(R.string.reader_btn_follow),
                             labelColor = R.attr.colorPrimary,
                             iconRes = R.drawable.ic_reader_follow_white_24dp,
                             isSelected = false,
@@ -80,7 +79,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
         menuItems.add(
                 SecondaryAction(
                         type = SHARE,
-                        label = UiStringRes(string.reader_btn_share),
+                        label = UiStringRes(R.string.reader_btn_share),
                         labelColor = R.attr.colorOnSurface,
                         iconRes = R.drawable.ic_share_white_24dp,
                         iconColor = R.attr.wpColorOnSurfaceMedium,
@@ -90,7 +89,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
         menuItems.add(
                 SecondaryAction(
                         type = VISIT_SITE,
-                        label = UiStringRes(string.reader_label_visit),
+                        label = UiStringRes(R.string.reader_label_visit),
                         labelColor = R.attr.colorOnSurface,
                         iconRes = R.drawable.ic_external_white_24dp,
                         iconColor = R.attr.wpColorOnSurfaceMedium,
@@ -102,7 +101,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
             menuItems.add(
                     SecondaryAction(
                             type = BLOCK_SITE,
-                            label = UiStringRes(string.reader_menu_block_blog),
+                            label = UiStringRes(R.string.reader_menu_block_blog),
                             labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_block_white_24dp,
                             iconColor = R.attr.wpColorOnSurfaceMedium,
