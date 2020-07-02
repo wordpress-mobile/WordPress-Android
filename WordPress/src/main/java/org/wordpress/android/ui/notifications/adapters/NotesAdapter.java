@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -341,7 +342,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         mOnNoteClickListener = mNoteClickListener;
     }
 
-    public void cleanUp() {
+    public void cancelReloadNotesTask() {
         if (mReloadNotesFromDBTask != null && mReloadNotesFromDBTask.getStatus() != Status.FINISHED) {
             mReloadNotesFromDBTask.cancel(true);
             mReloadNotesFromDBTask = null;
@@ -349,6 +350,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     }
 
     public void reloadNotesFromDBAsync() {
+        cancelReloadNotesTask();
         mReloadNotesFromDBTask = new ReloadNotesFromDBTask();
         mReloadNotesFromDBTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

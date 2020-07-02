@@ -66,6 +66,12 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var gcmMessageHandler: GCMMessageHandler
 
+    private val showNewUnseenNotificationsRunnable = Runnable {
+        if (isAdded) {
+            notifications_list.addOnScrollListener(mOnScrollListener)
+        }
+    }
+
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
     }
@@ -125,9 +131,10 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onDestroyView() {
-        notesAdapter!!.cleanUp()
+        notesAdapter!!.cancelReloadNotesTask()
         swipeToRefreshHelper = null
         notifications_list.adapter = null
+        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
         notesAdapter = null
         super.onDestroyView()
     }
@@ -353,11 +360,8 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         notifications_list.clearOnScrollListeners()
-        notifications_list.postDelayed({
-            if (isAdded) {
-                notifications_list.addOnScrollListener(mOnScrollListener)
-            }
-        }, 1000L)
+        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
+        notifications_list.postDelayed(showNewUnseenNotificationsRunnable, 1000L)
         val first = notifications_list.layoutManager!!.getChildAt(0)
         // Show new notifications bar if first item is not visible on the screen.
         if (first != null && notifications_list.layoutManager!!.getPosition(first) > 0) {
