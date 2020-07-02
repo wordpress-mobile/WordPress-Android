@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -456,7 +457,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
+        return AppPrefs.isReaderImprovementsPhase2Enabled()
+               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
     }
 
     private boolean isDiscover() {
