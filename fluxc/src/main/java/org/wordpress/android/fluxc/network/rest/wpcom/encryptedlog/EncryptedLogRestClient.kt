@@ -17,8 +17,8 @@ constructor(
     private val requestQueue: RequestQueue,
     private val appSecrets: AppSecrets
 ) {
-    suspend fun uploadLog(logUuid: String, logFile: File) = suspendCancellableCoroutine<LogUploadResult> { cont ->
-        val request = EncryptedLogUploadRequest(logUuid, logFile, appSecrets.appSecret, Response.Listener {
+    suspend fun uploadLog(logUuid: String, contents: String) = suspendCancellableCoroutine<LogUploadResult> { cont ->
+        val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, Response.Listener {
             // TODO: add callbacks
             cont.resume(LogUploaded)
         }, Response.ErrorListener {

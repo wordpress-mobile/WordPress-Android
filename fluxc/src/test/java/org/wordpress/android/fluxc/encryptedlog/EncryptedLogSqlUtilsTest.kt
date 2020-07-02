@@ -8,12 +8,12 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
-import org.wordpress.android.fluxc.model.EncryptedLog
-import org.wordpress.android.fluxc.model.EncryptedLogModel
-import org.wordpress.android.fluxc.model.EncryptedLogUploadState
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogModel
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
 import java.io.File
-import java.time.temporal.ChronoUnit
+import java.time.temporal.ChronoUnit.SECONDS
 import java.util.Date
 
 private const val TEST_UUID = "TEST_UUID"
@@ -89,7 +89,7 @@ class EncryptedLogSqlUtilsTest {
         uploadState: EncryptedLogUploadState = EncryptedLogUploadState.CREATED
     ) = EncryptedLog(
             // Bypass the annoying milliseconds comparison issue
-            dateCreated = Date.from(dateCreated.toInstant().truncatedTo(ChronoUnit.SECONDS)),
+            dateCreated = Date.from(dateCreated.toInstant().truncatedTo(SECONDS)),
             uuid = uuid,
             file = File(filePath),
             uploadState = uploadState
