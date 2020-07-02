@@ -11,10 +11,14 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogModel
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.QUEUED
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.UPLOADING
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
 import java.io.File
 import java.time.temporal.ChronoUnit.SECONDS
 import java.util.Date
+import java.util.UUID
+import kotlin.random.Random
 
 private const val TEST_UUID = "TEST_UUID"
 private const val TEST_FILE_PATH = "TEST_FILE_PATH"
@@ -34,7 +38,7 @@ class EncryptedLogSqlUtilsTest {
     }
 
     @Test
-    fun testInsertEncryptedLog() {
+    fun `test insert encrypted log`() {
         // Assert that there are no encrypted logs with the test uuid
         assertThat(getTestEncryptedLogFromDB()).isNull()
 
@@ -48,14 +52,14 @@ class EncryptedLogSqlUtilsTest {
     }
 
     @Test
-    fun testUpdateEncryptedLog() {
+    fun `test update encrypted log`() {
         // Insert an initial encrypted log
         val initialLog = createTestEncryptedLog()
         sqlUtils.insertOrUpdateEncryptedLog(initialLog)
         assertThat(getTestEncryptedLogFromDB()).isEqualToComparingFieldByField(initialLog)
 
         // Create a copy of the encrypted log by changing its upload state (which will be the common usage)
-        val newUploadState = EncryptedLogUploadState.NEEDS_UPLOAD
+        val newUploadState = EncryptedLogUploadState.UPLOADING
         val updatedLog = initialLog.copy(uploadState = newUploadState)
         sqlUtils.insertOrUpdateEncryptedLog(updatedLog)
 
@@ -67,31 +71,51 @@ class EncryptedLogSqlUtilsTest {
     }
 
     @Test
-    fun testDeleteEncryptedLog() {
+    fun `test delete encrypted log`() {
         // Insert an initial encrypted log
         val initialLog = createTestEncryptedLog()
         sqlUtils.insertOrUpdateEncryptedLog(initialLog)
         assertThat(getTestEncryptedLogFromDB()).isEqualToComparingFieldByField(initialLog)
 
         // Delete the encrypted log
-        sqlUtils.deleteEncryptedLog(TEST_UUID)
+        sqlUtils.deleteEncryptedLogs(listOf(initialLog))
 
         // Assert that the encrypted log no longer exists
         assertThat(getTestEncryptedLogFromDB()).isNull()
     }
 
+    @Test
+    fun `test uploading encrypted logs count for empty DB`() {
+        assertThat(sqlUtils.getNumberOfUploadingEncryptedLogs()).isEqualTo(0)
+    }
+
+    @Test
+    fun `test uploading encrypted logs for random number`() {
+        Random.nextInt(100).let { numberOfLogs ->
+            repeat(numberOfLogs) {
+                sqlUtils.insertOrUpdateEncryptedLog(
+                        createTestEncryptedLog(
+                                uuid = UUID.randomUUID().toString(),
+                                uploadState = UPLOADING
+                        )
+                )
+            }
+            assertThat(sqlUtils.getNumberOfUploadingEncryptedLogs()).isEqualTo(numberOfLogs.toLong())
+        }
+    }
+
     private fun getTestEncryptedLogFromDB() = sqlUtils.getEncryptedLog(TEST_UUID)
 
     private fun createTestEncryptedLog(
-        dateCreated: Date = Date(),
         uuid: String = TEST_UUID,
         filePath: String = TEST_FILE_PATH,
-        uploadState: EncryptedLogUploadState = EncryptedLogUploadState.CREATED
+        dateCreated: Date = Date(),
+        uploadState: EncryptedLogUploadState = QUEUED
     ) = EncryptedLog(
             // Bypass the annoying milliseconds comparison issue
-            dateCreated = Date.from(dateCreated.toInstant().truncatedTo(SECONDS)),
             uuid = uuid,
             file = File(filePath),
+            dateCreated = Date.from(dateCreated.toInstant().truncatedTo(SECONDS)),
             uploadState = uploadState
     )
 }

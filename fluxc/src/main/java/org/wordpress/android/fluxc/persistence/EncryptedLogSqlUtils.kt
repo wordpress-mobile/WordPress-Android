@@ -23,20 +23,19 @@ class EncryptedLogSqlUtils @Inject constructor() {
         return getEncryptedLogModel(uuid)?.let { EncryptedLog.fromEncryptedLogModel(it) }
     }
 
-    fun getNumberOfEncryptedLogsUploading(): Long = WellSql.select(EncryptedLogModel::class.java)
+    fun getNumberOfUploadingEncryptedLogs(): Long = WellSql.select(EncryptedLogModel::class.java)
             .where()
-            .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, UPLOADING)
+            .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, UPLOADING.value)
             .endWhere()
             .count()
 
-    // TODO: Update the tests for this
     fun deleteEncryptedLogs(encryptedLogList: List<EncryptedLog>) {
         if (encryptedLogList.isEmpty()) {
             return
         }
         WellSql.delete(EncryptedLogModel::class.java)
                 .where()
-                .equals(EncryptedLogModelTable.UUID, encryptedLogList.map { it.uuid })
+                .isIn(EncryptedLogModelTable.UUID, encryptedLogList.map { it.uuid })
                 .endWhere()
                 .execute()
     }
