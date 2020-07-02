@@ -134,6 +134,13 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="ReaderTextView.Tag.Header.Title" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:maxLines">1</item>
+        <item name="textColor">?attr/textColor</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <!-- EditTexts -->
 
     <style name="ReaderEditText">
