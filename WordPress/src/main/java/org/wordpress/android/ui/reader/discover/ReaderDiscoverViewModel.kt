@@ -10,6 +10,15 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -54,10 +63,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
-                                onBookmarkClicked = this::onBookmarkClicked,
-                                onLikeClicked = this::onLikeClicked,
-                                onReblogClicked = this::onReblogClicked,
-                                onCommentsClicked = this::onCommentsClicked,
+                                onButtonClicked = this::onButtonClicked,
                                 onItemClicked = this::onItemClicked,
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
@@ -71,20 +77,18 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
-    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
+    private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+        when (type) {
+            FOLLOW -> TODO()
+            SITE_NOTIFICATIONS -> TODO()
+            SHARE -> TODO()
+            VISIT_SITE -> TODO()
+            BLOCK_SITE -> TODO()
+            LIKE -> TODO()
+            BOOKMARK -> TODO()
+            REBLOG -> TODO()
+            COMMENTS -> TODO()
+        }
     }
 
     private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
