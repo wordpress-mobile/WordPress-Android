@@ -337,7 +337,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     switch (type) {
                         case BOOKMARK:
                             toggleBookmark(post.blogId, post.postId);
-                            notifyItemChanged(position);
+                            renderPost(position, holder);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
