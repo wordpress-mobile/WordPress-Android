@@ -3,12 +3,11 @@ package org.wordpress.android.fluxc.persistence
 import com.wellsql.generated.EncryptedLogModelTable
 import com.yarolegovich.wellsql.SelectQuery
 import com.yarolegovich.wellsql.WellSql
-import org.wordpress.android.fluxc.model.EncryptedLog
-import org.wordpress.android.fluxc.model.EncryptedLogModel
-import org.wordpress.android.fluxc.model.EncryptedLogUploadState
-import org.wordpress.android.fluxc.model.EncryptedLogUploadState.FAILED
-import org.wordpress.android.fluxc.model.EncryptedLogUploadState.QUEUED
-import org.wordpress.android.fluxc.model.EncryptedLogUploadState.UPLOADING
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogModel
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.FAILED
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.QUEUED
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.UPLOADING
 import javax.inject.Inject
 import javax.inject.Singleton
 
