@@ -1672,7 +1672,7 @@
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Site</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
+    <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
