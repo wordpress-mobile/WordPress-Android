@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.network.EncryptedLogUploadRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.LogUploadResult.LogUploadFailed
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.LogUploadResult.LogUploaded
-import java.io.File
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 
