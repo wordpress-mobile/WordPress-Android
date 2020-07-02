@@ -52,7 +52,7 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private suspend fun uploadNext() {
-        if (encryptedLogSqlUtils.getNumberOfEncryptedLogsUploading() > 0) {
+        if (encryptedLogSqlUtils.getNumberOfUploadingEncryptedLogs() > 0) {
             // We are already uploading another log file
             return
         }
