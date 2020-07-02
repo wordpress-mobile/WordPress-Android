@@ -21,18 +21,6 @@
         android:layout_below="@+id/follow_button"
         android:layout_marginBottom="@dimen/margin_extra_small">
 
-        <ImageView
-            android:id="@+id/image_tag_header"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_tag_header_image_height"
-            android:contentDescription="@null"/>
-
-        <View
-            android:id="@+id/view_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/reader_tag_header_image_height"
-            android:background="@color/black_translucent_50" />
-
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_tag"
             android:layout_width="wrap_content"
@@ -46,29 +34,9 @@
             android:shadowDx="@dimen/reader_photo_title_shadow_offset"
             android:shadowDy="@dimen/reader_photo_title_shadow_offset"
             android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textColor="@android:color/white"
             android:textSize="@dimen/text_sz_double_extra_large"
             tools:text="text_tag"
             android:drawableStart="@drawable/ic_tag_white_24dp"/>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/text_attribution"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/margin_medium"
-            android:background="?android:selectableItemBackground"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:shadowColor="@color/neutral_70"
-            android:shadowDx="@dimen/reader_photo_title_shadow_offset"
-            android:shadowDy="@dimen/reader_photo_title_shadow_offset"
-            android:shadowRadius="@dimen/reader_photo_title_shadow_radius"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/text_sz_medium"
-            tools:text="text_attribution"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_alignParentEnd="true"/>
 
     </RelativeLayout>
 
