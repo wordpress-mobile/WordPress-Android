@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.SingleStoreWellSqlConfigForTests
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogModel
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState
+import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.FAILED
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.QUEUED
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.UPLOADING
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
@@ -102,6 +103,36 @@ class EncryptedLogSqlUtilsTest {
             }
             assertThat(sqlUtils.getNumberOfUploadingEncryptedLogs()).isEqualTo(numberOfLogs.toLong())
         }
+    }
+
+    @Test
+    fun `test get encrypted logs for upload includes QUEUED logs`() {
+        sqlUtils.insertOrUpdateEncryptedLog(createTestEncryptedLog(uploadState = QUEUED))
+
+        assertThat(sqlUtils.getEncryptedLogsForUpload()).isNotEmpty
+    }
+
+    @Test
+    fun `test get encrypted logs for upload includes FAILED logs`() {
+        sqlUtils.insertOrUpdateEncryptedLog(createTestEncryptedLog(uploadState = FAILED))
+
+        assertThat(sqlUtils.getEncryptedLogsForUpload()).isNotEmpty
+    }
+
+    @Test
+    fun `test get encrypted logs for upload does not include UPLOADING logs`() {
+        sqlUtils.insertOrUpdateEncryptedLog(createTestEncryptedLog(uploadState = UPLOADING))
+
+        assertThat(sqlUtils.getEncryptedLogsForUpload()).isEmpty()
+    }
+
+    @Test
+    fun `test get encrypted logs for upload is in correct order`() {
+        sqlUtils.insertOrUpdateEncryptedLog(createTestEncryptedLog(uploadState = FAILED))
+        sqlUtils.insertOrUpdateEncryptedLog(createTestEncryptedLog(uploadState = QUEUED))
+
+        // Queued logs should be uploaded before the failed ones
+        assertThat(sqlUtils.getEncryptedLogsForUpload().firstOrNull()?.uploadState).isEqualTo(QUEUED)
     }
 
     private fun getTestEncryptedLogFromDB() = sqlUtils.getEncryptedLog(TEST_UUID)
