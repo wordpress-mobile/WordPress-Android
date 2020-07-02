@@ -40,7 +40,6 @@ class EncryptedLogSqlUtils @Inject constructor() {
                 .execute()
     }
 
-    // TODO: Add a unit test for this
     fun getEncryptedLogsForUpload(): List<EncryptedLog> {
         val uploadStates = listOf(QUEUED, FAILED).map { it.value }
         return WellSql.select(EncryptedLogModel::class.java)
