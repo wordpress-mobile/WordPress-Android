@@ -14,12 +14,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
+import org.wordpress.android.ui.reader.actions.ReaderActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.models.ReaderTagHeaderInfo;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -29,6 +34,7 @@ import java.util.HashMap;
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
 public class ReaderTagHeaderView extends RelativeLayout {
+    private ReaderFollowButton mFollowButton;
     private ImageView mImageView;
     private TextView mTxtAttribution;
     private ReaderTag mCurrentTag;
@@ -52,6 +58,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
 
     private void initView(Context context) {
         View view = inflate(context, R.layout.reader_tag_header_view, this);
+        mFollowButton = (ReaderFollowButton) view.findViewById(R.id.follow_button);
         mImageView = view.findViewById(R.id.image_tag_header);
         mTxtAttribution = view.findViewById(R.id.text_attribution);
     }
@@ -78,6 +85,19 @@ public class ReaderTagHeaderView extends RelativeLayout {
         } else if (isTagChanged) {
             getTagHeaderInfo();
         }
+
+        /*if (ReaderUtils.isLoggedOutReader()) {
+            mFollowButton.setVisibility(View.GONE);
+        } else {*/
+        mFollowButton.setVisibility(View.VISIBLE);
+        mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagSlug()));
+        mFollowButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFollowStatus();
+            }
+        });
+//        }
     }
 
     private void setTagHeaderInfo(final ReaderTagHeaderInfo info) {
@@ -173,6 +193,42 @@ public class ReaderTagHeaderView extends RelativeLayout {
 
         private String getKeyForTag(ReaderTag tag) {
             return tag.getTagSlug();
+        }
+    }
+
+    private void toggleFollowStatus() {
+        if (mCurrentTag == null || !NetworkUtils.checkConnection(getContext())) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagSlug());
+
+        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
+            @Override
+            public void onActionResult(boolean succeeded) {
+                if (getContext() == null) {
+                    return;
+                }
+                mFollowButton.setEnabled(true);
+                if (!succeeded) {
+                    int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag : R.string.reader_toast_err_remove_tag;
+                    ToastUtils.showToast(getContext(), errResId);
+                    mFollowButton.setIsFollowed(!isAskingToFollow);
+                }
+            }
+        };
+
+        mFollowButton.setEnabled(false);
+
+        boolean success;
+        if (isAskingToFollow) {
+            success = ReaderTagActions.addTag(mCurrentTag, listener);
+        } else {
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+        }
+
+        if (success) {
+            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
         }
     }
 }
