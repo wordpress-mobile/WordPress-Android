@@ -87,6 +87,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
@@ -94,6 +95,8 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.media.MediaBrowserActivity
+import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -689,39 +692,42 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                    val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
-                    showSiteIconProgressBar(true)
-                    updateSiteIconMediaId(mediaId)
-                } else {
-                    val mediaUriStringsArray = data.getStringArrayExtra(
-                            PhotoPickerActivity.EXTRA_MEDIA_URIS
-                    )
-                    if (mediaUriStringsArray.isNullOrEmpty()) {
-                        AppLog.e(
-                                UTILS,
-                                "Can't resolve picked or captured image"
+                if (!handleMediaPickerResultForStories(data)) {
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
+                        showSiteIconProgressBar(true)
+                        updateSiteIconMediaId(mediaId)
+                    } else {
+                        val mediaUriStringsArray = data.getStringArrayExtra(
+                                PhotoPickerActivity.EXTRA_MEDIA_URIS
                         )
-                        return
-                    }
-                    val source = PhotoPickerMediaSource.fromString(
-                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
-                    )
-                    val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
-                    AnalyticsTracker.track(stat)
-                    val imageUri = Uri.parse(mediaUriStringsArray[0])
-                    if (imageUri != null) {
-                        val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
-                                activity, imageUri
-                        ) { uri: Uri ->
-                            showSiteIconProgressBar(true)
-                            startCropActivity(uri)
-                        }
-                        if (!didGoWell) {
+                        if (mediaUriStringsArray.isNullOrEmpty()) {
                             AppLog.e(
                                     UTILS,
-                                    "Can't download picked or captured image"
+                                    "Can't resolve picked or captured image"
                             )
+                            return
+                        }
+
+                        val source = PhotoPickerMediaSource.fromString(
+                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                        )
+                        val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
+                        AnalyticsTracker.track(stat)
+                        val imageUri = Uri.parse(mediaUriStringsArray[0])
+                        if (imageUri != null) {
+                            val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
+                                    activity, imageUri
+                            ) { uri: Uri ->
+                                showSiteIconProgressBar(true)
+                                startCropActivity(uri)
+                            }
+                            if (!didGoWell) {
+                                AppLog.e(
+                                        UTILS,
+                                        "Can't download picked or captured image"
+                                )
+                            }
                         }
                     }
                 }
@@ -753,6 +759,59 @@ class MySiteFragment : Fragment(),
                 requestEmailValidation(requireContext(), email)
             }
         }
+    }
+
+    private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
+        if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
+            val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
+            return browserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER
+        }
+        return false
+    }
+
+    /*
+        return true if MediaPickerResult was handled
+     */
+    private fun handleMediaPickerResultForStories(data: Intent): Boolean {
+        if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
+            ActivityLauncher.addNewStoryForResult(
+                    activity,
+                    selectedSite,
+                    PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+            )
+            return true
+        } else if (isWPStoriesMediaBrowserTypeResult(data)) {
+            if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
+                ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                        activity,
+                        selectedSite,
+                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        data.getLongArrayExtra(
+                                MediaBrowserActivity.RESULT_IDS
+                        )
+                )
+                return true
+            } else {
+                val mediaUriStringsArray = data.getStringArrayExtra(
+                        PhotoPickerActivity.EXTRA_MEDIA_URIS
+                )
+                if (mediaUriStringsArray.isNullOrEmpty()) {
+                    AppLog.e(
+                            UTILS,
+                            "Can't resolve picked or captured image"
+                    )
+                    return false
+                }
+                ActivityLauncher.addNewStoryWithMediaUrisForResult(
+                        activity,
+                        selectedSite,
+                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
+                        mediaUriStringsArray
+                )
+                return true
+            }
+        }
+        return false
     }
 
     override fun onConfirm(result: Bundle?) {

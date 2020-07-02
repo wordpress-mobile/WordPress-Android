@@ -674,6 +674,41 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, StoryComposerActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void addNewStoryWithMediaIdsForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
+            long[] mediaIds
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void addNewStoryWithMediaUrisForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
+            String[] mediaUris
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS, mediaUris);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 

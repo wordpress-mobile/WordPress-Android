@@ -138,9 +138,15 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
-        editorMedia.start(site!!, this, STORY_EDITOR)
+        editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
         postEditorAnalyticsSession?.start(null)
         startObserving()
+    }
+
+    override fun onLoadFromIntent(intent: Intent) {
+        super.onLoadFromIntent(intent)
+        // now see if we need to handle information coming from the MediaPicker to populate
+        handleMediaPickerIntentData(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -155,7 +161,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         data?.let {
             when (requestCode) {
                 RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> {
-                    handleMediaPickerResult(it)
+                    handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
                     if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
@@ -164,7 +170,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         )
                         editorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                        handleMediaPickerResult(it)
+                        handleMediaPickerIntentData(it)
                     }
                 }
             }
@@ -218,7 +224,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return true
     }
 
-    fun handleMediaPickerResult(data: Intent) {
+    fun handleMediaPickerIntentData(data: Intent) {
         // TODO move this to EditorMedia
         val ids = ListUtils.fromLongArray(
                 data.getLongArrayExtra(
