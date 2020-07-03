@@ -298,7 +298,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // also, Story posts are always PUBLISHED
         editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
         site?.let {
-            savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
+            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
         }
     }
 
