@@ -344,6 +344,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         initEmojiCompat();
         mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
+        mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
