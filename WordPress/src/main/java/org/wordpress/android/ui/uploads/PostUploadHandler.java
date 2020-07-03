@@ -334,9 +334,13 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                                 // and the PostModel contains Gutenberg blocks.
                                 // As a proxy to mIsNewPost, we're using postModel.isLocalDraft(). The choice is
                                 // loosely made knowing the other check ("contains blocks") is in place.
-                                PostUtils.shouldShowGutenbergEditor(mPost.isLocalDraft(), mPost.getContent(),
-                                        selectedSite)
-                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
+                                // NOTE: added now first check if this post contains a WP Story and mark it created
+                                // like so.
+                                PostUtils.contentContainsWPStoryGutenbergBlocks(mPost.getContent())
+                                        ? SiteUtils.WP_STORIES_CREATOR_NAME
+                                        : (PostUtils.shouldShowGutenbergEditor(
+                                                    mPost.isLocalDraft(), mPost.getContent(), selectedSite
+                                                ) ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
                     }
                 }
                 if (hasGallery()) {
