@@ -683,6 +683,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
                         event.post, sCurrentUploadingPostAnalyticsProperties);
                 sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                         PostUtils.contentContainsGutenbergBlocks(event.post.getContent()));
+                sCurrentUploadingPostAnalyticsProperties.put(AnalyticsUtils.HAS_WP_STORIES_BLOCKS_KEY,
+                        PostUtils.contentContainsWPStoryGutenbergBlocks(event.post.getContent()));
                 AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_PUBLISHED_POST,
                         mSiteStore.getSiteByLocalId(event.post.getLocalSiteId()),
                         sCurrentUploadingPostAnalyticsProperties);

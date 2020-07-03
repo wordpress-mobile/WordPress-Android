@@ -80,6 +80,7 @@ public class AnalyticsUtils {
     private static final String NEWS_CARD_VERSION = "version";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
+    public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
 
