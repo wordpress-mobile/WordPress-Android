@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 112
+        return 113
     }
 
     override fun getDbName(): String {
@@ -1250,6 +1250,11 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "UNIQUE (REMOTE_TAG_ID, LOCAL_SITE_ID) " +
                                     "ON CONFLICT REPLACE)"
                     )
+                }
+                112 -> migrate(version) {
+                    db.execSQL("CREATE TABLE EncryptedLogModel (UUID TEXT,FILE_PATH TEXT,DATE_CREATED TEXT," +
+                            "UPLOAD_STATE_DB_VALUE INTEGER,FAILED_COUNT INTEGER," +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT,UNIQUE(UUID) ON CONFLICT REPLACE)")
                 }
             }
         }

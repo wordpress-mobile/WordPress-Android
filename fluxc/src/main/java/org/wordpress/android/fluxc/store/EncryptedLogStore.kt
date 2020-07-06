@@ -29,8 +29,6 @@ import javax.inject.Singleton
 
 private const val MAX_RETRY_COUNT = 3
 
-// TODO: Add EncryptedLogModel DB migration
-
 @Singleton
 class EncryptedLogStore @Inject constructor(
     private val encryptedLogRestClient: EncryptedLogRestClient,
