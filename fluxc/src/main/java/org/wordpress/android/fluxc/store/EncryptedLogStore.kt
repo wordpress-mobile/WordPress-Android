@@ -27,8 +27,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO: Increase the retry count
-private const val MAX_FAIL_COUNT = 1
+private const val MAX_RETRY_COUNT = 3
 
 // TODO: Add EncryptedLogModel DB migration
 
@@ -58,15 +57,15 @@ class EncryptedLogStore @Inject constructor(
     }
 
     /**
-     * Document the logic for when uploads will happen:
+     * A method for the client to use to start uploading any encrypted logs that might have been queued.
      *
-     * Uploads should be checked:
-     * 1. After [queueLogForUpload]
-     * 2. After [handleSuccessfulUpload]
-     * 3. Sometimes after [handleFailedUpload]
-     * 4. At application start
-     * 5. After a timer - maybe due to [handleFailedUpload]
+     * This method should be called within a coroutine, possibly in GlobalScope so it's not attached to any one context.
      */
+    @Suppress("unused")
+    suspend fun uploadQueuedEncryptedLogs() {
+        uploadNext()
+    }
+
     private suspend fun queueLogForUpload(payload: UploadEncryptedLogPayload) {
         // If the log file doesn't exist, there is nothing we can do
         if (!payload.file.exists()) {
@@ -131,7 +130,7 @@ class EncryptedLogStore @Inject constructor(
                 handleFinalUploadFailure(encryptedLog, error)
             }
             Unknown -> {
-                if (encryptedLog.failedCount + 1 >= MAX_FAIL_COUNT) {
+                if (encryptedLog.failedCount + 1 >= MAX_RETRY_COUNT) {
                     handleFinalUploadFailure(encryptedLog, error)
                 } else {
                     encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(
