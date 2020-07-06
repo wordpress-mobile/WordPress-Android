@@ -24,7 +24,8 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val MAX_FAIL_COUNT = 3
+// TODO: Increase the retry count
+private const val MAX_FAIL_COUNT = 1
 
 // TODO: Add EncryptedLogModel DB migration
 
