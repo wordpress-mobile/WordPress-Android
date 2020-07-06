@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-17 08:19:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
@@ -27,8 +27,6 @@ Language: cs_CZ
     <string name="stats_management_try_it_now">Vyzkoušet</string>
     <string name="stats_management_new">Nový</string>
     <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
-    <string name="post_list_author_everyone">Všichni</string>
-    <string name="post_list_author_me">Já</string>
     <string name="post_list_tab_drafts">Koncepty</string>
     <string name="stats_insights_this_year_site_stats">Tento rok</string>
     <string name="stats_insights_posts">Příspěvky</string>

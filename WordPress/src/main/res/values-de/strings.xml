@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
@@ -586,8 +586,6 @@ Language: de
     <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
     <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
     <string name="post_list_tab_drafts">Entwürfe</string>
-    <string name="post_list_author_everyone">Jeder</string>
-    <string name="post_list_author_me">Ich</string>
     <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
     <string name="backdated_for">Zurückdatiert auf: %s</string>
     <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>

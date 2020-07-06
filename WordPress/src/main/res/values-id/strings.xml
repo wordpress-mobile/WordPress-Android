@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-26 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
@@ -584,8 +584,6 @@ Language: id
     <string name="editor_failed_to_insert_media_tap_to_retry">Gagal memasukkan media.\nKetuk untuk mencoba lagi.</string>
     <string name="editor_uploading_draft">Konsep Anda sedang diunggah</string>
     <string name="post_uploading_draft">Mengunggah konsep</string>
-    <string name="post_list_author_everyone">Setiap Orang</string>
-    <string name="post_list_author_me">Saya</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>

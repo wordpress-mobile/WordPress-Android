@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 13:54:10+0000
+Translation-Revision-Date: 2020-07-01 04:52:59+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">リンクをブラウザーで開く</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">前のコンテンツシートへ移動</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">グラデーションのカスタマイズへ移動</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">カスタムカラーピッカーへ移動</string>
+    <string name="gutenberg_native_gradient_type">グラデーションタイプ</string>
+    <string name="gutenberg_native_go_back">戻る</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">ダブルタップしてオプションを選択</string>
+    <string name="gutenberg_native_customize_gradient">グラデーションをカスタマイズ</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">ページ作成者</string>
+    <string name="photo_picker_use_gif">この GIF を使う</string>
+    <string name="error_media_thumbnail_not_loaded">メディアサムネイルを読み込めませんでした</string>
+    <string name="menu_content_info">コンテンツ構造</string>
+    <string name="everyone">誰でも</string>
+    <string name="me">自分</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">リリースごとにブロックを追加できるよう努めています。 その間は、デバイスの Web ブラウザーを使用してこのブロックを編集できます。</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Web ブラウザーでブロックを編集</string>
     <string name="gutenberg_native_dismiss">非表示</string>
@@ -586,8 +601,6 @@ Language: ja_JP
     <string name="editor_uploading_draft">下書きをアップロードしています</string>
     <string name="post_uploading_draft">下書きをアップロードしています</string>
     <string name="post_list_tab_drafts">下書き</string>
-    <string name="post_list_author_everyone">すべてのユーザー</string>
-    <string name="post_list_author_me">自分</string>
     <string name="error_restoring_post">投稿を復元する際にエラーが発生しました</string>
     <string name="backdated_for">遡及日 :%s</string>
     <string name="stats_insights_management_title">最も関連の深い統計情報のみを表示します。以下に統計概要を追加し整理します。</string>
