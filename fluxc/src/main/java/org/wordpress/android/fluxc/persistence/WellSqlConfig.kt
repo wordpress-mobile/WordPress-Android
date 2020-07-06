@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 112
+        return 113
     }
 
     override fun getDbName(): String {
@@ -1250,6 +1250,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "UNIQUE (REMOTE_TAG_ID, LOCAL_SITE_ID) " +
                                     "ON CONFLICT REPLACE)"
                     )
+                }
+                112 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WhatsNewAnnouncementModel ADD APP_VERSION_TARGETS TEXT NOT NULL")
                 }
             }
         }
