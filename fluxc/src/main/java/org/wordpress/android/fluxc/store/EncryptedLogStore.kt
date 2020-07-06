@@ -158,8 +158,9 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
-    sealed class UploadEncryptedLogError : OnChangedError {
+    sealed class UploadEncryptedLogError(val message: String? = null) : OnChangedError {
         object Unknown : UploadEncryptedLogError()
-        class InvalidUuid(val message: String) : UploadEncryptedLogError()
+        class InvalidRequest(message: String?) : UploadEncryptedLogError(message)
+        class TooManyRequests(message: String?) : UploadEncryptedLogError(message)
     }
 }
