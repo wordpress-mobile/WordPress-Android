@@ -17,6 +17,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogR
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploadFailed
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploaded
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.InvalidRequest
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
@@ -120,22 +123,36 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private suspend fun handleFailedUpload(encryptedLog: EncryptedLog, error: UploadEncryptedLogError) {
-        // TODO: Handle known server errors. If the upload failed for a temporary reason, don't increase failed count
-        // TODO: and just queue it again with a back off timer
-        val updatedEncryptedLog = encryptedLog.copy(
-                failedCount = encryptedLog.failedCount + 1,
-                uploadState = FAILED
-        )
-        if (updatedEncryptedLog.failedCount >= MAX_FAIL_COUNT) {
-            // If a log failed to upload too many times, assume we can't upload it
-            deleteEncryptedLog(updatedEncryptedLog)
-
-            // Since we have a retry mechanism we should only notify that we failed to upload when we give up
-            emitChange(OnEncryptedLogUploaded(uuid = encryptedLog.uuid, file = encryptedLog.file, error = error))
-        } else {
-            encryptedLogSqlUtils.insertOrUpdateEncryptedLog(updatedEncryptedLog)
+        when (error) {
+            is TooManyRequests -> {
+                encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(uploadState = FAILED))
+            }
+            is InvalidRequest -> {
+                handleFinalUploadFailure(encryptedLog, error)
+            }
+            Unknown -> {
+                if (encryptedLog.failedCount + 1 >= MAX_FAIL_COUNT) {
+                    handleFinalUploadFailure(encryptedLog, error)
+                } else {
+                    encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(
+                            failedCount = encryptedLog.failedCount + 1,
+                            uploadState = FAILED
+                    ))
+                }
+            }
         }
         uploadNextWithBackOffTiming()
+    }
+
+    /**
+     * If a log has failed to upload too many times, or it's failing for a reason we know retrying won't help,
+     * this method should be called to clean up and notify the client.
+     */
+    private fun handleFinalUploadFailure(encryptedLog: EncryptedLog, error: UploadEncryptedLogError) {
+        deleteEncryptedLog(encryptedLog)
+
+        // Since we have a retry mechanism we should only notify that we failed to upload when we give up
+        emitChange(OnEncryptedLogUploaded(uuid = encryptedLog.uuid, file = encryptedLog.file, error = error))
     }
 
     private fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
@@ -158,6 +175,7 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
+    // TODO: Any other known upload errors we should handle?
     sealed class UploadEncryptedLogError(val message: String? = null) : OnChangedError {
         object Unknown : UploadEncryptedLogError()
         class InvalidRequest(message: String?) : UploadEncryptedLogError(message)
