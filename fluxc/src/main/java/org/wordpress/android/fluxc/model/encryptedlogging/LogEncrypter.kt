@@ -23,7 +23,7 @@ class LogEncrypter(private val sourceFile: File, private val uuid: String, priva
         }
     }
 
-    fun read(): String = buildString {
+    fun encrypt(): String = buildString {
         append(buildHeader())
         sourceFile.readLines().forEach { line ->
             append(buildMessage(line))

@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog
 
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.wordpress.android.fluxc.network.EncryptedLogUploadRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets
@@ -18,17 +19,27 @@ constructor(
 ) {
     suspend fun uploadLog(logUuid: String, contents: String) = suspendCancellableCoroutine<LogUploadResult> { cont ->
         val request = EncryptedLogUploadRequest(logUuid, contents, appSecrets.appSecret, Response.Listener {
-            // TODO: add callbacks
             cont.resume(LogUploaded)
-        }, Response.ErrorListener {
-            cont.resume(LogUploadFailed)
+        }, Response.ErrorListener { error ->
+            cont.resume(LogUploadFailed(mapError(error)))
         })
         cont.invokeOnCancellation { request.cancel() }
         requestQueue.add(request)
+    }
+
+    // {"error":"invalid-request","message":"Invalid UUID: uuids must only contain letters, numbers, dashes, and curly brackets"}
+    private fun mapError(error: VolleyError): LogUploadErrorType {
+        val errorMessageFromData = String(error.networkResponse.data)
+        return LogUploadErrorType.Unknown
     }
 }
 
 sealed class LogUploadResult {
     object LogUploaded : LogUploadResult()
-    object LogUploadFailed : LogUploadResult()
+    class LogUploadFailed(val error: LogUploadErrorType) : LogUploadResult()
+}
+
+sealed class LogUploadErrorType {
+    object Unknown: LogUploadErrorType()
+    class InvalidUuid(val message: String): LogUploadErrorType()
 }
