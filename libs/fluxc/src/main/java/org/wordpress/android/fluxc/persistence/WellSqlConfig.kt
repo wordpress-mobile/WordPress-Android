@@ -1223,8 +1223,8 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 110 -> migrate(version) {
-                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementModel")
-                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeatureModel")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncement")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncementFeature")
                     db.execSQL(
                             "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
                                     "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION TEXT NOT NULL," +
@@ -1252,7 +1252,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 112 -> migrate(version) {
-                    db.execSQL("ALTER TABLE WhatsNewAnnouncementModel ADD APP_VERSION_TARGETS TEXT NOT NULL")
+                    db.execSQL("ALTER TABLE WhatsNewAnnouncement ADD APP_VERSION_TARGETS TEXT NOT NULL")
                 }
             }
         }
