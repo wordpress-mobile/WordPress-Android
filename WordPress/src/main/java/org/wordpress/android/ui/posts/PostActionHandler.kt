@@ -72,7 +72,7 @@ class PostActionHandler(
         invalidateList.invoke()
     })
 
-    fun handlePostButton(buttonType: PostListButtonType, post: PostModel) {
+    fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean) {
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> triggerPostListAction.invoke(RetryUpload(post))
@@ -105,7 +105,7 @@ class PostActionHandler(
                     post.isLocallyChanged -> {
                         postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
                     }
-                    PostUtils.hasAutoSave(post) -> {
+                    hasAutoSave -> {
                         postListDialogHelper.showTrashPostWithUnsavedChangesConfirmationDialog(post)
                     }
                     else -> trashPost(post)
