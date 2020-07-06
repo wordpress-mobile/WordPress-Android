@@ -63,7 +63,7 @@ class EncryptedLogStore @Inject constructor(
      * 4. At application start
      * 5. After a timer - maybe due to [handleFailedUpload]
      */
-    suspend fun queueLogForUpload(payload: UploadEncryptedLogPayload) {
+    private suspend fun queueLogForUpload(payload: UploadEncryptedLogPayload) {
         // If the log file doesn't exist, there is nothing we can do
         if (!payload.file.exists()) {
             return
