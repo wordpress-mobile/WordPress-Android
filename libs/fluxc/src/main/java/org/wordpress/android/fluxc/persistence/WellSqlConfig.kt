@@ -1252,7 +1252,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 112 -> migrate(version) {
-                    db.execSQL("ALTER TABLE WhatsNewAnnouncement ADD APP_VERSION_TARGETS TEXT NOT NULL")
+                    db.execSQL("ALTER TABLE WhatsNewAnnouncement ADD APP_VERSION_TARGETS TEXT")
                 }
             }
         }
