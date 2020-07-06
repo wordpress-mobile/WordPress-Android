@@ -33,7 +33,7 @@ class EncryptedLogStore @Inject constructor(
      * 5. After a timer - maybe due to [handleFailedUpload]
      */
     // TODO: Remove `suspend` and move the logic to bg thread and return asap
-    private suspend fun queueLogForUpload(uuid: String, file: File) {
+    suspend fun queueLogForUpload(uuid: String, file: File) {
         // If the log file doesn't exist, there is nothing we can do
         if (!file.exists()) {
             return
@@ -75,7 +75,7 @@ class EncryptedLogStore @Inject constructor(
                 sourceFile = encryptedLog.file,
                 uuid = encryptedLog.uuid,
                 publicKey = keyPair.publicKey
-        ).read()
+        ).encrypt()
         encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)
     }
 
