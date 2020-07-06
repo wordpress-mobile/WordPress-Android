@@ -36,10 +36,10 @@ constructor(
 
 sealed class LogUploadResult {
     object LogUploaded : LogUploadResult()
-    class LogUploadFailed(val error: LogUploadErrorType) : LogUploadResult()
+    class LogUploadFailed(val errorType: LogUploadErrorType) : LogUploadResult()
 }
 
 sealed class LogUploadErrorType {
-    object Unknown: LogUploadErrorType()
-    class InvalidUuid(val message: String): LogUploadErrorType()
+    object Unknown : LogUploadErrorType()
+    class InvalidUuid(val message: String) : LogUploadErrorType()
 }

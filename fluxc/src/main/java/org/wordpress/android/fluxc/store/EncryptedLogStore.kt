@@ -6,6 +6,9 @@ import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadStat
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptionUtils
 import org.wordpress.android.fluxc.model.encryptedlogging.LogEncrypter
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient
+import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.LogUploadErrorType
+import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.LogUploadResult.LogUploadFailed
+import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.LogUploadResult.LogUploaded
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
 import java.io.File
 import javax.inject.Inject
@@ -76,7 +79,10 @@ class EncryptedLogStore @Inject constructor(
                 uuid = encryptedLog.uuid,
                 publicKey = keyPair.publicKey
         ).encrypt()
-        encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)
+        when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)) {
+            is LogUploaded -> handleSuccessfulUpload(encryptedLog)
+            is LogUploadFailed -> handleFailedUpload(encryptedLog, result.errorType)
+        }
     }
 
     private suspend fun handleSuccessfulUpload(encryptedLog: EncryptedLog) {
@@ -84,7 +90,7 @@ class EncryptedLogStore @Inject constructor(
         uploadNext()
     }
 
-    private suspend fun handleFailedUpload(encryptedLog: EncryptedLog) {
+    private suspend fun handleFailedUpload(encryptedLog: EncryptedLog, errorType: LogUploadErrorType) {
         // TODO: Handle known server errors. If the upload failed for a temporary reason, don't increase failed count
         // TODO: and just queue it again with a back off timer
         val updatedEncryptedLog = encryptedLog.copy(
@@ -94,6 +100,8 @@ class EncryptedLogStore @Inject constructor(
         if (updatedEncryptedLog.failedCount >= MAX_FAIL_COUNT) {
             // If a log failed to upload too many times, assume we can't upload it
             deleteEncryptedLog(updatedEncryptedLog)
+        } else {
+            encryptedLogSqlUtils.insertOrUpdateEncryptedLog(updatedEncryptedLog)
         }
         uploadNextWithBackOffTiming()
     }
