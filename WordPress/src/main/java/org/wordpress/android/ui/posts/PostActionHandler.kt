@@ -101,10 +101,14 @@ class PostActionHandler(
             )
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
-                if (post.isLocallyChanged) {
-                    postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
-                } else {
-                    trashPost(post)
+                when {
+                    post.isLocallyChanged -> {
+                        postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
+                    }
+                    PostUtils.hasAutoSave(post) -> {
+                        postListDialogHelper.showTrashPostWithUnsavedChangesConfirmationDialog(post)
+                    }
+                    else -> trashPost(post)
                 }
             }
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
@@ -259,6 +263,11 @@ class PostActionHandler(
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
         trashPost(post, true)
+    }
+
+    fun trashPostWithUnsavedChanges(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        trashPost(post)
     }
 
     private fun trashPost(post: PostModel, hasLocalChanges: Boolean = false) {

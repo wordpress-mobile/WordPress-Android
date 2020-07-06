@@ -371,6 +371,8 @@
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
