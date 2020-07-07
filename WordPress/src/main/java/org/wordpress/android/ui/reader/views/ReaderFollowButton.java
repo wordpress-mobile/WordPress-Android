@@ -7,23 +7,19 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
+import com.google.android.material.button.MaterialButton;
 
 import org.wordpress.android.R;
-import org.wordpress.android.util.ColorUtils;
-import org.wordpress.android.util.ContextExtensionsKt;
 
 /**
  * Follow button used in reader detail
  */
-public class ReaderFollowButton extends LinearLayout {
-    private TextView mTextFollow;
-    private ImageView mImageFollow;
+public class ReaderFollowButton extends MaterialButton {
     private boolean mIsFollowed;
     private boolean mShowCaption;
 
@@ -33,7 +29,7 @@ public class ReaderFollowButton extends LinearLayout {
     }
 
     public ReaderFollowButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        super(context, attrs, R.attr.followButtonStyle);
         initView(context, attrs);
     }
 
@@ -43,10 +39,6 @@ public class ReaderFollowButton extends LinearLayout {
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        inflate(context, R.layout.reader_follow_button, this);
-        mTextFollow = (TextView) findViewById(R.id.text_follow_button);
-        mImageFollow = (ImageView) findViewById(R.id.image_follow_button);
-
         // default to showing caption, then read the value from passed attributes
         mShowCaption = true;
         if (attrs != null) {
@@ -56,41 +48,31 @@ public class ReaderFollowButton extends LinearLayout {
             }
         }
 
-        // hide follow text and enlarge the follow icon if there's no caption
         if (!mShowCaption) {
-            mTextFollow.setText(null);
-            mTextFollow.setVisibility(View.GONE);
-            int iconSz = context.getResources().getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption);
-            mImageFollow.getLayoutParams().width = iconSz;
-            mImageFollow.getLayoutParams().height = iconSz;
+            hideCaptionAndEnlargeIcon(context);
         }
     }
 
-    private void updateFollowText() {
-        if (mShowCaption) {
-            mTextFollow.setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
-        }
-        mTextFollow.setSelected(mIsFollowed);
+    private void hideCaptionAndEnlargeIcon(Context context) {
+        setText(null);
+        int iconSz = context.getResources().getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption);
+        setIconSize(iconSz);
+    }
 
-        // show green icon if site is followed, gray icon if not followed and there's a caption,
-        // blue icon if not followed and there is no caption
+    private void updateFollowTextAndIcon() {
+        if (mShowCaption) {
+            setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+        }
+        setSelected(mIsFollowed);
+
         int drawableId;
-        int colorId;
         if (mIsFollowed) {
             drawableId = R.drawable.ic_reader_following_white_24dp;
-            colorId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.wpColorSuccess);
         } else {
             drawableId = R.drawable.ic_reader_follow_white_24dp;
-            colorId = ContextExtensionsKt.getColorResIdFromAttribute(getContext(), R.attr.colorPrimary);
         }
-        ColorUtils.INSTANCE.setImageResourceWithTint(mImageFollow, drawableId, colorId);
-    }
-
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        mTextFollow.setEnabled(enabled);
-        mImageFollow.setEnabled(enabled);
+        Drawable drawable = getContext().getResources().getDrawable(drawableId, getContext().getTheme());
+        setIcon(drawable);
     }
 
     public void setIsFollowed(boolean isFollowed) {
@@ -102,7 +84,7 @@ public class ReaderFollowButton extends LinearLayout {
     }
 
     private void setIsFollowed(boolean isFollowed, boolean animateChanges) {
-        if (isFollowed == mIsFollowed && mTextFollow.isSelected() == isFollowed) {
+        if (isFollowed == mIsFollowed && isSelected() == isFollowed) {
             return;
         }
 
@@ -116,7 +98,7 @@ public class ReaderFollowButton extends LinearLayout {
             anim.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationRepeat(Animator animation) {
-                    updateFollowText();
+                    updateFollowTextAndIcon();
                 }
             });
 
@@ -128,7 +110,7 @@ public class ReaderFollowButton extends LinearLayout {
 
             set.start();
         } else {
-            updateFollowText();
+            updateFollowTextAndIcon();
         }
     }
 }

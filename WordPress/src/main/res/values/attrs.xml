@@ -97,6 +97,10 @@
         <attr name="wpShowFollowButtonCaption" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="ReaderFollowButtonStyle">
+        <attr name="followButtonStyle" format="reference"/>
+    </declare-styleable>
+
     <!--
         PostListButton attributes
     -->
