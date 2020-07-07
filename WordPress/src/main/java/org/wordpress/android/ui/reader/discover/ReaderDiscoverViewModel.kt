@@ -142,7 +142,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     fun onReblogSiteSelected(siteLocalId: Int) {
         // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
         //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
-        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost).peekContent()
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))

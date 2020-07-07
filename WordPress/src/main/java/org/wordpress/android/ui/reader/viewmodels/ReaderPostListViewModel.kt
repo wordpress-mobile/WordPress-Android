@@ -80,7 +80,7 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost).peekContent()
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))

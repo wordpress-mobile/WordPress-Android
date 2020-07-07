@@ -35,7 +35,7 @@ class ReblogUseCaseTest {
 
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
 
         Assertions.assertThat(state).isEqualTo(NoSite)
     }
@@ -48,7 +48,7 @@ class ReblogUseCaseTest {
 
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
 
         Assertions.assertThat(state).isInstanceOf(PostEditor::class.java)
 
@@ -65,7 +65,7 @@ class ReblogUseCaseTest {
 
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
 
         Assertions.assertThat(state).isInstanceOf(SitePicker::class.java)
 
@@ -84,8 +84,8 @@ class ReblogUseCaseTest {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post).peekContent() as SitePicker
-        val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post).peekContent()
+        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post) as SitePicker
+        val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post)
 
         Assertions.assertThat(state).isInstanceOf(PostEditor::class.java)
 
@@ -101,7 +101,7 @@ class ReblogUseCaseTest {
 
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
 
         Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
     }
@@ -113,7 +113,7 @@ class ReblogUseCaseTest {
 
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
 
         Assertions.assertThat(state).isInstanceOf(Unknown::class.java)
     }
