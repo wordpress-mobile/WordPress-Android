@@ -158,6 +158,18 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
+    <style name="Reader.Follow.Button.New" parent="Reader.Follow.Button">
+        <item name="android:textColor">@color/on_secondary_on_background_selector</item>
+        <item name="android:backgroundTint">@color/secondary_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+        <item name="strokeColor">@color/on_secondary_on_background_selector</item>
+        <item name="iconTint">@color/on_secondary_on_background_selector</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:minHeight">@dimen/min_touch_target_sz</item>
+        <item name="android:minWidth">@dimen/min_touch_target_sz</item>
+    </style>
+
     <!-- EditTexts -->
 
     <style name="ReaderEditText">
