@@ -30,6 +30,7 @@ import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiSta
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
+import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -42,6 +43,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
     @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
     @Mock lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
+    @Mock lateinit var updateStoryTitleUseCase: UpdateStoryPostTitleUseCase
     @Mock lateinit var site: SiteModel
 
     @InternalCoroutinesApi
@@ -54,6 +56,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
                 getButtonUiStateUseCase,
                 mock(),
                 storyRepositoryWrapper,
+                updateStoryTitleUseCase,
                 TEST_DISPATCHER
         )
         whenever(
@@ -66,6 +69,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
             PublishButtonUiState(it.arguments[2] as (PublishPost) -> Unit)
         }
         whenever(editPostRepository.getEditablePost()).thenReturn(PostModel())
+        whenever(editPostRepository.title).thenReturn("")
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
         whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
@@ -358,22 +362,22 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that if currentStoryTitle is set then storyTitle shouldn't be null`() {
+    fun `verify that if post title is set then storyTitle text shouldn't be empty`() {
         val storyTitle = "Story Title"
-        whenever(storyRepositoryWrapper.getCurrentStoryTitle()).thenReturn(storyTitle)
+        whenever(editPostRepository.title).thenReturn(storyTitle)
 
         viewModel.start(editPostRepository, site, true)
 
-        assertThat(getStoryTitleUiState()?.storyTitle).isNotNull()
+        assertThat(getStoryTitleUiState()?.storyTitle?.text).isEqualTo(storyTitle)
     }
 
     @Test
-    fun `verify that if currentStoryTitle is null then storyTitle should be null`() {
-        whenever(storyRepositoryWrapper.getCurrentStoryTitle()).thenReturn(null)
+    fun `verify that if post title is null then storyTitle text should be empty`() {
+        whenever(editPostRepository.title).thenReturn(null)
 
         viewModel.start(editPostRepository, site, true)
 
-        assertThat(getStoryTitleUiState()?.storyTitle).isNull()
+        assertThat(getStoryTitleUiState()?.storyTitle?.text).isEmpty()
     }
 
     @Test
@@ -384,6 +388,16 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
 
         verify(storyRepositoryWrapper).setCurrentStoryTitle(eq(storyTitle))
+    }
+
+    @Test
+    fun `verify that if storyTitleChanged then updateStoryPostTitleUseCase is called`() {
+        val storyTitle = "Story Title"
+
+        viewModel.start(editPostRepository, site, true)
+        getStoryTitleUiState()?.onStoryTitleChanged?.invoke(storyTitle)
+
+        verify(updateStoryTitleUseCase).updateStoryTitle(eq(storyTitle), any())
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
