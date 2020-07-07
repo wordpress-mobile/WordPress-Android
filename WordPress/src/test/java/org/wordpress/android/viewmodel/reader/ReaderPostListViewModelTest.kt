@@ -27,6 +27,6 @@ class ReaderPostListViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ReaderPostListViewModel(readerPostCardActionsHandler,reblogUseCase, readerTracker)
+        viewModel = ReaderPostListViewModel(readerPostCardActionsHandler, reblogUseCase, readerTracker)
     }
 }
