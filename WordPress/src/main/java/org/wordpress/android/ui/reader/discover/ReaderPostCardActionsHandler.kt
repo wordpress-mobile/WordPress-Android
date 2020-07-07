@@ -81,7 +81,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     }
 
     private fun handleReblogClicked(post: ReaderPost) {
-        val state = reblogUseCase.onReblogButtonClicked(post).peekContent()
+        val state = reblogUseCase.onReblogButtonClicked(post)
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))

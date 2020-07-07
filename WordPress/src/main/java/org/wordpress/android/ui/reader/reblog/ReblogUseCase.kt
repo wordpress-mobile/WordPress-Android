@@ -13,41 +13,40 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSiteP
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.BuildConfig
-import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 @Reusable
 class ReblogUseCase @Inject constructor(private val siteStore: SiteStore) {
-    fun onReblogButtonClicked(post: ReaderPost): Event<ReblogState> {
+    fun onReblogButtonClicked(post: ReaderPost): ReblogState {
         val sites = siteStore.visibleSitesAccessedViaWPCom
 
         return when (sites.count()) {
-            0 -> Event(NoSite)
+            0 -> NoSite
             1 -> {
                 sites.firstOrNull()?.let {
-                    Event(PostEditor(it, post))
-                } ?: Event(Unknown)
+                    PostEditor(it, post)
+                } ?: Unknown
             }
             else -> {
                 sites.firstOrNull()?.let {
-                    Event(SitePicker(it, post))
-                } ?: Event(Unknown)
+                    SitePicker(it, post)
+                } ?: Unknown
             }
         }
     }
 
-    fun onReblogSiteSelected(siteLocalId: Int, post: ReaderPost?): Event<ReblogState> {
+    fun onReblogSiteSelected(siteLocalId: Int, post: ReaderPost?): ReblogState {
         return when {
             post != null -> {
                 val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
-                if (site != null) Event(PostEditor(site, post)) else Event(Unknown)
+                if (site != null) PostEditor(site, post) else Unknown
             }
             BuildConfig.DEBUG -> {
                 throw IllegalStateException("Site Selected without passing the SitePicker state")
             }
             else -> {
                 AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
-                Event(Unknown)
+                Unknown
             }
         }
     }
