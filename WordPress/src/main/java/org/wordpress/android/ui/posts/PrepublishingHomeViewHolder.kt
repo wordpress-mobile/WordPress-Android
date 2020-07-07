@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -58,7 +59,7 @@ sealed class PrepublishingHomeViewHolder(
         val uiHelpers: UiHelpers,
         val imageManager: ImageManager
     ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_story_title_list_item) {
-        private val storyTitle: TextView = itemView.findViewById(R.id.story_title)
+        private val storyTitle: EditText = itemView.findViewById(R.id.story_title)
         private val thumbnail: ImageView = itemView.findViewById(R.id.story_thumbnail)
 
         private val thumbnailCornerRadius =
@@ -76,7 +77,8 @@ sealed class PrepublishingHomeViewHolder(
             )
 
             uiState.storyTitle?.let { title ->
-                storyTitle.text = uiHelpers.getTextOfUiString(parent.context, title)
+                storyTitle.setText(uiHelpers.getTextOfUiString(parent.context, title))
+                storyTitle.setSelection(title.text.length)
             }
 
             storyTitle.postDelayed({
