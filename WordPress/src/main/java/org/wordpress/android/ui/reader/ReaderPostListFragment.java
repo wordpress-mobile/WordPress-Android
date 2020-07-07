@@ -455,7 +455,18 @@ public class ReaderPostListFragment extends Fragment
                     return Unit.INSTANCE;
                 }));
 
-                mViewModel.start(mReaderViewModel);
+        mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
+            event.applyIfNotHandled(holder -> {
+                WPSnackbar.make(
+                        requireActivity().findViewById(R.id.coordinator),
+                        holder.getMessageRes(),
+                        Snackbar.LENGTH_LONG
+                ).show();
+                return Unit.INSTANCE;
+            })
+        );
+
+        mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();

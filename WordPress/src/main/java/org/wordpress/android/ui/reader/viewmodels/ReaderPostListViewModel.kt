@@ -3,8 +3,10 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
@@ -35,6 +37,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
@@ -53,6 +58,10 @@ class ReaderPostListViewModel @Inject constructor(
                 pendingReblogPost = target.post
             }
             _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) {event ->
+            _snackbarEvents.value = event
         }
     }
 
@@ -76,8 +85,7 @@ class ReaderPostListViewModel @Inject constructor(
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
         }  else {
-            // TODO malinjir show toast R.string.reader_reblog_error
-            TODO()
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
         pendingReblogPost = null
     }

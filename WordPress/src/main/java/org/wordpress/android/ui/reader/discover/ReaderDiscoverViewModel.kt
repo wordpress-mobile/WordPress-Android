@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
@@ -146,8 +147,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
         }  else {
-            // TODO malinjir show toast R.string.reader_reblog_error
-            TODO()
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
         pendingReblogPost = null
     }
