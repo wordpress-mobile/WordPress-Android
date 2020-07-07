@@ -1252,7 +1252,13 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 112 -> migrate(version) {
-                    db.execSQL("ALTER TABLE WhatsNewAnnouncement ADD APP_VERSION_TARGETS TEXT")
+                    db.execSQL("DROP TABLE IF EXISTS WhatsNewAnnouncement")
+                    db.execSQL(
+                            "CREATE TABLE WhatsNewAnnouncement (_announcement_id INTEGER PRIMARY KEY," +
+                                    "APP_VERSION_NAME TEXT NOT NULL,MINIMUM_APP_VERSION TEXT NOT NULL," +
+                                    "MAXIMUM_APP_VERSION TEXT NOT NULL,APP_VERSION_TARGETS TEXT NOT NULL," +
+                                    "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
+                    )
                 }
             }
         }
