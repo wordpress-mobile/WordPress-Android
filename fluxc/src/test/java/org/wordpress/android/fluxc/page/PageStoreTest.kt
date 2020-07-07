@@ -34,6 +34,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.network.utils.CurrentDateUtils
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PageStore
+import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
@@ -114,7 +115,7 @@ class PageStoreTest {
     @Test
     fun requestPagesFetchesFromServerAndReturnsEvent() = test {
         val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
-        var event: OnPostChanged? = null
+        var event: OnPageChanged? = null
         val job = launch {
             event = store.requestPagesFromServer(site, true)
         }
@@ -123,15 +124,15 @@ class PageStoreTest {
         delay(10)
         job.join()
 
-        assertThat(expected).isEqualTo(event)
+        assertThat(event).isEqualTo(OnPageChanged.Success)
         verify(dispatcher).dispatch(any())
     }
 
     @Test
     fun requestPagesFetchesFromServerAndReturnsEventFromTwoRequests() = test {
         val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
-        var firstEvent: OnPostChanged? = null
-        var secondEvent: OnPostChanged? = null
+        var firstEvent: OnPageChanged? = null
+        var secondEvent: OnPageChanged? = null
         val firstJob = launch {
             firstEvent = store.requestPagesFromServer(site, true)
         }
@@ -144,8 +145,8 @@ class PageStoreTest {
         firstJob.join()
         secondJob.join()
 
-        assertThat(firstEvent).isEqualTo(expected)
-        assertThat(secondEvent).isEqualTo(expected)
+        assertThat(firstEvent).isEqualTo(OnPageChanged.Success)
+        assertThat(secondEvent).isEqualTo(OnPageChanged.Success)
         verify(dispatcher).dispatch(any())
     }
 
@@ -163,15 +164,14 @@ class PageStoreTest {
 
         val secondEvent = store.requestPagesFromServer(site, forced = false)
 
-        assertThat(secondEvent.causeOfChange).isEqualTo(CauseOfOnPostChanged.HasCachedData)
-        assertThat(secondEvent.rowsAffected).isEqualTo(0)
+        assertThat(secondEvent).isEqualTo(OnPageChanged.Success)
         verify(dispatcher).dispatch(any())
     }
 
     @Test
     fun `request pages fetches data when there is no recent call`() = test {
         val expected = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
-        var secondEvent: OnPostChanged? = null
+        var secondEvent: OnPageChanged? = null
         initNow(hour = 8, minute = 0)
         val firstJob = launch {
             store.requestPagesFromServer(site, forced = true)
@@ -190,7 +190,7 @@ class PageStoreTest {
         delay(10)
         secondJob.join()
 
-        assertThat(secondEvent).isEqualTo(expected)
+        assertThat(secondEvent).isEqualTo(OnPageChanged.Success)
         verify(dispatcher, times(2)).dispatch(any())
     }
 
@@ -204,7 +204,7 @@ class PageStoreTest {
     fun requestPagesFetchesPaginatedFromServerAndReturnsSecondEvent() = test {
         val firstEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, true)
         val lastEvent = OnPostChanged(CauseOfOnPostChanged.FetchPages, 5, false)
-        var event: OnPostChanged? = null
+        var event: OnPageChanged? = null
         val job = launch {
             event = store.requestPagesFromServer(site, true)
         }
@@ -215,7 +215,7 @@ class PageStoreTest {
         delay(10)
         job.join()
 
-        assertThat(lastEvent).isEqualTo(event)
+        assertThat(event).isEqualTo(OnPageChanged.Success)
         verify(dispatcher, times(2)).dispatch(actionCaptor.capture())
         val firstPayload = actionCaptor.firstValue.payload as FetchPostsPayload
         assertThat(firstPayload.site).isEqualTo(site)
@@ -232,7 +232,7 @@ class PageStoreTest {
         val event = OnPostChanged(CauseOfOnPostChanged.DeletePost(post.id, post.remotePostId, TRASH), 0)
         val page = PageModel(post, site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
                 post.remotePostId, null, post.featuredImageId)
-        var result: OnPostChanged? = null
+        var result: OnPageChanged? = null
         launch {
             result = store.deletePageFromServer(page)
         }
@@ -240,7 +240,7 @@ class PageStoreTest {
         store.onPostChanged(event)
         delay(10)
 
-        assertThat(result).isEqualTo(event)
+        assertThat(result).isEqualTo(OnPageChanged.Success)
 
         verify(dispatcher, times(1)).dispatch(actionCaptor.capture())
         val payload = actionCaptor.firstValue.payload as RemotePostPayload
@@ -256,7 +256,7 @@ class PageStoreTest {
         event.error = PostError(UNKNOWN_POST)
         val page = PageModel(post, site, post.id, post.title, PageStatus.fromPost(post), Date(), post.isLocallyChanged,
             post.remotePostId, null, post.featuredImageId)
-        var result: OnPostChanged? = null
+        var result: OnPageChanged? = null
         launch {
             result = store.deletePageFromServer(page)
         }
