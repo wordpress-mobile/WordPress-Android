@@ -108,11 +108,7 @@ GEM
       xcpretty (~> 0.3.0)
       xcpretty-travis-formatter (>= 0.0.3)
     gh_inspector (1.1.3)
-<<<<<<< HEAD
-    git (1.6.0)
-=======
     git (1.7.0)
->>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       rchardet (~> 1.8)
     google-api-client (0.36.4)
       addressable (~> 2.5, >= 2.5.1)
@@ -135,11 +131,7 @@ GEM
       google-cloud-core (~> 1.2)
       googleauth (~> 0.9)
       mini_mime (~> 1.0)
-<<<<<<< HEAD
-    googleauth (0.11.0)
-=======
     googleauth (0.12.0)
->>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       faraday (>= 0.17.3, < 2.0)
       jwt (>= 1.4, < 3.0)
       memoist (~> 0.16)
@@ -174,11 +166,7 @@ GEM
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
     oj (3.10.6)
-<<<<<<< HEAD
-    optimist (3.0.0)
-=======
     optimist (3.0.1)
->>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
     options (2.3.2)
     os (1.1.0)
     parallel (1.19.1)
@@ -228,11 +216,7 @@ GEM
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
     word_wrap (1.0.0)
-<<<<<<< HEAD
-    xcodeproj (1.15.0)
-=======
     xcodeproj (1.16.0)
->>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
       CFPropertyList (>= 2.3.3, < 4.0)
       atomos (~> 0.1.3)
       claide (>= 1.0.2, < 2.0)
@@ -247,11 +231,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-<<<<<<< HEAD
-  fastlane (= 2.142.0)!
-=======
   fastlane (= 2.146.1)!
->>>>>>> f8d581c5bf... Update Fastlane and release-toolkit
   fastlane-plugin-wpmreleasetoolkit!
   nokogiri!
   rmagick (~> 3.2.0)
