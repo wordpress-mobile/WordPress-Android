@@ -56,7 +56,9 @@ class UiHelpers @Inject constructor() {
 
     fun setTextOrHide(view: TextView, text: CharSequence?) {
         updateVisibility(view, text != null)
-        view.text = text ?: ""
+        text?.let {
+            view.text = text
+        }
     }
 
     fun setImageOrHide(imageView: ImageView, @DrawableRes resId: Int?) {
