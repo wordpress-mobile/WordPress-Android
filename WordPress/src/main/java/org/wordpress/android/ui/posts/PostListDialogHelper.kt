@@ -13,6 +13,8 @@ import org.wordpress.android.viewmodel.helpers.DialogHolder
 private const val CONFIRM_DELETE_POST_DIALOG_TAG = "CONFIRM_DELETE_POST_DIALOG_TAG"
 private const val CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG = "CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG"
 private const val CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG = "CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG"
+private const val CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG =
+        "CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG"
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
@@ -31,6 +33,7 @@ class PostListDialogHelper(
     private var localPostIdForDeleteDialog: Int? = null
     private var localPostIdForMoveTrashedPostToDraftDialog: Int? = null
     private var localPostIdForTrashPostWithLocalChangesDialog: Int? = null
+    private var localPostIdForTrashPostWithUnsavedChangesDialog: Int? = null
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var localPostIdForAutosaveRevisionResolutionDialog: Int? = null
     private var localPostIdForScheduledPostSyncDialog: Int? = null
@@ -94,6 +97,21 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
+    fun showTrashPostWithUnsavedChangesConfirmationDialog(post: PostModel) {
+        if (!checkNetworkConnection.invoke()) {
+            return
+        }
+        val dialogHolder = DialogHolder(
+                tag = CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG,
+                title = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_title),
+                message = UiStringRes(R.string.dialog_confirm_trash_losing_unsaved_changes_message),
+                positiveButton = UiStringRes(R.string.dialog_button_ok),
+                negativeButton = UiStringRes(R.string.dialog_button_cancel)
+        )
+        localPostIdForTrashPostWithUnsavedChangesDialog = post.id
+        showDialog.invoke(dialogHolder)
+    }
+
     fun showConflictedPostResolutionDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
                 tag = CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG,
@@ -122,6 +140,7 @@ class PostListDialogHelper(
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         trashPostWithLocalChanges: (Int) -> Unit,
+        trashPostWithUnsavedChanges: (Int) -> Unit,
         deletePost: (Int) -> Unit,
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit,
@@ -145,6 +164,10 @@ class PostListDialogHelper(
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog?.let {
                 localPostIdForTrashPostWithLocalChangesDialog = null
                 trashPostWithLocalChanges(it)
+            }
+            CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithUnsavedChangesDialog?.let {
+                localPostIdForTrashPostWithUnsavedChangesDialog = null
+                trashPostWithUnsavedChanges(it)
             }
             CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog?.let {
                 localPostIdForMoveTrashedPostToDraftDialog = null
@@ -171,6 +194,7 @@ class PostListDialogHelper(
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
             CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG -> localPostIdForScheduledPostSyncDialog = null
             CONFIRM_TRASH_POST_WITH_LOCAL_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithLocalChangesDialog = null
+            CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG -> localPostIdForTrashPostWithUnsavedChangesDialog = null
             CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG -> localPostIdForConflictResolutionDialog?.let {
                 updateConflictedPostWithLocalVersion(it)
             }

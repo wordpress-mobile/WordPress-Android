@@ -1,5 +1,6 @@
 15.3
 -----
+* [*] Improve wording for confirmation dialogs when trashing posts
  
 15.2
 -----
