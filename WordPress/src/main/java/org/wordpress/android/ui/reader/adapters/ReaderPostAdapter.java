@@ -33,6 +33,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
@@ -92,9 +93,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final HashSet<String> mRenderedIds = new HashSet<>();
     private NewsItem mNewsItem;
 
+    private ReaderInterfaces.OnPostListItemButtonListener mOnPostListItemButtonListener;
     private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -336,7 +337,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     switch (type) {
                         case BOOKMARK:
                             toggleBookmark(post.blogId, post.postId);
-                            notifyItemChanged(position);
+                            renderPost(position, holder);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
@@ -347,8 +348,14 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         case COMMENTS:
                             ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
                             break;
-                        default:
-                            throw new IllegalArgumentException("onClick invoked with an unexpected type: " + type);
+                        case FOLLOW:
+                        case SITE_NOTIFICATIONS:
+                        case SHARE:
+                        case VISIT_SITE:
+                        case BLOCK_SITE:
+                            mOnPostListItemButtonListener.onButtonClicked(post, type);
+                            renderPost(position, holder);
+                            break;
                     }
                     return Unit.INSTANCE;
                 };
@@ -391,9 +398,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
-            if (mOnPostPopupListener != null) {
-                mOnPostPopupListener.onShowPostPopup(view, post);
-            }
+            // noop
             return Unit.INSTANCE;
         };
 
@@ -480,6 +485,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return mCurrentTag != null && mCurrentTag.isDiscover();
     }
 
+    public void setOnPostListItemButtonListener(OnPostListItemButtonListener listener) {
+        mOnPostListItemButtonListener = listener;
+    }
+
     public void setOnFollowListener(OnFollowListener listener) {
         mFollowListener = listener;
     }
@@ -502,10 +511,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
-    }
-
-    public void setOnPostPopupListener(ReaderInterfaces.OnPostPopupListener onPostPopupListener) {
-        mOnPostPopupListener = onPostPopupListener;
     }
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {

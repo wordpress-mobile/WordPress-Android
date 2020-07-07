@@ -98,6 +98,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.reblog.NoSite;
 import org.wordpress.android.ui.reader.reblog.PostEditor;
 import org.wordpress.android.ui.reader.reblog.SitePicker;
@@ -148,8 +149,8 @@ import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpda
 
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-        ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
+        ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         ReblogActionListener {
@@ -711,7 +712,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
@@ -831,7 +832,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (mCurrentTag != null) {
@@ -1395,11 +1396,6 @@ public class ReaderPostListFragment extends Fragment
         populateSearchSuggestionRecyclerAdapter(null); // always passing null as there's no need to filter
     }
 
-    private void resetSearchSuggestions() {
-        resetSearchSuggestionAdapter();
-        resetSearchSuggestionRecyclerAdapter();
-    }
-
     /*
      * create and assign the suggestion adapter for the search view
      */
@@ -1816,10 +1812,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private boolean isEmptyViewShowing() {
-        return isAdded() && mActionableEmptyView.getVisibility() == View.VISIBLE;
-    }
-
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
         ReaderTag tag;
 
@@ -2008,7 +2000,7 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
-            mPostAdapter.setOnPostPopupListener(this);
+            mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
@@ -2400,7 +2392,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             hideNewPostsBar();
         }
@@ -2580,88 +2572,45 @@ public class ReaderPostListFragment extends Fragment
         AnalyticsTracker.track(stat, properties);
     }
 
-    /*
-     * called when user taps "..." icon next to a post
-     */
     @Override
-    public void onShowPostPopup(View view, final ReaderPost post) {
-//        if (view == null || post == null || !isAdded()) {
-//            return;
-//        }
-//
-//        List<Integer> menuItems = new ArrayList<>();
-//
-//        if (ReaderPostTable.isPostFollowed(post)) {
-//            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-//
-//            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-//            if (post.blogId != post.feedId) {
-//                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-//                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
-//                } else {
-//                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
-//                }
-//            }
-//        } else {
-//            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
-//        }
-//
-//        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
-//        menuItems.add(ReaderMenuAdapter.ITEM_VISIT);
-//
-//        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-//            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-//        }
-//
-//        Context context = view.getContext();
-//        final ListPopupWindow listPopup = new ListPopupWindow(context);
-//        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-//        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
-//        listPopup.setDropDownGravity(Gravity.END);
-//        listPopup.setAnchorView(view);
-//        listPopup.setModal(true);
-//        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                if (!isAdded()) {
-//                    return;
-//                }
-//
-//                listPopup.dismiss();
-//                switch ((int) id) {
-//                    case ReaderMenuAdapter.ITEM_FOLLOW:
-//                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
-//                        toggleFollowStatusForPost(post);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
-//                        onFollowingTapped();
-//                        toggleFollowStatusForPost(post);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_BLOCK:
-//                        blockBlogForPost(post);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
-//                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-//                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-//                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
-//                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-//                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-//                        updateSubscription(SubscriptionAction.NEW, post.blogId);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_SHARE:
-//                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
-//                        sharePost(post);
-//                        break;
-//                    case ReaderMenuAdapter.ITEM_VISIT:
-//                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-//                        ReaderActivityLauncher.openPost(view.getContext(), post);
-//                        break;
-//                }
-//            }
-//        });
-//        listPopup.show();
+    public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
+        switch (actionType) {
+            case FOLLOW:
+                if (post.isFollowedByCurrentUser) {
+                    onFollowingTapped();
+                } else {
+                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
+                }
+                toggleFollowStatusForPost(post);
+                break;
+            case SITE_NOTIFICATIONS:
+                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
+                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
+                    updateSubscription(SubscriptionAction.DELETE, post.blogId);
+                } else {
+                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
+                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
+                    updateSubscription(SubscriptionAction.NEW, post.blogId);
+                }
+                break;
+            case SHARE:
+                AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+                sharePost(post);
+                break;
+            case VISIT_SITE:
+                AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                ReaderActivityLauncher.openPost(getContext(), post);
+                break;
+            case BLOCK_SITE:
+                blockBlogForPost(post);
+                break;
+            case BOOKMARK:
+            case LIKE:
+            case REBLOG:
+            case COMMENTS:
+                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
+        }
     }
 
     @Override
@@ -2740,14 +2689,6 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    private boolean isCurrentTagManagedInFollowingTab() {
-        return ReaderUtils.isTagManagedInFollowingTab(
-                mCurrentTag,
-                mIsTopLevel,
-                mRecyclerView
-        );
     }
 
     /**
