@@ -5,23 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
-import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -29,6 +22,7 @@ import javax.inject.Named
 class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -36,6 +30,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
     /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
         returns result based on device orientation */
@@ -75,19 +72,16 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
             )
         }
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            _navigationEvents.value = event
+        }
     }
 
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
-        when (type) {
-            FOLLOW -> TODO()
-            SITE_NOTIFICATIONS -> TODO()
-            SHARE -> TODO()
-            VISIT_SITE -> TODO()
-            BLOCK_SITE -> TODO()
-            LIKE -> TODO()
-            BOOKMARK -> TODO()
-            REBLOG -> TODO()
-            COMMENTS -> TODO()
+        launch {
+            // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
+            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+            readerPostCardActionsHandler.onAction(post, type)
         }
     }
 
