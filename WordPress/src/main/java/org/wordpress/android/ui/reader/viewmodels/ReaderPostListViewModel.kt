@@ -75,7 +75,7 @@ class ReaderPostListViewModel @Inject constructor(
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
-        }  else {
+        } else {
             // TODO malinjir show toast R.string.reader_reblog_error
             TODO()
         }

@@ -28,7 +28,6 @@ class ReblogUseCaseTest {
         reblogUseCase = ReblogUseCase(siteStore)
     }
 
-
     @Test
     fun `when user has no visible WPCOM site the no site flow is triggered`() {
         val post = ReaderPost()
