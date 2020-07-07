@@ -94,7 +94,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             _navigationEvents.value = event
         }
 
-        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) {event ->
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
         }
     }
