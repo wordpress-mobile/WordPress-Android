@@ -1,13 +1,15 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.reader.reblog.ReblogState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
@@ -17,15 +19,21 @@ import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderPostListViewModel @Inject constructor(
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
     private val readerTracker: ReaderTracker
 ) : ViewModel() {
-    private val _reblogState = MutableLiveData<Event<ReblogState>>()
-    val reblogState: LiveData<Event<ReblogState>> = _reblogState
-
     private var isStarted = false
 
     private var readerViewModel: ReaderViewModel? = null
+
+    /**
+     * Post which is about to be reblogged after the user selects a target site.
+     */
+    private var pendingReblogPost: ReaderPost? = null
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -34,6 +42,18 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
         isStarted = true
+
+        init()
+    }
+
+    private fun init() {
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
     }
 
     /**
@@ -42,7 +62,7 @@ class ReaderPostListViewModel @Inject constructor(
      * @param post post to reblog
      */
     fun onReblogButtonClicked(post: ReaderPost) {
-        _reblogState.value = reblogUseCase.onReblogButtonClicked(post)
+        readerPostCardActionsHandler.onAction(post, REBLOG)
     }
 
     /**
@@ -51,8 +71,15 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val post = (_reblogState.value?.peekContent() as? SitePicker)?.post
-        _reblogState.value = reblogUseCase.onReblogSiteSelected(siteLocalId, post)
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost).peekContent()
+        val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
+        if (navigationTarget != null) {
+            _navigationEvents.postValue(Event(navigationTarget))
+        }  else {
+            // TODO malinjir show toast R.string.reader_reblog_error
+            TODO()
+        }
+        pendingReblogPost = null
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {
