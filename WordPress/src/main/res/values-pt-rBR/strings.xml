@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-19 12:04:31+0000
+Translation-Revision-Date: 2020-07-03 19:25:40+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Abrir link no navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Ir para a folha de conteúdo anterior</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Ir para a personalização de gradiente</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Ir para o seletor de cores personalizadas</string>
+    <string name="gutenberg_native_gradient_type">Tipo de gradiente</string>
+    <string name="gutenberg_native_go_back">Voltar</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
+    <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autor da página</string>
+    <string name="photo_picker_use_gif">Usar este GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Não foi possível carregar a miniatura do arquivo</string>
+    <string name="menu_content_info">Estrutura do conteúdo</string>
+    <string name="everyone">Todos</string>
+    <string name="me">Meus</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar este bloco no navegador.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editar bloco no navegador</string>
     <string name="gutenberg_native_dismiss">Dispensar</string>
@@ -201,13 +216,13 @@ Language: pt_BR
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Não chore por que acabou. Sorria porque aconteceu.</string>
     <string name="gutenberg_native_customize">Personalizar</string>
-    <string name="gutenberg_native_city_10100">Cidade, 01010&#8211;100</string>
+    <string name="gutenberg_native_city_10100">Cidade, 01010–100</string>
     <string name="gutenberg_native_add_paragraph_block">Adicionar bloco de parágrafo</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Uma pequena descrição dos serviços que você oferece.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Uma pequena biografia com sua história pessoal, conquistas ou fatos interessantes.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:email@exemplo.com.br\">email@exemplo.com.br&lt;/a></string>
     <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Uma descrição do projeto e trabalhos apresentados.</string>
-    <string name="gutenberg_native_555_555_1234">(11) 1234&#8211;5678</string>
+    <string name="gutenberg_native_555_555_1234">(11) 1234–5678</string>
     <string name="gutenberg_native_10_street_road">Avenida Paulista, 1</string>
     <string name="create_post_page_fab_tooltip_contributors">Criar um post</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
@@ -586,8 +601,6 @@ Language: pt_BR
     <string name="editor_uploading_draft">Seu rascunho está sendo enviado para o site</string>
     <string name="post_uploading_draft">Enviando rascunho</string>
     <string name="post_list_tab_drafts">Rascunhos</string>
-    <string name="post_list_author_everyone">Todos</string>
-    <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocorreu um erro ao restaurar o post</string>
     <string name="backdated_for">Retroceder para: %s</string>
     <string name="stats_insights_management_title">Ver apenas as estatísticas mais relevantes. Adicione e organize duas informações abaixo.</string>

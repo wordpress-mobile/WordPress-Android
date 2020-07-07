@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
@@ -581,8 +581,6 @@ Language: it
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
     <string name="post_list_tab_drafts">Bozze</string>
-    <string name="post_list_author_everyone">Tutti</string>
-    <string name="post_list_author_me">Io</string>
     <string name="error_restoring_post">Errore durante il recupero dell\'articolo</string>
     <string name="backdated_for">Retrodatato per: %s</string>
     <string name="stats_insights_management_title">Vedi solo le statistiche più rilevanti. Aggiungi e organizza le tue informazioni di seguito.</string>

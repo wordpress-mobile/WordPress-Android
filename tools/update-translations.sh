@@ -36,7 +36,7 @@ for line in $(grep -v en-rUS $LANG_FILE) ; do
     test -d $RESDIR/values-$local/ || mkdir $RESDIR/values-$local/
     test -f $RESDIR/values-$local/$strings_file && cp $RESDIR/values-$local/$strings_file $RESDIR/values-$local/$strings_file.bak
     
-    curl -sSfL --globoff "http://translate.wordpress.org/projects/apps/android/dev/$code/default/export-translations?filters[status]=$filter&format=android" | sed $'s/\.\.\./\…/' | sed $'s/\t/    /g' > $RESDIR/values-$local/$strings_file || (echo Error downloading $code && rm -rf $RESDIR/values-$local/)
+    curl -sSfL --globoff "http://translate.wordpress.org/projects/apps/android/dev/$code/default/export-translations?filters[status]=$filter&format=android" | sed $'s/\.\.\./\…/' | sed $'s/\t/    /g' | sed -E '/Translation-Revision-Date/!s/([[:digit:]])-([[:digit:]])/\1–\2/g' > $RESDIR/values-$local/$strings_file || (echo Error downloading $code && rm -rf $RESDIR/values-$local/)
     test -f $RESDIR/values-$local/$strings_file.bak && rm $RESDIR/values-$local/$strings_file.bak
 done
 

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
@@ -584,8 +584,6 @@ Language: zh_CN
     <string name="editor_uploading_draft">正在上传您的草稿</string>
     <string name="post_uploading_draft">正在上传草稿</string>
     <string name="post_list_tab_drafts">草稿</string>
-    <string name="post_list_author_everyone">所有人</string>
-    <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">恢复文章时出错</string>
     <string name="backdated_for">倒填日期：%s</string>
     <string name="stats_insights_management_title">仅查看相关性较大的统计信息。在下面添加和管理您的见解。</string>
