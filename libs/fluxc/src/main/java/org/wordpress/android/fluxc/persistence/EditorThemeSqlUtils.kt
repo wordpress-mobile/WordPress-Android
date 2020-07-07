@@ -95,8 +95,16 @@ class EditorThemeSqlUtils {
             storedColors: List<EditorThemeElementBuilder>?,
             storedGradients: List<EditorThemeElementBuilder>?
         ): EditorTheme {
-            val colors = storedColors?.mapNotNull { it.toEditorThemeElement() }
-            val gradients = storedGradients?.mapNotNull { it.toEditorThemeElement() }
+            var colors: List<EditorThemeElement>? = null
+            if (storedColors != null && storedColors.count() > 0) {
+                colors = storedColors.mapNotNull { it.toEditorThemeElement() }
+            }
+
+            var gradients: List<EditorThemeElement>? = null
+            if (storedGradients != null && storedGradients.count() > 0) {
+                gradients = storedGradients.mapNotNull { it.toEditorThemeElement() }
+            }
+
             val editorThemeSupport = EditorThemeSupport(colors, gradients)
 
             return EditorTheme(editorThemeSupport, stylesheet, version)
