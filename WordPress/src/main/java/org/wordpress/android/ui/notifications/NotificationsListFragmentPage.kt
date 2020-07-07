@@ -394,10 +394,6 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
                             .removeStickyEvent(
                                     NoteLikeOrModerationStatusChanged::class.java
                             )
-                    val note = NotificationsTable.getNoteById(event.noteId)
-                    if (note != null) {
-                        notesAdapter!!.replaceNote(note)
-                    }
                 }
         ) {
             EventBus.getDefault().removeStickyEvent(
