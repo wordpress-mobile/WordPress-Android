@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout) {
@@ -72,6 +74,11 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     is OpenEditorForReblog -> ActivityLauncher
                             .openEditorForReblog(activity, this.site, this.post, this.source)
                 }
+            }
+        })
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                WPSnackbar.make(constraint_layout, getString(this.messageRes), Snackbar.LENGTH_LONG).show()
             }
         })
         viewModel.start()

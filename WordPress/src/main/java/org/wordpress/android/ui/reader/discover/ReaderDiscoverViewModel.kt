@@ -9,6 +9,7 @@ import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
@@ -37,6 +38,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -87,6 +91,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                 pendingReblogPost = target.post
             }
             _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) {event ->
+            _snackbarEvents.value = event
         }
     }
 
