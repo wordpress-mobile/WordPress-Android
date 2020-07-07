@@ -3,27 +3,21 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.reader.reblog.NoSite
-import org.wordpress.android.ui.reader.reblog.PostEditor
 import org.wordpress.android.ui.reader.reblog.ReblogState
-import org.wordpress.android.ui.reader.reblog.SitePicker
-import org.wordpress.android.ui.reader.reblog.Unknown
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderPostListViewModel @Inject constructor(
-    private val readerTracker: ReaderTracker,
-    private val siteStore: SiteStore
+    private val reblogUseCase: ReblogUseCase,
+    private val readerTracker: ReaderTracker
 ) : ViewModel() {
     private val _reblogState = MutableLiveData<Event<ReblogState>>()
     val reblogState: LiveData<Event<ReblogState>> = _reblogState
@@ -47,21 +41,7 @@ class ReaderPostListViewModel @Inject constructor(
      * @param post post to reblog
      */
     fun onReblogButtonClicked(post: ReaderPost) {
-        val sites = siteStore.visibleSitesAccessedViaWPCom
-
-        _reblogState.value = when (sites.count()) {
-            0 -> Event(NoSite)
-            1 -> {
-                sites.firstOrNull()?.let {
-                    Event(PostEditor(it, post))
-                } ?: Event(Unknown)
-            }
-            else -> {
-                sites.firstOrNull()?.let {
-                    Event(SitePicker(it, post))
-                } ?: Event(Unknown)
-            }
-        }
+        _reblogState.value = reblogUseCase.onReblogButtonClicked(post)
     }
 
     /**
@@ -70,16 +50,7 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val currentState: ReblogState? = _reblogState.value?.peekContent()
-        if (currentState is SitePicker) {
-            val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogState.value = if (site != null) Event(PostEditor(site, currentState.post)) else Event(Unknown)
-        } else if (BuildConfig.DEBUG) {
-            throw IllegalStateException("Site Selected without passing the SitePicker state")
-        } else {
-            AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
-            _reblogState.value = Event(Unknown)
-        }
+        _reblogState.value = reblogUseCase.onReblogSiteSelected(siteLocalId, _reblogState.value?.peekContent())
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {
