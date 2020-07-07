@@ -146,7 +146,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
         if (navigationTarget != null) {
             _navigationEvents.postValue(Event(navigationTarget))
-        }  else {
+        } else {
             _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
         pendingReblogPost = null
