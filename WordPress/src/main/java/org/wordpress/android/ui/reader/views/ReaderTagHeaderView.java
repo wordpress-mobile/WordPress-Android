@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
@@ -27,17 +28,16 @@ public class ReaderTagHeaderView extends RelativeLayout {
     @Inject AccountStore mAccountStore;
 
     public ReaderTagHeaderView(Context context) {
-        super(context);
-        initView(context);
+        this(context, null);
     }
 
     public ReaderTagHeaderView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView(context);
+        this(context, attrs, 0);
     }
 
     public ReaderTagHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ((WordPress) context.getApplicationContext()).component().inject(this);
         initView(context);
     }
 
@@ -60,7 +60,7 @@ public class ReaderTagHeaderView extends RelativeLayout {
         TextView txtTagName = findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
 
-        if (mAccountStore.hasAccessToken()) {
+        if (!mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
         } else {
             mFollowButton.setVisibility(View.VISIBLE);
