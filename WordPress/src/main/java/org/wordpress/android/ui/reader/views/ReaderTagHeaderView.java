@@ -8,11 +8,14 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.datasets.ReaderTagTable;
+import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
+
+import javax.inject.Inject;
 
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
@@ -20,6 +23,8 @@ import org.wordpress.android.util.ToastUtils;
 public class ReaderTagHeaderView extends RelativeLayout {
     private ReaderFollowButton mFollowButton;
     private ReaderTag mCurrentTag;
+
+    @Inject AccountStore mAccountStore;
 
     public ReaderTagHeaderView(Context context) {
         super(context);
@@ -55,18 +60,13 @@ public class ReaderTagHeaderView extends RelativeLayout {
         TextView txtTagName = findViewById(R.id.text_tag);
         txtTagName.setText(tag.getLabel());
 
-        /*if (ReaderUtils.isLoggedOutReader()) {
+        if (mAccountStore.hasAccessToken()) {
             mFollowButton.setVisibility(View.GONE);
-        } else {*/
-        mFollowButton.setVisibility(View.VISIBLE);
-        mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagSlug()));
-        mFollowButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleFollowStatus();
-            }
-        });
-//        }
+        } else {
+            mFollowButton.setVisibility(View.VISIBLE);
+            mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagSlug()));
+            mFollowButton.setOnClickListener(v -> toggleFollowStatus());
+        }
     }
 
     private void toggleFollowStatus() {
@@ -76,18 +76,16 @@ public class ReaderTagHeaderView extends RelativeLayout {
 
         final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagSlug());
 
-        ReaderActions.ActionListener listener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                if (getContext() == null) {
-                    return;
-                }
-                mFollowButton.setEnabled(true);
-                if (!succeeded) {
-                    int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag : R.string.reader_toast_err_remove_tag;
-                    ToastUtils.showToast(getContext(), errResId);
-                    mFollowButton.setIsFollowed(!isAskingToFollow);
-                }
+        ReaderActions.ActionListener listener = succeeded -> {
+            if (getContext() == null) {
+                return;
+            }
+            mFollowButton.setEnabled(true);
+            if (!succeeded) {
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
+                        : R.string.reader_toast_err_remove_tag;
+                ToastUtils.showToast(getContext(), errResId);
+                mFollowButton.setIsFollowed(!isAskingToFollow);
             }
         };
 
