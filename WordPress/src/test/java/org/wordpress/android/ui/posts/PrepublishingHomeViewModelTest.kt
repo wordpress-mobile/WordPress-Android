@@ -386,6 +386,32 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         verify(storyRepositoryWrapper).setCurrentStoryTitle(eq(storyTitle))
     }
 
+    @Test
+    fun `verify that if isStoryPost is true then VISIBILITY UiState does not exist`() {
+        // arrange
+        val isStoryPost = true
+
+        // act
+        viewModel.start(editPostRepository, site, isStoryPost)
+        val visibilityAction = getHomeUiState(VISIBILITY)
+
+        // assert
+        assertThat(visibilityAction).isNull()
+    }
+
+    @Test
+    fun `verify that if isStoryPost is false then VISIBILITY UiState exist`() {
+        // arrange
+        val isStoryPost = false
+
+        // act
+        viewModel.start(editPostRepository, site, isStoryPost)
+        val visibilityAction = getHomeUiState(VISIBILITY)
+
+        // assert
+        assertThat(visibilityAction).isNotNull()
+    }
+
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
     private fun getStoryTitleUiState() = getStoryTitleUiStateList()?.first()
     private fun getStoryTitleUiStateList() =
