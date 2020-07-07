@@ -1,7 +1,9 @@
+15.3
+-----
+ 
 15.2
 -----
 * [**] Fixes tons of rendering issues in Reader post detail by changing the technical solution (shared CSS file).
-
 * [**] Block editor: Display content metrics information (blocks, words, characters count).
 * [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
 * [**] Block Editor: Add support allowing Cover Block video uploads to complete after the editor has closed

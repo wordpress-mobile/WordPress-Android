@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-05 20:29:05+0000
+Translation-Revision-Date: 2020-06-18 20:32:56+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать этот блок в веб-браузере.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Редактировать блок в браузере</string>
+    <string name="gutenberg_native_dismiss">Закрыть</string>
+    <string name="prepublishing_nudges_visibility_password">Защищено паролем</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
+    <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Опубликовать</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
+    <string name="prepublishing_nudges_back_button">Назад</string>
+    <string name="prepublishing_nudges_home_save_button">Сохранить</string>
+    <string name="prepublishing_nudges_home_submit_button">Отправить</string>
+    <string name="prepublishing_nudges_home_schedule_button">Запланировать сейчас</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Публикация на</string>
+    <string name="prepublishing_nudges_tags_action">Метки</string>
+    <string name="prepublishing_nudges_publish_action">Дата публикации</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Отмена</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Переместить в черновики</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Записи из корзины не могут быть отредактированы. Хотите изменить статус на \"черновик\", чтобы получить возможность редактирования?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
+    <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
+    <string name="reader_label_discover_follow_tags">Откройте для себя и подпишитесь на метки, которые полюбите</string>
+    <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
+    <string name="reader_btn_done">Готово</string>
+    <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
+    <string name="post_status_post_published">Опубликована</string>
+    <string name="post_status_post_trashed">В корзине</string>
+    <string name="post_status_post_scheduled">Запланирована</string>
+    <string name="publish_date">Дата публикации</string>
+    <string name="ccpa_privacy_notice_read">Прочитать уведомление о конфиденциальности CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
+    <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
+    <string name="status_and_visibility">Статус и видимость</string>
+    <string name="update_now">Обновить сейчас</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Удалить %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
@@ -284,7 +317,7 @@ Language: ru
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="site_cannot_be_loaded">Сейчас невозможно загрузить данные для вашего сайта. Попробуйте позже.</string>
     <string name="gutenberg_native_wordpress_media_library">Медиатека WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы также можете отредактировать эту запись в веб-браузере.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать эту запись в веб-браузере.</string>
     <string name="gutenberg_native_ungroup">Разгруппировать</string>
     <string name="gutenberg_native_translate">Перевести</string>
     <string name="gutenberg_native_title">Заголовок:</string>
@@ -507,10 +540,6 @@ Language: ru
     <string name="stats_widget_all_time_title">За всё время</string>
     <string name="stats_widget_views_title">Просмотров на этой неделе</string>
     <string name="stats_widget_add">Добавить виджет</string>
-    <string name="dialog_confirm_update_yes">Обновить сейчас</string>
-    <string name="dialog_confirm_update_message_page">Опубликованная страница будет обновлена немедленно.</string>
-    <string name="dialog_confirm_update_message_post">Опубликованная запись будет обновлена немедленно.</string>
-    <string name="dialog_confirm_update_title">Готовы к обновлению?</string>
     <string name="plugin_fetching_error_after_at">Обновление подробностей о плагине занимает больше времени чем обычно, попробуйте попозже.</string>
     <string name="plugin_install_site_ineligible_default_error">Если вы только что зарегистрировали имя домена, пожалуйста, дождитесь завершения процесса регистрации и настройки и попробуйте снова\n\nВ ином случае, похоже что что-то пошло не так и возможности использования плагинов недоступны на этом сайте.</string>
     <string name="domain_contact_information_state_not_available_hint">Область/округ (не доступно)</string>
@@ -823,7 +852,6 @@ Language: ru
     <string name="pages_delete_permanently">Удалить навсегда</string>
     <string name="pages_move_to_trash">Переместить в корзину</string>
     <string name="pages_move_to_draft">Переместить в черновики</string>
-    <string name="pages_publish_now">Опубликовать</string>
     <string name="pages_set_parent">Установить родителя</string>
     <string name="pages_view">Просмотр</string>
     <string name="pages_trashed">Корзина</string>
@@ -1076,7 +1104,6 @@ Language: ru
     <string name="menu_html_mode_done_snackbar">Переход в режим HTML</string>
     <string name="menu_html_mode">Режим HTML</string>
     <string name="menu_preview">Предпросмотр</string>
-    <string name="menu_publish_now">Опубликовать сейчас</string>
     <string name="menu_save_as_draft">Сохранить как черновик</string>
     <string name="file_size_in_terabytes">%s ТБ</string>
     <string name="file_size_in_gigabytes">%s ГБ</string>
@@ -1139,10 +1166,6 @@ Language: ru
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">остались %1$d страниц и %2$d из %3$d файлов</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">осталась 1 запись и %1$d из %2$d файлов</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">осталась 1 страница и %1$d из %2$d файлов </string>
-    <string name="dialog_confirm_publish_yes">Опубликовать сейчас</string>
-    <string name="dialog_confirm_publish_message_page">Эта страница будет опубликована немедленно.</string>
-    <string name="dialog_confirm_publish_message_post">Эта запись будет опубликована немедленно.</string>
-    <string name="dialog_confirm_publish_title">Готовы опубликовать?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">не загружено %1$d страниц/записей</string>
     <string name="media_file_pages_plural_only_not_uploaded">не загружено %1$d страниц</string>
     <string name="media_file_page_singular_only_not_uploaded">не загружена 1 страница</string>
@@ -1477,7 +1500,6 @@ Language: ru
     <string name="post_settings_not_set">Не заданы</string>
     <string name="post_settings_more_options">Дополнительные параметры</string>
     <string name="post_settings_categories_and_tags">Рубрики и метки</string>
-    <string name="post_settings_status">Статус</string>
     <string name="notifications_tab_title_all">Все</string>
     <string name="top_level_category_name">Верхний уровень</string>
     <string name="category_parent">Родительская рубрика (необязательно):</string>
@@ -1601,7 +1623,6 @@ Language: ru
     <string name="media_upload_state_deleting">Удаление</string>
     <string name="media_upload_state_uploading">Идет загрузка</string>
     <string name="media_upload_state_queued">В очереди</string>
-    <string name="keep_editing">Продолжить редактирование</string>
     <string name="image_quality">Качество изображений</string>
     <string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
     <string name="error_unknown_post_type">Неизвестный формат записи</string>
@@ -2264,7 +2285,6 @@ Language: ru
     <string name="httppassword">Пароль для HTTP-авторизации</string>
     <string name="httpuser">Имя для HTTP-авторизации</string>
     <string name="error_media_upload">Произошла ошибка при загрузке медиафайла</string>
-    <string name="publish_date">Опубликовано</string>
     <string name="incorrect_credentials">Неправильное имя или пароль.</string>
     <string name="log_in">Войти</string>
     <string name="username">Имя</string>
@@ -2301,6 +2321,7 @@ Language: ru
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="notification_settings">Настройки уведомлений</string>
+    <string name="publish_now">Опубликовать</string>
     <string name="reply">Ответ</string>
     <string name="on">на</string>
     <string name="preview">Предварительный просмотр</string>

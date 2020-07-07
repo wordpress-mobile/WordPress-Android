@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-06 08:19:20+0000
+Translation-Revision-Date: 2020-06-17 11:12:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest bloc folosind navigatorul dispozitivului tău.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Editează blocul în navigatorul web</string>
+    <string name="gutenberg_native_dismiss">Respinge</string>
+    <string name="prepublishing_nudges_visibility_password">Protejat cu parolă</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Nesetat</string>
+    <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publică</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Adaugă etichete</string>
+    <string name="prepublishing_nudges_back_button">Înapoi</string>
+    <string name="prepublishing_nudges_home_save_button">Salvează acum</string>
+    <string name="prepublishing_nudges_home_submit_button">Trimite acum</string>
+    <string name="prepublishing_nudges_home_schedule_button">Programează acum</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publicare în</string>
+    <string name="prepublishing_nudges_tags_action">Etichete</string>
+    <string name="prepublishing_nudges_publish_action">Data publicării</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Anulează</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mută în ciorne</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Articolele aruncate la gunoi nu pot fi editate. Vrei să modifici starea acestui articol în „ciornă” pentru a-l putea edita?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Muți articolul în Ciorne?</string>
+    <string name="reader_label_choose_your_interests">Alege ce te interesează</string>
+    <string name="reader_label_discover_follow_tags">Descoperă și urmărește etichetele care te interesează</string>
+    <string name="reader_choose_interests_content_description">Alege ce te interesează</string>
+    <string name="reader_btn_done">Gata</string>
+    <string name="reader_btn_select_few_interests">Selectează câteva pentru a continua</string>
+    <string name="post_status_post_published">Publicat</string>
+    <string name="post_status_post_trashed">Aruncat la gunoi</string>
+    <string name="post_status_post_scheduled">Programat</string>
+    <string name="publish_date">Data publicării</string>
+    <string name="ccpa_privacy_notice_read">Citește notificarea de confidențialitate CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Legea privind confidențialitatea consumatorilor din California (CCPA) ne obligă să oferim rezidenților din California câteva informații suplimentare despre categoriile de informații cu caracter personal pe care le colectăm și le partajăm, de unde și cum obținem aceste informații cu caracter personal și de ce le folosim.</string>
+    <string name="ccpa_privacy_notice_header">Notificări de confidențialitate pentru utilizatorii din California</string>
+    <string name="status_and_visibility">Stare și vizibilitate</string>
+    <string name="update_now">Actualizează acum</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Înlătură %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Deschide meniul acțiuni blocuri</string>
@@ -284,7 +317,7 @@ Language: ro
     <string name="reader_my_likes_display_name">Aprecieri</string>
     <string name="site_cannot_be_loaded">Nu putem încărca datele pentru situl tău chiar acum. Te rog reîncearcă mai târziu</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliotecă media WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest articol pe web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest articol pe web.</string>
     <string name="gutenberg_native_ungroup">Anulează gruparea</string>
     <string name="gutenberg_native_translate">Tradu</string>
     <string name="gutenberg_native_title">Titlu:</string>
@@ -507,10 +540,6 @@ Language: ro
     <string name="stats_widget_all_time_title">Total general</string>
     <string name="stats_widget_views_title">Vizualizări în această săptămână</string>
     <string name="stats_widget_add">Adaugă o piesă</string>
-    <string name="dialog_confirm_update_yes">Actualizează acum</string>
-    <string name="dialog_confirm_update_message_page">Această pagină publicată va fi actualizată imediat.</string>
-    <string name="dialog_confirm_update_message_post">Acest articol publicat va fi actualizat imediat.</string>
-    <string name="dialog_confirm_update_title">Ești gata să actualizezi?</string>
     <string name="plugin_fetching_error_after_at">Reîmprospătarea detaliilor modulului durează mai mult decât de obicei. Te rog verifică din nou mai târziu.</string>
     <string name="plugin_install_site_ineligible_default_error">Dacă abia ai înregistrat un nume de domeniu, te rog așteaptă până terminăm setarea lui și încearcă din nou.\n\nDacă nu, se pare că ceva nu a mers bine și funcționalitatea modulului ar putea să nu fie disponibilă pentru acest sit.</string>
     <string name="domain_contact_information_state_not_available_hint">Stare (indisponibilă)</string>
@@ -823,7 +852,6 @@ Language: ro
     <string name="pages_delete_permanently">Șterge definitiv</string>
     <string name="pages_move_to_trash">Mută la gunoi</string>
     <string name="pages_move_to_draft">Mută în ciorne</string>
-    <string name="pages_publish_now">Publică acum</string>
     <string name="pages_set_parent">Setează un părinte</string>
     <string name="pages_view">Vezi</string>
     <string name="pages_trashed">Aruncate la gunoi</string>
@@ -1076,7 +1104,6 @@ Language: ro
     <string name="menu_html_mode_done_snackbar">Comutat la modul HTML</string>
     <string name="menu_html_mode">Modul HTML</string>
     <string name="menu_preview">Previzualizează</string>
-    <string name="menu_publish_now">Publică acum</string>
     <string name="menu_save_as_draft">Salvează ca ciornă</string>
     <string name="file_size_in_terabytes">%s TO</string>
     <string name="file_size_in_gigabytes">%s GO</string>
@@ -1139,10 +1166,6 @@ Language: ro
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pagini și %2$d din %3$d fișiere rămase</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">Un articol și %1$d din %2$d fișiere rămase</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">O pagină și %1$d din %2$d fișiere rămase</string>
-    <string name="dialog_confirm_publish_yes">Publică acum</string>
-    <string name="dialog_confirm_publish_message_page">Această pagină va fi publicată imediat.</string>
-    <string name="dialog_confirm_publish_message_post">Acest articol va fi publicat imediat.</string>
-    <string name="dialog_confirm_publish_title">Ești gata să publici?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d articole/pagini neîncărcate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagini neîncărcate</string>
     <string name="media_file_page_singular_only_not_uploaded">O pagină neîncărcată</string>
@@ -1477,7 +1500,6 @@ Language: ro
     <string name="post_settings_not_set">Nesetate</string>
     <string name="post_settings_more_options">Mai multe opțiuni</string>
     <string name="post_settings_categories_and_tags">Categorii și etichete</string>
-    <string name="post_settings_status">Stare</string>
     <string name="notifications_tab_title_all">Toate</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categorie părinte (opțional):</string>
@@ -1601,7 +1623,6 @@ Language: ro
     <string name="media_upload_state_deleting">Ștergere</string>
     <string name="media_upload_state_uploading">Se încarcă</string>
     <string name="media_upload_state_queued">În coada de așteptare</string>
-    <string name="keep_editing">Continuă editarea</string>
     <string name="image_quality">Calitate imagine</string>
     <string name="error_all_media_upload_canceled">Toate încărcările media au fost anulate din cauza unei erori necunoscute. Te rog reîncearcă încărcarea</string>
     <string name="error_unknown_post_type">Format de articol necunoscut</string>
@@ -2264,7 +2285,6 @@ Language: ro
     <string name="httppassword">parolă HTTP</string>
     <string name="httpuser">nume utilizator HTTP</string>
     <string name="error_media_upload">A apărut o eroare la încărcarea media</string>
-    <string name="publish_date">Publicare</string>
     <string name="incorrect_credentials">Nume de utilizator sau parolă incorecte.</string>
     <string name="log_in">Autentificare</string>
     <string name="username">Nume utilizator</string>
@@ -2301,6 +2321,7 @@ Language: ro
     <string name="no">Nu</string>
     <string name="yes">Da</string>
     <string name="notification_settings">Setări notificare</string>
+    <string name="publish_now">Publică acum</string>
     <string name="reply">Răspunde</string>
     <string name="on">pornit</string>
     <string name="preview">Previzualizare</string>

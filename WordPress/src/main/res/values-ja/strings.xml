@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-11 08:54:11+0000
+Translation-Revision-Date: 2020-06-25 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">リリースごとにブロックを追加できるよう努めています。 その間は、デバイスの Web ブラウザーを使用してこのブロックを編集できます。</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Web ブラウザーでブロックを編集</string>
+    <string name="gutenberg_native_dismiss">非表示</string>
+    <string name="prepublishing_nudges_visibility_password">パスワード保護</string>
+    <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
+    <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">公開</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">タグを追加</string>
+    <string name="prepublishing_nudges_back_button">戻る</string>
+    <string name="prepublishing_nudges_home_save_button">今すぐ保存</string>
+    <string name="prepublishing_nudges_home_submit_button">今すぐ送信</string>
+    <string name="prepublishing_nudges_home_schedule_button">今すぐ予約する</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">公開先</string>
+    <string name="prepublishing_nudges_tags_action">タグ</string>
+    <string name="prepublishing_nudges_publish_action">公開日</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">キャンセル</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">下書きに移動</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">ゴミ箱にある投稿は編集できません。 この投稿のステータスを「下書き」に戻して編集しますか ? </string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">投稿を「下書き」に移動しますか ? </string>
+    <string name="reader_label_choose_your_interests">関心のあるものを選択</string>
+    <string name="reader_label_discover_follow_tags">お気に入りのタグを探してフォロー</string>
+    <string name="reader_choose_interests_content_description">関心のあるものを選択</string>
+    <string name="reader_btn_done">終了</string>
+    <string name="reader_btn_select_few_interests">選択して続ける</string>
+    <string name="post_status_post_published">公開済み</string>
+    <string name="post_status_post_trashed">ゴミ箱に移動済み</string>
+    <string name="post_status_post_scheduled">予約済み</string>
+    <string name="publish_date">公開日</string>
+    <string name="ccpa_privacy_notice_read">CCPA のプライバシー通知を読む</string>
+    <string name="ccpa_privacy_notice_caption">カリフォルニア州消費者プライバシー法 (CCPA) は、収集および共有する個人情報の分類、その個人情報を取得する場所、その使用方法と目的についての詳細情報をカリフォルニア州の住民に提供することを企業に義務づけています。</string>
+    <string name="ccpa_privacy_notice_header">カリフォルニア州のユーザーへのプライバシー通知</string>
+    <string name="status_and_visibility">ステータスと公開状態</string>
+    <string name="update_now">今すぐ更新</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">%s を削除</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
@@ -284,7 +317,7 @@ Language: ja_JP
     <string name="reader_my_likes_display_name">いいね</string>
     <string name="site_cannot_be_loaded">現在、サイトのデータを読み込めません。後ほど、もう一度お試しください</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress メディアライブラリ</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">リリースごとにブロックを追加できるよう努めています。それまでは、Web でこの投稿を編集できます。</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">リリースごとにブロックを追加できるよう努めています。 それまでは、Web でこの投稿を編集できます。</string>
     <string name="gutenberg_native_ungroup">グループ解除</string>
     <string name="gutenberg_native_translate">翻訳</string>
     <string name="gutenberg_native_title">タイトル:</string>
@@ -507,10 +540,6 @@ Language: ja_JP
     <string name="stats_widget_all_time_title">全期間</string>
     <string name="stats_widget_views_title">今週の表示数</string>
     <string name="stats_widget_add">ウィジェットを追加</string>
-    <string name="dialog_confirm_update_yes">今すぐ更新</string>
-    <string name="dialog_confirm_update_message_page">この公開済みページは間もなく更新されます。</string>
-    <string name="dialog_confirm_update_message_post">この公開済み投稿は間もなく更新されます。</string>
-    <string name="dialog_confirm_update_title">更新しますか ?</string>
     <string name="plugin_fetching_error_after_at">プラグイン詳細の再読み込みには通常より時間がかかります。後ほどご確認ください。</string>
     <string name="plugin_install_site_ineligible_default_error">ドメイン名を登録した直後の場合、設定が完了するまでお待ちいただき、もう一度お試しください。\n\nそれ以外の場合はエラーが発生していると考えられます。このサイトではプラグイン機能をご利用いただけない可能性があります。</string>
     <string name="domain_contact_information_state_not_available_hint">状態 (使用不可)</string>
@@ -823,7 +852,6 @@ Language: ja_JP
     <string name="pages_delete_permanently">完全に削除する</string>
     <string name="pages_move_to_trash">ゴミ箱へ移動</string>
     <string name="pages_move_to_draft">ドラフトに移動</string>
-    <string name="pages_publish_now">今すぐ公開</string>
     <string name="pages_set_parent">親の設定</string>
     <string name="pages_view">表示</string>
     <string name="pages_trashed">ゴミ箱に移動済み</string>
@@ -1076,7 +1104,6 @@ Language: ja_JP
     <string name="menu_html_mode_done_snackbar">HTML モードに切り替えました。</string>
     <string name="menu_html_mode">HTML モード</string>
     <string name="menu_preview">プレビュー</string>
-    <string name="menu_publish_now">今すぐ公開</string>
     <string name="menu_save_as_draft">下書きとして保存</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1166,6 @@ Language: ja_JP
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">残り%1$dページ、%3$d / %2$dファイル</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">残り1投稿、%2$d / %1$dファイル</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">残り1ページ、%2$d / %1$dファイル</string>
-    <string name="dialog_confirm_publish_yes">今すぐ公開</string>
-    <string name="dialog_confirm_publish_message_page">このページはすぐに公開されます。</string>
-    <string name="dialog_confirm_publish_message_post">この投稿はすぐに公開されます。</string>
-    <string name="dialog_confirm_publish_title">公開する準備はできていますか ?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d投稿/ページが未アップロード</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d投稿/ページが未アップロード</string>
     <string name="media_file_page_singular_only_not_uploaded">1ページが未アップロード</string>
@@ -1477,7 +1500,6 @@ Language: ja_JP
     <string name="post_settings_not_set">未設定</string>
     <string name="post_settings_more_options">追加オプション</string>
     <string name="post_settings_categories_and_tags">カテゴリーとタグ</string>
-    <string name="post_settings_status">ステータス</string>
     <string name="notifications_tab_title_all">すべて</string>
     <string name="top_level_category_name">トップレベル</string>
     <string name="category_parent">親カテゴリー (オプション):</string>
@@ -1601,7 +1623,6 @@ Language: ja_JP
     <string name="media_upload_state_deleting">削除中</string>
     <string name="media_upload_state_uploading">アップロード中</string>
     <string name="media_upload_state_queued">待機中</string>
-    <string name="keep_editing">編集を続行</string>
     <string name="image_quality">画質</string>
     <string name="error_all_media_upload_canceled">不明なエラーにより、メディアのアップロードはすべてキャンセルされました。もう一度アップロードをお試しください</string>
     <string name="error_unknown_post_type">投稿フォーマットが不明です</string>
@@ -2264,7 +2285,6 @@ Language: ja_JP
     <string name="httppassword">HTTP パスワード</string>
     <string name="httpuser">HTTP ユーザー名</string>
     <string name="error_media_upload">メディアをアップロードする際にエラーが発生しました</string>
-    <string name="publish_date">公開</string>
     <string name="incorrect_credentials">ユーザー名またはパスワードが正しくありません。</string>
     <string name="log_in">ログイン</string>
     <string name="username">ユーザー名</string>
@@ -2301,6 +2321,7 @@ Language: ja_JP
     <string name="no">いいえ</string>
     <string name="yes">はい</string>
     <string name="notification_settings">通知設定</string>
+    <string name="publish_now">今すぐ公開</string>
     <string name="reply">返信する</string>
     <string name="on">オン</string>
     <string name="preview">プレビュー</string>

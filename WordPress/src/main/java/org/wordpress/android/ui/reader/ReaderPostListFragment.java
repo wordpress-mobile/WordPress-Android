@@ -1825,20 +1825,21 @@ public class ReaderPostListFragment extends Fragment
     }
 
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
-        ReaderTag tag;
+            ReaderTag tag = null;
 
-        switch (button) {
-            case DISCOVER:
-                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
-                break;
-            case FOLLOWED:
-                tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
-                break;
-            default:
+            switch (button) {
+                case DISCOVER:
+                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.DISCOVER_PATH);
+                    break;
+                case FOLLOWED:
+                    tag = ReaderUtils.getTagFromEndpoint(ReaderTag.FOLLOWING_PATH);
+                    break;
+            }
+            if (tag == null) {
                 tag = ReaderUtils.getDefaultTag();
-        }
+            }
 
-        mViewModel.onEmptyStateButtonTapped(tag);
+            mViewModel.onEmptyStateButtonTapped(tag);
     }
 
     /*
@@ -2006,6 +2007,7 @@ public class ReaderPostListFragment extends Fragment
                     context,
                     getPostListType(),
                     mImageManager,
+                    mUiHelpers,
                     mIsTopLevel
             );
             mPostAdapter.setOnFollowListener(this);

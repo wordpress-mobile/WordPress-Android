@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-11 18:30:44+0000
+Translation-Revision-Date: 2020-06-18 07:45:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: es
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar este bloque usando el navegador web de tu dispositivo.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque en el navegador web</string>
+    <string name="gutenberg_native_dismiss">Descartar</string>
+    <string name="prepublishing_nudges_visibility_password">Protegida con contraseña</string>
+    <string name="prepublishing_nudges_home_tags_not_set">No establecido</string>
+    <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Añadir etiquetas</string>
+    <string name="prepublishing_nudges_back_button">Volver</string>
+    <string name="prepublishing_nudges_home_save_button">Guardar ahora</string>
+    <string name="prepublishing_nudges_home_submit_button">Enviar ahora</string>
+    <string name="prepublishing_nudges_home_schedule_button">Programar ahora</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publicando en</string>
+    <string name="prepublishing_nudges_tags_action">Etiquetas</string>
+    <string name="prepublishing_nudges_publish_action">Fecha de publicación</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
+    <string name="reader_label_choose_your_interests">Elige tus intereses</string>
+    <string name="reader_label_discover_follow_tags">Descubre y sigue las etiquetas que te gustan</string>
+    <string name="reader_choose_interests_content_description">Elige tus intereses</string>
+    <string name="reader_btn_done">Hecho</string>
+    <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
+    <string name="post_status_post_published">Publicado</string>
+    <string name="post_status_post_trashed">En la papelera</string>
+    <string name="post_status_post_scheduled">Programada</string>
+    <string name="publish_date">Fecha de publicación</string>
+    <string name="ccpa_privacy_notice_read">Lee el aviso de privacidad de CCPA</string>
+    <string name="ccpa_privacy_notice_caption">La Ley de Privacidad del Consumidor de California («CCPA») nos obliga a que proporcionemos información adicional a los residentes de California sobre las categorías de información personal que recopilamos y compartimos, dónde obtenemos esa información personal y cómo y por qué la usamos.</string>
+    <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
+    <string name="status_and_visibility">Estado y visibilidad</string>
+    <string name="update_now">Actualizar ahora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Eliminar %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
@@ -284,7 +317,7 @@ Language: es
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Título:</string>
@@ -507,17 +540,13 @@ Language: es
     <string name="stats_widget_all_time_title">Histórico</string>
     <string name="stats_widget_views_title">Visitas esta semana</string>
     <string name="stats_widget_add">Añadir widget</string>
-    <string name="dialog_confirm_update_yes">Actualizar ahora</string>
-    <string name="dialog_confirm_update_message_page">Esta página publicada se actualizará inmediatamente.</string>
-    <string name="dialog_confirm_update_message_post">Esta entrada publicada se actualizará inmediatamente.</string>
-    <string name="dialog_confirm_update_title">¿Preparado para actualizar?</string>
     <string name="plugin_fetching_error_after_at">Está tardando más tiempo del normal recargar los detalles del plugin. Por favor, compruébalo de nuevo más tarde.</string>
     <string name="plugin_install_site_ineligible_default_error">Si acabas de registrar un nombre de dominio, por favor, espera hasta que terminemos de configurarlo e inténtalo de nuevo.\n\nEn caso contrario, parece que algo fue mal y la característica del plugin podría no estar disponible para este sitio.</string>
     <string name="domain_contact_information_state_not_available_hint">Estado (no disponible)</string>
     <string name="domain_registration_privacy_protection_tos">Al registrar este dominio aceptas nuestros %1$stérminos y condiciones%2$s</string>
     <string name="error_network_connection">Comprueba tu conexión a la red e inténtalo de nuevo.</string>
     <string name="error_browser_no_network">No se ha podido cargar esta página en este momento.</string>
-    <string name="error_disabled_apis">No se pudieron recuperar los ajustes. Algunas APIs no están disponibles para la cuenta e ID de esta aplicación OAuth. </string>
+    <string name="error_disabled_apis">No se pudieron recuperar los ajustes. Algunas APIs no están disponibles para la cuenta e ID de esta aplicación OAuth.</string>
     <string name="jetpack_connection_terms_and_conditions">Al configurar Jetpack aceptas nuestros %1$stérminos y condiciones%2$s</string>
     <string name="site_settings_disconnected_toast">No hay ninguna conexión. La edición está desactivada.</string>
     <string name="site_settings_update_password_message">Para volver a conectar la aplicación con tu sitio alojado, introduce aquí la nueva contraseña del sitio.</string>
@@ -543,7 +572,7 @@ Language: es
     <string name="domain_contact_information_title">Información de contacto del dominio</string>
     <string name="domain_privacy_option_off_title">Registrar públicamente</string>
     <string name="domain_privacy_option_on_title">Registrar privadamente con protección de privacidad</string>
-    <string name="domain_registration_privacy_protection_description">Lo propietarios de dominios tienen que compartir información en una base de datos pública de todos los dominios.\n   Con la protección de privacidad publicamos nuestra propia información en vez de la tuya, y te redirigiremos de forma privada cualquier comunicación dirigida a ti. </string>
+    <string name="domain_registration_privacy_protection_description">Los propietarios de dominios tienen que compartir información en una base de datos pública de todos los dominios.\n   Con la protección de privacidad publicamos nuestra propia información en vez de la tuya, y te redirigiremos de forma privada cualquier comunicación dirigida a ti. </string>
     <string name="domain_registration_privacy_protection_title">Protección de privacidad</string>
     <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
     <string name="domains_suggestions_choose_domain">Elegir dominio</string>
@@ -783,7 +812,7 @@ Language: es
     <string name="stats_no_data_yet">Aún no hay datos</string>
     <string name="menu_debug">Menú de depuración</string>
     <string name="change_password_dialog_message">Cambiando contraseña…</string>
-    <string name="change_password_dialog_hint">Tu contraseña debe tener al menos seis caracteres de longitud. Para hacerla más fuerte, use letras mayúsculas y minúsculas, números y símbolos como ! \" ? $ % ^ &amp; ).</string>
+    <string name="change_password_dialog_hint">Tu contraseña debe tener al menos seis caracteres de longitud. Para hacerla más fuerte, usa letras mayúsculas y minúsculas, números y símbolos como ! \" ? $ % ^ &amp; ).</string>
     <string name="change_password_confirmation">Contraseña cambiada con éxito</string>
     <string name="change_password">Cambiar contraseña</string>
     <string name="support_identity_input_dialog_name_label">Nombre</string>
@@ -823,7 +852,6 @@ Language: es
     <string name="pages_delete_permanently">Borrar permanentemente</string>
     <string name="pages_move_to_trash">Mover a la papelera</string>
     <string name="pages_move_to_draft">Mover a borradores</string>
-    <string name="pages_publish_now">Publicar ahora</string>
     <string name="pages_set_parent">Hacer superior</string>
     <string name="pages_view">Ver</string>
     <string name="pages_trashed">En la papelera</string>
@@ -896,7 +924,7 @@ Language: es
     <string name="reader_label_post_search_explainer">¿Que te gustaría encontrar?</string>
     <string name="site_settings_tags_empty_title_search">No hay etiquetas que coincidan con tu búsqueda</string>
     <string name="site_settings_tags_empty_title">No tienes ninguna etiqueta</string>
-    <string name="site_settings_tags_empty_subtitle">Añade aquí las etiquetas que uses frecuentemente para poder seleccionarlas rápidamente al etiquetar tus entradas </string>
+    <string name="site_settings_tags_empty_subtitle">Añade aquí las etiquetas que uses frecuentemente para poder seleccionarlas rápidamente al etiquetar tus entradas</string>
     <string name="site_settings_tags_empty_button">Crea una etiqueta</string>
     <string name="media_empty_search_list">No hay medios que coincidan con tu búsqueda</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">¿Salir de WordPress?</string>
@@ -1013,7 +1041,7 @@ Language: es
     <string name="plugin_install_first_plugin_almost_finished_dialog_message">Estamos haciendo la configuración final, está casi listo…</string>
     <string name="plugin_install_first_plugin_progress_dialog_message">Instalando plugin…</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">Instalar</string>
-    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalar el primer plugin en tu sitio puede tomar hasta 1 minuto. Durante este tiempo, no podrás realizar cambios en tu sitio.</string>
+    <string name="plugin_install_first_plugin_confirmation_dialog_message">Instalar el primer plugin en tu sitio puede llevar hasta 1 minuto. Durante este tiempo no podrás realizar cambios en tu sitio.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">Instalar plugin</string>
     <string name="notification_settings_followed_dialog_title">Avisos</string>
     <string name="notification_settings_followed_dialog_email_comments">Enviarme nuevos comentarios por correo electrónico</string>
@@ -1076,7 +1104,6 @@ Language: es
     <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
-    <string name="menu_publish_now">Publicar ahora</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1114,7 +1141,7 @@ Language: es
     <string name="license_screen_title">Licencia</string>
     <string name="release_notes_screen_title">Notas de la versión</string>
     <string name="signup_epilogue_error_avatar_view">Tu avatar se ha subido y estará disponible en breve.</string>
-    <string name="email_not_registered_wpcom">Umm, no encontramos una cuenta WordPress.com conectada a esta dirección de correo. Prueba con el enlace de abajo para acceder usando la dirección de tu sitio.</string>
+    <string name="email_not_registered_wpcom">Umm, no encontramos una cuenta WordPress.com conectada a esta dirección de correo electrónico. Prueba con el enlace de abajo para acceder usando la dirección de tu sitio.</string>
     <string name="permissions_denied_message">Parece que has desactivado los permisos necesarios para esta característica.&lt;br/>&lt;br/>Para cambiarlo, edita tus permisos y asegúrate de que &lt;strong>%s&lt;/strong> está activado.</string>
     <string name="permissions_denied_title">Permisos</string>
     <string name="plugin_caption_featured">Destacados</string>
@@ -1139,10 +1166,6 @@ Language: es
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">quedan %1$d páginas y %2$d de %3$d archivos</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">queda 1 entrada y %1$d de %2$d archivos</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">queda 1 página y %1$d de %2$d archivos</string>
-    <string name="dialog_confirm_publish_yes">Publicar ahora</string>
-    <string name="dialog_confirm_publish_message_page">Esta página se publicará de inmediato.</string>
-    <string name="dialog_confirm_publish_message_post">Esta entrada se publicará de inmediato.</string>
-    <string name="dialog_confirm_publish_title">¿Listo para publicar?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas / páginas sin subir</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas sin subir</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página sin subir</string>
@@ -1330,7 +1353,7 @@ Language: es
     <string name="jetpack_disconnect_confirm">Desconectar</string>
     <string name="jetpack_disconnect_confirmation_message">¿Estás seguro de querer desconectar Jetpack del sitio?</string>
     <string name="jetpack_disconnect_pref_title">«Desconectar de WordPress.com»</string>
-    <string name="site_settings_jetpack_whitelist_description">Puedes poner en lista blanca una dirección IP o series de direcciones, evitando que las bloquee Jetpack. Se aceptan IPv4 y IPv6. Para especificar un rango introduce  un valor inferior y un valor superior separados por guiones. Ejemplo: 12.12.12.1–12.12.12.100</string>
+    <string name="site_settings_jetpack_whitelist_description">Puedes poner en lista blanca una dirección IP o series de direcciones, evitando que las bloquee Jetpack. Se aceptan IPv4 y IPv6. Para especificar un rango introduce un valor inferior y un valor superior separados por guiones. Ejemplo: 12.12.12.1–12.12.12.100</string>
     <string name="jetpack_require_two_factor_title">Requiere la identificación en dos pasos</string>
     <string name="jetpack_match_wpcom_via_email_title">Relacionar cuentas usando el correo electrónico</string>
     <string name="jetpack_allow_wpcom_sign_in_title">Permitir el acceso con WordPress.com</string>
@@ -1376,7 +1399,7 @@ Language: es
     <string name="notification_settings_category_other">Otros</string>
     <string name="notification_settings_item_your_sites_all_your_sites">Todos mis sitios</string>
     <string name="notification_settings_category_your_sites">Tus sitios</string>
-    <string name="notification_settings_master_off_message">Desactivando los ajustes de avisos desactivará todos los avisos de esta aplicación, da igual el tipo. Puedes ajustar al detalle que tipo de aviso recibir tras activar los ajustes de avisos.</string>
+    <string name="notification_settings_master_off_message">Desactivando los ajustes de avisos desactivarás todos los avisos de esta aplicación, da igual el tipo. Puedes ajustar al detalle qué tipo de aviso recibir tras activar los ajustes de avisos.</string>
     <string name="notification_settings_master_off_title">Para recibir avisos en este dispositivo activa los ajustes de avisos.</string>
     <string name="notification_settings_master_hint_off">Activar avisos</string>
     <string name="notification_settings_master_hint_on">Desactivar avisos</string>
@@ -1477,7 +1500,6 @@ Language: es
     <string name="post_settings_not_set">No definido</string>
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y etiquetas</string>
-    <string name="post_settings_status">Estado</string>
     <string name="notifications_tab_title_all">Todos</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría superior (opcional):</string>
@@ -1601,7 +1623,6 @@ Language: es
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subiendo</string>
     <string name="media_upload_state_queued">En cola</string>
-    <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidad de la imagen</string>
     <string name="error_all_media_upload_canceled">Todos los archivos de medios se han cancelado debido a un error desconocido. Por favor, vuelve a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
@@ -1620,7 +1641,7 @@ Language: es
     <string name="retry">Reintentar</string>
     <string name="confirm">Confirmar</string>
     <string name="xmlrpc_endpoint_forbidden_error">No se pudo conectar. Se ha recibido un error 403 cuando se intenta acceder a \n        tu endpoint del XMLRPC de sitio. La aplicación lo necesita para comunicarse con tu sitio. Ponte en contacto con tu proveedor para solucionar este problema.</string>
-    <string name="xmlrpc_post_blocked_error">No se pudo conectar. Su alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con su sitio. Póngase en contacto con su alojamiento para solucionar este problema.</string>
+    <string name="xmlrpc_post_blocked_error">No se pudo conectar. Tu alojamiento está bloqueando las peticiones POST, y la aplicación las necesita \n        para comunicarse con tu sitio. Ponte en contacto con tu alojamiento para solucionar este problema.</string>
     <string name="reader_hint_search_followed_sites">Busca en los sitios que sigues</string>
     <string name="pending_draft_one_generic">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
     <string name="pending_draft_one_month">¡No dejes el trabajo a medias! «%1$s» está pendiente de publicarse.</string>
@@ -2264,7 +2285,6 @@ Language: es
     <string name="httppassword">Contraseña HTTP</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
     <string name="log_in">Acceder</string>
     <string name="username">Nombre de usuario</string>
@@ -2301,6 +2321,7 @@ Language: es
     <string name="no">No</string>
     <string name="yes">Sí</string>
     <string name="notification_settings">Ajustes de avisos</string>
+    <string name="publish_now">Publicar ahora</string>
     <string name="reply">Responder</string>
     <string name="on">en</string>
     <string name="preview">Vista previa</string>

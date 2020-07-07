@@ -2,9 +2,11 @@ package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
@@ -50,8 +52,49 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `progress bar shown on start hides on successful data load`() {
-        coroutineScope.runBlockingTest {
+    fun `getUserTags invoked on start`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            initViewModel()
+
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `getInterests invoked if empty user tags received from repo`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+
+            // When
+            initViewModel()
+
+            // Then
+            verify(readerTagRepository, times(1)).getInterests()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `close reader screen triggered if non empty user tags are received from repo`() =
+        testWithNonEmptyUserTags {
+            // When
+            initViewModel()
+
+            // Then
+            verify(parentViewModel, times(1)).onCloseReaderInterests()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `progress bar shown on start hides on successful interests data load`() =
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -69,12 +112,11 @@ class ReaderInterestsViewModelTest {
 
             assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
         }
-    }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `title hidden on start become visible on successful data load`() {
-        coroutineScope.runBlockingTest {
+    fun `title hidden on start become visible on successful interests data load`() =
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -92,12 +134,11 @@ class ReaderInterestsViewModelTest {
 
             assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
         }
-    }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `subtitle hidden on start become visible on successful data load`() {
-        coroutineScope.runBlockingTest {
+    fun `subtitle hidden on start become visible on successful interests data load`() =
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -115,12 +156,11 @@ class ReaderInterestsViewModelTest {
 
             assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
         }
-    }
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `interests correctly shown on successful data load`() =
-        coroutineScope.runBlockingTest {
+    fun `interests correctly shown on successful interests data load`() =
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -141,8 +181,8 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `done button hidden on start switches to disabled state when tags received from repo`() =
-        coroutineScope.runBlockingTest {
+    fun `done button hidden on start switches to disabled state when interests tags received from repo`() =
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -166,7 +206,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `interest selected if onInterestAtIndexToggled invoked on a deselected interest`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -185,7 +225,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `interest deselected if onInterestAtIndexToggled invoked on a selected interest`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -205,7 +245,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -226,7 +266,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `done button shown in disabled state if no interests are in selected state`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -242,7 +282,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `close reader interests screen triggered on done button click`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -258,7 +298,7 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `selected interests saved on done button click`() =
-        coroutineScope.runBlockingTest {
+        testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
             whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
@@ -275,8 +315,8 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `data loading triggered on retry`() =
-        coroutineScope.runBlockingTest {
+    fun `interests data loading triggered on retry`() =
+        testWithEmptyUserTags {
             // Given
             val uiStates = mutableListOf<UiState>()
             viewModel.uiState.observeForever {
@@ -294,6 +334,26 @@ class ReaderInterestsViewModelTest {
         }
 
     private fun initViewModel() = viewModel.start(parentViewModel)
+
+    @ExperimentalCoroutinesApi
+    private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        coroutineScope.runBlockingTest {
+            whenever(readerTagRepository.getUserTags()).thenReturn(ReaderTagList())
+            block()
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        coroutineScope.runBlockingTest {
+            val nonEmptyUserTags = ReaderTagList().apply {
+                this.add(mock())
+                this.add(mock())
+            }
+            whenever(readerTagRepository.getUserTags()).thenReturn(nonEmptyUserTags)
+            block()
+        }
+    }
 
     private fun getMockInterests() =
         ReaderTagList().apply {

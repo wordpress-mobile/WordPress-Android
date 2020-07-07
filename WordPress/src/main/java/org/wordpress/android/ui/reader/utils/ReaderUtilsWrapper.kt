@@ -27,4 +27,7 @@ class ReaderUtilsWrapper @Inject constructor(
 
     fun getDefaultTagFromDbOrCreateInMemory() =
             ReaderUtils.getDefaultTagFromDbOrCreateInMemory(appContext, tagUpdateClientUtilsProvider)
+
+    fun getLongLikeLabelText(numLikes: Int, isLikedByCurrentUser: Boolean): String =
+            ReaderUtils.getLongLikeLabelText(appContext, numLikes, isLikedByCurrentUser)
 }

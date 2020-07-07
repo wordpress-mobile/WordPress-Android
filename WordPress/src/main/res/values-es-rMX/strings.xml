@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-05 20:29:36+0000
+Translation-Revision-Date: 2020-06-16 21:18:06+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha
 Language: es_MX
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques con cada lanzamiento. Mientras tanto, también puedes editar este bloque usando el navegador web de tu dispositivo.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque en el navegador web</string>
+    <string name="gutenberg_native_dismiss">Descartar</string>
+    <string name="prepublishing_nudges_visibility_password">Protegida con contraseña</string>
+    <string name="prepublishing_nudges_home_tags_not_set">No establecido</string>
+    <string name="prepublishing_tags_description">Las etiquetas ayudan a los lectores diciéndoles de qué se trata la entrada.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Añadir etiquetas</string>
+    <string name="prepublishing_nudges_back_button">Volver</string>
+    <string name="prepublishing_nudges_home_save_button">Guardar ahora</string>
+    <string name="prepublishing_nudges_home_submit_button">Enviar ahora</string>
+    <string name="prepublishing_nudges_home_schedule_button">Programar ahora</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publicando en</string>
+    <string name="prepublishing_nudges_tags_action">Etiquetas</string>
+    <string name="prepublishing_nudges_publish_action">Fecha de publicación</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Las entradas en la papelera no se pueden editar. ¿Deseas cambiar el estado de esta entrada a «borrador» para poder trabajar en ella?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">¿Mover entrada a borradores?</string>
+    <string name="reader_label_choose_your_interests">Elige tus intereses</string>
+    <string name="reader_label_discover_follow_tags">Descubre y sigue las etiquetas que te gustan</string>
+    <string name="reader_choose_interests_content_description">Elige tus intereses</string>
+    <string name="reader_btn_done">Hecho</string>
+    <string name="reader_btn_select_few_interests">Selecciona algunos para continuar</string>
+    <string name="post_status_post_published">Publicado</string>
+    <string name="post_status_post_trashed">En la papelera</string>
+    <string name="post_status_post_scheduled">Programada</string>
+    <string name="publish_date">Fecha de publicación</string>
+    <string name="ccpa_privacy_notice_read">Lee el aviso de privacidad de CCPA</string>
+    <string name="ccpa_privacy_notice_caption">La Ley de Privacidad del Consumidor de California (\"CCPA\") nos obliga a que proporcionemos información adicional a los residentes de California sobre las categorías de información personal que recopilamos y compartimos, dónde obtenemos esa información personal y cómo y por qué la usamos.</string>
+    <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
+    <string name="status_and_visibility">Estado y visibilidad</string>
+    <string name="update_now">Actualizar ahora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Eliminar %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
@@ -284,7 +317,7 @@ Language: es_MX
     <string name="reader_my_likes_display_name">Me gusta</string>
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques con cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar esta entrada en la web.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Titulo:</string>
@@ -507,10 +540,6 @@ Language: es_MX
     <string name="stats_widget_all_time_title">Histórico</string>
     <string name="stats_widget_views_title">Visitas esta semana</string>
     <string name="stats_widget_add">Agregar widget</string>
-    <string name="dialog_confirm_update_yes">Actualizar ahora</string>
-    <string name="dialog_confirm_update_message_page">Esta página publicada se actualizará inmediatamente.</string>
-    <string name="dialog_confirm_update_message_post">Esta entrada publicada se actualizará inmediatamente.</string>
-    <string name="dialog_confirm_update_title">¿Listo para Actualizar?</string>
     <string name="plugin_fetching_error_after_at">Está tardando más tiempo del normal recargar los detalles del plugin. Por favor, compruébalo de nuevo más tarde.</string>
     <string name="plugin_install_site_ineligible_default_error">Si acabas de registrar un nombre de dominio, por favor, espera hasta que terminemos de configurarlo e inténtalo de nuevo.\n\nEn caso contrario, parece que algo fue mal y la funcionalidad del plugin podría no estar disponible para este sitio.</string>
     <string name="domain_contact_information_state_not_available_hint">Estado (No Disponible)</string>
@@ -823,7 +852,6 @@ Language: es_MX
     <string name="pages_delete_permanently">Borrar permanentemente</string>
     <string name="pages_move_to_trash">Mover a la papelera</string>
     <string name="pages_move_to_draft">Mover a borradores</string>
-    <string name="pages_publish_now">Publicar ahora</string>
     <string name="pages_set_parent">Hacer superior</string>
     <string name="pages_view">Ver</string>
     <string name="pages_trashed">En la papelera</string>
@@ -1076,7 +1104,6 @@ Language: es_MX
     <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
-    <string name="menu_publish_now">Publicar ahora</string>
     <string name="menu_save_as_draft">Guardar como borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1166,6 @@ Language: es_MX
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">quedan %1$d páginas y %2$d de %3$d archivos</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">queda 1 entrada y %1$d de %2$d archivos</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">queda 1 página y %1$d de %2$d archivos</string>
-    <string name="dialog_confirm_publish_yes">Publicar ahora</string>
-    <string name="dialog_confirm_publish_message_page">Esta página se publicará de inmediato.</string>
-    <string name="dialog_confirm_publish_message_post">Esta entrada se publicará de inmediato.</string>
-    <string name="dialog_confirm_publish_title">¿Listo para publicar?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas / páginas sin subir</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas sin subir</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página sin subir</string>
@@ -1477,7 +1500,6 @@ Language: es_MX
     <string name="post_settings_not_set">No definido</string>
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y etiquetas</string>
-    <string name="post_settings_status">Estado</string>
     <string name="notifications_tab_title_all">Todos</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría superior (opcional):</string>
@@ -1601,7 +1623,6 @@ Language: es_MX
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subiendo</string>
     <string name="media_upload_state_queued">En cola</string>
-    <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidad de la imagen</string>
     <string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
@@ -2264,7 +2285,6 @@ Language: es_MX
     <string name="httppassword">Contraseña HTTP</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
     <string name="log_in">Acceder</string>
     <string name="username">Nombre de usuario</string>
@@ -2301,6 +2321,7 @@ Language: es_MX
     <string name="no">No</string>
     <string name="yes">Sí</string>
     <string name="notification_settings">Ajustes de avisos</string>
+    <string name="publish_now">Publicar ahora</string>
     <string name="reply">Responder</string>
     <string name="on">en</string>
     <string name="preview">Vista previa</string>
