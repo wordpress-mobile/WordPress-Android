@@ -17,7 +17,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -80,7 +79,6 @@ sealed class PrepublishingHomeViewHolder(
                 storyTitle.text = uiHelpers.getTextOfUiString(parent.context, title)
             }
 
-            ActivityUtils.showKeyboardForced(storyTitle)
             storyTitle.postDelayed({
                 storyTitle.requestFocus()
             }, STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY)
