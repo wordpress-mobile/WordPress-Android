@@ -414,9 +414,12 @@ private fun buildZendeskCustomFields(
     )
     allSites?.let {
         val planIds = it.map { site -> site.planId }.distinct()
-        val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
-        if (highestPlan != UNKNOWN_PLAN) {
-            customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
+            .filter { planId -> planId != 0L }
+        if (planIds.isNotEmpty()) {
+            val highestPlan = zendeskPlanFieldHelper.getHighestPlan(planIds)
+            if (highestPlan != UNKNOWN_PLAN) {
+                customFields.add(CustomField(TicketFieldIds.highestPlan, highestPlan))
+            }
         }
     }
 
