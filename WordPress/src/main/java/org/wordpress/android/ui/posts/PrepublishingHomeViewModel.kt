@@ -69,7 +69,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (isStoryPost) {
                 add(
                         StoryTitleUiState(
-                                storyTitle = UiStringText(editPostRepository.title),
+                                storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
                                 storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                         ) { storyTitle ->
                             onStoryTitleChanged(storyTitle)
