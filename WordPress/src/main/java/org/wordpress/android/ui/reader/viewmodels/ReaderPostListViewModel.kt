@@ -7,6 +7,7 @@ import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.reblog.ReblogState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.reblog.SitePicker
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
@@ -50,7 +51,8 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        _reblogState.value = reblogUseCase.onReblogSiteSelected(siteLocalId, _reblogState.value?.peekContent())
+        val post = (_reblogState.value?.peekContent() as? SitePicker)?.post
+        _reblogState.value = reblogUseCase.onReblogSiteSelected(siteLocalId, post)
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {

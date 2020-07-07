@@ -85,8 +85,8 @@ class ReblogUseCaseTest {
         whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
         whenever(siteStore.visibleSitesAccessedViaWPCom).thenReturn(visibleWPComSites)
 
-        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post).peekContent()
-        val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState).peekContent()
+        val afterButtonClickedState = reblogUseCase.onReblogButtonClicked(post).peekContent() as SitePicker
+        val state = reblogUseCase.onReblogSiteSelected(siteId, afterButtonClickedState.post).peekContent()
 
         Assertions.assertThat(state).isInstanceOf(PostEditor::class.java)
 
