@@ -12,10 +12,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
@@ -44,37 +40,6 @@ abstract class BaseReaderRepository(
         return ReaderTag.isSameTag(tag, getTag())
     }
 
-    // todo: annmarie this should go into it's own use case
-    fun requestPostsFromRemoteStorage(readerTag: ReaderTag, updateAction: UpdateAction = REQUEST_NEWER) {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _communicationChannel.postValue(
-                    Event(NetworkUnavailable)
-            )
-            return
-        }
-
-        ReaderPostServiceStarter.startServiceForTag(
-                contextProvider.getContext(),
-                readerTag,
-                updateAction
-        )
-    }
-
-    // todo: annmarie move to separate use case and refine for discover
-    fun requestDiscoverFeedFromRemoteStorage(readerTag: ReaderTag, updateAction: UpdateAction = REQUEST_NEWER) {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            _communicationChannel.postValue(
-                    Event(NetworkUnavailable)
-            )
-            return
-        }
-
-        ReaderPostServiceStarter.startServiceForTag(
-                contextProvider.getContext(),
-                readerTag,
-                updateAction
-        )
-    }
     @Subscribe(threadMode = MAIN)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (event.readerTag != null && !isTag(event.readerTag)) {

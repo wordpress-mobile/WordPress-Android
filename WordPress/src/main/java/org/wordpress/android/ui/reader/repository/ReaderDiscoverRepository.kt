@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,14 +11,14 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
+import org.wordpress.android.ui.reader.repository.usecases.ReaderRepositoryEventBusHandler
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import javax.inject.Inject
@@ -25,53 +27,63 @@ import javax.inject.Named
 class ReaderDiscoverRepository constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val contextProvider: ContextProvider,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
     private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
-) : BaseReaderRepository(eventBusWrapper,
-        networkUtilsWrapper,
-        contextProvider) {
+    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
+    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
+) {
     private var isStarted = false
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
     val discoverFeed: ReactiveMutableLiveData<ReaderPostList> = _discoverFeed
 
-    override fun start() {
+    private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
+    val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
+
+    private lateinit var readerRepositoryEventBusHandler: ReaderRepositoryEventBusHandler
+
+    fun start() {
         if (isStarted) return
 
         isStarted = true
-        super.start()
+        initEventBusHandler()
     }
 
-    override fun stop() {
+    private fun initEventBusHandler() {
+        readerRepositoryEventBusHandler = ReaderRepositoryEventBusHandler(
+                ReaderRepositoryEventBusHandler.setUpdatePostsEndedListeners(this::onNewPosts,
+                this::onChangedPosts, this::onUnchanged, this::onFailed), eventBusWrapper, readerTag)
+        readerRepositoryEventBusHandler.start()
+    }
+
+    fun stop() {
         getPostsForTagUseCase.stop()
         getNumPostsForTagUseCase.stop()
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
+        readerRepositoryEventBusHandler.stop()
     }
 
-    override fun getTag(): ReaderTag {
+    fun getTag(): ReaderTag {
         return readerTag
     }
 
-    override fun onNewPosts(event: UpdatePostsEnded) {
+    private fun onNewPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
 
-    override fun onChangedPosts(event: UpdatePostsEnded) {
+    private fun onChangedPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
 
-    override fun onUnchanged(event: UpdatePostsEnded) {
+    private fun onUnchanged(event: UpdatePostsEnded) {
         // todo: annmarie implement
     }
 
-    override fun onFailed(event: UpdatePostsEnded) {
+    private fun onFailed(event: UpdatePostsEnded) {
         _communicationChannel.postValue(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure))
     }
@@ -97,7 +109,8 @@ class ReaderDiscoverRepository constructor(
             }
 
             if (refresh) {
-                requestDiscoverFeedFromRemoteStorage(readerTag)
+                val response = fetchPostsForTagUseCase.fetch(readerTag)
+                _communicationChannel.postValue(Event(response))
             }
         }
     }
@@ -113,13 +126,12 @@ class ReaderDiscoverRepository constructor(
     @Inject constructor(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val eventBusWrapper: EventBusWrapper,
-        private val networkUtilsWrapper: NetworkUtilsWrapper,
-        private val contextProvider: ContextProvider,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
-        private val fetchNumPostsForTagUseCase: GetNumPostsForTagUseCase,
+        private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
+        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
+        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
             val tag = readerTag
@@ -128,13 +140,12 @@ class ReaderDiscoverRepository constructor(
             return ReaderDiscoverRepository(
                     bgDispatcher,
                     eventBusWrapper,
-                    networkUtilsWrapper,
-                    contextProvider,
                     tag,
                     getPostsForTagUseCase,
-                    fetchNumPostsForTagUseCase,
+                    getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    getPostsForTagWithCountUseCase
+                    getPostsForTagWithCountUseCase,
+                    fetchPostsForTagUseCase
             )
         }
     }

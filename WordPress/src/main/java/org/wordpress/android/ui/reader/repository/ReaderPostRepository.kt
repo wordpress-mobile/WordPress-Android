@@ -8,6 +8,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
@@ -29,7 +30,8 @@ class ReaderPostRepository(
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
     private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
+    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
+    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
 ) : BaseReaderRepository(eventBusWrapper,
         networkUtilsWrapper,
         contextProvider) {
@@ -96,7 +98,8 @@ class ReaderPostRepository(
             }
 
             if (refresh) {
-                requestPostsFromRemoteStorage(readerTag)
+                val response = fetchPostsForTagUseCase.fetch(readerTag)
+                    _communicationChannel.postValue(Event(response))
             }
         }
     }
@@ -115,9 +118,10 @@ class ReaderPostRepository(
         private val networkUtilsWrapper: NetworkUtilsWrapper,
         private val contextProvider: ContextProvider,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
-        private val fetchNumPostsForTagUseCase: GetNumPostsForTagUseCase,
+        private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
+        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
+        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
     ) {
         fun create(readerTag: ReaderTag): ReaderPostRepository {
             return ReaderPostRepository(
@@ -127,9 +131,10 @@ class ReaderPostRepository(
                     contextProvider,
                     readerTag,
                     getPostsForTagUseCase,
-                    fetchNumPostsForTagUseCase,
+                    getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    getPostsForTagWithCountUseCase
+                    getPostsForTagWithCountUseCase,
+                    fetchPostsForTagUseCase
             )
         }
     }
