@@ -48,13 +48,6 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_create_new_post_message_short,
             R.drawable.ic_create_white_24dp
     ),
-    PUBLISH_POST_TUTORIAL_SECON_STEP(
-            QuickStartTask.PUBLISH_POST,
-            R.id.fab_container,
-            R.id.fab_button,
-            -1,
-            -1
-    ),
     FOLLOW_SITES_TUTORIAL(
             QuickStartTask.FOLLOW_SITE,
             R.id.root_view_main,

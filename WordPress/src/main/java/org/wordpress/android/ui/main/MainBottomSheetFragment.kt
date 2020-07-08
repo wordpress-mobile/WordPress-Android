@@ -36,9 +36,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState != null) {
-            quickStartEvent = savedInstanceState.getParcelable(QuickStartEvent.KEY)
-        }
+        quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
 
     override fun onCreateView(
@@ -104,9 +102,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         // we are waiting for RecyclerView to populate itself with views and then grab the one we need one when it's ready
         content_recycler_view?.viewTreeObserver?.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
             override fun onGlobalLayout() {
-                val holder: ViewHolder? = content_recycler_view.findViewHolderForAdapterPosition(
-                        1
-                )
+                val holder: ViewHolder? = content_recycler_view.findViewHolderForAdapterPosition(1)
                 if (holder != null) {
                     val quickStartTarget = holder.itemView
                     quickStartTarget.post(Runnable {

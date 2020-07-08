@@ -441,11 +441,10 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.fab_container));
-            hideQuickStartSnackBar();
             if (getMySiteFragment() != null && getMySiteFragment()
                     .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-                // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.fab_container));
+                hideQuickStartSnackBar();
                 getMySiteFragment().requestNextStepOfActiveQuickStartTask(true);
             }
             mViewModel.onFabClicked(hasFullAccessToContent());
