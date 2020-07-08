@@ -27,8 +27,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -289,14 +288,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private fun saveInitialPost() {
         editPostRepository.set {
             val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(DRAFT.toString())
-            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
+            post.setStatus(PostStatus.DRAFT.toString())
             post
         }
         editPostRepository.savePostSnapshot()
         // this is an artifact to be able to call savePostToDb()
-        // also, Story posts are always PUBLISHED
-        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
+        editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
             savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
         }

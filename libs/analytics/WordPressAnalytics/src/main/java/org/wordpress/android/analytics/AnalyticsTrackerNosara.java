@@ -1515,6 +1515,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_wordpress_library_opened";
             case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
                 return "media_picker_stories_capture_opened";
+            case MEDIA_PICKER_OPEN_FOR_STORIES:
+                return "media_picker_open_for_stories";
             case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
