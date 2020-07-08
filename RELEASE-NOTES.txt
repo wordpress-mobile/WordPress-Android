@@ -1,6 +1,8 @@
 15.3
 -----
 * [*] Improve wording for confirmation dialogs when trashing posts
+* [***] Block Editor: Adds Copy, Cut, Paste, and Duplicate functionality to blocks
+* [***] Block Editor: The block editor now gives users the ability to individually edit unsupported blocks found in posts or pages. 
  
 15.2
 -----
