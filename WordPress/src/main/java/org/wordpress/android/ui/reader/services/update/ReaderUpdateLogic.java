@@ -23,6 +23,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetched;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
@@ -45,6 +46,7 @@ public class ReaderUpdateLogic {
 
     public enum UpdateTask {
         TAGS,
+        INTEREST_TAGS,
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
     }
@@ -73,6 +75,9 @@ public class ReaderUpdateLogic {
         // the Reader can't show anything
         if (tasks.contains(UpdateTask.TAGS)) {
             updateTags();
+        }
+        if (tasks.contains(UpdateTask.INTEREST_TAGS)) {
+            fetchInterestTags();
         }
         if (tasks.contains(UpdateTask.FOLLOWED_BLOGS)) {
             updateFollowedBlogs();
@@ -264,6 +269,33 @@ public class ReaderUpdateLogic {
         }
     }
 
+    private void fetchInterestTags() {
+        RestRequest.Listener listener = this::handleInterestTagsResponse;
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.READER, volleyError);
+            taskCompleted(UpdateTask.INTEREST_TAGS);
+        };
+
+        AppLog.d(AppLog.T.READER, "reader service > updating interest tags");
+
+        // TODO - replace API
+        HashMap<String, String> params = new HashMap<>();
+        params.put("locale", mLanguage);
+        mClientUtilsProvider.getRestClientForTagUpdate()
+                            .get("read/menu", params, null, listener, errorListener);
+    }
+
+    private void handleInterestTagsResponse(final JSONObject jsonObject) {
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderTagList interestTags = new ReaderTagList();
+                interestTags.addAll(parseTags(jsonObject, "recommended", ReaderTagType.INTERESTS));
+                EventBus.getDefault().post(new InterestTagsFetched(interestTags));
+                taskCompleted(UpdateTask.INTEREST_TAGS);
+            }
+        }.start();
+    }
 
     /***
      * request the list of blogs the current user is following
