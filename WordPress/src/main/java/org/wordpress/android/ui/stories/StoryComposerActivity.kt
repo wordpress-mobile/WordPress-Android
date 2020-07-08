@@ -293,11 +293,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editPostRepository.set {
             val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
             post.setStatus(PostStatus.DRAFT.toString())
-            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
             post
         }
         editPostRepository.savePostSnapshot()
         // this is an artifact to be able to call savePostToDb()
+        editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
             savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
         }
