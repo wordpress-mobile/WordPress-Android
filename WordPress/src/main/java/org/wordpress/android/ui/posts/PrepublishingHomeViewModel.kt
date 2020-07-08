@@ -21,6 +21,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiS
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
+import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
@@ -39,10 +40,12 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val storyRepositoryWrapper: StoryRepositoryWrapper,
+    private val updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var updateStoryTitleJob: Job? = null
+    private lateinit var editPostRepository: EditPostRepository
 
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = _uiState
@@ -54,6 +57,7 @@ class PrepublishingHomeViewModel @Inject constructor(
     val onSubmitButtonClicked: LiveData<Event<PublishPost>> = _onSubmitButtonClicked
 
     fun start(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
+        this.editPostRepository = editPostRepository
         if (isStarted) return
         isStarted = true
 
@@ -65,8 +69,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (isStoryPost) {
                 add(
                         StoryTitleUiState(
-                                storyTitle = storyRepositoryWrapper.getCurrentStoryTitle()
-                                        ?.let { storyTitle -> UiStringText(storyTitle) },
+                                storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
                                 storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                         ) { storyTitle ->
                             onStoryTitleChanged(storyTitle)
@@ -135,6 +138,7 @@ class PrepublishingHomeViewModel @Inject constructor(
         updateStoryTitleJob = launch(bgDispatcher) {
             delay(THROTTLE_DELAY)
             storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
+            updateStoryPostTitleUseCase.updateStoryTitle(storyTitle, editPostRepository)
         }
     }
 
