@@ -411,14 +411,19 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
-                    if (getSelectedSite() != null && getMySiteFragment() != null
-                        && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+                    if (getSelectedSite() != null) {
+                        QuickStartEvent event = null;
+                        if (getMySiteFragment() != null
+                            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+                            event = new QuickStartEvent(QuickStartTask.PUBLISH_POST);
+                        }
+
                         QuickStartUtils.completeTaskAndRemindNextOne(
                                 mQuickStartStore,
                                 QuickStartTask.PUBLISH_POST,
                                 mDispatcher,
                                 getSelectedSite(),
-                                new QuickStartEvent(QuickStartTask.PUBLISH_POST),
+                                event,
                                 this
                         );
                     }
