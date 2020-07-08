@@ -187,6 +187,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -367,6 +368,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
+    @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2010,7 +2012,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
@@ -2023,7 +2024,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
-                                supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
                                 isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
@@ -2034,7 +2034,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 themeBundle,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                mSite.isJetpackConnected()
+                                mSite.isJetpackConnected(),
+                                mGutenbergMentionsFeatureConfig.isEnabled()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
