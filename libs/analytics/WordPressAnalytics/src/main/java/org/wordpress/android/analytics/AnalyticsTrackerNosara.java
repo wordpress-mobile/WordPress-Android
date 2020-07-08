@@ -1776,6 +1776,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_save_remotely";
             case STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED:
                 return "story_post_error_snackbar_manage_tapped";
+            case STORY_POST_PUBLISH_TAPPED:
+                return "story_post_publish_tapped";
+            case STORY_POST_BOTTOM_SHEET_OPENED:
+                return "story_post_bottom_sheet_opened";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";

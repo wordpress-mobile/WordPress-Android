@@ -22,6 +22,8 @@ import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_POST_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -59,6 +61,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
@@ -89,6 +92,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
@@ -410,10 +414,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
+        analyticsTrackerWrapper.track(STORY_POST_BOTTOM_SHEET_OPENED)
         showPrepublishingBottomSheet()
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
         processStorySaving()
     }
 }
