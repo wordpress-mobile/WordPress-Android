@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -28,5 +29,9 @@ class ReaderPostListViewModelTest {
     @Before
     fun setUp() {
         viewModel = ReaderPostListViewModel(readerPostCardActionsHandler, reblogUseCase, readerTracker)
+    }
+
+    @Test
+    fun foo() {
     }
 }
