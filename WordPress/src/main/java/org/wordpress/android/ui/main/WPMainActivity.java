@@ -846,6 +846,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
         SiteModel site = getSelectedSite();
         if (site != null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
             ActivityLauncher.showPhotoPickerForResult(
                     this,

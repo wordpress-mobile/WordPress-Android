@@ -335,7 +335,11 @@ class PostsListActivity : LocaleAwareActivity(),
             event.applyIfNotHandled {
                 val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
                 if (fragment == null) {
-                    val prepublishingFragment = newInstance(site, editPostRepository.isPage)
+                    val prepublishingFragment = newInstance(
+                            site = site,
+                            isPage = editPostRepository.isPage,
+                            isStoryPost = false
+                    )
                     prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
                 }
             }

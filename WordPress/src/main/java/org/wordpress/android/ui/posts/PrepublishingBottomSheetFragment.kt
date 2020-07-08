@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,18 +24,19 @@ import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
+import org.wordpress.android.util.KeyboardResizeViewUtil
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingViewModel
+    private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
     private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_PrepublishingNudges_BottomSheetDialogTheme)
         (requireNotNull(activity).application as WordPress).component().inject(this)
     }
 
@@ -59,7 +59,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        val view = inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        keyboardResizeViewUtil = KeyboardResizeViewUtil(requireActivity(), view)
+        keyboardResizeViewUtil.enable()
+        return view
     }
 
     override fun onResume() {
@@ -142,10 +145,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
-            HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(),
-                    PrepublishingHomeFragment.TAG
-            )
+            HOME -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingHomeFragment.newInstance(isStoryPost),
+                        PrepublishingHomeFragment.TAG
+                )
+            }
             PrepublishingScreen.PUBLISH -> Pair(
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
@@ -201,13 +209,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+        const val IS_STORY_POST = "prepublishing_bottom_sheet_is_story_post"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) =
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
                 PrepublishingBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
                         putBoolean(IS_PAGE, isPage)
+                        putBoolean(IS_STORY_POST, isStoryPost)
                     }
                 }
     }

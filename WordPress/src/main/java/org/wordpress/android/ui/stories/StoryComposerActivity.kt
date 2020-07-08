@@ -13,6 +13,7 @@ import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
+import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
@@ -26,8 +27,7 @@ import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
+import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -41,16 +41,20 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
+import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -70,7 +74,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         AuthenticationHeadersProvider,
         NotificationIntentLoader,
         MetadataProvider,
-        StoryDiscardListener {
+        StoryDiscardListener,
+        EditPostActivityHook,
+        PrepublishingEventProvider,
+        PrepublishingBottomSheetListener {
     private var site: SiteModel? = null
 
     @Inject lateinit var editorMedia: EditorMedia
@@ -78,13 +85,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
-    @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+
+    override fun getSite() = site
+    override fun getEditPostRepository() = editPostRepository
 
     companion object {
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
@@ -106,6 +116,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMetadataProvider(this)
         setStoryDiscardListener(this)
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
+        setPrepublishingEventProvider(this)
 
         if (savedInstanceState == null) {
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
@@ -141,6 +152,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
         postEditorAnalyticsSession?.start(null)
         startObserving()
+        updateStoryPostWithChanges()
     }
 
     override fun onLoadFromIntent(intent: Intent) {
@@ -276,17 +288,21 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     private fun saveInitialPost() {
         editPostRepository.set {
             val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(DRAFT.toString())
-            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
+            post.setStatus(PostStatus.DRAFT.toString())
             post
         }
         editPostRepository.savePostSnapshot()
         // this is an artifact to be able to call savePostToDb()
-        // also, Story posts are always PUBLISHED
-        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
+        editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
             savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
         }
+    }
+
+    private fun updateStoryPostWithChanges() {
+        editPostRepository.postChanged.observe(this, Observer {
+            savePostToDbUseCase.savePostToDb(this, editPostRepository, requireNotNull(site))
+        })
     }
 
     // EditorMediaListener
@@ -343,11 +359,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
         return NotificationsProcessingService
-            .getPendingIntentForNotificationDismiss(
-                applicationContext,
-                notificationId,
-                NotificationType.STORY_SAVE_ERROR
-            )
+                .getPendingIntentForNotificationDismiss(
+                        applicationContext,
+                        notificationId,
+                        NotificationType.STORY_SAVE_ERROR
+                )
     }
 
     override fun setupErrorNotificationBaseId(): Int {
@@ -379,5 +395,25 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     post, site, true
             )
         }
+    }
+
+    private fun showPrepublishingBottomSheet() {
+        val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
+        if (fragment == null) {
+            val prepublishingFragment = PrepublishingBottomSheetFragment.newInstance(
+                    site = requireNotNull(site),
+                    isPage = editPostRepository.isPage,
+                    isStoryPost = true
+            )
+            prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
+        }
+    }
+
+    override fun onStorySaveButtonPressed() {
+        showPrepublishingBottomSheet()
+    }
+
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        processStorySaving()
     }
 }

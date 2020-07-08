@@ -75,7 +75,10 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        val isStoryPost = true
+        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+            "arguments can't be null."
+        }
+
         viewModel.start(getEditPostRepository(), getSite(), isStoryPost)
     }
 
@@ -107,7 +110,13 @@ class PrepublishingHomeFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
+        const val IS_STORY_POST = "prepublishing_home_fragment_is_story_post"
 
-        fun newInstance() = PrepublishingHomeFragment()
+        fun newInstance(isStoryPost: Boolean) =
+                PrepublishingHomeFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(IS_STORY_POST, isStoryPost)
+                    }
+                }
     }
 }
