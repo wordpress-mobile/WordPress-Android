@@ -120,7 +120,6 @@ class ReaderPostRepository(
         private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase
     ) {
         fun create(readerTag: ReaderTag): ReaderPostRepository {
-
             return ReaderPostRepository(
                     bgDispatcher,
                     eventBusWrapper,
