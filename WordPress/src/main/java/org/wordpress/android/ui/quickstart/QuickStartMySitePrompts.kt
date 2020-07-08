@@ -43,9 +43,16 @@ enum class QuickStartMySitePrompts constructor(
     ),
     PUBLISH_POST_TUTORIAL(
             QuickStartTask.PUBLISH_POST,
-            R.id.my_site_scroll_view_root,
-            R.id.row_blog_posts,
+            R.id.fab_container,
+            R.id.fab_button,
             R.string.quick_start_dialog_create_new_post_message_short,
+            R.drawable.ic_create_white_24dp
+    ),
+    PUBLISH_POST_TUTORIAL_SECON_STEP(
+            QuickStartTask.PUBLISH_POST,
+            R.id.fab_container,
+            R.id.fab_button,
+            -1,
             -1
     ),
     FOLLOW_SITES_TUTORIAL(
