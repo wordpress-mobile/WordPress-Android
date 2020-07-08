@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 
+import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
@@ -286,6 +288,17 @@ public class ReaderActivityLauncher {
         } else {
             WPWebViewActivity.openURL(context, url, ReaderConstants.HTTP_REFERER_URL);
         }
+    }
+
+    public static void sharePost(Context context, ReaderPost post) throws ActivityNotFoundException {
+        String url = (post.hasShortUrl() ? post.getShortUrl() : post.getUrl());
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+        intent.putExtra(Intent.EXTRA_SUBJECT, post.getTitle());
+
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
     }
 
     public static void openUrl(Context context, String url, OpenUrlType openUrlType) {

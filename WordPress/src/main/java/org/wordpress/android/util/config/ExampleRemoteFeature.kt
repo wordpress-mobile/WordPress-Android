@@ -13,7 +13,8 @@ import javax.inject.Inject
 class ExampleRemoteFeature
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.TENOR_AVAILABLE
+        BuildConfig.TENOR_AVAILABLE,
+        EXAMPLE_REMOTE_FEATURE_FIELD
 ) {
     companion object {
         const val EXAMPLE_REMOTE_FEATURE_FIELD = "example_remote_feature_field"

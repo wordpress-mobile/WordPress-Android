@@ -32,14 +32,26 @@ class ReaderInterestsViewModel @Inject constructor(
         if (isStarted) {
             return
         }
-        loadInterests()
+        loadUserTags()
         isStarted = true
+    }
+
+    private fun loadUserTags() {
+        updateUiState(LoadingUiState)
+        viewModelScope.launch {
+            val userTags = readerTagRepository.getUserTags() // TODO: error handling
+            if (userTags.isEmpty()) {
+                loadInterests()
+            } else {
+                parentViewModel.onCloseReaderInterests()
+            }
+        }
     }
 
     private fun loadInterests() {
         updateUiState(LoadingUiState)
         viewModelScope.launch {
-            val tagList = readerTagRepository.getInterests()
+            val tagList = readerTagRepository.getInterests() // TODO: error handling
             updateUiState(
                 ContentUiState(
                     interestsUiState = transformToInterestsUiState(tagList),

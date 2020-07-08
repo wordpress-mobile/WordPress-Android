@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -25,6 +24,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -133,6 +133,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -831,8 +832,9 @@ class MySiteFragment : Fragment(),
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar))
-        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary))
+        options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
+        options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
