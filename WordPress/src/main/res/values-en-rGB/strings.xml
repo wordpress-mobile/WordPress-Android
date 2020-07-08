@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-16 20:01:41+0000
+Translation-Revision-Date: 2020-06-30 10:14:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigates to the previous content sheet</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigates to customise the gradient</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigates to custom colour picker</string>
+    <string name="gutenberg_native_gradient_type">Gradient Type</string>
+    <string name="gutenberg_native_go_back">Go back</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Double tap to select the option</string>
+    <string name="gutenberg_native_customize_gradient">Customise Gradient</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Page author</string>
+    <string name="photo_picker_use_gif">Use this GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Media thumbnail could not be loaded</string>
+    <string name="menu_content_info">Content structure</string>
+    <string name="everyone">Everyone</string>
+    <string name="me">Me</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this block using your device\'s web browser.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Edit block in web browser</string>
     <string name="gutenberg_native_dismiss">Dismiss</string>
@@ -586,8 +601,6 @@ Language: en_GB
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_list_tab_drafts">Drafts</string>
-    <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>

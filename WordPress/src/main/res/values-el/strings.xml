@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-02-28 09:54:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
@@ -37,8 +37,6 @@ Language: el_GR
     <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
-    <string name="post_list_author_everyone">Όλοι</string>
-    <string name="post_list_author_me">Εγώ</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
