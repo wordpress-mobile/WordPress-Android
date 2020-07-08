@@ -113,7 +113,8 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
                         if (view == null) {
                             return@Runnable
                         }
-                        val focusPointContainer = view!!.findViewById<ViewGroup>(R.id.add_content_bottom_sheet_root_view)
+                        val focusPointContainer =
+                                view!!.findViewById<ViewGroup>(R.id.add_content_bottom_sheet_root_view)
                         val focusPointSize = resources.getDimensionPixelOffset(dimen.quick_start_focus_point_size)
                         val verticalOffset = (quickStartTarget.height - focusPointSize) / 2
                         val horizontalOffset = (quickStartTarget.width - focusPointSize) / 2

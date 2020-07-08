@@ -99,6 +99,7 @@ import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
+import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -410,6 +411,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
+                    if (getSelectedSite() != null && getMySiteFragment() != null
+                        && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+                        QuickStartUtils.completeTaskAndRemindNextOne(
+                                mQuickStartStore,
+                                QuickStartTask.PUBLISH_POST,
+                                mDispatcher,
+                                getSelectedSite(),
+                                new QuickStartEvent(QuickStartTask.PUBLISH_POST),
+                                this
+                        );
+                    }
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
@@ -429,7 +441,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             if (getMySiteFragment() != null && getMySiteFragment()
                     .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                getMySiteFragment().requestNextStepOfActiveQuickStartTask(true);
             }
             mViewModel.onFabClicked(hasFullAccessToContent());
         });

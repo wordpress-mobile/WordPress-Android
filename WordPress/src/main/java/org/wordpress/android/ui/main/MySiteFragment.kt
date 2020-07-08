@@ -1303,13 +1303,16 @@ class MySiteFragment : Fragment(),
         quickStartSnackBarHandler.removeCallbacksAndMessages(null)
     }
 
-    fun requestNextStepOfActiveQuickStartTask() {
+    @JvmOverloads
+    fun requestNextStepOfActiveQuickStartTask(keepActiveQuickStartTask: Boolean = false) {
         if (!hasActiveQuickStartTask()) {
             return
         }
         removeQuickStartFocusPoint()
         EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
-        clearActiveQuickStartTask()
+        if (!keepActiveQuickStartTask) {
+            clearActiveQuickStartTask()
+        }
     }
 
     private fun clearActiveQuickStartTask() {
