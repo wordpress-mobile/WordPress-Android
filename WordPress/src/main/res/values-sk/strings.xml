@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-01-23 06:38:08+0000
-Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-06-19 08:15:05+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha.2
 Language: sk
 -->
 <resources>
+    <string name="error_failed_to_crop_and_save_image">Nepodarilo sa orezať a uložiť obrázok, skúste znova.</string>
+    <string name="preview_image_description">Náhľad obrázku</string>
+    <string name="error_unknown_page_type">Neznámy formát stránky</string>
+    <string name="error_publish_page_no_network">Zariadenie je offline. Stránka bola uložená lokálne.</string>
+    <string name="local_page_autosave_revision_available">Na tejto stránke ste vykonali neuložené zmeny.</string>
+    <string name="editor_uploading_page">Vaša stránka sa nahráva</string>
+    <string name="app_theme_dark">Tmavá</string>
+    <string name="app_theme_light">Svetlá</string>
+    <string name="app_theme">Vzhľad</string>
+    <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
+    <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_link_to">Odkaz na</string>
+    <string name="gutenberg_native_s_settings">Nastavenia %s</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Poďme spolu niečo vybudovať!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať!</string>
+    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
+    <string name="gutenberg_native_j_k_rowling">J. K. Rowling</string>
+    <string name="reader_filter_empty_tags_action">Pridať značku</string>
+    <string name="reader_filter_cta">Filter</string>
     <string name="plugin_install_custom_domain_required_dialog_title">Inštaluj plugin</string>
     <string name="new_site_creation_preview_subtitle">Vzhľad svojej stránky si budeš vedieť prispôsobiť neskôr.</string>
     <string name="scheduled_for">Naplánované na: %s</string>
@@ -130,7 +149,6 @@ Language: sk
     <string name="pages_delete_permanently">Natrvalo vymazať.</string>
     <string name="pages_move_to_trash">Presunúť do Kôš</string>
     <string name="pages_move_to_draft">Presunúť do Koncepty</string>
-    <string name="pages_publish_now">Zverejniť teraz</string>
     <string name="pages_set_parent">Nastaviť predlohu</string>
     <string name="pages_view">Zobraziť</string>
     <string name="pages_trashed">Vyhodené</string>
@@ -207,7 +225,6 @@ Language: sk
     <string name="reader_empty_posts_liked_title">Zatiaľ nebolo nič označené Páči sa mi to</string>
     <string name="reader_empty_followed_blogs_button_followed">Prejdite na sledovanie</string>
     <string name="reader_empty_followed_blogs_button_discover">Objavte webové stránky</string>
-    <string name="reader_empty_followed_blogs_description">Zatiaľ nesledujete žiadne webové stránky. Prečo nezačať sledovať jednu práve teraz?</string>
     <string name="reader_empty_followed_blogs_title">Žiadne sledované webové stránky</string>
     <string name="notifications_empty_likes">Zatiaľ žiadne lajky</string>
     <string name="notifications_empty_followers">Zatiaľ žiadni odberatelia</string>
@@ -375,7 +392,6 @@ Language: sk
     <string name="menu_html_mode_done_snackbar">Prepnuté do HTML módu</string>
     <string name="menu_html_mode">HTML mód</string>
     <string name="menu_preview">Ukážka</string>
-    <string name="menu_publish_now">Publikovať okamžite</string>
     <string name="menu_save_as_draft">Uložiť ako koncept</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -438,10 +454,6 @@ Language: sk
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d stránky, a %2$d z %3$d zostávajúcich súborov</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 príspevok, a %1$d z %2$d zostávajúcich súborov</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 stránka, a %1$d z %2$d zostávajúcich súborov</string>
-    <string name="dialog_confirm_publish_yes">Publikovať okamžite</string>
-    <string name="dialog_confirm_publish_message_page">Stránka bude okamžite publikovaná.</string>
-    <string name="dialog_confirm_publish_message_post">Článok bude okamžite publikovaný.</string>
-    <string name="dialog_confirm_publish_title">Ste pripravený publikovať?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d príspevkov / stránok nebolo nahraných</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránok nebolo nahraných</string>
     <string name="media_file_page_singular_only_not_uploaded">1 stránka nebola nahraná</string>
@@ -459,7 +471,6 @@ Language: sk
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 príspevok s 1 súborom neboli nahrané</string>
     <string name="untitled_in_parentheses">(Bez názvu)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Vytvoriť webovú stránku</string>
     <string name="notification_site_creation_created">Klepnutím pokračujte.</string>
@@ -665,7 +676,6 @@ Language: sk
     <string name="media_edit_filename_caption">Názov súboru</string>
     <string name="media_edit_url_caption">URL adresa</string>
     <string name="media_edit_alttext_text">Celý text</string>
-    <string name="copy">Kopírovať</string>
     <string name="connect_site">Pripojte webovú stránku</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blikajúce svetlo</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vybračné zariadenie</string>
@@ -772,7 +782,6 @@ Language: sk
     <string name="post_settings_not_set">Nie je nastavené</string>
     <string name="post_settings_more_options">Viac možností</string>
     <string name="post_settings_categories_and_tags">Kategórie a značky</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Všetky</string>
     <string name="top_level_category_name">Najvyššia úroveň</string>
     <string name="category_parent">Nadradená kategória (nepovinné):</string>
@@ -896,7 +905,6 @@ Language: sk
     <string name="media_upload_state_deleting">Vymazávanie</string>
     <string name="media_upload_state_uploading">Nahrávanie</string>
     <string name="media_upload_state_queued">V poradí</string>
-    <string name="keep_editing">Ponechať úpravy</string>
     <string name="image_quality">Kvalita obrázku</string>
     <string name="error_all_media_upload_canceled">Nahrávanie všetkých médii bolo zrušené pre neznámu chybu. Prosím, opakujte nahrávanie</string>
     <string name="error_unknown_post_type">Neznámy formát článku</string>
@@ -924,7 +932,7 @@ Language: sk
     <string name="pending_draft_one_day_2">Vedeli ste, že \'%1$s\' je stále konceptom? Zverejnite ho! </string>
     <string name="pending_draft_one_day_1">\'%1$s\' ste  včera uložili ako koncept. Nezabudnite ho zverejniť!</string>
     <string name="reader_photo_by">Fotografie od %s</string>
-    <string name="reader_label_visit">Navštívte</string>
+    <string name="reader_label_visit">Navštívte webstránku</string>
     <string name="swipe_for_more">Potiahnite prstom pre viac informácii </string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com alebo použite tlačidlo akcie a prehliadač sa otvorí.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com.</string>
@@ -1555,7 +1563,6 @@ Language: sk
     <string name="httppassword">HTTP heslo</string>
     <string name="httpuser">HTTP používateľské meno</string>
     <string name="error_media_upload">Pri nahrávaní multimédií sa vyskytla chyba</string>
-    <string name="publish_date">Zverejniť</string>
     <string name="incorrect_credentials">Nesprávne používatelské meno alebo heslo.</string>
     <string name="log_in">Prihlásiť sa</string>
     <string name="username">Používatelské meno</string>
@@ -1591,6 +1598,7 @@ Language: sk
     <string name="no">Nie</string>
     <string name="yes">Áno</string>
     <string name="notification_settings">Nastavenie upozornení</string>
+    <string name="publish_now">Publikovať ihneď</string>
     <string name="reply">Odpovedať</string>
     <string name="on">na</string>
     <string name="preview">Preview</string>

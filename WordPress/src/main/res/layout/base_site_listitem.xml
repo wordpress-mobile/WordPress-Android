@@ -12,7 +12,7 @@
         android:layout_marginEnd="@dimen/margin_extra_large"
         android:contentDescription="@string/blavatar_desc"
         android:gravity="center_vertical"
-        android:src="@drawable/bg_rectangle_neutral_10_radius_4dp_globe_32dp" />
+        android:src="@drawable/bg_rectangle_placeholder_radius_4dp_globe_32dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

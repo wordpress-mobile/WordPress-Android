@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    >
+
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium"
+        android:gravity="center"
+        android:background="?attr/colorGutenbergBackground"
+        android:textColor="?attr/wpColorText"
+        android:textSize="@dimen/text_sz_medium"
+        android:visibility="gone"
+        android:elevation="@dimen/popup_over_toolbar_elevation"
+        />
+
+    <View
+        android:id="@+id/divider"
+        android:background="?attr/colorGutenbergDivider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent" />
+
+    <org.wordpress.android.widgets.SuggestionAutoCompleteText
+        android:id="@+id/autocompleteText"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:paddingStart="@dimen/margin_extra_large"
+        android:paddingEnd="@dimen/margin_extra_large"
+        android:dropDownWidth="match_parent"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:background="?attr/colorGutenbergBackground"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:dropDownVerticalOffset="0dp"
+        android:dropDownAnchor="@+id/divider"
+        />
+
+</LinearLayout>

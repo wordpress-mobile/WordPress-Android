@@ -67,7 +67,6 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.CrashLoggingUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SelfSignedSSLUtils;
 import org.wordpress.android.util.StringUtils;
@@ -751,10 +750,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
             // log some data to help us debug https://github.com/wordpress-mobile/WordPress-Android/issues/7182
             final String loginModeStr = "LoginMode: " + (getLoginMode() != null ? getLoginMode().name() : "null");
             AppLog.w(AppLog.T.NUX, "Internal inconsistency error! mSmartLockHelper found null!" + loginModeStr);
-            CrashLoggingUtils.logException(
-                    new RuntimeException("Internal inconsistency error! mSmartLockHelper found null!"),
-                    AppLog.T.NUX,
-                    loginModeStr);
 
             // bail
             return;

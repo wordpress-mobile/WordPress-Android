@@ -26,6 +26,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.main.SitePickerAdapter;
 import org.wordpress.android.ui.main.SitePickerAdapter.SiteList;
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.SitePickerAdapter.ViewHolderHandler;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -186,7 +187,7 @@ public class LoginEpilogueFragment extends LoginBaseFormFragment<LoginEpilogueLi
                     public void onBindViewHolder(LoginFooterViewHolder holder, SiteList sites) {
                         bindFooterViewHolder(holder, sites);
                     }
-                }, mOldSitesIds);
+                }, mOldSitesIds, SitePickerMode.DEFAULT_MODE);
     }
 
     @Override

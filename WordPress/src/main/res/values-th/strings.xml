@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-12-01 04:20:36+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: th
 -->
 <resources>
@@ -379,7 +379,6 @@ Language: th
     <string name="httpuser">ชื่อผู้ใช้ HTTP</string>
     <string name="httppassword">รหัสผ่าน HTTP</string>
     <string name="error_media_upload">มีความผิดพลาดเกิดขึ้นขณะทำการอัปโหลดไฟล์สื่อ</string>
-    <string name="publish_date">เผยแพร่</string>
     <string name="incorrect_credentials">ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</string>
     <string name="password">รหัสผ่าน</string>
     <string name="username">ชื่อผู้ใช้</string>

@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.posts
 
+import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +22,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_TAB_CHANG
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.ListActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.list.PostListDescriptor
 import org.wordpress.android.fluxc.model.post.PostStatus
@@ -47,6 +50,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -76,6 +80,7 @@ class PostListMainViewModel @Inject constructor(
     private val postListEventListenerFactory: PostListEventListener.Factory,
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val savePostToDbUseCase: SavePostToDbUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -88,6 +93,8 @@ class PostListMainViewModel @Inject constructor(
         get() = bgDispatcher + scrollToTargetPostJob
 
     private lateinit var site: SiteModel
+    private lateinit var editPostRepository: EditPostRepository
+    var currentBottomSheetPostId: LocalId? = null
 
     private val _viewState = MutableLiveData<PostListMainViewState>()
     val viewState: LiveData<PostListMainViewState> = _viewState
@@ -103,6 +110,9 @@ class PostListMainViewModel @Inject constructor(
 
     private val _scrollToLocalPostId = SingleLiveEvent<LocalPostId>()
     val scrollToLocalPostId = _scrollToLocalPostId as LiveData<LocalPostId>
+
+    private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
+    val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
 
     private val _snackBarMessage = SingleLiveEvent<SnackbarMessageHolder>()
     val snackBarMessage = _snackBarMessage as LiveData<SnackbarMessageHolder>
@@ -174,6 +184,7 @@ class PostListMainViewModel @Inject constructor(
                 hasUnhandledAutoSave = postConflictResolver::hasUnhandledAutoSave,
                 triggerPostListAction = { _postListAction.postValue(it) },
                 triggerPostUploadAction = { _postUploadAction.postValue(it) },
+                triggerPublishAction = this::showPrepublishingBottomSheet,
                 invalidateList = this::invalidateAllLists,
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
@@ -199,8 +210,15 @@ class PostListMainViewModel @Inject constructor(
         lifecycleRegistry.markState(Lifecycle.State.CREATED)
     }
 
-    fun start(site: SiteModel, initPreviewState: PostListRemotePreviewState) {
+    fun start(
+        site: SiteModel,
+        initPreviewState: PostListRemotePreviewState,
+        currentBottomSheetPostId: LocalId,
+        editPostRepository: EditPostRepository,
+        context: Context
+    ) {
         this.site = site
+        this.editPostRepository = editPostRepository
 
         if (isSearchExpanded.value == true) {
             setViewLayoutAndIcon(COMPACT, false)
@@ -250,9 +268,21 @@ class PostListMainViewModel @Inject constructor(
         )
         _previewState.value = _previewState.value ?: initPreviewState
 
+        currentBottomSheetPostId.let { postId ->
+            if (postId.value != 0) {
+                editPostRepository.loadPostByLocalPostId(postId.value)
+            }
+        }
+
         lifecycleRegistry.markState(Lifecycle.State.STARTED)
 
         uploadStarter.queueUploadFromSite(site)
+
+        editPostRepository.run {
+            postChanged.observe(this@PostListMainViewModel, Observer {
+                savePostToDbUseCase.savePostToDb(editPostRepository, site)
+            })
+        }
     }
 
     override fun onCleared() {
@@ -388,10 +418,12 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
                 trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
+                trashPostWithUnsavedChanges = postActionHandler::trashPostWithUnsavedChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
-                editRestoredAutoSavePost = this::editRestoredAutoSavePost
+                editRestoredAutoSavePost = this::editRestoredAutoSavePost,
+                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft
         )
     }
 
@@ -409,6 +441,12 @@ class PostListMainViewModel @Inject constructor(
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
                 editLocalPost = this::editLocalPost
         )
+    }
+
+    private fun showPrepublishingBottomSheet(post: PostModel) {
+        currentBottomSheetPostId = LocalId(post.id)
+        editPostRepository.loadPostByLocalPostId(post.id)
+        _openPrepublishingBottomSheet.postValue(Event(Unit))
     }
 
     /**
@@ -516,5 +554,11 @@ class PostListMainViewModel @Inject constructor(
     private fun setUserPreferredViewLayoutType() {
         val savedLayoutType = prefs.postListViewLayoutType
         setViewLayoutAndIcon(savedLayoutType, false)
+    }
+
+    fun onBottomSheetPublishButtonClicked() {
+        editPostRepository.getEditablePost()?.let {
+            postActionHandler.publishPost(it)
+        }
     }
 }

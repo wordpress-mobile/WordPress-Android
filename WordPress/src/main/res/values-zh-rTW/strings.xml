@@ -1,13 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-18 00:54:11+0000
+Translation-Revision-Date: 2020-06-25 08:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我們正在努力開發，讓每次版本更新都可以新增更多區塊。 在此同時，你也可以使用裝置的網頁瀏覽器編輯此區塊。</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">在網頁瀏覽器編輯區塊</string>
+    <string name="gutenberg_native_dismiss">關閉</string>
+    <string name="prepublishing_nudges_visibility_password">密碼保護</string>
+    <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
+    <string name="prepublishing_tags_description">標籤可協助讀者瞭解文章內容。</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">發表</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">新增標籤</string>
+    <string name="prepublishing_nudges_back_button">返回</string>
+    <string name="prepublishing_nudges_home_save_button">立即儲存</string>
+    <string name="prepublishing_nudges_home_submit_button">立即提交</string>
+    <string name="prepublishing_nudges_home_schedule_button">立即安排</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">發表至</string>
+    <string name="prepublishing_nudges_tags_action">標籤</string>
+    <string name="prepublishing_nudges_publish_action">發表日期</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">取消</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">移至草稿</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
+    <string name="reader_label_choose_your_interests">選擇你的興趣</string>
+    <string name="reader_label_discover_follow_tags">探索並關注你喜愛的標籤</string>
+    <string name="reader_choose_interests_content_description">選擇你的興趣</string>
+    <string name="reader_btn_done">搞定</string>
+    <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
+    <string name="post_status_post_published">已發表</string>
+    <string name="post_status_post_trashed">已移至垃圾桶</string>
+    <string name="post_status_post_scheduled">已排程</string>
+    <string name="publish_date">發表日期</string>
+    <string name="ccpa_privacy_notice_read">閱讀《加州消費者隱私保護法》(CCPA) 隱私權聲明</string>
+    <string name="ccpa_privacy_notice_caption">根據《加州消費者隱私保護法》(以下稱「CCPA」) 規定，我們必須提供加州使用者一些額外資訊，說明我們收集和分享的個人資訊種類、從哪裡取得這些資訊，以及這些資訊的使用方式及用途。</string>
+    <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
+    <string name="status_and_visibility">狀態及可見度</string>
+    <string name="update_now">馬上更新</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">移除 %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
+    <string name="gutenberg_native_move_s_up">向上移動%s</string>
+    <string name="gutenberg_native_move_s_right">向右移動%s</string>
+    <string name="gutenberg_native_move_s_left">向左移動%s</string>
+    <string name="gutenberg_native_move_s_down">向下移動%s</string>
+    <string name="gutenberg_native_try_a_starter_layout">試用入門版面配置</string>
+    <string name="gutenberg_native_insert_mention">插入標記</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">按兩下以開啟含有可用選項的操作工作表</string>
+    <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
+    <string name="pages_set_as_posts_page">設為文章頁面</string>
+    <string name="pages_set_as_homepage">設為首頁</string>
+    <string name="suggestion_no_matching_users">「沒有符合條件的使用者。」</string>
+    <string name="suggestion_invalid_user">「%s不是有效的使用者」</string>
+    <string name="site_settings_select_page">選取頁面</string>
+    <string name="site_settings_posts_page">文章列表頁面</string>
+    <string name="site_settings_static_homepage">靜態首頁</string>
+    <string name="site_settings_classic_blog">傳統網誌</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">選取的首頁和文章頁面不能相同。</string>
+    <string name="site_settings_failed_update_homepage_settings">首頁設定更新失敗，請檢查你的網際網路連線</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">載入頁面之前無法儲存首頁設定</string>
+    <string name="site_settings_failed_to_save_homepage_settings">無法儲存首頁設定</string>
+    <string name="site_settings_accept_homepage">接受</string>
+    <string name="site_settings_failed_to_load_pages">載入頁面失敗</string>
+    <string name="site_settings_homepage_settings_description">選擇讓首頁顯示你的最新文章 (傳統網誌)，或顯示固定/靜態頁面。</string>
+    <string name="site_settings_homepage_settings">首頁設定</string>
+    <string name="site_settings_homepage">首頁</string>
+    <string name="page_posts_page_update_failed">文章頁面更新失敗</string>
+    <string name="page_posts_page_successfully_updated">文章頁面已成功更新</string>
+    <string name="page_homepage_update_failed">首頁更新失敗</string>
+    <string name="page_homepage_successfully_updated">首頁已成功更新</string>
+    <string name="page_cannot_set_posts_page">若要設定文章頁面，請在網站設定中啟用「靜態首頁」</string>
+    <string name="page_cannot_set_homepage">若要設定首頁，請在網站設定中啟用「靜態首頁」</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">歡迎來到我們全新的網誌</string>
+    <string name="gutenberg_native_select_a_color">選擇顏色</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">點選兩次即可前往顏色設定</string>
+    <string name="reader_empty_followed_blogs_description">關注網站後，網站內容就會顯示於此</string>
+    <string name="feature_announcement_find_out_mode">瞭解更多</string>
+    <string name="feature_announcement_dialog_label">WordPress 新功能</string>
+    <string name="insert_label_with_count">插入 %d 個</string>
+    <string name="crop">剪裁</string>
+    <string name="error_failed_to_load_into_file">無法載入檔案，請再試一次。</string>
+    <string name="preview_image_thumbnail_description">預覽圖片縮圖</string>
+    <string name="photo_picker_use_media">使用此媒體</string>
+    <string name="photo_picker_use_video">使用此視訊</string>
+    <string name="photo_picker_photo_or_video_title">選擇媒體</string>
+    <string name="photo_picker_video_title">選擇視訊</string>
+    <string name="site_picker_ask_site_select">無法選擇網站，請再試一次。</string>
+    <string name="sitepicker_continue_flow">繼續</string>
+    <string name="reader_reblog_error">轉發失敗</string>
+    <string name="reader_no_site_to_reblog_action">管理網站</string>
+    <string name="reader_no_site_to_reblog_detail">建立 WordPress.com 網站後，可以將喜歡的內容轉發到自己的網站。</string>
+    <string name="reader_no_site_to_reblog_title">沒有可用的 WordPress.com 網站</string>
+    <string name="whats_new_in_version_title">最新內容</string>
+    <string name="comment_q_action_copied_url">已複製連結位址</string>
+    <string name="copy_link_address">複製連結位址</string>
+    <string name="comment_share_link_via">分享方式：</string>
+    <string name="comment_toast_err_share_intent">無法分享</string>
+    <string name="button_insert">插入</string>
+    <string name="continue_label">繼續</string>
+    <string name="copy_text">複製</string>
+    <string name="gutenberg_native_number_of_columns">欄位數</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">將區塊向右移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">將區塊向左移動，從位置 %1$s 移動到位置 %2$s</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">按兩下將區塊向右移</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">按兩下將區塊向左移</string>
+    <string name="gutenberg_native_columns_settings">欄位設定</string>
+    <string name="gutenberg_native_blog">網誌</string>
+    <string name="new_site_creation_creating_site_loading_4">建立儀表板</string>
+    <string name="new_site_creation_creating_site_loading_3">設定佈景主題</string>
+    <string name="new_site_creation_creating_site_loading_2">新增網站功能</string>
+    <string name="new_site_creation_creating_site_loading_1">擷取網站網址</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">你的網站即將準備就緒</string>
+    <string name="new_site_creation_creating_site_loading_title">太棒了！\n快完成了</string>
+    <string name="pages_and_posts_cancel_auto_upload">取消上傳</string>
+    <string name="gif_list_search_returned_unknown_error">處理要求時發生問題</string>
+    <string name="gif_powered_by_tenor">由 Tenor 支援</string>
+    <string name="gif_picker_search_hint">搜尋 Tenor</string>
+    <string name="photo_picker_gif">從 Tenor 中選擇</string>
+    <string name="weekday_saturday">星期六</string>
+    <string name="weekday_friday">星期五</string>
+    <string name="weekday_thursday">星期四</string>
+    <string name="weekday_wednesday">星期三</string>
+    <string name="weekday_tuesday">星期二</string>
+    <string name="weekday_monday">星期一</string>
+    <string name="weekday_sunday">星期日</string>
+    <string name="media_accessing_failed">無法存取私人網站的內容。部分媒體可能無法使用</string>
+    <string name="media_accessing_progress">正在存取私人網站的內容</string>
     <string name="error_failed_to_crop_and_save_image">無法裁剪和儲存圖片，請再試一次。</string>
-    <string name="failed_to_insert_image_tap_to_retry">無法插入圖片。\n請點選以重試。</string>
+    <string name="failed_to_load_image_tap_to_retry">無法載入圖片。\n請點選以重試。</string>
     <string name="preview_image_description">預覽圖片</string>
     <string name="error_unknown_page_type">不明的頁面格式</string>
     <string name="error_page_not_submitted">我們無法完成此動作，因此未將此頁面提交送審。</string>
@@ -31,7 +154,6 @@ Language: zh_TW
     <string name="page_uploading">正在上傳頁面</string>
     <string name="error_publish_page_no_network">裝置已離線。頁面已儲存在本機。</string>
     <string name="local_page_autosave_revision_available">這個頁面有未儲存的變更</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">你的頁面正在上傳中</string>
     <string name="editor_page_saved_locally_failed_media">此頁面的媒體上傳作業失敗，但已儲存到本機</string>
     <string name="editor_page_saved_locally">頁面已儲存到裝置</string>
@@ -64,32 +186,22 @@ Language: zh_TW
     <string name="gutenberg_native_portfolio">作品集</string>
     <string name="gutenberg_native_only_show_excerpt">只顯示摘要</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的個人作品集展示了我在職涯中完成的各項專案。我的聯絡資訊如下，歡迎與我聯繫。</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">最低高度 (像素)</string>
     <string name="gutenberg_native_link_to">連結至</string>
-    <string name="gutenberg_native_link_settings">連結設定</string>
+    <string name="gutenberg_native_s_settings">%s 設定</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">與我們討論 👋 如有任何疑問，歡迎使用下方資訊與我們聯絡，或使用表單傳送訊息給我們。</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">讓我們攜手創造不凡。</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">讓我們攜手創造不凡</string>
-    <string name="gutenberg_native_let_s_build_something_together">讓我們攜手創造不凡</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">讓我們攜手創造不凡！</string>
+    <string name="gutenberg_native_let_s_build_something_together">讓我們攜手創造不凡！</string>
     <string name="gutenberg_native_juan_p_rez">胡安培瑞茲</string>
     <string name="gutenberg_native_j_k_rowling">J.K.羅琳</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">哈利，決定我們成為什麼樣的人，並不是我們的能力，而是我們做了什麼選擇。</string>
     <string name="gutenberg_native_inspiration">旅遊靈感</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">與我們聯絡！</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">與我們聯絡！</string>
     <string name="gutenberg_native_get_in_touch">與我們聯絡</string>
     <string name="gutenberg_native_excerpt_length_words">摘要長度 (字數)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">透過電子郵件聯絡我：&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">編輯封面媒體</string>
     <string name="gutenberg_native_dr_seuss">蘇斯博士</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">不要因為結束而哭泣，要為曾經發生過而微笑。</string>
     <string name="gutenberg_native_customize">自訂</string>
     <string name="gutenberg_native_city_10100">City, 10100</string>
-    <string name="gutenberg_native_button_link_url">按鈕連結網址</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">即將推出按鈕顏色設定。</string>
-    <string name="gutenberg_native_border_settings">框線設定</string>
-    <string name="gutenberg_native_border_radius">框線半徑</string>
-    <string name="gutenberg_native_background_opacity">背景不透明度</string>
     <string name="gutenberg_native_add_paragraph_block">新增段落區塊</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">簡要說明你提供的服務。</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">提供簡短自傳，包括個人經歷、重大成就或趣事。</string>
@@ -205,6 +317,7 @@ Language: zh_TW
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒體庫</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">我們正在努力開發，讓每次版本更新都可以新增更多區塊。 在此期間，你也可在網路上編輯這篇文章。</string>
     <string name="gutenberg_native_ungroup">取消群組</string>
     <string name="gutenberg_native_translate">翻譯</string>
     <string name="gutenberg_native_title">標題：</string>
@@ -221,7 +334,6 @@ Language: zh_TW
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 區塊含有無效內容</string>
     <string name="gutenberg_native_s_block_empty">%s 區塊空白</string>
     <string name="gutenberg_native_reset_block">重設區塊</string>
-    <string name="gutenberg_native_remove_block_at_row_s">移除第 %s 列的區塊</string>
     <string name="gutenberg_native_remove_annotations">移除註解</string>
     <string name="gutenberg_native_problem_opening_the_video">開啟視訊時發生問題</string>
     <string name="gutenberg_native_problem_displaying_block">顯示區塊時發生問題</string>
@@ -237,9 +349,7 @@ Language: zh_TW
     <string name="gutenberg_native_my_post_publish_panel">我的發表後面板</string>
     <string name="gutenberg_native_my_document_setting_panel">我的文件設定面板</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向上移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_up">向上移動區塊</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">將區塊從第 %1$s 列向下移至第 %2$s 列</string>
-    <string name="gutenberg_native_move_block_down">向下移動區塊</string>
     <string name="gutenberg_native_link_text">連結文字</string>
     <string name="gutenberg_native_link_inserted">連結已插入</string>
     <string name="gutenberg_native_image_caption_s">圖片說明。%s</string>
@@ -252,7 +362,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_select_an_image">按兩下以選擇圖片</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">按兩下以選擇視訊</string>
     <string name="gutenberg_native_double_tap_to_select">按兩下以選擇</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">按兩下以移除區塊</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">按兩次即可取消復原上次變更</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">按兩下將區塊向上移</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">按兩下將區塊向下移</string>
@@ -262,7 +371,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_and_hold_to_edit">點兩下並按住不放即可編輯</string>
     <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
     <string name="gutenberg_native_content">內容…</string>
-    <string name="gutenberg_native_clear_all_settings">清除所有設定</string>
     <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
     <string name="gutenberg_native_annotations_sidebar">註解側邊欄</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">發生不明的錯誤，請再試一次。</string>
@@ -429,10 +537,6 @@ Language: zh_TW
     <string name="stats_widget_all_time_title">有史以來</string>
     <string name="stats_widget_views_title">本週瀏覽次數</string>
     <string name="stats_widget_add">新增小工具</string>
-    <string name="dialog_confirm_update_yes">立即更新</string>
-    <string name="dialog_confirm_update_message_page">此發佈頁面將立即更新。</string>
-    <string name="dialog_confirm_update_message_post">此發佈文章將立即更新。</string>
-    <string name="dialog_confirm_update_title">準備好要更新了嗎？</string>
     <string name="plugin_fetching_error_after_at">重新整理外掛程式詳細資訊所需的時間比平時更長。請稍後再查看一次。</string>
     <string name="plugin_install_site_ineligible_default_error">如果你剛註冊網域名稱，請等到我們完成設定後再試一次。\n\n如果不是剛註冊網域名稱，那麼看來是系統發生錯誤，且該網站可能無法使用外掛程式功能。</string>
     <string name="domain_contact_information_state_not_available_hint">州 (無法使用)</string>
@@ -478,8 +582,6 @@ Language: zh_TW
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
     <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
     <string name="post_uploading_draft">正在上傳草稿</string>
-    <string name="post_list_author_everyone">所有人</string>
-    <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">還原文章時發生錯誤</string>
     <string name="backdated_for">回溯至：%s</string>
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
@@ -733,7 +835,6 @@ Language: zh_TW
     <string name="pages_delete_permanently">永久刪除</string>
     <string name="pages_move_to_trash">移至垃圾桶</string>
     <string name="pages_move_to_draft">移至草稿</string>
-    <string name="pages_publish_now">立即發佈</string>
     <string name="pages_set_parent">設定上層項目</string>
     <string name="pages_view">檢視</string>
     <string name="pages_trashed">已移至垃圾桶</string>
@@ -819,7 +920,6 @@ Language: zh_TW
     <string name="reader_empty_posts_liked_title">尚未有按讚的文章</string>
     <string name="reader_empty_followed_blogs_button_followed">前往關注</string>
     <string name="reader_empty_followed_blogs_button_discover">發掘網站</string>
-    <string name="reader_empty_followed_blogs_description">你尚未關注任何網站。要開始關注網站嗎？</string>
     <string name="reader_empty_followed_blogs_title">尚未有關注的網站</string>
     <string name="notifications_empty_likes">尚未有人按讚</string>
     <string name="notifications_empty_followers">尚未有關注者</string>
@@ -985,7 +1085,6 @@ Language: zh_TW
     <string name="menu_html_mode_done_snackbar">已切換至「HTML」模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
-    <string name="menu_publish_now">立即發表</string>
     <string name="menu_save_as_draft">儲存為草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1048,10 +1147,6 @@ Language: zh_TW
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">剩下 %1$d 個頁面和 %2$d 個檔案 (共 %3$d 個檔案)</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">剩下 1 篇文章和 %1$d 個檔案 (共 %2$d 個檔案)</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">剩下 1 個頁面和 %1$d 個檔案 (共 %2$d 個檔案)</string>
-    <string name="dialog_confirm_publish_yes">立即發表</string>
-    <string name="dialog_confirm_publish_message_page">此頁面會立即發表。</string>
-    <string name="dialog_confirm_publish_message_post">此文章會立即發表。</string>
-    <string name="dialog_confirm_publish_title">現在要發表了嗎？</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">無法上傳 %1$d 篇文章/個頁面</string>
     <string name="media_file_pages_plural_only_not_uploaded">無法上傳 %1$d 個頁面</string>
     <string name="media_file_page_singular_only_not_uploaded">無法上傳 1 個頁面</string>
@@ -1069,7 +1164,6 @@ Language: zh_TW
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">無法上傳 1 篇文章和 1 個檔案</string>
     <string name="untitled_in_parentheses">(未命名)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s，%2$s</string>
     <string name="latitude_longitude">%1$f，%2$f</string>
     <string name="site_creation_domain_finish_button">建立網站</string>
     <string name="notification_site_creation_created">點選以繼續。</string>
@@ -1275,7 +1369,6 @@ Language: zh_TW
     <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
-    <string name="copy">複製</string>
     <string name="connect_site">連結網站</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">閃爍燈</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">震動裝置</string>
@@ -1382,7 +1475,6 @@ Language: zh_TW
     <string name="post_settings_not_set">未設定</string>
     <string name="post_settings_more_options">更多選項</string>
     <string name="post_settings_categories_and_tags">分類與標籤</string>
-    <string name="post_settings_status">狀態</string>
     <string name="notifications_tab_title_all">全部</string>
     <string name="top_level_category_name">最上層</string>
     <string name="category_parent">上層類別 (選填)：</string>
@@ -1506,7 +1598,6 @@ Language: zh_TW
     <string name="media_upload_state_deleting">正在刪除</string>
     <string name="media_upload_state_uploading">正在上傳</string>
     <string name="media_upload_state_queued">已排進佇列</string>
-    <string name="keep_editing">繼續編輯</string>
     <string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
     <string name="error_unknown_post_type">未知的文章格式</string>
     <string name="submit_for_review">送出</string>
@@ -1533,7 +1624,7 @@ Language: zh_TW
     <string name="pending_draft_one_day_2">你知道「%1$s」還是草稿嗎？快發表吧！</string>
     <string name="pending_draft_one_day_1">你昨天寫了草稿「%1$s」，請記得發表！</string>
     <string name="reader_photo_by">拍攝者：%s</string>
-    <string name="reader_label_visit">造訪</string>
+    <string name="reader_label_visit">造訪網站</string>
     <string name="swipe_for_more">撥動以瞭解更多</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">你未獲授權，無法檢視此文章。請先嘗試登入 WordPress.com，或者使用頂端的動作按鈕開啟瀏覽器。</string>
     <string name="reader_err_get_post_not_authorized_signin">你未獲授權，無法檢視此文章。請先嘗試登入 WordPress.com。</string>
@@ -2126,6 +2217,7 @@ Language: zh_TW
     <string name="reader_btn_unfollow">追蹤</string>
     <string name="reader_btn_follow">追蹤</string>
     <string name="reader_btn_share">分享</string>
+    <string name="reader_view_reblog">轉發</string>
     <string name="reader_untitled_post">（未命名）</string>
     <string name="comments_empty_list">尚未有留言</string>
     <string name="empty_list_default">清單是空的</string>
@@ -2160,7 +2252,6 @@ Language: zh_TW
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
-    <string name="publish_date">發佈</string>
     <string name="incorrect_credentials">錯誤的使用者帳號或密碼。</string>
     <string name="log_in">登入</string>
     <string name="username">使用者帳號</string>
@@ -2197,6 +2288,7 @@ Language: zh_TW
     <string name="no">否</string>
     <string name="yes">是</string>
     <string name="notification_settings">通知設定</string>
+    <string name="publish_now">立即發佈</string>
     <string name="reply">回覆</string>
     <string name="on">於</string>
     <string name="preview">預覽</string>
@@ -2205,8 +2297,4 @@ Language: zh_TW
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
     <string name="error">錯誤</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.view.View;
 
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 
 public class ReaderInterfaces {
     private ReaderInterfaces() {
@@ -14,17 +15,17 @@ public class ReaderInterfaces {
     }
 
     /*
+     * Called by the [ReaderPostAdapter] to trigger the reblog action
+     */
+    public interface ReblogActionListener {
+        void reblog(ReaderPost post);
+    }
+
+    /*
      * called from post detail fragment so toolbar can animate in/out when scrolling
      */
     public interface AutoHideToolbarListener {
         void onShowHideToolbar(boolean show);
-    }
-
-    /*
-     * called when user taps the dropdown arrow next to a post to show the popup menu
-     */
-    public interface OnPostPopupListener {
-        void onShowPostPopup(View view, ReaderPost post);
     }
 
     /*
@@ -41,6 +42,15 @@ public class ReaderInterfaces {
         void onFollowTapped(View view, String blogName, long blogId);
 
         void onFollowingTapped();
+    }
+
+    /*
+     * Used by adapters to notify when button on post list item is clicked. This interface was created during
+     * refactoring for the new Discover tab. It isn't ideal but we wanted to re-use some of the legacy code but
+     * refactoring everything was out of scope of the project.
+     */
+    public interface OnPostListItemButtonListener {
+        void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
     }
 
     /*

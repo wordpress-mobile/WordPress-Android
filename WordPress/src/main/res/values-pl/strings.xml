@@ -1,13 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-13 07:20:53+0000
-Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-07-05 12:35:28+0000
+Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Otwórz odnośnik w przeglądarce</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Przechodzi do poprzedniego arkusza z treściami</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Przechodzi do personalizacji gradientów</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Przechodzi do personalizacji selektora kolorów</string>
+    <string name="gutenberg_native_gradient_type">Typ gradientu</string>
+    <string name="gutenberg_native_go_back">Wróć</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Stuknij dwukrotnie aby wybrać opcję</string>
+    <string name="gutenberg_native_customize_gradient">Personalizuj gradient</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autor strony</string>
+    <string name="photo_picker_use_gif">Użyj tego GIFa</string>
+    <string name="error_media_thumbnail_not_loaded">Nie można było wczytać miniatury tego pliku mediów</string>
+    <string name="menu_content_info">Struktura treści</string>
+    <string name="everyone">Wszyscy</string>
+    <string name="me">Ja</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym kolejnym wydaniem. W międzyczasie, możesz również edytować ten blok przy pomocy przeglądarki swojego urządzenia.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Edytuj blok w przeglądarce</string>
+    <string name="gutenberg_native_dismiss">Odrzuć</string>
+    <string name="prepublishing_nudges_visibility_password">Zabezpieczone hasłem</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
+    <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publikuj</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Dodaj tagi</string>
+    <string name="prepublishing_nudges_back_button">Cofnij</string>
+    <string name="prepublishing_nudges_home_save_button">Zapisz teraz</string>
+    <string name="prepublishing_nudges_home_submit_button">Prześlij teraz</string>
+    <string name="prepublishing_nudges_home_schedule_button">Zaplanuj teraz</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publikowanie dla</string>
+    <string name="prepublishing_nudges_tags_action">Tagi</string>
+    <string name="prepublishing_nudges_publish_action">Data publikacji</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Anuluj</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Przesuń do Szkiców</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Usunięte wpisy nie mogą być edytowane. Czy chcesz zmienić status tego wpisu na \"szkic\", tak aby można było na nim pracować?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Przesieść wpis do Szkiców?</string>
+    <string name="reader_label_choose_your_interests">Wybierz swoje zainteresowania</string>
+    <string name="reader_label_discover_follow_tags">Odkrywaj i obserwuj tagi które lubisz</string>
+    <string name="reader_choose_interests_content_description">Wybierz swoje zainteresowania</string>
+    <string name="reader_btn_done">Gotowe</string>
+    <string name="reader_btn_select_few_interests">Wybierz kilka aby kontynuować</string>
+    <string name="post_status_post_published">Opublikowano</string>
+    <string name="post_status_post_trashed">Usunięto</string>
+    <string name="post_status_post_scheduled">Zaplanowano</string>
+    <string name="publish_date">Data publikacji</string>
+    <string name="ccpa_privacy_notice_read">Przeczytaj notkę o prywatności CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Akt CPA wymaga aby dostarczyć rezydentom Kaliforni dodakowej informacji o danych które pozyskujemy.</string>
+    <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
+    <string name="status_and_visibility">Status i widoczność</string>
+    <string name="update_now">Aktualizuj teraz</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Usuń %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
+    <string name="gutenberg_native_move_s_up">Przesuń %s w górę</string>
+    <string name="gutenberg_native_move_s_right">Przesuń %s w prawo</string>
+    <string name="gutenberg_native_move_s_left">Przesuń %s w lewo</string>
+    <string name="gutenberg_native_move_s_down">Przesuń %s w dół</string>
+    <string name="gutenberg_native_try_a_starter_layout">Wypróbuj układ startowy</string>
+    <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
+    <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
+    <string name="pages_set_as_posts_page">Ustaw jako Stronę z wpisami</string>
+    <string name="pages_set_as_homepage">Ustaw jako stronę domową</string>
+    <string name="suggestion_no_matching_users">\"Brak pasujących użytkowników\"</string>
+    <string name="suggestion_invalid_user">\"%s nie jest prawidłową nazwą użytkownika\"</string>
+    <string name="site_settings_select_page">Wybierz Stronę</string>
+    <string name="site_settings_posts_page">Strona z wpisami</string>
+    <string name="site_settings_static_homepage">Statyczna strona główna</string>
+    <string name="site_settings_classic_blog">Klasyczny blog</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Wybrana strona główna i strony dla wpisów nie mogą być te same.</string>
+    <string name="site_settings_failed_update_homepage_settings">Nie udało się uaktualnić ustawień strony głównej, sprawdź swoje połączenie internetowe</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Nie można zapisać ustawień strony głównej zanim strony nie zostaną załadowane</string>
+    <string name="site_settings_failed_to_save_homepage_settings">NIe można było zapisać ustawień strony głównej</string>
+    <string name="site_settings_accept_homepage">Akceptuj</string>
+    <string name="site_settings_failed_to_load_pages">Nie udało sie wczytać stron</string>
+    <string name="site_settings_homepage_settings_description">Wybierz na stronie głównej czy wyświetla ostatnie wpisy (blog klasyczny) czy statyczną stronę</string>
+    <string name="site_settings_homepage_settings">Ustawienia strony głównej</string>
+    <string name="site_settings_homepage">Strona główna</string>
+    <string name="page_posts_page_update_failed">Nie udało się zaktualizować Strony z wpisami</string>
+    <string name="page_posts_page_successfully_updated">Strona z wpisami zaktualizowana</string>
+    <string name="page_homepage_update_failed">Nie udało się zaktualizować strony głównej</string>
+    <string name="page_homepage_successfully_updated">Strona główna zaktualizowana</string>
+    <string name="page_cannot_set_posts_page">Aby ustawić Stronę Wpisów włącz opcję \"Statyczna strona główna\" w ustawieniach witryny</string>
+    <string name="page_cannot_set_homepage">Aby ustawić Stronę główną włącz opcję \"Statyczna strona główna\" w ustawieniach witryny</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Witaj na nowym blogu</string>
+    <string name="gutenberg_native_select_a_color">Wybierz kolor</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
+    <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
+    <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
+    <string name="feature_announcement_dialog_label">Co nowego w WordPressie</string>
+    <string name="insert_label_with_count">Wstaw %d</string>
+    <string name="crop">przytnij</string>
+    <string name="error_failed_to_load_into_file">Nie udało się wczytać z pliku, proszę spróbować później.</string>
+    <string name="preview_image_thumbnail_description">Pogląd miniatury obrazka</string>
+    <string name="photo_picker_use_media">Użyj tych mediów</string>
+    <string name="photo_picker_use_video">Użyj tego wideo</string>
+    <string name="photo_picker_photo_or_video_title">Wybierz media</string>
+    <string name="photo_picker_video_title">Wybierz wideo</string>
+    <string name="site_picker_ask_site_select">Nie udało się wybrać witryny. Proszę spróbować ponownie.</string>
+    <string name="sitepicker_continue_flow">Kontynuuj</string>
+    <string name="reader_reblog_error">Nie udało się reblogować</string>
+    <string name="reader_no_site_to_reblog_action">Zarządzanie witryny</string>
+    <string name="reader_no_site_to_reblog_detail">Kiedy utowrzysz witrynę WordPress.com, możesz reblogować zawartość, którą chcesz na swoją własną witrynę</string>
+    <string name="reader_no_site_to_reblog_title">Brak dostępnych witryn WordPress.com</string>
+    <string name="whats_new_in_version_title">Co nowego?</string>
+    <string name="comment_q_action_copied_url">Skopiowano adres odnośnika</string>
+    <string name="copy_link_address">Skopiuj adres odnośnika</string>
+    <string name="comment_share_link_via">Udostępnij przez</string>
+    <string name="comment_toast_err_share_intent">Nie udało się udostępnić</string>
+    <string name="button_insert">Wstaw</string>
+    <string name="continue_label">Kontynuuj</string>
+    <string name="copy_text">Kopiuj</string>
+    <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Przesuń blok w prawo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
+    <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Tworzenie kokpitu</string>
+    <string name="new_site_creation_creating_site_loading_3">Ustawianie motywu</string>
+    <string name="new_site_creation_creating_site_loading_2">Dodawanie funkcji witryny</string>
+    <string name="new_site_creation_creating_site_loading_1">Pobieranie adresu URL witryny</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Twoja witryna będzie niebawem gotowa</string>
+    <string name="new_site_creation_creating_site_loading_title">Hurra!\nPrawie gotowe</string>
+    <string name="pages_and_posts_cancel_auto_upload">Anuluj przesyłanie</string>
+    <string name="gif_list_search_returned_unknown_error">Wystąpił problem podczas wykonywania żądania</string>
+    <string name="gif_powered_by_tenor">Napędzane przez Tenor</string>
+    <string name="gif_picker_search_hint">Przeszukaj Tenor</string>
+    <string name="photo_picker_gif">Wybierz z Tenor</string>
+    <string name="weekday_saturday">Sobota</string>
+    <string name="weekday_friday">Piątek</string>
+    <string name="weekday_thursday">Czwartek</string>
+    <string name="weekday_wednesday">Środa</string>
+    <string name="weekday_tuesday">Wtorek</string>
+    <string name="weekday_monday">Poniedziałek</string>
+    <string name="weekday_sunday">Niedziela</string>
+    <string name="media_accessing_failed">Nie udało się uzyskać dostępu do treści prywatnej witryny. Niektóre media mogą nie być dostępne</string>
+    <string name="media_accessing_progress">Uzyskiwanie dostępu do prywatnej witryny</string>
     <string name="error_failed_to_crop_and_save_image">Nie udało się skadrować i zapisać obrazka, spróbuj ponownie. </string>
-    <string name="failed_to_insert_image_tap_to_retry">Nie udało się osadzić obrazka. \nSuknij aby spróbować ponownie. </string>
+    <string name="failed_to_load_image_tap_to_retry">Nie udało się wczytać obrazka. \nSuknij aby spróbować ponownie. </string>
     <string name="preview_image_description">Podgląd zdjęcia</string>
     <string name="error_unknown_page_type">Nieznany format strony</string>
     <string name="error_page_not_submitted">Nie można było ukończyć tego działania, i przesłać tej strony do przeglądu.</string>
@@ -31,7 +169,6 @@ Language: pl
     <string name="page_uploading">Przesyłanie strony</string>
     <string name="error_publish_page_no_network">Urządzenie jest offline. Strona zapisana lokalnie. </string>
     <string name="local_page_autosave_revision_available">Dokonałeś niezapisanych zmian na tej stronie</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Strona wczytuje się</string>
     <string name="editor_page_saved_locally_failed_media">Strona posiada zakończone niepowodzeniem próby przesłania plików mediów i została zapisana lokalnie</string>
     <string name="editor_page_saved_locally">Strona zapisana na urządzeniu</string>
@@ -43,10 +180,12 @@ Language: pl
     <string name="app_theme">Wygląd</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="gutenberg_native_what_people_say">Co mówią ludzie</string>
+    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Oferujemy zakres usług aby pomóc tobie w osiągnięciu wyników, które ciebie interesują. Nie masz pewności czego potrzebujesz, lub ile to kosztuje. Możemy wyjaśnić jakie usługi są dla ciebie właściwe i powiemy ci o naszych stawkach. Skontaktuj się z nami.</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jesteśmy małym zespołem utalentowanych profesjonalistów z szerokim zakresem umiejętności i doświadczeń. Kochamy to co robimy i robimy to z pasją. Czekamy z niecierpliwością aby rozpocząć współpracę z tobą. </string>
     <string name="gutenberg_native_warning_message">Ostrzeżenie</string>
     <string name="gutenberg_native_want_to_work_with_us">Chcesz pracować z nami?</string>
     <string name="gutenberg_native_walt_disney">Walt Disney</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Odwiedzający witrynę będą chcieli wiedzieć kto jest po drugiej stronie. Wykorzystaj tą przestrzeń aby napisać więcej o sobie, swojej witrynie, swoimi biznesie, lub cokolwiek innego chcesz . Użyj rekomendacji poniżej aby zacytować innych, mówiących o tej samej rzeczy - ich słowami.</string>
     <string name="gutenberg_native_usa">USA</string>
     <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">To jest przykładowa treść, zawarta w szablonie, która ilustruje jego możliwości. Usuń ją i wstaw swoje słowa i media.</string>
     <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Aby zacząć trzeba przestać gadać i zacząć robić.</string>
@@ -62,18 +201,15 @@ Language: pl
     <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Minimalna wysokość w pikselach</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
-    <string name="gutenberg_native_link_settings">Ustawienia odnośnika</string>
+    <string name="gutenberg_native_s_settings">Ustawienia %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Zbudujmy coś razem.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Zbudujmy coś razem</string>
-    <string name="gutenberg_native_let_s_build_something_together">Zbudujmy coś razem</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Zbudujmy coś razem!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Zbudujmy coś razem!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
+    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">To twój wybór Harry, który pokazyje kim naprawdę jesteśmy, dużo więcej niż nasze możliwości.</string>
     <string name="gutenberg_native_inspiration">Inspiracja</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Skontaktuj się!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Skontaktuj się!</string>
     <string name="gutenberg_native_get_in_touch">Skontaktuj się</string>
     <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Napisz do mnie email:  &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
@@ -81,11 +217,6 @@ Language: pl
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nie płacz bo się skończyło, śmiej się bo się zdarzyło.</string>
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
     <string name="gutenberg_native_city_10100">Miasto, 10100</string>
-    <string name="gutenberg_native_button_link_url">Przycisk z odnośnikiem URL</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Ustawienia kolorów dla przycisków pojawią się wkrótce</string>
-    <string name="gutenberg_native_border_settings">Ustawienia obramowania</string>
-    <string name="gutenberg_native_border_radius">Zaokrąglenie rogów</string>
-    <string name="gutenberg_native_background_opacity">Przezroczystość tła</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Krótki opis usług które oferujesz.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Krótki życiorys z osobistą historią, kluczowe osiągnięcia lub interesujący fakt.</string>
@@ -201,7 +332,7 @@ Language: pl
     <string name="reader_my_likes_display_name">Polubienia</string>
     <string name="site_cannot_be_loaded">Nie możemy w tym momencie wyczytać danych dla twojej witryny. Proszę spróbować ponownie później.</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym wydaniem. W międzyczasie, możesz również edytować ten wpis na sieci.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Pracujemy ciężko aby dodać więcj bloków z każdym kolejnym wydaniem. W międzyczasie, możesz również edytować ten wpis na sieci.</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
     <string name="gutenberg_native_title">Tytuł:</string>
@@ -219,7 +350,6 @@ Language: pl
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Usuń blok we wierszu %s</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
     <string name="gutenberg_native_problem_displaying_block">Problem z wyświetlaniem bloku</string>
@@ -235,9 +365,7 @@ Language: pl
     <string name="gutenberg_native_my_post_publish_panel">Panel publikacji mojego wpisu</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel ustawień dokumentu</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
-    <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_link_text">Tekst odnośnika</string>
     <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
@@ -250,7 +378,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_to_select_an_image">Stuknij dwukrotnie aby wybrać obrazek</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Stuknij dwukrotnie aby wybrać plik filmowy</string>
     <string name="gutenberg_native_double_tap_to_select">Stuknij dwukrotnie aby wybrać</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Stuknij dwukrotnie aby usunąć blok</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Stuknij dwukrotnie aby cofnąć ostatnią zmianę</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Stuknij dwukrotnie aby przesunąć blok do góry</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Stuknij dwukrotnie aby przesunąć blok w dół</string>
@@ -260,7 +387,6 @@ Language: pl
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Stuknij dwukrotnie i przytrzymaj aby edytować</string>
     <string name="gutenberg_native_current_value_is_s">Aktualna wartość to %s</string>
     <string name="gutenberg_native_content">Treść…</string>
-    <string name="gutenberg_native_clear_all_settings">Wyczyść wszystkie ustawienia</string>
     <string name="gutenberg_native_choose_from_device">Wybierz z urządzenia</string>
     <string name="gutenberg_native_annotations_sidebar">Pasek boczny przypisu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Wystąpił nieznany błąd. Spróbuj ponownie.</string>
@@ -284,6 +410,8 @@ Language: pl
     <string name="notifications_tab_dialog_master_hint_on">Wyłącz ekran powiadomień na zakładce powiadomień dla tej witryny</string>
     <string name="notifications_tab_dialog_master_status_off">Powiadomienia dla tej witryny</string>
     <string name="notifications_tab_dialog_master_status_on">Powiadomienia dla tej witryny</string>
+    <string name="dialog_gutenberg_informative_description_page">Dla nowych stron używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \'Moja Witryna\' > \'Ustawienia witryny\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">Dla nowych wpisów używasz aktualnie edytora blokowego - super! Jeśli chciał(a)byś zmienić na edytor klasysczny przejdź do ekranu \'Moja Witryna\' > \'Ustawienia witryny\'.</string>
     <string name="pick_media">Dodaj zdjęcie lub film</string>
     <string name="error_post_not_submitted_retrying">Nie można było przesłać tego wpisu do przeglądu, ale spróbujemy później</string>
     <string name="error_post_not_scheduled_retrying">Nie można było zaplanować daty opublikowania tego wpisu, ale spróbujemy później.</string>
@@ -427,10 +555,6 @@ Language: pl
     <string name="stats_widget_all_time_title">Od początku</string>
     <string name="stats_widget_views_title">Wyświetlenia w tym tygodniu</string>
     <string name="stats_widget_add">Dodaj widget</string>
-    <string name="dialog_confirm_update_yes">Aktualizuj teraz</string>
-    <string name="dialog_confirm_update_message_page">Ta opublikowana strona zostanie teraz zaktualizowana.</string>
-    <string name="dialog_confirm_update_message_post">Ten opublikowany wpis zostanie teraz zaktualizowany.</string>
-    <string name="dialog_confirm_update_title">Aktualizować?</string>
     <string name="plugin_fetching_error_after_at">Odświeżenie szczegółów wtyczki trwa dłużej niż zwykle. Proszę spróbować później.</string>
     <string name="plugin_install_site_ineligible_default_error">Jeśli właśnie zarejestrowałe(a)ś nazwę domeny, poczekaj aż ukończymy konfigurację i wówczas spróbuj ponownie.\n\nJeśli nie zarejestrowałe(a)ś domeny, wygląda na to że coś poszło nie tak i funkcjonalność wtyczki może być w tym momencie niedostępna dla tej witryny.</string>
     <string name="domain_contact_information_state_not_available_hint">Stan (niedostępne)</string>
@@ -477,8 +601,6 @@ Language: pl
     <string name="editor_uploading_draft">Twój szkic jest przesyłany</string>
     <string name="post_uploading_draft">Przesyłanie wpisu</string>
     <string name="post_list_tab_drafts">Szkice</string>
-    <string name="post_list_author_everyone">Każdy</string>
-    <string name="post_list_author_me">Ja</string>
     <string name="error_restoring_post">Wystąpił błąd podczas odzyskiwania wpisu</string>
     <string name="backdated_for">Datowany wstecznie dla: %s</string>
     <string name="stats_insights_management_title">Oglądaj jedynie najbardziej istotne statystyki. Na tej karcie możesz dodawać i organizować najistotniejsze dla siebie trendy.</string>
@@ -644,6 +766,9 @@ Language: pl
     <string name="stats_no_data_for_period">Brak danych dla tego okresu</string>
     <string name="preference_strip_image_location">Usuń lokalizację GPS z plików mediów</string>
     <string name="stats_cannot_be_started">Nie możemy w tym momencie otworzyć statystyk. Spróbuj ponownie później</string>
+    <string name="gif_picker_endless_scroll_network_error">Niektórych plików mediów nie udało się wczytać z powodu błędu sieci. </string>
+    <string name="gif_picker_empty_search_list">Brak plików mediów dopasowanych do twojego zapytania</string>
+    <string name="gif_picker_initial_empty_text">Przeszukaj aby znaleźć pliki GIF które możesz dodać do swojej biblioteki mediów!</string>
     <string name="stats_author_views_label">Wyświetleń</string>
     <string name="stats_author_label">Autor</string>
     <string name="stats_authors">Autorzy</string>
@@ -740,7 +865,6 @@ Language: pl
     <string name="pages_delete_permanently">Usuń permanentnie</string>
     <string name="pages_move_to_trash">Przesuń do kosza</string>
     <string name="pages_move_to_draft">Przesuń do szkiców</string>
-    <string name="pages_publish_now">Opublikuj teraz</string>
     <string name="pages_set_parent">Ustaw jako nadrzędny</string>
     <string name="pages_view">Podgląd</string>
     <string name="pages_trashed">Przesunięto do kosza</string>
@@ -826,7 +950,6 @@ Language: pl
     <string name="reader_empty_posts_liked_title">Nic jeszcze nie polubione</string>
     <string name="reader_empty_followed_blogs_button_followed">Idź do obserwowanych</string>
     <string name="reader_empty_followed_blogs_button_discover">Odkrywaj witryny </string>
-    <string name="reader_empty_followed_blogs_description">Nie obserwujesz żadnych witryn. Może zaczniesz? </string>
     <string name="reader_empty_followed_blogs_title">Brak obserwowanych witryn</string>
     <string name="notifications_empty_likes">Brak polubień</string>
     <string name="notifications_empty_followers">Brak obserwujących</string>
@@ -994,7 +1117,6 @@ Language: pl
     <string name="menu_html_mode_done_snackbar">Przełączono na tryb HTML</string>
     <string name="menu_html_mode">Tryb HTML</string>
     <string name="menu_preview">Podgląd</string>
-    <string name="menu_publish_now">Opublikuj teraz</string>
     <string name="menu_save_as_draft">Zapisz jako szkic</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1057,10 +1179,6 @@ Language: pl
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">Pozostało %1$d stron oraz %2$d z %3$d plików</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">Pozostał 1 wpis oraz %1$d z %2$d plików</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">Pozostała 1 strona oraz %1$d z %2$d plików</string>
-    <string name="dialog_confirm_publish_yes">Publikuj teraz</string>
-    <string name="dialog_confirm_publish_message_page">Ta strona zostanie natychmiast opublikowana.</string>
-    <string name="dialog_confirm_publish_message_post">Ten wpis zostanie natychmiast opublikowany.</string>
-    <string name="dialog_confirm_publish_title">Gotowy do opublikowania?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">Nie przesłano %1$d wpisów / stron</string>
     <string name="media_file_pages_plural_only_not_uploaded">Nie przesłano %1$d stron</string>
     <string name="media_file_page_singular_only_not_uploaded">Nie przesłano 1 strony</string>
@@ -1078,7 +1196,6 @@ Language: pl
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Nie przesłano 1 wpisu z 1 plikiem</string>
     <string name="untitled_in_parentheses">(bez tytułu)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
@@ -1284,7 +1401,6 @@ Language: pl
     <string name="media_edit_filename_caption">Nazwa pliku</string>
     <string name="media_edit_url_caption">Adres URL </string>
     <string name="media_edit_alttext_text">Tekst alternatywny</string>
-    <string name="copy">Kopiuj</string>
     <string name="connect_site">Połącz witrynę</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Zamigaj diodą</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Zawibruj urządzeniem</string>
@@ -1392,7 +1508,6 @@ Language: pl
     <string name="post_settings_not_set">Nie ustawiono</string>
     <string name="post_settings_more_options">Więcej opcji</string>
     <string name="post_settings_categories_and_tags">Kategorie i tagi</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Wszystkie</string>
     <string name="top_level_category_name">Najwyższy poziom (nadrzędny)</string>
     <string name="category_parent">Kategoria nadrzędna (opcjonalnie)</string>
@@ -1516,7 +1631,6 @@ Language: pl
     <string name="media_upload_state_deleting">Usuwanie</string>
     <string name="media_upload_state_uploading">Przesyłanie</string>
     <string name="media_upload_state_queued">W kolejce</string>
-    <string name="keep_editing">Kontynuuj edycję</string>
     <string name="image_quality">Jakość obrazka</string>
     <string name="error_all_media_upload_canceled">Wszystkie zadania przesyłania mediów zostały anulowane z powodu nieznanego błędu. Proszę ponownie przesłać pliki mediów.</string>
     <string name="error_unknown_post_type">Nieznany format wpisu</string>
@@ -2144,6 +2258,7 @@ Language: pl
     <string name="reader_btn_unfollow">Obserwujesz</string>
     <string name="reader_btn_follow">Obserwuj</string>
     <string name="reader_btn_share">Udostępnij</string>
+    <string name="reader_view_reblog">Rebloguj</string>
     <string name="reader_untitled_post">(Brak tytułu)</string>
     <string name="comments_empty_list">Brak komentarzy </string>
     <string name="empty_list_default">Lista jest pusta</string>
@@ -2178,7 +2293,6 @@ Language: pl
     <string name="httppassword">Hasło protokołu HTTP</string>
     <string name="httpuser">Nazwa użytkownika protokołu HTTP</string>
     <string name="error_media_upload">Napotkano błąd podczas wysyłania multimediów.</string>
-    <string name="publish_date">Opublikuj</string>
     <string name="incorrect_credentials">Nieprawidłowa nazwa użytkownika lub hasło.</string>
     <string name="log_in">Zaloguj się</string>
     <string name="username">Nazwa użytkownika</string>
@@ -2215,6 +2329,7 @@ Language: pl
     <string name="no">Nie</string>
     <string name="yes">Tak</string>
     <string name="notification_settings">Ustawienia powiadomień</string>
+    <string name="publish_now">Opublikuj teraz</string>
     <string name="reply">Odpisz</string>
     <string name="on">we wpisie</string>
     <string name="preview">Podgląd</string>
@@ -2223,8 +2338,4 @@ Language: pl
     <string name="save">Zapisz</string>
     <string name="cancel">Anuluj</string>
     <string name="error">Błąd</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

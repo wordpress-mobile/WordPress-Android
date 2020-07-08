@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.UrlUtils;
 
@@ -32,6 +35,7 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private long mPostId;
 
     @Inject FeaturedImageUtils mFeaturedImageUtils;
+    @Inject ReaderCssProvider mReaderCssProvider;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
         ReaderPostWebViewCachingFragment fragment = new ReaderPostWebViewCachingFragment();
@@ -70,7 +74,7 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
             });
 
             ReaderPostRenderer rendered =
-                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils);
+                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils, mReaderCssProvider);
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available
@@ -80,10 +84,14 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
 
     private void selfRemoveFragment() {
         if (isAdded()) {
-            getActivity().getSupportFragmentManager()
-                         .beginTransaction()
-                         .remove(ReaderPostWebViewCachingFragment.this)
-                         .commitAllowingStateLoss(); // we don't care about state here
+            FragmentManager fm = getFragmentManager();
+            if (fm != null) {
+                fm.beginTransaction()
+                  .remove(ReaderPostWebViewCachingFragment.this)
+                  .commitAllowingStateLoss(); // we don't care about state here
+            } else {
+                AppLog.w(T.READER, "Fragment manager is null.");
+            }
         }
     }
 }

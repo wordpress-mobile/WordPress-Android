@@ -27,7 +27,6 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
@@ -69,6 +68,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.StringUtils;
@@ -708,8 +708,13 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         if (context != null) {
             UCrop.Options options = new UCrop.Options();
             options.setShowCropGrid(false);
-            options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar));
-            options.setToolbarColor(ContextCompat.getColor(context, R.color.primary));
+            options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
+                    context, android.R.attr.statusBarColor
+            ));
+            options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
+            options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
+                    context, R.attr.colorOnPrimarySurface
+            ));
             options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
             options.setHideBottomControls(true);
 

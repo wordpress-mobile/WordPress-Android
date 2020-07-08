@@ -352,25 +352,28 @@ class PostListViewModel @Inject constructor(
         }?.index
     }
 
-    private fun transformPostModelToPostListItemUiState(post: PostModel) =
-            listItemUiStateHelper.createPostListItemUiState(
-                    authorFilterSelection,
-                    post = post,
-                    site = connector.site,
-                    unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
-                    hasAutoSave = connector.hasAutoSave(post),
-                    capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
-                    statsSupported = isStatsSupported,
-                    featuredImageUrl =
-                    convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
-                    formattedDate = PostUtils.getFormattedDate(post),
-                    performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
-                    onAction = { postModel, buttonType, statEvent ->
-                        trackPostListAction(connector.site, buttonType, postModel, statEvent)
-                        connector.postActionHandler.handlePostButton(buttonType, postModel)
-                    },
-                    uploadStatusTracker = connector.uploadStatusTracker
-            )
+    private fun transformPostModelToPostListItemUiState(post: PostModel): PostListItemUiState {
+        val hasAutoSave = connector.hasAutoSave(post)
+        return listItemUiStateHelper.createPostListItemUiState(
+                authorFilterSelection,
+                post = post,
+                site = connector.site,
+                unhandledConflicts = connector.doesPostHaveUnhandledConflict(post),
+                hasAutoSave = hasAutoSave,
+                capabilitiesToPublish = uploadUtilsWrapper.userCanPublish(connector.site),
+                statsSupported = isStatsSupported,
+                featuredImageUrl =
+                convertToPhotonUrlIfPossible(connector.getFeaturedImageUrl(post.featuredImageId)),
+                formattedDate = PostUtils.getFormattedDate(post),
+                performingCriticalAction = connector.postActionHandler.isPerformingCriticalAction(LocalId(post.id)),
+                onAction = { postModel, buttonType, statEvent ->
+                    trackPostListAction(connector.site, buttonType, postModel, statEvent)
+                    connector.postActionHandler.handlePostButton(buttonType, postModel, hasAutoSave)
+                },
+                uploadStatusTracker = connector.uploadStatusTracker,
+                isSearch = connector.postListType == SEARCH
+        )
+    }
 
     private fun retryOnConnectionAvailableAfterRefreshError() {
         val connectionAvailableAfterRefreshError = networkUtilsWrapper.isNetworkAvailable() &&

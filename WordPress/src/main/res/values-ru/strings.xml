@@ -1,13 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-20 06:29:12+0000
-Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-06-30 10:05:25+0000
+Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
+Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Переход на предыдущий экран содержимого</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Переход к настройкам градиента</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Переход к выбору пользовательского цвета</string>
+    <string name="gutenberg_native_gradient_type">Тип градиента</string>
+    <string name="gutenberg_native_go_back">Вернуться</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
+    <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Автор страницы</string>
+    <string name="photo_picker_use_gif">Использовать этот GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Миниатюра не может быть загружена</string>
+    <string name="menu_content_info">Структура содержимого</string>
+    <string name="everyone">Все</string>
+    <string name="me">Мой профиль</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать этот блок в веб-браузере.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Редактировать блок в браузере</string>
+    <string name="gutenberg_native_dismiss">Закрыть</string>
+    <string name="prepublishing_nudges_visibility_password">Защищено паролем</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
+    <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Опубликовать</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
+    <string name="prepublishing_nudges_back_button">Назад</string>
+    <string name="prepublishing_nudges_home_save_button">Сохранить</string>
+    <string name="prepublishing_nudges_home_submit_button">Отправить</string>
+    <string name="prepublishing_nudges_home_schedule_button">Запланировать сейчас</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Публикация на</string>
+    <string name="prepublishing_nudges_tags_action">Метки</string>
+    <string name="prepublishing_nudges_publish_action">Дата публикации</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Отмена</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Переместить в черновики</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Записи из корзины не могут быть отредактированы. Хотите изменить статус на \"черновик\", чтобы получить возможность редактирования?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
+    <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
+    <string name="reader_label_discover_follow_tags">Откройте для себя и подпишитесь на метки, которые полюбите</string>
+    <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
+    <string name="reader_btn_done">Готово</string>
+    <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
+    <string name="post_status_post_published">Опубликована</string>
+    <string name="post_status_post_trashed">В корзине</string>
+    <string name="post_status_post_scheduled">Запланирована</string>
+    <string name="publish_date">Дата публикации</string>
+    <string name="ccpa_privacy_notice_read">Прочитать уведомление о конфиденциальности CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
+    <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
+    <string name="status_and_visibility">Статус и видимость</string>
+    <string name="update_now">Обновить сейчас</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Удалить %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
+    <string name="gutenberg_native_move_s_up">Сдвинуть %s наверх</string>
+    <string name="gutenberg_native_move_s_right">Сдвинуть %s вправо</string>
+    <string name="gutenberg_native_move_s_left">Сдвинуть %s влево</string>
+    <string name="gutenberg_native_move_s_down">Сдвинуть %s вниз</string>
+    <string name="gutenberg_native_try_a_starter_layout">Попробуйте стартовый макет</string>
+    <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Нажмите дважды для того, чтобы открыть нижнюю панель действий с доступными возможностями</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Нажмите дважды для того, чтобы открыть панель действий со всеми доступными возможностями</string>
+    <string name="pages_cannot_be_started">Невозможно открыть страницы в данный момент. Пожалуйста, попробуйте позже.</string>
+    <string name="pages_set_as_posts_page">Выбрать в качестве страницы записей</string>
+    <string name="pages_set_as_homepage">Установить в качестве главной страницы</string>
+    <string name="suggestion_no_matching_users">\"Нет подходящих пользователей.\"</string>
+    <string name="suggestion_invalid_user">\"%s не является действительным пользователем\"</string>
+    <string name="site_settings_select_page">Выберите страницу</string>
+    <string name="site_settings_posts_page">Страница записей</string>
+    <string name="site_settings_static_homepage">Статическая главная страница</string>
+    <string name="site_settings_classic_blog">Классический блог</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Выбранная главная страница и страница записей не могут быть однаковыми.</string>
+    <string name="site_settings_failed_update_homepage_settings">Обновление настроек главной страницы не удалось. Проверьте ваше подключение к сети.</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Не удалось сохранить настройки главной страницы до загрузки страниц</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Не удалось сохранить настройки главной страницы</string>
+    <string name="site_settings_accept_homepage">Принять</string>
+    <string name="site_settings_failed_to_load_pages">Загрузка страниц не удалась</string>
+    <string name="site_settings_homepage_settings_description">Выберите в качестве главной страницы страницу последних записей (классический блог) или фиксированную (статическую) страницу.</string>
+    <string name="site_settings_homepage_settings">Настройки главной страницы</string>
+    <string name="site_settings_homepage">Главная страница</string>
+    <string name="page_posts_page_update_failed">Обновление настроек страницы записей не удалось</string>
+    <string name="page_posts_page_successfully_updated">Настройки страницы записей обновлены</string>
+    <string name="page_homepage_update_failed">Обновление настроек главной страницы не удалось</string>
+    <string name="page_homepage_successfully_updated">Настройки главной страницы обновлены</string>
+    <string name="page_cannot_set_posts_page">Для установки страницы записей включите \"Статическую главную страницу\" в настройках сайта</string>
+    <string name="page_cannot_set_homepage">Для установки главной страницы включите \"Статическую главную страницу\" в настройках сайта</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Добро пожаловать в наш новый блог</string>
+    <string name="gutenberg_native_select_a_color">Выберите цвет</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Нажмите дважды для перехода в настройки цветов</string>
+    <string name="reader_empty_followed_blogs_description">При подписке на сайты вы увидите их содержимое здесь</string>
+    <string name="feature_announcement_find_out_mode">Подробнее</string>
+    <string name="feature_announcement_dialog_label">Что нового в WordPress</string>
+    <string name="insert_label_with_count">Вставить %d</string>
+    <string name="crop">обрезать</string>
+    <string name="error_failed_to_load_into_file">Ошибка загрузки в файл, повторите попытку.</string>
+    <string name="preview_image_thumbnail_description">Предварительный просмотр миниатюры</string>
+    <string name="photo_picker_use_media">Использовать этот медиафайл</string>
+    <string name="photo_picker_use_video">Использовать это видео</string>
+    <string name="photo_picker_photo_or_video_title">Выбрать медиафайл</string>
+    <string name="photo_picker_video_title">Выбрать видео</string>
+    <string name="site_picker_ask_site_select">Не удалось выбрать сайт. Повторите попытку.</string>
+    <string name="sitepicker_continue_flow">Продолжить</string>
+    <string name="reader_reblog_error">Перепубликация не удалась</string>
+    <string name="reader_no_site_to_reblog_action">Управление сайтами</string>
+    <string name="reader_no_site_to_reblog_detail">После создания сайта на WordPress.com вы сможете сделать перепубликацию понравившегося содержимого на своем сайте.</string>
+    <string name="reader_no_site_to_reblog_title">Нет доступных сайтов на WordPress.com</string>
+    <string name="whats_new_in_version_title">Что нового</string>
+    <string name="comment_q_action_copied_url">Адрес ссылки скопирован</string>
+    <string name="copy_link_address">Скопировать адрес ссылки</string>
+    <string name="comment_share_link_via">Поделиться в</string>
+    <string name="comment_toast_err_share_intent">Нельзя поделиться</string>
+    <string name="button_insert">Вставить</string>
+    <string name="continue_label">Продолжить</string>
+    <string name="copy_text">Копировать</string>
+    <string name="gutenberg_native_number_of_columns">Число столбцов</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Переместить блок вправо из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Переместить блок влево из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Нажмите дважды для перемещения блока вправо</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Нажмите дважды для перемещения блока влево</string>
+    <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
+    <string name="gutenberg_native_blog">Блог</string>
+    <string name="new_site_creation_creating_site_loading_4">Создание консоли</string>
+    <string name="new_site_creation_creating_site_loading_3">Настройка темы</string>
+    <string name="new_site_creation_creating_site_loading_2">Добавление функциональности сайта</string>
+    <string name="new_site_creation_creating_site_loading_1">Получение URL сайта</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Ваш сайт вскоре будет готов</string>
+    <string name="new_site_creation_creating_site_loading_title">Ура!\nПочти всё готово</string>
+    <string name="pages_and_posts_cancel_auto_upload">Отменить загрузку</string>
+    <string name="gif_list_search_returned_unknown_error">Возникла проблема с вашим запросом.</string>
+    <string name="gif_powered_by_tenor">GIF с сервиса Tenor</string>
+    <string name="gif_picker_search_hint">Поиск в Tenor</string>
+    <string name="photo_picker_gif">Выберите из Tenor</string>
+    <string name="weekday_saturday">Суббота</string>
+    <string name="weekday_friday">Пятница</string>
+    <string name="weekday_thursday">Четверг</string>
+    <string name="weekday_wednesday">Среда</string>
+    <string name="weekday_tuesday">Вторник</string>
+    <string name="weekday_monday">Понедельник</string>
+    <string name="weekday_sunday">Воскресенье</string>
+    <string name="media_accessing_failed">Доступ к содержимому личного сайта не удался, некоторые медиафайлы могут быть недоступны.</string>
+    <string name="media_accessing_progress">Доступ к содержимому личного сайта</string>
     <string name="error_failed_to_crop_and_save_image">Ошибка обрезки и сохранения изображения, попробуйте снова.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Невозможно вставить изображение.\nНажмите для выбора вариантов.</string>
+    <string name="failed_to_load_image_tap_to_retry">Невозможно загрузить изображение.\nНажмите для повтора.</string>
     <string name="preview_image_description">Предварительный просмотр изображения</string>
     <string name="error_unknown_page_type">Неизвестный формат страницы</string>
     <string name="error_page_not_submitted">Невозможно завершить это действие и отправить страницу на одобрение.</string>
@@ -31,7 +169,6 @@ Language: ru
     <string name="page_uploading">Загрузка страницы</string>
     <string name="error_publish_page_no_network">Нет доступа к сети. Страница сохранена локально.</string>
     <string name="local_page_autosave_revision_available">Вы внесли, но не сохранили изменения на этой странице.</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Выполняется загрузка страница</string>
     <string name="editor_page_saved_locally_failed_media">Эта страница сохранена локально: она содержит медиафайлы, загрузка которых не удалась.</string>
     <string name="editor_page_saved_locally">Страница сохранена на устройстве</string>
@@ -64,32 +201,22 @@ Language: ru
     <string name="gutenberg_native_portfolio">Портфолио</string>
     <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Мое портфолио демонстрирует различные проекты созданные в течении моей карьеры. Информация для договора представлена ниже, свяжитесь со мной.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Минимальная высота в пикселях</string>
     <string name="gutenberg_native_link_to">Ссылка на</string>
-    <string name="gutenberg_native_link_settings">Настройки ссылки</string>
+    <string name="gutenberg_native_s_settings">%s: настройки</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Давайте общаться 👋 Не стесняйтесь воспользоваться контактной информацией ниже или послать сообщение через форму.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Давайте сотворим что-нибудь вместе.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Давайте сотворим что-нибудь вместе</string>
-    <string name="gutenberg_native_let_s_build_something_together">Давайте сотворим что-нибудь вместе</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Давайте сотворим что-нибудь вместе!</string>
+    <string name="gutenberg_native_let_s_build_something_together">Давайте сотворим что-нибудь вместе!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">Дж. К. Роулинг</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Именно наш выбор, Гарри, определяет, что мы есть на самом деле, куда в большей степени, чем наши способности.</string>
     <string name="gutenberg_native_inspiration">Вдохновение</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">Присоединяйтесь!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">Присоединяйтесь!</string>
     <string name="gutenberg_native_get_in_touch">Присоединяйтесь</string>
     <string name="gutenberg_native_excerpt_length_words">Длина отрывка (слов)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Напишите мне: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Редактировать изображение обложки</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Don’t cry because it’s over, smile because it happened.</string>
     <string name="gutenberg_native_customize">НАСТРОИТЬ</string>
     <string name="gutenberg_native_city_10100">Воронеж, 394077</string>
-    <string name="gutenberg_native_button_link_url">URL ссылки кнопки</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Настройки цветов кнопок будут позже.</string>
-    <string name="gutenberg_native_border_settings">Настройки границы</string>
-    <string name="gutenberg_native_border_radius">Радиус границ</string>
-    <string name="gutenberg_native_background_opacity">Непрозрачность фона</string>
     <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Краткое описание предлагаемых услуг.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Короткая биография, ключевые достижения или интересные факты.</string>
@@ -205,7 +332,7 @@ Language: ru
     <string name="reader_my_likes_display_name">Отметки \"Нравится\"</string>
     <string name="site_cannot_be_loaded">Сейчас невозможно загрузить данные для вашего сайта. Попробуйте позже.</string>
     <string name="gutenberg_native_wordpress_media_library">Медиатека WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы также можете отредактировать эту запись в веб-браузере.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать эту запись в веб-браузере.</string>
     <string name="gutenberg_native_ungroup">Разгруппировать</string>
     <string name="gutenberg_native_translate">Перевести</string>
     <string name="gutenberg_native_title">Заголовок:</string>
@@ -223,7 +350,6 @@ Language: ru
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_s_block_empty">Блок %s. Пустой</string>
     <string name="gutenberg_native_reset_block">Сбросить блок</string>
-    <string name="gutenberg_native_remove_block_at_row_s">Убрать блок в ряду %s</string>
     <string name="gutenberg_native_remove_annotations">Удалить аннотации</string>
     <string name="gutenberg_native_problem_opening_the_video">Проблема с открытием видео</string>
     <string name="gutenberg_native_problem_displaying_block">Проблема отображения блока</string>
@@ -239,9 +365,7 @@ Language: ru
     <string name="gutenberg_native_my_post_publish_panel">Панель публикации моей записи</string>
     <string name="gutenberg_native_my_document_setting_panel">Панель настроек моего документа</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Переместить блок вверх из ряда %1$s в ряд %2$s</string>
-    <string name="gutenberg_native_move_block_up">Переместить блок вверх</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Переместить блок вниз из ряда %1$s в ряд %2$s</string>
-    <string name="gutenberg_native_move_block_down">Переместить блок ниже</string>
     <string name="gutenberg_native_link_text">Текст ссылки</string>
     <string name="gutenberg_native_link_inserted">Ссылка вставлена</string>
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
@@ -254,7 +378,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_to_select_an_image">Нажмите дважды для выбора изображения</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Нажмите дважды для выбора видео</string>
     <string name="gutenberg_native_double_tap_to_select">Нажмите дважды для выбора</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Нажмите дважды для удаления блока</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Нажмите дважды для повторения последнего изименения</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Нажмите дважды для перемещения блока вверх</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Нажмите дважды для перемещения блока вниз</string>
@@ -264,7 +387,6 @@ Language: ru
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Нажмите дважды и удерживайте для изменения</string>
     <string name="gutenberg_native_current_value_is_s">Текущее значение - %s</string>
     <string name="gutenberg_native_content">Содержимое…</string>
-    <string name="gutenberg_native_clear_all_settings">Очистить все настройки</string>
     <string name="gutenberg_native_choose_from_device">Выбрать с устройства</string>
     <string name="gutenberg_native_annotations_sidebar">Боковая панель аннотаций</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Произошла неизвестная ошибка. Повторите попытку.</string>
@@ -433,10 +555,6 @@ Language: ru
     <string name="stats_widget_all_time_title">За всё время</string>
     <string name="stats_widget_views_title">Просмотров на этой неделе</string>
     <string name="stats_widget_add">Добавить виджет</string>
-    <string name="dialog_confirm_update_yes">Обновить сейчас</string>
-    <string name="dialog_confirm_update_message_page">Опубликованная страница будет обновлена немедленно.</string>
-    <string name="dialog_confirm_update_message_post">Опубликованная запись будет обновлена немедленно.</string>
-    <string name="dialog_confirm_update_title">Готовы к обновлению?</string>
     <string name="plugin_fetching_error_after_at">Обновление подробностей о плагине занимает больше времени чем обычно, попробуйте попозже.</string>
     <string name="plugin_install_site_ineligible_default_error">Если вы только что зарегистрировали имя домена, пожалуйста, дождитесь завершения процесса регистрации и настройки и попробуйте снова\n\nВ ином случае, похоже что что-то пошло не так и возможности использования плагинов недоступны на этом сайте.</string>
     <string name="domain_contact_information_state_not_available_hint">Область/округ (не доступно)</string>
@@ -483,8 +601,6 @@ Language: ru
     <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
     <string name="post_uploading_draft">Загрузка черновика</string>
     <string name="post_list_tab_drafts">Черновики</string>
-    <string name="post_list_author_everyone">Все</string>
-    <string name="post_list_author_me">Моё</string>
     <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
     <string name="backdated_for">Датировано задним числом для: %s</string>
     <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
@@ -650,6 +766,9 @@ Language: ru
     <string name="stats_no_data_for_period">Для указанного периода нет данных</string>
     <string name="preference_strip_image_location">Убрать данные местоположения из медиафайлов</string>
     <string name="stats_cannot_be_started">Извините, статистика в данный момент недоступна, попробуйте позже.</string>
+    <string name="gif_picker_endless_scroll_network_error">Некоторые медиафайлы не загрузились из-за ошибки сети.</string>
+    <string name="gif_picker_empty_search_list">Мультимедиа по критериям поиска не найдены</string>
+    <string name="gif_picker_initial_empty_text">Найдите GIF изображения и добавьте их в медиатеку!</string>
     <string name="stats_author_views_label">Просмотры</string>
     <string name="stats_author_label">Автор</string>
     <string name="stats_authors">Авторы</string>
@@ -746,7 +865,6 @@ Language: ru
     <string name="pages_delete_permanently">Удалить навсегда</string>
     <string name="pages_move_to_trash">Переместить в корзину</string>
     <string name="pages_move_to_draft">Переместить в черновики</string>
-    <string name="pages_publish_now">Опубликовать</string>
     <string name="pages_set_parent">Установить родителя</string>
     <string name="pages_view">Просмотр</string>
     <string name="pages_trashed">Корзина</string>
@@ -832,7 +950,6 @@ Language: ru
     <string name="reader_empty_posts_liked_title">Нет отметок \"нравится\"</string>
     <string name="reader_empty_followed_blogs_button_followed">Перейти к подпискам</string>
     <string name="reader_empty_followed_blogs_button_discover">Найти сайты</string>
-    <string name="reader_empty_followed_blogs_description">Вы пока не подписаны ни на один сайт. Почему бы не подписаться сейчас?</string>
     <string name="reader_empty_followed_blogs_title">Нет подписок на сайты</string>
     <string name="notifications_empty_likes">Ещё нет отметок \"нравится\"</string>
     <string name="notifications_empty_followers">Ещё нет подписчиков</string>
@@ -1000,7 +1117,6 @@ Language: ru
     <string name="menu_html_mode_done_snackbar">Переход в режим HTML</string>
     <string name="menu_html_mode">Режим HTML</string>
     <string name="menu_preview">Предпросмотр</string>
-    <string name="menu_publish_now">Опубликовать сейчас</string>
     <string name="menu_save_as_draft">Сохранить как черновик</string>
     <string name="file_size_in_terabytes">%s ТБ</string>
     <string name="file_size_in_gigabytes">%s ГБ</string>
@@ -1063,10 +1179,6 @@ Language: ru
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">остались %1$d страниц и %2$d из %3$d файлов</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">осталась 1 запись и %1$d из %2$d файлов</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">осталась 1 страница и %1$d из %2$d файлов </string>
-    <string name="dialog_confirm_publish_yes">Опубликовать сейчас</string>
-    <string name="dialog_confirm_publish_message_page">Эта страница будет опубликована немедленно.</string>
-    <string name="dialog_confirm_publish_message_post">Эта запись будет опубликована немедленно.</string>
-    <string name="dialog_confirm_publish_title">Готовы опубликовать?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">не загружено %1$d страниц/записей</string>
     <string name="media_file_pages_plural_only_not_uploaded">не загружено %1$d страниц</string>
     <string name="media_file_page_singular_only_not_uploaded">не загружена 1 страница</string>
@@ -1084,7 +1196,6 @@ Language: ru
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">не загружены 1 запись и 1 файл </string>
     <string name="untitled_in_parentheses">(Без названия)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Создать сайт</string>
     <string name="notification_site_creation_created">Нажмите для продолжения.</string>
@@ -1290,7 +1401,6 @@ Language: ru
     <string name="media_edit_filename_caption">Имя файла</string>
     <string name="media_edit_url_caption">URL-адрес</string>
     <string name="media_edit_alttext_text">Атрибут Alt</string>
-    <string name="copy">Копировать</string>
     <string name="connect_site">Подключить сайт</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Мигание светом</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Вибрация устройства</string>
@@ -1398,7 +1508,6 @@ Language: ru
     <string name="post_settings_not_set">Не заданы</string>
     <string name="post_settings_more_options">Дополнительные параметры</string>
     <string name="post_settings_categories_and_tags">Рубрики и метки</string>
-    <string name="post_settings_status">Статус</string>
     <string name="notifications_tab_title_all">Все</string>
     <string name="top_level_category_name">Верхний уровень</string>
     <string name="category_parent">Родительская рубрика (необязательно):</string>
@@ -1522,7 +1631,6 @@ Language: ru
     <string name="media_upload_state_deleting">Удаление</string>
     <string name="media_upload_state_uploading">Идет загрузка</string>
     <string name="media_upload_state_queued">В очереди</string>
-    <string name="keep_editing">Продолжить редактирование</string>
     <string name="image_quality">Качество изображений</string>
     <string name="error_all_media_upload_canceled">Все процессы загрузки медиафайлов были прерваны из-за неизвестной ошибки. Попробуйте начать загрузку заново</string>
     <string name="error_unknown_post_type">Неизвестный формат записи</string>
@@ -1550,7 +1658,7 @@ Language: ru
     <string name="pending_draft_one_day_2">Вы помните, что запись «%1$s» все ещё в черновиках? Опубликуйте её!</string>
     <string name="pending_draft_one_day_1">Вчера вы сохранили черновик «%1$s». Не забудьте опубликовать эту запись!</string>
     <string name="reader_photo_by">Автор фото: %s</string>
-    <string name="reader_label_visit">Посетить</string>
+    <string name="reader_label_visit">Посетить сайт</string>
     <string name="swipe_for_more">Перелистните, чтобы перейти далее</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">У вас нет прав на просмотр этой записи. Попробуйте сначала выполнить вход на WordPress.com или откройте браузер с помощью управляющей кнопки вверху.</string>
     <string name="reader_err_get_post_not_authorized_signin">У вас нет прав на просмотр этой записи. Попробуйте сначала выполнить вход на WordPress.com.</string>
@@ -2150,6 +2258,7 @@ Language: ru
     <string name="reader_btn_unfollow">Отписаться</string>
     <string name="reader_btn_follow">Подписаться</string>
     <string name="reader_btn_share">Поделиться</string>
+    <string name="reader_view_reblog">Реблог</string>
     <string name="reader_untitled_post">(Без названия)</string>
     <string name="comments_empty_list">Комментариев ещё нет</string>
     <string name="empty_list_default">Этот список пуст</string>
@@ -2184,7 +2293,6 @@ Language: ru
     <string name="httppassword">Пароль для HTTP-авторизации</string>
     <string name="httpuser">Имя для HTTP-авторизации</string>
     <string name="error_media_upload">Произошла ошибка при загрузке медиафайла</string>
-    <string name="publish_date">Опубликовано</string>
     <string name="incorrect_credentials">Неправильное имя или пароль.</string>
     <string name="log_in">Войти</string>
     <string name="username">Имя</string>
@@ -2221,6 +2329,7 @@ Language: ru
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="notification_settings">Настройки уведомлений</string>
+    <string name="publish_now">Опубликовать</string>
     <string name="reply">Ответ</string>
     <string name="on">на</string>
     <string name="preview">Предварительный просмотр</string>
@@ -2229,8 +2338,4 @@ Language: ru
     <string name="save">Сохранить</string>
     <string name="cancel">Отмена</string>
     <string name="error">Ошибка</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

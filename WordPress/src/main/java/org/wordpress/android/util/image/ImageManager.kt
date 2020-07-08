@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.TextUtils
+import android.util.Base64
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.ImageView.ScaleType.CENTER
@@ -21,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
@@ -33,7 +36,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.DisplayUtils
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,6 +43,7 @@ import javax.inject.Singleton
 /**
  * Singleton for asynchronous image fetching/loading with support for placeholders, transformations and more.
  */
+
 @Singleton
 class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
     interface RequestListener<T> {
@@ -151,27 +154,60 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
-     * Loads an image from the "imgUrl" into the ImageView and applies a rounded corner transformation. Adds placeholder
-     * and error placeholder depending on the ImageType.
-     *
-     * If no URL is provided, it only loads the placeholder
+     * Loads a base64 string without prefix (data:image/png;base64,) into the ImageView and applies circle
+     * transformation. Adds placeholder and error placeholder depending on the ImageType.
      */
     @JvmOverloads
-    fun loadWithRoundedCorners(
+    fun loadBase64IntoCircle(
         imageView: ImageView,
         imageType: ImageType,
-        imgUrl: String = "",
-        cornerRadius: Int = 4,
-        scaleType: ScaleType = CENTER
+        base64ImageData: String,
+        requestListener: RequestListener<Drawable>? = null,
+        version: Int? = null
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
+
+        val imageData: ByteArray
+        try {
+            imageData = Base64.decode(base64ImageData, Base64.DEFAULT)
+        } catch (ex: IllegalArgumentException) {
+            AppLog.e(AppLog.T.UTILS, String.format("Cant parse base64 image data:" + ex.message))
+            return
+        }
+
         GlideApp.with(context)
-                .load(imgUrl)
+                .load(imageData)
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
-                .applyScaleType(scaleType)
-                .transform(RoundedCorners(DisplayUtils.dpToPx(context, cornerRadius)))
+                .circleCrop()
+                .attachRequestListener(requestListener)
+                .addSignature(version)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads an image from the "imgUrl" into the ImageView with a corner radius. Adds placeholder and
+     * error placeholder depending on the ImageType.
+     */
+    @JvmOverloads
+    fun loadImageWithCorners(
+        imageView: ImageView,
+        imageType: ImageType,
+        imgUrl: String,
+        cornerRadius: Int,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+
+        GlideApp.with(context)
+                .load(imgUrl)
+                .transform(CenterCrop(), RoundedCorners(cornerRadius))
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .attachRequestListener(requestListener)
                 .into(imageView)
                 .clearOnDetach()
     }
@@ -236,28 +272,29 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     }
 
     /**
-     * Loads a File from the Glide's disk cache for the provided imgUrl using asFile().
+     * Loads a File either using a file path obtained from the media store (for local images),
+     * or using Glide's disk cache (for remote images). Using Uri allows content and remote URIs to be interchangeable.
      *
      * We can use asFile() asynchronously on the ui thread or synchronously on a background thread.
      * This function uses the asynchronous api which takes a Target argument to invoke asFile().
      */
     fun loadIntoFileWithResultListener(
-        imgUrl: String,
+        imgUri: Uri,
         requestListener: RequestListener<File>
     ) {
         val context = WordPress.getContext()
         if (!context.isAvailable()) return
         GlideApp.with(context)
-            .asFile()
-            .load(imgUrl)
-            .attachRequestListener(requestListener)
-            .into(
-                // Used just to invoke asFile() and ignored thereafter.
-                object : CustomTarget<File>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {}
-                    override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
-                }
-            )
+                .asFile()
+                .load(imgUri)
+                .attachRequestListener(requestListener)
+                .into(
+                        // Used just to invoke asFile() and ignored thereafter.
+                        object : CustomTarget<File>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {}
+                            override fun onResourceReady(resource: File, transition: Transition<in File>?) {}
+                        }
+                )
     }
 
     /**
@@ -422,6 +459,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
             val thumbnailRequest = GlideApp
                     .with(context)
                     .load(thumbnailUrl)
+                    .downsample(DownsampleStrategy.AT_MOST)
                     .attachRequestListener(listener)
             return this.thumbnail(thumbnailRequest)
         }

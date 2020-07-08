@@ -26,11 +26,14 @@ public class ReaderConstants {
     // the Calypso web reader
     public static final int MIN_GALLERY_IMAGE_WIDTH = 144;
 
+    public static final int THUMBNAIL_STRIP_IMG_COUNT = 4;
+
     // referrer url for reader posts opened in a browser
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
 
     // intent arguments / keys
     static final String ARG_TAG = "tag";
+    static final String ARG_ORIGINAL_TAG = "original_tag";
     static final String ARG_IS_FEED = "is_feed";
     static final String ARG_BLOG_ID = "blog_id";
     static final String ARG_FEED_ID = "feed_id";

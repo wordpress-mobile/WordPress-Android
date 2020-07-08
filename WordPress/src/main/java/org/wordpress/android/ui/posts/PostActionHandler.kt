@@ -41,6 +41,7 @@ import org.wordpress.android.widgets.PostListButtonType.BUTTON_MOVE_TO_DRAFT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PREVIEW
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_PUBLISH
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_RETRY
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_STATS
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SUBMIT
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_SYNC
@@ -60,6 +61,7 @@ class PostActionHandler(
     private val hasUnhandledAutoSave: (PostModel) -> Boolean,
     private val triggerPostListAction: (PostListAction) -> Unit,
     private val triggerPostUploadAction: (PostUploadAction) -> Unit,
+    private val triggerPublishAction: (PostModel) -> Unit,
     private val invalidateList: () -> Unit,
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
@@ -70,7 +72,7 @@ class PostActionHandler(
         invalidateList.invoke()
     })
 
-    fun handlePostButton(buttonType: PostListButtonType, post: PostModel) {
+    fun handlePostButton(buttonType: PostListButtonType, post: PostModel, hasAutoSave: Boolean) {
         when (buttonType) {
             BUTTON_EDIT -> editPostButtonAction(site, post)
             BUTTON_RETRY -> triggerPostListAction.invoke(RetryUpload(post))
@@ -78,7 +80,7 @@ class PostActionHandler(
                 moveTrashedPostToDraft(post)
             }
             BUTTON_PUBLISH -> {
-                postListDialogHelper.showPublishConfirmationDialog(post)
+                triggerPublishAction.invoke(post)
             }
             BUTTON_SYNC -> {
                 postListDialogHelper.showSyncScheduledPostConfirmationDialog(post)
@@ -99,10 +101,14 @@ class PostActionHandler(
             )
             BUTTON_STATS -> triggerPostListAction.invoke(ViewStats(site, post))
             BUTTON_TRASH -> {
-                if (post.isLocallyChanged) {
-                    postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
-                } else {
-                    trashPost(post)
+                when {
+                    post.isLocallyChanged -> {
+                        postListDialogHelper.showTrashPostWithLocalChangesConfirmationDialog(post)
+                    }
+                    hasAutoSave -> {
+                        postListDialogHelper.showTrashPostWithUnsavedChangesConfirmationDialog(post)
+                    }
+                    else -> trashPost(post)
                 }
             }
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
@@ -110,6 +116,9 @@ class PostActionHandler(
             }
             BUTTON_CANCEL_PENDING_AUTO_UPLOAD -> {
                 cancelPendingAutoUpload(post)
+            }
+            BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG -> {
+                postListDialogHelper.showMoveTrashedPostToDraftDialog(post)
             }
             BUTTON_MORE -> {
             } // do nothing - ui will show a popup window
@@ -147,6 +156,17 @@ class PostActionHandler(
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
             triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
+        }
+    }
+
+    fun publishPost(post: PostModel) {
+        triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
+    }
+
+    fun moveTrashedPostToDraft(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            moveTrashedPostToDraft(post)
         }
     }
 
@@ -243,6 +263,11 @@ class PostActionHandler(
         // If post doesn't exist, nothing else to do
         val post = postStore.getPostByLocalPostId(localPostId) ?: return
         trashPost(post, true)
+    }
+
+    fun trashPostWithUnsavedChanges(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId) ?: return
+        trashPost(post)
     }
 
     private fun trashPost(post: PostModel, hasLocalChanges: Boolean = false) {

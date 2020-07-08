@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -65,8 +66,12 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener
+import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode.REBLOG_SELECT_MODE
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.prefs.AppPrefs
@@ -102,7 +107,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -179,6 +183,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
+    @Inject internal lateinit var readerCssProvider: ReaderCssProvider
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -205,7 +210,7 @@ class ReaderPostDetailFragment : Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as WordPress).component().inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
             postHistory.restoreInstance(savedInstanceState)
         }
@@ -348,7 +353,7 @@ class ReaderPostDetailFragment : Fragment(),
                             interceptedUri
                     )
                     ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
-                    activity!!.finish()
+                    requireActivity().finish()
                 }
                 return true
             }
@@ -590,7 +595,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        WPSnackbar.make(view!!, R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
+        WPSnackbar.make(requireView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
                 .setAction(
                         R.string.reader_bookmark_snack_btn
                 ) {
@@ -611,7 +616,7 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         if (isAskingToLike != ReaderPostTable.isPostLikedByCurrentUser(post)) {
-            val likeCount = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
+            val likeCount = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
             likeCount.isSelected = isAskingToLike
             ReaderAnim.animateLikeButton(likeCount.imageView, isAskingToLike)
 
@@ -873,8 +878,38 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val countLikes = view!!.findViewById<ReaderIconCountView>(R.id.count_likes)
-        val countComments = view!!.findViewById<ReaderIconCountView>(R.id.count_comments)
+        val countLikes = requireView().findViewById<ReaderIconCountView>(R.id.count_likes)
+        val countComments = requireView().findViewById<ReaderIconCountView>(R.id.count_comments)
+        val reblogButton = requireView().findViewById<ReaderIconCountView>(R.id.reblog)
+
+        if (canBeReblogged()) {
+            reblogButton.setCount(0)
+            reblogButton.visibility = View.VISIBLE
+            reblogButton.setOnClickListener {
+                val sites = siteStore.visibleSitesAccessedViaWPCom
+                when (sites.count()) {
+                    0 -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+                    1 -> {
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.openEditorForReblog(
+                                    activity,
+                                    it,
+                                    this.post,
+                                    PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                            )
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
+                    }
+                    else -> {
+                        sites.firstOrNull()?.let {
+                            ActivityLauncher.showSitePickerForResult(this, it, REBLOG_SELECT_MODE)
+                        } ?: ToastUtils.showToast(activity, R.string.reader_reblog_error)
+                    }
+                }
+            }
+        } else {
+            reblogButton.visibility = View.GONE
+            reblogButton.setOnClickListener(null)
+        }
 
         if (canShowCommentCount()) {
             countComments.setCount(post.numReplies)
@@ -887,7 +922,7 @@ class ReaderPostDetailFragment : Fragment(),
                 )
             }
         } else {
-            countComments.visibility = View.INVISIBLE
+            countComments.visibility = View.GONE
             countComments.setOnClickListener(null)
         }
 
@@ -913,7 +948,7 @@ class ReaderPostDetailFragment : Fragment(),
                 likingUsersLabel.visibility = View.INVISIBLE
             }
         } else {
-            countLikes.visibility = View.INVISIBLE
+            countLikes.visibility = View.GONE
             countLikes.setOnClickListener(null)
         }
     }
@@ -925,7 +960,7 @@ class ReaderPostDetailFragment : Fragment(),
 
         if (!accountStore.hasAccessToken()) {
             WPSnackbar.make(
-                    view!!, R.string.reader_snackbar_err_cannot_like_post_logged_out,
+                    requireView(), R.string.reader_snackbar_err_cannot_like_post_logged_out,
                     Snackbar.LENGTH_INDEFINITE
             ).setAction(R.string.sign_in, mSignInClickListener).show()
             return
@@ -937,6 +972,24 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         setPostLike(true)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.SITE_PICKER -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    val siteLocalId = data?.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) ?: -1
+                    val site = siteStore.getSiteByLocalId(siteLocalId)
+                    ActivityLauncher.openEditorForReblog(
+                            activity,
+                            site,
+                            this.post,
+                            PagePostCreationSourcesDetail.POST_FROM_DETAIL_REBLOG
+                    )
+                }
+            }
+        }
     }
 
     /*
@@ -1010,7 +1063,7 @@ class ReaderPostDetailFragment : Fragment(),
      * called when the post doesn't exist in local db, need to get it from server
      */
     private fun requestPost() {
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
         progress.visibility = View.VISIBLE
         progress.bringToFront()
 
@@ -1051,7 +1104,7 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val progress = view!!.findViewById<ProgressBar>(R.id.progress_loading)
+        val progress = requireView().findViewById<ProgressBar>(R.id.progress_loading)
         progress.visibility = View.GONE
 
         if (event.statusCode == 200) {
@@ -1107,15 +1160,14 @@ class ReaderPostDetailFragment : Fragment(),
             return
         }
 
-        val txtError = view!!.findViewById<TextView>(R.id.text_error)
+        val txtError = requireView().findViewById<TextView>(R.id.text_error)
         txtError.text = errorMessage
 
         context?.let {
             val icon: Drawable? = try {
                 ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
             } catch (e: Resources.NotFoundException) {
-                AppLog.e(READER, e)
-                CrashLoggingUtils.logException(e, READER, "Drawable not found. See issue #11576")
+                AppLog.e(READER, "Drawable not found. See issue #11576", e)
                 null
             }
             icon?.let {
@@ -1157,7 +1209,7 @@ class ReaderPostDetailFragment : Fragment(),
                     "Failed to load private AT cookie. $event.error.type - $event.error.message"
             )
             WPSnackbar.make(
-                    view!!,
+                    requireView(),
                     string.media_accessing_failed,
                     Snackbar.LENGTH_LONG
             ).show()
@@ -1179,7 +1231,7 @@ class ReaderPostDetailFragment : Fragment(),
         }
 
         WPSnackbar.make(
-                view!!,
+                requireView(),
                 string.media_accessing_failed,
                 Snackbar.LENGTH_LONG
         ).show()
@@ -1300,7 +1352,7 @@ class ReaderPostDetailFragment : Fragment(),
             scrollView.visibility = View.VISIBLE
 
             // render the post in the webView
-            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
+            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)
 
             // if the post is from private atomic site postpone render until we have a special access cookie
             if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {
@@ -1397,7 +1449,7 @@ class ReaderPostDetailFragment : Fragment(),
      */
     override fun onRequestCustomView(): ViewGroup? {
         return if (isAdded) {
-            view!!.findViewById<View>(R.id.layout_custom_view_container) as ViewGroup
+            requireView().findViewById<View>(R.id.layout_custom_view_container) as ViewGroup
         } else {
             null
         }
@@ -1408,7 +1460,7 @@ class ReaderPostDetailFragment : Fragment(),
      */
     override fun onRequestContentView(): ViewGroup? {
         return if (isAdded) {
-            view!!.findViewById<View>(R.id.layout_post_detail_container) as ViewGroup
+            requireView().findViewById<View>(R.id.layout_post_detail_container) as ViewGroup
         } else {
             null
         }
@@ -1574,6 +1626,18 @@ class ReaderPostDetailFragment : Fragment(),
      */
     private fun canShowFooter(): Boolean {
         return canShowLikeCount() || canShowCommentCount() || canShowBookmarkButton()
+    }
+
+    /**
+     * Returns true if the blog post can be reblogged
+     */
+    private fun canBeReblogged(): Boolean {
+        this.post?.let {
+            if (!it.isPrivate && accountStore.hasAccessToken()) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun canShowCommentCount(): Boolean {

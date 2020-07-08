@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-01-17 19:17:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: hu
 -->
 <resources>
@@ -94,7 +94,6 @@ Language: hu
     <string name="httpuser">HTTP felhasználónév</string>
     <string name="httppassword">HTTP jelszó</string>
     <string name="error_media_upload">Hiba történt a média feltöltése közben</string>
-    <string name="publish_date">Közzététel</string>
     <string name="incorrect_credentials">Hibás felhasználónév vagy jelszó.</string>
     <string name="password">Jelszó</string>
     <string name="username">Felhasználó név</string>

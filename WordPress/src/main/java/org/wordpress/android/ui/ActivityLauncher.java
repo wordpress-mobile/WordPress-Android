@@ -25,7 +25,9 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.model.page.PageModel;
 import org.wordpress.android.fluxc.network.utils.StatsGranularity;
 import org.wordpress.android.imageeditor.EditImageActivity;
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.login.LoginMode;
+import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.networking.SSLCertsViewActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.HelpActivity.Origin;
@@ -44,6 +46,7 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
+import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
 import org.wordpress.android.ui.media.MediaBrowserType;
@@ -93,10 +96,10 @@ import java.util.Map;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
+import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_HIGH_RES_IMAGE_URL;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_LOW_RES_IMAGE_URL;
-import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_OUTPUT_FILE_EXTENSION;
+import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -124,10 +127,42 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    /**
+     * Presents the site picker and expects the selection result
+     *
+     * @param activity the activity that starts the site picker and expects the result
+     * @param site     the preselected site
+     */
     public static void showSitePickerForResult(Activity activity, SiteModel site) {
-        Intent intent = new Intent(activity, SitePickerActivity.class);
-        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        Intent intent = createSitePickerIntent(activity, site, SitePickerMode.DEFAULT_MODE);
         activity.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+    }
+
+    /**
+     * Presents the site picker and expects the selection result
+     *
+     * @param fragment the fragment that starts the site picker and expects the result
+     * @param site     the preselected site
+     * @param mode     site picker mode
+     */
+    public static void showSitePickerForResult(Fragment fragment, SiteModel site, SitePickerMode mode) {
+        Intent intent = createSitePickerIntent(fragment.getContext(), site, mode);
+        fragment.startActivityForResult(intent, RequestCodes.SITE_PICKER);
+    }
+
+    /**
+     * Creates a site picker intent
+     *
+     * @param context the context to use for the intent creation
+     * @param site    the preselected site
+     * @param mode    site picker mode
+     * @return the site picker intent
+     */
+    private static Intent createSitePickerIntent(Context context, SiteModel site, SitePickerMode mode) {
+        Intent intent = new Intent(context, SitePickerActivity.class);
+        intent.putExtra(SitePickerActivity.KEY_LOCAL_ID, site.getId());
+        intent.putExtra(SitePickerActivity.KEY_SITE_PICKER_MODE, mode);
+        return intent;
     }
 
     public static void showPhotoPickerForResult(Activity activity,
@@ -182,6 +217,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, GifPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(GifPickerActivity.KEY_REQUEST_CODE, requestCode);
         activity.startActivityForResult(intent, requestCode);
     }
 
@@ -230,6 +266,12 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
+    public static void viewMySiteInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_MY_SITE);
+        context.startActivity(intent);
+    }
+
     public static void viewReader(Context context) {
         Intent intent = new Intent(context, WPMainActivity.class);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_READER);
@@ -262,6 +304,63 @@ public class ActivityLauncher {
         taskStackBuilder.startActivities();
     }
 
+
+    public static void openEditorForPostInNewStack(Context context, @NonNull SiteModel site, int localPostId) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+
+        Intent editorIntent = new Intent(context, EditPostActivity.class);
+        editorIntent.putExtra(WordPress.SITE, site);
+        editorIntent.putExtra(EditPostActivity.EXTRA_POST_LOCAL_ID, localPostId);
+        editorIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(editorIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    /**
+     * Opens the editor and passes the information needed for a reblog action
+     *
+     * @param activity the calling activity
+     * @param site     the site on which the post should be reblogged
+     * @param post     the post to be reblogged
+     */
+    public static void openEditorForReblog(
+            Activity activity,
+            @Nullable SiteModel site,
+            @Nullable ReaderPost post,
+            PagePostCreationSourcesDetail reblogSource
+    ) {
+        if (post == null) {
+            ToastUtils.showToast(activity, R.string.post_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        AnalyticsUtils.trackWithReblogDetails(
+            reblogSource == PagePostCreationSourcesDetail.POST_FROM_REBLOG
+                    ? READER_ARTICLE_REBLOGGED
+                    : READER_ARTICLE_DETAIL_REBLOGGED,
+            post.blogId,
+            post.postId,
+            site.getSiteId()
+        );
+
+        Intent editorIntent = new Intent(activity, EditPostActivity.class);
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_TITLE, post.getTitle());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_QUOTE, post.getExcerpt());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_IMAGE, post.getFeaturedImage());
+        editorIntent.putExtra(EditPostActivity.EXTRA_REBLOG_POST_CITATION, post.getUrl());
+        editorIntent.setAction(EditPostActivity.ACTION_REBLOG);
+
+        addNewPostForResult(editorIntent, activity, site, false, reblogSource);
+    }
+
     public static void viewStatsInNewStack(Context context, SiteModel site) {
         if (site == null) {
             AppLog.e(T.STATS, "SiteModel is null when opening the stats from the deeplink.");
@@ -283,6 +382,12 @@ public class ActivityLauncher {
         taskStackBuilder.addNextIntent(mainActivityIntent);
         taskStackBuilder.addNextIntent(statsIntent);
         taskStackBuilder.startActivities();
+    }
+
+    public static void viewStatsInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_STATS);
+        context.startActivity(intent);
     }
 
     private static Intent getMainActivityInNewStack(Context context) {
@@ -872,6 +977,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, requestCode);
     }
 
+    public static void viewSuggestUsersForResult(@NonNull Activity activity, @NonNull SiteModel site) {
+        Intent intent = new Intent(activity, SuggestUsersActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivityForResult(intent, RequestCodes.SELECTED_USER_MENTION);
+    }
+
     public static void addSelfHostedSiteForResult(Activity activity) {
         Intent intent;
         intent = new Intent(activity, LoginActivity.class);
@@ -905,6 +1016,7 @@ public class ActivityLauncher {
     public static void openUrlExternal(Context context, @NonNull String url) {
         Uri uri = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
             // disable deeplinking activity so to not catch WP URLs
@@ -952,14 +1064,31 @@ public class ActivityLauncher {
 
     public static void openImageEditor(
         Activity activity,
-        String loResImageUrl,
-        String hiResImageUrl,
-        String outputFileExtension
+        ArrayList<EditImageData.InputData> input
     ) {
         Intent intent = new Intent(activity, EditImageActivity.class);
-        intent.putExtra(ARG_LOW_RES_IMAGE_URL, loResImageUrl);
-        intent.putExtra(ARG_HIGH_RES_IMAGE_URL, hiResImageUrl);
-        intent.putExtra(ARG_OUTPUT_FILE_EXTENSION, outputFileExtension);
+        intent.putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, input);
         activity.startActivityForResult(intent, RequestCodes.IMAGE_EDITOR_EDIT_IMAGE);
+    }
+
+    public static void viewPagesInNewStack(Context context, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(context, R.string.pages_cannot_be_started, ToastUtils.Duration.SHORT);
+            return;
+        }
+
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainActivityIntent = getMainActivityInNewStack(context);
+        Intent pagesIntent = new Intent(context, PagesActivity.class);
+        pagesIntent.putExtra(WordPress.SITE, site);
+        taskStackBuilder.addNextIntent(mainActivityIntent);
+        taskStackBuilder.addNextIntent(pagesIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    public static void viewPagesInNewStack(Context context) {
+        Intent intent = getMainActivityInNewStack(context);
+        intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
+        context.startActivity(intent);
     }
 }

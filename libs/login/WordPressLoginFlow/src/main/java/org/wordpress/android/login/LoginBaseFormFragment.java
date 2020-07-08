@@ -226,6 +226,12 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
         return false;
     }
 
+    @Override
+    public void onDestroy() {
+        endProgress();
+        super.onDestroy();
+    }
+
     protected void startProgress() {
         startProgress(true);
     }
@@ -259,8 +265,9 @@ public abstract class LoginBaseFormFragment<LoginListenerType> extends Fragment 
             mProgressDialog.setOnCancelListener(null);
             mProgressDialog = null;
         }
-
-        mPrimaryButton.setEnabled(true);
+        if (mPrimaryButton != null) {
+            mPrimaryButton.setEnabled(true);
+        }
 
         if (mSecondaryButton != null) {
             mSecondaryButton.setEnabled(true);

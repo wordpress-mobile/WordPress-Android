@@ -1,5 +1,6 @@
 package org.wordpress.android.imageeditor.crop
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,17 +12,21 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import org.wordpress.android.imageeditor.R
 import com.yalantis.ucrop.UCropFragment
 import com.yalantis.ucrop.UCropFragment.UCropResult
 import com.yalantis.ucrop.UCropFragmentCallback
+import org.wordpress.android.imageeditor.EditImageViewModel
+import org.wordpress.android.imageeditor.ImageEditor
+import org.wordpress.android.imageeditor.R
 import org.wordpress.android.imageeditor.crop.CropViewModel.CropResult
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveFailedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveStartState
 import org.wordpress.android.imageeditor.crop.CropViewModel.ImageCropAndSaveState.ImageCropAndSaveSuccessState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiLoadedState
 import org.wordpress.android.imageeditor.crop.CropViewModel.UiState.UiStartLoadingWithBundleState
+import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.ARG_EDIT_IMAGE_DATA
 import org.wordpress.android.imageeditor.utils.ToastUtils
 import org.wordpress.android.imageeditor.utils.ToastUtils.Duration
 
@@ -35,6 +40,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
 
     companion object {
         private val TAG = CropFragment::class.java.simpleName
+        const val CROP_RESULT = "crop_result"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +52,7 @@ class CropFragment : Fragment(), UCropFragmentCallback {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_crop_image, container, false)
+    ): View? = inflater.inflate(R.layout.crop_image_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,11 +62,17 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     private fun initializeViewModels() {
         viewModel = ViewModelProvider(this).get(CropViewModel::class.java)
         setupObservers()
-        viewModel.start(navArgs.inputFilePath, navArgs.outputFileExtension, requireContext().cacheDir)
+        viewModel.start(
+            navArgs.inputFilePath,
+            navArgs.outputFileExtension,
+            navArgs.shouldReturnToPreviewScreen,
+            requireContext().cacheDir,
+            ImageEditor.instance
+        )
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
                 is UiStartLoadingWithBundleState -> {
                     showThirdPartyCropFragmentWithBundle(uiState.bundle)
@@ -71,12 +83,12 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             doneMenu?.isVisible = uiState.doneMenuVisible
         })
 
-        viewModel.cropAndSaveImageStateEvent.observe(this, Observer { stateEvent ->
+        viewModel.cropAndSaveImageStateEvent.observe(viewLifecycleOwner, Observer { stateEvent ->
             stateEvent?.getContentIfNotHandled()?.let { state ->
                 when (state) {
                     is ImageCropAndSaveStartState -> {
                         val thirdPartyCropFragment = childFragmentManager
-                                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+                            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
                         if (thirdPartyCropFragment != null && thirdPartyCropFragment.isAdded) {
                             thirdPartyCropFragment.cropAndSaveImage()
                         } else {
@@ -92,34 +104,41 @@ class CropFragment : Fragment(), UCropFragmentCallback {
             }
         })
 
-        viewModel.navigateBackWithCropResult.observe(this, Observer { cropResult ->
+        viewModel.navigateBackWithCropResult.observe(viewLifecycleOwner, Observer { cropResult ->
             navigateBackWithCropResult(cropResult)
         })
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_crop_fragment, menu)
-        doneMenu = menu?.findItem(R.id.menu_done)
+        inflater.inflate(R.menu.menu_crop_fragment, menu)
+        doneMenu = menu.findItem(R.id.menu_done)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = if (item.itemId == R.id.menu_done) {
         viewModel.onDoneMenuClicked()
         true
+    } else if (item.itemId == android.R.id.home) {
+        if (navArgs.shouldReturnToPreviewScreen) {
+            findNavController().popBackStack()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
     } else {
         super.onOptionsItemSelected(item)
     }
 
     private fun showThirdPartyCropFragmentWithBundle(bundle: Bundle) {
         var thirdPartyCropFragment = childFragmentManager
-                .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
+            .findFragmentByTag(UCropFragment.TAG) as? UCropFragment
 
         if (thirdPartyCropFragment == null || !thirdPartyCropFragment.isAdded) {
             thirdPartyCropFragment = UCropFragment.newInstance(bundle)
             childFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
-                    .disallowAddToBackStack()
-                    .commit()
+                .replace(R.id.fragment_container, thirdPartyCropFragment, UCropFragment.TAG)
+                .disallowAddToBackStack()
+                .commit()
         }
     }
 
@@ -139,9 +158,19 @@ class CropFragment : Fragment(), UCropFragmentCallback {
     }
 
     private fun navigateBackWithCropResult(cropResult: CropResult) {
-        activity?.let {
-            it.setResult(cropResult.resultCode, cropResult.data)
-            it.finish()
+        if (navArgs.shouldReturnToPreviewScreen) {
+            val navController = findNavController()
+            ViewModelProvider(requireActivity()).get(EditImageViewModel::class.java).setCropResult(cropResult)
+            navController.popBackStack()
+        } else {
+            val resultData = viewModel.getOutputData(cropResult)
+
+            activity?.let {
+                it.setResult(
+                    cropResult.resultCode,
+                    Intent().apply { putParcelableArrayListExtra(ARG_EDIT_IMAGE_DATA, resultData) })
+                it.finish()
+            }
         }
     }
 }

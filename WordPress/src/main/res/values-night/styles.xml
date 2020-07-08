@@ -27,6 +27,13 @@
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
 
+        <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>
+        <item name="toolbarIconDisabledColor">@color/on_surface_emphasis_lowest</item>
+
+        <item name="colorGutenbergDivider">@color/background_dark_elevated</item>
+        <item name="colorGutenbergBackground">@color/background_dark_elevated</item>
+
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
@@ -39,12 +46,13 @@
             @style/Widget.MaterialComponents.PopupMenu.Overflow
         </item>
 
-         <item name="bottomSheetDialogTheme">
-             @style/WordPress.BottomSheetDialogTheme
-         </item>
+        <item name="bottomSheetDialogTheme">
+            @style/WordPress.BottomSheetDialogTheme
+        </item>
 
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
@@ -106,17 +114,6 @@
     <style name="WordPress.Button.Primary" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/secondary_variant_disabled_selector</item>
         <item name="android:textColor">@color/on_surface_disabled_selector</item>
-    </style>
-
-    <!-- Overload of Aztec theme -->
-
-    <style name="FormatBarButton">
-        <item name="android:minWidth">@dimen/format_bar_height</item>
-        <item name="android:minHeight">@dimen/format_bar_height</item>
-        <item name="android:textOn">""</item>
-        <item name="android:textOff">""</item>
-        <item name="android:backgroundTint">@color/on_surface_medium_disabled_checked_selector</item>
-        <item name="android:backgroundTintMode">src_in</item>
     </style>
 
     <style name="DividerVertical">

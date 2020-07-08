@@ -1,13 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-17 00:54:10+0000
+Translation-Revision-Date: 2020-06-25 10:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הבלוק הזה באמצעות הדפדפן במכשיר שלך.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">לערוך את הבלוק בדפדפן הרשת</string>
+    <string name="gutenberg_native_dismiss">ביטול</string>
+    <string name="prepublishing_nudges_visibility_password">מוגן בסיסמה</string>
+    <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
+    <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">פרסום</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">להוסיף תגיות</string>
+    <string name="prepublishing_nudges_back_button">חזרה</string>
+    <string name="prepublishing_nudges_home_save_button">לשמור כעת</string>
+    <string name="prepublishing_nudges_home_submit_button">לשלוח כעת</string>
+    <string name="prepublishing_nudges_home_schedule_button">לקבוע זמן כעת</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">מפרסם בעמוד</string>
+    <string name="prepublishing_nudges_tags_action">תגיות</string>
+    <string name="prepublishing_nudges_publish_action">תאריך פרסום</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">ביטול</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">להעביר לטיוטות</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
+    <string name="reader_label_choose_your_interests">לבחור את תחומי העניין שלך</string>
+    <string name="reader_label_discover_follow_tags">לגלות תגיות שימצאו חן בעינייך ולעקוב אחריהן</string>
+    <string name="reader_choose_interests_content_description">לבחור את תחומי העניין שלך</string>
+    <string name="reader_btn_done">סיימתי</string>
+    <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
+    <string name="post_status_post_published">פורסם</string>
+    <string name="post_status_post_trashed">הועבר לפח</string>
+    <string name="post_status_post_scheduled">מתוזמן לפרסום</string>
+    <string name="publish_date">תאריך פרסום</string>
+    <string name="ccpa_privacy_notice_read">לעיון בהצהרת הפרטיות של CCPA</string>
+    <string name="ccpa_privacy_notice_caption">לפי החוק California Consumer Privacy Act (החוק לפרטיות צרכנים של קליפורניה – CCPA), עלינו לספק לתושבי קליפורניה פרטים נוספים אודות הקטגוריות של המידע האישי שאנחנו אוספים ומשתפים, המקום שממנו אנחנו מקבלים את המידע האישי, האופן שבו אנחנו משתמשים בו והסיבה לשימוש.</string>
+    <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
+    <string name="status_and_visibility">מצב וניראות</string>
+    <string name="update_now">לעדכן עכשיו</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">להסיר את %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
+    <string name="gutenberg_native_move_s_up">להזיז את %s למעלה</string>
+    <string name="gutenberg_native_move_s_right">להזיז את %s ימינה</string>
+    <string name="gutenberg_native_move_s_left">להזיז את %s שמאלה</string>
+    <string name="gutenberg_native_move_s_down">להזיז את %s למטה</string>
+    <string name="gutenberg_native_try_a_starter_layout">לנסות את הפריסה למתחילים</string>
+    <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות עם האפשרויות הזמינות</string>
+    <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
+    <string name="pages_set_as_posts_page">להגדיר כעמוד פוסטים</string>
+    <string name="pages_set_as_homepage">להגדיר כעמוד הבית</string>
+    <string name="suggestion_no_matching_users">\"לא נמצאו משתמשים מתאימים.\"</string>
+    <string name="suggestion_invalid_user">\"המשתמש %s לא חוקי\"</string>
+    <string name="site_settings_select_page">לבחור עמוד</string>
+    <string name="site_settings_posts_page">עמוד הפוסטים</string>
+    <string name="site_settings_static_homepage">עמוד בית קבוע</string>
+    <string name="site_settings_classic_blog">בלוג קלאסי</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">עמוד הבית והעמוד לפוסטים שנבחרו לא יכולים להיות זהים.</string>
+    <string name="site_settings_failed_update_homepage_settings">עדכון ההגדרות של עמוד הבית נכשל, כדאי לבדוק את החיבור לאינטרנט</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">לא ניתן היה לשמור את ההגדרות של עמוד הבית לפני טעינת העמודים</string>
+    <string name="site_settings_failed_to_save_homepage_settings">לא ניתן היה לשמור את ההגדרות של עמוד הבית</string>
+    <string name="site_settings_accept_homepage">אישור</string>
+    <string name="site_settings_failed_to_load_pages">טעינת העמוד נכשלה</string>
+    <string name="site_settings_homepage_settings_description">לבחור בין עמוד בית שמציג את הפוסטים האחרונים שלך (בלוג קלאסי) ובין עמוד קבוע/סטטי.</string>
+    <string name="site_settings_homepage_settings">הגדרות עמוד הבית</string>
+    <string name="site_settings_homepage">עמוד הבית</string>
+    <string name="page_posts_page_update_failed">העדכון של עמוד הפוסטים נכשל</string>
+    <string name="page_posts_page_successfully_updated">העדכון של עמוד הפוסטים בוצע בהצלחה</string>
+    <string name="page_homepage_update_failed">העדכון של עמוד הבית נכשל</string>
+    <string name="page_homepage_successfully_updated">העדכון של עמוד הבית בוצע בהצלחה</string>
+    <string name="page_cannot_set_posts_page">כדי להגדיר את עמוד הפוסטים, עליך להפעיל את \'עמוד בית קבוע\' בהגדרות האתר</string>
+    <string name="page_cannot_set_homepage">כדי להגדיר את עמוד הבית, עליך להפעיל את \'עמוד בית קבוע\' בהגדרות האתר</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">ברוך בואך אל הבלוג החדש שלנו</string>
+    <string name="gutenberg_native_select_a_color">לבחור צבע</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">יש להקיש פעמיים כדי לעבור להגדרות הצבע</string>
+    <string name="reader_empty_followed_blogs_description">כאשר יש לך אתרים במעקב, התוכן שלהם יופיע כאן</string>
+    <string name="feature_announcement_find_out_mode">למידע נוסף</string>
+    <string name="feature_announcement_dialog_label">מה חדש ב-WordPress</string>
+    <string name="insert_label_with_count">להוסיף %d</string>
+    <string name="crop">לחתוך</string>
+    <string name="error_failed_to_load_into_file">הטעינה לתוך הקובץ נכשלה, יש לנסות שוב.</string>
+    <string name="preview_image_thumbnail_description">להציג תצוגה מקדימה של התמונה הממוזערת</string>
+    <string name="photo_picker_use_media">להשתמש בפריט המדיה הזה</string>
+    <string name="photo_picker_use_video">להשתמש בווידאו הזה</string>
+    <string name="photo_picker_photo_or_video_title">לבחור מדיה</string>
+    <string name="photo_picker_video_title">לבחור וידאו</string>
+    <string name="site_picker_ask_site_select">לא ניתן היה לבחור אתר. יש לנסות שוב.</string>
+    <string name="sitepicker_continue_flow">המשך</string>
+    <string name="reader_reblog_error">הפרסום החדש בבלוג נכשל</string>
+    <string name="reader_no_site_to_reblog_action">ניהול אתרים</string>
+    <string name="reader_no_site_to_reblog_detail">לאחר יצירת אתר ב-WordPress.com, אפשר לפרסם מחדש בבלוג את התוכן שברצונך להציג באתר שלך.</string>
+    <string name="reader_no_site_to_reblog_title">אין אתרי WordPress.com זמינים</string>
+    <string name="whats_new_in_version_title">מה חדש</string>
+    <string name="comment_q_action_copied_url">כתובת הקישור הועתקה</string>
+    <string name="copy_link_address">להעתיק את הכתובת של הקישור</string>
+    <string name="comment_share_link_via">לשתף דרך</string>
+    <string name="comment_toast_err_share_intent">לא ניתן לשתף</string>
+    <string name="button_insert">להוסיף</string>
+    <string name="continue_label">המשך</string>
+    <string name="copy_text">להעתיק</string>
+    <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">להזיז את הבלוק שמאלה מהמיקום %1$s למיקום %2$s</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">להקיש פעמיים כדי להזיז את הבלוק ימינה</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">להקיש פעמיים כדי להזיז את הבלוק שמאלה</string>
+    <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
+    <string name="gutenberg_native_blog">בלוג</string>
+    <string name="new_site_creation_creating_site_loading_4">יוצר לוח בקרה</string>
+    <string name="new_site_creation_creating_site_loading_3">להגדיר ערכת עיצוב</string>
+    <string name="new_site_creation_creating_site_loading_2">מוסיף תכונות אתר</string>
+    <string name="new_site_creation_creating_site_loading_1">תופס את כתובת ה-URL של האתר</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">האתר שלך יהיה מוכן בקרוב</string>
+    <string name="new_site_creation_creating_site_loading_title">הידד!\nכמעט סיימת</string>
+    <string name="pages_and_posts_cancel_auto_upload">לבטל העלאה</string>
+    <string name="gif_list_search_returned_unknown_error">הייתה בעיה בטיפול בבקשה הזאת</string>
+    <string name="gif_powered_by_tenor">מופעל על ידי Tenor</string>
+    <string name="gif_picker_search_hint">חיפוש ב-Tenor</string>
+    <string name="photo_picker_gif">לבחור מ-Tenor</string>
+    <string name="weekday_saturday">יום שבת</string>
+    <string name="weekday_friday">יום שישי</string>
+    <string name="weekday_thursday">יום חמישי</string>
+    <string name="weekday_wednesday">יום רביעי</string>
+    <string name="weekday_tuesday">יום שלישי</string>
+    <string name="weekday_monday">יום שני</string>
+    <string name="weekday_sunday">יום ראשון</string>
+    <string name="media_accessing_failed">נכשלה הגישה לתוכן באתר פרטי. חלק מפרטי המדיה עלולים להיות לא זמינים</string>
+    <string name="media_accessing_progress">ניגש לתוכן של אתר פרטי</string>
     <string name="error_failed_to_crop_and_save_image">פעולת החיתוך והשמירה של התמונה נכשלה, יש לנסות שוב.</string>
-    <string name="failed_to_insert_image_tap_to_retry">ההוספה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
+    <string name="failed_to_load_image_tap_to_retry">הטעינה של התמונה נכשלה.\nיש להקיש כדי לנסות שוב.</string>
     <string name="preview_image_description">להציג תצוגה מקדימה של התמונה</string>
     <string name="error_unknown_page_type">פורמט עמוד לא ידוע</string>
     <string name="error_page_not_submitted">לא הצלחנו להשלים את הפעולה ולא שלחנו את העמוד לבדיקה.</string>
@@ -31,7 +154,6 @@ Language: he_IL
     <string name="page_uploading">מעלה את העמוד</string>
     <string name="error_publish_page_no_network">המכשיר אינו מחובר. השינויים נשמרו באחסון המקומי.</string>
     <string name="local_page_autosave_revision_available">ביצעת שינויים שלא נשמרו בעמוד הזה</string>
-    <string name="local_page_is_conflicted">‎@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">העמוד שלך מועלה</string>
     <string name="editor_page_saved_locally_failed_media">בעמוד קיימים פריטי מדיה שהעלאתם נכשלה והם נשמרו במחשב המקומי</string>
     <string name="editor_page_saved_locally">העמוד נשמר במכשיר</string>
@@ -64,32 +186,22 @@ Language: he_IL
     <string name="gutenberg_native_portfolio">תיק עבודות</string>
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">גובה מינימלי בפיקסלים</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
-    <string name="gutenberg_native_link_settings">הגדרות הקישור</string>
+    <string name="gutenberg_native_s_settings">%s הגדרות</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">נשמח לבנות משהו ביחד.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">נשמח לבנות משהו ביחד</string>
-    <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">נשמח לבנות משהו ביחד!</string>
+    <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד!</string>
     <string name="gutenberg_native_juan_p_rez">חואן פרז</string>
     <string name="gutenberg_native_j_k_rowling">ג\'יי קיי רולינג</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">הבחירות שלנו, הארי, משקפות מי אנחנו באמת הרבה יותר מהיכולות שלנו.</string>
     <string name="gutenberg_native_inspiration">השראה</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">מצפים לשמוע ממך!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">מצפים לשמוע ממך!</string>
     <string name="gutenberg_native_get_in_touch">מצפים לשמוע ממך</string>
     <string name="gutenberg_native_excerpt_length_words">אורך התקציר (מילים)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">שלחו לי אימייל: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">לערוך את תוכן המדיה של הכיסוי</string>
     <string name="gutenberg_native_dr_seuss">דוקטור סוס</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">חבל לבכות כי החוויה שהסתיימה, כדאי לחייך כי החוויה התרחשה.</string>
     <string name="gutenberg_native_customize">התאמה אישית</string>
     <string name="gutenberg_native_city_10100">עיר מגורים, 10100</string>
-    <string name="gutenberg_native_button_link_url">כתובת URL לקישור של הכפתור</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">בקרוב נוסיף הגדרות לצבע הכפתורים.</string>
-    <string name="gutenberg_native_border_settings">הגדרות גבול</string>
-    <string name="gutenberg_native_border_radius">רדיוס הגבולות</string>
-    <string name="gutenberg_native_background_opacity">השקיפות של הרקע</string>
     <string name="gutenberg_native_add_paragraph_block">להוסיף בלוק פסקה רגילה</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">תיאור קצר של השירותים שמוצעים על ידך.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">ביוגרפיה קצרה שכוללת היסטוריה אישית, הישגים מרכזיים או עובדות מעניינות.</string>
@@ -205,7 +317,6 @@ Language: he_IL
     <string name="reader_my_likes_display_name">לייקים</string>
     <string name="site_cannot_be_loaded">אין לנו אפשרות לטעון את הנתונים של האתר שלך כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הפוסט ברשת.</string>
     <string name="gutenberg_native_ungroup">לפרק קבוצה</string>
     <string name="gutenberg_native_translate">לתרגם</string>
     <string name="gutenberg_native_title">כותרת:</string>
@@ -223,7 +334,6 @@ Language: he_IL
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
     <string name="gutenberg_native_s_block_empty">הבלוק %s. ריק</string>
     <string name="gutenberg_native_reset_block">לאפס את הבלוק</string>
-    <string name="gutenberg_native_remove_block_at_row_s">להסיר את הבלוק בשורה %s</string>
     <string name="gutenberg_native_remove_annotations">להסיר את ההסברים</string>
     <string name="gutenberg_native_problem_opening_the_video">בעיה בפתיחת הווידאו</string>
     <string name="gutenberg_native_problem_displaying_block">בעיה בהצגת הבלוק</string>
@@ -239,9 +349,7 @@ Language: he_IL
     <string name="gutenberg_native_my_post_publish_panel">החלונית של תוכן שפרסמתי</string>
     <string name="gutenberg_native_my_document_setting_panel">החלונית של הגדרות המסמכים שלי</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">להזיז את הבלוק למעלה משורה %1$s לשורה %2$s</string>
-    <string name="gutenberg_native_move_block_up">להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">להזיז את הבלוק למטה משורה %1$s לשורה %2$s</string>
-    <string name="gutenberg_native_move_block_down">להזיז את הבלוק למטה</string>
     <string name="gutenberg_native_link_text">טקסט לקישור</string>
     <string name="gutenberg_native_link_inserted">הקישור הוכנס</string>
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
@@ -254,7 +362,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_to_select_an_image">יש להקיש פעמיים כדי לבחור תמונה</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">יש להקיש פעמיים כדי לבחור וידאו</string>
     <string name="gutenberg_native_double_tap_to_select">יש להקיש פעמיים כדי לבחור</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">יש להקיש פעמיים כדי להסיר את הבלוק</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">יש להקיש פעמיים כדי לבצע שוב את השינוי האחרון</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">יש להקיש פעמיים כדי להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">יש להקיש פעמיים כדי להזיז את הבלוק למטה</string>
@@ -264,7 +371,6 @@ Language: he_IL
     <string name="gutenberg_native_double_tap_and_hold_to_edit">יש להקיש פעמיים ולהחזיק כדי לערוך</string>
     <string name="gutenberg_native_current_value_is_s">הערך הנוכחי הוא %s</string>
     <string name="gutenberg_native_content">תוכן…</string>
-    <string name="gutenberg_native_clear_all_settings">ניקוי כל ההגדרות</string>
     <string name="gutenberg_native_choose_from_device">לבחור מהמכשיר</string>
     <string name="gutenberg_native_annotations_sidebar">סרגל צדי להסברים</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">אירעה שגיאה לא מזוהה. יש לנסות שוב.</string>
@@ -288,6 +394,8 @@ Language: he_IL
     <string name="notifications_tab_dialog_master_hint_on">השבתת הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
     <string name="notifications_tab_dialog_master_status_off">הודעות עבור אתר זה</string>
     <string name="notifications_tab_dialog_master_status_on">הודעות עבור אתר זה</string>
+    <string name="dialog_gutenberg_informative_description_page">התחלת להשתמש בעורך הבלוקים ליצירת עמודים חדשים, מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
+    <string name="dialog_gutenberg_informative_description_post">התחלת להשתמש בעורך הבלוקים ליצירת פוסטים חדשים, מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
     <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>
@@ -431,10 +539,6 @@ Language: he_IL
     <string name="stats_widget_all_time_title">כל הזמנים</string>
     <string name="stats_widget_views_title">תצוגות השבוע</string>
     <string name="stats_widget_add">הוספת וידג\'ט</string>
-    <string name="dialog_confirm_update_yes">לעדכן כעת</string>
-    <string name="dialog_confirm_update_message_page">העמוד הנוכחי שפורסם יעודכן מייד.</string>
-    <string name="dialog_confirm_update_message_post">הפוסט הנוכחי שפורסם יעודכן מייד.</string>
-    <string name="dialog_confirm_update_title">רוצה לעדכן כעת?</string>
     <string name="plugin_fetching_error_after_at">הריענון של פרטי התוסף דורש יותר זמן מהרגיל. יש לבדוק שוב מאוחר יותר.</string>
     <string name="plugin_install_site_ineligible_default_error">אם רשמת כרגע את שם הדומיין, עליך להמתין שנסיים להגדיר אותו ולנסות שוב.\n\nאם לא, נראה שמשהו השתבש ושבתוסף יש תכונה שאולי לא זמינה באתר זה.</string>
     <string name="domain_contact_information_state_not_available_hint">מדינה (לא זמין)</string>
@@ -480,8 +584,6 @@ Language: he_IL
     <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
     <string name="editor_uploading_draft">אנחנו מעלים את הטיוטה שלך</string>
     <string name="post_uploading_draft">מעלה את הטיוטה</string>
-    <string name="post_list_author_everyone">כולם</string>
-    <string name="post_list_author_me">אני</string>
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
     <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
@@ -646,6 +748,8 @@ Language: he_IL
     <string name="stats_no_data_for_period">אין נתונים לתקופה זו</string>
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
     <string name="stats_cannot_be_started">אין לנו אפשרות לפתוח את הנתונים הסטטיסטיים כעת. יש לנסות שוב מאוחר יותר</string>
+    <string name="gif_picker_endless_scroll_network_error">הטעינה של חלק מפרטי המדיה נכשלה עקב שגיאת רשת.</string>
+    <string name="gif_picker_initial_empty_text">לחפש קובצי GIF שניתן להוסיף לספריית המדיה שלך!</string>
     <string name="stats_author_views_label">צפיות</string>
     <string name="stats_author_label">מחבר</string>
     <string name="stats_authors">מחברים</string>
@@ -742,7 +846,6 @@ Language: he_IL
     <string name="pages_delete_permanently">מחק לצמיתות</string>
     <string name="pages_move_to_trash">העברה לפח</string>
     <string name="pages_move_to_draft">העברה לטיוטות</string>
-    <string name="pages_publish_now">לפרסם כעת</string>
     <string name="pages_set_parent">הגדרת הורה</string>
     <string name="pages_view">הצגה</string>
     <string name="pages_trashed">הועבר לפח</string>
@@ -828,7 +931,6 @@ Language: he_IL
     <string name="reader_empty_posts_liked_title">עדיין אין לייקים</string>
     <string name="reader_empty_followed_blogs_button_followed">מעבר לבא</string>
     <string name="reader_empty_followed_blogs_button_discover">עיון באתרים</string>
-    <string name="reader_empty_followed_blogs_description">עדיין לא מתבצע מעקב אחר אתרים. למה לא לעקוב אחר אתר כבר עכשיו?</string>
     <string name="reader_empty_followed_blogs_title">לא מתבצע מעקב אחר אתרים</string>
     <string name="notifications_empty_likes">עדיין אין לייקים</string>
     <string name="notifications_empty_followers">עדיין אין עוקבים</string>
@@ -996,7 +1098,6 @@ Language: he_IL
     <string name="menu_html_mode_done_snackbar">הוחלף לעורך HTML</string>
     <string name="menu_html_mode">עורך HTML</string>
     <string name="menu_preview">תצוגה מקדימה</string>
-    <string name="menu_publish_now">לפרסם כעת</string>
     <string name="menu_save_as_draft">לשמור כטיוטה</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1059,10 +1160,6 @@ Language: he_IL
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">נותרו עוד %1$d עמודים ועוד %2$d מתוך %3$d קבצים</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">נותרו עוד פוסט אחד ועוד %1$d מתוך %2$d קבצים</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">נותרו עוד עמוד אחד ועוד %1$d מתוך %2$d קבצים</string>
-    <string name="dialog_confirm_publish_yes">לפרסם כעת</string>
-    <string name="dialog_confirm_publish_message_page">עמוד זה יפורסם מייד.</string>
-    <string name="dialog_confirm_publish_message_post">פוסט זה יפורסם מייד.</string>
-    <string name="dialog_confirm_publish_title">הכול מוכן לפרסום?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d פוסטים / עמודים לא הועלו</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d עמודים לא הועלו</string>
     <string name="media_file_page_singular_only_not_uploaded">עמוד אחד לא הועלה</string>
@@ -1080,7 +1177,6 @@ Language: he_IL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">פוסט אחד עם קובץ אחד לא הועלה</string>
     <string name="untitled_in_parentheses">(ללא כותרת)</string>
     <string name="at_username">‎@‎%s‎</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="notification_site_creation_created">יש להקיש להמשך.</string>
@@ -1286,7 +1382,6 @@ Language: he_IL
     <string name="media_edit_filename_caption">שם קובץ</string>
     <string name="media_edit_url_caption">כתובת אתר</string>
     <string name="media_edit_alttext_text">טקסט חלופי</string>
-    <string name="copy">העתק</string>
     <string name="connect_site">חיבור האתר</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">הבהוב</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">מכשיר רוטט</string>
@@ -1394,7 +1489,6 @@ Language: he_IL
     <string name="post_settings_not_set">לא הוגדר</string>
     <string name="post_settings_more_options">אפשרויות נוספות</string>
     <string name="post_settings_categories_and_tags">קטגוריות ותגיות</string>
-    <string name="post_settings_status">מצב</string>
     <string name="notifications_tab_title_all">הכל</string>
     <string name="top_level_category_name">קטגוריה עליונה</string>
     <string name="category_parent">קטגוריית אב (אופציונלי):</string>
@@ -1518,7 +1612,6 @@ Language: he_IL
     <string name="media_upload_state_deleting">מוחק</string>
     <string name="media_upload_state_uploading">מעלה</string>
     <string name="media_upload_state_queued">בתור</string>
-    <string name="keep_editing">המשך עריכה</string>
     <string name="image_quality">איכות תמונה</string>
     <string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
     <string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
@@ -1546,7 +1639,7 @@ Language: he_IL
     <string name="pending_draft_one_day_2">שמת לב ש-\'%1$s\' עדיין טיוטה בלבד? קדימה, לפרסם!</string>
     <string name="pending_draft_one_day_1">אתמול שמרת את \'%1$s\' בתור טיוטה. לא לשכוח לפרסם אותה!</string>
     <string name="reader_photo_by">צולם על ידי %s</string>
-    <string name="reader_label_visit">אל האתר</string>
+    <string name="reader_label_visit">לבקר באתר</string>
     <string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
     <string name="reader_err_get_post_not_authorized_signin">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה.</string>
@@ -1884,6 +1977,7 @@ Language: he_IL
     <string name="notifications_no_search_results">אף אתר אינו תואם \'%s\'</string>
     <string name="search_sites">חיפוש אתרים</string>
     <string name="notifications_empty_view_reader">מעבר אל Reader</string>
+    <string name="notifications_empty_action_followers_likes">לבלוט בשטח: להוסיף תגובה על פוסטים שקראת</string>
     <string name="notifications_empty_action_comments">הצטרפות לדיון: הוספת תגובה על פוסטים בבלוגים תחת מעקב שלך</string>
     <string name="notifications_empty_action_unread">להכניס קצת עניין בדיון: כתיבת פוסט חדש</string>
     <string name="notifications_empty_action_all">תהיה פעיל! תגיב לפוסטים באתרים אחריהם אתה עוקב.</string>
@@ -2179,7 +2273,6 @@ Language: he_IL
     <string name="httppassword">סיסמה</string>
     <string name="httpuser">שם משתמש</string>
     <string name="error_media_upload">ארעה שגיאה במהלך העלאת הקובץ.</string>
-    <string name="publish_date">פרסם</string>
     <string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
     <string name="log_in">להתחבר</string>
     <string name="username">שם משתמש</string>
@@ -2216,6 +2309,7 @@ Language: he_IL
     <string name="no">לא</string>
     <string name="yes">כן</string>
     <string name="notification_settings">הגדרות התראות</string>
+    <string name="publish_now">לפרסם כעת</string>
     <string name="reply">תגובה</string>
     <string name="on">ב</string>
     <string name="preview">תצוגה מקדימה</string>
@@ -2224,8 +2318,4 @@ Language: he_IL
     <string name="save">שמור</string>
     <string name="cancel">בטל</string>
     <string name="error">שגיאה</string>
-    <string-array name="app_theme_entries">
-        <item>‎@string/app_theme_light</item>
-        <item>‎@string/app_theme_dark</item>
-    </string-array>
 </resources>

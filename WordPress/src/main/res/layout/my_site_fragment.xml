@@ -10,7 +10,9 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height">
+        android:layout_marginTop="@dimen/toolbar_height"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/my_site_bottom_spacing">
 
         <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
         <RelativeLayout
@@ -64,7 +66,7 @@
                             android:foreground="?attr/selectableItemBackgroundBorderless"
                             android:gravity="center_vertical"
                             tools:ignore="UnusedAttribute"
-                            tools:src="@drawable/bg_rectangle_neutral_10_globe_32dp" />
+                            tools:src="@drawable/bg_rectangle_placeholder_globe_32dp" />
                     </com.google.android.material.card.MaterialCardView>
 
                 </com.google.android.material.card.MaterialCardView>
@@ -110,10 +112,10 @@
                     android:id="@+id/switch_site"
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/margin_medium"
-                    android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:layout_marginBottom="@dimen/margin_extra_medium_large"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
@@ -309,8 +311,9 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/row_register_domain"
-                            style="@style/MySiteListRowLayout">
+                            style="@style/MySiteListRowLayout"
+                            android:foreground="@null"
+                            tools:ignore="UnusedAttribute">
 
                             <ImageView
                                 android:id="@+id/my_site_register_domain_icon"

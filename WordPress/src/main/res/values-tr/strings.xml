@@ -1,13 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-04-13 20:16:04+0000
-Plural-Forms: nplurals=2; plural=(n > 1);
-Generator: GlotPress/2.4.0-alpha
+Translation-Revision-Date: 2020-07-04 23:12:45+0000
+Plural-Forms: nplurals=2; plural=n > 1;
+Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
+    <string name="gutenberg_native_go_back">Geri dön</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Sayfa yazarı</string>
+    <string name="menu_content_info">İçerik yapısı</string>
+    <string name="everyone">Herkes</string>
+    <string name="me">Ben</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için çok çalışıyoruz. Bu arada, bu bloğu cihazınızın web tarayıcısını kullanarak da düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Bloğu tarayıcıda düzenle</string>
+    <string name="gutenberg_native_dismiss">Kapat</string>
+    <string name="prepublishing_nudges_visibility_password">Parola korumalı</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
+    <string name="prepublishing_tags_description">Etiketler okuyuculara bir yazının ne hakkında olduğunu söylemeye yardımcı olur.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Yayınla</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Etiketleri ekle</string>
+    <string name="prepublishing_nudges_back_button">Geri</string>
+    <string name="prepublishing_nudges_home_save_button">Şimdi kaydet</string>
+    <string name="prepublishing_nudges_home_submit_button">Şimdi gönder</string>
+    <string name="prepublishing_nudges_home_schedule_button">Şimdi zamanla</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Şuraya yayımlanıyor:</string>
+    <string name="prepublishing_nudges_tags_action">Etiketler</string>
+    <string name="prepublishing_nudges_publish_action">Yayımlama tarihi</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">İptal</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Taslağa taşı</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Çöpe atılan yazılar düzenlenemez. Üzerinde çalışabilmek için bu yazının durumunu \"taslak\" olarak değiştirmek ister misiniz?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Yazı taslaklara taşınsın mı?</string>
+    <string name="reader_label_choose_your_interests">İlgi alanlarınızı seçin</string>
+    <string name="reader_label_discover_follow_tags">Sevdiğiniz etiketleri keşfedin ve takip edin</string>
+    <string name="reader_choose_interests_content_description">İlgi alanlarınızı seçin</string>
+    <string name="reader_btn_done">Tamamlandı</string>
+    <string name="reader_btn_select_few_interests">Devam etmek için birkaç tane seçin</string>
+    <string name="post_status_post_published">Yayımlandı</string>
+    <string name="post_status_post_trashed">Çöpe taşındı</string>
+    <string name="post_status_post_scheduled">Zamanlandı</string>
+    <string name="publish_date">Yayımlama tarihi</string>
+    <string name="ccpa_privacy_notice_read">CCPA gizlilik notunu okuyun</string>
+    <string name="ccpa_privacy_notice_caption">California Tüketici Gizlilik Yasası (\"CCPA\"), California sakinlerine topladığımız ve paylaştığımız kişisel bilgi kategorileri, bu kişisel bilgileri nereden aldığımız ve bunları nasıl ve neden kullandığımız hakkında bazı ek bilgiler sağlamamızı gerektirir.</string>
+    <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
+    <string name="status_and_visibility">Durum ve görünürlük</string>
+    <string name="update_now">Şimdi güncelle</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">%s ögesini kaldır</string>
+    <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
+    <string name="gutenberg_native_move_s_up">%s Blokunu Yukarı Taşı</string>
+    <string name="gutenberg_native_move_s_right">%s Blokunu Sağa Taşı</string>
+    <string name="gutenberg_native_move_s_left">%s Sola Taşı</string>
+    <string name="gutenberg_native_move_s_down">%s Blokunu Aşağı Taşı</string>
+    <string name="gutenberg_native_try_a_starter_layout">Başlangıç düzenini deneyin</string>
+    <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Uygun seçenekleri içeren Eylem Sayfasını açmak için iki kez dokunun</string>
+    <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
+    <string name="pages_set_as_posts_page">Yazılar Sayfası Yap</string>
+    <string name="pages_set_as_homepage">Ana Sayfa olarak ayarla</string>
+    <string name="suggestion_no_matching_users">“Eşleşen kullanıcı yok.”</string>
+    <string name="suggestion_invalid_user">“%s geçerli bir kullanıcı değil”</string>
+    <string name="site_settings_select_page">Sayfa seç</string>
+    <string name="site_settings_posts_page">Yazılar sayfası</string>
+    <string name="site_settings_static_homepage">Sabit ana sayfa</string>
+    <string name="site_settings_classic_blog">Klasik blog</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
+    <string name="site_settings_failed_update_homepage_settings">Ana sayfa ayarları güncellenemedi, internet bağlantınızı kontrol edin</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Sayfalar yüklenmeden önce ana sayfa ayarları kaydedilemez</string>
+    <string name="site_settings_failed_to_save_homepage_settings">Ana sayfa ayarları kaydedilemiyor</string>
+    <string name="site_settings_accept_homepage">Kabul et</string>
+    <string name="site_settings_failed_to_load_pages">Sayfalar yüklemesi başarısız</string>
+    <string name="site_settings_homepage_settings_description">En son gönderilerinizi görüntüleyen bir ana sayfa (klasik blog) veya sabit/statik bir sayfa seçin.</string>
+    <string name="site_settings_homepage_settings">Ana sayfa ayarları</string>
+    <string name="site_settings_homepage">Ana sayfa</string>
+    <string name="page_posts_page_update_failed">Gönderiler Sayfası güncellenemedi</string>
+    <string name="page_posts_page_successfully_updated">Gönderiler Sayfası başarıyla güncellendi</string>
+    <string name="page_homepage_update_failed">Ana Sayfa güncellenemedi</string>
+    <string name="page_homepage_successfully_updated">Ana Sayfa başarıyla güncellendi</string>
+    <string name="page_cannot_set_posts_page">Gönderiler sayfasını ayarlamak için Site Ayarları’nda “Statik Ana Sayfa” seçeneğini belirleyin</string>
+    <string name="page_cannot_set_homepage">Ana sayfa ayarlamak için Site Ayarları’nda “Statik Ana Sayfa” seçeneğini belirleyin</string>
+    <string name="gutenberg_native_welcome_to_our_new_blog">Yeni blogumuza hoşgeldiniz</string>
+    <string name="gutenberg_native_select_a_color">Bir renk seçin</string>
+    <string name="gutenberg_native_double_tap_to_go_to_color_settings">Renk ayarlarına gitmek için çift dokunun</string>
+    <string name="reader_empty_followed_blogs_description">Siteleri takip ettiğinizde, içeriklerini burada görürsünüz</string>
+    <string name="feature_announcement_find_out_mode">Daha fazlasını bul</string>
+    <string name="feature_announcement_dialog_label">WordPress\'de neler yeni</string>
+    <string name="insert_label_with_count">%d ekle</string>
+    <string name="crop">kırp</string>
+    <string name="error_failed_to_load_into_file">Dosyaya yüklenemedi, lütfen tekrar deneyin.</string>
+    <string name="preview_image_thumbnail_description">Önizleme görseli küçük resmi</string>
+    <string name="photo_picker_use_media">Bu ortamı kullan</string>
+    <string name="photo_picker_use_video">Bu videoyu kullan</string>
+    <string name="photo_picker_photo_or_video_title">Ortam seç</string>
+    <string name="photo_picker_video_title">Video seç</string>
+    <string name="site_picker_ask_site_select">Site seçilemedi. Lütfen yeniden deneyin.</string>
+    <string name="sitepicker_continue_flow">Devam</string>
+    <string name="reader_reblog_error">Yeniden bloglama başarısız</string>
+    <string name="reader_no_site_to_reblog_action">Siteleri yönet</string>
+    <string name="reader_no_site_to_reblog_detail">Bir WordPress.com sitesi oluşturduktan sonra, beğendiğiniz içeriği kendi sitenize yeniden bloglayabilirsiniz.</string>
+    <string name="reader_no_site_to_reblog_title">Kullanılabilir WordPress.com sitesi yok</string>
+    <string name="whats_new_in_version_title">Neler yeni</string>
+    <string name="comment_q_action_copied_url">Bağlantı kopyalandı</string>
+    <string name="copy_link_address">Bağlantıyı kopyala</string>
+    <string name="comment_share_link_via">Paylaş</string>
+    <string name="comment_toast_err_share_intent">Paylaşılamadı</string>
+    <string name="button_insert">Ekle</string>
+    <string name="continue_label">Devam</string>
+    <string name="copy_text">Kopyala</string>
+    <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
+    <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
+    <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
+    <string name="gutenberg_native_blog">Blog</string>
+    <string name="new_site_creation_creating_site_loading_4">Pano oluşturma</string>
+    <string name="new_site_creation_creating_site_loading_3">Tema ayarlama</string>
+    <string name="new_site_creation_creating_site_loading_2">Site özellikleri ekleme</string>
+    <string name="new_site_creation_creating_site_loading_1">Site URL\'sini alma</string>
+    <string name="new_site_creation_creating_site_loading_subtitle">Siteniz kısa süre içinde hazır olacak</string>
+    <string name="new_site_creation_creating_site_loading_title">Tebrikler!\nNeredeyse bitti</string>
+    <string name="pages_and_posts_cancel_auto_upload">Yüklemeyi iptal et</string>
+    <string name="gif_list_search_returned_unknown_error">İstek işlenirken bir sorun oluştu</string>
+    <string name="gif_powered_by_tenor">Destekleyen: Tenor</string>
+    <string name="gif_picker_search_hint">Tenor\'da Ara</string>
+    <string name="photo_picker_gif">Tenor\'dan Seç</string>
+    <string name="weekday_saturday">Cumartesi</string>
+    <string name="weekday_friday">Cuma</string>
+    <string name="weekday_thursday">Perşembe</string>
+    <string name="weekday_wednesday">Çarşamba</string>
+    <string name="weekday_tuesday">Salı</string>
+    <string name="weekday_monday">Pazartesi</string>
+    <string name="weekday_sunday">Pazar</string>
+    <string name="media_accessing_failed">Özel bir sitenin içeriğine erişilemedi. Bazı ortamlar kullanılamayabilir</string>
+    <string name="media_accessing_progress">Özel bir sitenin içeriğine erişiliyor.</string>
     <string name="error_failed_to_crop_and_save_image">Görsel kırpılamadı ve kaydedilemedi, lütfen tekrar deneyin.</string>
-    <string name="failed_to_insert_image_tap_to_retry">Görsel ekleme başarısız.\nYeniden denemek için dokunun.</string>
+    <string name="failed_to_load_image_tap_to_retry">Görsel yükleme başarısız.\nYeniden denemek için dokunun.</string>
     <string name="preview_image_description">Görseli ön izle</string>
     <string name="error_unknown_page_type">Bilinmeyen sayfa formatı</string>
     <string name="error_page_not_submitted">Bu eylemi tamamlayamadık ve bu sayfayı inceleme için göndermedik.</string>
@@ -31,7 +162,6 @@ Language: tr
     <string name="page_uploading">Sayfa yükleniyor</string>
     <string name="error_publish_page_no_network">Cihaz çevrimdışı. Sayfalar yerel olarak kaydedildi.</string>
     <string name="local_page_autosave_revision_available">Bu sayfada kaydedilmeyen değişiklikler yaptınız</string>
-    <string name="local_page_is_conflicted">\@string/local_post_is_conflicted</string>
     <string name="editor_uploading_page">Sayfanız yükleniyor</string>
     <string name="editor_page_saved_locally_failed_media">Sayfa, ortam dosyası yüklemelerinde başarısız oldu ve yerel olarak kaydedildi</string>
     <string name="editor_page_saved_locally">Sayfa cihaz üzerinde kaydedildi</string>
@@ -64,32 +194,22 @@ Language: tr
     <string name="gutenberg_native_portfolio">Portföy</string>
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
-    <string name="gutenberg_native_minimum_height_in_pixels">Piksel cinsinden minimum yükseklik</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
-    <string name="gutenberg_native_link_settings">Bağlantı Ayarları</string>
+    <string name="gutenberg_native_s_settings">%s ayarları</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
-    <string name="gutenberg_native_let_s_build_something_together_e349ef7a">Hadi birlikte bir şeyler oluşturalım.</string>
-    <string name="gutenberg_native_let_s_build_something_together_93c12eb5">Hadi Birlikte Bir Şeyler Oluşturalım</string>
-    <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Hadi birlikte bir şeyler oluşturalım.</string>
+    <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, gerçekten kim olduğumuzu gösteren becerilerimizden daha çok kendi seçimlerimizdir.</string>
     <string name="gutenberg_native_inspiration">İlham</string>
-    <string name="gutenberg_native_get_in_touch_dbfe07f2">İletişime Geçin!</string>
-    <string name="gutenberg_native_get_in_touch_c53e1927">İletişime geçin!</string>
     <string name="gutenberg_native_get_in_touch">İletişime Geçin</string>
     <string name="gutenberg_native_excerpt_length_words">Alıntı uzunluğu (sözcük)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Bana e-posta gönderin: &lt;a href=\"mailto:mail@example.com\">eposta@ornek.com&lt;/a></string>
-    <string name="gutenberg_native_edit_cover_media">Kapak ortamını düzenle</string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Bitti diye ağlama, gerçekleştiği için gülümse.</string>
     <string name="gutenberg_native_customize">ÖZELLEŞTİR</string>
     <string name="gutenberg_native_city_10100">Şehir, 10100</string>
-    <string name="gutenberg_native_button_link_url">Düğme Bağlantı URL\'si</string>
-    <string name="gutenberg_native_button_color_settings_are_coming_soon">Düğme rengi ayarları çok yakında kullanıma sunulacak.</string>
-    <string name="gutenberg_native_border_settings">Kenarlık Ayarları</string>
-    <string name="gutenberg_native_border_radius">Kenarlık Yarıçapı</string>
-    <string name="gutenberg_native_background_opacity">Arka Plan Opaklığı</string>
     <string name="gutenberg_native_add_paragraph_block">Paragraf bloku ekle</string>
     <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Sunduğunuz hizmetlerin kısa bir tanımı.</string>
     <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Kişisel geçmişinizi, önemli başarılarınızı veya ilginç bir gerçeği içeren kısa bir biyografi.</string>
@@ -205,7 +325,7 @@ Language: tr
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu gönderiyi web’de de düzenleyebilirsiniz.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz. Bu arada, bu yazıyı webde de düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_ungroup">Gruplamayı Kaldır</string>
     <string name="gutenberg_native_translate">Çevir</string>
     <string name="gutenberg_native_title">Başlık:</string>
@@ -223,7 +343,6 @@ Language: tr
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
-    <string name="gutenberg_native_remove_block_at_row_s">%s. satırdaki bloğu kaldır</string>
     <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
     <string name="gutenberg_native_problem_displaying_block">Blok görüntülenirken bir sorun oluştu</string>
@@ -239,9 +358,7 @@ Language: tr
     <string name="gutenberg_native_my_post_publish_panel">Yayımlama sonrası panelim</string>
     <string name="gutenberg_native_my_document_setting_panel">Belge ayarları panelim</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
-    <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
-    <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
     <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
@@ -254,7 +371,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_to_select_an_image">Bir görsel seçmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select_a_video">Bir video seçmek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_select">Seçmek için çift dokunun</string>
-    <string name="gutenberg_native_double_tap_to_remove_the_block">Bloğu kaldırmak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change">Son değişikliği yinelemek için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up">Bloğu yukarı taşımak için çift dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down">Bloğu aşağı taşımak için çift dokunun</string>
@@ -264,7 +380,6 @@ Language: tr
     <string name="gutenberg_native_double_tap_and_hold_to_edit">Düzenlemek için çift dokunup basılı tutun</string>
     <string name="gutenberg_native_current_value_is_s">Geçerli değer: %s</string>
     <string name="gutenberg_native_content">İçerik…</string>
-    <string name="gutenberg_native_clear_all_settings">Tüm ayarları temizle</string>
     <string name="gutenberg_native_choose_from_device">Cihazdan seç</string>
     <string name="gutenberg_native_annotations_sidebar">Ek Açıklamalar Kenar Çubuğu</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin.</string>
@@ -288,6 +403,8 @@ Language: tr
     <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
     <string name="notifications_tab_dialog_master_status_off">Bu site için bildirimler</string>
     <string name="notifications_tab_dialog_master_status_on">Bu site için bildirimler</string>
+    <string name="dialog_gutenberg_informative_description_page">Şimdi yeni sayfalar için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
+    <string name="dialog_gutenberg_informative_description_post">Şimdi yeni göçnderiler için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
     <string name="pick_media">Görsel veya video ekle.</string>
     <string name="error_post_not_submitted_retrying">Bu yazıyı inceleme için gönderemedik ama daha sonra tekrar deneyeceğiz.</string>
     <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
@@ -431,10 +548,6 @@ Language: tr
     <string name="stats_widget_all_time_title">Tüm zamanlar</string>
     <string name="stats_widget_views_title">Bu Haftadan Görünümler</string>
     <string name="stats_widget_add">Pencere öğesi ekle</string>
-    <string name="dialog_confirm_update_yes">Şimdi güncelle</string>
-    <string name="dialog_confirm_update_message_page">Yayınlanan bu sayfa hemen güncellenecek.</string>
-    <string name="dialog_confirm_update_message_post">Yayınlanan bu gönderi hemen güncellenecek.</string>
-    <string name="dialog_confirm_update_title">Güncellemeye Hazır mısınız?</string>
     <string name="plugin_fetching_error_after_at">Eklenti ayrıntılarının yenilenmesi normalden daha uzun sürer. Lütfen daha sonra tekrar kontrol edin.</string>
     <string name="plugin_install_site_ineligible_default_error">Bir alan adı kaydettirdiyseniz lütfen kayıt tamamlanana kadar bekleyin ve ardından yeniden deneyin.\n\nAksi takdirde, bir şeyler yanlış gitmiş olabilir ve eklenti özelliği bu site için kullanılamayabilir.</string>
     <string name="domain_contact_information_state_not_available_hint">Eyalet (mevcut değil)</string>
@@ -481,8 +594,6 @@ Language: tr
     <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
     <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
     <string name="post_list_tab_drafts">Taslaklar</string>
-    <string name="post_list_author_everyone">Herkes</string>
-    <string name="post_list_author_me">Ben</string>
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. Yönelimleri aşağıya ekleyin ve düzenleyin.</string>
@@ -648,6 +759,9 @@ Language: tr
     <string name="stats_no_data_for_period">Bu dönem için veri yok</string>
     <string name="preference_strip_image_location">Ortam dosyasından konum bilgisini kaldır</string>
     <string name="stats_cannot_be_started">Şu anda istatistikleri açamıyoruz. Lütfen daha sonra tekrar deneyiniz.</string>
+    <string name="gif_picker_endless_scroll_network_error">Ağ hatası nedeniyle bazı ortam dosyaları yüklenemedi.</string>
+    <string name="gif_picker_empty_search_list">Aramanızla eşleşen ortam yok</string>
+    <string name="gif_picker_initial_empty_text">Medya Kitaplığınıza eklemek için GIF\'ler arayın!</string>
     <string name="stats_author_views_label">Görüntülemeler</string>
     <string name="stats_author_label">Yazar</string>
     <string name="stats_authors">Yazarlar</string>
@@ -744,7 +858,6 @@ Language: tr
     <string name="pages_delete_permanently">Kalıcı olarak sil</string>
     <string name="pages_move_to_trash">Çöpe taşı</string>
     <string name="pages_move_to_draft">Taslağa taşı</string>
-    <string name="pages_publish_now">Şimdi yayınla</string>
     <string name="pages_set_parent">Ebeveyn belirle</string>
     <string name="pages_view">Görüntüle</string>
     <string name="pages_trashed">Çöpe atıldı</string>
@@ -830,7 +943,6 @@ Language: tr
     <string name="reader_empty_posts_liked_title">Henüz herhangi bir şey beğenilmedi</string>
     <string name="reader_empty_followed_blogs_button_followed">Takip edilenlere git</string>
     <string name="reader_empty_followed_blogs_button_discover">Siteleri keşfet</string>
-    <string name="reader_empty_followed_blogs_description">Henüz herhangi bir siteyi takip etmiyorsunuz. Hemen bir tanesini takip etmeye ne dersiniz?</string>
     <string name="reader_empty_followed_blogs_title">Takip edilen site yok</string>
     <string name="notifications_empty_likes">Henüz beğeni yok</string>
     <string name="notifications_empty_followers">Henüz takipçi yok</string>
@@ -998,7 +1110,6 @@ Language: tr
     <string name="menu_html_mode_done_snackbar">HTML moduna geçildi</string>
     <string name="menu_html_mode">HTML modu</string>
     <string name="menu_preview">Önizleme</string>
-    <string name="menu_publish_now">Şimdi yayınla</string>
     <string name="menu_save_as_draft">Taslak olarak kaydet</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1061,10 +1172,6 @@ Language: tr
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d sayfa ve %2$d / %3$d dosya kaldı</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 yazı ve %1$d / %2$d dosya kaldı</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 sayfa ve %1$d / %2$d dosya kaldı</string>
-    <string name="dialog_confirm_publish_yes">Şimdi yayınla</string>
-    <string name="dialog_confirm_publish_message_page">Bu sayfa hemen yayınlanacak.</string>
-    <string name="dialog_confirm_publish_message_post">Bu yazı hemen yayınlanacak.</string>
-    <string name="dialog_confirm_publish_title">Yayınlanmaya hazır mı?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d yazı/sayfa karşıya yüklenmedi</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sayfa karşıya yüklenmedi</string>
     <string name="media_file_page_singular_only_not_uploaded">1 sayfa karşıya yüklenmedi</string>
@@ -1082,7 +1189,6 @@ Language: tr
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 dosya ile 1 yazı karşıya yüklenmedi</string>
     <string name="untitled_in_parentheses">(İsimsiz)</string>
     <string name="at_username">\@%s</string>
-    <string name="author_name_blog_name">%1$s, %2$s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Site oluştur</string>
     <string name="notification_site_creation_created">Devam etmek için dokunun.</string>
@@ -1288,7 +1394,6 @@ Language: tr
     <string name="media_edit_filename_caption">Dosya adı</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alternatif metin</string>
-    <string name="copy">Kopyala</string>
     <string name="connect_site">Site bağla</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Işığı yakıp söndür</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Cihazı titreştir</string>
@@ -1396,7 +1501,6 @@ Language: tr
     <string name="post_settings_not_set">Belirlenmemiş</string>
     <string name="post_settings_more_options">Daha fazla seçenek</string>
     <string name="post_settings_categories_and_tags">Kategoriler ve etiketler</string>
-    <string name="post_settings_status">Durum</string>
     <string name="notifications_tab_title_all">Tümü</string>
     <string name="top_level_category_name">Üst seviye</string>
     <string name="category_parent">Üst kategori (tercihe bağlı):</string>
@@ -1520,7 +1624,6 @@ Language: tr
     <string name="media_upload_state_deleting">Siliniyor</string>
     <string name="media_upload_state_uploading">Yükleniyor</string>
     <string name="media_upload_state_queued">Sırada</string>
-    <string name="keep_editing">Düzenlemeye devam et</string>
     <string name="image_quality">Görsel kalitesi</string>
     <string name="error_all_media_upload_canceled">Tüm ortam yüklemeleri bilimeyen bir hata sebebiyle iptal edildi. Lütfen tekrar yüklemeyi deneyin</string>
     <string name="error_unknown_post_type">Bilinmeyen yazı biçimi</string>
@@ -1548,7 +1651,7 @@ Language: tr
     <string name="pending_draft_one_day_2">Biliyor musunuz \'%1$s\'  hala bir taslak? Yayınlayın gitsin!</string>
     <string name="pending_draft_one_day_1">\'%1$s\' taslağını dün kaydettiniz. Yayınlamayı unutmayın!</string>
     <string name="reader_photo_by">%s tarafından çekilmiş fotoğraf</string>
-    <string name="reader_label_visit">Ziyaret et</string>
+    <string name="reader_label_visit">Siteyi ziyaret et</string>
     <string name="swipe_for_more">Daha fazlası için parmağınızı kaydırın</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin ya da üst eylem tuşu ile bir tarayıcı açmayı deneyin.</string>
     <string name="reader_err_get_post_not_authorized_signin">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin.</string>
@@ -2148,6 +2251,7 @@ Language: tr
     <string name="reader_btn_unfollow">Takipte</string>
     <string name="reader_btn_follow">Takip et</string>
     <string name="reader_btn_share">Paylaş</string>
+    <string name="reader_view_reblog">Yeniden blogla</string>
     <string name="reader_untitled_post">(Başlıksız)</string>
     <string name="comments_empty_list">Henüz yorum yok</string>
     <string name="empty_list_default">Bu liste boş</string>
@@ -2182,7 +2286,6 @@ Language: tr
     <string name="httppassword">HTTP parolası</string>
     <string name="httpuser">HTTP kullanıcı adı</string>
     <string name="error_media_upload">Ortam dosyası yüklenirken bir hata oluştu</string>
-    <string name="publish_date">Yayımla</string>
     <string name="incorrect_credentials">Geçersiz kullanıcı adı veya parola.</string>
     <string name="log_in">Giriş yap</string>
     <string name="username">Kullanıcı adı</string>
@@ -2219,6 +2322,7 @@ Language: tr
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
     <string name="notification_settings">Bildirim ayarları</string>
+    <string name="publish_now">Şimdi yayınla</string>
     <string name="reply">Cevapla</string>
     <string name="on">üstünde</string>
     <string name="preview">Önizleme</string>
@@ -2227,8 +2331,4 @@ Language: tr
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="error">Hata</string>
-    <string-array name="app_theme_entries">
-        <item>\@string/app_theme_light</item>
-        <item>\@string/app_theme_dark</item>
-    </string-array>
 </resources>

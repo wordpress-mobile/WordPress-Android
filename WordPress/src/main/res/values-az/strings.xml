@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-12-08 01:00:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/2.4.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: az
 -->
 <resources>
@@ -249,7 +249,6 @@ Language: az
     <string name="httpuser">HTTP istifadəçi adı</string>
     <string name="httppassword">HTTP parolu</string>
     <string name="error_media_upload">Media faylının yüklənməsi zamanı xəta baş verdi.</string>
-    <string name="publish_date">Dərc edilmiş</string>
     <string name="incorrect_credentials">Yanlış istifadəçi adı və ya parol</string>
     <string name="password">Parol</string>
     <string name="username">İstifadəçi adı</string>

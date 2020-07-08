@@ -6,6 +6,7 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.os.ConfigurationCompat
@@ -23,6 +24,13 @@ fun Context.getColorFromAttribute(@AttrRes attribute: Int) =
         TypedValue().let {
             theme.resolveAttribute(attribute, it, true)
             ContextCompat.getColor(this, it.resourceId)
+        }
+
+@DrawableRes
+fun Context.getDrawableResIdFromAttribute(@AttrRes attribute: Int) =
+        TypedValue().let {
+            theme.resolveAttribute(attribute, it, true)
+            it.resourceId
         }
 
 fun Context.getColorStateListFromAttribute(@AttrRes attribute: Int): ColorStateList =

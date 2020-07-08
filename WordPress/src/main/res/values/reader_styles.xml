@@ -10,6 +10,15 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="ReaderRecyclerView">
+        <item name="android:background">@color/reader_post_list_background</item>
+    </style>
+
+    <style name="ReaderCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/reader_card_elevation</item>
+        <item name="cardCornerRadius">0dp</item>
+    </style>
+
     <!-- TextViews -->
     <style name="ReaderTextView" parent="android:Widget.TextView">
         <item name="android:textColorLink">?attr/colorPrimary</item>
@@ -17,25 +26,38 @@
 
     <style name="ReaderTextView.Label" parent="ReaderTextView">
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Label.Large" parent="ReaderTextView.Label">
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="textColor">?attr/textColor</item>
+    </style>
+
+    <style name="ReaderTextView.Site.Title" parent="ReaderTextView">
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title" parent="ReaderTextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
         <item name="android:textStyle">bold</item>
         <item name="android:maxLines">3</item>
         <item name="android:fontFamily">serif</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
     </style>
 
     <style name="ReaderTextView.Post.Title.Detail" parent="ReaderTextView.Post.Title">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:maxLines">5</item>
+        <item name="textColor">?attr/textColor</item>
     </style>
 
     <style name="ReaderTextView.Post.Excerpt" parent="ReaderTextView">
@@ -46,7 +68,26 @@
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:maxLines">3</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ReaderTextView.XPost.SubTitle" parent="ReaderTextView">
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:minHeight">@dimen/avatar_sz_extra_small</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
         <item name="android:fontFamily">serif</item>
+    </style>
+
+    <style name="ReaderTextView.RemovedPost.Title" parent="ReaderTextView">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:alpha">@dimen/material_emphasis_high_type</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="ReaderTextView.MetaHeader">
@@ -72,6 +113,36 @@
         <item name="android:textColor">?attr/wpColorText</item>
     </style>
 
+    <style name="ReaderTextView.Interests.Title" parent="ReaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_medium_large</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:gravity">start</item>
+        <item name="android:includeFontPadding">false</item>>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="ReaderTextView.Interests.SubTitle" parent="ReaderTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:gravity">start</item>
+        <item name="android:includeFontPadding">false</item>>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">?attr/textAppearanceOverline</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="WordPress.ReaderPrimaryButton" parent="WordPress.Button.Primary">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <!-- EditTexts -->
 
     <style name="ReaderEditText">
@@ -85,10 +156,6 @@
 
     <!-- images -->
     <style name="ReaderImageView" />
-    <style name="ReaderImageView.Featured.CardView" parent="ReaderImageView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/reader_featured_image_height_cardview</item>
-    </style>
     <style name="ReaderImageView.Avatar" parent="ReaderImageView">
         <item name="android:layout_width">@dimen/avatar_sz_medium</item>
         <item name="android:layout_height">@dimen/avatar_sz_medium</item>
@@ -104,4 +171,21 @@
 
     <!-- progress bars -->
     <style name="ReaderProgressBar" parent="Widget.AppCompat.ProgressBar" />
+
+    <!-- chips -->
+    <style name="ReaderInterestFilterChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
+        <item name="android:textColor">@color/on_surface_surface_selector</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="chipBackgroundColor">@color/on_surface_disabled_primary_selector</item>
+        <item name="chipStartPadding">@dimen/margin_medium_large</item>
+        <item name="chipEndPadding">@dimen/margin_medium_large</item>
+        <item name="chipMinHeight">@dimen/reader_chip_height</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipCornerRadius">@dimen/reader_chip_radius</item>
+    </style>
+
 </resources>

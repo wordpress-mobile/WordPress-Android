@@ -20,9 +20,14 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorControlActivated">@color/primary_30</item>
 
+        <item name="toolbarIconNormalColor">@color/grey_darken_20</item>
+        <item name="toolbarIconHighlightColor">@color/almost_black</item>
+        <item name="toolbarIconDisabledColor">@color/grey_lighten_20</item>
+
         <item name="toolbarStyle">@style/WordPress.ToolBar</item>
         <item name="tabStyle">@style/WordPress.TabLayout</item>
         <item name="appBarLayoutStyle">@style/WordPress.AppBarLayout</item>
+        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
@@ -37,6 +42,9 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+
+        <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
+        <item name="colorGutenbergBackground">@android:color/white</item>
 
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow
@@ -120,6 +128,10 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="WordPress.PrepublishingNudges.BottomSheetDialogTheme" parent="WordPress.BottomSheetDialogTheme">
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
     <style name="WordPress.SearchViewStyle" parent="Widget.AppCompat.SearchView.ActionBar" />
 
@@ -130,6 +142,14 @@
     </style>
 
     <style name="NoDisplay" parent="WordPress.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="WordPressNoDisplay" parent="WordPress.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -505,7 +525,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <style name="QuickStartDivider">
@@ -554,7 +575,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:maxLines">1</item>
         <item name="android:paddingEnd">@dimen/content_margin</item>
-        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
     <!--People Management Styles-->
@@ -1045,6 +1067,62 @@
         <item name="strokeColor">@color/on_surface_divider</item>
         <item name="strokeWidth">@dimen/unelevated_card_stroke_width</item>
         <item name="contentPadding">@dimen/unelevated_card_stroke_width</item>
+    </style>
+
+    <style name="FullScreenDialogFragmentAnimation" parent="@android:style/Theme.Panel">
+        <item name="android:windowEnterAnimation">@anim/full_screen_dialog_fragment_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/full_screen_dialog_fragment_slide_down</item>
+    </style>
+
+    <style name="FeatureAnnouncementDialogFragment" parent="WordPress.NoActionBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
+    </style>
+
+    <!-- Overload of Aztec theme -->
+    <style name="FormatBarButton">
+        <item name="android:minWidth">@dimen/format_bar_height</item>
+        <item name="android:minHeight">@dimen/format_bar_height</item>
+        <item name="android:textOn">""</item>
+        <item name="android:textOff">""</item>
+        <item name="android:backgroundTint">@color/aztec_format_button_selector_color</item>
+        <item name="android:backgroundTintMode">src_in</item>
+    </style>
+
+    <!-- Homepage settings -->
+    <style name="SettingsDialogTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    </style>
+
+    <style name="SettingsDialogText">
+        <item name="android:textColor">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+    </style>
+
+    <style name="SettingsDialogError">
+        <item name="android:textColor">?attr/colorError</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_small</item>
+    </style>
+
+    <style name="SettingsDialogHeader">
+        <item name="android:textColor">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="SettingsDialogDropDownField">
+        <item name="android:textColor">@color/on_surface_selector</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:drawableEnd">@drawable/ic_dropdown_primary_30_24dp</item>
+        <item name="android:drawableTint">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:drawablePadding">@dimen/margin_medium</item>
+        <item name="android:paddingTop">@dimen/margin_small_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
     </style>
 
 </resources>
