@@ -10,7 +10,7 @@ import javax.inject.Named
 class GetNumPostsForTagUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(bgDispatcher) {
-    fun fetch(readerTag: ReaderTag): Int {
+    fun get(readerTag: ReaderTag): Int {
         return ReaderPostTable.getNumPostsWithTag(readerTag)
     }
 }

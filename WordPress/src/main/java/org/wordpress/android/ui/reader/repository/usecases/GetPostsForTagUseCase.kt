@@ -11,7 +11,7 @@ import javax.inject.Named
 class GetPostsForTagUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(bgDispatcher) {
-    fun fetch(readerTag: ReaderTag): ReaderPostList {
+    fun get(readerTag: ReaderTag): ReaderPostList {
         return ReaderPostTable.getPostsWithTag(
                 readerTag,
                 MAX_ROWS,

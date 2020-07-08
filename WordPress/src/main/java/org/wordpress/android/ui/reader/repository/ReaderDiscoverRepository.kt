@@ -89,10 +89,10 @@ class ReaderDiscoverRepository constructor(
             val existsInMemory = discoverFeed.value?.let {
                 !it.isEmpty()
             } ?: false
-            val refresh = shouldAutoUpdateTagUseCase.fetch(readerTag)
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
 
             if (!existsInMemory) {
-                val result = getPostsForTagUseCase.fetch(readerTag)
+                val result = getPostsForTagUseCase.get(readerTag)
                 _discoverFeed.postValue(result)
             }
 
@@ -104,7 +104,7 @@ class ReaderDiscoverRepository constructor(
 
     private fun reloadPosts() {
         GlobalScope.launch(bgDispatcher) {
-            val result = getPostsForTagUseCase.fetch(readerTag)
+            val result = getPostsForTagUseCase.get(readerTag)
             _discoverFeed.postValue(result)
         }
     }

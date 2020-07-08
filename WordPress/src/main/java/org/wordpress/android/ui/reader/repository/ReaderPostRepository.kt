@@ -88,10 +88,10 @@ class ReaderPostRepository(
             val existsInMemory = postsForTag.value?.let {
                 !it.isEmpty()
             } ?: false
-            val refresh = shouldAutoUpdateTagUseCase.fetch(readerTag)
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
 
             if (!existsInMemory) {
-                val result = getPostsForTagUseCase.fetch(readerTag)
+                val result = getPostsForTagUseCase.get(readerTag)
                 _postsForTag.postValue(result)
             }
 
@@ -103,7 +103,7 @@ class ReaderPostRepository(
 
     private fun reloadPosts() {
         GlobalScope.launch(bgDispatcher) {
-            val result = getPostsForTagUseCase.fetch(readerTag)
+            val result = getPostsForTagUseCase.get(readerTag)
             _postsForTag.postValue(result)
         }
     }

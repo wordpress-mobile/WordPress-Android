@@ -10,7 +10,7 @@ import javax.inject.Named
 class ShouldAutoUpdateTagUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(bgDispatcher) {
-    fun fetch(readerTag: ReaderTag): Boolean {
+    fun get(readerTag: ReaderTag): Boolean {
         return ReaderTagTable.shouldAutoUpdateTag(readerTag)
     }
 }
