@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-18 10:33:26+0000
+Translation-Revision-Date: 2020-06-30 21:00:05+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigeert naar het vorige inhoudsblad</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigeert naar aanpassen van het verloop</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigeert naar de aangepaste kleurkiezer</string>
+    <string name="gutenberg_native_gradient_type">Verloop type</string>
+    <string name="gutenberg_native_go_back">Ga terug</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Tik tweemaal om de optie te selecteren</string>
+    <string name="gutenberg_native_customize_gradient">Pas de verloop aan</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Pagina auteur</string>
+    <string name="photo_picker_use_gif">Gebruik deze GIF</string>
+    <string name="error_media_thumbnail_not_loaded">De media thumbnail kon niet geladen worden</string>
+    <string name="menu_content_info">Inhoudstructuur</string>
+    <string name="everyone">Iedereen</string>
+    <string name="me">Mij</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We werken er hard aan om met iedere release nieuwe blokken toe te voegen. Tot die tijd kan je dit blok ook op het web met je browser bewerken.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Bewerk blok in je browser</string>
     <string name="gutenberg_native_dismiss">Negeren</string>
@@ -586,8 +601,6 @@ Language: nl
     <string name="editor_uploading_draft">Je concept wordt geüpload</string>
     <string name="post_uploading_draft">Bezig met uploaden concept</string>
     <string name="post_list_tab_drafts">Concepten</string>
-    <string name="post_list_author_everyone">Iedereen</string>
-    <string name="post_list_author_me">Ik</string>
     <string name="error_restoring_post">Er is een fout opgetreden tijdens het herstellen van het bericht</string>
     <string name="backdated_for">Van datum voorzien voor: %s</string>
     <string name="stats_insights_management_title">Bekijk alleen de meest relevante statistieken. Voeg je inzichten hieronder toe en sorteer ze.</string>

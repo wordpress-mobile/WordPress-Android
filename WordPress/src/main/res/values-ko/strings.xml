@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
@@ -552,8 +552,6 @@ Language: ko_KR
     <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
     <string name="post_uploading_draft">임시글 업로드 중</string>
     <string name="post_list_tab_drafts">임시글</string>
-    <string name="post_list_author_everyone">모두 볼 수 있음</string>
-    <string name="post_list_author_me">나</string>
     <string name="error_restoring_post">글을 복원하는 중 오류 발생</string>
     <string name="backdated_for">소급 적용: %s</string>
     <string name="stats_insights_management_title">가장 관련성 높은 통계만 확인하세요. 아래 인사이트를 추가 및 구성하세요.</string>

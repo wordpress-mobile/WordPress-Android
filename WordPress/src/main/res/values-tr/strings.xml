@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 14:54:09+0000
+Translation-Revision-Date: 2020-07-04 23:12:45+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
+    <string name="gutenberg_native_go_back">Geri dön</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Sayfa yazarı</string>
+    <string name="menu_content_info">İçerik yapısı</string>
+    <string name="everyone">Herkes</string>
+    <string name="me">Ben</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için çok çalışıyoruz. Bu arada, bu bloğu cihazınızın web tarayıcısını kullanarak da düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Bloğu tarayıcıda düzenle</string>
     <string name="gutenberg_native_dismiss">Kapat</string>
@@ -586,8 +594,6 @@ Language: tr
     <string name="editor_uploading_draft">Taslağınız karşıya yükleniyor</string>
     <string name="post_uploading_draft">Taslak karşıya yükleniyor</string>
     <string name="post_list_tab_drafts">Taslaklar</string>
-    <string name="post_list_author_everyone">Herkes</string>
-    <string name="post_list_author_me">Ben</string>
     <string name="error_restoring_post">Yazı geri yüklenirken bir hata oluştu</string>
     <string name="backdated_for">Geriye dönüldü: %s</string>
     <string name="stats_insights_management_title">Sadece en çok ilgili olan istatistikleri görün. Yönelimleri aşağıya ekleyin ve düzenleyin.</string>
