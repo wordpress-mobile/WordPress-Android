@@ -112,8 +112,9 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(getString(bookmarkDialog.title))
                     .setMessage(getString(bookmarkDialog.message))
-                    .setPositiveButton(getString(bookmarkDialog.buttonLabel))
-                    { _, _ -> bookmarkDialog.okButtonAction.invoke() }
+                    .setPositiveButton(getString(bookmarkDialog.buttonLabel)) {
+                        _, _ -> bookmarkDialog.okButtonAction.invoke()
+                    }
                     .setOnDismissListener {
                         bookmarksSavedLocallyDialog = null
                     }

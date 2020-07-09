@@ -42,7 +42,6 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private val _preloadPostEvents = MutableLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents = _preloadPostEvents
 
-
     suspend fun toggleBookmark(blogId: Long, postId: Long, isBookmarkList: Boolean) {
         return withContext(bgDispatcher) {
             val bookmarked = updatePostInDb(blogId, postId)
