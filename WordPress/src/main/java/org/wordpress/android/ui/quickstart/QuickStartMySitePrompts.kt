@@ -2,6 +2,7 @@ package org.wordpress.android.ui.quickstart
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.util.QuickStartUtils.Companion.ICON_NOT_SET
 
 /**
  * Static data about initial tutorial prompts you see when selecting one from Quick Start task list
@@ -18,7 +19,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.my_site_title_label,
             R.string.quick_start_dialog_update_site_title_message_short,
-            -1
+            ICON_NOT_SET
     ),
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
@@ -53,7 +54,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.row_blog_posts,
             R.string.quick_start_dialog_create_new_post_message_short,
-            -1
+            ICON_NOT_SET
     ),
     FOLLOW_SITES_TUTORIAL(
             QuickStartTask.FOLLOW_SITE,
@@ -67,14 +68,14 @@ enum class QuickStartMySitePrompts constructor(
             R.id.my_site_scroll_view_root,
             R.id.my_site_blavatar,
             R.string.quick_start_dialog_upload_site_icon_message_short,
-            -1
+            ICON_NOT_SET
     ),
     CREATE_NEW_PAGE(
             QuickStartTask.CREATE_NEW_PAGE,
             R.id.my_site_scroll_view_root,
             R.id.quick_action_pages_button,
             R.string.quick_start_dialog_create_new_page_message_short,
-            -1
+            ICON_NOT_SET
     ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,

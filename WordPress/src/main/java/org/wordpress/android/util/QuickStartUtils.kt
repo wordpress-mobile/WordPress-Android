@@ -51,6 +51,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity
 class QuickStartUtils {
     companion object {
         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
+        const val ICON_NOT_SET = -1
 
         /**
          * Formats the string, to highlight text between %1$s and %2$s with specified color, and add an icon
@@ -65,7 +66,7 @@ class QuickStartUtils {
         fun stylizeQuickStartPrompt(
             context: Context,
             messageId: Int,
-            iconId: Int = -1
+            iconId: Int = ICON_NOT_SET
         ): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)

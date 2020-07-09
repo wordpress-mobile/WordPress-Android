@@ -6,7 +6,6 @@ import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.text.Html
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
