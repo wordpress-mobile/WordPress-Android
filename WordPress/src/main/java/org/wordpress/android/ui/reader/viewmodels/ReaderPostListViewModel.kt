@@ -70,8 +70,8 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param post post to reblog
      */
-    fun onReblogButtonClicked(post: ReaderPost) {
-        readerPostCardActionsHandler.onAction(post, REBLOG)
+    fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
     }
 
     /**

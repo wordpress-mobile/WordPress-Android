@@ -450,7 +450,7 @@ public class ReaderPostListFragment extends Fragment
                     } else if (navTarget instanceof ShowNoSitesToReblog) {
                         ReaderActivityLauncher.showNoSiteToReblog(getActivity());
                     } else {
-                        throw new IllegalStateException("Action not supported in ReaderPostListFragment");
+                        throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
                     return Unit.INSTANCE;
                 }));
@@ -2727,7 +2727,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post);
+        mViewModel.onReblogButtonClicked(post, isBookmarksList());
     }
 
     @Override

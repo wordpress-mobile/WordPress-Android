@@ -14,9 +14,11 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -43,6 +45,9 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
+
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
@@ -59,6 +64,13 @@ class ReaderDiscoverViewModel @Inject constructor(
 
         init()
         loadPosts()
+    }
+
+    fun bookmarkDialogOkClicked() {
+        val currentState = _uiState.value
+        if (currentState is ContentUiState && currentState.bookmarkDialog != null) {
+            _uiState.value = currentState.copy(bookmarkDialog = null)
+        }
     }
 
     private fun init() {
@@ -91,11 +103,19 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (target is ShowSitePickerForResult) {
                 pendingReblogPost = target.post
             }
-            _navigationEvents.value = event
+            if (target is ShowBookmarkedSavedOnlyLocallyDialog) {
+                // We need to transform the navigation event into uiState in order to re-show dialog after config change
+                _uiState.value = (_uiState.value as ContentUiState).copy(bookmarkDialog = target)
+            } else
+                _navigationEvents.value = event
         }
 
         _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
         }
     }
 
@@ -103,7 +123,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
             val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, type)
+            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
         }
     }
 
@@ -156,7 +176,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         val contentVisiblity: Boolean = false,
         val progressVisibility: Boolean = false
     ) {
-        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
+        data class ContentUiState(
+            val cards: List<ReaderCardUiState>,
+            val bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog? = null
+        ) : DiscoverUiState(contentVisiblity = true)
+
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
     }
