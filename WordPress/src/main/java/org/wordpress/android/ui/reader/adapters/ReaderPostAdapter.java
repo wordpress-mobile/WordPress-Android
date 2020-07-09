@@ -29,16 +29,19 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener;
+import org.wordpress.android.ui.reader.ReaderInterfaces.OnPostListItemButtonListener;
 import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
@@ -87,9 +90,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private final HashSet<String> mRenderedIds = new HashSet<>();
     private NewsItem mNewsItem;
 
+    private ReaderInterfaces.OnPostListItemButtonListener mOnPostListItemButtonListener;
     private ReaderInterfaces.OnFollowListener mFollowListener;
     private ReaderInterfaces.OnPostSelectedListener mPostSelectedListener;
-    private ReaderInterfaces.OnPostPopupListener mOnPostPopupListener;
     private ReaderInterfaces.DataLoadedListener mDataLoadedListener;
     private ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener;
     private ReaderActions.DataRequestedListener mDataRequestedListener;
@@ -317,24 +320,34 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return;
         }
         Context ctx = holder.getViewContext();
-
-        Function3<Long, Long, Boolean, Unit> onBookmarkClicked = (postId, blogId, aBoolean) -> {
-            toggleBookmark(post.blogId, post.postId);
-            notifyItemChanged(position);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onLikeClicked = (postId, blogId, aBoolean) -> {
-            toggleLike(ctx, post, position, holder);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onReblogClicked = (postId, blogId, aBoolean) -> {
-            mReblogActionListener.reblog(post);
-            return Unit.INSTANCE;
-        };
-        Function3<Long, Long, Boolean, Unit> onCommentClicked = (postId, blogId, aBoolean) -> {
-            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
-            return Unit.INSTANCE;
-        };
+        Function3<Long, Long, ReaderPostCardActionType, Unit> onButtonClicked =
+                (postId, blogId, type) -> {
+                    //noinspection EnumSwitchStatementWhichMissesCases
+                    switch (type) {
+                        case BOOKMARK:
+                            toggleBookmark(post.blogId, post.postId);
+                            renderPost(position, holder);
+                            break;
+                        case LIKE:
+                            toggleLike(ctx, post, position, holder);
+                            break;
+                        case REBLOG:
+                            mReblogActionListener.reblog(post);
+                            break;
+                        case COMMENTS:
+                            ReaderActivityLauncher.showReaderComments(ctx, post.blogId, post.postId);
+                            break;
+                        case FOLLOW:
+                        case SITE_NOTIFICATIONS:
+                        case SHARE:
+                        case VISIT_SITE:
+                        case BLOCK_SITE:
+                            mOnPostListItemButtonListener.onButtonClicked(post, type);
+                            renderPost(position, holder);
+                            break;
+                    }
+                    return Unit.INSTANCE;
+                };
         Function2<Long, Long, Unit> onItemClicked = (postId, blogId) -> {
             if (mPostSelectedListener != null) {
                 mPostSelectedListener.onPostSelected(post);
@@ -374,9 +387,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return Unit.INSTANCE;
         };
         Function3<Long, Long, View, Unit> onMoreButtonClicked = (postId, blogId, view) -> {
-            if (mOnPostPopupListener != null) {
-                mOnPostPopupListener.onShowPostPopup(view, post);
-            }
+            // noop
             return Unit.INSTANCE;
         };
 
@@ -397,10 +408,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         mPhotonHeight,
                         postListType,
                         isBookmarksList(),
-                        onBookmarkClicked,
-                        onLikeClicked,
-                        onReblogClicked,
-                        onCommentClicked,
+                        onButtonClicked,
                         onItemClicked,
                         onItemRendered,
                         onDiscoverSectionClicked,
@@ -456,11 +464,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
+        return AppPrefs.isReaderImprovementsPhase2Enabled()
+               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
     }
 
     private boolean isDiscover() {
         return mCurrentTag != null && mCurrentTag.isDiscover();
+    }
+
+    public void setOnPostListItemButtonListener(OnPostListItemButtonListener listener) {
+        mOnPostListItemButtonListener = listener;
     }
 
     public void setOnFollowListener(OnFollowListener listener) {
@@ -485,10 +498,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public void setOnDataRequestedListener(ReaderActions.DataRequestedListener listener) {
         mDataRequestedListener = listener;
-    }
-
-    public void setOnPostPopupListener(ReaderInterfaces.OnPostPopupListener onPostPopupListener) {
-        mOnPostPopupListener = onPostPopupListener;
     }
 
     public void setOnBlogInfoLoadedListener(ReaderSiteHeaderView.OnBlogInfoLoadedListener listener) {

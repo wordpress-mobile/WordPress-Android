@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -13,6 +14,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -20,6 +22,7 @@ import javax.inject.Named
 class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -27,6 +30,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
     /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
         returns result based on device orientation */
@@ -54,10 +60,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
-                                onBookmarkClicked = this::onBookmarkClicked,
-                                onLikeClicked = this::onLikeClicked,
-                                onReblogClicked = this::onReblogClicked,
-                                onCommentsClicked = this::onCommentsClicked,
+                                onButtonClicked = this::onButtonClicked,
                                 onItemClicked = this::onItemClicked,
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
@@ -69,22 +72,17 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
             )
         }
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            _navigationEvents.value = event
+        }
     }
 
-    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
-    }
-
-    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
+    private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+        launch {
+            // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
+            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+            readerPostCardActionsHandler.onAction(post, type)
+        }
     }
 
     private fun onVideoOverlayClicked(postId: Long, blogId: Long) {

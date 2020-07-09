@@ -32,6 +32,7 @@ class ReaderDiscoverViewModelTest {
 
     @Mock private lateinit var readerPostRepository: ReaderPostRepository
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+    @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
 
     private val fakeDiscoverFeed = MutableLiveData<ReaderPostList>()
 
@@ -39,13 +40,18 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ReaderDiscoverViewModel(readerPostRepository, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = ReaderDiscoverViewModel(
+                readerPostRepository,
+                uiStateBuilder,
+                readerPostCardActionsHandler,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
+        )
         whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(),
-                        anyOrNull(), anyOrNull()
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
     }

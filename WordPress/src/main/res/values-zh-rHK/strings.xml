@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 08:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
@@ -582,8 +582,6 @@ Language: zh_TW
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
     <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
     <string name="post_uploading_draft">正在上傳草稿</string>
-    <string name="post_list_author_everyone">所有人</string>
-    <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">還原文章時發生錯誤</string>
     <string name="backdated_for">回溯至：%s</string>
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>

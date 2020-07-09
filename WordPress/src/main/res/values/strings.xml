@@ -370,7 +370,9 @@
 
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
@@ -1609,6 +1611,7 @@
     <string name="error_generic_error_retrying">We couldn\'t complete this action, but we\'ll try again later. </string>
     <string name="error_browser_no_network">Unable to load this page right now.</string>
     <string name="error_network_connection">Check your network connection and try again.</string>
+    <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
 
     <!-- Post Error -->
     <string name="error_unknown_post">Could not find the post on the server</string>
@@ -1672,7 +1675,7 @@
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Site</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
+    <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
@@ -1740,7 +1743,6 @@
     <string name="reader_label_visit">Visit site</string>
     <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
-    <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
     <string name="reader_excerpt_link">Visit %s for more</string>
@@ -1905,6 +1907,9 @@
     <string name="my_site_icon_dialog_remove_button">Remove</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
+    <string name="my_site_title_changer_dialog_title">@string/site_settings_title_title</string>
+    <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
 
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
@@ -2613,7 +2618,7 @@
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
-    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Site Pages %2$s to continue.</string>
+    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Pages %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Blog Posts %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_post_message_short_posts">Tap %1$s Add Post %2$s to create a new post.</string>

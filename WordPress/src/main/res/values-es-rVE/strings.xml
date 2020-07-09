@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-16 20:48:02+0000
+Translation-Revision-Date: 2020-06-30 14:02:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Abrir el enlace en un navegador</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navega a la hoja de contenido anterior</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navega para personalizar el degradado</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navega al selector de color personalizado</string>
+    <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
+    <string name="gutenberg_native_go_back">Volver</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
+    <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autor de la página</string>
+    <string name="photo_picker_use_gif">Usar este GIF</string>
+    <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
+    <string name="menu_content_info">Estructura del contenido</string>
+    <string name="everyone">Todos</string>
+    <string name="me">Yo</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabajando duro para añadir más bloques en cada versión. Mientras tanto, también puedes editar este bloque usando el navegador web de tu dispositivo.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque en el navegador web</string>
     <string name="gutenberg_native_dismiss">Descartar</string>
@@ -586,8 +601,6 @@ Language: es_VE
     <string name="editor_uploading_draft">Tu borrador se está subiendo</string>
     <string name="post_uploading_draft">Subiendo borrador</string>
     <string name="post_list_tab_drafts">Borradores</string>
-    <string name="post_list_author_everyone">Todos</string>
-    <string name="post_list_author_me">Yo</string>
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
     <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
