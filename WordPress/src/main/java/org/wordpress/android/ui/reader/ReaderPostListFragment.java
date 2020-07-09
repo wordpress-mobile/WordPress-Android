@@ -458,7 +458,7 @@ public class ReaderPostListFragment extends Fragment
         mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
             event.applyIfNotHandled(holder -> {
                 WPSnackbar.make(
-                        requireActivity().findViewById(R.id.coordinator),
+                        requireView(),
                         holder.getMessageRes(),
                         Snackbar.LENGTH_LONG
                 ).show();
