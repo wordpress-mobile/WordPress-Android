@@ -22,11 +22,11 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
-import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -49,17 +49,14 @@ class ReaderDiscoverViewModelTest {
     fun setUp() = test {
         whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
         viewModel = ReaderDiscoverViewModel(
-                readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
-        whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
-        viewModel = ReaderDiscoverViewModel(
-                readerPostRepository,
+                readerDiscoverRepositoryFactory,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
-        whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
+        whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
