@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -79,6 +80,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -111,6 +113,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.util.AccessibilityUtils.getSnackbarDuration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.AppLog.T.EDITOR
@@ -120,6 +123,7 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
@@ -139,6 +143,7 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
 import org.wordpress.android.widgets.WPDialogSnackbar
+import org.wordpress.android.widgets.WPSnackbar
 import java.io.File
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -152,7 +157,8 @@ class MySiteFragment : Fragment(),
         BasicDialogOnDismissByOutsideTouchInterface,
         PromoDialogClickInterface,
         OnConfirmListener,
-        OnDismissListener {
+        OnDismissListener,
+        TextInputDialogFragment.Callback {
     private var siteSettings: SiteSettingsInterface? = null
     private var activeTutorialPrompt: QuickStartMySitePrompts? = null
     private val quickStartSnackBarHandler = Handler()
@@ -223,6 +229,8 @@ class MySiteFragment : Fragment(),
             } else {
                 row_activity_log.visibility = View.VISIBLE
             }
+
+            my_site_title_label.isClickable = SiteUtils.isAccessedViaWPComRest(site)
         }
         updateQuickStartContainer()
         if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
@@ -314,7 +322,8 @@ class MySiteFragment : Fragment(),
     }
 
     private fun setupClickListeners() {
-        site_info_container.setOnClickListener { viewSite() }
+        my_site_title_label.setOnClickListener { showTitleChangerDialog() }
+        my_site_subtitle_label.setOnClickListener { viewSite() }
         switch_site.setOnClickListener { showSitePicker() }
         row_view_site.setOnClickListener { viewSite() }
         my_site_register_domain_cta.setOnClickListener { registerDomain() }
@@ -480,6 +489,35 @@ class MySiteFragment : Fragment(),
                 ActivityLauncher.viewConnectJetpackForStats(activity, selectedSite)
             }
         }
+    }
+
+    private fun showTitleChangerDialog() {
+        if (!NetworkUtils.isNetworkAvailable(activity)) {
+            WPSnackbar.make(
+                    requireActivity().findViewById(R.id.coordinator),
+                    R.string.error_network_connection,
+                    getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
+            ).show()
+            return
+        }
+
+        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
+        val hint = if (canEditTitle) {
+            getString(R.string.my_site_title_changer_dialog_hint)
+        } else {
+            getString(R.string.my_site_title_changer_dialog_not_allowed_hint)
+        }
+
+        val inputDialog = TextInputDialogFragment.newInstance(
+                getString(R.string.my_site_title_changer_dialog_title),
+                selectedSite?.name,
+                hint,
+                false,
+                canEditTitle,
+                my_site_title_label.id
+        )
+        inputDialog.setTargetFragment(this@MySiteFragment, 0)
+        inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
     }
 
     private fun viewSite() {
@@ -1380,6 +1418,29 @@ class MySiteFragment : Fragment(),
         const val KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED"
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
+        }
+    }
+
+    override fun onSuccessfulInput(input: String, callbackId: Int) {
+        if (callbackId == my_site_title_label.id && selectedSite != null) {
+            if (!NetworkUtils.isNetworkAvailable(activity)) {
+                WPSnackbar.make(
+                        requireActivity().findViewById(R.id.coordinator),
+                        R.string.error_update_site_title_network,
+                        getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
+                ).show()
+                return
+            }
+
+            my_site_title_label.text = input
+            selectedSite?.name = input
+            // save the site locally with updated title
+            dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(selectedSite))
+
+            siteSettings?.let {
+                it.title = input
+                it.saveSettings()
+            }
         }
     }
 }
