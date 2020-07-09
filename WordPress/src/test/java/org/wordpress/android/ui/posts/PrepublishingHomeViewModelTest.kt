@@ -58,7 +58,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that post home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 3
+        val expectedActionsAmount = 2
 
         // act
         viewModel.start(mock(), site)
@@ -72,7 +72,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 2
+        val expectedActionsAmount = 1
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
