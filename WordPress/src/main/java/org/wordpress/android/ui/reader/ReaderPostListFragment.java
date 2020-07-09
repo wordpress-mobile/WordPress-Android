@@ -455,7 +455,7 @@ public class ReaderPostListFragment extends Fragment
                     return Unit.INSTANCE;
                 }));
 
-                mViewModel.start(mReaderViewModel);
+     mViewModel.start(mReaderViewModel);
 
         if (isFollowingScreen()) {
             mSubFilterViewModel.onUserComesToReader();
