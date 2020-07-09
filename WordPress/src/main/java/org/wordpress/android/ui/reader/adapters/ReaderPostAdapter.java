@@ -337,7 +337,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     switch (type) {
                         case BOOKMARK:
                             toggleBookmark(post.blogId, post.postId);
-                            notifyItemChanged(position);
+                            renderPost(position, holder);
                             break;
                         case LIKE:
                             toggleLike(ctx, post, position, holder);
@@ -718,31 +718,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * triggered when user taps the bookmark post button
      */
     private void toggleBookmark(final long blogId, final long postId) {
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
-
-        AnalyticsTracker.Stat eventToTrack;
-        if (post.isBookmarked) {
-            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-                    : AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST;
-            ReaderPostActions.removeFromBookmarked(post);
-        } else {
-            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
-                    : AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST;
-            ReaderPostActions.addToBookmarked(post);
-        }
-
-        AnalyticsTracker.track(eventToTrack);
-
         // update post in array and on screen
-        post = ReaderPostTable.getBlogPost(blogId, postId, true);
+        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
         int position = mPosts.indexOfPost(post);
         if (post != null && position > -1) {
+            post.isBookmarked = !post.isBookmarked;
             mPosts.set(position, post);
+        }
 
-            if (mOnPostBookmarkedListener != null) {
-                mOnPostBookmarkedListener
-                        .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isBookmarksList());
-            }
+        if (mOnPostBookmarkedListener != null) {
+            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
         }
     }
 
