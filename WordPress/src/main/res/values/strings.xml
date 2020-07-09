@@ -1675,7 +1675,7 @@
     <string name="reader_title_deeplink">WordPress Reader</string>
     <string name="reader_title_applog">Application log</string>
     <string name="reader_title_blog_preview">Reader Site</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
+    <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
     <string name="reader_title_post_detail_wpcom">WordPress.com Post</string>
     <string name="reader_title_related_post_detail">Related Post</string>
@@ -1743,7 +1743,6 @@
     <string name="reader_label_visit">Visit site</string>
     <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
     <string name="reader_label_choose_your_interests">Choose your interests</string>
-    <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_view_comments">View comments</string>
 
     <string name="reader_excerpt_link">Visit %s for more</string>
