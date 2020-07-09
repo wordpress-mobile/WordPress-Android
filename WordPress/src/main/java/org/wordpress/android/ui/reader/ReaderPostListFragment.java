@@ -79,11 +79,9 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
@@ -98,10 +96,10 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
-import org.wordpress.android.ui.reader.reblog.NoSite;
-import org.wordpress.android.ui.reader.reblog.PostEditor;
-import org.wordpress.android.ui.reader.reblog.SitePicker;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -146,6 +144,8 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
+
+import kotlin.Unit;
 
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
@@ -430,7 +430,41 @@ public class ReaderPostListFragment extends Fragment
             initSubFilterViewModel();
         }
 
-        handleReblogStateChanges();
+        mViewModel.getNavigationEvents().observe(getViewLifecycleOwner(),
+                event -> event.applyIfNotHandled(navTarget -> {
+                    if (navTarget instanceof ShowSitePickerForResult) {
+                        ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
+                        ActivityLauncher.showSitePickerForResult(
+                                ReaderPostListFragment.this,
+                                data.getSite(),
+                                data.getMode()
+                        );
+                    } else if (navTarget instanceof OpenEditorForReblog) {
+                        OpenEditorForReblog data = (OpenEditorForReblog) navTarget;
+                        ActivityLauncher.openEditorForReblog(
+                                getActivity(),
+                                data.getSite(),
+                                data.getPost(),
+                                data.getSource()
+                        );
+                    } else if (navTarget instanceof ShowNoSitesToReblog) {
+                        ReaderActivityLauncher.showNoSiteToReblog(getActivity());
+                    } else {
+                        throw new IllegalStateException("Action not supported in ReaderPostListFragment");
+                    }
+                    return Unit.INSTANCE;
+                }));
+
+        mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
+            event.applyIfNotHandled(holder -> {
+                WPSnackbar.make(
+                        requireView(),
+                        holder.getMessageRes(),
+                        Snackbar.LENGTH_LONG
+                ).show();
+                return Unit.INSTANCE;
+            })
+        );
 
         mViewModel.start(mReaderViewModel);
 
@@ -2690,37 +2724,6 @@ public class ReaderPostListFragment extends Fragment
         if (isAdded() && getCurrentPosition() > 0) {
             mRecyclerView.smoothScrollToPosition(0);
         }
-    }
-
-    /**
-     * Handles reblog state changes and triggers reblog actions
-     */
-    private void handleReblogStateChanges() {
-        mViewModel.getReblogState().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(state -> {
-                if (state instanceof NoSite) {
-                    ReaderActivityLauncher.showNoSiteToReblog(getActivity());
-                } else if (state instanceof SitePicker) {
-                    SitePicker sitePickerStateData = (SitePicker) state;
-                    ActivityLauncher.showSitePickerForResult(
-                            this,
-                            sitePickerStateData.getSite(),
-                            SitePickerMode.REBLOG_SELECT_MODE
-                    );
-                } else if (state instanceof PostEditor) {
-                    PostEditor postEditorStateData = (PostEditor) state;
-                    ActivityLauncher.openEditorForReblog(
-                            getActivity(),
-                            postEditorStateData.getSite(),
-                            postEditorStateData.getPost(),
-                            PagePostCreationSourcesDetail.POST_FROM_REBLOG
-                    );
-                } else { // Error
-                    ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
-                }
-                return null;
-            });
-        });
     }
 
     @Override
