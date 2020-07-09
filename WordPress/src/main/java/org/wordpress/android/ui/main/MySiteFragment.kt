@@ -1467,4 +1467,11 @@ class MySiteFragment : Fragment(),
             }
         }
     }
+
+    override fun onTextInputDialogDismissed(callbackId: Int) {
+        if (callbackId == my_site_title_label.id) {
+            showQuickStartNoticeIfNecessary()
+            updateQuickStartContainer()
+        }
+    }
 }
