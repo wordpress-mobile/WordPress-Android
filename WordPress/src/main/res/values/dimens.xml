@@ -463,7 +463,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
