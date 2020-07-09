@@ -1276,7 +1276,7 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = (focusPointSize / 0.5).toInt()
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
-            activeTutorialPrompt!!.task == UPDATE_SITE_TITLE -> { // focus point might be hidden behind FAB
+            activeTutorialPrompt!!.task == UPDATE_SITE_TITLE -> {
                 horizontalOffset = -(focusPointSize / 2)
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
