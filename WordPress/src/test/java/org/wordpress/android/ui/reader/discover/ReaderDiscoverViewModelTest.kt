@@ -27,7 +27,6 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -48,7 +47,6 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-
         whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
         viewModel = ReaderDiscoverViewModel(
                 readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)

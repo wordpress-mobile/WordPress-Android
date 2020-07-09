@@ -14,12 +14,9 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -103,7 +100,8 @@ class ReaderDiscoverViewModel @Inject constructor(
             data?.let {
                 // TODO listen for communications from the reeaderPostRepository, but not 4ever!
             }
-                                                                      
+        }
+
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {
