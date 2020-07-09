@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2016-08-23 18:32:37+0000
 Plural-Forms: nplurals=4; plural=(n == 1 || n == 11) ? 0 : ((n == 2 || n == 12) ? 1 : ((n >= 3 && n <= 10 || n >= 13 && n <= 19) ? 2 : 3));
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: gd_GB
 -->
 <resources>
@@ -261,7 +261,6 @@ Language: gd_GB
     <string name="httpuser">Ainm-cleachdaiche HTTP</string>
     <string name="httppassword">Facal-faire HTTP</string>
     <string name="error_media_upload">Thachair mearachd fhad \'s a bha sinn a\' luchdadh suas meadhan</string>
-    <string name="publish_date">Foillsich</string>
     <string name="incorrect_credentials">Ainm-cleachdaiche no facal-faire cearr.</string>
     <string name="password">Facal-faire</string>
     <string name="username">Ainm-cleachdaiche</string>

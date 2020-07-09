@@ -35,6 +35,7 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
+    private static final String ARG_SITE_JETPACK_IS_CONNECTED = "param_site_jetpack_is_connected";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
@@ -46,7 +47,8 @@ public class GutenbergContainerFragment extends Fragment {
                                                          Bundle translations,
                                                          boolean isDarkMode,
                                                          boolean isSiteUsingWpComRestApi,
-                                                         Bundle editorTheme) {
+                                                         Bundle editorTheme,
+                                                         boolean siteJetpackIsConnected) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_POST_TYPE, postType);
@@ -56,6 +58,7 @@ public class GutenbergContainerFragment extends Fragment {
         args.putBoolean(ARG_PREFERRED_COLOR_SCHEME, isDarkMode);
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
+        args.putBoolean(ARG_SITE_JETPACK_IS_CONNECTED, siteJetpackIsConnected);
         fragment.setArguments(args);
         return fragment;
     }
@@ -106,6 +109,7 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
         boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
+        boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_JETPACK_IS_CONNECTED);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -132,7 +136,8 @@ public class GutenbergContainerFragment extends Fragment {
                 exceptionLogger,
                 breadcrumbLogger,
                 isSiteUsingWpComRestApi,
-                editorTheme);
+                editorTheme,
+                siteJetpackIsConnected);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;

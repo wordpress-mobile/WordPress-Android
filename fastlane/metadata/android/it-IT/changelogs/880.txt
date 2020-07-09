@@ -1,4 +1,0 @@
-15.0:
-Aggiunte all'editor a blocchi: nuovo blocco Verso. Supporto per i colori di sovrapposizione nel blocco Copertina. Animazione di ingresso/uscita per la barra degli strumenti mobile. Tooltip per i pulsanti di selezione del modello di pagina.
-Aggiornamenti all'editor a blocchi: il "blocco Cestino" in un menu è raggiungibile dalla barra degli strumenti del blocco.
-Altri aggiornamenti: aggiunte impostazioni della homepage all'elenco di pagine e alle impostazioni del sito.

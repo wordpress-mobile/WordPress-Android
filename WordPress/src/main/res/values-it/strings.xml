@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-10 14:54:11+0000
+Translation-Revision-Date: 2020-06-25 14:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo blocco usando il browser web del dispositivo.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Modifica il blocco sul browser web</string>
+    <string name="gutenberg_native_dismiss">Chiudi</string>
+    <string name="prepublishing_nudges_visibility_password">Protetto da password</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Nessuna impostazione</string>
+    <string name="prepublishing_tags_description">I tag aiutano a dire al lettore di cosa parla un articolo.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Pubblica</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Aggiungi tag</string>
+    <string name="prepublishing_nudges_back_button">Indietro</string>
+    <string name="prepublishing_nudges_home_save_button">Salva ora</string>
+    <string name="prepublishing_nudges_home_submit_button">Invia ora</string>
+    <string name="prepublishing_nudges_home_schedule_button">Pianifica ora</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">In pubblicazione su</string>
+    <string name="prepublishing_nudges_tags_action">Tag</string>
+    <string name="prepublishing_nudges_publish_action">Data di pubblicazione</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Annulla</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Sposta in bozze</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Gli articoli eliminati non possono essere modificati. Vuoi modificare lo stato di questo articolo da \"bozza\" in modo da poterlo lavorare?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Spostare gli articoli in bozze?</string>
+    <string name="reader_label_choose_your_interests">Scegli i tuoi interessi</string>
+    <string name="reader_label_discover_follow_tags">Scopri e segui i tag che ami</string>
+    <string name="reader_choose_interests_content_description">Scegli i tuoi interessi</string>
+    <string name="reader_btn_done">Fatto</string>
+    <string name="reader_btn_select_few_interests">Selezionane alcuni per continuare</string>
+    <string name="post_status_post_published">Pubblicato</string>
+    <string name="post_status_post_trashed">Eliminato nel cestino</string>
+    <string name="post_status_post_scheduled">Programmato</string>
+    <string name="publish_date">Data di pubblicazione</string>
+    <string name="ccpa_privacy_notice_read">Leggi la nota sulla privacy del CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Il California Consumer Privacy Act (\"CCPA\") ci impone di fornire ai residenti in California alcune informazioni aggiuntive sulle categorie di informazioni personali che raccogliamo e condividiamo, dove otteniamo tali informazioni personali e come e perché le usiamo.</string>
+    <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
+    <string name="status_and_visibility">Stato e visibilità</string>
+    <string name="update_now">Aggiorna ora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Rimuovi %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Apri menu azioni del blocco</string>
@@ -279,7 +312,7 @@ Language: it
     <string name="reader_my_likes_display_name">Mi piace</string>
     <string name="site_cannot_be_loaded">Non siamo in grado di caricare i dati per il tuo sito in questo momento. Riprova più tardi.</string>
     <string name="gutenberg_native_wordpress_media_library">Libreria multimediale WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere altri blocchi ad ogni rilascio. Nel frattempo, puoi anche modificare questo articolo sul web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo articolo sul web.</string>
     <string name="gutenberg_native_ungroup">Non raggruppare</string>
     <string name="gutenberg_native_translate">Traduci</string>
     <string name="gutenberg_native_title">Titolo:</string>
@@ -502,10 +535,6 @@ Language: it
     <string name="stats_widget_all_time_title">Di sempre</string>
     <string name="stats_widget_views_title">Visualizzazioni questa settimana</string>
     <string name="stats_widget_add">Aggiungi widget</string>
-    <string name="dialog_confirm_update_yes">Aggiorna ora</string>
-    <string name="dialog_confirm_update_message_page">Questa pagina pubblicata verrà aggiornata immediatamente.</string>
-    <string name="dialog_confirm_update_message_post">Questo articolo pubblicato verrà aggiornato immediatamente.</string>
-    <string name="dialog_confirm_update_title">Tutto pronto per l\'aggiornamento?</string>
     <string name="plugin_fetching_error_after_at">L\'aggiornamento dei dettagli del plugin richiede più tempo del normale. Riprova più tardi.</string>
     <string name="plugin_install_site_ineligible_default_error">Se hai appena registrato un nome di dominio, attendi fino al termine della configurazione e riprova.\n\nIn caso contrario, qualcosa è andato storto e la funzionalità di plugin potrebbe non essere disponibile per questo sito.</string>
     <string name="domain_contact_information_state_not_available_hint">Stato (non disponibile)</string>
@@ -552,8 +581,6 @@ Language: it
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
     <string name="post_list_tab_drafts">Bozze</string>
-    <string name="post_list_author_everyone">Tutti</string>
-    <string name="post_list_author_me">Io</string>
     <string name="error_restoring_post">Errore durante il recupero dell\'articolo</string>
     <string name="backdated_for">Retrodatato per: %s</string>
     <string name="stats_insights_management_title">Vedi solo le statistiche più rilevanti. Aggiungi e organizza le tue informazioni di seguito.</string>
@@ -818,7 +845,6 @@ Language: it
     <string name="pages_delete_permanently">Cancella definitivamente</string>
     <string name="pages_move_to_trash">Sposta nel cestino</string>
     <string name="pages_move_to_draft">Sposta in bozze</string>
-    <string name="pages_publish_now">Pubblica ora</string>
     <string name="pages_set_parent">Imposta genitore</string>
     <string name="pages_view">Visualizza</string>
     <string name="pages_trashed">Spostate nel cestino</string>
@@ -1071,7 +1097,6 @@ Language: it
     <string name="menu_html_mode_done_snackbar">Passato alla modalità HTML.</string>
     <string name="menu_html_mode">Modalità HTML</string>
     <string name="menu_preview">Visualizzare in anteprima</string>
-    <string name="menu_publish_now">Pubblica ora</string>
     <string name="menu_save_as_draft">Salva come bozza</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1134,10 +1159,6 @@ Language: it
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pagine e %2$d di %3$d file rimanenti</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post e %1$d di %2$d file rimanenti</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 pagina e %1$d di %2$d file rimanenti</string>
-    <string name="dialog_confirm_publish_yes">Pubblica ora</string>
-    <string name="dialog_confirm_publish_message_page">Questa pagina verrà pubblicata immediatamente.</string>
-    <string name="dialog_confirm_publish_message_post">Questo post verrà pubblicato immediatamente.</string>
-    <string name="dialog_confirm_publish_title">Pronto a pubblicare?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d post/pagine non caricate</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pagine non caricate</string>
     <string name="media_file_page_singular_only_not_uploaded">1 pagina non caricata</string>
@@ -1472,7 +1493,6 @@ Language: it
     <string name="post_settings_not_set">Non impostato</string>
     <string name="post_settings_more_options">Altre opzioni</string>
     <string name="post_settings_categories_and_tags">Categorie e tag</string>
-    <string name="post_settings_status">Stato</string>
     <string name="notifications_tab_title_all">Tutto</string>
     <string name="top_level_category_name">Primo livello</string>
     <string name="category_parent">Categoria madre (facoltativa):</string>
@@ -1596,7 +1616,6 @@ Language: it
     <string name="media_upload_state_deleting">Eliminazione in corso</string>
     <string name="media_upload_state_uploading">Caricamento in corso</string>
     <string name="media_upload_state_queued">Accodato</string>
-    <string name="keep_editing">Continua a modificare</string>
     <string name="image_quality">Qualità delle immagini</string>
     <string name="error_all_media_upload_canceled">Tutti i caricamenti dei file multimediali sono stati cancellati a causa di un errore sconosciuto. Riprova il caricamento.</string>
     <string name="error_unknown_post_type">Formato dell\'articolo sconosciuto</string>
@@ -2259,7 +2278,6 @@ Language: it
     <string name="httppassword">Password HTTP</string>
     <string name="httpuser">Nome utente HTTP</string>
     <string name="error_media_upload">Si è verificato un errore durante il caricamento</string>
-    <string name="publish_date">Pubblica</string>
     <string name="incorrect_credentials">Nome utente o password errati</string>
     <string name="log_in">Accedi</string>
     <string name="username">Nome utente</string>
@@ -2296,6 +2314,7 @@ Language: it
     <string name="no">No</string>
     <string name="yes">Sì</string>
     <string name="notification_settings">Impostazioni notifiche</string>
+    <string name="publish_now">Pubblica ora</string>
     <string name="reply">Rispondi</string>
     <string name="on">on</string>
     <string name="preview">Anteprima</string>

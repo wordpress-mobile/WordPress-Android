@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-12 12:13:01+0000
+Translation-Revision-Date: 2020-06-24 09:07:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque no navegador web</string>
+    <string name="gutenberg_native_dismiss">Rexeitar</string>
+    <string name="prepublishing_nudges_visibility_password">Protexido con contrasinal</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Non establecido</string>
+    <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Engadir etiquetas</string>
+    <string name="prepublishing_nudges_back_button">Volver</string>
+    <string name="prepublishing_nudges_home_save_button">Gardar agora</string>
+    <string name="prepublishing_nudges_home_submit_button">Enviar agora</string>
+    <string name="prepublishing_nudges_home_schedule_button">Programar agora</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publicando en</string>
+    <string name="prepublishing_nudges_tags_action">Etiquetas</string>
+    <string name="prepublishing_nudges_publish_action">Data de publicación</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancelar</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Mover a borrador</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Mover entrada a borrador?</string>
+    <string name="reader_btn_done">Feito</string>
+    <string name="post_status_post_published">Publicado</string>
+    <string name="post_status_post_trashed">Na papeleira</string>
+    <string name="post_status_post_scheduled">Programado</string>
+    <string name="publish_date">Data de publicación</string>
+    <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
+    <string name="status_and_visibility">Estado e visibilidade</string>
+    <string name="update_now">Actualizar agora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Eliminar %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
@@ -284,7 +309,7 @@ Language: gl_ES
     <string name="reader_my_likes_display_name">Gústame</string>
     <string name="site_cannot_be_loaded">Non puidemos cargar os datos para o teu sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos traballando duro para engadir máis bloques en cada versión. Mentres tanto, tamén podes editar esta entrada na web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Estamos traballando duro para engadir máis bloques en cada versión. Mentres tanto, tamén podes editar esta entrada na web.</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
     <string name="gutenberg_native_title">Título:</string>
@@ -507,10 +532,6 @@ Language: gl_ES
     <string name="stats_widget_all_time_title">Histórico</string>
     <string name="stats_widget_views_title">Visitas esta semana</string>
     <string name="stats_widget_add">Engadir widget</string>
-    <string name="dialog_confirm_update_yes">Actualizar agora</string>
-    <string name="dialog_confirm_update_message_page">Esta páxina publicada actualizarase inmediatamente.</string>
-    <string name="dialog_confirm_update_message_post">Esta entrada publicada actualizarase inmediatamente.</string>
-    <string name="dialog_confirm_update_title">Preparado para actualizar?</string>
     <string name="plugin_fetching_error_after_at">Está levando máis tempo do normal recargar os detalles do plugin. Por favor, compróbao de novo máis tarde.</string>
     <string name="plugin_install_site_ineligible_default_error">Se acabas de rexistrar un nome de dominio, por favor, espera ata que terminemos de configuralo e inténtao de novo.\n\nEn caso contrario, parece que algo saíu mal e a característica do plugin podería non estar dispoñible para este sitio.</string>
     <string name="domain_contact_information_state_not_available_hint">Estado (non dispoñible)</string>
@@ -557,8 +578,6 @@ Language: gl_ES
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
     <string name="post_list_tab_drafts">Borradores</string>
-    <string name="post_list_author_everyone">Todos</string>
-    <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>
@@ -823,7 +842,6 @@ Language: gl_ES
     <string name="pages_delete_permanently">Borrar permanentemente</string>
     <string name="pages_move_to_trash">Mover ao lixo</string>
     <string name="pages_move_to_draft">Mover a borradores</string>
-    <string name="pages_publish_now">Publicar agora</string>
     <string name="pages_set_parent">Facer superior</string>
     <string name="pages_view">Ver</string>
     <string name="pages_trashed">No lixo</string>
@@ -1076,7 +1094,6 @@ Language: gl_ES
     <string name="menu_html_mode_done_snackbar">Cambiado a modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
-    <string name="menu_publish_now">Publicar agora</string>
     <string name="menu_save_as_draft">Gardar coma borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1156,6 @@ Language: gl_ES
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">quedan %1$d páxinas e %2$d de %3$d arquivos</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">queda 1 entrada e %1$d de %2$d arquivos</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">queda 1 páxina e %1$d de %2$d arquivos</string>
-    <string name="dialog_confirm_publish_yes">Publicar agora</string>
-    <string name="dialog_confirm_publish_message_page">Esta páxina publicarase de inmediato.</string>
-    <string name="dialog_confirm_publish_message_post">Esta entrada publicarase de inmediato.</string>
-    <string name="dialog_confirm_publish_title">Listo para publicar?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas / páxinas sen subir</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páxinas sen subir</string>
     <string name="media_file_page_singular_only_not_uploaded">1 páxina sen subir</string>
@@ -1477,7 +1490,6 @@ Language: gl_ES
     <string name="post_settings_not_set">Non definido</string>
     <string name="post_settings_more_options">Máis opcións</string>
     <string name="post_settings_categories_and_tags">Categorías e etiquetas</string>
-    <string name="post_settings_status">Estado</string>
     <string name="notifications_tab_title_all">Todas</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría superior (opcional):</string>
@@ -1601,7 +1613,6 @@ Language: gl_ES
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subindo</string>
     <string name="media_upload_state_queued">En cola</string>
-    <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidade da imaxe</string>
     <string name="error_all_media_upload_canceled">Todos os arquivos multimedia canceláronse debido a un erro descoñecido. Por favor, volve a intentar cargalos</string>
     <string name="error_unknown_post_type">Formato de entrada descoñecido</string>
@@ -2264,7 +2275,6 @@ Language: gl_ES
     <string name="httppassword">contrasinal HTTP</string>
     <string name="httpuser">usuario HTTP</string>
     <string name="error_media_upload">Houbo un erro mentres se cargaba o ficheiro</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Nome de usuario ou contrasinal incorrecto</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="username">Nome de usuario</string>
@@ -2301,6 +2311,7 @@ Language: gl_ES
     <string name="no">Non</string>
     <string name="yes">Si</string>
     <string name="notification_settings">Opcións de notificación</string>
+    <string name="publish_now">Publicar agora</string>
     <string name="reply">Responder</string>
     <string name="on">en</string>
     <string name="preview">Vista previa</string>

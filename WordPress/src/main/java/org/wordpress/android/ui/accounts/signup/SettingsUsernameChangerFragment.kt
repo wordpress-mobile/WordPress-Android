@@ -46,8 +46,8 @@ class SettingsUsernameChangerFragment : BaseUsernameChangerFullScreenDialogFragm
             ), HtmlCompat.FROM_HTML_MODE_LEGACY
     )
 
-    override fun onViewCreated(controller: FullScreenDialogController) {
-        super.onViewCreated(controller)
+    override fun setController(controller: FullScreenDialogController) {
+        super.setController(controller)
         dialogController = controller
 
         dialogController.setActionEnabled(false)

@@ -26,6 +26,8 @@ public class ReaderConstants {
     // the Calypso web reader
     public static final int MIN_GALLERY_IMAGE_WIDTH = 144;
 
+    public static final int THUMBNAIL_STRIP_IMG_COUNT = 4;
+
     // referrer url for reader posts opened in a browser
     public static final String HTTP_REFERER_URL = "https://wordpress.com";
 

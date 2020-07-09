@@ -1,0 +1,4 @@
+15.1:
+Mejoras: Mensajes emergentes de programación, etiquetas y visibilidad en el panel de lista previa a la publicación del editor. Pulsando intro tras añadir leyendas en bloques de imagen, vídeo, galería, cita y bloque de cita añade un nuevo bloque.
+
+Correcciones: Miniaturas de vídeo, ajustes y visualización de vista previa correctas en los sitios privados. Los avisos y pestañas de instalación de JetPack ya no se superponen.

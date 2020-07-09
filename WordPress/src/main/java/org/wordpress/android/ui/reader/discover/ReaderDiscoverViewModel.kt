@@ -1,17 +1,29 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.text.Spanned
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
+import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -19,6 +31,8 @@ import javax.inject.Named
 class ReaderDiscoverViewModel @Inject constructor(
     private val readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val reblogUseCase: ReblogUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -26,6 +40,20 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
+
+    /**
+     * Post which is about to be reblogged after the user selects a target site.
+     */
+    private var pendingReblogPost: ReaderPost? = null
 
     /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
         returns result based on device orientation */
@@ -58,12 +86,14 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
-                                onBookmarkClicked = this::onBookmarkClicked,
-                                onLikeClicked = this::onLikeClicked,
-                                onReblogClicked = this::onReblogClicked,
-                                onCommentsClicked = this::onCommentsClicked,
+                                onButtonClicked = this::onButtonClicked,
                                 onItemClicked = this::onItemClicked,
-                                onItemRendered = this::onItemRendered
+                                onItemRendered = this::onItemRendered,
+                                onDiscoverSectionClicked = this::onDiscoverClicked,
+                                onMoreButtonClicked = this::onMoreButtonClicked,
+                                onVideoOverlayClicked = this::onVideoOverlayClicked,
+                                onPostHeaderViewClicked = this::onPostHeaderClicked,
+                                postListType = TAG_FOLLOWED
                         )
                     }
             )
@@ -73,31 +103,55 @@ class ReaderDiscoverViewModel @Inject constructor(
             data?.let {
                 // TODO listen for communications from the reeaderPostRepository, but not 4ever!
             }
+                                                                      
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
         }
     }
 
-    private fun onBookmarkClicked(postId: Long, blogId: Long, selected: Boolean) {
+    private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
+        launch {
+            // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
+            val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
+        }
+    }
+
+    private fun onVideoOverlayClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
     }
 
-    private fun onLikeClicked(postId: Long, blogId: Long, selected: Boolean) {
+    private fun onPostHeaderClicked(postId: Long, blogId: Long) {
         // TODO malinjir implement action
     }
 
-    private fun onReblogClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
+    private fun onItemClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemClicked")
     }
 
-    private fun onCommentsClicked(postId: Long, blogId: Long, selected: Boolean) {
-        // TODO malinjir implement action
+    private fun onItemRendered(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnItemRendered")
     }
 
-    private fun onItemClicked(post: ReaderPost) {
-        // TODO malinjir implement action
+    private fun onDiscoverClicked(postId: Long, blogId: Long) {
+        AppLog.d(T.READER, "OnDiscoverClicked")
     }
 
-    private fun onItemRendered(post: ReaderPost) {
-        // TODO malinjir implement action
+    // TODO malinjir get rid of the view reference
+    private fun onMoreButtonClicked(postId: Long, blogId: Long, view: View) {
+        AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
 //    private fun loadPosts() {
@@ -107,6 +161,19 @@ class ReaderDiscoverViewModel @Inject constructor(
 //        }
 //    }
 
+    fun onReblogSiteSelected(siteLocalId: Int) {
+        // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
+        //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
+        val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
+        if (navigationTarget != null) {
+            _navigationEvents.postValue(Event(navigationTarget))
+        } else {
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
+        }
+        pendingReblogPost = null
+    }
+
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val progressVisibility: Boolean = false
@@ -114,48 +181,5 @@ class ReaderDiscoverViewModel @Inject constructor(
         data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
-    }
-
-    sealed class ReaderCardUiState {
-        data class ReaderPostUiState(
-            val postId: Long,
-            val blogId: Long,
-            val dateLine: String,
-            val title: String?,
-            val blogName: String?,
-            val excerpt: String?, // mTxtText
-            val blogUrl: String?,
-            val photoTitle: String?,
-            val featuredImageUrl: String?,
-            val videoThumbnailUrl: String?,
-            val avatarOrBlavatarUrl: String?,
-            val thumbnailStripUrls: List<String>?,
-            val discoverSection: DiscoverLayoutUiState?,
-            val videoOverlayVisibility: Boolean,
-            val moreMenuVisibility: Boolean,
-            val photoFrameVisibility: Boolean,
-            val bookmarkAction: ActionUiState,
-            val likeAction: ActionUiState,
-            val reblogAction: ActionUiState,
-            val commentsAction: ActionUiState,
-            val onItemClicked: ((ReaderPost) -> Unit),
-            val onItemRendered: (ReaderPost) -> Unit
-        ) : ReaderCardUiState() {
-            val dotSeparatorVisibility: Boolean = blogUrl != null
-
-            data class DiscoverLayoutUiState(
-                val discoverText: Spanned,
-                val discoverAvatarUrl: String,
-                val imageType: ImageType
-            )
-
-            data class ActionUiState(
-                val isEnabled: Boolean,
-                val isSelected: Boolean? = false,
-                val contentDescription: UiString? = null,
-                val count: Int = 0,
-                val onClicked: ((Long, Long, Boolean) -> Unit)? = null
-            )
-        }
     }
 }

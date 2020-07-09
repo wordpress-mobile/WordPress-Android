@@ -26,6 +26,8 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -36,6 +38,8 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory
     @Mock private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
+    @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+    @Mock private lateinit var reblogUseCase: ReblogUseCase
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderPostList>()
     private val communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
@@ -44,14 +48,24 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
+
         whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
         viewModel = ReaderDiscoverViewModel(
                 readerDiscoverRepositoryFactory, uiStateBuilder, TEST_DISPATCHER, TEST_DISPATCHER)
         whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
+        viewModel = ReaderDiscoverViewModel(
+                readerPostRepository,
+                uiStateBuilder,
+                readerPostCardActionsHandler,
+                reblogUseCase,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER
+        )
+        whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
-                        anyOrNull(), anyInt(), anyInt(), anyBoolean(), anyOrNull(),
-                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
+                        anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
+                        anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
         whenever(readerDiscoverRepository.communicationChannel).thenReturn(communicationChannel)

@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build.VERSION;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -17,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -55,13 +52,12 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ConfigurationExtensionsKt;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.URLFilteredWebViewClient;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
@@ -161,20 +157,8 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ((WordPress) getApplication()).component().inject(this);
-        setLightStatusBar();
+        WPActivityUtils.setLightStatusBar(getWindow(), true);
         super.onCreate(savedInstanceState);
-    }
-
-    private void setLightStatusBar() {
-        if (VERSION.SDK_INT >= VERSION_CODES.M) {
-            Window window = getWindow();
-            window.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(this, R.attr.colorSurface));
-
-            if (!ConfigurationExtensionsKt.isDarkTheme(getResources().getConfiguration())) {
-                window.getDecorView().setSystemUiVisibility(
-                        window.getDecorView().getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-        }
     }
 
     @Override

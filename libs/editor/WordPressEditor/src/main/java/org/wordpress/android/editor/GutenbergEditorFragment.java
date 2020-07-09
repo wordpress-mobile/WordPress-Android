@@ -86,8 +86,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_TOKEN = "param_site_token";
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
+    private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
-
+    private static final String ARG_SITE_JETPACK_IS_CONNECTED = "param_site_jetpack_is_connected";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -134,7 +135,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String token,
                                                       boolean isSiteUsingWpComRestApi,
                                                       @Nullable Bundle editorTheme,
-                                                      boolean tenorEnabled) {
+                                                      String userAgent,
+                                                      boolean tenorEnabled,
+                                                      boolean siteIsJetpackConnected) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -151,7 +154,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_SITE_TOKEN, token);
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
+        args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
+        args.putBoolean(ARG_SITE_JETPACK_IS_CONNECTED, siteIsJetpackConnected);
         fragment.setArguments(args);
         return fragment;
     }
@@ -253,6 +258,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
             boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
             Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
+            boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_JETPACK_IS_CONNECTED);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -263,7 +269,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             getTranslations(),
                             isDarkMode(),
                             isSiteUsingWpComRestApi,
-                            editorTheme);
+                            editorTheme,
+                            siteJetpackIsConnected);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
@@ -463,6 +470,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         String siteUsername = getArguments().getString(ARG_SITE_USERNAME);
         String sitePassword = getArguments().getString(ARG_SITE_PASSWORD);
         String siteToken = getArguments().getString(ARG_SITE_TOKEN);
+        String userAgent = getArguments().getString(ARG_SITE_USER_AGENT);
 
         Intent intent = new Intent(getActivity(), WPGutenbergWebViewActivity.class);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID, blockId);
@@ -474,8 +482,23 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_USER, siteUsername);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_PASSWD, sitePassword);
         intent.putExtra(WPGutenbergWebViewActivity.ARG_AUTHENTICATION_TOKEN, siteToken);
+        intent.putExtra(WPGutenbergWebViewActivity.ARG_USER_AGENT, userAgent);
 
         startActivityForResult(intent, UNSUPPORTED_BLOCK_REQUEST_CODE);
+
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("block", blockName);
+        mEditorFragmentListener.onTrackableEvent(
+                TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
+                properties);
+    }
+
+    private void trackWebViewClosed(String action) {
+        HashMap<String, String> properties = new HashMap<>();
+        properties.put("action", action);
+        mEditorFragmentListener.onTrackableEvent(
+                TrackableEvent.EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
+                properties);
     }
 
     @Override
@@ -487,6 +510,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 String blockId = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_ID);
                 String content = data.getStringExtra(WPGutenbergWebViewActivity.ARG_BLOCK_CONTENT);
                 getGutenbergContainerFragment().replaceUnsupportedBlock(content, blockId);
+                trackWebViewClosed("save");
+            } else {
+                trackWebViewClosed("dismiss");
             }
         }
     }

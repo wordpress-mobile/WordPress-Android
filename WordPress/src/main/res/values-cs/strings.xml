@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-01 20:35:46+0000
+Translation-Revision-Date: 2020-06-17 08:19:44+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
@@ -28,8 +28,6 @@ Language: cs_CZ
     <string name="stats_management_dismiss_insights_news_card">Skrýt</string>
     <string name="stats_management_try_it_now">Vyzkoušet</string>
     <string name="post_list_tab_drafts">Koncepty</string>
-    <string name="post_list_author_everyone">Všichni</string>
-    <string name="post_list_author_me">Já</string>
     <string name="stats_insights_average_words">Průměr slov/příspěvek</string>
     <string name="stats_insights_total_words">Celkem slov</string>
     <string name="stats_insights_average_likes">Průměr to se mi líbí/příspěvek</string>
@@ -168,7 +166,6 @@ Language: cs_CZ
     <string name="pages_delete_permanently">Trvale odstranit</string>
     <string name="pages_move_to_trash">Přesunout do koše</string>
     <string name="pages_move_to_draft">Přesunout do konceptů</string>
-    <string name="pages_publish_now">Zveřejnit</string>
     <string name="pages_set_parent">Přiřadit nadřazenou stránku</string>
     <string name="pages_view">Zobrazení</string>
     <string name="pages_trashed">Smazané</string>
@@ -401,7 +398,6 @@ Language: cs_CZ
     <string name="menu_html_mode_done_snackbar">Přepnout na HTML mód</string>
     <string name="menu_html_mode">HTML mód</string>
     <string name="menu_preview">Náhled</string>
-    <string name="menu_publish_now">Publikovat nyní</string>
     <string name="menu_save_as_draft">Uložit jako koncept</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -464,10 +460,6 @@ Language: cs_CZ
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d stánek a %2$d z%3$d souborů zbývají </string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 příspěvek a %1$d z %2$d souborů zbývají </string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">Stránka 1, a %1$d z %2$d souborů zbývá</string>
-    <string name="dialog_confirm_publish_yes">Publikovat</string>
-    <string name="dialog_confirm_publish_message_page">Tato stránka bude publikována okamžitě.</string>
-    <string name="dialog_confirm_publish_message_post">Tento příspěvek bude publikován okamžitě.</string>
-    <string name="dialog_confirm_publish_title">Připraveno k publikování?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d příspěvků / stránek se nenahrálo</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d stránek se nenahrálo</string>
     <string name="media_file_page_singular_only_not_uploaded">1 stránka se nenahrála</string>
@@ -802,7 +794,6 @@ Language: cs_CZ
     <string name="post_settings_not_set">Nenastaveno</string>
     <string name="post_settings_more_options">Více nastavení</string>
     <string name="post_settings_categories_and_tags">Rubriky a štítky</string>
-    <string name="post_settings_status">Stav</string>
     <string name="notifications_tab_title_all">Vše</string>
     <string name="top_level_category_name">Nejvyšší úroveň</string>
     <string name="category_parent">Nadřazená rubrika (volitelné):</string>
@@ -926,7 +917,6 @@ Language: cs_CZ
     <string name="media_upload_state_deleting">Mazání</string>
     <string name="media_upload_state_uploading">Nahrávání</string>
     <string name="media_upload_state_queued">Ve frontě</string>
-    <string name="keep_editing">Pokračovat v úpravách</string>
     <string name="image_quality">Kvalita obrázku</string>
     <string name="error_all_media_upload_canceled">Všechna nahrání médií byla zrušena kvůli neznámé chybě. Opakujte nahrávání</string>
     <string name="error_unknown_post_type">Neznámý formát příspěvku</string>
@@ -1586,7 +1576,6 @@ Language: cs_CZ
     <string name="httppassword">HTTP heslo</string>
     <string name="httpuser">HTTP uživ.jméno</string>
     <string name="error_media_upload">Došlo k chybě během nahrávání médií</string>
-    <string name="publish_date">Publikovat</string>
     <string name="incorrect_credentials">Nesprávné uživatelské jméno nebo heslo.</string>
     <string name="log_in">Přihlásit</string>
     <string name="username">Uživatelské jméno</string>
@@ -1622,6 +1611,7 @@ Language: cs_CZ
     <string name="no">Ne</string>
     <string name="yes">Ano</string>
     <string name="notification_settings">Nastavení upozornění</string>
+    <string name="publish_now">Publikovat</string>
     <string name="reply">Odpovědět</string>
     <string name="on">na</string>
     <string name="preview">Náhled</string>

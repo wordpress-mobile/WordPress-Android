@@ -705,7 +705,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mSite);
+            mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -1580,6 +1580,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void updateAndSavePostAsync() {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
@@ -2022,13 +2026,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
-                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
                                 themeBundle,
-                                mTenorFeatureConfig.isEnabled());
+                                WordPress.getUserAgent(),
+                                mTenorFeatureConfig.isEnabled(),
+                                mSite.isJetpackConnected()
+                        );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2903,6 +2910,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
         }
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
     // FluxC events
