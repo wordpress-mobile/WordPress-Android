@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -463,7 +464,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
+        return AppPrefs.isReaderImprovementsPhase2Enabled()
+               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
     }
 
     private boolean isDiscover() {
@@ -703,31 +705,16 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
      * triggered when user taps the bookmark post button
      */
     private void toggleBookmark(final long blogId, final long postId) {
-        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, false);
-
-        AnalyticsTracker.Stat eventToTrack;
-        if (post.isBookmarked) {
-            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
-                    : AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_OTHER_POST_LIST;
-            ReaderPostActions.removeFromBookmarked(post);
-        } else {
-            eventToTrack = isBookmarksList() ? AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
-                    : AnalyticsTracker.Stat.READER_POST_SAVED_FROM_OTHER_POST_LIST;
-            ReaderPostActions.addToBookmarked(post);
-        }
-
-        AnalyticsTracker.track(eventToTrack);
-
         // update post in array and on screen
-        post = ReaderPostTable.getBlogPost(blogId, postId, true);
+        ReaderPost post = ReaderPostTable.getBlogPost(blogId, postId, true);
         int position = mPosts.indexOfPost(post);
         if (post != null && position > -1) {
+            post.isBookmarked = !post.isBookmarked;
             mPosts.set(position, post);
+        }
 
-            if (mOnPostBookmarkedListener != null) {
-                mOnPostBookmarkedListener
-                        .onBookmarkedStateChanged(post.isBookmarked, blogId, postId, !isBookmarksList());
-            }
+        if (mOnPostBookmarkedListener != null) {
+            mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
         }
     }
 

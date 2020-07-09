@@ -1,36 +1,50 @@
 package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.reader.reblog.NoSite
-import org.wordpress.android.ui.reader.reblog.PostEditor
-import org.wordpress.android.ui.reader.reblog.ReblogState
-import org.wordpress.android.ui.reader.reblog.SitePicker
-import org.wordpress.android.ui.reader.reblog.Unknown
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.BuildConfig
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ReaderPostListViewModel @Inject constructor(
-    private val readerTracker: ReaderTracker,
-    private val siteStore: SiteStore
+    private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val reblogUseCase: ReblogUseCase,
+    private val readerTracker: ReaderTracker
 ) : ViewModel() {
-    private val _reblogState = MutableLiveData<Event<ReblogState>>()
-    val reblogState: LiveData<Event<ReblogState>> = _reblogState
-
     private var isStarted = false
 
     private var readerViewModel: ReaderViewModel? = null
+
+    /**
+     * Post which is about to be reblogged after the user selects a target site.
+     */
+    private var pendingReblogPost: ReaderPost? = null
+
+    private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
 
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
@@ -39,6 +53,26 @@ class ReaderPostListViewModel @Inject constructor(
             return
         }
         isStarted = true
+
+        init()
+    }
+
+    private fun init() {
+        _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
+            _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
     }
 
     /**
@@ -46,22 +80,13 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param post post to reblog
      */
-    fun onReblogButtonClicked(post: ReaderPost) {
-        val sites = siteStore.visibleSitesAccessedViaWPCom
+    fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
+    }
 
-        _reblogState.value = when (sites.count()) {
-            0 -> Event(NoSite)
-            1 -> {
-                sites.firstOrNull()?.let {
-                    Event(PostEditor(it, post))
-                } ?: Event(Unknown)
-            }
-            else -> {
-                sites.firstOrNull()?.let {
-                    Event(SitePicker(it, post))
-                } ?: Event(Unknown)
-            }
-        }
+    fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+        val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+        readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
     }
 
     /**
@@ -70,16 +95,14 @@ class ReaderPostListViewModel @Inject constructor(
      * @param site selected site to reblog to
      */
     fun onReblogSiteSelected(siteLocalId: Int) {
-        val currentState: ReblogState? = _reblogState.value?.peekContent()
-        if (currentState is SitePicker) {
-            val site: SiteModel? = siteStore.getSiteByLocalId(siteLocalId)
-            _reblogState.value = if (site != null) Event(PostEditor(site, currentState.post)) else Event(Unknown)
-        } else if (BuildConfig.DEBUG) {
-            throw IllegalStateException("Site Selected without passing the SitePicker state")
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
+        val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
+        if (navigationTarget != null) {
+            _navigationEvents.postValue(Event(navigationTarget))
         } else {
-            AppLog.e(T.READER, "Site Selected without passing the SitePicker state")
-            _reblogState.value = Event(Unknown)
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
+        pendingReblogPost = null
     }
 
     fun onEmptyStateButtonTapped(tag: ReaderTag) {

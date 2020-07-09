@@ -22,6 +22,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
 
 @InternalCoroutinesApi
@@ -33,6 +34,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var readerPostRepository: ReaderPostRepository
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
+    @Mock private lateinit var reblogUseCase: ReblogUseCase
 
     private val fakeDiscoverFeed = MutableLiveData<ReaderPostList>()
 
@@ -44,6 +46,7 @@ class ReaderDiscoverViewModelTest {
                 readerPostRepository,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
+                reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
