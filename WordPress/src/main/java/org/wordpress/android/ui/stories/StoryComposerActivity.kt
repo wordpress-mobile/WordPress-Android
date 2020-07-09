@@ -299,7 +299,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // this is an artifact to be able to call savePostToDb()
         editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
-            savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
+            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
         }
     }
 
