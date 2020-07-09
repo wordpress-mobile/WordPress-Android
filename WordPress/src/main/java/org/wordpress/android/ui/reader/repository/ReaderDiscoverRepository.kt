@@ -15,7 +15,6 @@ import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCa
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
-import org.wordpress.android.ui.reader.repository.usecases.ReaderRepositoryEventBusHandler
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
@@ -43,20 +42,23 @@ class ReaderDiscoverRepository constructor(
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
 
-    private lateinit var readerRepositoryEventBusHandler: ReaderRepositoryEventBusHandler
+    private lateinit var readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
 
     fun start() {
         if (isStarted) return
 
         isStarted = true
-        initEventBusHandler()
+        initUpdatePostsEndedHandler()
     }
 
-    private fun initEventBusHandler() {
-        readerRepositoryEventBusHandler = ReaderRepositoryEventBusHandler(
-                ReaderRepositoryEventBusHandler.setUpdatePostsEndedListeners(this::onNewPosts,
-                this::onChangedPosts, this::onUnchanged, this::onFailed), eventBusWrapper, readerTag)
-        readerRepositoryEventBusHandler.start()
+    private fun initUpdatePostsEndedHandler() {
+        readerUpdatePostsEndedHandler = ReaderUpdatePostsEndedHandler(
+                ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
+                        this::onNewPosts,
+                        this::onChangedPosts, this::onUnchanged, this::onFailed
+                ), eventBusWrapper, readerTag
+        )
+        readerUpdatePostsEndedHandler.start()
     }
 
     fun stop() {
@@ -64,7 +66,7 @@ class ReaderDiscoverRepository constructor(
         getNumPostsForTagUseCase.stop()
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
-        readerRepositoryEventBusHandler.stop()
+        readerUpdatePostsEndedHandler.stop()
     }
 
     fun getTag(): ReaderTag {
@@ -80,7 +82,6 @@ class ReaderDiscoverRepository constructor(
     }
 
     private fun onUnchanged(event: UpdatePostsEnded) {
-        // todo: annmarie implement
     }
 
     private fun onFailed(event: UpdatePostsEnded) {
@@ -93,7 +94,6 @@ class ReaderDiscoverRepository constructor(
     }
 
     private fun onInactiveDiscoverFeed() {
-        // todo: annmarie this may not be used
     }
 
     private fun loadPosts() {

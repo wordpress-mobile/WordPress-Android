@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository.usecases
+package org.wordpress.android.ui.reader.repository
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
@@ -10,7 +10,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.util.EventBusWrapper
 
-class ReaderRepositoryEventBusHandler constructor(
+class ReaderUpdatePostsEndedHandler constructor(
     private val onReaderRepositoryUpdatePostsEndedListener: OnReaderRepositoryUpdatePostsEndedListener,
     private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag

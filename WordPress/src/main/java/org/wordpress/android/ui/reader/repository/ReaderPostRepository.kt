@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -7,7 +9,6 @@ import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
@@ -32,49 +33,61 @@ class ReaderPostRepository(
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
-) : BaseReaderRepository(eventBusWrapper,
-        networkUtilsWrapper,
-        contextProvider) {
+) {
+    private var isStarted = false
+
     private val _postsForTag = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActivePostsForTag() }, onInactive = { onInactivePostsForTag() })
     val postsForTag: ReactiveMutableLiveData<ReaderPostList> = _postsForTag
 
-    private var isStarted = false
+    private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
+    val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
 
-    override fun start() {
+    private lateinit var readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+
+    fun start() {
         if (isStarted) return
 
         isStarted = true
-        super.start()
+        initUpdatePostsEndedHandler()
     }
 
-    override fun stop() {
+    private fun initUpdatePostsEndedHandler() {
+        readerUpdatePostsEndedHandler = ReaderUpdatePostsEndedHandler(
+                ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
+                        this::onNewPosts,
+                        this::onChangedPosts, this::onUnchanged, this::onFailed
+                ), eventBusWrapper, readerTag
+        )
+        readerUpdatePostsEndedHandler.start()
+    }
+
+    fun stop() {
         getPostsForTagUseCase.stop()
         getNumPostsForTagUseCase.stop()
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
+        readerUpdatePostsEndedHandler.stop()
     }
 
-    override fun getTag(): ReaderTag {
+    fun getTag(): ReaderTag {
         return readerTag
     }
 
-    override fun onNewPosts(event: UpdatePostsEnded) {
+    private fun onNewPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
 
-    override fun onChangedPosts(event: UpdatePostsEnded) {
+    private fun onChangedPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
 
-    override fun onUnchanged(event: UpdatePostsEnded) {
-        // todo: annmarie Handle the refresh situation but nothing changed
+    private fun onUnchanged(event: UpdatePostsEnded) {
     }
 
-    override fun onFailed(event: UpdatePostsEnded) {
+    private fun onFailed(event: UpdatePostsEnded) {
         _communicationChannel.postValue(
-                Event(RemoteRequestFailure)
-        )
+                Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure))
     }
 
     private fun onActivePostsForTag() {
@@ -82,7 +95,6 @@ class ReaderPostRepository(
     }
 
     private fun onInactivePostsForTag() {
-        // todo: annmarie this may not be used
     }
 
     private fun loadPosts() {
