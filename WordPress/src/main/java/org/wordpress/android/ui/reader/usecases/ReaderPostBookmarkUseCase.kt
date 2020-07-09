@@ -10,10 +10,12 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
+import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
@@ -31,7 +33,9 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val readerPostActionsWrapper: ReaderPostActionsWrapper,
+    private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
     private val _navigationEvents = MutableLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -79,14 +83,15 @@ class ReaderPostBookmarkUseCase @Inject constructor(
     private fun updatePostInDb(blogId: Long, postId: Long): Boolean {
         // TODO malinjir replace direct db access with access to repository.
         //  Also make sure PostUpdated event is emitted when we change the state of the post.
-        val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+        val post = readerPostTableWrapper.getBlogPost(blogId, postId, true)
+                ?: throw IllegalStateException("Post displayed on the UI not found in DB.")
 
         val setToBookmarked = !post.isBookmarked
 
         if (setToBookmarked) {
-            ReaderPostActions.addToBookmarked(post)
+            readerPostActionsWrapper.addToBookmarked(post)
         } else {
-            ReaderPostActions.removeFromBookmarked(post)
+            readerPostActionsWrapper.removeFromBookmarked(post)
         }
         return setToBookmarked
     }
