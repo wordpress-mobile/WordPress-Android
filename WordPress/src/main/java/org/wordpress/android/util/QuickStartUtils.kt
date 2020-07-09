@@ -57,7 +57,8 @@ class QuickStartUtils {
          * in front of it if necessary
          *
          * @param context Context used to access resources
-         * @param messageId resources id of the message to display
+         * @param messageId resources id of the message to display. If string contains basic HTML tags inside
+         * <![CDATA[ ]]>, they will be converted to Spans.
          * @param iconId resource if of the icon that goes before the highlighted area
          */
         @JvmStatic
