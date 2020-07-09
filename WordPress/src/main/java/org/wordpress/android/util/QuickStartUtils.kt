@@ -63,7 +63,9 @@ class QuickStartUtils {
          */
         @JvmStatic
         @JvmOverloads
-        fun stylizeQuickStartPrompt(context: Context, messageId: Int, iconId: Int = -1, actionName: String? = null): Spannable {
+        fun stylizeQuickStartPrompt(
+            context: Context, messageId: Int, iconId: Int = -1, actionName: String? = null
+        ): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
             var formattedMessage = if (actionName == null) {
