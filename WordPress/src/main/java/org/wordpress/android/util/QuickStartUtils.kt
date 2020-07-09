@@ -59,23 +59,17 @@ class QuickStartUtils {
          * @param context Context used to access resources
          * @param messageId resources id of the message to display
          * @param iconId resource if of the icon that goes before the highlighted area
-         * @param actionName String that would be displayed in bold, will only work if message contains %1$s %2$s %3$s
          */
         @JvmStatic
         @JvmOverloads
         fun stylizeQuickStartPrompt(
             context: Context,
             messageId: Int,
-            iconId: Int = -1,
-            actionName: String? = null
+            iconId: Int = -1
         ): Spannable {
             val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
             val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
-            var formattedMessage = if (actionName == null) {
-                context.resources.getString(messageId, spanTagOpen, spanTagEnd)
-            } else {
-                context.resources.getString(messageId, spanTagOpen, actionName, spanTagEnd)
-            }
+            var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
 
             val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 

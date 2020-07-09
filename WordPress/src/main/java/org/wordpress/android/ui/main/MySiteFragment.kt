@@ -6,6 +6,7 @@ import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.text.Html
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
@@ -1379,12 +1381,11 @@ class MySiteFragment : Fragment(),
         showQuickStartFocusPoint()
         val shortQuickStartMessage =
                 if (activeTutorialPrompt?.task == UPDATE_SITE_TITLE) {
-                    stylizeQuickStartPrompt(
-                            requireActivity(),
-                            activeTutorialPrompt!!.shortMessagePrompt,
-                            activeTutorialPrompt!!.iconId,
-                            my_site_title_label.text.toString()
-                    )
+                    HtmlCompat.fromHtml(
+                            getString(
+                                    R.string.quick_start_dialog_update_site_title_message_short,
+                                    my_site_title_label.text.toString()
+                            ), HtmlCompat.FROM_HTML_MODE_COMPACT)
                 } else {
                     stylizeQuickStartPrompt(
                             requireActivity(),
