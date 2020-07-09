@@ -1384,7 +1384,8 @@ class MySiteFragment : Fragment(),
                             getString(
                                     R.string.quick_start_dialog_update_site_title_message_short,
                                     my_site_title_label.text.toString()
-                            ), HtmlCompat.FROM_HTML_MODE_COMPACT)
+                            ), HtmlCompat.FROM_HTML_MODE_COMPACT
+                    )
                 } else {
                     stylizeQuickStartPrompt(
                             requireActivity(),
