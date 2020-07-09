@@ -77,7 +77,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginMagicLinkExited() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_EXITED);
-        mUnifiedLoginTracker.trackClick(Click.USE_PASSWORD_INSTEAD);
     }
 
     @Override
@@ -302,11 +301,6 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSubmit2faCodeClicked() {
         mUnifiedLoginTracker.trackClick(Click.SUBMIT_2FA_CODE);
-    }
-
-    @Override
-    public void trackClickOnLoginSiteClicked() {
-        mUnifiedLoginTracker.trackClick(Click.CLICK_ON_LOGIN_SITE);
     }
 
     @Override
