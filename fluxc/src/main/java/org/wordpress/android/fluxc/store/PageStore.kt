@@ -9,18 +9,21 @@ import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.post.PostStatus
+import org.wordpress.android.fluxc.network.utils.CurrentDateUtils
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
+import org.wordpress.android.fluxc.store.PageStore.OnPageChanged.Error
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.ERROR_NON_EXISTING_PAGE
 import org.wordpress.android.fluxc.store.PageStore.UploadRequestResult.SUCCESS
 import org.wordpress.android.fluxc.store.PostStore.FetchPostsPayload
 import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
-import org.wordpress.android.fluxc.store.PostStore.PostDeleteActionType.DELETE
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.UNKNOWN_POST
 import org.wordpress.android.fluxc.store.PostStore.RemotePostPayload
+import org.wordpress.android.fluxc.store.Store.OnChanged
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,6 +36,7 @@ class PageStore @Inject constructor(
     private val postStore: PostStore,
     private val postSqlUtils: PostSqlUtils,
     private val dispatcher: Dispatcher,
+    private val currentDateUtils: CurrentDateUtils,
     private val coroutineEngine: CoroutineEngine
 ) {
     companion object {
@@ -46,10 +50,11 @@ class PageStore @Inject constructor(
         )
     }
 
-    private var postLoadContinuation: Continuation<OnPostChanged>? = null
-    private var deletePostContinuation: Continuation<OnPostChanged>? = null
-    private var updatePostContinuation: Continuation<OnPostChanged>? = null
+    private var postLoadContinuations: MutableList<Continuation<OnPageChanged>> = mutableListOf()
+    private var deletePostContinuation: Continuation<OnPageChanged>? = null
+    private var updatePostContinuation: Continuation<OnPageChanged>? = null
 
+    private var lastFetchTime: Calendar? = null
     private var fetchingSite: SiteModel? = null
 
     init {
@@ -83,7 +88,7 @@ class PageStore @Inject constructor(
                 }
             }
 
-    suspend fun updatePageInDb(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+    suspend fun updatePageInDb(page: PageModel): OnPageChanged = suspendCoroutine { cont ->
         val post = postStore.getPostByRemotePostId(page.remoteId, page.site)
                 ?: postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
@@ -93,9 +98,7 @@ class PageStore @Inject constructor(
             updatePostContinuation = cont
             dispatcher.dispatch(updateAction)
         } else {
-            val event = OnPostChanged(CauseOfOnPostChanged.UpdatePost(page.pageId, page.remoteId), 0)
-            event.error = PostError(UNKNOWN_POST)
-            cont.resume(event)
+            cont.resume(Error(PostError(UNKNOWN_POST)))
         }
     }
 
@@ -120,36 +123,41 @@ class PageStore @Inject constructor(
         ERROR_NON_EXISTING_PAGE
     }
 
-    suspend fun getPagesFromDb(site: SiteModel): List<PageModel> =
-            coroutineEngine.withDefaultContext(AppLog.T.POSTS, this, "getPagesFromDb") {
-                val posts = postStore.getPagesForSite(site)
-                        .asSequence()
-                        .filterNotNull()
-                        .filter { PAGE_TYPES.contains(PostStatus.fromPost(it)) }
-                        .map {
-                            // local DB pages have a non-unique remote ID value of 0
-                            // to keep the apart we replace it with page ID (still unique)
-                            // and make it negative (to easily tell it's a temporary value)
-                            if (it.remotePostId == 0L) {
-                                /**
-                                 * This hack is breaking the approach which we use for making sure we upload only changes which
-                                 * were explicitly confirmed by the user. We are modifying the PostModel and we need to make
-                                 * sure to retain the confirmation.
-                                 */
-                                val changesConfirmed = it.contentHashcode() == it.changesConfirmedContentHashcode
-                                it.setRemotePostId(-it.id.toLong())
-                                if (changesConfirmed) {
-                                    it.setChangesConfirmedContentHashcode(it.contentHashcode())
-                                }
+    suspend fun getPagesFromDb(site: SiteModel): List<PageModel> {
+        // We don't want to return data from the database when it's still being loaded
+        if (postLoadContinuations.isNotEmpty()) {
+            return listOf()
+        }
+        return coroutineEngine.withDefaultContext(AppLog.T.POSTS, this, "getPagesFromDb") {
+            val posts = postStore.getPagesForSite(site)
+                    .asSequence()
+                    .filterNotNull()
+                    .filter { PAGE_TYPES.contains(PostStatus.fromPost(it)) }
+                    .map {
+                        // local DB pages have a non-unique remote ID value of 0
+                        // to keep the apart we replace it with page ID (still unique)
+                        // and make it negative (to easily tell it's a temporary value)
+                        if (it.remotePostId == 0L) {
+                            /**
+                             * This hack is breaking the approach which we use for making sure we upload only changes which
+                             * were explicitly confirmed by the user. We are modifying the PostModel and we need to make
+                             * sure to retain the confirmation.
+                             */
+                            val changesConfirmed = it.contentHashcode() == it.changesConfirmedContentHashcode
+                            it.setRemotePostId(-it.id.toLong())
+                            if (changesConfirmed) {
+                                it.setChangesConfirmedContentHashcode(it.contentHashcode())
                             }
-                            it
                         }
-                        .associateBy { it.remotePostId }
+                        it
+                    }
+                    .associateBy { it.remotePostId }
 
-                return@withDefaultContext posts.map { getPageFromPost(it.key, site, posts, false) }
-                        .filterNotNull()
-                        .sortedBy { it.remoteId }
-            }
+            return@withDefaultContext posts.map { getPageFromPost(it.key, site, posts, false) }
+                    .filterNotNull()
+                    .sortedBy { it.remoteId }
+        }
+    }
 
     private fun getPageFromPost(
         postId: Long,
@@ -164,22 +172,14 @@ class PageStore @Inject constructor(
         return PageModel(post, site, getPageFromPost(post.parentId, site, posts))
     }
 
-    suspend fun deletePageFromServer(page: PageModel): OnPostChanged = suspendCoroutine { cont ->
+    suspend fun deletePageFromServer(page: PageModel): OnPageChanged = suspendCoroutine { cont ->
         val post = postStore.getPostByLocalPostId(page.pageId)
         if (post != null) {
             deletePostContinuation = cont
             val payload = RemotePostPayload(post, page.site)
             dispatcher.dispatch(PostActionBuilder.newDeletePostAction(payload))
         } else {
-            val event = OnPostChanged(
-                    CauseOfOnPostChanged.DeletePost(
-                            localPostId = page.pageId,
-                            remotePostId = page.remoteId,
-                            postDeleteActionType = DELETE
-                    ), 0
-            )
-            event.error = PostError(UNKNOWN_POST)
-            cont.resume(event)
+            cont.resume(Error(PostError(UNKNOWN_POST)))
         }
     }
 
@@ -193,10 +193,24 @@ class PageStore @Inject constructor(
                 }
             }
 
-    suspend fun requestPagesFromServer(site: SiteModel): OnPostChanged = suspendCoroutine { cont ->
-        fetchingSite = site
-        postLoadContinuation = cont
-        fetchPages(site, false)
+    suspend fun requestPagesFromServer(site: SiteModel, forced: Boolean): OnPageChanged {
+        if (!forced && hasRecentCall() && getPagesFromDb(site).isNotEmpty()) {
+            return OnPageChanged.Success
+        }
+        return suspendCoroutine { cont ->
+            fetchingSite = site
+            if (postLoadContinuations.isEmpty()) {
+                lastFetchTime = currentDateUtils.getCurrentCalendar()
+                fetchPages(site, false)
+            }
+            postLoadContinuations.add(cont)
+        }
+    }
+
+    private fun hasRecentCall(): Boolean {
+        val currentCalendar = currentDateUtils.getCurrentCalendar()
+        currentCalendar.add(Calendar.HOUR, -1)
+        return lastFetchTime?.after(currentCalendar) ?: false
     }
 
     /**
@@ -234,17 +248,18 @@ class PageStore @Inject constructor(
                 if (event.canLoadMore && fetchingSite != null) {
                     fetchPages(fetchingSite!!, true)
                 } else {
-                    postLoadContinuation?.resume(event)
-                    postLoadContinuation = null
+                    val onPageChanged = event.toOnPageChangedEvent()
+                    postLoadContinuations.forEach { it.resume(onPageChanged) }
+                    postLoadContinuations.clear()
                     fetchingSite = null
                 }
             }
             is CauseOfOnPostChanged.DeletePost -> {
-                deletePostContinuation?.resume(event)
+                deletePostContinuation?.resume(event.toOnPageChangedEvent())
                 deletePostContinuation = null
             }
             is CauseOfOnPostChanged.UpdatePost -> {
-                updatePostContinuation?.resume(event)
+                updatePostContinuation?.resume(event.toOnPageChangedEvent())
                 updatePostContinuation = null
             }
             else -> {
@@ -259,5 +274,18 @@ class PageStore @Inject constructor(
         this.setParentId(page.parent?.remoteId ?: 0)
         this.setRemotePostId(page.remoteId)
         this.setDateCreated(DateTimeUtils.iso8601FromDate(page.date))
+    }
+
+    sealed class OnPageChanged : OnChanged<PostError>() {
+        object Success : OnPageChanged()
+        data class Error(val postError: PostError) : OnPageChanged() {
+            init {
+                this.error = postError
+            }
+        }
+    }
+
+    private fun OnPostChanged.toOnPageChangedEvent(): OnPageChanged {
+        return if (this.isError) Error(this.error) else OnPageChanged.Success
     }
 }
