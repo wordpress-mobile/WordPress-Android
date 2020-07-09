@@ -2013,7 +2013,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
-                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -2038,7 +2037,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
-                                isSiteUsingWpComRestApi,
+                                mSite.isUsingWpComRestApi(),
                                 themeBundle,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),

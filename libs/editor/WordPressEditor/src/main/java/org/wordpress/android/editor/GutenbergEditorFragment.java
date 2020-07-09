@@ -45,6 +45,7 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
+import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
@@ -74,9 +75,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String GUTENBERG_EDITOR_NAME = "gutenberg";
     private static final String KEY_HTML_MODE_ENABLED = "KEY_HTML_MODE_ENABLED";
     private static final String KEY_EDITOR_DID_MOUNT = "KEY_EDITOR_DID_MOUNT";
-    private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
-    private static final String ARG_LOCALE_SLUG = "param_locale_slug";
     private static final String ARG_SITE_URL = "param_site_url";
     private static final String ARG_IS_SITE_PRIVATE = "param_is_site_private";
     private static final String ARG_SITE_USER_ID = "param_user_id";
@@ -84,12 +83,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_PASSWORD = "param_site_password";
     private static final String ARG_SITE_TOKEN = "param_site_token";
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
-    private static final String ARG_EDITOR_THEME = "param_editor_theme";
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
-    private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
-    private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
-            "param_site_is_unsupported_block_editor_enabled";
+    private static final String ARG_GUTENBERG_PROPS = "param_gutenberg_props";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -143,9 +139,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
         args.putString(ARG_PARAM_CONTENT, content);
-        args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
-        args.putString(ARG_LOCALE_SLUG, localeSlug);
         args.putString(ARG_SITE_URL, siteUrl);
         args.putBoolean(ARG_IS_SITE_PRIVATE, isPrivate);
         args.putLong(ARG_SITE_USER_ID, userId);
@@ -153,11 +147,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_SITE_PASSWORD, password);
         args.putString(ARG_SITE_TOKEN, token);
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
-        args.putBundle(ARG_EDITOR_THEME, editorTheme);
         args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
-        args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
-        args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
+
+        GutenbergProps gutenbergProps = new GutenbergProps(
+                enableMentionsFlag,
+                isSiteUsingWpComRestApi,
+                isUnsupportedBlockEditorEnabled,
+                localeSlug,
+                postType,
+                editorTheme);
+        args.putParcelable(ARG_GUTENBERG_PROPS, gutenbergProps);
         fragment.setArguments(args);
         return fragment;
     }
@@ -254,29 +254,15 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
-            String postType = getArguments().getString(ARG_POST_TYPE);
-            boolean isNewPost = getArguments().getBoolean(ARG_IS_NEW_POST);
-            String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
-            boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
-            Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
-            boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
-            boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
+            GutenbergProps gutenbergProps = getArguments().getParcelable(ARG_GUTENBERG_PROPS);
+            gutenbergProps.setTranslations(getTranslations());
+            gutenbergProps.setDarkMode(isDarkMode());
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(
-                            postType,
-                            isNewPost,
-                            localeSlug,
-                            getTranslations(),
-                            isDarkMode(),
-                            isSiteUsingWpComRestApi,
-                            editorTheme,
-                            siteJetpackIsConnected,
-                            enableMentionsFlag);
-            gutenbergContainerFragment.setRetainInstance(true);
-            fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
+            GutenbergContainerFragment fragment = GutenbergContainerFragment.newInstance(gutenbergProps);
+            fragment.setRetainInstance(true);
+            fragmentTransaction.add(fragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
         }
 

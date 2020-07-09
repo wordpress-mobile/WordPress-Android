@@ -7,6 +7,7 @@ import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -28,41 +29,16 @@ import java.util.ArrayList;
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
 
-    private static final String ARG_POST_TYPE = "param_post_type";
-    private static final String ARG_IS_NEW_POST = "param_is_new_post";
-    private static final String ARG_LOCALE = "param_locale";
-    private static final String ARG_TRANSLATIONS = "param_translations";
-    private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
-    private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
-    private static final String ARG_EDITOR_THEME = "param_editor_theme";
-    private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
-            "param_site_is_unsupported_block_editor_enabled";
-    private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
+    private static final String ARG_GUTENBERG_PROPS = "param_gutenberg_props";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-    public static GutenbergContainerFragment newInstance(String postType,
-                                                         boolean isNewPost,
-                                                         String localeString,
-                                                         Bundle translations,
-                                                         boolean isDarkMode,
-                                                         boolean isSiteUsingWpComRestApi,
-                                                         Bundle editorTheme,
-                                                         boolean isUnsupportedBlockEditorEnabled,
-                                                         boolean enableMentionsFlag) {
+    public static GutenbergContainerFragment newInstance(GutenbergProps gutenbergProps) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_POST_TYPE, postType);
-        args.putBoolean(ARG_IS_NEW_POST, isNewPost);
-        args.putString(ARG_LOCALE, localeString);
-        args.putBundle(ARG_TRANSLATIONS, translations);
-        args.putBoolean(ARG_PREFERRED_COLOR_SCHEME, isDarkMode);
-        args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
-        args.putBundle(ARG_EDITOR_THEME, editorTheme);
-        args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
-        args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
+        args.putParcelable(ARG_GUTENBERG_PROPS, gutenbergProps);
         fragment.setArguments(args);
         return fragment;
     }
@@ -106,16 +82,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String postType = getArguments().getString(ARG_POST_TYPE);
-        boolean isNewPost = getArguments() != null && getArguments().getBoolean(ARG_IS_NEW_POST);
-        String localeString = getArguments().getString(ARG_LOCALE);
-        Bundle translations = getArguments().getBundle(ARG_TRANSLATIONS);
-        boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
-        boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
-        Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
-        boolean isUnsupportedBlockEditorEnabled =
-                getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
-        boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
+        GutenbergProps gutenbergProps = getArguments().getParcelable(ARG_GUTENBERG_PROPS);
+        gutenbergProps.setHtmlModeEnabled(mHtmlModeEnabled);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -129,22 +97,13 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.onCreate(getContext());
         mWPAndroidGlueCode.onCreateView(
                 getContext(),
-                mHtmlModeEnabled,
                 getActivity().getApplication(),
                 BuildConfig.DEBUG,
                 BuildConfig.BUILD_GUTENBERG_FROM_SOURCE,
-                postType,
-                isNewPost,
-                localeString,
-                translations,
                 getContext().getResources().getColor(R.color.background_color),
-                isDarkMode,
                 exceptionLogger,
                 breadcrumbLogger,
-                isSiteUsingWpComRestApi,
-                editorTheme,
-                isUnsupportedBlockEditorEnabled,
-                enableMentionsFlag);
+                gutenbergProps);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
