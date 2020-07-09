@@ -173,7 +173,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that tags action type is propagated to prepublishingActionType`() {
         // arrange
-        val expectedActionType = VISIBILITY
+        val expectedActionType = TAGS
 
         // act
         viewModel.start(mock(), site)
