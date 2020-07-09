@@ -256,7 +256,6 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         siteLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAnalyticsListener.trackClickOnLoginSiteClicked();
                 if (mLoginListener != null) {
                     LoginMode loginMode = mLoginListener.getLoginMode();
                     if (loginMode == LoginMode.JETPACK_STATS) {
