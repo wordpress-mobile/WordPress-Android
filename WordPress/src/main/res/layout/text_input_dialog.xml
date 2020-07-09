@@ -6,16 +6,16 @@
     android:padding="@dimen/margin_extra_large">
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/my_profile_dialog_label"
+        android:id="@+id/text_input_dialog_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
         android:layout_marginBottom="@dimen/margin_large"
-        android:labelFor="@+id/my_profile_dialog_input"
+        android:labelFor="@+id/text_input_dialog_input"
         android:textAppearance="?attr/textAppearanceHeadline6" />
 
     <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/my_profile_dialog_hint"
+        android:id="@+id/text_input_dialog_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_small"
@@ -23,7 +23,7 @@
         android:textAppearance="?attr/textAppearanceCaption" />
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/my_profile_dialog_input"
+        android:id="@+id/text_input_dialog_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"

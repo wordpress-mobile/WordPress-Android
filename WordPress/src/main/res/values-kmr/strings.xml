@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-04-06 15:11:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ku_TR
 -->
 <resources>
@@ -89,10 +89,6 @@ Language: ku_TR
     <string name="stats_widget_all_time_title">Herdem</string>
     <string name="stats_widget_views_title">Dîtinên vê hefteyê</string>
     <string name="stats_widget_add">Alavok tevlî bike</string>
-    <string name="dialog_confirm_update_yes">Aniha hildemîne</string>
-    <string name="dialog_confirm_update_message_page">Ev rûpela weşandî wê aniha were hildemandin.</string>
-    <string name="dialog_confirm_update_message_post">Ev şandiya weşandî wê aniha were hildemandin.</string>
-    <string name="dialog_confirm_update_title">Ji bo hildemandinê amade yî?</string>
     <string name="plugin_fetching_error_after_at">Nûyandina hûrgiliyên pêvekan ji her tim bêhtir dewam dike. Ji kerema xwe paşê dîsa kontrol bike.</string>
     <string name="plugin_install_site_ineligible_default_error">Eger te navperek nû tomar kiribe, ji kerema xwe li bende be heta em sazkirina wê biqedînin û paşê dîsa biceribîne.\n\nEger na, wisa dixuyê ku şaşiyek pêk hatiye û dibe ku taybetiya pêvekê ji bo vê malperê ne guncan be.</string>
     <string name="domain_contact_information_state_not_available_hint">Herêm(Tune Ye)</string>
@@ -138,8 +134,6 @@ Language: ku_TR
     <string name="editor_failed_to_insert_media_tap_to_retry">Tevlîkirina medyayê bi serneket.\nJi bo ceribandineke din, bitepîne.</string>
     <string name="editor_uploading_draft">Reşnivîsa te tê hilxistin</string>
     <string name="post_uploading_draft">Reşnivîs tê hilxistin</string>
-    <string name="post_list_author_everyone">Her kes</string>
-    <string name="post_list_author_me">Min</string>
     <string name="error_restoring_post">Di vegerandina şandiyê de çewtiyek pêk hat</string>
     <string name="backdated_for">Vegeriya ser: %s</string>
     <string name="stats_insights_management_title">Tenê rêjejimarên herî pêwendîdar bibîne. Kûrbînên xwe tevlî jêr bike û serast bike.</string>
@@ -401,7 +395,6 @@ Language: ku_TR
     <string name="pages_delete_permanently">Bi Mayînde Jê Bîbe</string>
     <string name="pages_move_to_trash">Veguzîne Jêbirdankê</string>
     <string name="pages_move_to_draft">Vegerîne Reşnivîsê</string>
-    <string name="pages_publish_now">Niha Biweşîne</string>
     <string name="pages_set_parent">Dêûbavan diyar bike</string>
     <string name="pages_view">Bibîne</string>
     <string name="pages_trashed">Hat jêbirin</string>
@@ -653,7 +646,6 @@ Language: ku_TR
     <string name="menu_html_mode_done_snackbar">Derbasî moda HTML bû</string>
     <string name="menu_html_mode">Moda HTML</string>
     <string name="menu_preview">Pêşdîtin</string>
-    <string name="menu_publish_now">Niha Biweşîne</string>
     <string name="menu_save_as_draft">Wekî Reşnivîs Tomar Bike</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -716,10 +708,6 @@ Language: ku_TR
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d rûpel û %2$d ji %3$d ê pelgeh man</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 şande û %1$d ji %2$d ê pelgeh man</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 rûpel û %1$d ji %2$d ê pelgeh man</string>
-    <string name="dialog_confirm_publish_yes">Niha biweşîne</string>
-    <string name="dialog_confirm_publish_message_page">Ev rûpel dê aniha were weşandin.</string>
-    <string name="dialog_confirm_publish_message_post">Ev şandî dê aniha were weşandin</string>
-    <string name="dialog_confirm_publish_title">Ji Weşandinê re amade ye?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d şandî / rûpel nehatin hilxistin</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d rûpel nehatin hilxistin</string>
     <string name="media_file_page_singular_only_not_uploaded">Rûpelek nehat hilxistin</string>
@@ -1054,7 +1042,6 @@ Language: ku_TR
     <string name="post_settings_not_set">Nesazandî</string>
     <string name="post_settings_more_options">Vebijêrkên Bêhtir</string>
     <string name="post_settings_categories_and_tags">Beş û Nîşank</string>
-    <string name="post_settings_status">Rewş</string>
     <string name="notifications_tab_title_all">Hemû</string>
     <string name="top_level_category_name">Asta jor</string>
     <string name="category_parent">Beşa esasî (gor daxwazê):</string>
@@ -1178,7 +1165,6 @@ Language: ku_TR
     <string name="media_upload_state_deleting">Tê jêbirin</string>
     <string name="media_upload_state_uploading">Tê hilxistin</string>
     <string name="media_upload_state_queued">Di dorê de</string>
-    <string name="keep_editing">Serastkirinê bidomîne</string>
     <string name="image_quality">Qalîteya Wêneyê</string>
     <string name="error_all_media_upload_canceled">Ji ber sedema çewtiyeke nediyar hilxistina hemû medayayan betal bû. Ji kerema xwe hilxistinê dîsa biceribîne</string>
     <string name="error_unknown_post_type">Dirûva şandiya nenas</string>
@@ -1839,7 +1825,6 @@ Language: ku_TR
     <string name="httppassword">Pêborîna HTTP</string>
     <string name="httpuser">Navê bikarhêner yê HTTP</string>
     <string name="error_media_upload">Di hilbarkirina medyayê de çewtiyek rû da.</string>
-    <string name="publish_date">Biweşîne</string>
     <string name="incorrect_credentials">Navê bikarhêner an jî pêborîna çewt.</string>
     <string name="log_in">Têkevê</string>
     <string name="username">Navê bikarhêner</string>

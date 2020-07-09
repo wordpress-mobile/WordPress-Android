@@ -1,43 +1,43 @@
-WordPress for Android puts the power of web publishing in your pocket. It’s a website creator and so much more!
+안드로이드용 워드프레스는 휴대용 웹 발행 기능을 제공합니다. 웹사이트 제작기 그 이상이에요!
 
-CREATE
-- Give your big ideas a home on the web. WordPress for Android is a website builder and a blog maker. Use it to create your website.
-- Pick the right look and feel from a wide selection of WordPress themes, then customize with photos, colors, and fonts so it’s uniquely you.
-- Built-in Quick Start tips guide you through the setup basics to set your new website up for success. (We’re not just a website creator -- we’re your partner and cheering squad!)
+만들기
+- 웹에 큰 생각을 올리세요. 안드로이드용 워드프레스는 웹사이트 구축기이자 블로그 제작기에요. 웹사이트를 만드는데 사용하세요.
+- 워드프레스 테마의 넓은 선택으로부터 바른 표시와 느낌을 선택하면, 사진, 색상, 그리고 글꼴로 꾸밀 수 있어서 구별되게 해요.
+- 내장된 빠른 시작은 성공을 위한 새로운 웹사이트를 설정하는 설정 기본을 통하여 안내해요. (그저 웹사이트 제작기가 아니에요 -- 동반자이자 응원단이에요!)
 
-STATS
-- Check your website’s stats in real time to keep track of the activity on your site.
-- Track which posts and pages get the most traffic over time by exploring daily, weekly, monthly, and yearly insights.
-- Use the traffic map to see which countries your visitors come from.
+통계
+- 웹사이트의 통계를 실시간으로 확인하여 사이트의 활동 추적을 유지하세요.
+- 일간, 주간, 월간, 그리고 연간 통찰을 탐색하여 최고의 트래픽을 얻는 글과 페이지를 추적하세요.
+- 어떤 국가에서 방문자가 오는지 볼 수 있는 트래픽 지도를 사용하세요.
 
-NOTIFICATIONS
-- Get notifications about comments, likes, and new followers so you can see people reacting to your website as it happens.
-- Reply to new comments as they show up to keep the conversation flowing and acknowledge your readers.
+알림
+- 댓글, 좋아요, 그리고 새로운 팔로워에 대한 알림을 얻어서 웹사이트에서 반응을 하는 순간 어떤 사람이 했는지 볼 수 있습니다.
+- 대화 흐름과 독자에게 알림을 유지하기 위해 새로운 댓글이 보이자마자 답변하세요.
 
-PUBLISH
-- Create updates, stories, photo essays announcements -- anything! -- with the editor.
-- Bring your posts and pages to life with photos and video from your camera and albums, or find the perfect image with the in-app collection of free-to-use pro photography.
-- Save ideas as drafts and come back to them when your muse returns, or schedule new posts for the future so your site is always fresh and engaging.
-- Add tags and categories to help new readers discover your posts, and watch your audience grow.
+발행
+- 업데이트, 이야기, 사진 수필 알림을 만드세요 -- 뭐든지요! --  편집기로 할 수 있어요.
+- 카메라와 앨범에서 사진과 영상으로 글과 페이지에 가져오거나 무료로 사용할 수 있는 전문 사진의 앱 내부 모음에서 완벽한 이미지를 찾으세요.
+- 임시글로 생각을 저장하고 영감이 돌아올 때 돌아오거나, 나중을 위해 새로운 글을 예약하면 사이트가 항상 신선하고 매력적이에요.
+- 새로운 독자가 글을 발견하도록 돕는 태그와 분류를 추가하고, 예비 독자가 늘어나는 것을 확인하세요.
 
-READER
-- WordPress is more than a blog maker — use it to connect with a community of writers in the WordPress Reader. Explore thousands of topics by tag, discover new authors and organizations, and follow the ones who pique your interest.
-- Hang on to the posts that fascinate you with the Save for later feature.
+리더
+- 워드프레스는 블로거 제작기 이상이에요 — 워드프레스 리더에서 작가 커뮤니티에 연결하여 사용하세요. 태그로 수 천가지 주제를 탐색하고, 새로운 작가와 조직을 발견하고, 관심을 끄는 사람을 팔로우하세요.
+- 더 나중을 위해 저장으로 매료시키는 글을 즐기세요.
 
-SHARE
-- Set up automated sharing to tell your followers on social media when you publish a new post. Automatically cross-post to Facebook, Twitter, and more.
-- Add social sharing buttons to your posts so your visitors can share them with their network, and let your fans become your ambassadors.
+공유
+- 새로운 글을 발행할 때 소셜 미디어의 팔로워에게 알릴 수 있도록 자동 공유를 설정하세요. 페이스북, 트위터, 등에 자동으로 교차등록하세요.
+- 글에 소셜 공유 단추를 추가하여 방문자가 네트워크에 공유할 수 있게 하고,  팬들이 사생팬이 되게하세요.
 
-Why WordPress?
+왜 워드프레스인가요?
 
-There are a lot of blogging services, website builders, and social networks out there. Why create your website with WordPress?
+많은 블로깅 서비스, 소셜 네트워크가 있어요. 왜 워드프레스로 웹사이트를 만들어야 할까요?
 
-WordPress powers over a third of the web. It’s used by hobby blogs, businesses of all sizes, online stores, even the biggest news sites on the internet. Odds are that many of your favorite websites are running on WordPress.
+워드프레스는 웹에 강력한 3가지가 있어요. 취미 블로깅, 모든 규모의 사업, 온라인 이야기 뿐 아니라 인터넷의 가장 큰 뉴스 사이트에도 사용됩니다. 좋아하는 웹사이트의 다수가 워드프레스에서 돌아가고 있을 가능성이 다분해요.
 
-With WordPress, you own your own content. Other social networks treat you as a commodity, and assume ownership of the content you post. But with WordPress anything you publish is yours, and you can take it with you wherever you’d like.
+워드프레스로, 자신의 내용을 소유하세요. 다른 소셜 네트워크가 상품으로 취급하고, 게시한 내용의 소유권을 취할 수 있어요. 하지만 워드프레스로 발행한 모든 것을 자신의 것으로 만들고, 원하는 어디든 취할 수 있어요.
 
-WordPress is an open source website creator, meaning anyone can see how it's made, and even contribute. Other services and social networks are proprietary, closed systems; you can never be sure exactly how they work or what they are doing -- and they can disappear!
+워드프레스는 오픈 소스 웹사이트 제작기에요, 누구든 어떻게 만들어지는지 볼 수 있고, 기여도 할 수 있다는 말이에요. 다른 서비스와 소셜 네트워크는 독점적이고, 시스템이 닫혀 있어요; 어떻게 동작하고 어떻게 돌아가는지 절대 알 수 없어요 -- 그리고 사라져 버릴 수도 있어요!
 
-Whether you need a website builder to create your website, or a simple blog maker, WordPress can help. It gives you beautiful designs, powerful features, and the freedom to build anything you want.
+웹사이트를 만드는 웹사이트 구축기가 필요하든지, 단순 블로그 제작기가 필요하든지, 워드프레스는 도울 수 있어요. 아름다운 디자인, 강력한 기능, 그리고 원하는 뭐든 만들 수 있는 자유를 주어요.
 
-WordPress for Android supports self-hosted sites running WordPress 4.0 and later, and all sites at WordPress.com. Just like WordPress, WordPress for Android is open source. https://apps.wordpress.com/contribute/에서 자세히 알아보세요. 앱 사용에 도움이 필요하세요? Send us a tweet at @WPAndroid, or visit our forums at https://android.forums.wordpress.org/forum/troubleshooting.
+안드로이드용 워드프레스는 워드프레스 4.0 또는 그 이후가 실행되는 자체 호스팅 사이트와 모든 워드프레스닷컴에 있는 사이트를 지원해요. 마치 워드프레스와 같이, 안드로이드 워드프레스는 오픈 소스에요. https://apps.wordpress.com/contribute/에서 더 알아보세요. 앱에 대해 도움이 필요하세요? @WPAndroid으로 트윗을 보내거나, https://android.forums.wordpress.org/forum/troubleshooting에 있는 포럼에 방문하세요.

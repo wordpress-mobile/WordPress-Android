@@ -29,6 +29,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.news.NewsItem;
 import org.wordpress.android.ui.news.NewsViewHolder;
 import org.wordpress.android.ui.news.NewsViewHolder.NewsCardListener;
+import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
@@ -38,7 +39,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.ReblogActionListener;
 import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
@@ -81,12 +81,9 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final int mPhotonWidth;
     private final int mPhotonHeight;
-    private final int mAvatarSzMedium;
     private final int mAvatarSzSmall;
-    private final int mMarginExtraLarge;
 
     private boolean mCanRequestMorePosts;
-    private final boolean mIsLoggedOutReader;
 
     private final ReaderTypes.ReaderPostListType mPostListType;
     private final ReaderPostList mPosts = new ReaderPostList();
@@ -122,7 +119,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private static final float READER_FEATURED_IMAGE_ASPECT_RATIO = 16 / 9f;
 
-    private boolean mIsMainReader = false;
+    private boolean mIsMainReader;
 
     @Inject AccountStore mAccountStore;
     @Inject SiteStore mSiteStore;
@@ -145,20 +142,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mTxtTitle = itemView.findViewById(R.id.text_title);
             mTxtSubtitle = itemView.findViewById(R.id.text_subtitle);
 
-            postContainer.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    ReaderPost post = getItem(position);
-                    if (mPostSelectedListener != null && post != null) {
-                        mPostSelectedListener.onPostSelected(post);
-                    }
+            postContainer.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                ReaderPost post = getItem(position);
+                if (mPostSelectedListener != null && post != null) {
+                    mPostSelectedListener.onPostSelected(post);
                 }
             });
         }
     }
 
-    private class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
+    private static class ReaderRemovedPostViewHolder extends RecyclerView.ViewHolder {
         final View mPostContainer;
 
         private final ViewGroup mRemovedPostContainer;
@@ -174,7 +168,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class SiteHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderSiteHeaderView mSiteHeaderView;
 
         SiteHeaderViewHolder(View itemView) {
@@ -183,7 +177,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class TagHeaderViewHolder extends RecyclerView.ViewHolder {
+    private static class TagHeaderViewHolder extends RecyclerView.ViewHolder {
         private final ReaderTagHeaderView mTagHeaderView;
 
         TagHeaderViewHolder(View itemView) {
@@ -192,7 +186,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private class GapMarkerViewHolder extends RecyclerView.ViewHolder {
+    private static class GapMarkerViewHolder extends RecyclerView.ViewHolder {
         private final ReaderGapMarkerView mGapMarkerView;
 
         GapMarkerViewHolder(View itemView) {
@@ -309,12 +303,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ColorUtils.INSTANCE.applyTintToDrawable(context, R.drawable.ic_undo_white_24dp,
                         ContextExtensionsKt.getColorResIdFromAttribute(context, R.attr.colorPrimary));
         holder.mUndoRemoveAction.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
-        holder.mPostContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                undoPostUnbookmarked(post, position);
-            }
-        });
+        holder.mPostContainer.setOnClickListener(v -> undoPostUnbookmarked(post, position));
     }
 
     private void undoPostUnbookmarked(final ReaderPost post, final int position) {
@@ -455,10 +444,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         this.mImageManager = imageManager;
         mPostListType = postListType;
         mUiHelpers = uiHelpers;
-        mAvatarSzMedium = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_medium);
         mAvatarSzSmall = context.getResources().getDimensionPixelSize(R.dimen.avatar_sz_small);
-        mMarginExtraLarge = context.getResources().getDimensionPixelSize(R.dimen.margin_extra_large);
-        mIsLoggedOutReader = !mAccountStore.hasAccessToken();
         mIsMainReader = isMainReader;
 
         int displayWidth = DisplayUtils.getDisplayPixelWidth(context);
@@ -478,7 +464,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     private boolean hasTagHeader() {
-        return !mIsMainReader && (mCurrentTag != null && mCurrentTag.isTagTopic() && !isEmpty());
+        return AppPrefs.isReaderImprovementsPhase2Enabled()
+               && ((getPostListType() == ReaderPostListType.TAG_PREVIEW) && !isEmpty());
     }
 
     private boolean isDiscover() {
@@ -729,47 +716,6 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (mOnPostBookmarkedListener != null) {
             mOnPostBookmarkedListener.onBookmarkClicked(blogId, postId);
         }
-    }
-
-    /*
-     * triggered when user taps the follow button on a post
-     */
-    private void toggleFollow(final Context context, final View followButton, final ReaderPost post) {
-        if (post == null || !NetworkUtils.checkConnection(context)) {
-            return;
-        }
-
-        boolean isCurrentlyFollowed = ReaderPostTable.isPostFollowed(post);
-        final boolean isAskingToFollow = !isCurrentlyFollowed;
-
-        if (mFollowListener != null) {
-            if (isAskingToFollow) {
-                mFollowListener.onFollowTapped(followButton, post.getBlogName(), post.blogId);
-            } else {
-                mFollowListener.onFollowingTapped();
-            }
-        }
-
-        ReaderActions.ActionListener actionListener = new ReaderActions.ActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                followButton.setEnabled(true);
-                if (!succeeded) {
-                    int resId = (isAskingToFollow ? R.string.reader_toast_err_follow_blog
-                            : R.string.reader_toast_err_unfollow_blog);
-                    ToastUtils.showToast(context, resId);
-                    setFollowStatusForBlog(post.blogId, !isAskingToFollow);
-                }
-            }
-        };
-
-        if (!ReaderBlogActions.followBlogForPost(post, isAskingToFollow, actionListener)) {
-            ToastUtils.showToast(context, R.string.reader_toast_err_generic);
-            return;
-        }
-
-        followButton.setEnabled(false);
-        setFollowStatusForBlog(post.blogId, isAskingToFollow);
     }
 
     public void setFollowStatusForBlog(long blogId, boolean isFollowing) {

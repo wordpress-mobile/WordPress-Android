@@ -33,6 +33,8 @@
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
         <item name="floatingActionButtonStyle">@style/WordPress.FloatingActionButton</item>
 
+        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
+
         <item name="wpColorText">@color/neutral_70</item>
         <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
@@ -42,6 +44,9 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+
+        <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
+        <item name="colorGutenbergBackground">@android:color/white</item>
 
         <item name="listPopupWindowStyle">
             @style/Widget.MaterialComponents.PopupMenu.ListPopupWindow

@@ -13,8 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -61,6 +62,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
@@ -79,6 +81,7 @@ import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
@@ -111,6 +114,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.util.AccessibilityUtils.getSnackbarDuration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.AppLog.T.EDITOR
@@ -120,6 +124,7 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.MediaUtils
+import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
@@ -133,11 +138,13 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
 import org.wordpress.android.widgets.WPDialogSnackbar
+import org.wordpress.android.widgets.WPSnackbar
 import java.io.File
 import java.util.GregorianCalendar
 import java.util.TimeZone
@@ -151,7 +158,8 @@ class MySiteFragment : Fragment(),
         BasicDialogOnDismissByOutsideTouchInterface,
         PromoDialogClickInterface,
         OnConfirmListener,
-        OnDismissListener {
+        OnDismissListener,
+        TextInputDialogFragment.Callback {
     private var siteSettings: SiteSettingsInterface? = null
     private var activeTutorialPrompt: QuickStartMySitePrompts? = null
     private val quickStartSnackBarHandler = Handler()
@@ -222,6 +230,8 @@ class MySiteFragment : Fragment(),
             } else {
                 row_activity_log.visibility = View.VISIBLE
             }
+
+            my_site_title_label.isClickable = SiteUtils.isAccessedViaWPComRest(site)
         }
         updateQuickStartContainer()
         if (!AppPrefs.hasQuickStartMigrationDialogShown() && isQuickStartInProgress(quickStartStore)) {
@@ -313,7 +323,8 @@ class MySiteFragment : Fragment(),
     }
 
     private fun setupClickListeners() {
-        site_info_container.setOnClickListener { viewSite() }
+        my_site_title_label.setOnClickListener { showTitleChangerDialog() }
+        my_site_subtitle_label.setOnClickListener { viewSite() }
         switch_site.setOnClickListener { showSitePicker() }
         row_view_site.setOnClickListener { viewSite() }
         my_site_register_domain_cta.setOnClickListener { registerDomain() }
@@ -479,6 +490,35 @@ class MySiteFragment : Fragment(),
                 ActivityLauncher.viewConnectJetpackForStats(activity, selectedSite)
             }
         }
+    }
+
+    private fun showTitleChangerDialog() {
+        if (!NetworkUtils.isNetworkAvailable(activity)) {
+            WPSnackbar.make(
+                    requireActivity().findViewById(R.id.coordinator),
+                    R.string.error_network_connection,
+                    getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
+            ).show()
+            return
+        }
+
+        val canEditTitle = SiteUtils.isAccessedViaWPComRest(selectedSite) && selectedSite?.hasCapabilityManageOptions!!
+        val hint = if (canEditTitle) {
+            getString(R.string.my_site_title_changer_dialog_hint)
+        } else {
+            getString(R.string.my_site_title_changer_dialog_not_allowed_hint)
+        }
+
+        val inputDialog = TextInputDialogFragment.newInstance(
+                getString(R.string.my_site_title_changer_dialog_title),
+                selectedSite?.name,
+                hint,
+                false,
+                canEditTitle,
+                my_site_title_label.id
+        )
+        inputDialog.setTargetFragment(this@MySiteFragment, 0)
+        inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
     }
 
     private fun viewSite() {
@@ -831,8 +871,9 @@ class MySiteFragment : Fragment(),
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar))
-        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary))
+        options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
+        options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
@@ -1223,13 +1264,18 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
+            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
+                horizontalOffset = -focusPointSize / 4
+                verticalOffset = -focusPointSize / 4
+            }
             activeTutorialPrompt!!.task == VIEW_SITE -> { // focus point might be hidden behind FAB
                 horizontalOffset = (focusPointSize / 0.5).toInt()
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
             else -> {
-                horizontalOffset =
-                        resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset)
+                horizontalOffset = resources.getDimensionPixelOffset(
+                        R.dimen.quick_start_focus_point_my_site_right_offset
+                )
                 verticalOffset = (quickStartTarget.height - focusPointSize) / 2
             }
         }
@@ -1378,6 +1424,29 @@ class MySiteFragment : Fragment(),
         const val KEY_DOMAIN_CREDIT_CHECKED = "KEY_DOMAIN_CREDIT_CHECKED"
         fun newInstance(): MySiteFragment {
             return MySiteFragment()
+        }
+    }
+
+    override fun onSuccessfulInput(input: String, callbackId: Int) {
+        if (callbackId == my_site_title_label.id && selectedSite != null) {
+            if (!NetworkUtils.isNetworkAvailable(activity)) {
+                WPSnackbar.make(
+                        requireActivity().findViewById(R.id.coordinator),
+                        R.string.error_update_site_title_network,
+                        getSnackbarDuration(activity, Snackbar.LENGTH_SHORT)
+                ).show()
+                return
+            }
+
+            my_site_title_label.text = input
+            selectedSite?.name = input
+            // save the site locally with updated title
+            dispatcher.dispatch(SiteActionBuilder.newUpdateSiteAction(selectedSite))
+
+            siteSettings?.let {
+                it.title = input
+                it.saveSettings()
+            }
         }
     }
 }

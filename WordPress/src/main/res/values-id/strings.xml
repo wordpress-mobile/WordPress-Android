@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-10 18:54:54+0000
+Translation-Revision-Date: 2020-06-26 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat mengedit blok ini menggunakan web browser perangkat Anda.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Edit blok di browser web</string>
+    <string name="gutenberg_native_dismiss">Tutup</string>
+    <string name="prepublishing_nudges_visibility_password">Dilindungi Kata sandi</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
+    <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publikasikan</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Tambahkan Tag</string>
+    <string name="prepublishing_nudges_back_button">Kembali</string>
+    <string name="prepublishing_nudges_home_save_button">Simpan Sekarang</string>
+    <string name="prepublishing_nudges_home_submit_button">Kirim Sekarang</string>
+    <string name="prepublishing_nudges_home_schedule_button">Jadwalkan Sekarang</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Memublikasikan ke</string>
+    <string name="prepublishing_nudges_tags_action">Tag</string>
+    <string name="prepublishing_nudges_publish_action">Tanggal Publikasi</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Batal</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Pindahkan ke Konsep</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Pos yang dibuang tidak dapat disunting. Apakah Anda ingin mengubah status pos ini menjadi \"konsep\" sehingga Anda dapat menyuntingnya?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Pindahkan pos ke Konsep?</string>
+    <string name="reader_label_choose_your_interests">Pilih minat Anda</string>
+    <string name="reader_label_discover_follow_tags">Temukan dan ikuti tag yang Anda suka</string>
+    <string name="reader_choose_interests_content_description">Pilih minat Anda</string>
+    <string name="reader_btn_done">Selesai</string>
+    <string name="reader_btn_select_few_interests">Pilih beberapa untuk melanjutkan</string>
+    <string name="post_status_post_published">Dipublikasikan</string>
+    <string name="post_status_post_trashed">Dibuang</string>
+    <string name="post_status_post_scheduled">Dijadwalkan</string>
+    <string name="publish_date">Tanggal Publikasi</string>
+    <string name="ccpa_privacy_notice_read">Baca pemberitahuan privasi CCPA</string>
+    <string name="ccpa_privacy_notice_caption">Undang-Undang Privasi Konsumen California (CCPA) meminta kami untuk menyediakan kepada warga negara California informasi tambahan tentang kategori informasi pribadi yang kami kumpulkan dan bagikan, di mana kami mendapatkan informasi tersebut, dan bagaimana dan mengapa kami menggunakannya.</string>
+    <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
+    <string name="status_and_visibility">Status &amp; Keterlihatan</string>
+    <string name="update_now">Perbarui Sekarang</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Hapus %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
@@ -284,7 +317,6 @@ Language: id
     <string name="reader_my_likes_display_name">Suka</string>
     <string name="site_cannot_be_loaded">Kami saat ini tidak dapat memuat data untuk situs Anda. Harap coba lagi nanti</string>
     <string name="gutenberg_native_wordpress_media_library">Pustaka Media WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat menyunting pos ini di web.</string>
     <string name="gutenberg_native_ungroup">Batalkan pengelompokan</string>
     <string name="gutenberg_native_translate">Terjemahan</string>
     <string name="gutenberg_native_title">Judul:</string>
@@ -507,10 +539,6 @@ Language: id
     <string name="stats_widget_all_time_title">Sepanjang waktu</string>
     <string name="stats_widget_views_title">Dilihat Minggu Ini</string>
     <string name="stats_widget_add">Tambahkan widget</string>
-    <string name="dialog_confirm_update_yes">Perbarui sekarang</string>
-    <string name="dialog_confirm_update_message_page">Halaman yang telah diterbitkan ini akan segera diperbarui.</string>
-    <string name="dialog_confirm_update_message_post">Pos yang telah diterbitkan ini akan segera diperbarui.</string>
-    <string name="dialog_confirm_update_title">Siap Memperbarui?</string>
     <string name="plugin_fetching_error_after_at">Diperlukan waktu yang lebih lama dari biasanya untuk menyegarkan detail plugin. Silakan periksa lagi nanti.</string>
     <string name="plugin_install_site_ineligible_default_error">Jika Anda baru saja mendaftarkan nama domain, harap tunggu sampai kami selesai menyiapkannya dan silakan coba lagi.\n\nJika tidak, sepertinya terjadi kesalahan dan fitur plugin mungkin tidak tersedia di situs ini.</string>
     <string name="domain_contact_information_state_not_available_hint">Negara Bagian (Tidak Tersedia)</string>
@@ -556,8 +584,6 @@ Language: id
     <string name="editor_failed_to_insert_media_tap_to_retry">Gagal memasukkan media.\nKetuk untuk mencoba lagi.</string>
     <string name="editor_uploading_draft">Konsep Anda sedang diunggah</string>
     <string name="post_uploading_draft">Mengunggah konsep</string>
-    <string name="post_list_author_everyone">Setiap Orang</string>
-    <string name="post_list_author_me">Saya</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
@@ -816,7 +842,6 @@ Language: id
     <string name="pages_delete_permanently">Hapus Permanen</string>
     <string name="pages_move_to_trash">Pindahkan ke Sampah</string>
     <string name="pages_move_to_draft">Pindahkan ke Konsep</string>
-    <string name="pages_publish_now">Publikasikan Sekarang</string>
     <string name="pages_set_parent">Atur induk</string>
     <string name="pages_view">Lihat</string>
     <string name="pages_trashed">Dibuang</string>
@@ -1067,7 +1092,6 @@ Language: id
     <string name="menu_html_mode_done_snackbar">Beralih ke mode HTML</string>
     <string name="menu_html_mode">Mode HTML</string>
     <string name="menu_preview">Pratinjau</string>
-    <string name="menu_publish_now">Publikasikan Sekarang</string>
     <string name="menu_save_as_draft">Simpan sebagai Konsep</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1130,10 +1154,6 @@ Language: id
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d halaman dan %2$d dari %3$d file tersisa</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 pos dan %1$d dari %2$d file tersisa</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 halaman dan %1$d dari %2$d file tersisa</string>
-    <string name="dialog_confirm_publish_yes">Publikasikan sekarang</string>
-    <string name="dialog_confirm_publish_message_page">Halaman ini akan segera diterbitkan.</string>
-    <string name="dialog_confirm_publish_message_post">Pos ini akan segera diterbitkan.</string>
-    <string name="dialog_confirm_publish_title">Publikasikan Sekarang?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d pos/halaman belum diunggah</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d halaman belum diunggah</string>
     <string name="media_file_page_singular_only_not_uploaded">1 halaman belum diunggah</string>
@@ -1466,7 +1486,6 @@ Language: id
     <string name="post_settings_not_set">Belum Ditetapkan</string>
     <string name="post_settings_more_options">Pilihan Lainnya</string>
     <string name="post_settings_categories_and_tags">Kategori &amp; Tag</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Semua</string>
     <string name="top_level_category_name">Level teratas</string>
     <string name="category_parent">Kategori induk (opsional):</string>
@@ -1590,7 +1609,6 @@ Language: id
     <string name="media_upload_state_deleting">Menghapus</string>
     <string name="media_upload_state_uploading">Mengunggah</string>
     <string name="media_upload_state_queued">Diantrekan</string>
-    <string name="keep_editing">Lanjutkan menyunting</string>
     <string name="image_quality">Kualitas Gambar</string>
     <string name="error_all_media_upload_canceled">Semua unggahan media telah dibatalkan karena error yang tidak diketahui. Coba unggah lagi</string>
     <string name="error_unknown_post_type">Format pos tidak diketahui</string>
@@ -2249,7 +2267,6 @@ Language: id
     <string name="httppassword">Kata sandi HTTP</string>
     <string name="httpuser">Nama pengguna HTTP</string>
     <string name="error_media_upload">Ada masalah ketika mengunggah media</string>
-    <string name="publish_date">Terbitkan</string>
     <string name="incorrect_credentials">Nama pengguna atau kata sandi salah.</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata sandi</string>
@@ -2285,6 +2302,7 @@ Language: id
     <string name="no">Tidak</string>
     <string name="yes">Ya</string>
     <string name="notification_settings">Pengaturan Pemberitahuan</string>
+    <string name="publish_now">Publikasikan Sekarang</string>
     <string name="reply">Balasan</string>
     <string name="on">pada</string>
     <string name="preview">Pratinjau</string>
