@@ -1266,7 +1266,7 @@ class MySiteFragment : Fragment(),
             }
             activeTutorialPrompt!!.task == UPLOAD_SITE_ICON -> {
                 horizontalOffset = focusPointSize
-                verticalOffset = -(focusPointSize / 0.5).toInt()
+                verticalOffset = -focusPointSize / 2
             }
             activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
                 horizontalOffset = -focusPointSize / 4
