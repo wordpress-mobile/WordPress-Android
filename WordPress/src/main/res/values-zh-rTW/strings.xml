@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-10 08:54:14+0000
+Translation-Revision-Date: 2020-06-25 08:54:11+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我們正在努力開發，讓每次版本更新都可以新增更多區塊。 在此同時，你也可以使用裝置的網頁瀏覽器編輯此區塊。</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">在網頁瀏覽器編輯區塊</string>
+    <string name="gutenberg_native_dismiss">關閉</string>
+    <string name="prepublishing_nudges_visibility_password">密碼保護</string>
+    <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
+    <string name="prepublishing_tags_description">標籤可協助讀者瞭解文章內容。</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">發表</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">新增標籤</string>
+    <string name="prepublishing_nudges_back_button">返回</string>
+    <string name="prepublishing_nudges_home_save_button">立即儲存</string>
+    <string name="prepublishing_nudges_home_submit_button">立即提交</string>
+    <string name="prepublishing_nudges_home_schedule_button">立即安排</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">發表至</string>
+    <string name="prepublishing_nudges_tags_action">標籤</string>
+    <string name="prepublishing_nudges_publish_action">發表日期</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">取消</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">移至草稿</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">你無法編輯移至垃圾桶的文章。 要將此文章狀態變更為「草稿」以便修正嗎？</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">是否將文章移至草稿？</string>
+    <string name="reader_label_choose_your_interests">選擇你的興趣</string>
+    <string name="reader_label_discover_follow_tags">探索並關注你喜愛的標籤</string>
+    <string name="reader_choose_interests_content_description">選擇你的興趣</string>
+    <string name="reader_btn_done">搞定</string>
+    <string name="reader_btn_select_few_interests">選取幾項以繼續操作</string>
+    <string name="post_status_post_published">已發表</string>
+    <string name="post_status_post_trashed">已移至垃圾桶</string>
+    <string name="post_status_post_scheduled">已排程</string>
+    <string name="publish_date">發表日期</string>
+    <string name="ccpa_privacy_notice_read">閱讀《加州消費者隱私保護法》(CCPA) 隱私權聲明</string>
+    <string name="ccpa_privacy_notice_caption">根據《加州消費者隱私保護法》(以下稱「CCPA」) 規定，我們必須提供加州使用者一些額外資訊，說明我們收集和分享的個人資訊種類、從哪裡取得這些資訊，以及這些資訊的使用方式及用途。</string>
+    <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
+    <string name="status_and_visibility">狀態及可見度</string>
+    <string name="update_now">馬上更新</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">移除 %s</string>
     <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
@@ -284,6 +317,7 @@ Language: zh_TW
     <string name="reader_my_likes_display_name">按讚數</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒體庫</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">我們正在努力開發，讓每次版本更新都可以新增更多區塊。 在此期間，你也可在網路上編輯這篇文章。</string>
     <string name="gutenberg_native_ungroup">取消群組</string>
     <string name="gutenberg_native_translate">翻譯</string>
     <string name="gutenberg_native_title">標題：</string>
@@ -503,10 +537,6 @@ Language: zh_TW
     <string name="stats_widget_all_time_title">有史以來</string>
     <string name="stats_widget_views_title">本週瀏覽次數</string>
     <string name="stats_widget_add">新增小工具</string>
-    <string name="dialog_confirm_update_yes">立即更新</string>
-    <string name="dialog_confirm_update_message_page">此發佈頁面將立即更新。</string>
-    <string name="dialog_confirm_update_message_post">此發佈文章將立即更新。</string>
-    <string name="dialog_confirm_update_title">準備好要更新了嗎？</string>
     <string name="plugin_fetching_error_after_at">重新整理外掛程式詳細資訊所需的時間比平時更長。請稍後再查看一次。</string>
     <string name="plugin_install_site_ineligible_default_error">如果你剛註冊網域名稱，請等到我們完成設定後再試一次。\n\n如果不是剛註冊網域名稱，那麼看來是系統發生錯誤，且該網站可能無法使用外掛程式功能。</string>
     <string name="domain_contact_information_state_not_available_hint">州 (無法使用)</string>
@@ -552,8 +582,6 @@ Language: zh_TW
     <string name="editor_failed_to_insert_media_tap_to_retry">無法插入媒體。\n請點選以重試。</string>
     <string name="editor_uploading_draft">你的草稿正在上傳中…</string>
     <string name="post_uploading_draft">正在上傳草稿</string>
-    <string name="post_list_author_everyone">所有人</string>
-    <string name="post_list_author_me">我</string>
     <string name="error_restoring_post">還原文章時發生錯誤</string>
     <string name="backdated_for">回溯至：%s</string>
     <string name="stats_insights_management_title">只查看最相關的統計資料。在下方新增及管理你的洞察報告。</string>
@@ -807,7 +835,6 @@ Language: zh_TW
     <string name="pages_delete_permanently">永久刪除</string>
     <string name="pages_move_to_trash">移至垃圾桶</string>
     <string name="pages_move_to_draft">移至草稿</string>
-    <string name="pages_publish_now">立即發佈</string>
     <string name="pages_set_parent">設定上層項目</string>
     <string name="pages_view">檢視</string>
     <string name="pages_trashed">已移至垃圾桶</string>
@@ -1058,7 +1085,6 @@ Language: zh_TW
     <string name="menu_html_mode_done_snackbar">已切換至「HTML」模式</string>
     <string name="menu_html_mode">HTML 模式</string>
     <string name="menu_preview">預覽</string>
-    <string name="menu_publish_now">立即發表</string>
     <string name="menu_save_as_draft">儲存為草稿</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1121,10 +1147,6 @@ Language: zh_TW
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">剩下 %1$d 個頁面和 %2$d 個檔案 (共 %3$d 個檔案)</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">剩下 1 篇文章和 %1$d 個檔案 (共 %2$d 個檔案)</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">剩下 1 個頁面和 %1$d 個檔案 (共 %2$d 個檔案)</string>
-    <string name="dialog_confirm_publish_yes">立即發表</string>
-    <string name="dialog_confirm_publish_message_page">此頁面會立即發表。</string>
-    <string name="dialog_confirm_publish_message_post">此文章會立即發表。</string>
-    <string name="dialog_confirm_publish_title">現在要發表了嗎？</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">無法上傳 %1$d 篇文章/個頁面</string>
     <string name="media_file_pages_plural_only_not_uploaded">無法上傳 %1$d 個頁面</string>
     <string name="media_file_page_singular_only_not_uploaded">無法上傳 1 個頁面</string>
@@ -1458,7 +1480,6 @@ Language: zh_TW
     <string name="post_settings_not_set">未設定</string>
     <string name="post_settings_more_options">更多選項</string>
     <string name="post_settings_categories_and_tags">分類與標籤</string>
-    <string name="post_settings_status">狀態</string>
     <string name="notifications_tab_title_all">全部</string>
     <string name="top_level_category_name">最上層</string>
     <string name="category_parent">上層類別 (選填)：</string>
@@ -1582,7 +1603,6 @@ Language: zh_TW
     <string name="media_upload_state_deleting">正在刪除</string>
     <string name="media_upload_state_uploading">正在上傳</string>
     <string name="media_upload_state_queued">已排進佇列</string>
-    <string name="keep_editing">繼續編輯</string>
     <string name="error_all_media_upload_canceled">由於未知的錯誤，所有的媒體上傳均已取消。請重試上傳</string>
     <string name="error_unknown_post_type">未知的文章格式</string>
     <string name="submit_for_review">送出</string>
@@ -2237,7 +2257,6 @@ Language: zh_TW
     <string name="httppassword">HTTP 密碼</string>
     <string name="httpuser">HTTP 使用者帳號</string>
     <string name="error_media_upload">上傳媒體時發生錯誤</string>
-    <string name="publish_date">發佈</string>
     <string name="incorrect_credentials">錯誤的使用者帳號或密碼。</string>
     <string name="log_in">登入</string>
     <string name="username">使用者帳號</string>
@@ -2274,6 +2293,7 @@ Language: zh_TW
     <string name="no">否</string>
     <string name="yes">是</string>
     <string name="notification_settings">通知設定</string>
+    <string name="publish_now">立即發佈</string>
     <string name="reply">回覆</string>
     <string name="on">於</string>
     <string name="preview">預覽</string>

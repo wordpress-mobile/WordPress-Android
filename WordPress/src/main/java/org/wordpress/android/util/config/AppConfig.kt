@@ -9,19 +9,24 @@ import javax.inject.Singleton
 
 @Singleton
 class AppConfig
-@Inject constructor(private val remoteConfig: RemoteConfig, private val analyticsTracker: AnalyticsTrackerWrapper) {
+@Inject constructor(
+    private val remoteConfig: RemoteConfig,
+    private val analyticsTracker: AnalyticsTrackerWrapper
+) {
     /**
      * We need to keep the value of an already loaded feature flag to make sure the value is not changed while using the app.
      * We should only reload the flags when the application is created.
      */
     private val enabledFeatures = mutableMapOf<String, Boolean>()
     private val experimentValues = mutableMapOf<String, String>()
+    private val remoteConfigCheck = RemoteConfigCheck(this)
 
     /**
      * This method initialized the config and triggers refresh of remote configuration.
      */
     fun refresh() {
         remoteConfig.refresh()
+        remoteConfigCheck.checkRemoteFields()
     }
 
     /**

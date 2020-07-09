@@ -370,7 +370,9 @@
 
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
 
     <!-- gutenberg informative dialog -->
     <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
@@ -2617,7 +2619,7 @@
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
-    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Site Pages %2$s to continue.</string>
+    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Pages %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Blog Posts %2$s to continue.</string>
     <string name="quick_start_dialog_create_new_post_message_short_posts">Tap %1$s Add Post %2$s to create a new post.</string>
@@ -2881,6 +2883,7 @@
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
+    <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
@@ -2903,6 +2906,8 @@
     <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Double tap to select a video</string>
     <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Double tap to select an image</string>
     <string name="gutenberg_native_double_tap_to_select_layout" tools:ignore="UnusedResources">Double tap to select layout</string>
+    <!-- translators: accessibility text (hint for selecting option) -->
+    <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Double tap to select the option</string>
     <!-- translators: accessibility text (hint for switches) -->
     <string name="gutenberg_native_double_tap_to_toggle_setting" tools:ignore="UnusedResources">Double tap to toggle setting</string>
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
@@ -2923,6 +2928,8 @@ translators: sample content for "Portfolio" page template
 translators: sample content for "Services" page template
 translators: sample content for "Team" page template -->
     <string name="gutenberg_native_get_in_touch" tools:ignore="UnusedResources">Get in Touch</string>
+    <string name="gutenberg_native_go_back" tools:ignore="UnusedResources">Go back</string>
+    <string name="gutenberg_native_gradient_type" tools:ignore="UnusedResources">Gradient Type</string>
     <string name="gutenberg_native_help_icon" tools:ignore="UnusedResources">Help icon</string>
     <string name="gutenberg_native_here_is_the_panel_content" tools:ignore="UnusedResources">Here is the panel content!</string>
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
@@ -2972,10 +2979,14 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_my_post_status_info" tools:ignore="UnusedResources">My post status info</string>
     <string name="gutenberg_native_my_pre_publish_panel" tools:ignore="UnusedResources">My pre publish panel</string>
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet" tools:ignore="UnusedResources">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
     <string name="gutenberg_native_number_of_columns" tools:ignore="UnusedResources">Number of columns</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
+    <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>

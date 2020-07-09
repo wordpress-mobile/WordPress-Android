@@ -31,6 +31,10 @@ class AnalyticsTrackerWrapper
         AnalyticsUtils.trackWithSiteDetails(stat, site)
     }
 
+    fun track(stat: Stat, siteId: Long) {
+        AnalyticsUtils.trackWithSiteId(stat, siteId)
+    }
+
     /**
      * A convenience method for logging an error event with some additional meta data.
      * @param stat The stat to track.

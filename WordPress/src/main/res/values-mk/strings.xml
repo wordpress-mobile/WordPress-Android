@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2015-01-28 14:24:38+0000
 Plural-Forms: nplurals=2; plural=n % 10 != 1 || n % 100 == 11;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: mk
 -->
 <resources>
@@ -183,7 +183,6 @@ Language: mk
     <string name="httpuser">HTTP корисничко име</string>
     <string name="httppassword">HTTP лозинка</string>
     <string name="error_media_upload">Настана грешка при качување на медиа</string>
-    <string name="publish_date">Објави</string>
     <string name="incorrect_credentials">Невалидно корисничко име или лозинка.</string>
     <string name="password">Лозинка</string>
     <string name="username">Корисничко име</string>

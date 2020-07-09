@@ -72,14 +72,14 @@ enum class QuickStartMySitePrompts constructor(
     CREATE_NEW_PAGE(
             QuickStartTask.CREATE_NEW_PAGE,
             R.id.my_site_scroll_view_root,
-            R.id.row_pages,
+            R.id.quick_action_pages_button,
             R.string.quick_start_dialog_create_new_page_message_short,
             -1
     ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,
             R.id.my_site_scroll_view_root,
-            R.id.row_stats,
+            R.id.quick_action_stats_button,
             R.string.quick_start_dialog_check_stats_message_short,
             R.drawable.ic_stats_alt_white_24dp
     ),

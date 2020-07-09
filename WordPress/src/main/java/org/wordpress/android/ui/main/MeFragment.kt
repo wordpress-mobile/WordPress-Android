@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +25,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ME_GRAVATAR_CROPPED
@@ -58,6 +58,7 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager.RequestListener
 import org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND
 import java.io.File
@@ -379,8 +380,9 @@ class MeFragment : Fragment(), OnScrollToTopListener {
         val context = activity ?: return
         val options = Options()
         options.setShowCropGrid(false)
-        options.setStatusBarColor(ContextCompat.getColor(context, R.color.status_bar))
-        options.setToolbarColor(ContextCompat.getColor(context, R.color.primary))
+        options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
+        options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnPrimarySurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_gravatar.jpg")))
