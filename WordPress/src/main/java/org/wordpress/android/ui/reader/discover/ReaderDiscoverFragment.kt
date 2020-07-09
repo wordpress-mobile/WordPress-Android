@@ -66,7 +66,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     is SharePost -> ReaderActivityLauncher.sharePost(context, post)
                     is OpenPost -> ReaderActivityLauncher.openPost(context, post)
                     is ShowReaderComments -> ReaderActivityLauncher.showReaderComments(context, blogId, postId)
-                    ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+                    is ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
                     is ShowSitePickerForResult -> ActivityLauncher
                             .showSitePickerForResult(this@ReaderDiscoverFragment, this.site, this.mode)
                     is OpenEditorForReblog -> ActivityLauncher
