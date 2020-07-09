@@ -52,8 +52,12 @@ class ReaderPostBookmarkUseCase @Inject constructor(
             val showSnackbarAction = prepareSnackbarAction()
             if (bookmarked && !isBookmarkList) {
                 if (appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()) {
-                    appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
-                    _navigationEvents.postValue(Event(ShowBookmarkedSavedOnlyLocallyDialog(showSnackbarAction)))
+                    _navigationEvents.postValue(Event(ShowBookmarkedSavedOnlyLocallyDialog(
+                            okButtonAction = {
+                                appPrefsWrapper.setBookmarksSavedLocallyDialogShown()
+                                showSnackbarAction.invoke()
+                            })
+                    ))
                 } else {
                     showSnackbarAction.invoke()
                 }

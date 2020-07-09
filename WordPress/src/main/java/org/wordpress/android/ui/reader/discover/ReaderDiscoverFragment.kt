@@ -67,9 +67,6 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             when (it) {
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
-                    if (it.bookmarkDialog != null) {
-                        showBookmarkSavedLocallyDialog(it.bookmarkDialog)
-                    }
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
@@ -93,6 +90,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                             requireActivity().overridePendingTransition(0, 0)
                         }
                     }
+                    is ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
                 }
             }
         })
@@ -115,12 +113,7 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
                     .setTitle(getString(bookmarkDialog.title))
                     .setMessage(getString(bookmarkDialog.message))
                     .setPositiveButton(getString(bookmarkDialog.buttonLabel))
-                    { _, _ ->
-                        run {
-                            bookmarkDialog.okButtonAction.invoke()
-                            viewModel.bookmarkDialogOkClicked()
-                        }
-                    }
+                    { _, _ -> bookmarkDialog.okButtonAction.invoke() }
                     .setOnDismissListener {
                         bookmarksSavedLocallyDialog = null
                     }

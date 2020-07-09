@@ -66,13 +66,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         loadPosts()
     }
 
-    fun bookmarkDialogOkClicked() {
-        val currentState = _uiState.value
-        if (currentState is ContentUiState && currentState.bookmarkDialog != null) {
-            _uiState.value = currentState.copy(bookmarkDialog = null)
-        }
-    }
-
     private fun init() {
         // Start with loading state
         _uiState.value = LoadingUiState
@@ -103,11 +96,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (target is ShowSitePickerForResult) {
                 pendingReblogPost = target.post
             }
-            if (target is ShowBookmarkedSavedOnlyLocallyDialog) {
-                // We need to transform the navigation event into uiState in order to re-show dialog after config change
-                _uiState.value = (_uiState.value as ContentUiState).copy(bookmarkDialog = target)
-            } else
-                _navigationEvents.value = event
+            _navigationEvents.value = event
         }
 
         _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
@@ -176,11 +165,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         val contentVisiblity: Boolean = false,
         val progressVisibility: Boolean = false
     ) {
-        data class ContentUiState(
-            val cards: List<ReaderCardUiState>,
-            val bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog? = null
-        ) : DiscoverUiState(contentVisiblity = true)
-
+        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
     }
