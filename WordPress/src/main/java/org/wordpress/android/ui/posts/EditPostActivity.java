@@ -2017,6 +2017,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
+                        boolean isUnsupportedBlockEditorEnabled = mSite.isWPComAtomic() || !mSite.isJetpackConnected();
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
@@ -2034,7 +2036,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 themeBundle,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                mSite.isJetpackConnected()
+                                isUnsupportedBlockEditorEnabled
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
