@@ -191,8 +191,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         } else {
             R.string.reader_add_bookmark
         }
-        // TODO malinjir shouldn't the action be disabled just for posts which don't have blog and post id?
-        return if (!post.isDiscoverPost) {
+        return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                     isEnabled = true,
                     isSelected = post.isBookmarked,

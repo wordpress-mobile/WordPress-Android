@@ -17,6 +17,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -42,6 +43,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -97,13 +101,17 @@ class ReaderDiscoverViewModel @Inject constructor(
         _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
         }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
     }
 
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
         launch {
             // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
             val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, type)
+            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
         }
     }
 

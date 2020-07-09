@@ -4,17 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -40,6 +43,9 @@ class ReaderPostListViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
+
     fun start(readerViewModel: ReaderViewModel?) {
         this.readerViewModel = readerViewModel
 
@@ -63,6 +69,10 @@ class ReaderPostListViewModel @Inject constructor(
         _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
             _snackbarEvents.value = event
         }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
+        }
     }
 
     /**
@@ -70,8 +80,13 @@ class ReaderPostListViewModel @Inject constructor(
      *
      * @param post post to reblog
      */
-    fun onReblogButtonClicked(post: ReaderPost) {
-        readerPostCardActionsHandler.onAction(post, REBLOG)
+    fun onReblogButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
+        readerPostCardActionsHandler.onAction(post, REBLOG, bookmarksList)
+    }
+
+    fun onBookmarkButtonClicked(blogId: Long, postId: Long, isBookmarkList: Boolean) {
+        val post = ReaderPostTable.getBlogPost(blogId, postId, true)
+        readerPostCardActionsHandler.onAction(post, BOOKMARK, isBookmarkList)
     }
 
     /**

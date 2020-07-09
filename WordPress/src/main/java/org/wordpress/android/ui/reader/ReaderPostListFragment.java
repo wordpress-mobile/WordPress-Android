@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -83,6 +81,7 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
@@ -97,6 +96,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAd
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
@@ -449,21 +450,31 @@ public class ReaderPostListFragment extends Fragment
                         );
                     } else if (navTarget instanceof ShowNoSitesToReblog) {
                         ReaderActivityLauncher.showNoSiteToReblog(getActivity());
+                    } else if (navTarget instanceof ShowBookmarkedTab) {
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        if (requireActivity() instanceof WPMainActivity) {
+                            requireActivity().overridePendingTransition(0, 0);
+                        }
+                    } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
+                        showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
                     } else {
-                        throw new IllegalStateException("Action not supported in ReaderPostListFragment");
+                        throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
                     }
                     return Unit.INSTANCE;
                 }));
 
         mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
-            event.applyIfNotHandled(holder -> {
-                WPSnackbar.make(
-                        requireView(),
-                        holder.getMessageRes(),
-                        Snackbar.LENGTH_LONG
-                ).show();
-                return Unit.INSTANCE;
-            })
+                event.applyIfNotHandled(holder -> {
+                    showSnackbar(holder);
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.getPreloadPostEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    addWebViewCachingFragment(holder.getBlogId(), holder.getPostId());
+                    return Unit.INSTANCE;
+                })
         );
 
         mViewModel.start(mReaderViewModel);
@@ -476,6 +487,28 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
+        }
+    }
+
+    private void showSnackbar(SnackbarMessageHolder holder) {
+        WPSnackbar snackbar = WPSnackbar.make(
+                requireView(),
+                holder.getMessageRes(),
+                Snackbar.LENGTH_LONG
+        );
+        if (holder.getButtonTitleRes() != null) {
+            snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+        }
+        snackbar.show();
+    }
+
+    private void addWebViewCachingFragment(Long blogId, Long postId) {
+        String tag = blogId + "" + postId;
+
+        if (getParentFragmentManager().findFragmentByTag(tag) == null) {
+            getParentFragmentManager().beginTransaction()
+                                 .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                 .commit();
         }
     }
 
@@ -1896,34 +1929,7 @@ public class ReaderPostListFragment extends Fragment
     };
 
     private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            new ReaderInterfaces.OnPostBookmarkedListener() {
-                @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
-                                                               boolean isCachingActionRequired) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    String tag = Long.toString(blogId) + Long.toString(postId);
-
-                    if (NetworkUtils.isNetworkAvailable(getActivity())
-                        && isCachingActionRequired && isBookmarked
-                        && getFragmentManager().findFragmentByTag(tag) == null) {
-                        getFragmentManager().beginTransaction()
-                                            .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                                            .commit();
-                    }
-
-                    if (isBookmarked && !isBookmarksList()) {
-                        if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
-                            AppPrefs.setBookmarksSavedLocallyDialogShown();
-                            showBookmarksSavedLocallyDialog();
-                        } else {
-                            // show snackbar when not in saved posts list
-                            showBookmarkSnackbar();
-                        }
-                    }
-                }
-            };
+            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
 
     private void announceListStateForAccessibility() {
         if (getView() != null) {
@@ -1932,15 +1938,11 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void showBookmarksSavedLocallyDialog() {
-        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(getActivity())
-                .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
-                .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
-                .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        showBookmarkSnackbar();
-                    }
-                })
+    private void showBookmarksSavedLocallyDialog(ShowBookmarkedSavedOnlyLocallyDialog holder) {
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(holder.getTitle()))
+                .setMessage(getString(holder.getMessage()))
+                .setPositiveButton(holder.getButtonLabel(), (dialog, which) -> holder.getOkButtonAction().invoke())
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
@@ -1949,26 +1951,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
                && (mCurrentTag != null && mCurrentTag.isBookmarked());
-    }
-
-    private void showBookmarkSnackbar() {
-        if (!isAdded()) {
-            return;
-        }
-
-        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                  .setAction(R.string.reader_bookmark_snack_btn,
-                          new View.OnClickListener() {
-                              @Override public void onClick(View view) {
-                                  AnalyticsTracker
-                                          .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                                  ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                                  if (getActivity() instanceof WPMainActivity) {
-                                      getActivity().overridePendingTransition(0, 0);
-                                  }
-                              }
-                          })
-                  .show();
     }
 
     /*
@@ -2728,7 +2710,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post);
+        mViewModel.onReblogButtonClicked(post, isBookmarksList());
     }
 
     @Override
