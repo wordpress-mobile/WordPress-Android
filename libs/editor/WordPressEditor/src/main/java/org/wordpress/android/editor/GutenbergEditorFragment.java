@@ -87,8 +87,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
-    private static final String ARG_SITE_JETPACK_IS_CONNECTED = "param_site_jetpack_is_connected";
     private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
+    private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
+            "param_site_is_unsupported_block_editor_enabled";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -136,7 +137,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       @Nullable Bundle editorTheme,
                                                       String userAgent,
                                                       boolean tenorEnabled,
-                                                      boolean siteIsJetpackConnected,
+                                                      boolean isUnsupportedBlockEditorEnabled,
                                                       boolean enableMentionsFlag) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
@@ -155,8 +156,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
         args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
-        args.putBoolean(ARG_SITE_JETPACK_IS_CONNECTED, siteIsJetpackConnected);
         args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
+        args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -258,7 +259,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             String localeSlug = getArguments().getString(ARG_LOCALE_SLUG);
             boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
             Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
-            boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_JETPACK_IS_CONNECTED);
+            boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
             boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
 
             FragmentManager fragmentManager = getChildFragmentManager();
