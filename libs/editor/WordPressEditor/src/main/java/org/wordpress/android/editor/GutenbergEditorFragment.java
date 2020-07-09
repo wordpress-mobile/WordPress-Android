@@ -77,7 +77,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_POST_TYPE = "param_post_type";
     private static final String ARG_IS_NEW_POST = "param_is_new_post";
     private static final String ARG_LOCALE_SLUG = "param_locale_slug";
-    private static final String ARG_SUPPORT_STOCK_PHOTOS = "param_support_stock_photos";
     private static final String ARG_SITE_URL = "param_site_url";
     private static final String ARG_IS_SITE_PRIVATE = "param_is_site_private";
     private static final String ARG_SITE_USER_ID = "param_user_id";
@@ -88,6 +87,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
+    private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
     private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
             "param_site_is_unsupported_block_editor_enabled";
 
@@ -127,7 +127,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String postType,
                                                       boolean isNewPost,
                                                       String localeSlug,
-                                                      boolean supportStockPhotos,
                                                       String siteUrl,
                                                       boolean isPrivate,
                                                       long userId,
@@ -138,7 +137,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       @Nullable Bundle editorTheme,
                                                       String userAgent,
                                                       boolean tenorEnabled,
-                                                      boolean isUnsupportedBlockEditorEnabled) {
+                                                      boolean isUnsupportedBlockEditorEnabled,
+                                                      boolean enableMentionsFlag) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -146,7 +146,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putString(ARG_POST_TYPE, postType);
         args.putBoolean(ARG_IS_NEW_POST, isNewPost);
         args.putString(ARG_LOCALE_SLUG, localeSlug);
-        args.putBoolean(ARG_SUPPORT_STOCK_PHOTOS, supportStockPhotos);
         args.putString(ARG_SITE_URL, siteUrl);
         args.putBoolean(ARG_IS_SITE_PRIVATE, isPrivate);
         args.putLong(ARG_SITE_USER_ID, userId);
@@ -157,6 +156,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
         args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
+        args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
         args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
         fragment.setArguments(args);
         return fragment;
@@ -260,18 +260,21 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
             Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
             boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
+            boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             GutenbergContainerFragment gutenbergContainerFragment =
-                    GutenbergContainerFragment.newInstance(postType,
+                    GutenbergContainerFragment.newInstance(
+                            postType,
                             isNewPost,
                             localeSlug,
                             getTranslations(),
                             isDarkMode(),
                             isSiteUsingWpComRestApi,
                             editorTheme,
-                            siteJetpackIsConnected);
+                            siteJetpackIsConnected,
+                            enableMentionsFlag);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
