@@ -47,8 +47,7 @@ class LoginPrologueFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val nonNullActivity = checkNotNull(activity)
-        (nonNullActivity.application as? WordPress)?.component()?.inject(this)
+        (requireActivity().application as WordPress).component().inject(this)
 
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             bottom_buttons.removeAllViews()
