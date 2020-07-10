@@ -463,6 +463,7 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
+    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -508,7 +509,7 @@
 
     <!-- prepublishing nudges -->
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
 
 </resources>

@@ -16,11 +16,14 @@ import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityItemUiState.Visibility.DRAFT
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -30,6 +33,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Mock lateinit var postSettingsUtils: PostSettingsUtils
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var getPostTagsUseCase: GetPostTagsUseCase
+    @Mock lateinit var getPostVisibilityUseCase: GetPostVisibilityUseCase
     @Mock lateinit var getButtonUiStateUseCase: GetButtonUiStateUseCase
     @Mock lateinit var site: SiteModel
 
@@ -37,6 +41,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     fun setUp() {
         viewModel = PrepublishingHomeViewModel(
                 getPostTagsUseCase,
+                getPostVisibilityUseCase,
                 postSettingsUtils,
                 getButtonUiStateUseCase,
                 mock()
@@ -52,13 +57,14 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         }
         whenever(editPostRepository.getEditablePost()).thenReturn(PostModel())
         whenever(postSettingsUtils.getPublishDateLabel(any())).thenReturn((""))
+        whenever(getPostVisibilityUseCase.getVisibility(any())).thenReturn(DRAFT)
         whenever(site.name).thenReturn("")
     }
 
     @Test
     fun `verify that post home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 2
+        val expectedActionsAmount = 3
 
         // act
         viewModel.start(mock(), site)
@@ -72,7 +78,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     @Test
     fun `verify that page home actions are propagated to prepublishingHomeUiState once the viewModel is started`() {
         // arrange
-        val expectedActionsAmount = 1
+        val expectedActionsAmount = 2
         whenever(editPostRepository.isPage).thenReturn(true)
 
         // act
@@ -151,9 +157,23 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `verify that visibility action type is propagated to prepublishingActionType`() {
+        // arrange
+        val expectedActionType = VISIBILITY
+
+        // act
+        viewModel.start(mock(), site)
+        val visibilityAction = getHomeUiState(expectedActionType)
+        visibilityAction?.onActionClicked?.invoke(expectedActionType)
+
+        // assert
+        assertThat(requireNotNull(viewModel.onActionClicked.value).peekContent()).isEqualTo(expectedActionType)
+    }
+
+    @Test
     fun `verify that tags action type is propagated to prepublishingActionType`() {
         // arrange
-        val expectedActionType = TAGS
+        val expectedActionType = VISIBILITY
 
         // act
         viewModel.start(mock(), site)
@@ -283,6 +303,17 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
         viewModel.start(editPostRepository, site)
 
         val uiState = getHomeUiState(TAGS)
+
+        assertThat(uiState?.actionClickable).isTrue()
+    }
+
+    @Test
+    fun `verify that VISIBILITY action is clickable if PostStatus is PRIVATE`() {
+        whenever(editPostRepository.status).thenReturn(PRIVATE)
+
+        viewModel.start(editPostRepository, site)
+
+        val uiState = getHomeUiState(VISIBILITY)
 
         assertThat(uiState?.actionClickable).isTrue()
     }

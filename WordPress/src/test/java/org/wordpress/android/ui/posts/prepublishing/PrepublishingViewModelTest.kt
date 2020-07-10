@@ -10,6 +10,7 @@ import org.wordpress.android.ui.posts.PrepublishingNavigationTarget
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.PrepublishingScreen.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
+import org.wordpress.android.ui.posts.PrepublishingScreen.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingViewModel
 import org.wordpress.android.viewmodel.Event
 
@@ -115,6 +116,21 @@ class PrepublishingViewModelTest : BaseUnitTest() {
 
         viewModel.start(mock(), mock())
         viewModel.onActionClicked(ActionType.PUBLISH)
+
+        assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
+    }
+
+    @Test
+    fun `when onActionClicked is called with VISIBILITY, navigate to VISIBILITY screen`() {
+        val expectedScreen = VISIBILITY
+
+        var event: Event<PrepublishingNavigationTarget>? = null
+        viewModel.navigationTarget.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), mock())
+        viewModel.onActionClicked(ActionType.VISIBILITY)
 
         assertThat(event?.peekContent()?.targetScreen).isEqualTo(expectedScreen)
     }
