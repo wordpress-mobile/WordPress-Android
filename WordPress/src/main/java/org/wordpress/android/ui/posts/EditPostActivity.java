@@ -2026,7 +2026,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // which are required for us to be able to fetch the site's authentication cookie.
                         boolean isUnsupportedBlockEditorEnabled =
                                 (mSite.isWPComAtomic() || !mSite.isJetpackConnected())
-                                && mSite.getWebEditor().equals("gutenberg");
+                                && "gutenberg".equals(mSite.getWebEditor());
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
