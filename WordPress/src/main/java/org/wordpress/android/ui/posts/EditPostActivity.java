@@ -2024,7 +2024,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // to be set to classic and then the fallback will not work.
                         // We disable in Jetpack site because we don't have the self-hosted site's credentials
                         // which are required for us to be able to fetch the site's authentication cookie.
-                        boolean isUnsupportedBlockEditorEnabled = isWpCom && !"gutenberg".equals(mSite.getWebEditor());
+                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
