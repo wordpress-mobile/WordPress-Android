@@ -152,13 +152,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
-//    private fun loadPosts() {
-//        // TODO malinjir we'll remove this method when the repositories start managing the requests automatically
-//        launch(bgDispatcher) {
-//            readerPostRepository.getDiscoveryFeed()
-//        }
-//    }
-
     fun onReblogSiteSelected(siteLocalId: Int) {
         // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
         //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
