@@ -155,7 +155,6 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
-        // TODO: Do we want to delete the unencrypted log file?
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
     }
 

@@ -143,9 +143,9 @@ class EncryptedLogSqlUtilsTest {
         dateCreated: Date = Date(),
         uploadState: EncryptedLogUploadState = QUEUED
     ) = EncryptedLog(
-            // Bypass the annoying milliseconds comparison issue
             uuid = uuid,
             file = File(filePath),
+            // Bypass the annoying milliseconds comparison issue
             dateCreated = Date.from(dateCreated.toInstant().truncatedTo(SECONDS)),
             uploadState = uploadState
     )
