@@ -82,4 +82,10 @@ class MediaUploadCompletionProcessorTest {
         val processedContent = processor.processContent(TestContent.malformedCoverBlock)
         Assertions.assertThat(processedContent).isEqualTo(TestContent.malformedCoverBlock)
     }
+
+    @Test
+    fun `processPost can handle blocks with json-null ids`() {
+        val processedContent = processor.processContent(TestContent.oldPostWithJsonNullId)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithJsonNullId)
+    }
 }

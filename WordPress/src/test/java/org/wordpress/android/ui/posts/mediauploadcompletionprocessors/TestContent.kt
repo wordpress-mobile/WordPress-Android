@@ -523,6 +523,14 @@ object TestContent {
 <!-- /wp:cover -->
 """
 
+    const val imageBlockWithJsonNullId = """<!-- wp:image {"id":null,"align":"full"} -->
+<figure class="wp-block-image alignfull">
+  <img src="https://example.com" alt="" class="wp-image-77">
+  <figcaption><em>Gutenberg</em> on web</figcaption>
+</figure>
+<!-- /wp:image -->
+"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock
@@ -533,4 +541,6 @@ object TestContent {
     const val newPostGallery = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostCover = paragraphBlock + newImageBlock + oldCoverBlock + newMediaTextBlock + oldGalleryBlock
     const val newPostCover = paragraphBlock + newImageBlock + newCoverBlock + newMediaTextBlock + newGalleryBlock
+    const val oldPostWithJsonNullId = paragraphBlock + oldImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
+    const val newPostWithJsonNullId = paragraphBlock + newImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
 }
