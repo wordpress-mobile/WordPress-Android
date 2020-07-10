@@ -35,7 +35,9 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_PREFERRED_COLOR_SCHEME = "param_preferred_color_scheme";
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_EDITOR_THEME = "param_editor_theme";
-    private static final String ARG_SITE_JETPACK_IS_CONNECTED = "param_site_jetpack_is_connected";
+    private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
+            "param_site_is_unsupported_block_editor_enabled";
+    private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
@@ -48,7 +50,8 @@ public class GutenbergContainerFragment extends Fragment {
                                                          boolean isDarkMode,
                                                          boolean isSiteUsingWpComRestApi,
                                                          Bundle editorTheme,
-                                                         boolean siteJetpackIsConnected) {
+                                                         boolean isUnsupportedBlockEditorEnabled,
+                                                         boolean enableMentionsFlag) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_POST_TYPE, postType);
@@ -58,7 +61,8 @@ public class GutenbergContainerFragment extends Fragment {
         args.putBoolean(ARG_PREFERRED_COLOR_SCHEME, isDarkMode);
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
-        args.putBoolean(ARG_SITE_JETPACK_IS_CONNECTED, siteJetpackIsConnected);
+        args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
+        args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
         fragment.setArguments(args);
         return fragment;
     }
@@ -109,7 +113,9 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isDarkMode = getArguments().getBoolean(ARG_PREFERRED_COLOR_SCHEME);
         boolean isSiteUsingWpComRestApi = getArguments().getBoolean(ARG_SITE_USING_WPCOM_REST_API);
         Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
-        boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_JETPACK_IS_CONNECTED);
+        boolean isUnsupportedBlockEditorEnabled =
+                getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
+        boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -137,7 +143,8 @@ public class GutenbergContainerFragment extends Fragment {
                 breadcrumbLogger,
                 isSiteUsingWpComRestApi,
                 editorTheme,
-                siteJetpackIsConnected);
+                isUnsupportedBlockEditorEnabled,
+                enableMentionsFlag);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
