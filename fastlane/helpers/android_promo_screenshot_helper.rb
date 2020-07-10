@@ -2,7 +2,7 @@ require 'tmpdir'
 
 module Fastlane
   module Helpers
-    
+
     class AndroidPromoScreenshots
       attr_reader :device, :locales, :orig_folder, :target_folder, :default_locale, :metadata_folder
 
@@ -108,7 +108,7 @@ module Fastlane
         if (@default_strings.key?(index))
           return @default_strings[index]
         end
-        
+
         return "Unknown"
       end
 
@@ -127,13 +127,13 @@ module Fastlane
 
           # Read the file into a string
           promo_string = File.read(promo_file)
-          
+
           # Add to hash
           strings[promo_id] = promo_string
         end
 
         return strings
-      end 
+      end
 
       # Helpers
       def get_text_size_for(locale_options)

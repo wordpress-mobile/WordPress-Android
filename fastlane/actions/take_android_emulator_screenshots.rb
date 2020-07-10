@@ -26,13 +26,13 @@ module Fastlane
       def self.enter_demo_mode(device_serial)
         # Setup device for demo
         other_action.adb(command: "shell settings put global sysui_demo_allowed 1",
-                         serial: device_serial)
+                        serial: device_serial)
         # Disable system notifications
         other_action.adb(command: "shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false",
-                         serial: device_serial)
+                        serial: device_serial)
         # Enjoy lunch while browsing the Play Store
         other_action.adb(command: "shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 1337",
-                         serial: device_serial)
+                        serial: device_serial)
       end
 
       def self.exit_demo_mode(device_serial)
@@ -100,21 +100,21 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :devices,
-                                       env_name: "FL_TAKE_ANDROID_EMULATOR_SCREENSHOTS_DEVICES",
-                                       description: "Android emulator configurations to capture screenshots in",
-                                       type: Array,
-                                       verify_block: proc do |value|
-                                         verify_devices(value)
-                                       end),
+                                      env_name: "FL_TAKE_ANDROID_EMULATOR_SCREENSHOTS_DEVICES",
+                                      description: "Android emulator configurations to capture screenshots in",
+                                      type: Array,
+                                      verify_block: proc do |value|
+                                        verify_devices(value)
+                                      end),
           FastlaneCore::ConfigItem.new(key: :screenshot_options,
-                                       env_name: "FL_TAKE_ANDROID_EMULATOR_SCREENSHOT_OPTIONS",
-                                       description: "The screenshot options to be provided to Fastlane Screengrab",
-                                       type: Hash)
+                                      env_name: "FL_TAKE_ANDROID_EMULATOR_SCREENSHOT_OPTIONS",
+                                      description: "The screenshot options to be provided to Fastlane Screengrab",
+                                      type: Hash)
         ]
       end
 
       def self.output
-        
+
       end
 
       def self.return_value

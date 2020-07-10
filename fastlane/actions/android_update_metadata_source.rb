@@ -4,16 +4,16 @@ module Fastlane
         def self.run(params)
           # Check local repo status
           other_action.ensure_git_status_clean()
-  
+
           other_action.an_update_metadata_source(po_file_path: params[:po_file_path],
-            source_files: params[:source_files], 
+            source_files: params[:source_files],
             release_version: params[:release_version])
-  
+
           Action.sh("git add #{params[:po_file_path]}")
           params[:source_files].each do | key, file |
             Action.sh("git add #{file}")
           end
-  
+
           repo_status = Actions.sh("git status --porcelain")
           repo_clean = repo_status.empty?
           if (!repo_clean) then
@@ -21,27 +21,27 @@ module Fastlane
             Action.sh("git push")
           end
         end
-  
+
         #####################################################
         # @!group Documentation
         #####################################################
-  
+
         def self.description
           "Updates the PlayStoreStrings.po file with the data from text source files"
         end
-  
+
         def self.details
           "Updates the PlayStoreStrings.po file with the data from text source files"
         end
-  
+
         def self.available_options
-          # Define all options your action supports. 
-          
+          # Define all options your action supports.
+
           # Below a few examples
           [
             FastlaneCore::ConfigItem.new(key: :po_file_path,
-                                          env_name: "FL_ANDROID_UPDATE_METADATA_SOURCE_PO_FILE_PATH", 
-                                          description: "The path of the .po file to update", 
+                                          env_name: "FL_ANDROID_UPDATE_METADATA_SOURCE_PO_FILE_PATH",
+                                          description: "The path of the .po file to update",
                                           is_string: true,
                                           verify_block: proc do |value|
                                             UI.user_error!("No .po file path for UpdateMetadataSourceAction given, pass using `po_file_path: 'file path'`") unless (value and not value.empty?)
@@ -62,19 +62,19 @@ module Fastlane
                                           end)
           ]
         end
-  
+
         def self.output
-  
+
         end
-  
+
         def self.return_value
-          
+
         end
-  
+
         def self.authors
           ["loremattei"]
         end
-  
+
         def self.is_supported?(platform)
           platform == :android
         end

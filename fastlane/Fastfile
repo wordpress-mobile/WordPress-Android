@@ -517,7 +517,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :build_for_translation_review do | options |
     cmd_params = ""
     unless options[:custom_version].nil?
-      UI.message("Building custom version: #{options[:custom_version]}") 
+      UI.message("Building custom version: #{options[:custom_version]}")
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
@@ -527,7 +527,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")
-  end 
+  end
 
 #####################################################################################
 # Private lanes

@@ -13,9 +13,9 @@ module Fastlane
         UI.message "Metadata folder path: #{params[:metadata_folder]}"
 
         Fastlane::Helpers::AndroidPromoScreenshots::require_font()
-        screenshot_gen = Fastlane::Helpers::AndroidPromoScreenshots.new(params[:locales], 
+        screenshot_gen = Fastlane::Helpers::AndroidPromoScreenshots.new(params[:locales],
           params[:default_locale],
-          params[:orig_folder], 
+          params[:orig_folder],
           params[:output_folder],
           params[:metadata_folder])
 
@@ -45,33 +45,33 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :orig_folder,
-                                   env_name: "PROMOSS_ORIG",
+                                  env_name: "PROMOSS_ORIG",
                                 description: "The path of the original screenshots",
-                                   optional: false,
+                                  optional: false,
                                   is_string: true),
           FastlaneCore::ConfigItem.new(key: :output_folder,
                                         env_name: "PROMOSS_OUTPUT",
-                                     description: "The path of the folder to save the promo screenshots",
+                                    description: "The path of the folder to save the promo screenshots",
                                         optional: false,
                                       is_string: true),
           FastlaneCore::ConfigItem.new(key: :locales,
                                         env_name: "PROMOSS_LOCALES",
-                                     description: "The list of locales to generate",
+                                    description: "The list of locales to generate",
                                         optional: false,
                                       is_string: false),
           FastlaneCore::ConfigItem.new(key: :device_config,
                                         env_name: "PROMOSS_DEVICE_CONFIGHASH",
-                                     description: "A hash with the configuration data",
+                                    description: "A hash with the configuration data",
                                         optional: false,
                                       is_string: false),
           FastlaneCore::ConfigItem.new(key: :default_locale,
                                         env_name: "PROMOSS_DEFAULT_LOCALE",
-                                     description: "The default locale to use in case of missing translations",
+                                    description: "The default locale to use in case of missing translations",
                                         optional: false,
                                       is_string: true),
           FastlaneCore::ConfigItem.new(key: :metadata_folder,
                                         env_name: "PROMOSS_METADATA_FOLDER",
-                                     description: "The default locale to use in case of missing translations",
+                                    description: "The default locale to use in case of missing translations",
                                         optional: false,
                                       is_string: true),
         ]

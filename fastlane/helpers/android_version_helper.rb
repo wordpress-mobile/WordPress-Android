@@ -36,8 +36,8 @@ module Fastlane
         else
           vp[MINOR_NUMBER] -= 1
         end
-        
-         "#{vp[MAJOR_NUMBER]}.#{vp[MINOR_NUMBER]}"
+
+        "#{vp[MAJOR_NUMBER]}.#{vp[MINOR_NUMBER]}"
       end
 
       def self.is_hotfix(version)
@@ -46,7 +46,7 @@ module Fastlane
         return (vp.length > 2) && (vp[HOTFIX_NUMBER] != 0)
       end
 
-      # private 
+      # private
 
       def self.get_version_parts(version)
         version.split(".").fill("0", version.length...2).map{|chr| chr.to_i}
