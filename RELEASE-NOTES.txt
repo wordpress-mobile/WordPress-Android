@@ -2,7 +2,7 @@
 -----
 * [*] Improve wording for confirmation dialogs when trashing posts
 * [***] Block Editor: Adds Copy, Cut, Paste, and Duplicate functionality to blocks
-* [***] Block Editor: Users can now individually edit unsupported blocks found in posts or pages. Not available on Jetpack connected self-hosted sites.
+* [***] Block Editor: Users can now individually edit unsupported blocks found in posts or pages. Not available on selfhosted sites or sites defaulted to classic editor.
  
 15.2
 -----
