@@ -119,6 +119,7 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
 enum class PrepublishingScreen : Parcelable {
     HOME,
     PUBLISH,
+    VISIBILITY,
     TAGS
 }
 

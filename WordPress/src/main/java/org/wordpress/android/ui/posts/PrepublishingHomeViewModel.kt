@@ -10,9 +10,11 @@ import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
+import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
+import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.StringUtils
@@ -22,6 +24,7 @@ import javax.inject.Inject
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
+    private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -47,6 +50,15 @@ class PrepublishingHomeViewModel @Inject constructor(
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
+
+            add(
+                    HomeUiState(
+                            actionType = VISIBILITY,
+                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                            actionClickable = true,
+                            onActionClicked = ::onActionClicked
+                    )
+            )
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
                 add(
