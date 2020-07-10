@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader.discover
 
-import android.text.Html
 import android.view.View
 import dagger.Reusable
 import org.wordpress.android.R
@@ -162,8 +161,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onDiscoverSectionClicked: (Long, Long) -> Unit
     ): DiscoverLayoutUiState {
         // TODO malinjir don't store Spanned in VM/UiState => refactor getAttributionHtml method.
-        // TODO Found a case in which attributionHtml is null - leaving this as a placemarker
-        val discoverText = discoverData.attributionHtml ?: Html.fromHtml("<p>I am null</p>")
+        val discoverText = discoverData.attributionHtml
         val discoverAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                 discoverData.avatarUrl,
                 R.dimen.avatar_sz_small
