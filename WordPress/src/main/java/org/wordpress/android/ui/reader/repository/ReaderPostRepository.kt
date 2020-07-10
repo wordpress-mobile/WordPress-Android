@@ -38,7 +38,7 @@ class ReaderPostRepository(
 
     private val _postsForTag = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActivePostsForTag() }, onInactive = { onInactivePostsForTag() })
-    val postsForTag: ReactiveMutableLiveData<ReaderPostList> = _postsForTag
+    val postsForTag: LiveData<ReaderPostList> = _postsForTag
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel

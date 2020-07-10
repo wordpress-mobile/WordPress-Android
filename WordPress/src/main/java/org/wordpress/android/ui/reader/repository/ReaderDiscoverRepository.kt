@@ -37,7 +37,7 @@ class ReaderDiscoverRepository constructor(
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
-    val discoverFeed: ReactiveMutableLiveData<ReaderPostList> = _discoverFeed
+    val discoverFeed: LiveData<ReaderPostList> = _discoverFeed
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
