@@ -133,6 +133,8 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
         ((WordPress) getApplication()).component().inject(this);
         super.onCreate(savedInstanceState);
 
+        LoginFlowThemeHelper.injectMissingCustomAttributes(getTheme());
+
         setContentView(R.layout.login_activity);
 
         if (savedInstanceState == null) {
