@@ -27,6 +27,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
@@ -703,26 +704,20 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void startCropActivity(Uri uri) {
-        final Context context = getActivity();
+        final Context context = new ContextThemeWrapper(getActivity(), R.style.WordPress_NoActionBar);
 
-        if (context != null) {
-            UCrop.Options options = new UCrop.Options();
-            options.setShowCropGrid(false);
-            options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
-                    context, android.R.attr.statusBarColor
-            ));
-            options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
-            options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
-                    context, R.attr.colorOnPrimarySurface
-            ));
-            options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
-            options.setHideBottomControls(true);
+        UCrop.Options options = new UCrop.Options();
+        options.setShowCropGrid(false);
+        options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(context, android.R.attr.statusBarColor));
+        options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
+        options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnPrimarySurface));
+        options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
+        options.setHideBottomControls(true);
 
-            UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
-                 .withAspectRatio(1, 1)
-                 .withOptions(options)
-                 .start(getActivity(), this);
-        }
+        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
+             .withAspectRatio(1, 1)
+             .withOptions(options)
+             .start(context, this);
     }
 
     protected void startGravatarUpload(final String filePath) {
