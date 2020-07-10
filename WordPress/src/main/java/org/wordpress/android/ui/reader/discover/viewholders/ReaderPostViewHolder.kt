@@ -65,7 +65,6 @@ class ReaderPostViewHolder(
         updateFeaturedImage(state)
         uiHelpers.updateVisibility(image_video_overlay, state.videoOverlayVisibility)
         uiHelpers.setTextOrHide(text_photo_title, state.photoTitle)
-        uiHelpers.updateVisibility(frame_photo, state.photoFrameVisibility)
         uiHelpers.updateVisibility(thumbnail_strip, state.thumbnailStripSection != null)
         state.thumbnailStripSection?.let {
             thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
@@ -116,6 +115,7 @@ class ReaderPostViewHolder(
     }
 
     private fun updateDiscoverSection(state: ReaderPostUiState) {
+        uiHelpers.updateVisibility(image_discover_avatar, state.discoverSection != null)
         uiHelpers.updateVisibility(layout_discover, state.discoverSection != null)
         uiHelpers.setTextOrHide(text_discover, state.discoverSection?.discoverText)
         if (state.discoverSection?.discoverAvatarUrl == null) {
