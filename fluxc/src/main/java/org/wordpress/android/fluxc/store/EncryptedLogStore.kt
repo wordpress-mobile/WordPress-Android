@@ -122,21 +122,31 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private suspend fun handleFailedUpload(encryptedLog: EncryptedLog, error: UploadEncryptedLogError) {
+        val handleServerError = {
+            encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(uploadState = FAILED))
+        }
         when (error) {
             is TooManyRequests -> {
-                encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(uploadState = FAILED))
+                handleServerError.invoke()
             }
             is InvalidRequest -> {
                 handleFinalUploadFailure(encryptedLog, error)
             }
-            Unknown -> {
-                if (encryptedLog.failedCount + 1 >= MAX_RETRY_COUNT) {
-                    handleFinalUploadFailure(encryptedLog, error)
-                } else {
-                    encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(
-                            failedCount = encryptedLog.failedCount + 1,
-                            uploadState = FAILED
-                    ))
+            is Unknown -> {
+                when {
+                    // If it's a server error, we should just retry later
+                    (500..599).contains(error.statusCode) -> {
+                        handleServerError.invoke()
+                    }
+                    encryptedLog.failedCount + 1 >= MAX_RETRY_COUNT -> {
+                        handleFinalUploadFailure(encryptedLog, error)
+                    }
+                    else -> {
+                        encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog.copy(
+                                failedCount = encryptedLog.failedCount + 1,
+                                uploadState = FAILED
+                        ))
+                    }
                 }
             }
         }
@@ -173,10 +183,9 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
-    // TODO: Any other known upload errors we should handle?
-    sealed class UploadEncryptedLogError(val message: String? = null) : OnChangedError {
-        object Unknown : UploadEncryptedLogError()
-        class InvalidRequest(message: String?) : UploadEncryptedLogError(message)
-        class TooManyRequests(message: String?) : UploadEncryptedLogError(message)
+    sealed class UploadEncryptedLogError(val statusCode: Int?, val message: String?) : OnChangedError {
+        class Unknown(statusCode: Int? = null, message: String? = null) : UploadEncryptedLogError(statusCode, message)
+        class InvalidRequest(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
+        class TooManyRequests(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
     }
 }
