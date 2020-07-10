@@ -1,2 +1,13 @@
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace=true
+
 [*.{kt,kts}]
 max_line_length=120
+
+[*.rb]
+indent_style = space
+
+[**FastFile]
+indent_style = space
