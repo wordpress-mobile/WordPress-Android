@@ -131,9 +131,8 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     private void updatePrimaryButtonEnabledStatus() {
         View view = getView();
         if (view != null) {
-            Button primaryButton = (Button) view.findViewById(R.id.primary_button);
             String currentPassword = mPasswordInput.getEditText().getText().toString();
-            primaryButton.setEnabled(!currentPassword.trim().isEmpty());
+            getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty());
         }
     }
 
