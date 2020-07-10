@@ -70,6 +70,7 @@ class ReaderPostViewHolder(
             thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
         }
         loadVideoThumbnail(state)
+        image_video_overlay.setOnClickListener { state.onVideoOverlayClicked(uiState.postId, uiState.blogId) }
 
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)

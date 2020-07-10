@@ -392,7 +392,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         };
 
         Function2<Long, Long, Unit> onVideoOverlayClicked = (postId, blogId) -> {
-            ReaderActivityLauncher.showReaderBlogPreview(ctx, post);
+            ReaderActivityLauncher.showReaderVideoViewer(ctx, post.getFeaturedVideo());
             return Unit.INSTANCE;
         };
 
