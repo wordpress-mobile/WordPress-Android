@@ -88,4 +88,10 @@ class MediaUploadCompletionProcessorTest {
         val processedContent = processor.processContent(TestContent.oldPostWithJsonNullId)
         Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithJsonNullId)
     }
+
+    @Test
+    fun `processPost can handle blocks with json-null ids in gallery`() {
+        val processedContent = processor.processContent(TestContent.oldPostWithGalleryJsonNullId)
+        Assertions.assertThat(processedContent).isEqualTo(TestContent.newPostWithGalleryJsonNullId)
+    }
 }

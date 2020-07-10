@@ -530,6 +530,23 @@ object TestContent {
 </figure>
 <!-- /wp:image -->
 """
+    const val galleryBlockWithJsonNullId = """<!-- wp:gallery {"ids":[203,null,369]} -->
+<figure class="wp-block-gallery columns-3 is-cropped">
+  <ul class="blocks-gallery-grid">
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="203" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-203"></figure>
+    </li>
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="77" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-77"></figure>
+    </li>
+    <li class="blocks-gallery-item">
+      <figure><img src="https://example.com" alt="" data-id="369" data-full-url="https://example.com" data-link="https://example.com" class="wp-image-369"></figure>
+    </li>
+  </ul>
+</figure>
+<!-- /wp:gallery -->
+"""
+
 
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
@@ -543,4 +560,6 @@ object TestContent {
     const val newPostCover = paragraphBlock + newImageBlock + newCoverBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostWithJsonNullId = paragraphBlock + oldImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
     const val newPostWithJsonNullId = paragraphBlock + newImageBlock + imageBlockWithJsonNullId + newMediaTextBlock
+    const val oldPostWithGalleryJsonNullId = paragraphBlock + oldImageBlock + galleryBlockWithJsonNullId
+    const val newPostWithGalleryJsonNullId = paragraphBlock + newImageBlock + galleryBlockWithJsonNullId
 }
