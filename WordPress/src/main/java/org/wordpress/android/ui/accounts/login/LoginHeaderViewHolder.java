@@ -11,10 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.login.util.AvatarHelper.FakeGravatarUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.image.ImageManager;
 
+import static org.wordpress.android.login.util.AvatarHelper.FakeGravatarUtils.DefaultImage.STATUS_404;
 import static org.wordpress.android.util.image.ImageType.AVATAR_WITHOUT_BACKGROUND;
 
 /**
@@ -74,10 +75,10 @@ class LoginHeaderViewHolder extends RecyclerView.ViewHolder {
     }
 
     private String constructGravatarUrl(Context context, AccountModel account) {
-        return GravatarUtils.fixGravatarUrl(account.getAvatarUrl(), getAvatarSize(context));
+        return FakeGravatarUtils.fixGravatarUrl(account.getAvatarUrl(), getAvatarSize(context), STATUS_404);
     }
 
     private String constructGravatarUrl(Context context, SiteModel site) {
-        return GravatarUtils.gravatarFromEmail(site.getEmail(), getAvatarSize(context));
+        return FakeGravatarUtils.gravatarFromEmail(site.getEmail(), getAvatarSize(context), STATUS_404);
     }
 }
