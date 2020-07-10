@@ -10,7 +10,7 @@ import org.wordpress.android.R
 class LoginProloguePagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     private val pages = listOf(
             Page(
-                    R.string.login_promo_title_36_percent,
+                    R.string.login_promo_title_37_percent,
                     R.string.login_promo_text_unlock_the_power,
                     R.drawable.img_illustration_promo
             )
