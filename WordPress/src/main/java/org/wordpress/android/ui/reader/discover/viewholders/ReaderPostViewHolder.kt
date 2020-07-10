@@ -115,7 +115,7 @@ class ReaderPostViewHolder(
     }
 
     private fun updateDiscoverSection(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_discover_avatar, state.discoverSection != null)
+        uiHelpers.updateVisibility(image_discover_avatar, state.discoverSection?.discoverAvatarUrl != null)
         uiHelpers.updateVisibility(layout_discover, state.discoverSection != null)
         uiHelpers.setTextOrHide(text_discover, state.discoverSection?.discoverText)
         if (state.discoverSection?.discoverAvatarUrl == null) {
