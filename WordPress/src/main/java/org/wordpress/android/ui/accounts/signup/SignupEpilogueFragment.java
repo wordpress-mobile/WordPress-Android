@@ -310,7 +310,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ReaderUpdateServiceStarter.startService(WordPress.getContext(),
                     EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
-            mUnifiedLoginTracker.track(Step.USERNAME_PASSWORD);
+            mUnifiedLoginTracker.track(Step.SUCCESS);
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
 
