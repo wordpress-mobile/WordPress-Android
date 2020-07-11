@@ -14,6 +14,9 @@
     <color name="material_black_800">#121212</color>
     <color name="material_black_900">#000000</color>
 
+    <!-- Temporarily using a hardcoded color for the avatar placeholder in order
+    to avoid having to handle tint programmatically in more than one place -->
+    <color name="avatar_placeholder">#61121212</color>
 
     <!-- Legacy -->
     <!--
