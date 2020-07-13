@@ -1,105 +1,88 @@
-package org.wordpress.android.ui.reader.views;
+package org.wordpress.android.ui.reader.views
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.datasets.ReaderTagTable;
-import org.wordpress.android.fluxc.store.AccountStore;
-import org.wordpress.android.models.ReaderTag;
-import org.wordpress.android.ui.reader.actions.ReaderActions;
-import org.wordpress.android.ui.reader.actions.ReaderTagActions;
-import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.ToastUtils;
-
-import javax.inject.Inject;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.widget.RelativeLayout
+import kotlinx.android.synthetic.main.reader_tag_header_view.view.*
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderTagTable
+import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener
+import org.wordpress.android.ui.reader.actions.ReaderTagActions
+import org.wordpress.android.util.NetworkUtils
+import org.wordpress.android.util.ToastUtils
+import javax.inject.Inject
 
 /**
  * topmost view in post adapter when showing tag preview - displays tag name and follow button
  */
-public class ReaderTagHeaderView extends RelativeLayout {
-    private ReaderFollowButton mFollowButton;
-    private ReaderTag mCurrentTag;
+class ReaderTagHeaderView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : RelativeLayout(context, attrs, defStyleAttr) {
+    private var currentTag: ReaderTag? = null
 
-    @Inject AccountStore mAccountStore;
+    @Inject lateinit var accountStore: AccountStore
 
-    public ReaderTagHeaderView(Context context) {
-        this(context, null);
+    init {
+        (context.applicationContext as WordPress).component().inject(this)
+        initView(context)
     }
 
-    public ReaderTagHeaderView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    private fun initView(context: Context) {
+        inflate(context, R.layout.reader_tag_header_view, this)
+        follow_button.setOnClickListener { toggleFollowStatus() }
     }
 
-    public ReaderTagHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        ((WordPress) context.getApplicationContext()).component().inject(this);
-        initView(context);
-    }
-
-    private void initView(Context context) {
-        View view = inflate(context, R.layout.reader_tag_header_view, this);
-        mFollowButton = view.findViewById(R.id.follow_button);
-    }
-
-    public void setCurrentTag(final ReaderTag tag) {
+    fun setCurrentTag(tag: ReaderTag?) {
         if (tag == null) {
-            return;
+            return
         }
-
-        boolean isTagChanged = !ReaderTag.isSameTag(tag, mCurrentTag);
-
+        val isTagChanged = !ReaderTag.isSameTag(tag, currentTag)
         if (isTagChanged) {
-            mCurrentTag = tag;
+            currentTag = tag
         }
-
-        TextView txtTagName = findViewById(R.id.text_tag);
-        txtTagName.setText(tag.getLabel());
-
-        if (!mAccountStore.hasAccessToken()) {
-            mFollowButton.setVisibility(View.GONE);
-        } else {
-            mFollowButton.setVisibility(View.VISIBLE);
-            mFollowButton.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.getTagSlug()));
-            mFollowButton.setOnClickListener(v -> toggleFollowStatus());
-        }
+        updateUi(tag)
     }
 
-    private void toggleFollowStatus() {
-        if (mCurrentTag == null || !NetworkUtils.checkConnection(getContext())) {
-            return;
+    private fun updateUi(tag: ReaderTag) {
+        text_tag.text = tag.label
+        follow_button.visibility = if (!accountStore.hasAccessToken()) View.GONE else View.VISIBLE
+        follow_button.setIsFollowed(ReaderTagTable.isFollowedTagName(tag.tagSlug))
+    }
+
+    private fun toggleFollowStatus() {
+        if (currentTag == null || !NetworkUtils.checkConnection(context)) {
+            return
         }
-
-        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(mCurrentTag.getTagSlug());
-
-        ReaderActions.ActionListener listener = succeeded -> {
-            if (getContext() == null) {
-                return;
+        val isAskingToFollow = currentTag?.let { !ReaderTagTable.isFollowedTagName(it.tagSlug) } ?: false
+        val listener = ActionListener { succeeded: Boolean ->
+            if (context == null) {
+                return@ActionListener
             }
-            mFollowButton.setEnabled(true);
+            follow_button.isEnabled = true
             if (!succeeded) {
-                int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
-                        : R.string.reader_toast_err_remove_tag;
-                ToastUtils.showToast(getContext(), errResId);
-                mFollowButton.setIsFollowed(!isAskingToFollow);
+                val errResId = if (isAskingToFollow) {
+                    R.string.reader_toast_err_add_tag
+                } else {
+                    R.string.reader_toast_err_remove_tag
+                }
+                ToastUtils.showToast(context, errResId)
+                follow_button.setIsFollowed(!isAskingToFollow)
             }
-        };
-
-        mFollowButton.setEnabled(false);
-
-        boolean success;
-        if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener);
-        } else {
-            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
         }
-
+        follow_button.isEnabled = false
+        val success = if (isAskingToFollow) {
+            ReaderTagActions.addTag(currentTag, listener)
+        } else {
+            ReaderTagActions.deleteTag(currentTag, listener)
+        }
         if (success) {
-            mFollowButton.setIsFollowedAnimated(isAskingToFollow);
+            follow_button.setIsFollowedAnimated(isAskingToFollow)
         }
     }
 }

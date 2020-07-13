@@ -1,116 +1,101 @@
-package org.wordpress.android.ui.reader.views;
+package org.wordpress.android.ui.reader.views
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
-import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
-
-import com.google.android.material.button.MaterialButton;
-
-import org.wordpress.android.R;
+import android.R.integer
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.content.Context
+import android.util.AttributeSet
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import com.google.android.material.button.MaterialButton
+import org.wordpress.android.R
 
 /**
  * Follow button used in reader detail
  */
-public class ReaderFollowButton extends MaterialButton {
-    private boolean mIsFollowed;
-    private boolean mShowCaption;
+class ReaderFollowButton @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = R.attr.followButtonStyle
+) : MaterialButton(context, attrs, defStyleAttr) {
+    private var isFollowed = false
+    private var showCaption = false
 
-    public ReaderFollowButton(Context context) {
-        super(context);
-        initView(context, null);
+    init {
+        initView(context, attrs)
     }
 
-    public ReaderFollowButton(Context context, AttributeSet attrs) {
-        super(context, attrs, R.attr.followButtonStyle);
-        initView(context, attrs);
-    }
-
-    public ReaderFollowButton(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initView(context, attrs);
-    }
-
-    private void initView(Context context, AttributeSet attrs) {
+    private fun initView(context: Context, attrs: AttributeSet?) {
         // default to showing caption, then read the value from passed attributes
-        mShowCaption = true;
+        showCaption = true
         if (attrs != null) {
-            TypedArray array = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0);
-            if (array != null) {
-                mShowCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true);
+            val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
+            array?.let {
+                showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
             }
         }
-
-        if (!mShowCaption) {
-            hideCaptionAndEnlargeIcon(context);
+        if (!showCaption) {
+            hideCaptionAndEnlargeIcon(context)
         }
     }
 
-    private void hideCaptionAndEnlargeIcon(Context context) {
-        setText(null);
-        int iconSz = context.getResources().getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption);
-        setIconSize(iconSz);
+    private fun hideCaptionAndEnlargeIcon(context: Context) {
+        text = null
+        iconSize = context.resources.getDimensionPixelSize(R.dimen.reader_follow_icon_no_caption)
     }
 
-    private void updateFollowTextAndIcon() {
-        if (mShowCaption) {
-            setText(mIsFollowed ? R.string.reader_btn_unfollow : R.string.reader_btn_follow);
+    private fun updateFollowTextAndIcon() {
+        if (showCaption) {
+            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
         }
-        setSelected(mIsFollowed);
-
-        int drawableId;
-        if (mIsFollowed) {
-            drawableId = R.drawable.ic_reader_following_white_24dp;
+        isSelected = isFollowed
+        val drawableId = if (isFollowed) {
+            R.drawable.ic_reader_following_white_24dp
         } else {
-            drawableId = R.drawable.ic_reader_follow_white_24dp;
+            R.drawable.ic_reader_follow_white_24dp
         }
-        Drawable drawable = getContext().getResources().getDrawable(drawableId, getContext().getTheme());
-        setIcon(drawable);
+        icon = context.resources.getDrawable(drawableId, context.theme)
     }
 
-    public void setIsFollowed(boolean isFollowed) {
-        setIsFollowed(isFollowed, false);
+    fun setIsFollowed(isFollowed: Boolean) {
+        setIsFollowed(isFollowed, false)
     }
 
-    public void setIsFollowedAnimated(boolean isFollowed) {
-        setIsFollowed(isFollowed, true);
+    fun setIsFollowedAnimated(isFollowed: Boolean) {
+        setIsFollowed(isFollowed, true)
     }
 
-    private void setIsFollowed(boolean isFollowed, boolean animateChanges) {
-        if (isFollowed == mIsFollowed && isSelected() == isFollowed) {
-            return;
+    private fun setIsFollowed(isFollowed: Boolean, animateChanges: Boolean) {
+        if (isFollowed == this.isFollowed && isSelected == isFollowed) {
+            return
         }
-
-        mIsFollowed = isFollowed;
-
+        this.isFollowed = isFollowed
         if (animateChanges) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(this, View.SCALE_Y, 1f, 0f);
-            anim.setRepeatMode(ValueAnimator.REVERSE);
-            anim.setRepeatCount(1);
-
-            anim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-                    updateFollowTextAndIcon();
-                }
-            });
-
-            long duration = getContext().getResources().getInteger(android.R.integer.config_shortAnimTime);
-            AnimatorSet set = new AnimatorSet();
-            set.play(anim);
-            set.setDuration(duration);
-            set.setInterpolator(new AccelerateDecelerateInterpolator());
-
-            set.start();
+            val anim = ObjectAnimator.ofFloat(
+                this,
+                View.SCALE_Y,
+                1f,
+                0f
+            )
+            with(anim) {
+                repeatMode = ValueAnimator.REVERSE
+                repeatCount = 1
+                addListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationRepeat(animation: Animator) {
+                        updateFollowTextAndIcon()
+                    }
+                })
+            }
+            AnimatorSet().apply {
+                play(anim)
+                duration = context.resources.getInteger(integer.config_shortAnimTime).toLong()
+                interpolator = AccelerateDecelerateInterpolator()
+            }.start()
         } else {
-            updateFollowTextAndIcon();
+            updateFollowTextAndIcon()
         }
     }
 }
