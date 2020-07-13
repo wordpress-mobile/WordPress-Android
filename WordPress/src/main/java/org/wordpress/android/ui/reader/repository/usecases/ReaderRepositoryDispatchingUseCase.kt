@@ -6,6 +6,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancelChildren
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import kotlin.coroutines.CoroutineContext
 
 abstract class ReaderRepositoryDispatchingUseCase(
@@ -30,4 +32,9 @@ abstract class ReaderRepositoryDispatchingUseCase(
         const val EXCLUDE_TEXT_COLUMN = true
         const val MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
     }
+}
+// todo: annmarie - this should be removed - it's a helper log fun for coroutines
+fun logCoroutine(methodName: String, coroutineContext: CoroutineContext) {
+    AppLog.d(T.READER, "logCoroutine Thread for $methodName ${Thread.currentThread().name}" +
+            " and the context is $coroutineContext")
 }

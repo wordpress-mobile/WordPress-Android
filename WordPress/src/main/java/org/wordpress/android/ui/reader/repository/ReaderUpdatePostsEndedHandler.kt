@@ -9,16 +9,24 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.util.EventBusWrapper
+import javax.inject.Inject
 
-class ReaderUpdatePostsEndedHandler constructor(
-    private val onReaderRepositoryUpdatePostsEndedListener: OnReaderRepositoryUpdatePostsEndedListener,
-    private val eventBusWrapper: EventBusWrapper,
-    private val readerTag: ReaderTag
+class ReaderUpdatePostsEndedHandler @Inject constructor(
+    private val eventBusWrapper: EventBusWrapper
 ) {
     private var isStarted = false
+    private lateinit var readerTag: ReaderTag
+    private lateinit var onReaderRepositoryUpdatePostsEndedListener: OnReaderRepositoryUpdatePostsEndedListener
 
-    fun start() {
+    fun start(
+        readerTag: ReaderTag,
+        onReaderRepositoryUpdatePostsEndedListener: OnReaderRepositoryUpdatePostsEndedListener
+    ) {
         if (isStarted) return
+
+        this.onReaderRepositoryUpdatePostsEndedListener = onReaderRepositoryUpdatePostsEndedListener
+        this.readerTag = readerTag
+
         eventBusWrapper.register(this)
     }
 
