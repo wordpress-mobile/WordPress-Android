@@ -165,6 +165,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         pendingReblogPost = null
     }
 
+    fun stop() {
+        readerDiscoverRepository.stop()
+    }
+
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
         val progressVisibility: Boolean = false
