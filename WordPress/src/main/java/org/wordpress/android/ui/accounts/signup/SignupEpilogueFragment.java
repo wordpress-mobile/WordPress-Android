@@ -705,20 +705,28 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void startCropActivity(Uri uri) {
-        final Context context = new ContextThemeWrapper(getActivity(), R.style.WordPress_NoActionBar);
+        final Context baseContext = getActivity();
 
-        UCrop.Options options = new UCrop.Options();
-        options.setShowCropGrid(false);
-        options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(context, android.R.attr.statusBarColor));
-        options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
-        options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.colorOnPrimarySurface));
-        options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
-        options.setHideBottomControls(true);
+        if (baseContext != null) {
+            final Context context = new ContextThemeWrapper(baseContext, R.style.WordPress_NoActionBar);
 
-        UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
-             .withAspectRatio(1, 1)
-             .withOptions(options)
-             .start(context, this);
+            UCrop.Options options = new UCrop.Options();
+            options.setShowCropGrid(false);
+            options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
+                    context, android.R.attr.statusBarColor
+            ));
+            options.setToolbarColor(ContextExtensionsKt.getColorFromAttribute(context, R.attr.wpColorAppBar));
+            options.setToolbarWidgetColor(ContextExtensionsKt.getColorFromAttribute(
+                    context, R.attr.colorOnPrimarySurface
+            ));
+            options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE);
+            options.setHideBottomControls(true);
+
+            UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
+                 .withAspectRatio(1, 1)
+                 .withOptions(options)
+                 .start(context, this);
+        }
     }
 
     protected void startGravatarUpload(final String filePath) {
