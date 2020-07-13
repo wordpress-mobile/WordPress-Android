@@ -187,6 +187,7 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -367,6 +368,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
+    @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2010,12 +2012,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
+                        // The Unsupported Block Editor is disabled for all self-hosted sites
+                        // even the one that are connected via Jetpack to a WP.com account.
+                        // The option is disabled on Self-hosted sites because they can have their web editor
+                        // to be set to classic and then the fallback will not work.
+                        // We disable in Jetpack site because we don't have the self-hosted site's credentials
+                        // which are required for us to be able to fetch the site's authentication cookie.
+                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
@@ -2023,7 +2032,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
-                                supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
                                 isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
@@ -2034,7 +2042,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 themeBundle,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                mSite.isJetpackConnected()
+                                isUnsupportedBlockEditorEnabled,
+                                mGutenbergMentionsFeatureConfig.isEnabled()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

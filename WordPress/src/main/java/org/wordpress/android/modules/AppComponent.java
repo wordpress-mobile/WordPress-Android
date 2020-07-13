@@ -94,22 +94,19 @@ import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
 import org.wordpress.android.ui.posts.PostTimePickerDialogFragment;
 import org.wordpress.android.ui.posts.PostsListActivity;
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.PrepublishingHomeAdapter;
 import org.wordpress.android.ui.posts.PrepublishingHomeFragment;
-import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment;
 import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
-import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityAdapter;
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment;
+import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
 import org.wordpress.android.ui.prefs.AppSettingsActivity;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
-import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.MyProfileFragment;
 import org.wordpress.android.ui.prefs.ReleaseNotesActivity;
@@ -117,6 +114,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
+import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
@@ -140,8 +138,8 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -518,10 +516,6 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PostSettingsTagsFragment object);
 
     void inject(PrepublishingPublishSettingsFragment object);
-
-    void inject(PrepublishingVisibilityFragment object);
-
-    void inject(PrepublishingVisibilityAdapter object);
 
     void inject(AppSettingsActivity object);
 
