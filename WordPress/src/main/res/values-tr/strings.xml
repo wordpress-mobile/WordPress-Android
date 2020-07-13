@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-04 23:12:45+0000
+Translation-Revision-Date: 2020-07-09 12:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Önceki içerik sayfasına gider</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Gradyanı özelleştirme bölümüne gider</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Özel renk seçiciye gider</string>
+    <string name="gutenberg_native_gradient_type">Gradyan Türü</string>
     <string name="gutenberg_native_go_back">Geri dön</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
+    <string name="gutenberg_native_customize_gradient">Gradyanı Özelleştir</string>
     <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Sayfa yazarı</string>
+    <string name="photo_picker_use_gif">Bu GIF\'i kullan</string>
+    <string name="error_media_thumbnail_not_loaded">Medya küçük resmi yüklenemedi</string>
     <string name="menu_content_info">İçerik yapısı</string>
     <string name="everyone">Herkes</string>
     <string name="me">Ben</string>
