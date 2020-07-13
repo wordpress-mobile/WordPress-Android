@@ -252,6 +252,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
 
             if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
+                NotificationType notificationType =
+                        (NotificationType) getIntent().getSerializableExtra(ARG_NOTIFICATION_TYPE);
+                if (notificationType != null) {
+                    mSystemNotificationsTracker.trackTappedNotification(notificationType);
+                }
                 // open note detail if activity called from a push
                 boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
                         false));
@@ -490,16 +495,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
         super.onNewIntent(intent);
         setIntent(intent);
         AppLog.i(T.MAIN, "main activity > new intent");
-
-        if (FluxCUtils.isSignedInWPComOrHasWPOrgSite(mAccountStore, mSiteStore)) {
-            if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-                NotificationType notificationType =
-                        (NotificationType) intent.getSerializableExtra(ARG_NOTIFICATION_TYPE);
-                if (notificationType != null) {
-                    mSystemNotificationsTracker.trackTappedNotification(notificationType);
-                }
-            }
-        }
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
