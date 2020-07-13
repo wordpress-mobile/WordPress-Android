@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-29 20:45:36+0000
+Translation-Revision-Date: 2020-07-09 16:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
+    <string name="gutenberg_native_gradient_type">نوع التدرج</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
+    <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
+    <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
+    <string name="menu_content_info">هيكل المحتوى</string>
+    <string name="me">أنا</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. وفي هذه الأثناء، يمكنك أيضًا تحرير هذا المكوِّن باستخدام متصفح الويب في جهازك.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">تحرير المكوِّن في متصفح الويب</string>
     <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>

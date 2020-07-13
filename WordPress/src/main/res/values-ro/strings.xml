@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-30 11:49:13+0000
+Translation-Revision-Date: 2020-07-09 06:42:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -863,7 +863,7 @@ Language: ro
     <string name="pages_search_suggestion">Caută pagini</string>
     <string name="pages_empty_search_result">Nu se potrivește nicio pagină cu căutarea ta</string>
     <string name="pages_delete_permanently">Șterge definitiv</string>
-    <string name="pages_move_to_trash">Mută la gunoi</string>
+    <string name="pages_move_to_trash">Aruncă la gunoi</string>
     <string name="pages_move_to_draft">Mută în ciorne</string>
     <string name="pages_set_parent">Setează un părinte</string>
     <string name="pages_view">Vezi</string>

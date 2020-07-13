@@ -1,0 +1,4 @@
+15.2:
+Aggiunte all'editor a blocchi: supporto all'editor aggiunto per colori e gradienti specifici del tema sui blocchi Copertina e Pulsante. I caricamenti di video del blocco Copertina vengono completati dopo la chiusura dell'editor. Vengono visualizzate le informazioni di tipo metrico del blocco, del conteggio di parole e caratteri.
+
+Correzioni: corretti problemi di restituzione dei dettagli dell'articolo del Reader e un arresto anomalo in risposta a un API di WordPress.

@@ -5,13 +5,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -23,6 +29,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val readerPostRepository: ReaderPostRepository,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val reblogUseCase: ReblogUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -33,6 +40,17 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
+    private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
+    val preloadPostEvents = _preloadPostEvents
+
+    /**
+     * Post which is about to be reblogged after the user selects a target site.
+     */
+    private var pendingReblogPost: ReaderPost? = null
 
     /* TODO malinjir calculate photon dimensions - check if DisplayUtils.getDisplayPixelWidth
         returns result based on device orientation */
@@ -73,7 +91,19 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
+            val target = event.peekContent()
+            if (target is ShowSitePickerForResult) {
+                pendingReblogPost = target.post
+            }
             _navigationEvents.value = event
+        }
+
+        _snackbarEvents.addSource(readerPostCardActionsHandler.snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+
+        _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
+            _preloadPostEvents.value = event
         }
     }
 
@@ -81,7 +111,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             // TODO malinjir replace with repository. Also consider if we need to load the post form db in on click.
             val post = ReaderPostTable.getBlogPost(blogId, postId, true)
-            readerPostCardActionsHandler.onAction(post, type)
+            readerPostCardActionsHandler.onAction(post, type, isBookmarkList = false)
         }
     }
 
@@ -115,6 +145,19 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch(bgDispatcher) {
             readerPostRepository.getDiscoveryFeed()
         }
+    }
+
+    fun onReblogSiteSelected(siteLocalId: Int) {
+        // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
+        //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
+        val state = reblogUseCase.onReblogSiteSelected(siteLocalId, pendingReblogPost)
+        val navigationTarget = reblogUseCase.convertReblogStateToNavigationEvent(state)
+        if (navigationTarget != null) {
+            _navigationEvents.postValue(Event(navigationTarget))
+        } else {
+            _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
+        }
+        pendingReblogPost = null
     }
 
     sealed class DiscoverUiState(

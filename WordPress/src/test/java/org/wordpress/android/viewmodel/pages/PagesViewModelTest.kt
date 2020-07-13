@@ -21,7 +21,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront.PAGE
@@ -31,7 +30,7 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
 import org.wordpress.android.fluxc.store.SiteOptionsStore
 import org.wordpress.android.fluxc.store.SiteOptionsStore.HomepageUpdatedPayload
 import org.wordpress.android.fluxc.store.SiteOptionsStore.SiteOptionsError
@@ -409,8 +408,8 @@ class PagesViewModelTest {
 
     private suspend fun setUpPageStoreWithEmptyPages() {
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf())
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 0, false)
+        whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(
+                OnPageChanged.Success
         )
     }
 
@@ -418,8 +417,8 @@ class PagesViewModelTest {
         val pageModel = PageModel(PostModel(), site, 1, "title", DRAFT, Date(), false, 1, null, 0)
 
         whenever(pageStore.getPagesFromDb(site)).thenReturn(listOf(pageModel))
-        whenever(pageStore.requestPagesFromServer(any())).thenReturn(
-                OnPostChanged(CauseOfOnPostChanged.FetchPages, 1, false)
+        whenever(pageStore.requestPagesFromServer(any(), any())).thenReturn(
+                OnPageChanged.Success
         )
 
         return pageModel

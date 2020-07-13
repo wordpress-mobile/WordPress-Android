@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-28 09:54:01+0000
+Translation-Revision-Date: 2020-07-06 12:41:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
@@ -37,6 +37,7 @@ Language: el_GR
     <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
+    <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -596,6 +597,7 @@ Language: el_GR
     <string name="pending_draft_one_day_2">Το ξέρατε ότι το \'%1$s\' είναι ακόμα προσχέδιο; Δημοσιεύστε το!</string>
     <string name="pending_draft_one_day_1">Κάνατε το προσχέδιο του \'%1$s\' χθες. Μην ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="reader_photo_by">Φωτογραφία από %s</string>
+    <string name="reader_label_visit">Επισκεφθείτε</string>
     <string name="swipe_for_more">Σαρώστε για περισσότερα</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
     <string name="reader_err_get_post_not_authorized_signin">Δεν είστε εξουσιοδοτημένος να δείτε αυτό το άρθρο. Δοκιμάστε να συνδεθείτε στο WordPress.com πρώτα.</string>
@@ -1193,6 +1195,7 @@ Language: el_GR
     <string name="reader_btn_unfollow">Ακολουθούν</string>
     <string name="reader_btn_follow">Ακολουθήστε</string>
     <string name="reader_btn_share">Μοιράσου</string>
+    <string name="reader_view_reblog">Αναμετάδοση</string>
     <string name="reader_untitled_post">Ανώνυμο</string>
     <string name="comments_empty_list">Κανένα σχόλιο.</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>

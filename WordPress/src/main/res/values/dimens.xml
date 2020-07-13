@@ -135,7 +135,7 @@
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_tag_header_image_height">128dp</dimen>
+    <dimen name="reader_tag_header_height">165dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
@@ -480,7 +480,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -526,7 +525,7 @@
 
     <!-- prepublishing nudges -->
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
 
 </resources>

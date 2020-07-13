@@ -57,6 +57,6 @@ public class ReaderInterfaces {
      * used by adapters to notify when post bookmarked state has changed
      */
     public interface OnPostBookmarkedListener {
-        void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId, boolean isCachingActionRequired);
+        void onBookmarkClicked(long blogId, long postId);
     }
 }
