@@ -18,6 +18,7 @@
 ## Others
 
 - [Frequently Asked Questions](faq.md)
+- [Issue Triage](issue-triage.md)
 
 ## Further Reading
 

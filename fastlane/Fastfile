@@ -69,6 +69,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     localize_gutenberg(skip_module_update: true)
     localize_libs()
+    send_strings_for_translation()
     ensure_git_status_clean()
     get_prs_list(repository:GHHELPER_REPO, start_tag:"release/#{old_version}", report_path:"#{File.expand_path('~')}/wpandroid_prs_list_#{old_version}_#{new_version}.txt")
   end
@@ -360,10 +361,17 @@ ENV["HAS_ALPHA_VERSION"]="true"
 # Dependencies handling lanes
 ########################################################################
   main_strings_path = "./WordPress/src/main/res/values/strings.xml"
+  update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
     {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
     {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
   ]
+
+  private_lane :send_strings_for_translation do | options |
+    sh("cd .. && mkdir -p #{update_strings_path} && cp #{main_strings_path} #{update_strings_path} && git add #{update_strings_path}strings.xml")
+    sh("git diff-index --quiet HEAD || git commit -m \"Send strings to translation.\"")
+    sh("git push origin HEAD")
+  end
 
   private_lane :commit_strings do | options |
     if (options[:auto_commit]) then

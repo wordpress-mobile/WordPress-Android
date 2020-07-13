@@ -6,6 +6,7 @@
 
     <!-- APPLICATION -->
     <color name="background_dark">#121212</color>
+    <color name="background_dark_elevated">#2e2e2e</color>
     <color name="background_default">@color/neutral_0</color>
     <color name="background_notification_unread">#e6eff3</color>
     <color name="background_shortcut">#f5f5f5</color>
@@ -317,7 +318,7 @@
     <color name="reader_following_empty_view_left_lower_plus">@color/pink_0</color>
     <color name="reader_following_empty_view_outline">@color/gray_10</color>
     <color name="reader_following_empty_view_middle_plus">@android:color/white</color>
-    <color name="reader_following_empty_view_background">@android:color/white</color>
+    <color name="reader_following_empty_view_background">@color/background_default</color>
 
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.ReaderCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 
 abstract class ReaderViewHolder(
     internal val parent: ViewGroup,

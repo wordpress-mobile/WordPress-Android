@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader;
 import android.view.View;
 
 import org.wordpress.android.models.ReaderPost;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 
 public class ReaderInterfaces {
     private ReaderInterfaces() {
@@ -28,13 +29,6 @@ public class ReaderInterfaces {
     }
 
     /*
-     * called when user taps the dropdown arrow next to a post to show the popup menu
-     */
-    public interface OnPostPopupListener {
-        void onShowPostPopup(View view, ReaderPost post);
-    }
-
-    /*
      * used by adapters to notify when data has been loaded
      */
     public interface DataLoadedListener {
@@ -51,9 +45,18 @@ public class ReaderInterfaces {
     }
 
     /*
+     * Used by adapters to notify when button on post list item is clicked. This interface was created during
+     * refactoring for the new Discover tab. It isn't ideal but we wanted to re-use some of the legacy code but
+     * refactoring everything was out of scope of the project.
+     */
+    public interface OnPostListItemButtonListener {
+        void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType);
+    }
+
+    /*
      * used by adapters to notify when post bookmarked state has changed
      */
     public interface OnPostBookmarkedListener {
-        void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId, boolean isCachingActionRequired);
+        void onBookmarkClicked(long blogId, long postId);
     }
 }
