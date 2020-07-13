@@ -45,7 +45,6 @@ import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
-import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnContentInfoReceivedListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnEditorMountListener;
@@ -85,7 +84,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_SITE_USING_WPCOM_REST_API = "param_site_using_wpcom_rest_api";
     private static final String ARG_SITE_USER_AGENT = "param_user_agent";
     private static final String ARG_TENOR_ENABLED = "param_tenor_enabled";
-    private static final String ARG_GUTENBERG_PROPS = "param_gutenberg_props";
+    private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -120,9 +119,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     public static GutenbergEditorFragment newInstance(String title,
                                                       String content,
-                                                      String postType,
                                                       boolean isNewPost,
-                                                      String localeSlug,
                                                       String siteUrl,
                                                       boolean isPrivate,
                                                       long userId,
@@ -130,11 +127,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String password,
                                                       String token,
                                                       boolean isSiteUsingWpComRestApi,
-                                                      @Nullable Bundle editorTheme,
                                                       String userAgent,
                                                       boolean tenorEnabled,
-                                                      boolean isUnsupportedBlockEditorEnabled,
-                                                      boolean enableMentionsFlag) {
+                                                      GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -149,15 +144,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_SITE_USING_WPCOM_REST_API, isSiteUsingWpComRestApi);
         args.putString(ARG_SITE_USER_AGENT, userAgent);
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
-
-        GutenbergProps gutenbergProps = new GutenbergProps(
-                enableMentionsFlag,
-                isSiteUsingWpComRestApi,
-                isUnsupportedBlockEditorEnabled,
-                localeSlug,
-                postType,
-                editorTheme);
-        args.putParcelable(ARG_GUTENBERG_PROPS, gutenbergProps);
+        args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         fragment.setArguments(args);
         return fragment;
     }
@@ -254,13 +241,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         super.onCreate(savedInstanceState);
 
         if (getGutenbergContainerFragment() == null) {
-            GutenbergProps gutenbergProps = getArguments().getParcelable(ARG_GUTENBERG_PROPS);
-            gutenbergProps.setTranslations(getTranslations());
-            gutenbergProps.setDarkMode(isDarkMode());
+            GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+            gutenbergPropsBuilder.setTranslations(getTranslations());
+            gutenbergPropsBuilder.setDarkMode(isDarkMode());
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            GutenbergContainerFragment fragment = GutenbergContainerFragment.newInstance(gutenbergProps);
+            GutenbergContainerFragment fragment = GutenbergContainerFragment.newInstance(gutenbergPropsBuilder);
             fragment.setRetainInstance(true);
             fragmentTransaction.add(fragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();

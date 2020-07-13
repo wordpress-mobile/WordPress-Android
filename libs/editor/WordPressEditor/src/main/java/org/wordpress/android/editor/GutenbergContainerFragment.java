@@ -7,7 +7,6 @@ import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
-import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode;
@@ -29,16 +28,16 @@ import java.util.ArrayList;
 public class GutenbergContainerFragment extends Fragment {
     public static final String TAG = "gutenberg_container_fragment_tag";
 
-    private static final String ARG_GUTENBERG_PROPS = "param_gutenberg_props";
+    private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
 
     private WPAndroidGlueCode mWPAndroidGlueCode;
-    public static GutenbergContainerFragment newInstance(GutenbergProps gutenbergProps) {
+    public static GutenbergContainerFragment newInstance(GutenbergPropsBuilder gutenbergPropsBuilder) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_GUTENBERG_PROPS, gutenbergProps);
+        args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         fragment.setArguments(args);
         return fragment;
     }
@@ -82,8 +81,8 @@ public class GutenbergContainerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GutenbergProps gutenbergProps = getArguments().getParcelable(ARG_GUTENBERG_PROPS);
-        gutenbergProps.setHtmlModeEnabled(mHtmlModeEnabled);
+        GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
+        gutenbergPropsBuilder.setHtmlModeEnabled(mHtmlModeEnabled);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -103,7 +102,7 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,
-                gutenbergProps);
+                gutenbergPropsBuilder.build());
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;

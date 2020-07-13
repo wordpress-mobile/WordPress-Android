@@ -66,6 +66,7 @@ import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.GutenbergEditorFragment;
+import org.wordpress.android.editor.GutenbergPropsBuilder;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -2025,24 +2026,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // which are required for us to be able to fetch the site's authentication cookie.
                         boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
 
+                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+                        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+                        GutenbergPropsBuilder gutenbergPropsBuilder = new GutenbergPropsBuilder(
+                                enableMentions,
+                                isUnsupportedBlockEditorEnabled,
+                                wpcomLocaleSlug,
+                                postType,
+                                themeBundle
+                        );
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
-                                postType,
                                 mIsNewPost,
-                                wpcomLocaleSlug,
                                 mSite.getUrl(),
                                 !isWpCom,
                                 isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
-                                mSite.isUsingWpComRestApi(),
-                                themeBundle,
+                                isSiteUsingWpComRestApi,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                isUnsupportedBlockEditorEnabled,
-                                mGutenbergMentionsFeatureConfig.isEnabled()
+                                gutenbergPropsBuilder
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
