@@ -31,6 +31,9 @@
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.LoginFlow.BottomSheetDialog</item>
         <item name="appBarLayoutStyle">@style/Widget.LoginFlow.AppBarLayout</item>
         <item name="toolbarStyle">@style/Widget.LoginFlow.Toolbar</item>
+
+        <!-- Makes the toolbar action mode behave correctly on older API levels -->
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <!-- Base theme containing attributes that are overridden by the dark theme variant -->

@@ -29,7 +29,7 @@
             android:paddingTop="@dimen/margin_extra_large"
             android:paddingBottom="@dimen/margin_extra_large"
             android:src="@drawable/ic_search_white_24dp"
-            app:tint="@color/login_on_surface_medium_selector" />
+            app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/username"

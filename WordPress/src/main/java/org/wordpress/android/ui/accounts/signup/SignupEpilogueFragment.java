@@ -27,6 +27,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.widget.NestedScrollView;
 import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
@@ -605,6 +606,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDialog = new FullScreenDialogFragment.Builder(getContext())
                 .setTitle(R.string.username_changer_title)
                 .setAction(R.string.username_changer_action)
+                .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
@@ -703,9 +705,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void startCropActivity(Uri uri) {
-        final Context context = getActivity();
+        final Context baseContext = getActivity();
 
-        if (context != null) {
+        if (baseContext != null) {
+            final Context context = new ContextThemeWrapper(baseContext, R.style.WordPress_NoActionBar);
+
             UCrop.Options options = new UCrop.Options();
             options.setShowCropGrid(false);
             options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
@@ -721,7 +725,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
                  .withAspectRatio(1, 1)
                  .withOptions(options)
-                 .start(getActivity(), this);
+                 .start(context, this);
         }
     }
 
