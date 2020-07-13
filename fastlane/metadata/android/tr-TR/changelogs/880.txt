@@ -1,4 +1,0 @@
-15.0:
-Blok düzenleyici eklemeleri: Yeni Dörtlük bloku. Kapak blokunda katman renklerine yönelik destek. Kayan Araç Çubuğu için giriş/çıkış animasyonu. Sayfa şablonu seçim düğmeleri için araç ipucu.
-Blok düzenleyici güncellemeleri: Blok araç çubuğundan ulaşılabilen bir menüde “Çöp Kutusu bloku”.
-Diğer güncellemeler: Sayfalar listesine ve site ayarlarına ana sayfa ayarları eklendi.

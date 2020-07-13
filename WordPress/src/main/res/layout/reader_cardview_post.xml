@@ -39,7 +39,7 @@
             android:id="@+id/image_avatar_or_blavatar"
             style="@style/ReaderImageView.Avatar"
             android:importantForAccessibility="no"
-            android:background="@drawable/bg_reader_avatar_or_blavatar_with_border"
+            android:background="@drawable/bg_oval_stroke_placeholder_1dp"
             android:padding="@dimen/reader_image_avatar_or_blavatar_border_width"
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@+id/guideline_beginning"
@@ -137,7 +137,7 @@
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
         <!-- post header end -->
 
-        <!-- frame photo start -->
+        <!-- image section start -->
         <ImageView
             android:id="@+id/image_featured"
             android:layout_width="0dp"
@@ -146,10 +146,11 @@
             android:contentDescription="@null"
             android:cropToPadding="true"
             android:padding="@dimen/reader_image_featured_border_width"
-            android:background="@drawable/bg_reader_image_featured"
+            android:background="@drawable/bg_rectangle_stroke_placeholder_radius_4dp"
             app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
+            app:layout_constraintBottom_toTopOf="@id/text_title"
             app:layout_constraintTop_toBottomOf="@+id/layout_post_header" />
 
         <ImageView
@@ -186,18 +187,7 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toBottomOf="@id/image_featured"
             tools:text="text_photo_title" />
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/frame_photo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/margin_extra_large"
-            app:layout_constraintStart_toStartOf="@id/guideline_beginning"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintTop_toBottomOf="@id/layout_post_header"
-            app:layout_constraintBottom_toBottomOf="@id/image_featured"
-            app:constraint_referenced_ids="image_featured,text_photo_title"/>
-        <!-- frame photo end -->
+        <!-- image section end -->
 
         <org.wordpress.android.ui.reader.views.ReaderThumbnailStrip
             android:id="@+id/thumbnail_strip"
@@ -209,19 +199,19 @@
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toBottomOf="@id/layout_post_header"
+            app:layout_constraintBottom_toTopOf="@+id/text_title"
             tools:visibility="visible" />
 
         <org.wordpress.android.widgets.WPTextView
             android:id="@+id/text_title"
             style="@style/ReaderTextView.Post.Title"
             android:layout_width="0dp"
-            android:layout_marginTop="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_large"
             android:includeFontPadding="false"
             android:textAlignment="viewStart"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toTopOf="@+id/text_excerpt"
-            app:layout_constraintTop_toBottomOf="@+id/frame_photo"
             tools:text="text_title" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -270,7 +260,7 @@
             tools:text="text_attribution"
             tools:ignore="RtlSymmetry" />
 
-        <androidx.constraintlayout.widget.Group
+        <View
             android:id="@+id/layout_discover"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -280,7 +270,6 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/text_discover"
             app:layout_constraintBottom_toBottomOf="@id/text_discover"
-            app:constraint_referenced_ids="image_discover_avatar,text_discover"
             tools:visibility="visible" />
         <!-- attribution section for discover posts end -->
 

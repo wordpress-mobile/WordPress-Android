@@ -107,7 +107,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.CrashLoggingUtils
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
@@ -184,6 +183,7 @@ class ReaderPostDetailFragment : Fragment(),
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
     @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
+    @Inject internal lateinit var readerCssProvider: ReaderCssProvider
 
     private val mSignInClickListener = View.OnClickListener {
         EventBus.getDefault()
@@ -1167,8 +1167,7 @@ class ReaderPostDetailFragment : Fragment(),
             val icon: Drawable? = try {
                 ContextCompat.getDrawable(it, R.drawable.ic_notice_48dp)
             } catch (e: Resources.NotFoundException) {
-                AppLog.e(READER, e)
-                CrashLoggingUtils.logException(e, READER, "Drawable not found. See issue #11576")
+                AppLog.e(READER, "Drawable not found. See issue #11576", e)
                 null
             }
             icon?.let {
@@ -1353,7 +1352,7 @@ class ReaderPostDetailFragment : Fragment(),
             scrollView.visibility = View.VISIBLE
 
             // render the post in the webView
-            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils)
+            renderer = ReaderPostRenderer(readerWebView, post, featuredImageUtils, readerCssProvider)
 
             // if the post is from private atomic site postpone render until we have a special access cookie
             if (post!!.isPrivateAtomic && privateAtomicCookie.isCookieRefreshRequired()) {

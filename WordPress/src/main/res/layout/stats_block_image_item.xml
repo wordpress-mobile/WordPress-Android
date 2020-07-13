@@ -5,11 +5,18 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="220dp"
-        android:layout_height="189dp"
+        android:layout_width="@dimen/stats_insights_news_card_width"
+        android:layout_height="@dimen/stats_insights_news_card_height"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/margin_medium"
         android:contentDescription="@string/stats_manage_your_stats"
-        android:src="@drawable/insights_management_feature_resource" />
+        android:src="@drawable/insights_management_feature_image" />
+
+    <View
+        android:id="@+id/image_gradient_overlay"
+        android:background="@drawable/bg_rectangle_white_gradient"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/stats_insights_news_card_width"
+        android:layout_height="@dimen/stats_insights_news_card_height" />
 
 </FrameLayout>

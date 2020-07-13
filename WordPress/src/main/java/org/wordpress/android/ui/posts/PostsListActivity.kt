@@ -250,7 +250,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
-        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository)
+        viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository, this)
 
         viewModel.viewState.observe(this, Observer { state ->
             state?.let {

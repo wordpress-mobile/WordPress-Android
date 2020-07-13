@@ -47,7 +47,8 @@ import org.wordpress.android.ui.notifications.adapters.NotesAdapter.FILTERS.FILT
 import org.wordpress.android.ui.notifications.services.NotificationsUpdateServiceStarter
 import org.wordpress.android.ui.notifications.utils.NotificationsActions
 import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.CrashLoggingUtils.Companion.log
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper
@@ -64,6 +65,12 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var gcmMessageHandler: GCMMessageHandler
+
+    private val showNewUnseenNotificationsRunnable = Runnable {
+        if (isAdded) {
+            notifications_list.addOnScrollListener(mOnScrollListener)
+        }
+    }
 
     interface OnNoteClickListener {
         fun onClickNote(noteId: String?)
@@ -124,15 +131,18 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
     }
 
     override fun onDestroyView() {
+        notesAdapter!!.cancelReloadNotesTask()
         swipeToRefreshHelper = null
         notifications_list.adapter = null
+        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
         notesAdapter = null
         super.onDestroyView()
     }
 
     override fun onDataLoaded(itemsCount: Int) {
         if (!isAdded) {
-            log("NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
+            AppLog.d(T.NOTIFS,
+                    "NotificationsListFragmentPage.onDataLoaded occurred when fragment is not attached.")
         }
         if (itemsCount > 0) {
             hideEmptyView()
@@ -350,11 +360,8 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
             return
         }
         notifications_list.clearOnScrollListeners()
-        notifications_list.postDelayed({
-            if (isAdded) {
-                notifications_list.addOnScrollListener(mOnScrollListener)
-            }
-        }, 1000L)
+        notifications_list.removeCallbacks(showNewUnseenNotificationsRunnable)
+        notifications_list.postDelayed(showNewUnseenNotificationsRunnable, 1000L)
         val first = notifications_list.layoutManager!!.getChildAt(0)
         // Show new notifications bar if first item is not visible on the screen.
         if (first != null && notifications_list.layoutManager!!.getPosition(first) > 0) {
@@ -387,10 +394,6 @@ class NotificationsListFragmentPage : Fragment(), OnScrollToTopListener, DataLoa
                             .removeStickyEvent(
                                     NoteLikeOrModerationStatusChanged::class.java
                             )
-                    val note = NotificationsTable.getNoteById(event.noteId)
-                    if (note != null) {
-                        notesAdapter!!.replaceNote(note)
-                    }
                 }
         ) {
             EventBus.getDefault().removeStickyEvent(

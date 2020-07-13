@@ -55,7 +55,6 @@ sealed class PrepublishingHomeItemUiState {
 
     enum class ActionType(val textRes: UiStringRes) {
         PUBLISH(UiStringRes(R.string.prepublishing_nudges_publish_action)),
-        VISIBILITY(UiStringRes(R.string.prepublishing_nudges_visibility_action)),
         TAGS(UiStringRes(R.string.prepublishing_nudges_tags_action))
     }
 }

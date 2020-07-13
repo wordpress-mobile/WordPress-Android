@@ -1,11 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-05-26 19:50:39+0000
+Translation-Revision-Date: 2020-06-25 13:33:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="gutenberg_native_edit_block_in_web_browser">Rediger blokk i nettleser</string>
+    <string name="gutenberg_native_dismiss">Avfei</string>
+    <string name="prepublishing_nudges_visibility_password">Passordbeskyttet</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Ikke bestemt</string>
+    <string name="prepublishing_tags_description">Stikkord hjelper leserne vit hva innlegg er om.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publiser</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Legg til stikkord</string>
+    <string name="prepublishing_nudges_back_button">Tilbake</string>
+    <string name="prepublishing_nudges_home_save_button">Lagre nå</string>
+    <string name="prepublishing_nudges_home_submit_button">Send inn nå</string>
+    <string name="prepublishing_nudges_home_schedule_button">Planlegg nå</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publiserer til</string>
+    <string name="prepublishing_nudges_tags_action">Stikkord</string>
+    <string name="prepublishing_nudges_publish_action">Pubøiseringsdato</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Avbryt</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Flytt til kladd</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Flytt innlegg til kladder?</string>
+    <string name="reader_label_choose_your_interests">Velg dine interesser</string>
+    <string name="reader_label_discover_follow_tags">Oppdag og følg nøkkelord du liker</string>
+    <string name="reader_choose_interests_content_description">Velg dine interesser</string>
+    <string name="reader_btn_done">Utført</string>
+    <string name="reader_btn_select_few_interests">Velg noen for å fortsette</string>
+    <string name="post_status_post_published">Publisert</string>
+    <string name="post_status_post_trashed">Kastet</string>
+    <string name="post_status_post_scheduled">Planlagt</string>
+    <string name="publish_date">Publiseringsdato</string>
+    <string name="status_and_visibility">Status og synlighet</string>
+    <string name="update_now">Oppdater nå</string>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">Fjern %s</string>
+    <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
+    <string name="gutenberg_native_move_s_up">Flytt %s opp</string>
+    <string name="gutenberg_native_move_s_right">Flytt %s mot høyre</string>
+    <string name="gutenberg_native_move_s_left">Flytt %s mot venstre</string>
+    <string name="gutenberg_native_move_s_down">Flytt %s ned</string>
+    <string name="gutenberg_native_try_a_starter_layout">Prøv et startoppsett</string>
+    <string name="gutenberg_native_insert_mention">Sett inn omtale</string>
+    <string name="pages_set_as_posts_page">Sett som innleggsside</string>
+    <string name="pages_set_as_homepage">Sett som forside</string>
+    <string name="suggestion_invalid_user">\"%s er ikke en gyldig bruker\"</string>
+    <string name="site_settings_select_page">Velg side</string>
+    <string name="site_settings_posts_page">Innleggsside</string>
+    <string name="site_settings_static_homepage">Statisk hjemmeside</string>
+    <string name="site_settings_classic_blog">Klassisk blogg</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Valgte forside og side for innlegg kan ikke være den samme.</string>
+    <string name="site_settings_accept_homepage">Godta</string>
+    <string name="site_settings_homepage_settings">Hjemmesideinnstillinger</string>
+    <string name="site_settings_homepage">Hjemmeside</string>
+    <string name="page_posts_page_successfully_updated">Innleggside oppdatert</string>
+    <string name="page_homepage_successfully_updated">Hjemmeside oppdatert</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">Velkommen til vår nye blogg</string>
     <string name="gutenberg_native_select_a_color">Velg en farge</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
@@ -84,6 +134,7 @@ Language: nb_NO
     <string name="editor_page_saved_locally_failed_media">Siden mislyktes i å laste opp mediefilene og har blitt lagret lokalt</string>
     <string name="editor_page_saved_locally">Siden ble lagret på enheten</string>
     <string name="editor_page_saved_online">Siden ble lagret på nettet</string>
+    <string name="app_theme_default">Bestemt av batterirpareren</string>
     <string name="app_theme_dark">Mørk</string>
     <string name="app_theme_light">Lys</string>
     <string name="app_theme">Utseende</string>
@@ -105,13 +156,21 @@ Language: nb_NO
     <string name="gutenberg_native_portfolio">Portefølje</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
+    <string name="gutenberg_native_s_settings">%s-innstillinger</string>
+    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">La oss bygge noe sammen!</string>
+    <string name="gutenberg_native_let_s_build_something_together">La oss bygge noe sammen!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
     <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
     <string name="gutenberg_native_inspiration">Inspirasjon</string>
+    <string name="gutenberg_native_get_in_touch">Ta kontakt</string>
     <string name="gutenberg_native_excerpt_length_words">Lengde på utdrag (ord)</string>
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Send meg e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
+    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt ikke fordi det er forbi, smil fordi det skjedde.</string>
+    <string name="gutenberg_native_customize">TILPASS</string>
+    <string name="gutenberg_native_city_10100">1000 Sted</string>
     <string name="gutenberg_native_add_paragraph_block">Legg til avsnittsblokk</string>
+    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Et kort beskrivelse av tjenestene du tilbyr.</string>
     <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_555_555_1234">98765432</string>
     <string name="gutenberg_native_10_street_road">Gateveien 10</string>
@@ -153,10 +212,13 @@ Language: nb_NO
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
     <string name="gutenberg_native_edit_media">Rediger media</string>
+    <string name="gutenberg_native_double_tap_to_select_layout">Dobbelttrykk for å velge oppsett</string>
     <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
     <string name="post_list_author">Innleggsforfatter</string>
     <string name="fab_create_desc">Lag et innlegg</string>
     <string name="stats_posting_activity_empty_description">Det er ingen statistikk for denne perioden.</string>
+    <string name="stats_posting_activity_label_content_description">Publiseringsaktivitet for %1$s</string>
+    <string name="stats_posting_activity_content_description">Dagene med %1$s visninger for %2$s er: %2$s %3$s. Trykk for mer.</string>
     <string name="stats_box_type_very_high">veldig høy</string>
     <string name="stats_box_type_high">høy</string>
     <string name="stats_box_type_medium">middels</string>
@@ -172,6 +234,7 @@ Language: nb_NO
     <string name="quick_start_dialog_create_new_post_message_short_posts">Trykk %1$s Legg til innlegg %2$s for å lage et nytt innlegg.</string>
     <string name="quick_start_dialog_create_new_post_message_short">Trykk %1$s Blogginnlegg %2$s for å fortsette.</string>
     <string name="post_signup_interstitial_not_right_now">Ikke akkurat nå</string>
+    <string name="post_signup_interstitial_subtitle">Hva du enn vil lage eller dele vil vi hjelpe deg å gjøre det her.</string>
     <string name="post_signup_interstitial_title">Velkommen til WordPress</string>
     <string name="stock_media_picker_list_content_description">Fotobibiliotek</string>
     <string name="photo_picker_image_thumbnail_unselected">Bilde fravalgt</string>
@@ -219,6 +282,8 @@ Language: nb_NO
     <string name="gutenberg_native_start_writing">Start å skrive…</string>
     <string name="gutenberg_native_size">Størrelse</string>
     <string name="gutenberg_native_show_section">Vis seksjon</string>
+    <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' er ennå ikke støttet i WordPress for Android</string>
+    <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
     <string name="gutenberg_native_reset_block">Tilbakestill blokk</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem under åpning av videoen</string>
@@ -270,6 +335,7 @@ Language: nb_NO
     <string name="gutenberg_native_add_annotation">Legg til merknad</string>
     <string name="gutenberg_native_add_a_description">Legg til en beskrivelse</string>
     <string name="reader_empty_saved_posts_content_description">Trykk Legg til for å lagre-knappen for å lagre et innlegg til listen din.</string>
+    <string name="reader_acessibility_list_loaded">\"Listen er lastet inn med %1$d elementer.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Varsler</string>
     <string name="master_switch_default_title_off">Av</string>
     <string name="master_switch_default_title_on">På</string>
@@ -424,10 +490,6 @@ Language: nb_NO
     <string name="stats_widget_all_time_title">Til all tid</string>
     <string name="stats_widget_views_title">Vis denne uken</string>
     <string name="stats_widget_add">Legg til widget</string>
-    <string name="dialog_confirm_update_yes">Oppdater nå</string>
-    <string name="dialog_confirm_update_message_page">Denne publiserte siden vil bli oppdatert straks.</string>
-    <string name="dialog_confirm_update_message_post">Dette publiserte innlegget vil bli oppdatert straks.</string>
-    <string name="dialog_confirm_update_title">Klar til å oppdatere?</string>
     <string name="plugin_fetching_error_after_at">Det tar lengre tid enn vanlig å oppfriske detaljer om utvidelser. Vennligst prøv igjen senere.</string>
     <string name="plugin_install_site_ineligible_default_error">Om du nettopp registrerte et domenenavn, vennligst vent til vi er ferdig med å sette det opp og forsøk igjen.\n\nOm ikke, ser det ut til at noe gikk galt og utvidelsesfunksjonen er kanskje ikke tilgjengelig for dette nettstedet,</string>
     <string name="domain_contact_information_state_not_available_hint">Delstat (ikke tilgjengelig)</string>
@@ -472,8 +534,6 @@ Language: nb_NO
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
     <string name="post_list_tab_drafts">Kladder</string>
-    <string name="post_list_author_everyone">Alle</string>
-    <string name="post_list_author_me">Meg</string>
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
     <string name="backdated_for">Tilbakedatert til: %s</string>
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
@@ -736,7 +796,6 @@ Language: nb_NO
     <string name="pages_delete_permanently">Slett permanent</string>
     <string name="pages_move_to_trash">Flytt til papirkurven</string>
     <string name="pages_move_to_draft">Flytt til kladder</string>
-    <string name="pages_publish_now">Publiser nå</string>
     <string name="pages_set_parent">Angi forelder</string>
     <string name="pages_view">Vis</string>
     <string name="pages_trashed">Slettet</string>
@@ -977,7 +1036,6 @@ Language: nb_NO
     <string name="menu_html_mode_done_snackbar">Byttet ti HTML-modus</string>
     <string name="menu_html_mode">HTML-modus</string>
     <string name="menu_preview">Forhåndsvis</string>
-    <string name="menu_publish_now">Publiser nå</string>
     <string name="menu_save_as_draft">Lagre som kladd</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1037,10 +1095,6 @@ Language: nb_NO
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d sider og %2$d av %3$d filer gjenstår</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 innlegg og %1$d av %2$d filer gjenstår</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 side og %1$d av %2$d filer gjenstår</string>
-    <string name="dialog_confirm_publish_yes">Publiser nå</string>
-    <string name="dialog_confirm_publish_message_page">Denn siden vil bli publsert straks.</string>
-    <string name="dialog_confirm_publish_message_post">Dette innlegget vil bli publsert straks.</string>
-    <string name="dialog_confirm_publish_title">Klar til å publisere?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d innlegg / sider ikke lastet opp</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d sider ikke lastet opp</string>
     <string name="media_file_page_singular_only_not_uploaded">1 side ikke lastet opp</string>
@@ -1366,7 +1420,6 @@ Language: nb_NO
     <string name="post_settings_not_set">Ikke valgt</string>
     <string name="post_settings_more_options">Flere innstillinger</string>
     <string name="post_settings_categories_and_tags">Kategorier og stikkord</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Alle</string>
     <string name="top_level_category_name">Toppnivå</string>
     <string name="category_parent">Overkategori (valgfritt):</string>
@@ -1490,7 +1543,6 @@ Language: nb_NO
     <string name="media_upload_state_deleting">Sletter</string>
     <string name="media_upload_state_uploading">Laster opp</string>
     <string name="media_upload_state_queued">Stilt opp i kø</string>
-    <string name="keep_editing">Fortsett å redigere</string>
     <string name="image_quality">Bildekvalitet</string>
     <string name="error_all_media_upload_canceled">Alle medieopplastninger har blitt avbrutt på grunn av en ukjent feil. Vennligst prøv på nytt</string>
     <string name="error_unknown_post_type">Ukjent innleggsformat</string>
@@ -1518,6 +1570,7 @@ Language: nb_NO
     <string name="pending_draft_one_day_2">Visste du at \'%1$s\' fortsatt er et utkast? Publiser i vei!</string>
     <string name="pending_draft_one_day_1">Du lagde et utkast for \'%1$s\' i går. Ikke glem å publisere den!</string>
     <string name="reader_photo_by">Bilde av %s</string>
+    <string name="reader_label_visit">Besøk nettstedet</string>
     <string name="swipe_for_more">Sveip for mer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du er ikke autorisert til å se dette innlegget. Prøv å logge inn på WordPress.com først, eller bruk den øverste handlingsknappen for å åpne opp en nettleser istedet.</string>
     <string name="reader_err_get_post_not_authorized_signin">Du er ikke autorisert til å se dette innlegget. Prøv å logge inn til WordPress.com først.</string>
@@ -2151,7 +2204,6 @@ Language: nb_NO
     <string name="httppassword">HTTP-passord</string>
     <string name="httpuser">HTTP-brukernavn</string>
     <string name="error_media_upload">Det oppsto en feil under opplasting av media.</string>
-    <string name="publish_date">Publiser</string>
     <string name="incorrect_credentials">Feil brukernavn eller passord</string>
     <string name="log_in">Logg inn</string>
     <string name="username">Brukernavn</string>
@@ -2188,6 +2240,7 @@ Language: nb_NO
     <string name="no">Nei</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Innstillinger for varslinger</string>
+    <string name="publish_now">Publiser nå</string>
     <string name="reply">Svar</string>
     <string name="on">på</string>
     <string name="preview">Forhåndsvisning</string>

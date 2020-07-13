@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-10 08:54:12+0000
+Translation-Revision-Date: 2020-06-25 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="pages_item_subtitle">%1$s · %2$s</string>
+    <string name="gutenberg_native_remove_s">%s 제거</string>
+    <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
+    <string name="gutenberg_native_move_s_up">%s(을)를 위로 이동</string>
+    <string name="gutenberg_native_move_s_right">%s(을)를 오른쪽으로 이동</string>
+    <string name="gutenberg_native_move_s_left">%s(을)를 왼쪽으로 이동</string>
+    <string name="gutenberg_native_move_s_down">%s(을)를 아래로 이동</string>
+    <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
+    <string name="gutenberg_native_insert_mention">언급 넣기</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 동작 시트를 열기</string>
+    <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
+    <string name="pages_set_as_posts_page">글 페이지로 설정</string>
+    <string name="pages_set_as_homepage">홈페이지로 설정</string>
+    <string name="suggestion_no_matching_users">일치하는 사용자가 없습니다.</string>
+    <string name="suggestion_invalid_user">“%s(은)는 유효한 사용자가 아닙니다”</string>
+    <string name="site_settings_select_page">페이지 선택</string>
+    <string name="site_settings_posts_page">글 페이지</string>
+    <string name="site_settings_static_homepage">정적 홈페이지</string>
+    <string name="site_settings_classic_blog">고전 블로그</string>
+    <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">선택된 홈페이지와 글에 대한 페이지는 같을 수 없습니다.</string>
+    <string name="site_settings_failed_update_homepage_settings">홈페이지 설정 업데이트가 실패하면, 인터넷 연결을 확인하십시오</string>
+    <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">페이지를 부르기 전에 홈페이지 설정을 저장할 수 없습니다</string>
+    <string name="site_settings_failed_to_save_homepage_settings">홈페이지 설정을 저장하지 못했습니다</string>
+    <string name="site_settings_accept_homepage">승인</string>
+    <string name="site_settings_failed_to_load_pages">페이지의 부르기를 실패하였습니다</string>
+    <string name="site_settings_homepage_settings_description">최근 글(고전 블로그) 또는 고정/정적 페이지를 보여주는 홈페이지에서 선택하기</string>
+    <string name="site_settings_homepage_settings">홈페이지 설정</string>
+    <string name="site_settings_homepage">홈페이지</string>
+    <string name="page_posts_page_update_failed">홈페이지 업데이트가 실패했습니다</string>
+    <string name="page_posts_page_successfully_updated">글 페이지를 성공적으로 업데이트하였습니다</string>
+    <string name="page_homepage_update_failed">홈페이지 업데이트가 실패했습니다</string>
+    <string name="page_homepage_successfully_updated">홈페이지를 성공적으로 업데이트하였습니다</string>
+    <string name="page_cannot_set_posts_page">사이트 설정에서 글 페이지를 “정적 홈페이지” 활성화로 설정하기</string>
+    <string name="page_cannot_set_homepage">사이트 설정에서 홈페이지를 “정적 홈페이지” 활성화로 설정하기</string>
     <string name="gutenberg_native_welcome_to_our_new_blog">새 블로그에 오신 것을 환영합니다.</string>
     <string name="gutenberg_native_select_a_color">색상 선택</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
@@ -119,6 +154,7 @@ Language: ko_KR
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
     <string name="gutenberg_native_link_to">링크</string>
+    <string name="gutenberg_native_s_settings">%s 설정</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">함께 만들어 보세요!</string>
     <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요!</string>
@@ -248,7 +284,6 @@ Language: ko_KR
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">당사는 각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그 사이에 웹에서 이 글을 편집할 수도 있습니다.</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
     <string name="gutenberg_native_translate">번역</string>
     <string name="gutenberg_native_title">제목:</string>
@@ -471,10 +506,6 @@ Language: ko_KR
     <string name="stats_widget_all_time_title">모든 기간</string>
     <string name="stats_widget_views_title">이번 주 보기</string>
     <string name="stats_widget_add">위젯 추가</string>
-    <string name="dialog_confirm_update_yes">지금 업데이트</string>
-    <string name="dialog_confirm_update_message_page">이 발행된 페이지는 바로 업데이트됩니다.</string>
-    <string name="dialog_confirm_update_message_post">이 발행된 글은 바로 업데이트됩니다.</string>
-    <string name="dialog_confirm_update_title">업데이트할 준비가 되셨나요?</string>
     <string name="plugin_fetching_error_after_at">플러그인 세부정보를 새로 고치는 데 평소보다 오래 걸립니다. 나중에 다시 확인하세요.</string>
     <string name="plugin_install_site_ineligible_default_error">방금 도메인 네임을 등록했다면 설정이 끝날 때까지 기다렸다가 다시 시도하세요.\n\n그렇지 않다면 문제가 발생하여 이 사이트에서 플러그인 기능을 사용할 수 없는 것일 수 있습니다.</string>
     <string name="domain_contact_information_state_not_available_hint">상태(사용할 수 없음)</string>
@@ -521,8 +552,6 @@ Language: ko_KR
     <string name="editor_uploading_draft">임시글을 업로드하고 있습니다.</string>
     <string name="post_uploading_draft">임시글 업로드 중</string>
     <string name="post_list_tab_drafts">임시글</string>
-    <string name="post_list_author_everyone">모두 볼 수 있음</string>
-    <string name="post_list_author_me">나</string>
     <string name="error_restoring_post">글을 복원하는 중 오류 발생</string>
     <string name="backdated_for">소급 적용: %s</string>
     <string name="stats_insights_management_title">가장 관련성 높은 통계만 확인하세요. 아래 인사이트를 추가 및 구성하세요.</string>
@@ -787,7 +816,6 @@ Language: ko_KR
     <string name="pages_delete_permanently">영구적으로 삭제하기</string>
     <string name="pages_move_to_trash">휴지통으로 이동</string>
     <string name="pages_move_to_draft">임시글로 이동</string>
-    <string name="pages_publish_now">지금 공개</string>
     <string name="pages_set_parent">상위 항목 설정</string>
     <string name="pages_view">보기</string>
     <string name="pages_trashed">삭제된</string>
@@ -860,7 +888,7 @@ Language: ko_KR
     <string name="reader_label_post_search_explainer">무엇을 찾길 원하세요?</string>
     <string name="site_settings_tags_empty_title_search">검색과 일치하는 태그 없음</string>
     <string name="site_settings_tags_empty_title">태그가 없음</string>
-    <string name="site_settings_tags_empty_subtitle">게시글에 태그를 지정할 때 빠르게 선택할 수 있도록 자주 사용하는 태그를 추가하세요.</string>
+    <string name="site_settings_tags_empty_subtitle">글에 태그를 지정할 때 빠르게 선택할 수 있도록 자주 사용하는 태그를 추가하세요.</string>
     <string name="site_settings_tags_empty_button">태그 만들기</string>
     <string name="media_empty_search_list">검색과 일치하는 미디어 없음</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">워드프레스에서 로그아웃하시겠습니까?</string>
@@ -1040,7 +1068,6 @@ Language: ko_KR
     <string name="menu_html_mode_done_snackbar">HTML 모드로 전환했습니다.</string>
     <string name="menu_html_mode">HTML 모드</string>
     <string name="menu_preview">미리보기</string>
-    <string name="menu_publish_now">지금 공개</string>
     <string name="menu_save_as_draft">임시글로 저장</string>
     <string name="file_size_in_terabytes">%sTB</string>
     <string name="file_size_in_gigabytes">%sGB</string>
@@ -1103,10 +1130,6 @@ Language: ko_KR
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d개의 페이지 및 %2$d/%3$d개의 파일 남음</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1개의 글 및 %1$d/%2$d개의 파일 남음</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1개의 페이지 및 %1$d/%2$d개의 파일 남음</string>
-    <string name="dialog_confirm_publish_yes">지금 발행</string>
-    <string name="dialog_confirm_publish_message_page">이 페이지는 바로 발행됩니다.</string>
-    <string name="dialog_confirm_publish_message_post">이 글은 바로 발행됩니다.</string>
-    <string name="dialog_confirm_publish_title">발행할 준비가 되었나요?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d개의 글/페이지가 업로드되지 않음</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d개의 페이지가 업로드되지 않음</string>
     <string name="media_file_page_singular_only_not_uploaded">1개의 페이지가 업로드되지 않음</string>
@@ -1441,7 +1464,6 @@ Language: ko_KR
     <string name="post_settings_not_set">설정 안 함</string>
     <string name="post_settings_more_options">추가 옵션</string>
     <string name="post_settings_categories_and_tags">카테고리 및 태그</string>
-    <string name="post_settings_status">상태</string>
     <string name="notifications_tab_title_all">모두</string>
     <string name="top_level_category_name">최상위</string>
     <string name="category_parent">상위 카테고리(선택사항):</string>
@@ -1565,7 +1587,6 @@ Language: ko_KR
     <string name="media_upload_state_deleting">삭제 중</string>
     <string name="media_upload_state_uploading">업로드 중</string>
     <string name="media_upload_state_queued">대기열에 추가됨</string>
-    <string name="keep_editing">계속 편집하기</string>
     <string name="image_quality">이미지 품질</string>
     <string name="error_all_media_upload_canceled">알 수 없는 오류로 인해 모든 미디어 업로드가 취소되었습니다. 업로드를 다시 시도하세요.</string>
     <string name="error_unknown_post_type">알 수 없는 글 형식입니다.</string>
@@ -1593,6 +1614,7 @@ Language: ko_KR
     <string name="pending_draft_one_day_2">\'%1$s\'이(가) 아직 임시글입니다. 어서 발행하세요!</string>
     <string name="pending_draft_one_day_1">어제 \'%1$s\'의 초안을 작성했습니다. 잊지 말고 발행하세요!</string>
     <string name="reader_photo_by">%s 촬영</string>
+    <string name="reader_label_visit">사이트 방문</string>
     <string name="swipe_for_more">더 많은 내용을 보려면 살짝 밀기</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">이 글을 볼 권한이 없습니다. 워드프레스닷컴에 먼저 로그인하거나, 상단 조치 버튼을 사용하여 브라우저를 대신 엽니다.</string>
     <string name="reader_err_get_post_not_authorized_signin">이 글을 볼 권한이 없습니다. 워드프레스닷컴에 먼저 로그인하세요.</string>
@@ -2227,7 +2249,6 @@ Language: ko_KR
     <string name="httppassword">HTTP 암호</string>
     <string name="httpuser">HTTP 사용자 이름</string>
     <string name="error_media_upload">미디어를 업로드할때 오류가 발생했습니다</string>
-    <string name="publish_date">공개</string>
     <string name="incorrect_credentials">사용자 이름이나 암호가 올바르지 않습니다 .</string>
     <string name="log_in">로그인</string>
     <string name="username">사용자 이름</string>
@@ -2264,6 +2285,7 @@ Language: ko_KR
     <string name="no">아니오</string>
     <string name="yes">예</string>
     <string name="notification_settings">알림 설정</string>
+    <string name="publish_now">지금 공개</string>
     <string name="reply">회신</string>
     <string name="on">선택</string>
     <string name="preview">미리보기</string>

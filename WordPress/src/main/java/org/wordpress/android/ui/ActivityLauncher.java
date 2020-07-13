@@ -216,6 +216,7 @@ public class ActivityLauncher {
 
         Intent intent = new Intent(activity, GifPickerActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(GifPickerActivity.KEY_REQUEST_CODE, requestCode);
         activity.startActivityForResult(intent, requestCode);
     }
 

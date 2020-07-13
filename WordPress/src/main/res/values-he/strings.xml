@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-10 13:54:11+0000
+Translation-Revision-Date: 2020-07-09 08:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">לפתוח את הקישור בדפדפן</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">הפעולה מנווטת אל גיליון התוכן הקודם</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">הפעולה מנווטת אל האפשרות להתאים את מעבר הצבע</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">הפעולה מנווטת אל בורר הצבע המותאם</string>
+    <string name="gutenberg_native_gradient_type">סוג מעבר צבע</string>
+    <string name="gutenberg_native_go_back">חזרה</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">יש להקיש פעמיים כדי לבחור את האפשרות</string>
+    <string name="gutenberg_native_customize_gradient">להתאים אישית את מעבר הצבע</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">מחבר העמוד</string>
+    <string name="photo_picker_use_gif">להשתמש בקובץ GIF זה</string>
+    <string name="error_media_thumbnail_not_loaded">לא ניתן לטעון את התמונה הממוזערת של המדיה</string>
+    <string name="menu_content_info">מבנה התוכן</string>
+    <string name="everyone">כולם</string>
+    <string name="me">אני</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הבלוק הזה באמצעות הדפדפן במכשיר שלך.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">לערוך את הבלוק בדפדפן הרשת</string>
+    <string name="gutenberg_native_dismiss">ביטול</string>
+    <string name="prepublishing_nudges_visibility_password">מוגן בסיסמה</string>
+    <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
+    <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">פרסום</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">להוסיף תגיות</string>
+    <string name="prepublishing_nudges_back_button">חזרה</string>
+    <string name="prepublishing_nudges_home_save_button">לשמור כעת</string>
+    <string name="prepublishing_nudges_home_submit_button">לשלוח כעת</string>
+    <string name="prepublishing_nudges_home_schedule_button">לקבוע זמן כעת</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">מפרסם בעמוד</string>
+    <string name="prepublishing_nudges_tags_action">תגיות</string>
+    <string name="prepublishing_nudges_publish_action">תאריך פרסום</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">ביטול</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">להעביר לטיוטות</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">לא ניתן לערוך פוסטים שהועברו לפח. האם ברצונך לשנות את המצב של הפוסט ל\'טיוטה\' כדי לערוך אותו?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">האם להעביר את הפוסט ל\'טיוטות\'?</string>
+    <string name="reader_label_choose_your_interests">לבחור את תחומי העניין שלך</string>
+    <string name="reader_label_discover_follow_tags">לגלות תגיות שימצאו חן בעינייך ולעקוב אחריהן</string>
+    <string name="reader_choose_interests_content_description">לבחור את תחומי העניין שלך</string>
+    <string name="reader_btn_done">סיימתי</string>
+    <string name="reader_btn_select_few_interests">יש לבחור מספר אפשרויות כדי להמשיך</string>
+    <string name="post_status_post_published">פורסם</string>
+    <string name="post_status_post_trashed">הועבר לפח</string>
+    <string name="post_status_post_scheduled">מתוזמן לפרסום</string>
+    <string name="publish_date">תאריך פרסום</string>
+    <string name="ccpa_privacy_notice_read">לעיון בהצהרת הפרטיות של CCPA</string>
+    <string name="ccpa_privacy_notice_caption">לפי החוק California Consumer Privacy Act (החוק לפרטיות צרכנים של קליפורניה – CCPA), עלינו לספק לתושבי קליפורניה פרטים נוספים אודות הקטגוריות של המידע האישי שאנחנו אוספים ומשתפים, המקום שממנו אנחנו מקבלים את המידע האישי, האופן שבו אנחנו משתמשים בו והסיבה לשימוש.</string>
+    <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
+    <string name="status_and_visibility">מצב וניראות</string>
+    <string name="update_now">לעדכן עכשיו</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">להסיר את %s</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
@@ -284,7 +332,6 @@ Language: he_IL
     <string name="reader_my_likes_display_name">לייקים</string>
     <string name="site_cannot_be_loaded">אין לנו אפשרות לטעון את הנתונים של האתר שלך כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הפוסט ברשת.</string>
     <string name="gutenberg_native_ungroup">לפרק קבוצה</string>
     <string name="gutenberg_native_translate">לתרגם</string>
     <string name="gutenberg_native_title">כותרת:</string>
@@ -507,10 +554,6 @@ Language: he_IL
     <string name="stats_widget_all_time_title">כל הזמנים</string>
     <string name="stats_widget_views_title">תצוגות השבוע</string>
     <string name="stats_widget_add">הוספת וידג\'ט</string>
-    <string name="dialog_confirm_update_yes">לעדכן כעת</string>
-    <string name="dialog_confirm_update_message_page">העמוד הנוכחי שפורסם יעודכן מייד.</string>
-    <string name="dialog_confirm_update_message_post">הפוסט הנוכחי שפורסם יעודכן מייד.</string>
-    <string name="dialog_confirm_update_title">רוצה לעדכן כעת?</string>
     <string name="plugin_fetching_error_after_at">הריענון של פרטי התוסף דורש יותר זמן מהרגיל. יש לבדוק שוב מאוחר יותר.</string>
     <string name="plugin_install_site_ineligible_default_error">אם רשמת כרגע את שם הדומיין, עליך להמתין שנסיים להגדיר אותו ולנסות שוב.\n\nאם לא, נראה שמשהו השתבש ושבתוסף יש תכונה שאולי לא זמינה באתר זה.</string>
     <string name="domain_contact_information_state_not_available_hint">מדינה (לא זמין)</string>
@@ -556,8 +599,6 @@ Language: he_IL
     <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
     <string name="editor_uploading_draft">אנחנו מעלים את הטיוטה שלך</string>
     <string name="post_uploading_draft">מעלה את הטיוטה</string>
-    <string name="post_list_author_everyone">כולם</string>
-    <string name="post_list_author_me">אני</string>
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
     <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
@@ -820,7 +861,6 @@ Language: he_IL
     <string name="pages_delete_permanently">מחק לצמיתות</string>
     <string name="pages_move_to_trash">העברה לפח</string>
     <string name="pages_move_to_draft">העברה לטיוטות</string>
-    <string name="pages_publish_now">לפרסם כעת</string>
     <string name="pages_set_parent">הגדרת הורה</string>
     <string name="pages_view">הצגה</string>
     <string name="pages_trashed">הועבר לפח</string>
@@ -1073,7 +1113,6 @@ Language: he_IL
     <string name="menu_html_mode_done_snackbar">הוחלף לעורך HTML</string>
     <string name="menu_html_mode">עורך HTML</string>
     <string name="menu_preview">תצוגה מקדימה</string>
-    <string name="menu_publish_now">לפרסם כעת</string>
     <string name="menu_save_as_draft">לשמור כטיוטה</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1136,10 +1175,6 @@ Language: he_IL
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">נותרו עוד %1$d עמודים ועוד %2$d מתוך %3$d קבצים</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">נותרו עוד פוסט אחד ועוד %1$d מתוך %2$d קבצים</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">נותרו עוד עמוד אחד ועוד %1$d מתוך %2$d קבצים</string>
-    <string name="dialog_confirm_publish_yes">לפרסם כעת</string>
-    <string name="dialog_confirm_publish_message_page">עמוד זה יפורסם מייד.</string>
-    <string name="dialog_confirm_publish_message_post">פוסט זה יפורסם מייד.</string>
-    <string name="dialog_confirm_publish_title">הכול מוכן לפרסום?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d פוסטים / עמודים לא הועלו</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d עמודים לא הועלו</string>
     <string name="media_file_page_singular_only_not_uploaded">עמוד אחד לא הועלה</string>
@@ -1474,7 +1509,6 @@ Language: he_IL
     <string name="post_settings_not_set">לא הוגדר</string>
     <string name="post_settings_more_options">אפשרויות נוספות</string>
     <string name="post_settings_categories_and_tags">קטגוריות ותגיות</string>
-    <string name="post_settings_status">מצב</string>
     <string name="notifications_tab_title_all">הכל</string>
     <string name="top_level_category_name">קטגוריה עליונה</string>
     <string name="category_parent">קטגוריית אב (אופציונלי):</string>
@@ -1598,7 +1632,6 @@ Language: he_IL
     <string name="media_upload_state_deleting">מוחק</string>
     <string name="media_upload_state_uploading">מעלה</string>
     <string name="media_upload_state_queued">בתור</string>
-    <string name="keep_editing">המשך עריכה</string>
     <string name="image_quality">איכות תמונה</string>
     <string name="error_all_media_upload_canceled">כל ההעלאות של פריטי המדיה בוטלו עקב שגיאה לא מזוהה. יש לנסות לבצע את ההעלאה שוב</string>
     <string name="error_unknown_post_type">סוג פוסט לא מזוהה</string>
@@ -2260,7 +2293,6 @@ Language: he_IL
     <string name="httppassword">סיסמה</string>
     <string name="httpuser">שם משתמש</string>
     <string name="error_media_upload">ארעה שגיאה במהלך העלאת הקובץ.</string>
-    <string name="publish_date">פרסם</string>
     <string name="incorrect_credentials">שם משתמש או סיסמה לא נכונים.</string>
     <string name="log_in">להתחבר</string>
     <string name="username">שם משתמש</string>
@@ -2297,6 +2329,7 @@ Language: he_IL
     <string name="no">לא</string>
     <string name="yes">כן</string>
     <string name="notification_settings">הגדרות התראות</string>
+    <string name="publish_now">לפרסם כעת</string>
     <string name="reply">תגובה</string>
     <string name="on">ב</string>
     <string name="preview">תצוגה מקדימה</string>

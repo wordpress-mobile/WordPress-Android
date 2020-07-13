@@ -35,6 +35,7 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
     private long mPostId;
 
     @Inject FeaturedImageUtils mFeaturedImageUtils;
+    @Inject ReaderCssProvider mReaderCssProvider;
 
     public static ReaderPostWebViewCachingFragment newInstance(long blogId, long postId) {
         ReaderPostWebViewCachingFragment fragment = new ReaderPostWebViewCachingFragment();
@@ -73,7 +74,7 @@ public class ReaderPostWebViewCachingFragment extends DaggerFragment {
             });
 
             ReaderPostRenderer rendered =
-                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils);
+                    new ReaderPostRenderer((ReaderWebView) view, post, mFeaturedImageUtils, mReaderCssProvider);
             rendered.beginRender(); // rendering will cache post content using native WebView implementation.
         } else {
             // abort mission if no network is available

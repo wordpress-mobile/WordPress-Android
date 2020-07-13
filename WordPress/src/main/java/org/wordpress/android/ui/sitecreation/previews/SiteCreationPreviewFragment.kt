@@ -21,7 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.site_creation_error_with_retry.*
+import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.site_creation_preview_header_item.*
 import kotlinx.android.synthetic.main.site_creation_preview_screen_default.*
 import kotlinx.android.synthetic.main.site_creation_preview_web_view_container.*

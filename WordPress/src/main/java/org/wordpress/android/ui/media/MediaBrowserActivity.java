@@ -86,6 +86,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
 
 import java.util.ArrayList;
@@ -117,6 +118,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject SiteStore mSiteStore;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject SystemNotificationsTracker mSystemNotificationsTracker;
+    @Inject TenorFeatureConfig mTenorFeatureConfig;
 
     private SiteModel mSite;
 
@@ -503,7 +505,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     reloadMediaGrid();
                 }
                 break;
-            case RequestCodes.GIF_PICKER:
+            case RequestCodes.GIF_PICKER_MULTI_SELECT:
                 if (resultCode == RESULT_OK
                     && data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                     int[] mediaLocalIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
@@ -931,7 +933,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        if (mBrowserType.isBrowser() && BuildConfig.TENOR_AVAILABLE) {
+        if (mBrowserType.isBrowser() && mTenorFeatureConfig.isEnabled()) {
             popup.getMenu().add(R.string.photo_picker_gif).setOnMenuItemClickListener(
                     item -> {
                         doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_GIF);
@@ -977,7 +979,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                         mSite, RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT);
                 break;
             case ITEM_CHOOSE_GIF:
-                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
+                ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_MULTI_SELECT);
                 break;
         }
     }

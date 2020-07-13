@@ -122,7 +122,7 @@ public class QuickStartFullScreenDialogFragment extends Fragment implements Full
     }
 
     @Override
-    public void onViewCreated(final FullScreenDialogController controller) {
+    public void setController(final FullScreenDialogController controller) {
         mDialogController = controller;
     }
 

@@ -28,17 +28,21 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
 import org.wordpress.android.fluxc.generated.AccountActionBuilder;
+import org.wordpress.android.fluxc.generated.WhatsNewActionBuilder;
+import org.wordpress.android.fluxc.model.whatsnew.WhatsNewAnnouncementModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.WhatsNewStore.OnWhatsNewFetched;
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewAppId;
+import org.wordpress.android.fluxc.store.WhatsNewStore.WhatsNewFetchPayload;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
-import org.wordpress.android.ui.whatsnew.FeatureAnnouncement;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementDialogFragment;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppThemeUtils;
-import org.wordpress.android.util.CrashLoggingUtils;
+import org.wordpress.android.util.BuildConfigWrapper;
 import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -78,11 +82,13 @@ public class AppSettingsFragment extends PreferenceFragment
     @Inject Dispatcher mDispatcher;
     @Inject ContextProvider mContextProvider;
     @Inject FeatureAnnouncementProvider mFeatureAnnouncementProvider;
+    @Inject BuildConfigWrapper mBuildConfigWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplication()).component().inject(this);
+        mDispatcher.register(this);
 
         setRetainInstance(true);
 
@@ -101,9 +107,6 @@ public class AppSettingsFragment extends PreferenceFragment
                                 mDispatcher,
                                 mAccountStore,
                                 hasUserOptedOut);
-
-
-                        CrashLoggingUtils.stopCrashLogging();
 
                         return true;
                     }
@@ -172,13 +175,8 @@ public class AppSettingsFragment extends PreferenceFragment
 
         mWhatsNew = findPreference(getString(R.string.pref_key_whats_new));
 
-        FeatureAnnouncement featureAnnouncement = mFeatureAnnouncementProvider.getLatestFeatureAnnouncement();
-        if (featureAnnouncement != null) {
-            mWhatsNew.setSummary(getString(R.string.version_with_name_param, featureAnnouncement.getAppVersionName()));
-            mWhatsNew.setOnPreferenceClickListener(this);
-        } else {
-            removeWhatsNewPreference();
-        }
+        removeWhatsNewPreference();
+        mDispatcher.dispatch(WhatsNewActionBuilder.newFetchCachedAnnouncementAction());
 
         if (!BuildConfig.OFFER_GUTENBERG) {
             removeExperimentalCategory();
@@ -200,6 +198,12 @@ public class AppSettingsFragment extends PreferenceFragment
         aboutTheAppPreferenceCategory.removePreference(mWhatsNew);
     }
 
+    private void addWhatsNewPreference() {
+        PreferenceCategory aboutTheAppPreferenceCategory =
+                (PreferenceCategory) findPreference(getString(R.string.pref_key_about_section));
+        aboutTheAppPreferenceCategory.addPreference(mWhatsNew);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -211,7 +215,6 @@ public class AppSettingsFragment extends PreferenceFragment
     @Override
     public void onStart() {
         super.onStart();
-        mDispatcher.register(this);
     }
 
     @Override
@@ -227,6 +230,26 @@ public class AppSettingsFragment extends PreferenceFragment
         updateLanguagePreference(getResources().getConfiguration().locale.toString());
         // flush gathered events (if any)
         AnalyticsTracker.flush();
+    }
+
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onWhatsNewFetched(OnWhatsNewFetched event) {
+        if (event.isFromCache()) {
+            mDispatcher.dispatch(WhatsNewActionBuilder
+                    .newFetchRemoteAnnouncementAction(
+                            new WhatsNewFetchPayload(mBuildConfigWrapper.getAppVersionName(),
+                                    WhatsNewAppId.WP_ANDROID)));
+        }
+
+        if (event.error != null || event.getWhatsNewItems() == null || event.getWhatsNewItems().isEmpty()) {
+            return;
+        }
+
+        WhatsNewAnnouncementModel latestAnnouncement = event.getWhatsNewItems().get(0);
+        mWhatsNew.setSummary(getString(R.string.version_with_name_param, latestAnnouncement.getAppVersionName()));
+        mWhatsNew.setOnPreferenceClickListener(this);
+        addWhatsNewPreference();
     }
 
     @SuppressWarnings("unused")

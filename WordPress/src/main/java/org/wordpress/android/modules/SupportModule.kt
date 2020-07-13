@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.support.SupportHelper
 import org.wordpress.android.support.ZendeskHelper
 import org.wordpress.android.support.ZendeskPlanFieldHelper
-import org.wordpress.android.util.CrashLoggingUtilsWrapper
+import org.wordpress.android.util.CrashLogging
 import javax.inject.Singleton
 
 @Module
@@ -27,6 +27,6 @@ class SupportModule {
 
     @Singleton
     @Provides
-    fun provideZendeskPlanFieldHelper(remoteLoggingUtils: CrashLoggingUtilsWrapper): ZendeskPlanFieldHelper =
+    fun provideZendeskPlanFieldHelper(remoteLoggingUtils: CrashLogging): ZendeskPlanFieldHelper =
         ZendeskPlanFieldHelper(remoteLoggingUtils)
 }

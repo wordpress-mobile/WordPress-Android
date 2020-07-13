@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-12-10 19:56:03+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: bg
 -->
 <resources>
@@ -38,7 +38,6 @@ Language: bg
     <string name="pages_move_to_trash">Преместване в кошчето</string>
     <string name="pages_move_to_draft">Преместване в чернова</string>
     <string name="news_card_announcement_action_sample_announcement">[Научете още]</string>
-    <string name="pages_publish_now">Публикуване сега</string>
     <string name="pages_view">Преглед</string>
     <string name="pages_trashed">В кошчето</string>
     <string name="pages_drafts">Чернови</string>
@@ -165,7 +164,6 @@ Language: bg
     <string name="post_settings_more_options">Повече настройки</string>
     <string name="post_settings_categories_and_tags">Категории и етикети</string>
     <string name="notifications_tab_title_all">Всички</string>
-    <string name="post_settings_status">Състояние</string>
     <string name="category_parent">Родителска категория (не задължително):</string>
     <string name="media_error_timeout">Отне твърде много време на сървъра да отговори</string>
     <string name="media_error_exceeds_memory_limit">Файлът е твърде голям, за да бъде качен на сайта</string>
@@ -257,7 +255,6 @@ Language: bg
     <string name="media_upload_state_uploading">Качва се</string>
     <string name="media_upload_state_queued">В опашката</string>
     <string name="image_quality">Качество на изображението</string>
-    <string name="keep_editing">Продължете да редактирате</string>
     <string name="error_all_media_upload_canceled">Качването на всички файлове беше прекъснато по неизвестна причина. Моля повторете качването</string>
     <string name="error_unknown_post_type">Непознат формат на публикацията</string>
     <string name="submit_for_review">Изпращане</string>
@@ -869,7 +866,6 @@ Language: bg
     <string name="httppassword">HTTP Парола</string>
     <string name="httpuser">Потребител за HTTP</string>
     <string name="error_media_upload">Грешка при качването на медийния файл</string>
-    <string name="publish_date">Публикуване</string>
     <string name="incorrect_credentials">Грешно име и/или парола</string>
     <string name="password">Парола</string>
     <string name="username">Име</string>
