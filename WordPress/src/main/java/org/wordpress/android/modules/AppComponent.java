@@ -66,6 +66,7 @@ import org.wordpress.android.ui.notifications.receivers.NotificationsPendingDraf
 import org.wordpress.android.ui.pages.PageListFragment;
 import org.wordpress.android.ui.pages.PageParentFragment;
 import org.wordpress.android.ui.pages.PageParentSearchFragment;
+import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.pages.SearchListFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
@@ -340,6 +341,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(EditPostSettingsFragment object);
 
     void inject(PostsListActivity object);
+
+    void inject(PagesActivity object);
 
     void inject(AuthorSelectionAdapter object);
 
