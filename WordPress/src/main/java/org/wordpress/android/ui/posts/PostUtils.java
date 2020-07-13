@@ -60,6 +60,7 @@ public class PostUtils {
     private static final String GB_IMG_BLOCK_CLASS_PLACEHOLDER = "class=\"wp-image-%s\"";
     private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
     public static final String WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER = "placeholderLocalId";
+    public static final String WP_STORIES_GUTENBERG_BLOCK_START = "<!-- wp:jetpack/story";
 
     public static Map<String, Object> addPostTypeAndPostFormatToAnalyticsProperties(PostImmutableModel post,
                                                                                     Map<String, Object> properties) {
@@ -170,8 +171,10 @@ public class PostUtils {
                 } else {
                     properties.put("word_count", AnalyticsUtils.getWordCount(post.getContent()));
                     properties.put("editor_source",
-                            shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
-                                    ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME);
+                            contentContainsWPStoryGutenbergBlocks(post.getContent())
+                                    ? SiteUtils.WP_STORIES_CREATOR_NAME
+                                    : (shouldShowGutenbergEditor(post.isLocalDraft(), post.getContent(), site)
+                                        ? SiteUtils.GB_EDITOR_NAME : SiteUtils.AZTEC_EDITOR_NAME));
                     properties.put(AnalyticsUtils.HAS_GUTENBERG_BLOCKS_KEY,
                             PostUtils.contentContainsGutenbergBlocks(post.getContent()));
                     AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST, site,
@@ -587,5 +590,9 @@ public class PostUtils {
         return flag != null && post != null
                && post.getLocalSiteId() == flag.localSiteId
                && post.getId() == flag.postId;
+    }
+
+    public static boolean contentContainsWPStoryGutenbergBlocks(String postContent) {
+        return (postContent != null && postContent.contains(WP_STORIES_GUTENBERG_BLOCK_START));
     }
 }
