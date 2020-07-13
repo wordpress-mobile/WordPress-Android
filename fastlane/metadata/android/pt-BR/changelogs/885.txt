@@ -1,4 +1,0 @@
-15.1:
-Melhorias no editor de blocos: Agendamento, tag e configurações de visibilidade são exibidos no editor de post e lista de posts ao tocar em Publicar. Faça os ajustes necessários e toque em "Publicar agora" para concluir a publicação. Pressionar Enter após adicionar uma legenda nos blocos de Imagem, Vídeo ou Citação agora adiciona um novo bloco automaticamente.
-
-Correções: Miniaturas de vídeo, configurações e visualização são exibidos corretamente na seção Mídia em sites privados. As abas Notificações e Instalar Jetpack não são mais exibidas uma sobre a outra.

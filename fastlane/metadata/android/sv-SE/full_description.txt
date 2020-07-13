@@ -40,4 +40,6 @@ WordPress är en webbplatsskapare med öppen källkod, vilket innebär att alla 
 
 Oavsett om du behöver en webbplatsbyggare för att skapa en egen webbplats, eller en enkel bloggmaskin kan WordPress vara till hjälp. Det ger dig vackra deignmöjligheter, kraftfulla funktioner och friheten att bygga just det du själv vill ha.
 
-WordPress för Android stödjer webbplatser du driftar själv, som använder WordPress 4.0 eller senare, och alla webbplatser hos WordPress.com. På samma sätt som WordPress självt, är WordPress för Android öppen källkod. Läs mer på https://apps.wordpress.com/contribute/. Behöver du hjälp med appen? Twittra till oss på @WPAndroid, eller gå till vårt supportforum på https://android.forums.wordpress.org/forum/troubleshooting 
+WordPress för Android stödjer webbplatser du driftar själv, som använder WordPress 4.0 eller senare, och alla webbplatser hos WordPress.com. På samma sätt som WordPress självt, är WordPress för Android öppen källkod. Läs mer på https://wp.me/P7jrAc-tJ. Behöver du hjälp med appen? Twittra till oss på @WPAndroid, eller gå till vårt supportforum på https://android.forums.wordpress.org/forum/troubleshooting 
+
+Integritetsinformation för användare i Kalifornien: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.
