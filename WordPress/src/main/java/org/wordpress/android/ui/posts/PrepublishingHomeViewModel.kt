@@ -133,6 +133,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private fun onStoryTitleChanged(storyTitle: String) {
         updateStoryTitleJob?.cancel()
         updateStoryTitleJob = launch(bgDispatcher) {
+            // there's a delay here since every single character change event triggers onStoryTitleChanged
+            // and without a delay we would have multiple save operations being triggered unnecessarily.
             delay(THROTTLE_DELAY)
             storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
         }
