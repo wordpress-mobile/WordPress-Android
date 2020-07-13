@@ -1,4 +1,0 @@
-15.1 :
-Améliorations : le volet de planification, étiquette et visibilité s’affiche dans l’éditeur et lors de la pré-publication de la liste d’articles. Appuyer sur Entrée après l’ajout d’une légende dans un bloc Image, Vidéo, Galerie, Citation ou Citation en exergue ajoute un nouveau bloc.
-
-Corrections : les miniatures de vidéo, les paramètres et les aperçus s’affichent correctement sur les sites privés. Les onglets Notifications et Installer Jetpack ne se superposent plus.
