@@ -61,12 +61,15 @@ public class PostUtils {
     private static final String GB_MEDIA_TEXT_BLOCK_HEADER_PLACEHOLDER = "<!-- wp:media-text {\"mediaId\":%s";
     public static final String WP_STORIES_POST_MEDIA_LOCAL_ID_PLACEHOLDER = "placeholderLocalId";
 
-    public static Map<String, Object> addPostTypeToAnalyticsProperties(PostImmutableModel post,
-                                                                       Map<String, Object> properties) {
+    public static Map<String, Object> addPostTypeAndPostFormatToAnalyticsProperties(PostImmutableModel post,
+                                                                                    Map<String, Object> properties) {
         if (properties == null) {
             properties = new HashMap<>();
         }
         properties.put("post_type", post.isPage() ? "page" : "post");
+        if (!StringUtils.isEmpty(post.getPostFormat())) {
+            properties.put("post_format", post.getPostFormat());
+        }
         return properties;
     }
 
@@ -146,7 +149,7 @@ public class PostUtils {
     public static void trackSavePostAnalytics(PostImmutableModel post, SiteModel site) {
         PostStatus status = PostStatus.fromPost(post);
         Map<String, Object> properties = new HashMap<>();
-        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
+        PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         switch (status) {
             case PUBLISHED:
                 if (!post.isLocalDraft()) {
@@ -188,7 +191,7 @@ public class PostUtils {
 
     public static void trackOpenEditorAnalytics(PostImmutableModel post, SiteModel site) {
         Map<String, Object> properties = new HashMap<>();
-        PostUtils.addPostTypeToAnalyticsProperties(post, properties);
+        PostUtils.addPostTypeAndPostFormatToAnalyticsProperties(post, properties);
         if (!post.isLocalDraft()) {
             properties.put("post_id", post.getRemotePostId());
         }

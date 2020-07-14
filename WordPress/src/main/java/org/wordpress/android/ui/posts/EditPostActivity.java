@@ -109,7 +109,6 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
@@ -215,7 +214,6 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
-import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
@@ -253,7 +251,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
-    public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     public static final String EXTRA_REBLOG_POST_TITLE = "reblogPostTitle";
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
@@ -575,7 +572,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // Bump post created analytics only once, first time the editor is opened
         if (mIsNewPost && savedInstanceState == null && !isRestarting) {
-            trackEditorCreatedPost(action, getIntent());
+            AnalyticsUtils.trackEditorCreatedPost(
+                    action,
+                    getIntent(),
+                    mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
+                    mEditPostRepository.getPost()
+            );
         }
 
         if (!mIsNewPost) {
@@ -1523,50 +1525,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void showErrorAndFinish(int errorMessageId) {
         ToastUtils.showToast(this, errorMessageId, ToastUtils.Duration.LONG);
         finish();
-    }
-
-    private void trackEditorCreatedPost(String action, Intent intent) {
-        Map<String, Object> properties = new HashMap<>();
-        // Post created from the post list (new post button).
-        String normalizedSourceName = "post-list";
-
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // Post created with share with WordPress
-            normalizedSourceName = "shared-from-external-app";
-        }
-        if (EditPostActivity.NEW_MEDIA_POST.equals(
-                action)) {
-            // Post created from the media library
-            normalizedSourceName = "media-library";
-        }
-        if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
-            // Quick press
-            normalizedSourceName = "quick-press";
-        }
-        PostUtils.addPostTypeToAnalyticsProperties(mEditPostRepository.getPost(), properties);
-        properties.put("created_post_source", normalizedSourceName);
-
-        if (intent != null
-            && intent.hasExtra(EXTRA_CREATION_SOURCE_DETAIL)
-            && normalizedSourceName == "post-list") {
-            PagePostCreationSourcesDetail source =
-                    (PagePostCreationSourcesDetail) intent.getSerializableExtra(EXTRA_CREATION_SOURCE_DETAIL);
-            properties.put(
-                    CREATED_POST_SOURCE_DETAIL_KEY,
-                    source != null ? source.getLabel() : PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
-            );
-        } else {
-            properties.put(
-                    CREATED_POST_SOURCE_DETAIL_KEY,
-                    PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
-            );
-        }
-
-        AnalyticsUtils.trackWithSiteDetails(
-                AnalyticsTracker.Stat.EDITOR_CREATED_POST,
-                mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
-                properties
-        );
     }
 
     private void updateAndSavePostAsync() {

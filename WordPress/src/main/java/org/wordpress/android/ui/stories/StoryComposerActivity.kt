@@ -41,6 +41,8 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
@@ -53,6 +55,7 @@ import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -79,6 +82,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -87,6 +91,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // See https://wordpress.org/support/article/post-formats/
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
         private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        private const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
@@ -108,9 +113,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (localPostId == 0) {
                 // Create a new post
                 saveInitialPost()
+                // Bump post created analytics only once, first time the editor is opened
+                AnalyticsUtils.trackEditorCreatedPost(
+                        intent.action,
+                        intent,
+                        site,
+                        editPostRepository.getPost()
+                )
             } else {
                 editPostRepository.loadPostByLocalPostId(localPostId)
             }
+            createPostEditorAnalyticsSessionTracker(editPostRepository.getPost(), site)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
                 val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
@@ -121,9 +134,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
                 editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
             }
+            postEditorAnalyticsSession =
+                    savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
         editorMedia.start(site!!, this, STORY_EDITOR)
+        postEditorAnalyticsSession?.start(null)
         startObserving()
     }
 
@@ -131,6 +147,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, site)
         outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
+        outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -156,6 +173,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onDestroy() {
         editorMedia.cancelAddMediaToEditorActions()
+        postEditorAnalyticsSession?.end()
         super.onDestroy()
     }
 
@@ -312,7 +330,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         notificationIntent.putExtra(WordPress.SITE, site)
         // setup tracks NotificationType for Notification tracking. Note this doesn't use our interface.
-        val notificationType = NotificationType.STORY_FRAME_SAVE_ERROR
+        val notificationType = NotificationType.STORY_SAVE_ERROR
         notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
         return notificationIntent
     }
@@ -342,7 +360,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     override fun onStoryDiscarded() {
         // delete empty post from database
         dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-        // TODO WPSTORIES add TRACKS LOOK BELOW LINE!!!
-        // mPostEditorAnalyticsSession.setOutcome(CANCEL)
+        postEditorAnalyticsSession?.setOutcome(CANCEL)
+    }
+
+    private fun createPostEditorAnalyticsSessionTracker(
+        post: PostImmutableModel?,
+        site: SiteModel?
+    ) {
+        if (postEditorAnalyticsSession == null) {
+            postEditorAnalyticsSession = PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
+                    PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
+                    post, site, true
+            )
+        }
     }
 }

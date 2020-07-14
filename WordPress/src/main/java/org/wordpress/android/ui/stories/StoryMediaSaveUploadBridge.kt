@@ -62,6 +62,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
         get() = mainDispatcher + job
 
     @Inject lateinit var editPostRepository: EditPostRepository
+    @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
 
     @Suppress("unused")
     @OnLifecycleEvent(ON_CREATE)
@@ -111,8 +112,12 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                 )
                 uploadService.uploadPost(appContext, editPostRepository.id, true)
                 // SAVED_ONLINE
+                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, false)
             } else {
                 // SAVED_LOCALLY
+                storiesTrackerHelper.trackStoryPostSavedEvent(uriList.size, site, true)
+                // no op, when network is available the offline mode in WPAndroid will gather the queued Post
+                // and try to upload.
             }
         }
     }
@@ -124,6 +129,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     @Subscribe(sticky = true, threadMode = MAIN)
     fun onEventMainThread(event: StorySaveResult) {
+        // track event
+        storiesTrackerHelper.trackStorySaveResultEvent(event)
+
         // only trigger the bridge preparation and the UploadService if the Story is now complete
         // otherwise we can be receiving successful retry events for individual frames we shouldn't care about just
         // yet.
@@ -134,14 +142,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             event.metadata?.let {
                 val site = it.getSerializable(WordPress.SITE) as SiteModel
                 editPostRepository.loadPostByLocalPostId(it.getInt(StoryComposerActivity.KEY_POST_LOCAL_ID))
+                // media upload tracking already in addLocalMediaToPostUseCase.addNewMediaToEditorAsync
                 addNewStoryFrameMediaItemsToPostAndUploadAsync(site, event)
-                // TODO WPSTORIES add TRACKS
-                // lets add an EVENT for START UPLOADING MEDIA
-                // AnalyticsTracker.track(Stat.STORIES_BLA_BLA_ADDED_MEDIA_OR_SOMETHING);
             }
-        } else {
-            // TODO WPSTORIES add TRACKS for ERROR
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
         }
     }
 

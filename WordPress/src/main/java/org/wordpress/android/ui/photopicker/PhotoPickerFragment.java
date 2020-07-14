@@ -311,7 +311,7 @@ public class PhotoPickerFragment extends Fragment {
             case GIF:
                 break;
             case WP_STORIES_CAPTURE:
-                // TODO WPSTORIES add TRACKS (follow along the cases above)
+                AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE);
                 break;
         }
 

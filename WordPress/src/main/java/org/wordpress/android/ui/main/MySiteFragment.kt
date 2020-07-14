@@ -59,6 +59,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -114,6 +115,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
+import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 import org.wordpress.android.ui.uploads.UploadService
@@ -175,6 +177,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -1063,12 +1066,8 @@ class MySiteFragment : Fragment(),
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: StorySaveResult) {
         EventBus.getDefault().removeStickyEvent(event)
-        if (event.isSuccess()) {
-            // TODO WPSTORIES add TRACKS
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
-        } else {
-            // TODO WPSTORIES add TRACKS
-            // AnalyticsTracker.track(Stat.MY_SITE_ICON_UPLOAD_UNSUCCESSFUL);
+        if (!event.isSuccess()) {
+            // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
             val errorText = String.format(
                     getString(string.story_saving_snackbar_finished_with_error),
                     getStoryAtIndex(event.storyIndex).title
@@ -1102,6 +1101,12 @@ class MySiteFragment : Fragment(),
                         // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
                         //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
                         //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+
+                        storiesTrackerHelper.trackStorySaveResultEvent(
+                                event,
+                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+
+                        )
                         startActivity(intent)
                     }
             )

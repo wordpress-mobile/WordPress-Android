@@ -324,7 +324,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
-        if (mediaIds != null && mediaIds.size() == 1) {
+        if (mediaIds != null && mediaIds.size() > 0) {
             if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
                 // if user chose a featured image, track image picked event
                 mFeaturedImageHelper.trackFeaturedImageEvent(
