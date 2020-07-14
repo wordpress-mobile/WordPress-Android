@@ -20,6 +20,7 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
+import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiS
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -92,6 +94,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
+    @Inject lateinit var updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase
+    @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
@@ -299,7 +303,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // this is an artifact to be able to call savePostToDb()
         editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
-            savePostToDbUseCase.savePostToDb(WordPress.getContext(), editPostRepository, it)
+            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
         }
     }
 
@@ -418,8 +422,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         showPrepublishingBottomSheet()
     }
 
+    private fun setUntitledStoryTitleIfTitleEmpty() {
+        if (editPostRepository.title.isEmpty()) {
+            val untitledStoryTitle = resources.getString(R.string.untitled)
+            storyRepositoryWrapper.setCurrentStoryTitle(untitledStoryTitle)
+            updateStoryPostTitleUseCase.updateStoryTitle(untitledStoryTitle, editPostRepository)
+        }
+    }
+
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
         analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
+        setUntitledStoryTitleIfTitleEmpty()
         processStorySaving()
     }
 }
