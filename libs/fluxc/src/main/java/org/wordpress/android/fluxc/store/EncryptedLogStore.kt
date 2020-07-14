@@ -6,6 +6,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.EncryptedLogAction
+import org.wordpress.android.fluxc.action.EncryptedLogAction.RESET_UPLOAD_STATES
 import org.wordpress.android.fluxc.action.EncryptedLogAction.UPLOAD_LOG
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
@@ -52,6 +53,11 @@ class EncryptedLogStore @Inject constructor(
                     queueLogForUpload(action.payload as UploadEncryptedLogPayload)
                 }
             }
+            RESET_UPLOAD_STATES -> {
+                coroutineEngine.launch(API, this, "EncryptedLogStore: On RESET_UPLOAD_STATES") {
+                    resetUploadStates()
+                }
+            }
         }
     }
 
@@ -78,6 +84,12 @@ class EncryptedLogStore @Inject constructor(
 
         if (payload.shouldStartUploadImmediately) {
             uploadNext()
+        }
+    }
+
+    private fun resetUploadStates() {
+        encryptedLogSqlUtils.getUploadingEncryptedLogs().map {
+            it.copy(uploadState = FAILED)
         }
     }
 
