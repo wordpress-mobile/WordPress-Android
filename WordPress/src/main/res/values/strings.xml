@@ -2385,7 +2385,7 @@
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="send_verification_email">Send verification email</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials</string>
+    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
