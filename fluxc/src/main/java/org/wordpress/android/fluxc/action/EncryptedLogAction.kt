@@ -8,5 +8,7 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPay
 @ActionEnum
 enum class EncryptedLogAction : IAction {
     @Action(payloadType = UploadEncryptedLogPayload::class)
-    UPLOAD_LOG
+    UPLOAD_LOG,
+    @Action
+    RESET_UPLOAD_STATES
 }
