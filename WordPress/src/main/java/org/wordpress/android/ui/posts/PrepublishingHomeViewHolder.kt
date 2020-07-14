@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -17,7 +18,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -59,7 +59,7 @@ sealed class PrepublishingHomeViewHolder(
         val uiHelpers: UiHelpers,
         val imageManager: ImageManager
     ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_story_title_list_item) {
-        private val storyTitle: TextView = itemView.findViewById(R.id.story_title)
+        private val storyTitle: EditText = itemView.findViewById(R.id.story_title)
         private val thumbnail: ImageView = itemView.findViewById(R.id.story_thumbnail)
 
         private val thumbnailCornerRadius =
@@ -77,10 +77,10 @@ sealed class PrepublishingHomeViewHolder(
             )
 
             uiState.storyTitle?.let { title ->
-                storyTitle.text = uiHelpers.getTextOfUiString(parent.context, title)
+                storyTitle.setText(uiHelpers.getTextOfUiString(parent.context, title))
+                storyTitle.setSelection(title.text.length)
             }
 
-            ActivityUtils.showKeyboardForced(storyTitle)
             storyTitle.postDelayed({
                 storyTitle.requestFocus()
             }, STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY)

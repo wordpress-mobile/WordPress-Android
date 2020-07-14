@@ -17,14 +17,14 @@ class StoriesTrackerHelper @Inject constructor() {
     fun trackStoryPostSavedEvent(frameQty: Int, site: SiteModel, locallySaved: Boolean) {
         val stat = if (locallySaved) Stat.STORY_POST_SAVE_LOCALLY else Stat.STORY_POST_SAVE_REMOTELY
         val properties: HashMap<String, Any> = HashMap()
-        properties.put("frame_qty", frameQty)
+        properties.put("slide_qty", frameQty)
         AnalyticsUtils.trackWithSiteDetails(stat, site, properties)
     }
 
     private fun getCommonProperties(event: StorySaveResult): HashMap<String, Any> {
         val properties: HashMap<String, Any> = HashMap()
         properties.put("is_retry", event.isRetry)
-        properties.put("frame_qty", event.frameSaveResult.size)
+        properties.put("slide_qty", event.frameSaveResult.size)
         properties.put("elapsed_time", event.elapsedTime)
         return properties
     }

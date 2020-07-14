@@ -69,7 +69,7 @@ class PrepublishingHomeViewModel @Inject constructor(
             if (isStoryPost) {
                 add(
                         StoryTitleUiState(
-                                storyTitle = UiStringText(editPostRepository.title),
+                                storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
                                 storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
                         ) { storyTitle ->
                             onStoryTitleChanged(storyTitle)
@@ -78,14 +78,17 @@ class PrepublishingHomeViewModel @Inject constructor(
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
 
-            add(
-                    HomeUiState(
-                            actionType = VISIBILITY,
-                            actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                            actionClickable = true,
-                            onActionClicked = ::onActionClicked
-                    )
-            )
+            if (!isStoryPost) {
+                add(
+                        HomeUiState(
+                                actionType = VISIBILITY,
+                                actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
+                                actionClickable = true,
+                                onActionClicked = ::onActionClicked
+                        )
+                )
+            }
+
             if (editPostRepository.status != PostStatus.PRIVATE) {
                 add(
                         HomeUiState(
@@ -133,6 +136,8 @@ class PrepublishingHomeViewModel @Inject constructor(
     private fun onStoryTitleChanged(storyTitle: String) {
         updateStoryTitleJob?.cancel()
         updateStoryTitleJob = launch(bgDispatcher) {
+            // there's a delay here since every single character change event triggers onStoryTitleChanged
+            // and without a delay we would have multiple save operations being triggered unnecessarily.
             delay(THROTTLE_DELAY)
             storyRepositoryWrapper.setCurrentStoryTitle(storyTitle)
             updateStoryPostTitleUseCase.updateStoryTitle(storyTitle, editPostRepository)

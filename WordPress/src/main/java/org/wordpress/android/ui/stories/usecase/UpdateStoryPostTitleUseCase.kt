@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 @Reusable
 class UpdateStoryPostTitleUseCase @Inject constructor() {
-    fun updateStoryTitle(storyTitle:String, editPostRepository: EditPostRepository) {
+    fun updateStoryTitle(storyTitle: String, editPostRepository: EditPostRepository) {
         editPostRepository.updateAsync({ postModel ->
             postModel.setTitle(storyTitle)
             true
