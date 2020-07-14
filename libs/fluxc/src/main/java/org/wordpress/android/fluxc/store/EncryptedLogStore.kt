@@ -75,7 +75,10 @@ class EncryptedLogStore @Inject constructor(
                 file = payload.file
         )
         encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog)
-        uploadNext()
+
+        if (payload.shouldStartUploadImmediately) {
+            uploadNext()
+        }
     }
 
     private suspend fun uploadNextWithBackOffTiming() {
@@ -168,9 +171,18 @@ class EncryptedLogStore @Inject constructor(
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
     }
 
+    /**
+     * Payload to be used to queue a file to be encrypted and uploaded.
+     *
+     * [shouldStartUploadImmediately] property will be used by [EncryptedLogStore] to decide whether the encryption and
+     * upload should be initiated immediately. Since the main use case to queue a log file to be uploaded is a crash,
+     * the default value is `false`. If we try to upload the log file during a crash, there won't be enough time to
+     * encrypt and upload it, which means it'll just fail.
+     */
     class UploadEncryptedLogPayload(
         val uuid: String,
-        val file: File
+        val file: File,
+        val shouldStartUploadImmediately: Boolean = false
     ) : Payload<BaseNetworkError>()
 
     class OnEncryptedLogUploaded(
