@@ -35,8 +35,9 @@ class ReaderTagHeaderView @JvmOverloads constructor(
     fun updateUi(uiState: ReaderTagHeaderUiState) {
         text_tag.text = uiState.title
         with(uiState.followButtonUiState) {
-            uiHelpers.updateVisibility(follow_button, followButtonVisibility)
-            follow_button.setIsFollowed(isFollowed)
+            uiHelpers.updateVisibility(follow_button, isVisible)
+            follow_button.setIsFollowed(isFollowed, shouldAnimate)
+            follow_button.isEnabled = isEnabled
             onFollowBtnClicked = onFollowButtonClicked
         }
     }

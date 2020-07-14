@@ -277,7 +277,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         } else if (holder instanceof TagHeaderViewHolder) {
             TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
-            renderTag(mCurrentTag, position, tagHolder);
+            renderTagHeader(mCurrentTag, tagHolder, true, false);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -286,12 +286,17 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
     }
 
-    private void renderTag(ReaderTag currentTag, int position, TagHeaderViewHolder tagHolder) {
+    private void renderTagHeader(
+        ReaderTag currentTag,
+        TagHeaderViewHolder tagHolder,
+        Boolean isFollowButtonEnabled,
+        Boolean shouldFollowButtonAnimate
+    ) {
         if (currentTag == null) {
             return;
         }
         Function0<Unit> onFollowButtonClicked = () -> {
-            toggleFollowButton(tagHolder.itemView.getContext(), currentTag, position);
+            toggleFollowButton(tagHolder.itemView.getContext(), currentTag, tagHolder);
             return Unit.INSTANCE;
         };
 
@@ -300,13 +305,19 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             new FollowButtonUiState(
                 onFollowButtonClicked,
                 mAccountStore.hasAccessToken(),
-                ReaderTagTable.isFollowedTagName(currentTag.getTagSlug())
+                ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                isFollowButtonEnabled,
+                shouldFollowButtonAnimate
             )
         );
         tagHolder.onBind(uiState);
     }
 
-    private void toggleFollowButton(Context context, @NotNull ReaderTag currentTag, final int position) {
+    private void toggleFollowButton(
+        Context context,
+        @NotNull ReaderTag currentTag,
+        TagHeaderViewHolder tagHolder
+    ) {
         if (!NetworkUtils.checkConnection(context)) {
             return;
         }
@@ -318,8 +329,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
                         : R.string.reader_toast_err_remove_tag;
                 ToastUtils.showToast(context, errResId);
-                notifyItemChanged(position);
             }
+            renderTagHeader(currentTag, tagHolder, true, false);
         };
 
         boolean success;
@@ -330,7 +341,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (success) {
-            notifyItemChanged(position);
+            renderTagHeader(currentTag, tagHolder, false, true);
         }
     }
 
