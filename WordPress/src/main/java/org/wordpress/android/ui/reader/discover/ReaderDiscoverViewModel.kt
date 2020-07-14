@@ -165,7 +165,8 @@ class ReaderDiscoverViewModel @Inject constructor(
         pendingReblogPost = null
     }
 
-    fun stop() {
+    override fun onCleared() {
+        super.onCleared()
         readerDiscoverRepository.stop()
     }
 

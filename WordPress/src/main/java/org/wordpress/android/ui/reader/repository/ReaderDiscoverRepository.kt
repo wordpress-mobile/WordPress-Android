@@ -11,6 +11,7 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
@@ -104,7 +105,7 @@ class ReaderDiscoverRepository constructor(
             }
             if (refresh) {
                 val response = fetchPostsForTagUseCase.fetch(readerTag)
-                _communicationChannel.postValue(Event(response))
+                if (response != Success) _communicationChannel.postValue(Event(response))
             }
         }
     }

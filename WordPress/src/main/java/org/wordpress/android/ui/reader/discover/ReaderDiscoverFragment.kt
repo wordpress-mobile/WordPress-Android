@@ -150,7 +150,6 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
-        viewModel.stop()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
