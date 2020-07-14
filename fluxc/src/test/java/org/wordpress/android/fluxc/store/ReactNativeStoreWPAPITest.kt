@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.store
 
+import android.net.Uri
 import com.android.volley.NetworkResponse
 import com.android.volley.VolleyError
 import com.nhaarman.mockitokotlin2.any
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.UNKNOWN
 import org.wordpress.android.fluxc.network.discovery.DiscoveryWPAPIRestClient
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.Nonce
 import org.wordpress.android.fluxc.network.rest.wpapi.reactnative.ReactNativeWPAPIRestClient
@@ -421,6 +423,28 @@ class ReactNativeStoreWPAPITest {
         assertEquals("begin/end", ReactNativeStore.slashJoin("begin/", "end"))
         assertEquals("begin/end", ReactNativeStore.slashJoin("begin", "/end"))
         assertEquals("begin/end", ReactNativeStore.slashJoin("begin/", "/end"))
+    }
+
+    @Test
+    fun `handles failure to parse path`() = test {
+        val mockUri = mock<Uri>()
+        assertNull(mockUri.path, "path must be null to represent failure to parse the path in this test")
+        val uriParser = { _: String -> mockUri }
+
+        store = ReactNativeStore(
+                mock(),
+                wpApiRestClient,
+                discoveryWPAPIRestClient,
+                initCoroutineEngine(),
+                mutableMapOf(),
+                { currentTime },
+                sitePersistenceMock,
+                uriParser
+        )
+
+        val response = store.executeRequest(mock(), "")
+        val errorType = (response as? Error)?.error?.type
+        assertEquals(UNKNOWN, errorType)
     }
 
     private suspend fun ReactNativeWPAPIRestClient.fetch(url: String, nonce: String? = null) =
