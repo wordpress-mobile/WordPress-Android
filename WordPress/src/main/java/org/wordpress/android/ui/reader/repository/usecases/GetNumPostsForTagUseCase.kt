@@ -4,13 +4,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import javax.inject.Inject
 import javax.inject.Named
 
 class GetNumPostsForTagUseCase @Inject constructor(
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
-) : ReaderRepositoryDispatchingUseCase(bgDispatcher) {
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+) : ReaderRepositoryDispatchingUseCase(ioDispatcher) {
     suspend fun get(readerTag: ReaderTag): Int =
         withContext(coroutineContext) {
             ReaderPostTable.getNumPostsWithTag(readerTag)

@@ -11,10 +11,10 @@ import org.wordpress.android.util.AppLog.T
 import kotlin.coroutines.CoroutineContext
 
 abstract class ReaderRepositoryDispatchingUseCase(
-    private val bgDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher + parentJob + coroutineExceptionHandler
+        get() = ioDispatcher + parentJob + coroutineExceptionHandler
 
     private val parentJob = Job()
 
