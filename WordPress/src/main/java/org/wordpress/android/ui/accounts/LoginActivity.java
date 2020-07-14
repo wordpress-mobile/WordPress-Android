@@ -152,7 +152,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
                     break;
                 case WPCOM_LOGIN_ONLY:
                     mUnifiedLoginTracker.setSource(Source.ADD_WORDPRESS_COM_ACCOUNT);
-                    loginFromPrologue();
+                    if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
+                        checkSmartLockPasswordAndStartLogin();
+                    } else {
+                        loginFromPrologue();
+                    }
                     break;
                 case SELFHOSTED_ONLY:
                     mUnifiedLoginTracker.setSource(Source.SELF_HOSTED);
