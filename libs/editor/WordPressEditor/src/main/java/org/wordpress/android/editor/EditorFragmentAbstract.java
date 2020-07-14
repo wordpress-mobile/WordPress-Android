@@ -195,8 +195,10 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onVideoPressInfoRequested(String videoId);
         Map<String, String> onAuthHeaderRequested(String url);
         void onTrackableEvent(TrackableEvent event);
+        void onTrackableEvent(TrackableEvent event, Map<String, String> properties);
         void onHtmlModeToggledInToolbar();
         void onAddStockMediaClicked(boolean allowMultipleSelection);
+        void onAddGifClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
@@ -244,6 +246,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         STRIKETHROUGH_BUTTON_TAPPED,
         UNDERLINE_BUTTON_TAPPED,
         REDO_TAPPED,
-        UNDO_TAPPED
+        UNDO_TAPPED,
+        EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN,
+        EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED,
     }
 }

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-10-25 15:03:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
@@ -158,7 +158,6 @@ Language: es_CO
     <string name="post_settings_not_set">No definido</string>
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y etiquetas</string>
-    <string name="post_settings_status">Estado</string>
     <string name="notifications_tab_title_all">Todos</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría superior (opcional):</string>
@@ -280,7 +279,6 @@ Language: es_CO
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subiendo</string>
     <string name="media_upload_state_queued">En cola</string>
-    <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidad de la imagen</string>
     <string name="error_all_media_upload_canceled">Todos los archivos de multimedia han sido cancelados debido a un error desconocido. Por favor vuelva a intentar cargarlos</string>
     <string name="error_unknown_post_type">Formato de entrada desconocido</string>
@@ -904,7 +902,6 @@ Language: es_CO
     <string name="httppassword">Contraseña HTTP</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta</string>
     <string name="password">Contraseña</string>
     <string name="username">Nombre de usuario</string>

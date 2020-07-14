@@ -23,6 +23,8 @@
     </item>
     <item name="disabled_alpha" format="float" type="dimen">0.12</item>
 
+    <item name="emphasis_low" format="float" type="dimen">0.20</item>
+
     <dimen name="divider_size">1dp</dimen>
 
     <!-- Height of an end list indicator for cases when we want to make sure the FAB doesn't cover any content -->
@@ -110,6 +112,10 @@
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
 
+    <!-- left/right margin for reader interests content -->
+    <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
+    <dimen name="interests_done_button_margin">@dimen/margin_medium_large</dimen>
+
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
@@ -129,7 +135,7 @@
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_tag_header_image_height">128dp</dimen>
+    <dimen name="reader_tag_header_height">165dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
@@ -201,7 +207,7 @@
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_chip_height">38dp</dimen>
+    <dimen name="reader_chip_height">44dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
@@ -245,6 +251,8 @@
     <dimen name="stats_activity_box_size">12dp</dimen>
     <dimen name="stats_activity_box_end_margin">4dp</dimen>
     <dimen name="stats_map_legend_width">60dp</dimen>
+    <dimen name="stats_insights_news_card_width">288dp</dimen>
+    <dimen name="stats_insights_news_card_height">177dp</dimen>
 
     <!-- stats widget-->
     <dimen name="stats_widget_content_height">108dp</dimen>
@@ -263,6 +271,7 @@
     <dimen name="my_site_blavatar_container_corner_radius">4dp</dimen>
     <dimen name="my_site_blavatar_container_border_width">0.5dp</dimen>
     <dimen name="my_site_blavatar_corner_radius">2dp</dimen>
+    <dimen name="my_site_bottom_spacing">64dp</dimen>
 
     <!--me-->
     <dimen name="me_list_row_icon_size">24dp</dimen>
@@ -458,7 +467,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -504,7 +512,7 @@
 
     <!-- prepublishing nudges -->
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
 
 </resources>

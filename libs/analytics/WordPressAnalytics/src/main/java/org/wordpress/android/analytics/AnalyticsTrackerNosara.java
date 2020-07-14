@@ -1485,6 +1485,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
+            case FEATURE_FLAG_SET:
+                return "feature_flag_set";
+            case EXPERIMENT_VARIANT_SET:
+                return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
                 return "traintracks_render";
             case TRAIN_TRACKS_INTERACT:
@@ -1784,6 +1788,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plans_compare";
             case PAGES_LIST_AUTHOR_FILTER_CHANGED:
                 return "pages_list_author_filter_changed";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN:
+                return "gutenberg_unsupported_block_webview_shown";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
+                return "gutenberg_unsupported_block_webview_closed";
         }
         return null;
     }

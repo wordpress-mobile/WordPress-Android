@@ -499,6 +499,30 @@ object TestContent {
 <!-- /wp:cover -->
 """
 
+    const val oldCoverBlockWithVideo = """<!-- wp:cover {"url":"$localVideoUrl","id":$localMediaId,"backgroundType":"video"} -->
+<div class="wp-block-cover has-background-dim">
+  <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$localVideoUrl"></video>
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
+    const val newCoverBlockWithVideo = """<!-- wp:cover {"url":"$remoteVideoUrl","id":$remoteMediaId,"backgroundType":"video"} -->
+<div class="wp-block-cover has-background-dim">
+  <video class="wp-block-cover__video-background" autoplay muted loop playsinline src="$remoteVideoUrl"></video>
+  <div class="wp-block-cover__inner-container">
+    <!-- wp:paragraph {"align":"center","placeholder":"Write title…"} -->
+    <p class="has-text-align-center"></p>
+    <!-- /wp:paragraph -->
+  </div>
+</div>
+<!-- /wp:cover -->
+"""
+
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val oldPostVideo = paragraphBlock + newImageBlock + oldVideoBlock + newMediaTextBlock + newGalleryBlock

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-12-20 12:00:16+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ms
 -->
 <resources>
@@ -192,7 +192,6 @@ Language: ms
     <string name="post_settings_more_options">Pilihan Lebih Lanjut</string>
     <string name="post_settings_not_set">Tidak Ditetapkan</string>
     <string name="notifications_tab_title_all">Semua</string>
-    <string name="post_settings_status">Status</string>
     <string name="category_parent">Kategori induk (pilihan):</string>
     <string name="top_level_category_name">Paras Atas</string>
     <string name="media_empty_audio_list">Anda tidak mempunyai audio</string>
@@ -315,7 +314,6 @@ Language: ms
     <string name="media_upload_state_failed">Muat Naik Gagal</string>
     <string name="media_upload_state_uploading">Memuat naik</string>
     <string name="image_quality">Kualiti Imej</string>
-    <string name="keep_editing">Teruskan menyunting</string>
     <string name="error_all_media_upload_canceled">Semua muat naik media telah dibatalkan disebabkan ralat yang tidak diketahui. Sila cuba muat naik semula</string>
     <string name="error_unknown_post_type">Format kiriman tidak diketahui</string>
     <string name="submit_for_review">Hantar</string>
@@ -939,7 +937,6 @@ Language: ms
     <string name="httpuser">Nama pengguna HTTP</string>
     <string name="httppassword">Kata laluan HTTP</string>
     <string name="error_media_upload">Ralat berlaku semasa memuat naik media</string>
-    <string name="publish_date">Terbit</string>
     <string name="incorrect_credentials">Nama pengguna atau kata laluan tidak betul.</string>
     <string name="username">Nama pengguna</string>
     <string name="password">Kata laluan</string>

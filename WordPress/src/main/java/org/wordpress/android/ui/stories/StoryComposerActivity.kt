@@ -279,7 +279,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // also, Story posts are always PUBLISHED
         editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
         site?.let {
-            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
+            savePostToDbUseCase.savePostToDb(editPostRepository, it)
         }
     }
 

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-12-25 16:34:28+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: vi_VN
 -->
 <resources>
@@ -639,7 +639,6 @@ Language: vi_VN
     <string name="httppassword">HTTP mật khẩu</string>
     <string name="httpuser">HTTP tên người dùng</string>
     <string name="error_media_upload">Một lỗi đã xảy ra trong khi tải lên media</string>
-    <string name="publish_date">Xuất bản</string>
     <string name="incorrect_credentials">Tên người dùng hoặc mật khẩu không đúng.</string>
     <string name="log_in">Đăng nhập</string>
     <string name="username">Tên người dùng</string>

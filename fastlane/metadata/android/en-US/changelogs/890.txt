@@ -1,0 +1,4 @@
+15.2:
+Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.
+
+Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.

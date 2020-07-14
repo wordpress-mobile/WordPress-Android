@@ -1,4 +1,0 @@
-15.0:
-Nytt i blockredigeraren: Diktblock. Överläggsfärger i omslagsblocket. Animering av flytande verktygsfält. Inforuta vid val av sidmall.
-Uppdaterat i blockredigeraren: ”Kasta block” nås via menyn från blockets verktygsfält.
-Andra uppdateringar: Inställningar för startsidan har lagts till i sidlista och webbplatsinställningar.
