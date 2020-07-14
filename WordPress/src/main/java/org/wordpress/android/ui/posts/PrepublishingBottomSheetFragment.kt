@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
@@ -25,11 +27,13 @@ import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetList
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
 import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
 import org.wordpress.android.util.KeyboardResizeViewUtil
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: PrepublishingViewModel
     private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
@@ -101,6 +105,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         }
         setupMinimumHeightForFragmentContainer()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        analyticsTrackerWrapper.track(Stat.PREPUBLISHING_BOTTOM_SHEET_DISMISSED)
+        super.onDismiss(dialog)
     }
 
     private fun setupMinimumHeightForFragmentContainer() {

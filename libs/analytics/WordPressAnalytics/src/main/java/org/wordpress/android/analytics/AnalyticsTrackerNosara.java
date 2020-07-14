@@ -1790,6 +1790,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plans_compare";
             case PAGES_LIST_AUTHOR_FILTER_CHANGED:
                 return "pages_list_author_filter_changed";
+            case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
+                return "prepublishing_bottom_sheet_dismissed";
         }
         return null;
     }
