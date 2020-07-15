@@ -22,7 +22,7 @@ class SignupUtilsTest {
 
     @Test
     fun `maps longer email to display name`() {
-        assertEmailMappedToDisplayName("firstname.lastname@email.com", "FirstnameLastname")
+        assertEmailMappedToDisplayName("firstname.lastname@email.com", "Firstname Lastname")
     }
 
     @Test
@@ -32,12 +32,17 @@ class SignupUtilsTest {
 
     @Test
     fun `maps single character longer email to display name`() {
-        assertEmailMappedToDisplayName("a.b.c@email.com", "ABC")
+        assertEmailMappedToDisplayName("a.b.c@email.com", "A B C")
     }
 
     @Test
     fun `maps invalid email only with domain to null`() {
         assertEmailMappedToDisplayName("@email.com", null)
+    }
+
+    @Test
+    fun `maps invalid email ending with dot and numbers`() {
+        assertEmailMappedToDisplayName("username.1+a.2.3@email.com", "Username A")
     }
 
     @Test

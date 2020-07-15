@@ -22,6 +22,7 @@ class SignupUtils
                 if (item.length > 1) {
                     builder.append(item.substring(1))
                 }
+                builder.append(" ")
             }
         }
         val displayName = builder.toString().trim { it <= ' ' }
@@ -35,9 +36,7 @@ class SignupUtils
      * @return [String] to be the username
      */
     fun createUsernameFromEmail(emailAddress: String): String? {
-        return emailAddress.split("@".toRegex())
-                .toTypedArray()
-                .get(0)
+        return emailAddress.split("@".toRegex())[0]
                 .replace("[^A-Za-z0-9]".toRegex(), "")
                 .toLowerCase(Locale.ROOT)
     }
