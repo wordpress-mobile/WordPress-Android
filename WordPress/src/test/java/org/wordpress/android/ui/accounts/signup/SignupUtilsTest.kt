@@ -41,8 +41,8 @@ class SignupUtilsTest {
     }
 
     @Test
-    fun `maps invalid email ending with dot and numbers`() {
-        assertEmailMappedToDisplayName("username.1+a.2.3@email.com", "Username A")
+    fun `maps invalid email ending with numbers in the middle`() {
+        assertEmailMappedToDisplayName("username.12.a@email.com", "Username A")
     }
 
     @Test
