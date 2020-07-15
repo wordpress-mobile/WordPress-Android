@@ -35,7 +35,6 @@ class PostLikeActionUseCase @Inject constructor(
         return suspendCoroutine { cont ->
             continuation = cont
             ReaderPostActions.performLikeAction(post, isAskingToLike, wpComUserId)
-           // ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
         }
     }
 
