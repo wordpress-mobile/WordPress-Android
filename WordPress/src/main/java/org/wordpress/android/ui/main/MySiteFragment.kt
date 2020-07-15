@@ -101,6 +101,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.posts.PromoDialog
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -274,6 +275,7 @@ class MySiteFragment : Fragment(),
                         .setNegativeButton(
                                 getString(R.string.quick_start_button_negative)
                         ) {
+                            AppPrefs.setLastSkippedQuickStartTask(taskToPrompt)
                             AnalyticsTracker.track(
                                     QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
                             )
