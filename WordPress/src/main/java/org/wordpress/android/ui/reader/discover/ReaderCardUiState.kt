@@ -3,6 +3,9 @@ package org.wordpress.android.ui.reader.discover
 import android.text.Spanned
 import android.view.View
 import androidx.annotation.AttrRes
+import androidx.annotation.DrawableRes
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -25,12 +28,14 @@ sealed class ReaderCardUiState {
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val discoverSection: DiscoverLayoutUiState?,
         val videoOverlayVisibility: Boolean,
+        val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
         val photoFrameVisibility: Boolean,
-        val bookmarkAction: ActionUiState,
-        val likeAction: ActionUiState,
-        val reblogAction: ActionUiState,
-        val commentsAction: ActionUiState,
+        val bookmarkAction: PrimaryAction,
+        val likeAction: PrimaryAction,
+        val reblogAction: PrimaryAction,
+        val commentsAction: PrimaryAction,
+        val moreMenuItems: List<SecondaryAction>,
         val postHeaderClickData: PostHeaderClickData?,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (Long, Long) -> Unit,
@@ -56,13 +61,42 @@ sealed class ReaderCardUiState {
             val imageType: ImageType,
             val onDiscoverClicked: ((Long, Long) -> Unit)
         )
-
-        data class ActionUiState(
-            val isEnabled: Boolean,
-            val isSelected: Boolean = false,
-            val contentDescription: UiString? = null,
-            val count: Int = 0,
-            val onClicked: ((Long, Long, Boolean) -> Unit)? = null
-        )
     }
+}
+
+sealed class ReaderPostCardAction {
+    abstract val type: ReaderPostCardActionType
+    open val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
+    open val isSelected: Boolean = false
+
+    data class PrimaryAction(
+        val isEnabled: Boolean,
+        val contentDescription: UiString? = null,
+        val count: Int = 0,
+        override val isSelected: Boolean = false,
+        override val type: ReaderPostCardActionType,
+        override val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
+    ) : ReaderPostCardAction()
+
+    data class SecondaryAction(
+        val label: UiString,
+        @AttrRes val labelColor: Int,
+        @DrawableRes val iconRes: Int,
+        @AttrRes val iconColor: Int = labelColor,
+        override val isSelected: Boolean = false,
+        override val type: ReaderPostCardActionType,
+        override val onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ) : ReaderPostCardAction()
+}
+
+enum class ReaderPostCardActionType {
+    FOLLOW,
+    SITE_NOTIFICATIONS,
+    SHARE,
+    VISIT_SITE,
+    BLOCK_SITE,
+    LIKE,
+    BOOKMARK,
+    REBLOG,
+    COMMENTS
 }

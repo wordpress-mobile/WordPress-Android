@@ -1,0 +1,4 @@
+15.2:
+Tambahan penyunting blok: Dukungan penyunting ditambahkan untuk warna dan gradasi yang berdasarkan tema pada blok Sampul dan Tombol. Pengunggahan video blok sampul kini selesai setelah penyunting ditutup. Informasi metrik mengenai jumlah blok, kata, dan karakter kini ditampilkan.
+
+Perbaikan: Masalah pemuatan detail pos Pembaca, penanganan penyelesaian unggahan pada penyunting Blok, dan crash yang terjadi ketika respons API WordPress tidak diisi telah diperbaiki.

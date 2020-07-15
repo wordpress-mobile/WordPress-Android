@@ -418,6 +418,7 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onPositiveClickedForBasicDialog(
                 instanceTag = instanceTag,
                 trashPostWithLocalChanges = postActionHandler::trashPostWithLocalChanges,
+                trashPostWithUnsavedChanges = postActionHandler::trashPostWithUnsavedChanges,
                 deletePost = postActionHandler::deletePost,
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,

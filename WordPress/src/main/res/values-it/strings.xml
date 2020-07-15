@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 14:54:10+0000
+Translation-Revision-Date: 2020-07-09 11:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Apri il link in un browser.</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Naviga al foglio dei contenuti precedente</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Naviga alla personalizzazione del gradiente</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Naviga al selezionatore del colore personalizzato</string>
+    <string name="gutenberg_native_gradient_type">Tipo di gradiente</string>
+    <string name="gutenberg_native_go_back">Torna indietro</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Tocca due volte per selezionare l\'opzione</string>
+    <string name="gutenberg_native_customize_gradient">Personalizza gradiente</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autore della pagina</string>
+    <string name="photo_picker_use_gif">Usa questa GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Impossibile caricare la miniatura del file multimediale</string>
+    <string name="menu_content_info">Struttura del contenuto</string>
+    <string name="everyone">Tutti</string>
+    <string name="me">Io</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo blocco usando il browser web del dispositivo.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Modifica il blocco sul browser web</string>
     <string name="gutenberg_native_dismiss">Chiudi</string>
@@ -581,8 +596,6 @@ Language: it
     <string name="editor_uploading_draft">La tua bozza è in caricamento</string>
     <string name="post_uploading_draft">Caricamento della bozza</string>
     <string name="post_list_tab_drafts">Bozze</string>
-    <string name="post_list_author_everyone">Tutti</string>
-    <string name="post_list_author_me">Io</string>
     <string name="error_restoring_post">Errore durante il recupero dell\'articolo</string>
     <string name="backdated_for">Retrodatato per: %s</string>
     <string name="stats_insights_management_title">Vedi solo le statistiche più rilevanti. Aggiungi e organizza le tue informazioni di seguito.</string>

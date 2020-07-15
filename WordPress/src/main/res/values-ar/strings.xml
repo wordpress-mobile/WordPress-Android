@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 14:54:10+0000
+Translation-Revision-Date: 2020-07-09 16:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
+    <string name="gutenberg_native_gradient_type">نوع التدرج</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
+    <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
+    <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
+    <string name="menu_content_info">هيكل المحتوى</string>
+    <string name="me">أنا</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. وفي هذه الأثناء، يمكنك أيضًا تحرير هذا المكوِّن باستخدام متصفح الويب في جهازك.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">تحرير المكوِّن في متصفح الويب</string>
     <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>
@@ -22,9 +33,11 @@ Language: ar
     <string name="reader_btn_select_few_interests">تحديد القليل للاستمرار</string>
     <string name="post_status_post_published">منشور</string>
     <string name="post_status_post_trashed">أُضيف إلى سلة المهملات</string>
+    <string name="publish_date">تاريخ النشر</string>
     <string name="ccpa_privacy_notice_read">قراءة إشعار الخصوصية لقانون خصوصية المستهلك في كاليفورنيا</string>
     <string name="ccpa_privacy_notice_caption">يتطلب قانون خصوصية المستهلك في كاليفورنيا (\"CCPA\") منا تزويد سكان كاليفورنيا ببعض المعلومات الإضافية حول تصنيفات المعلومات الشخصية التي نقوم بتجميعها ومشاركتها، مع تحديد المصدر الذي نحصل على تلك المعلومات الشخصية منه، وكيف نستخدمها ولماذا.</string>
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
+    <string name="status_and_visibility">الحالة والظهور</string>
     <string name="update_now">قم بالتحديث الآن</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">إزالة %s</string>
@@ -304,6 +317,7 @@ Language: ar
     <string name="reader_my_likes_display_name">الإعجابات</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. في غضون ذلك، يمكنك أيضًا تحرير هذه المقالة على الويب.</string>
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
     <string name="gutenberg_native_translate">الترجمة</string>
     <string name="gutenberg_native_title">العنوان:</string>
@@ -572,8 +586,6 @@ Language: ar
     <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
     <string name="post_uploading_draft">رفع المسودّة</string>
     <string name="post_list_tab_drafts">المسودات</string>
-    <string name="post_list_author_everyone">الجميع</string>
-    <string name="post_list_author_me">أنا</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
     <string name="backdated_for">تاريخ سابق ليوم: %s</string>
     <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
@@ -2307,6 +2319,7 @@ Language: ar
     <string name="no">لا</string>
     <string name="yes">نعم</string>
     <string name="notification_settings">إعدادات التنبيهات</string>
+    <string name="publish_now">النشر الآن</string>
     <string name="reply">الرد</string>
     <string name="on">تشغيل</string>
     <string name="preview">معاينة</string>

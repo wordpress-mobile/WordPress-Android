@@ -1,4 +1,0 @@
-15.1:
- Verbesserungen: Bereich für Planen, Schlagwörter und Sichtbarkeit wird im Editor und der Vorab-Veröffentlichung der Beitragsliste angezeigt. Wenn du nach dem Hinzufügen von Beschriftungen in Bild-, Video-, Galerie-, Zitat- und Pullquote-Blöcken die Eingabetaste drückst, wird ein neuer Block hinzugefügt.
-
-Korrekturen: Vorschaubilder, Einstellungen und die Vorschau für Videos werden auf privaten Websites richtig angezeigt. Die Tabs für Benachrichtigungen und "Jetpack installieren" überschneiden sich nicht mehr.

@@ -2,8 +2,6 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,14 +10,12 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -28,7 +24,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.ListPopupWindow;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -82,12 +77,11 @@ import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
-import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.ui.reader.ReaderEvents.TagAdded;
@@ -96,15 +90,17 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions.BlockedBlogResult;
-import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSearchSuggestionRecyclerAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderSiteSearchAdapter.SiteSearchAdapterListener;
-import org.wordpress.android.ui.reader.reblog.NoSite;
-import org.wordpress.android.ui.reader.reblog.PostEditor;
-import org.wordpress.android.ui.reader.reblog.SitePicker;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog;
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
@@ -150,10 +146,12 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_OPENING_READER_POST;
 import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpdateSubscriptionNotificationPostAction;
 
+import kotlin.Unit;
+
 public class ReaderPostListFragment extends Fragment
         implements ReaderInterfaces.OnPostSelectedListener,
-        ReaderInterfaces.OnPostPopupListener,
         ReaderInterfaces.OnFollowListener,
+        ReaderInterfaces.OnPostListItemButtonListener,
         WPMainActivity.OnActivityBackPressedListener,
         WPMainActivity.OnScrollToTopListener,
         ReblogActionListener {
@@ -433,7 +431,51 @@ public class ReaderPostListFragment extends Fragment
             initSubFilterViewModel();
         }
 
-        handleReblogStateChanges();
+        mViewModel.getNavigationEvents().observe(getViewLifecycleOwner(),
+                event -> event.applyIfNotHandled(navTarget -> {
+                    if (navTarget instanceof ShowSitePickerForResult) {
+                        ShowSitePickerForResult data = (ShowSitePickerForResult) navTarget;
+                        ActivityLauncher.showSitePickerForResult(
+                                ReaderPostListFragment.this,
+                                data.getSite(),
+                                data.getMode()
+                        );
+                    } else if (navTarget instanceof OpenEditorForReblog) {
+                        OpenEditorForReblog data = (OpenEditorForReblog) navTarget;
+                        ActivityLauncher.openEditorForReblog(
+                                getActivity(),
+                                data.getSite(),
+                                data.getPost(),
+                                data.getSource()
+                        );
+                    } else if (navTarget instanceof ShowNoSitesToReblog) {
+                        ReaderActivityLauncher.showNoSiteToReblog(getActivity());
+                    } else if (navTarget instanceof ShowBookmarkedTab) {
+                        ActivityLauncher.viewSavedPostsListInReader(getActivity());
+                        if (requireActivity() instanceof WPMainActivity) {
+                            requireActivity().overridePendingTransition(0, 0);
+                        }
+                    } else if (navTarget instanceof ShowBookmarkedSavedOnlyLocallyDialog) {
+                        showBookmarksSavedLocallyDialog((ShowBookmarkedSavedOnlyLocallyDialog) navTarget);
+                    } else {
+                        throw new IllegalStateException("Action not supported in ReaderPostListFragment " + navTarget);
+                    }
+                    return Unit.INSTANCE;
+                }));
+
+        mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    showSnackbar(holder);
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.getPreloadPostEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    addWebViewCachingFragment(holder.getBlogId(), holder.getPostId());
+                    return Unit.INSTANCE;
+                })
+        );
 
         mViewModel.start(mReaderViewModel);
 
@@ -445,6 +487,28 @@ public class ReaderPostListFragment extends Fragment
             mRecyclerView.showAppBarLayout();
             mSearchMenuItem.expandActionView();
             mRecyclerView.setToolbarScrollFlags(0);
+        }
+    }
+
+    private void showSnackbar(SnackbarMessageHolder holder) {
+        WPSnackbar snackbar = WPSnackbar.make(
+                requireView(),
+                holder.getMessageRes(),
+                Snackbar.LENGTH_LONG
+        );
+        if (holder.getButtonTitleRes() != null) {
+            snackbar.setAction(getString(holder.getButtonTitleRes()), v -> holder.getButtonAction().invoke());
+        }
+        snackbar.show();
+    }
+
+    private void addWebViewCachingFragment(Long blogId, Long postId) {
+        String tag = blogId + "" + postId;
+
+        if (getParentFragmentManager().findFragmentByTag(tag) == null) {
+            getParentFragmentManager().beginTransaction()
+                                 .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
+                                 .commit();
         }
     }
 
@@ -715,7 +779,7 @@ public class ReaderPostListFragment extends Fragment
 
     @Override
     @SuppressWarnings("unchecked")
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
         // detect the bottom nav controller when this fragment is hosted in the main activity - this is used to
@@ -835,7 +899,7 @@ public class ReaderPostListFragment extends Fragment
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         AppLog.d(T.READER, "reader post list > saving instance state");
 
         if (mCurrentTag != null) {
@@ -1399,11 +1463,6 @@ public class ReaderPostListFragment extends Fragment
         populateSearchSuggestionRecyclerAdapter(null); // always passing null as there's no need to filter
     }
 
-    private void resetSearchSuggestions() {
-        resetSearchSuggestionAdapter();
-        resetSearchSuggestionRecyclerAdapter();
-    }
-
     /*
      * create and assign the suggestion adapter for the search view
      */
@@ -1820,10 +1879,6 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private boolean isEmptyViewShowing() {
-        return isAdded() && mActionableEmptyView.getVisibility() == View.VISIBLE;
-    }
-
     private void setCurrentTagFromEmptyViewButton(ActionableEmptyViewButtonType button) {
             ReaderTag tag = null;
 
@@ -1874,34 +1929,7 @@ public class ReaderPostListFragment extends Fragment
     };
 
     private final ReaderInterfaces.OnPostBookmarkedListener mOnPostBookmarkedListener =
-            new ReaderInterfaces.OnPostBookmarkedListener() {
-                @Override public void onBookmarkedStateChanged(boolean isBookmarked, long blogId, long postId,
-                                                               boolean isCachingActionRequired) {
-                    if (!isAdded()) {
-                        return;
-                    }
-
-                    String tag = Long.toString(blogId) + Long.toString(postId);
-
-                    if (NetworkUtils.isNetworkAvailable(getActivity())
-                        && isCachingActionRequired && isBookmarked
-                        && getFragmentManager().findFragmentByTag(tag) == null) {
-                        getFragmentManager().beginTransaction()
-                                            .add(ReaderPostWebViewCachingFragment.newInstance(blogId, postId), tag)
-                                            .commit();
-                    }
-
-                    if (isBookmarked && !isBookmarksList()) {
-                        if (AppPrefs.shouldShowBookmarksSavedLocallyDialog()) {
-                            AppPrefs.setBookmarksSavedLocallyDialogShown();
-                            showBookmarksSavedLocallyDialog();
-                        } else {
-                            // show snackbar when not in saved posts list
-                            showBookmarkSnackbar();
-                        }
-                    }
-                }
-            };
+            (blogId, postId) -> mViewModel.onBookmarkButtonClicked(blogId, postId, isBookmarksList());
 
     private void announceListStateForAccessibility() {
         if (getView() != null) {
@@ -1910,15 +1938,11 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private void showBookmarksSavedLocallyDialog() {
-        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(getActivity())
-                .setTitle(getString(R.string.reader_save_posts_locally_dialog_title))
-                .setMessage(getString(R.string.reader_save_posts_locally_dialog_message))
-                .setPositiveButton(R.string.dialog_button_ok, new OnClickListener() {
-                    @Override public void onClick(DialogInterface dialog, int which) {
-                        showBookmarkSnackbar();
-                    }
-                })
+    private void showBookmarksSavedLocallyDialog(ShowBookmarkedSavedOnlyLocallyDialog holder) {
+        mBookmarksSavedLocallyDialog = new MaterialAlertDialogBuilder(requireActivity())
+                .setTitle(getString(holder.getTitle()))
+                .setMessage(getString(holder.getMessage()))
+                .setPositiveButton(holder.getButtonLabel(), (dialog, which) -> holder.getOkButtonAction().invoke())
                 .setCancelable(false)
                 .create();
         mBookmarksSavedLocallyDialog.show();
@@ -1927,26 +1951,6 @@ public class ReaderPostListFragment extends Fragment
     private boolean isBookmarksList() {
         return getPostListType() == ReaderPostListType.TAG_FOLLOWED
                && (mCurrentTag != null && mCurrentTag.isBookmarked());
-    }
-
-    private void showBookmarkSnackbar() {
-        if (!isAdded()) {
-            return;
-        }
-
-        WPSnackbar.make(getView(), R.string.reader_bookmark_snack_title, Snackbar.LENGTH_LONG)
-                  .setAction(R.string.reader_bookmark_snack_btn,
-                          new View.OnClickListener() {
-                              @Override public void onClick(View view) {
-                                  AnalyticsTracker
-                                          .track(AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE);
-                                  ActivityLauncher.viewSavedPostsListInReader(getActivity());
-                                  if (getActivity() instanceof WPMainActivity) {
-                                      getActivity().overridePendingTransition(0, 0);
-                                  }
-                              }
-                          })
-                  .show();
     }
 
     /*
@@ -2013,7 +2017,7 @@ public class ReaderPostListFragment extends Fragment
             mPostAdapter.setOnFollowListener(this);
             mPostAdapter.setReblogActionListener(this);
             mPostAdapter.setOnPostSelectedListener(this);
-            mPostAdapter.setOnPostPopupListener(this);
+            mPostAdapter.setOnPostListItemButtonListener(this);
             mPostAdapter.setOnDataLoadedListener(mDataLoadedListener);
             mPostAdapter.setOnDataRequestedListener(mDataRequestedListener);
             mPostAdapter.setOnPostBookmarkedListener(mOnPostBookmarkedListener);
@@ -2405,7 +2409,7 @@ public class ReaderPostListFragment extends Fragment
      */
     private final RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
             hideNewPostsBar();
         }
@@ -2585,88 +2589,45 @@ public class ReaderPostListFragment extends Fragment
         AnalyticsTracker.track(stat, properties);
     }
 
-    /*
-     * called when user taps "..." icon next to a post
-     */
     @Override
-    public void onShowPostPopup(View view, final ReaderPost post) {
-        if (view == null || post == null || !isAdded()) {
-            return;
-        }
-
-        List<Integer> menuItems = new ArrayList<>();
-
-        if (ReaderPostTable.isPostFollowed(post)) {
-            menuItems.add(ReaderMenuAdapter.ITEM_UNFOLLOW);
-
-            // When blogId and feedId are not equal, post is not a feed so show notifications option.
-            if (post.blogId != post.feedId) {
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF);
+    public void onButtonClicked(ReaderPost post, ReaderPostCardActionType actionType) {
+        switch (actionType) {
+            case FOLLOW:
+                if (post.isFollowedByCurrentUser) {
+                    onFollowingTapped();
                 } else {
-                    menuItems.add(ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON);
+                    onFollowTapped(getView(), post.getBlogName(), post.blogId);
                 }
-            }
-        } else {
-            menuItems.add(ReaderMenuAdapter.ITEM_FOLLOW);
+                toggleFollowStatusForPost(post);
+                break;
+            case SITE_NOTIFICATIONS:
+                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
+                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
+                    updateSubscription(SubscriptionAction.DELETE, post.blogId);
+                } else {
+                    AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
+                    ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
+                    updateSubscription(SubscriptionAction.NEW, post.blogId);
+                }
+                break;
+            case SHARE:
+                AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
+                sharePost(post);
+                break;
+            case VISIT_SITE:
+                AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
+                ReaderActivityLauncher.openPost(getContext(), post);
+                break;
+            case BLOCK_SITE:
+                blockBlogForPost(post);
+                break;
+            case BOOKMARK:
+            case LIKE:
+            case REBLOG:
+            case COMMENTS:
+                throw new IllegalStateException("These actoins should be handled in ReaderPostAdapter.");
         }
-
-        menuItems.add(ReaderMenuAdapter.ITEM_SHARE);
-        menuItems.add(ReaderMenuAdapter.ITEM_VISIT);
-
-        if (getPostListType() == ReaderPostListType.TAG_FOLLOWED) {
-            menuItems.add(ReaderMenuAdapter.ITEM_BLOCK);
-        }
-
-        Context context = view.getContext();
-        final ListPopupWindow listPopup = new ListPopupWindow(context);
-        listPopup.setWidth(context.getResources().getDimensionPixelSize(R.dimen.menu_item_width));
-        listPopup.setAdapter(new ReaderMenuAdapter(context, menuItems));
-        listPopup.setDropDownGravity(Gravity.END);
-        listPopup.setAnchorView(view);
-        listPopup.setModal(true);
-        listPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (!isAdded()) {
-                    return;
-                }
-
-                listPopup.dismiss();
-                switch ((int) id) {
-                    case ReaderMenuAdapter.ITEM_FOLLOW:
-                        onFollowTapped(getView(), post.getBlogName(), post.blogId);
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_UNFOLLOW:
-                        onFollowingTapped();
-                        toggleFollowStatusForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_BLOCK:
-                        blockBlogForPost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_OFF:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_OFF, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, false);
-                        updateSubscription(SubscriptionAction.DELETE, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_NOTIFICATIONS_ON:
-                        AnalyticsUtils.trackWithSiteId(Stat.FOLLOWED_BLOG_NOTIFICATIONS_READER_MENU_ON, post.blogId);
-                        ReaderBlogTable.setNotificationsEnabledByBlogId(post.blogId, true);
-                        updateSubscription(SubscriptionAction.NEW, post.blogId);
-                        break;
-                    case ReaderMenuAdapter.ITEM_SHARE:
-                        AnalyticsUtils.trackWithSiteId(Stat.SHARED_ITEM_READER, post.blogId);
-                        sharePost(post);
-                        break;
-                    case ReaderMenuAdapter.ITEM_VISIT:
-                        AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED);
-                        ReaderActivityLauncher.openPost(view.getContext(), post);
-                        break;
-                }
-            }
-        });
-        listPopup.show();
     }
 
     @Override
@@ -2747,48 +2708,9 @@ public class ReaderPostListFragment extends Fragment
         }
     }
 
-    private boolean isCurrentTagManagedInFollowingTab() {
-        return ReaderUtils.isTagManagedInFollowingTab(
-                mCurrentTag,
-                mIsTopLevel,
-                mRecyclerView
-        );
-    }
-
-    /**
-     * Handles reblog state changes and triggers reblog actions
-     */
-    private void handleReblogStateChanges() {
-        mViewModel.getReblogState().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(state -> {
-                if (state instanceof NoSite) {
-                    ReaderActivityLauncher.showNoSiteToReblog(getActivity());
-                } else if (state instanceof SitePicker) {
-                    SitePicker sitePickerStateData = (SitePicker) state;
-                    ActivityLauncher.showSitePickerForResult(
-                            this,
-                            sitePickerStateData.getSite(),
-                            SitePickerMode.REBLOG_SELECT_MODE
-                    );
-                } else if (state instanceof PostEditor) {
-                    PostEditor postEditorStateData = (PostEditor) state;
-                    ActivityLauncher.openEditorForReblog(
-                            getActivity(),
-                            postEditorStateData.getSite(),
-                            postEditorStateData.getPost(),
-                            PagePostCreationSourcesDetail.POST_FROM_REBLOG
-                    );
-                } else { // Error
-                    ToastUtils.showToast(getActivity(), R.string.reader_reblog_error);
-                }
-                return null;
-            });
-        });
-    }
-
     @Override
     public void reblog(ReaderPost post) {
-        mViewModel.onReblogButtonClicked(post);
+        mViewModel.onReblogButtonClicked(post, isBookmarksList());
     }
 
     @Override

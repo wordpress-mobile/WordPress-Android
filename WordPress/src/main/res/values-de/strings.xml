@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 08:54:10+0000
+Translation-Revision-Date: 2020-07-10 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigiert zum vorherigen Content Sheet</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigiert zum Anpassen des Verlaufs</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigiert zur individuellen Farbauswahl</string>
+    <string name="gutenberg_native_gradient_type">Verlaufstyp</string>
+    <string name="gutenberg_native_go_back">Zurück</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Zum Auswählen der Option zweimal tippen</string>
+    <string name="gutenberg_native_customize_gradient">Verlauf anpassen</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Seitenautor</string>
+    <string name="photo_picker_use_gif">Dieses GIF verwenden</string>
+    <string name="error_media_thumbnail_not_loaded">Medien-Vorschaubild konnte nicht geladen werden</string>
+    <string name="menu_content_info">Inhaltliche Struktur</string>
+    <string name="everyone">Jeder</string>
+    <string name="me">Ich</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jeder Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Block auch über den Webbrowser deines Geräts bearbeiten.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Block in Webbrowser bearbeiten</string>
     <string name="gutenberg_native_dismiss">Verwerfen</string>
@@ -586,8 +601,6 @@ Language: de
     <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
     <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
     <string name="post_list_tab_drafts">Entwürfe</string>
-    <string name="post_list_author_everyone">Jeder</string>
-    <string name="post_list_author_me">Ich</string>
     <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
     <string name="backdated_for">Zurückdatiert auf: %s</string>
     <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>

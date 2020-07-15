@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-25 13:33:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
@@ -534,8 +534,6 @@ Language: nb_NO
     <string name="editor_uploading_draft">Din kladd lastes opp</string>
     <string name="post_uploading_draft">Laster opp kladd</string>
     <string name="post_list_tab_drafts">Kladder</string>
-    <string name="post_list_author_everyone">Alle</string>
-    <string name="post_list_author_me">Meg</string>
     <string name="error_restoring_post">Det oppsto en feil ved gjenoppretting av innlegget</string>
     <string name="backdated_for">Tilbakedatert til: %s</string>
     <string name="stats_insights_management_title">Se bare den mest relevante statistikken. Legg til og organiser innsikter nedenfor.</string>
