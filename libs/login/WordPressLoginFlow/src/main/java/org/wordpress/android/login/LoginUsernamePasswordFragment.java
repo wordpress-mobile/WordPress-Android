@@ -263,6 +263,17 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         outState.putBoolean(KEY_GET_SITE_OPTIONS_INITIATED, mGetSiteOptionsInitiated);
     }
 
+    @Override public void onResume() {
+        super.onResume();
+        updatePrimaryButtonEnabledStatus();
+    }
+
+    private void updatePrimaryButtonEnabledStatus() {
+        String currentUsername = mUsernameInput.getEditText().getText().toString();
+        String currentPassword = mPasswordInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
+    }
+
     protected void next() {
         mAnalyticsListener.trackSubmitClicked();
         if (!NetworkUtils.checkConnection(getActivity())) {
@@ -337,6 +348,7 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         showError(null);
+        updatePrimaryButtonEnabledStatus();
     }
 
     @Override

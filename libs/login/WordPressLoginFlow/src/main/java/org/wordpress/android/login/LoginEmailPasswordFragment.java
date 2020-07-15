@@ -109,6 +109,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
     @Override
     public void onResume() {
         super.onResume();
+        updatePrimaryButtonEnabledStatus();
 
         // connect to the Service. We'll receive updates via EventBus.
         mServiceEventConnection = new AutoForeground.ServiceEventConnection(getContext(),
@@ -125,6 +126,11 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
 
         // disconnect from the Service
         mServiceEventConnection.disconnect(getContext(), this);
+    }
+
+    private void updatePrimaryButtonEnabledStatus() {
+        String currentPassword = mPasswordInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty());
     }
 
     @Override
@@ -266,6 +272,7 @@ public class LoginEmailPasswordFragment extends LoginBaseFormFragment<LoginListe
         mPasswordInput.setError(null);
 
         LoginWpcomService.clearLoginServiceState();
+        updatePrimaryButtonEnabledStatus();
     }
 
     private void showPasswordError() {

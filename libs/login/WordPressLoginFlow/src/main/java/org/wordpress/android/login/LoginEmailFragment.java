@@ -219,6 +219,15 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         });
     }
 
+    private void updateContinueButtonEnabledStatus() {
+        View view = getView();
+        if (view != null) {
+            Button continueButton = (Button) view.findViewById(R.id.login_continue_button);
+            String currentEmail = mEmailInput.getEditText().getText().toString();
+            continueButton.setEnabled(!currentEmail.trim().isEmpty());
+        }
+    }
+
     private void setupTosButtons(Button continueTosButton, Button continueWithGoogleTosButton) {
         OnClickListener onClickListener = new OnClickListener() {
             public void onClick(View view) {
@@ -447,6 +456,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onResume() {
         super.onResume();
         mAnalyticsListener.emailFormScreenResumed();
+        updateContinueButtonEnabledStatus();
     }
 
     @Override
@@ -537,6 +547,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.setError(null);
         mIsSocialLogin = false;
         clearEmailError();
+        updateContinueButtonEnabledStatus();
     }
 
     private void showEmailError(int messageId) {
