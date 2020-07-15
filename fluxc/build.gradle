@@ -26,7 +26,7 @@ android {
     defaultConfig {
         versionCode 4
         versionName "0.1"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 29
     }
     buildTypes {
@@ -102,6 +102,10 @@ dependencies {
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinCoroutinesVersion"
+
+    // Encrypted Logging
+    implementation "com.goterl.lazycode:lazysodium-android:4.1.0@aar"
+    implementation "net.java.dev.jna:jna:4.5.1@aar"
 }
 
 version = android.defaultConfig.versionName
