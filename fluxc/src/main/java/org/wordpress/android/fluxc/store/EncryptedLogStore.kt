@@ -88,9 +88,9 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private fun resetUploadStates() {
-        encryptedLogSqlUtils.getUploadingEncryptedLogs().map {
+        encryptedLogSqlUtils.insertOrUpdateEncryptedLogs(encryptedLogSqlUtils.getUploadingEncryptedLogs().map {
             it.copy(uploadState = FAILED)
-        }
+        })
     }
 
     private suspend fun uploadNextWithBackOffTiming() {
