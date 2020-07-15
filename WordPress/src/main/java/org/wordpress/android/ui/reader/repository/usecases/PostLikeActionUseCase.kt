@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.repository.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
@@ -36,7 +35,7 @@ class PostLikeActionUseCase @Inject constructor(
         return suspendCoroutine { cont ->
             continuation = cont
             ReaderPostActions.performLikeAction(post, isAskingToLike, wpComUserId)
-            ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
+           // ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
         }
     }
 
