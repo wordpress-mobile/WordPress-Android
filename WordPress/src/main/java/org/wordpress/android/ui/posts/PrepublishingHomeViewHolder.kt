@@ -18,6 +18,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.focusAndShowKeyboard
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.image.ImageType.BLAVATAR
@@ -60,6 +61,7 @@ sealed class PrepublishingHomeViewHolder(
         val imageManager: ImageManager
     ) : PrepublishingHomeViewHolder(parentView, R.layout.prepublishing_story_title_list_item) {
         private val storyTitle: EditText = itemView.findViewById(R.id.story_title)
+        private val storyTitleLayout: View = itemView.findViewById(R.id.story_title_content)
         private val thumbnail: ImageView = itemView.findViewById(R.id.story_thumbnail)
 
         private val thumbnailCornerRadius =
@@ -81,8 +83,17 @@ sealed class PrepublishingHomeViewHolder(
                 storyTitle.setSelection(title.text.length)
             }
 
+            val focusStoryTitleEditTextAndShowKeyboard = {
+                storyTitle.focusAndShowKeyboard()
+                storyTitle.postDelayed({ storyTitle.requestFocus() }, STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY)
+            }
+
+            storyTitleLayout.setOnClickListener {
+                focusStoryTitleEditTextAndShowKeyboard()
+            }
+
             storyTitle.postDelayed({
-                storyTitle.requestFocus()
+                focusStoryTitleEditTextAndShowKeyboard()
             }, STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY)
 
             storyTitle.addTextChangedListener(object : TextWatcher {
