@@ -28,7 +28,6 @@ class EncryptedLogSqlUtils @Inject constructor() {
         return getEncryptedLogModel(uuid)?.let { EncryptedLog.fromEncryptedLogModel(it) }
     }
 
-    // TODO: Add unit tests
     fun getUploadingEncryptedLogs(): List<EncryptedLog> =
             getUploadingEncryptedLogsQuery().asModel.map { EncryptedLog.fromEncryptedLogModel(it) }
 
