@@ -35,6 +35,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent;
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeFailure;
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess;
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeUnChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -67,6 +71,7 @@ public class ReaderPostActions {
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         if (isCurrentlyLiked == isAskingToLike) {
             AppLog.w(T.READER, "post like unchanged");
+            EventBus.getDefault().post(OnPostLikeUnChanged.INSTANCE);
             return false;
         }
 
@@ -91,6 +96,9 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, String.format("post %s succeeded", actionName));
+                final OnPostLikeSuccess onPostLikeSuccess =
+                        new OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess(post.postId, post.blogId);
+                EventBus.getDefault().post(onPostLikeSuccess);
             }
         };
 
@@ -106,12 +114,14 @@ public class ReaderPostActions {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
                 ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
+                EventBus.getDefault().post(OnPostLikeFailure.INSTANCE);
             }
         };
 
         WordPress.getRestClientUtilsV1_1().post(path, listener, errorListener);
         return true;
     }
+
 
     /*
      * get the latest version of this post - note that the post is only considered changed if the

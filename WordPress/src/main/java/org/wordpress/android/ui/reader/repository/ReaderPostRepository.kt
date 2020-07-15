@@ -5,15 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeFailure
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -29,16 +34,17 @@ class ReaderPostRepository(
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+    private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher
 
     private var isStarted = false
 
-    private val _postsForTag = ReactiveMutableLiveData<ReaderPostList>(
-            onActive = { onActivePostsForTag() }, onInactive = { onInactivePostsForTag() })
-    val postsForTag: LiveData<ReaderPostList> = _postsForTag
+    private val _mutablePosts = ReactiveMutableLiveData<ReaderPostList>(
+            onActive = { onActivePosts() }, onInactive = { onInactivePosts() })
+    val posts: LiveData<ReaderPostList> = _mutablePosts
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -66,6 +72,30 @@ class ReaderPostRepository(
         return readerTag
     }
 
+    fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
+        // todo: annmarie - think about this, do I really want to handle all of these returns
+        // in the repository itself? It will get cluttered awfully quickly. Is there an
+        // opportunity to use a type of "Manager" that will call the "UseCase".
+        launch {
+            val event: OnReaderRepositoryEvent
+            try {
+                event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)
+            } catch (e: IllegalStateException) {
+                return@launch
+            }
+            // todo: annmarie - what does the caller want state ?
+            when (event) {
+                is OnPostLikeSuccess -> {
+                    // The db table has been updated - new post needed?
+                }
+                is OnPostLikeFailure -> {
+                    // The db table has been updated - new post needed?
+                }
+                is OnPostLikeUnChanged -> { }
+            }
+        }
+    }
+
     private fun onNewPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
@@ -82,23 +112,23 @@ class ReaderPostRepository(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure))
     }
 
-    private fun onActivePostsForTag() {
+    private fun onActivePosts() {
         loadPosts()
     }
 
-    private fun onInactivePostsForTag() {
+    private fun onInactivePosts() {
     }
 
     private fun loadPosts() {
         launch {
-            val existsInMemory = postsForTag.value?.let {
+            val existsInMemory = posts.value?.let {
                 !it.isEmpty()
             } ?: false
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
 
             if (!existsInMemory) {
                 val result = getPostsForTagUseCase.get(readerTag)
-                _postsForTag.postValue(result)
+                _mutablePosts.postValue(result)
             }
 
             if (refresh) {
@@ -111,7 +141,7 @@ class ReaderPostRepository(
     private fun reloadPosts() {
         launch {
             val result = getPostsForTagUseCase.get(readerTag)
-            _postsForTag.postValue(result)
+            _mutablePosts.postValue(result)
         }
     }
 
@@ -123,7 +153,8 @@ class ReaderPostRepository(
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+        private val postLikeActionUseCase: PostLikeActionUseCase
     ) {
         fun create(readerTag: ReaderTag): ReaderPostRepository {
             return ReaderPostRepository(
@@ -134,8 +165,20 @@ class ReaderPostRepository(
                     shouldAutoUpdateTagUseCase,
                     getPostsForTagWithCountUseCase,
                     fetchPostsForTagUseCase,
-                    readerUpdatePostsEndedHandler
+                    readerUpdatePostsEndedHandler,
+                    postLikeActionUseCase
+
             )
         }
+    }
+}
+
+// todo: annmarie once it's decided to keep this, then move out of repository file
+sealed class OnReaderRepositoryEvent {
+    sealed class OnPostLikeEnded : OnReaderRepositoryEvent() {
+        // todo: on both the success and failure, we prob need to send post to caller
+        class OnPostLikeSuccess(val postId: Long, val blogId: Long) : OnPostLikeEnded()
+        object OnPostLikeFailure : OnPostLikeEnded()
+        object OnPostLikeUnChanged : OnPostLikeEnded()
     }
 }

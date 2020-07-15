@@ -5,17 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeFailure
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess
+import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -32,7 +37,8 @@ class ReaderDiscoverRepository constructor(
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+    private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher
@@ -63,6 +69,28 @@ class ReaderDiscoverRepository constructor(
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
         readerUpdatePostsEndedHandler.stop()
+        postLikeActionUseCase.stop()
+    }
+
+    fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
+        launch {
+            val event: OnReaderRepositoryEvent
+            try {
+                event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)
+            } catch (e: IllegalStateException) {
+                return@launch
+            }
+            // todo: annmarie - what does the caller want state ?
+            when (event) {
+                is OnPostLikeSuccess -> {
+                    // The db table has been updated - new post needed?
+                }
+                is OnPostLikeFailure -> {
+                    // The db table has been updated - new post needed?
+                }
+                is OnPostLikeUnChanged -> { }
+            }
+        }
     }
 
     fun getTag(): ReaderTag {
@@ -126,7 +154,8 @@ class ReaderDiscoverRepository constructor(
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+        private val postLikeActionUseCase: PostLikeActionUseCase
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
             val tag = readerTag
@@ -140,7 +169,8 @@ class ReaderDiscoverRepository constructor(
                     shouldAutoUpdateTagUseCase,
                     getPostsForTagWithCountUseCase,
                     fetchPostsForTagUseCase,
-                    readerUpdatePostsEndedHandler
+                    readerUpdatePostsEndedHandler,
+                    postLikeActionUseCase
             )
         }
     }
