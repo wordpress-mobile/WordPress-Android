@@ -171,7 +171,7 @@
         <item name="android:textColor">@color/on_secondary_on_background_selector</item>
         <item name="android:backgroundTint">@color/secondary_surface_selector</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
-        <item name="strokeColor">@color/on_secondary_on_background_selector</item>
+        <item name="strokeColor">@color/transparent_on_background_selector</item>
         <item name="iconTint">@color/on_secondary_on_background_selector</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
         <item name="android:paddingEnd">@dimen/margin_extra_large</item>
@@ -210,7 +210,7 @@
 
     <!-- chips -->
     <style name="ReaderInterestFilterChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
-        <item name="android:textColor">@color/on_surface_surface_selector</item>
+        <item name="android:textColor">@color/on_surface_on_secondary_selector</item>
         <item name="android:textSize">@dimen/text_sz_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
         <item name="android:lineSpacingMultiplier">1.5</item>
