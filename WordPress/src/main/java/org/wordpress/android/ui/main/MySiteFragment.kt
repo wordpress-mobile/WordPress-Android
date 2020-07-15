@@ -101,7 +101,6 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveCli
 import org.wordpress.android.ui.posts.PromoDialog
 import org.wordpress.android.ui.posts.PromoDialog.PromoDialogClickInterface
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.prefs.SiteSettingsInterface
 import org.wordpress.android.ui.prefs.SiteSettingsInterface.SiteSettingsListener
 import org.wordpress.android.ui.quickstart.QuickStartEvent
