@@ -40,7 +40,7 @@ class PostSettingsUtils
             } else if (postUtilsWrapper.isPublishDateInTheFuture(postModel.dateCreated)) {
                 labelToUse = resourceProvider.getString(R.string.schedule_for, formattedDate)
             } else {
-                labelToUse = resourceProvider.getString(R.string.publish_on, formattedDate)
+                labelToUse = resourceProvider.getString(R.string.immediately)
             }
         } else if (postUtilsWrapper.shouldPublishImmediatelyOptionBeAvailable(status)) {
             labelToUse = resourceProvider.getString(R.string.immediately)
