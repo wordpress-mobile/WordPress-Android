@@ -53,6 +53,25 @@ class EncryptedLogSqlUtilsTest {
     }
 
     @Test
+    fun `test insert multiple encrypted logs`() {
+        // Assert that there are no encrypted logs with the test uuid
+        assertThat(getTestEncryptedLogFromDB()).isNull()
+
+        // Insert an encrypted log with uuid
+        val uuidList = (1..5).map { "uuid-prefix-$it" }
+        val logsToBeInserted = uuidList.map {
+            createTestEncryptedLog(uuid = it)
+        }
+        sqlUtils.insertOrUpdateEncryptedLogs(logsToBeInserted)
+
+        // Assert that the encrypted logs from the DB is the same as the ones we inserted
+        uuidList.forEachIndexed { index, uuid ->
+            val log = getTestEncryptedLogFromDB(uuid)
+            assertThat(log).isEqualToComparingFieldByField(logsToBeInserted[index])
+        }
+    }
+
+    @Test
     fun `test update encrypted log`() {
         // Insert an initial encrypted log
         val initialLog = createTestEncryptedLog()
@@ -83,6 +102,18 @@ class EncryptedLogSqlUtilsTest {
 
         // Assert that the encrypted log no longer exists
         assertThat(getTestEncryptedLogFromDB()).isNull()
+    }
+
+    @Test
+    fun `test get uploading encrypted logs`() {
+        // Insert an encrypted log with uuid
+        val logToBeInserted = createTestEncryptedLog(uploadState = UPLOADING)
+        sqlUtils.insertOrUpdateEncryptedLog(logToBeInserted)
+
+        // Assert that the encrypted log from the DB is the same as the one we inserted
+        val uploadingEncryptedLogs = sqlUtils.getUploadingEncryptedLogs()
+        assertThat(uploadingEncryptedLogs).hasSize(1)
+        assertThat(uploadingEncryptedLogs.first()).isEqualToComparingFieldByField(logToBeInserted)
     }
 
     @Test
@@ -135,7 +166,7 @@ class EncryptedLogSqlUtilsTest {
         assertThat(sqlUtils.getEncryptedLogsForUpload().firstOrNull()?.uploadState).isEqualTo(QUEUED)
     }
 
-    private fun getTestEncryptedLogFromDB() = sqlUtils.getEncryptedLog(TEST_UUID)
+    private fun getTestEncryptedLogFromDB(uuid: String = TEST_UUID) = sqlUtils.getEncryptedLog(uuid)
 
     private fun createTestEncryptedLog(
         uuid: String = TEST_UUID,
