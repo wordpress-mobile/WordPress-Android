@@ -267,12 +267,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
     }
 
     private void updatePrimaryButtonEnabledStatus() {
-        View view = getView();
-        if (view != null) {
-            String currentUsername = mUsernameInput.getEditText().getText().toString();
-            String currentPassword = mPasswordInput.getEditText().getText().toString();
-            getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
-        }
+        String currentUsername = mUsernameInput.getEditText().getText().toString();
+        String currentPassword = mPasswordInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentPassword.trim().isEmpty() && !currentUsername.trim().isEmpty());
     }
 
     protected void next() {
