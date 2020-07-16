@@ -10,8 +10,9 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_rectangle_placeholder_user_32dp
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.drawable.bg_rectangle_placeholder_globe_32dp
+            ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp_globe_32dp
             ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_globe_32dp
             ImageType.IMAGE -> null // don't display any error drawable
             ImageType.PHOTO -> R.color.placeholder
@@ -31,8 +32,9 @@ class ImagePlaceholderManager @Inject constructor() {
         return when (imgType) {
             ImageType.AVATAR -> R.drawable.bg_oval_placeholder
             ImageType.AVATAR_WITH_BACKGROUND -> R.drawable.bg_oval_placeholder_user_32dp
-            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_grey_24dp
+            ImageType.AVATAR_WITHOUT_BACKGROUND -> R.drawable.ic_user_circle_no_padding_grey_24dp
             ImageType.BLAVATAR -> R.color.placeholder
+            ImageType.BLAVATAR_ROUNDED_CORNERS -> R.drawable.bg_rectangle_placeholder_radius_4dp
             ImageType.BLAVATAR_CIRCULAR -> R.drawable.bg_oval_placeholder_globe_32dp
             ImageType.IMAGE -> null // don't display any placeholder
             ImageType.PHOTO -> R.color.placeholder

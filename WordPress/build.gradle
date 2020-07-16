@@ -72,6 +72,7 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
+        buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using

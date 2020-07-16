@@ -16,17 +16,20 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView.OnScrollChangeListener;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.yalantis.ucrop.UCrop;
@@ -54,6 +57,9 @@ import org.wordpress.android.ui.FullScreenDialogFragment;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener;
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
@@ -91,7 +97,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     private FullScreenDialogFragment mDialog;
     private SignupEpilogueListener mSignupEpilogueListener;
 
-    protected ImageButton mHeaderAvatarAdd;
+    protected ImageView mHeaderAvatarAdd;
     protected String mDisplayName;
     protected String mEmailAddress;
     protected String mPhotoUrl;
@@ -100,6 +106,8 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     protected ImageView mHeaderAvatar;
     protected WPTextView mHeaderDisplayName;
     protected WPTextView mHeaderEmailAddress;
+    protected View mBottomShadow;
+    protected NestedScrollView mScrollView;
     protected boolean mIsAvatarAdded;
     protected boolean mIsEmailSignup;
 
@@ -129,6 +137,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected Dispatcher mDispatcher;
     @Inject protected ImageManager mImageManager;
     @Inject protected AppPrefsWrapper mAppPrefsWrapper;
+    @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
     @Inject protected SignupUtils mSignupUtils;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
@@ -167,11 +176,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     @Override
     protected void setupContent(ViewGroup rootView) {
-        final RelativeLayout headerAvatarLayout = rootView.findViewById(R.id.signup_epilogue_header_avatar_layout);
+        final FrameLayout headerAvatarLayout = rootView.findViewById(R.id.login_epilogue_header_avatar_layout);
         headerAvatarLayout.setEnabled(mIsEmailSignup);
         headerAvatarLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.SELECT_AVATAR);
                 Intent intent = new Intent(getActivity(), PhotoPickerActivity.class);
                 intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
                 startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
@@ -186,12 +196,12 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             }
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(headerAvatarLayout);
-        mHeaderAvatarAdd = rootView.findViewById(R.id.signup_epilogue_header_avatar_add);
+        mHeaderAvatarAdd = rootView.findViewById(R.id.login_epilogue_header_avatar_add);
         mHeaderAvatarAdd.setVisibility(mIsEmailSignup ? View.VISIBLE : View.GONE);
-        mHeaderAvatar = rootView.findViewById(R.id.signup_epilogue_header_avatar);
-        mHeaderDisplayName = rootView.findViewById(R.id.signup_epilogue_header_display);
+        mHeaderAvatar = rootView.findViewById(R.id.login_epilogue_header_avatar);
+        mHeaderDisplayName = rootView.findViewById(R.id.login_epilogue_header_title);
         mHeaderDisplayName.setText(mDisplayName);
-        mHeaderEmailAddress = rootView.findViewById(R.id.signup_epilogue_header_email);
+        mHeaderEmailAddress = rootView.findViewById(R.id.login_epilogue_header_subtitle);
         mHeaderEmailAddress.setText(mEmailAddress);
         WPLoginInputRow inputDisplayName = rootView.findViewById(R.id.signup_epilogue_input_display);
         mEditTextDisplayName = inputDisplayName.getEditText();
@@ -217,6 +227,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mEditTextUsername.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.EDIT_USERNAME);
                 launchDialog();
             }
         });
@@ -245,6 +256,27 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
         // Set focus on static text field to avoid showing keyboard on start.
         mHeaderEmailAddress.requestFocus();
+
+        mBottomShadow = rootView.findViewById(R.id.bottom_shadow);
+        mScrollView = rootView.findViewById(R.id.scroll_view);
+        mScrollView.setOnScrollChangeListener(
+                (OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> showBottomShadowIfNeeded());
+        // We must use onGlobalLayout here otherwise canScrollVertically will always return false
+        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mScrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                showBottomShadowIfNeeded();
+            }
+        });
+    }
+
+    private void showBottomShadowIfNeeded() {
+        if (mScrollView != null) {
+            final boolean canScrollDown = mScrollView.canScrollVertically(1);
+            if (mBottomShadow != null) {
+                mBottomShadow.setVisibility(canScrollDown ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
     @Override
@@ -252,6 +284,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         primaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mUnifiedLoginTracker.trackClick(Click.CONTINUE);
                 updateAccountOrContinue();
             }
         });
@@ -279,6 +312,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             ReaderUpdateServiceStarter.startService(WordPress.getContext(),
                     EnumSet.of(ReaderUpdateLogic.UpdateTask.TAGS));
 
+            mUnifiedLoginTracker.track(Step.SUCCESS);
             if (mIsEmailSignup) {
                 AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_EMAIL_EPILOGUE_VIEWED);
 
@@ -543,6 +577,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         mDialog = new FullScreenDialogFragment.Builder(getContext())
                 .setTitle(R.string.username_changer_title)
                 .setAction(R.string.username_changer_action)
+                .setToolbarTheme(R.style.ThemeOverlay_LoginFlow_Toolbar)
                 .setOnConfirmListener(this)
                 .setOnDismissListener(this)
                 .setContent(UsernameChangerFullScreenDialogFragment.class, bundle)
@@ -641,9 +676,11 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     }
 
     protected void startCropActivity(Uri uri) {
-        final Context context = getActivity();
+        final Context baseContext = getActivity();
 
-        if (context != null) {
+        if (baseContext != null) {
+            final Context context = new ContextThemeWrapper(baseContext, R.style.WordPress_NoActionBar);
+
             UCrop.Options options = new UCrop.Options();
             options.setShowCropGrid(false);
             options.setStatusBarColor(ContextExtensionsKt.getColorFromAttribute(
@@ -659,7 +696,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             UCrop.of(uri, Uri.fromFile(new File(context.getCacheDir(), "cropped.jpg")))
                  .withAspectRatio(1, 1)
                  .withOptions(options)
-                 .start(getActivity(), this);
+                 .start(context, this);
         }
     }
 
