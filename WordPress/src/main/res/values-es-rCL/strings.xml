@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-05-09 06:46:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: es_CL
 -->
 <resources>
@@ -238,7 +238,6 @@ Language: es_CL
     <string name="pages_delete_permanently">Borrar Permanentemente</string>
     <string name="pages_move_to_trash">Mover a la papelera</string>
     <string name="pages_move_to_draft">Mover a Borrador</string>
-    <string name="pages_publish_now">Publicar Ahora</string>
     <string name="pages_set_parent">Establecer padre</string>
     <string name="pages_view">Ver</string>
     <string name="pages_trashed">Eliminado</string>
@@ -485,7 +484,6 @@ Language: es_CL
     <string name="menu_html_mode_done_snackbar">Cambiado al modo HTML</string>
     <string name="menu_html_mode">Modo HTML</string>
     <string name="menu_preview">Vista previa</string>
-    <string name="menu_publish_now">Publicar Ahora</string>
     <string name="menu_save_as_draft">Guardar como Borrador</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -548,10 +546,6 @@ Language: es_CL
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d páginas, y %2$d de %3$d archivos restantes</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 entrada, y %1$d de %2$d archivos restantes</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 página, y %1$d de %2$d archivos restantes</string>
-    <string name="dialog_confirm_publish_yes">Publicar ahora</string>
-    <string name="dialog_confirm_publish_message_page">Esta página se publicará inmediatamente.</string>
-    <string name="dialog_confirm_publish_message_post">Esta entrada se publicará inmediatamente.</string>
-    <string name="dialog_confirm_publish_title">¿Listo para Publicar?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d entradas/páginas no cargadas</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d páginas no cargadas</string>
     <string name="media_file_page_singular_only_not_uploaded">1 página no cargada</string>
@@ -884,7 +878,6 @@ Language: es_CL
     <string name="post_settings_not_set">Sin Asignar</string>
     <string name="post_settings_more_options">Más opciones</string>
     <string name="post_settings_categories_and_tags">Categorías y Etiquetas</string>
-    <string name="post_settings_status">Estado</string>
     <string name="notifications_tab_title_all">Todo</string>
     <string name="top_level_category_name">Nivel superior</string>
     <string name="category_parent">Categoría de padre (opcional):</string>
@@ -1007,7 +1000,6 @@ Language: es_CL
     <string name="media_upload_state_deleting">Eliminando</string>
     <string name="media_upload_state_uploading">Subiendo</string>
     <string name="media_upload_state_queued">Encolado</string>
-    <string name="keep_editing">Seguir editando</string>
     <string name="image_quality">Calidad de Imagen</string>
     <string name="error_all_media_upload_canceled">Todas las cargas de medios se han cancelado debido a un error desconocido. Vuelva a intentarlo</string>
     <string name="error_unknown_post_type">Formato desconocida de entrada</string>
@@ -1668,7 +1660,6 @@ Language: es_CL
     <string name="httppassword">Contraseña HTTP</string>
     <string name="httpuser">Usuario HTTP</string>
     <string name="error_media_upload">Se ha producido un error al cargar los archivos</string>
-    <string name="publish_date">Publicar</string>
     <string name="incorrect_credentials">Nombre de usuario o contraseña incorrecta.</string>
     <string name="log_in">Iniciar sesión</string>
     <string name="username">Nombre de usuario</string>

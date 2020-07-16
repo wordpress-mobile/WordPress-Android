@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-09 12:54:10+0000
+Translation-Revision-Date: 2020-07-10 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigiert zum vorherigen Content Sheet</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigiert zum Anpassen des Verlaufs</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigiert zur individuellen Farbauswahl</string>
+    <string name="gutenberg_native_gradient_type">Verlaufstyp</string>
+    <string name="gutenberg_native_go_back">Zurück</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Zum Auswählen der Option zweimal tippen</string>
+    <string name="gutenberg_native_customize_gradient">Verlauf anpassen</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Seitenautor</string>
+    <string name="photo_picker_use_gif">Dieses GIF verwenden</string>
+    <string name="error_media_thumbnail_not_loaded">Medien-Vorschaubild konnte nicht geladen werden</string>
+    <string name="menu_content_info">Inhaltliche Struktur</string>
+    <string name="everyone">Jeder</string>
+    <string name="me">Ich</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jeder Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Block auch über den Webbrowser deines Geräts bearbeiten.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Block in Webbrowser bearbeiten</string>
+    <string name="gutenberg_native_dismiss">Verwerfen</string>
+    <string name="prepublishing_nudges_visibility_password">Passwortgeschützt</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Nicht festgelegt</string>
+    <string name="prepublishing_tags_description">Schlagwörter helfen den Lesern zu verstehen, worum es in einem Beitrag geht.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Veröffentlichen</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Schlagwörter hinzufügen</string>
+    <string name="prepublishing_nudges_back_button">Zurück</string>
+    <string name="prepublishing_nudges_home_save_button">Jetzt speichern</string>
+    <string name="prepublishing_nudges_home_submit_button">Jetzt einreichen</string>
+    <string name="prepublishing_nudges_home_schedule_button">Jetzt planen</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Veröffentlichen in</string>
+    <string name="prepublishing_nudges_tags_action">Schlagwörter</string>
+    <string name="prepublishing_nudges_publish_action">Veröffentlichungsdatum</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Abbrechen</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">In Entwurf verschieben</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Beiträge im Papierkorb können nicht bearbeitet werden. Möchtest du den Status dieses Beitrags in \"Entwurf\" ändern, damit du ihn bearbeiten kannst?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Beitrag zu \"Entwürfe\" verschieben?</string>
+    <string name="reader_label_choose_your_interests">Wähle deine Interessengebiete aus</string>
+    <string name="reader_label_discover_follow_tags">Entdecke Schlagwörter, die dir gefallen, und folge ihnen</string>
+    <string name="reader_choose_interests_content_description">Wähle deine Interessengebiete aus</string>
+    <string name="reader_btn_done">Fertig</string>
+    <string name="reader_btn_select_few_interests">Wähle ein paar aus, um fortzufahren</string>
+    <string name="post_status_post_published">Veröffentlicht</string>
+    <string name="post_status_post_trashed">Im Papierkorb</string>
+    <string name="post_status_post_scheduled">Geplant</string>
+    <string name="publish_date">Veröffentlichungsdatum</string>
+    <string name="ccpa_privacy_notice_read">CCPA-Datenschutzhinweis lesen</string>
+    <string name="ccpa_privacy_notice_caption">Nach dem California Consumer Privacy Act („CCPA“) sind wir verpflichtet, den Einwohnern Kaliforniens zusätzliche Informationen zu den Kategorien personenbezogener Daten mitzuteilen, die wir sammeln und weitergeben. Außerdem müssen wir Auskunft darüber erteilen, woher wir diese personenbezogenen Daten erhalten und wie und warum wir sie verwenden.</string>
+    <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
+    <string name="status_and_visibility">Status und Sichtbarkeit</string>
+    <string name="update_now">Jetzt aktualisieren</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">%s entfernen</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
@@ -284,7 +332,7 @@ Language: de
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="site_cannot_be_loaded">Wir können die Daten deiner Website momentan nicht laden. Bitte versuche es später erneut</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-Mediathek</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jedem Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Beitrag auch im Web bearbeiten.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">Wir arbeiten intensiv daran, mit jedem Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Beitrag auch im Web bearbeiten.</string>
     <string name="gutenberg_native_ungroup">Gruppierung aufheben</string>
     <string name="gutenberg_native_translate">Übersetzen</string>
     <string name="gutenberg_native_title">Titel:</string>
@@ -507,10 +555,6 @@ Language: de
     <string name="stats_widget_all_time_title">Gesamter Zeitraum</string>
     <string name="stats_widget_views_title">Aufrufe dieser Woche</string>
     <string name="stats_widget_add">Widget hinzufügen</string>
-    <string name="dialog_confirm_update_yes">Jetzt aktualisieren</string>
-    <string name="dialog_confirm_update_message_page">Die veröffentlichte Seite wird sofort aktualisiert.</string>
-    <string name="dialog_confirm_update_message_post">Der veröffentlichte Beitrag wird sofort aktualisiert.</string>
-    <string name="dialog_confirm_update_title">Bereit für die Aktualisierung?</string>
     <string name="plugin_fetching_error_after_at">Es dauert länger als üblich, die Details des Plugins zu aktualisieren. Bitte versuche es später errneut.</string>
     <string name="plugin_install_site_ineligible_default_error">Falls du kürzlich einen Domainnamen registriert hast, warte bitte ab, bis diese fertig eingerichtet ist und versuche es erneut.\n\nFalls nicht, scheint etwas schiefgegangen zu sein und die Plugin-Funktion ist möglicherweise für diese Website nicht verfügbar.</string>
     <string name="domain_contact_information_state_not_available_hint">Status (nicht verfügbar)</string>
@@ -557,8 +601,6 @@ Language: de
     <string name="editor_uploading_draft">Dein Entwurf wird hochgeladen</string>
     <string name="post_uploading_draft">Entwurf wird hochgeladen</string>
     <string name="post_list_tab_drafts">Entwürfe</string>
-    <string name="post_list_author_everyone">Jeder</string>
-    <string name="post_list_author_me">Ich</string>
     <string name="error_restoring_post">Beim Wiederherstellen des Beitrags ist ein Fehler aufgetreten.</string>
     <string name="backdated_for">Zurückdatiert auf: %s</string>
     <string name="stats_insights_management_title">Zeige nur die relevantesten Statistiken an. Füge deine Einsichten unten hinzu und organisiere sie.</string>
@@ -823,7 +865,6 @@ Language: de
     <string name="pages_delete_permanently">Unwiderruflich löschen</string>
     <string name="pages_move_to_trash">In Papierkorb verschieben</string>
     <string name="pages_move_to_draft">In Entwurf verschieben</string>
-    <string name="pages_publish_now">Jetzt veröffentlichen</string>
     <string name="pages_set_parent">Übergeordnete Seite festlegen</string>
     <string name="pages_view">Anzeigen</string>
     <string name="pages_trashed">Im Papierkorb</string>
@@ -1076,7 +1117,6 @@ Language: de
     <string name="menu_html_mode_done_snackbar">Zum HTML-Modus gewechselt</string>
     <string name="menu_html_mode">HTML-Modus</string>
     <string name="menu_preview">Vorschau</string>
-    <string name="menu_publish_now">Jetzt veröffentlichen</string>
     <string name="menu_save_as_draft">Als Entwurf speichern</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1179,6 @@ Language: de
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d Seiten und %2$d von %3$d Dateien ausstehend</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 Beitrag und %1$d von %2$d Dateien ausstehend</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 Seite und %1$d von %2$d Dateien ausstehend</string>
-    <string name="dialog_confirm_publish_yes">Jetzt veröffentlichen</string>
-    <string name="dialog_confirm_publish_message_page">Diese Seite wird umgehend veröffentlicht.</string>
-    <string name="dialog_confirm_publish_message_post">Dieser Beitrag wird umgehend veröffentlicht.</string>
-    <string name="dialog_confirm_publish_title">Bereit zum Veröffentlichen?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d Beiträge/Seiten nicht hochgeladen</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d Seiten nicht hochgeladen</string>
     <string name="media_file_page_singular_only_not_uploaded">1 Seite nicht hochgeladen</string>
@@ -1477,7 +1513,6 @@ Language: de
     <string name="post_settings_not_set">Nicht eingestellt</string>
     <string name="post_settings_more_options">Weitere Optionen</string>
     <string name="post_settings_categories_and_tags">Kategorien &amp; Schlagwörter</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">Alle</string>
     <string name="top_level_category_name">Oberste Ebene</string>
     <string name="category_parent">Übergeordnete Kategorie (optional):</string>
@@ -1601,7 +1636,6 @@ Language: de
     <string name="media_upload_state_deleting">Lösche</string>
     <string name="media_upload_state_uploading">Lade hoch</string>
     <string name="media_upload_state_queued">In Warteschlange</string>
-    <string name="keep_editing">Weiter bearbeiten</string>
     <string name="image_quality">Bildqualität</string>
     <string name="error_all_media_upload_canceled">Aufgrund eines unbekannten Fehlers wurden alle Medien-Uploads abgebrochen. Bitte versuche erneut, die Inhalte hochzuladen</string>
     <string name="error_unknown_post_type">Unbekanntes Beitragsformat</string>
@@ -2264,7 +2298,6 @@ Language: de
     <string name="httppassword">HTTP-Passwort</string>
     <string name="httpuser">HTTP-Benutzername</string>
     <string name="error_media_upload">Beim Hochladen von Medien ist ein Fehler aufgetreten</string>
-    <string name="publish_date">Veröffentlichen</string>
     <string name="incorrect_credentials">Falscher Benutzername oder falsches Passwort.</string>
     <string name="log_in">Anmelden</string>
     <string name="username">Benutzername</string>
@@ -2301,6 +2334,7 @@ Language: de
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="notification_settings">Benachrichtigungs-Einstellungen</string>
+    <string name="publish_now">Jetzt veröffentlichen</string>
     <string name="reply">Antworten</string>
     <string name="on">zu</string>
     <string name="preview">Vorschau</string>

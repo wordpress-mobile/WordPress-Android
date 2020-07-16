@@ -105,7 +105,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                     doUploadAfterAdding = true
             )
             postUtils.preparePostForPublish(requireNotNull(editPostRepository.getEditablePost()), site)
-            savePostToDbUseCase.savePostToDb(appContext, editPostRepository, site)
+            savePostToDbUseCase.savePostToDb(editPostRepository, site)
 
             if (networkUtils.isNetworkAvailable()) {
                 postUtils.trackSavePostAnalytics(

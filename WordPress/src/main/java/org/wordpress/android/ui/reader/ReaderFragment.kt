@@ -23,17 +23,21 @@ import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.FOLLOWED_BLOGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.TAGS
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
 import org.wordpress.android.ui.reader.viewmodels.NewsCardViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
-import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.ContentUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel.ReaderUiState.InitialUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
 
 class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
     private lateinit var newsCardViewModel: NewsCardViewModel
 
@@ -43,7 +47,8 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
             viewModel.uiState.value?.let {
-                val selectedTag = it.readerTagList[position]
+                val currentUiState = it as ContentUiState
+                val selectedTag = currentUiState.readerTagList[position]
                 newsCardViewModel.onTagChanged(selectedTag)
                 viewModel.onTagChanged(selectedTag)
             }
@@ -113,7 +118,15 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             uiState?.let {
-                updateTabs(uiState)
+                when (it) {
+                    is InitialUiState -> {
+                    }
+                    is ContentUiState -> {
+                        updateTabs(it)
+                    }
+                }
+                app_bar.setExpanded(uiState.appBarExpanded)
+                uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }
         })
@@ -126,13 +139,25 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
 
         viewModel.selectTab.observe(viewLifecycleOwner, Observer { selectTabAction ->
             selectTabAction.getContentIfNotHandled()?.let { tabPosition ->
-                view_pager.currentItem = tabPosition
+                view_pager.setCurrentItem(tabPosition, false)
             }
         })
 
         viewModel.showSearch.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 ReaderActivityLauncher.showReaderSearch(context)
+            }
+        })
+
+        viewModel.showReaderInterests.observe(viewLifecycleOwner, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                showReaderInterests()
+            }
+        })
+
+        viewModel.closeReaderInterests.observe(viewLifecycleOwner, Observer { event ->
+            event?.getContentIfNotHandled()?.let {
+                closeReaderInterests()
             }
         })
 
@@ -148,7 +173,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
         viewModel.start()
     }
 
-    private fun updateTabs(uiState: ReaderUiState) {
+    private fun updateTabs(uiState: ContentUiState) {
         val adapter = TabsAdapter(this, uiState.readerTagList)
         view_pager.adapter = adapter
 
@@ -166,6 +191,28 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
             } else {
                 ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
             }
+        }
+    }
+
+    private fun showReaderInterests() {
+        val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+        if (readerInterestsFragment == null) {
+            childFragmentManager.beginTransaction()
+                .replace(
+                    R.id.interests_fragment_container,
+                    ReaderInterestsFragment(),
+                    ReaderInterestsFragment.TAG
+                )
+                .commitNow()
+        }
+    }
+
+    private fun closeReaderInterests() {
+        val readerInterestsFragment = childFragmentManager.findFragmentByTag(ReaderInterestsFragment.TAG)
+        if (readerInterestsFragment?.isAdded == true) {
+            childFragmentManager.beginTransaction()
+                .remove(readerInterestsFragment)
+                .commitNow()
         }
     }
 }

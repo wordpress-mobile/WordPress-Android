@@ -7,23 +7,25 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
-import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
+import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.ReaderFragment
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.WPActivityUtils
 import javax.inject.Inject
 
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
+    @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
-    @Inject lateinit var uiHelpers: UiHelpers
+    private lateinit var parentViewModel: ReaderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        WPActivityUtils.setLightStatusBar(requireActivity().window, true)
         initDoneButton()
         initRetryButton()
         initViewModel()
@@ -50,8 +53,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-            .get(ReaderInterestsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
+        parentViewModel = ViewModelProviders.of(requireParentFragment()).get(ReaderViewModel::class.java)
         startObserving()
     }
 
@@ -76,13 +79,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.navigateToDiscover.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let {
-                navigateToDiscover()
-            }
-        })
-
-        viewModel.start()
+        viewModel.start(parentViewModel)
     }
 
     private fun updateDoneButton(doneButtonUiState: DoneButtonUiState) {
@@ -119,7 +116,6 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             false
         ) as Chip
         with(chip) {
-            layoutDirection = View.LAYOUT_DIRECTION_LOCALE
             tag = titleTag
             setOnCheckedChangeListener { compoundButton, isChecked ->
                 if (compoundButton.isPressed) {
@@ -131,12 +127,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         return chip
     }
 
-    private fun navigateToDiscover() {
-        val fragmentTransaction = parentFragmentManager.beginTransaction()
-        fragmentTransaction.setCustomAnimations(
-            R.anim.activity_slide_in_from_right, R.anim.activity_slide_out_to_left,
-            R.anim.activity_slide_in_from_left, R.anim.activity_slide_out_to_right
-        )
-        fragmentTransaction.replace(R.id.fragment_container, ReaderFragment(), tag).commit()
+    override fun onDestroyView() {
+        WPActivityUtils.setLightStatusBar(requireActivity().window, false)
+        super.onDestroyView()
+    }
+
+    companion object {
+        const val TAG = "reader_interests_fragment_tag"
     }
 }

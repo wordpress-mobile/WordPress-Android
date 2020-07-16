@@ -19,7 +19,7 @@ class HomepageSettingsDataLoader
     ): Flow<LoadingResult> = flow {
         emit(Loading)
         emit(Data(loadPagesFromDb(siteModel)))
-        if (pageStore.requestPagesFromServer(siteModel).isError) {
+        if (pageStore.requestPagesFromServer(siteModel, false).isError) {
             emit(Error(R.string.site_settings_failed_to_load_pages))
         } else {
             emit(Data(loadPagesFromDb(siteModel)))

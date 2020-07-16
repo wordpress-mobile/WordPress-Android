@@ -39,10 +39,11 @@ class PrepublishingTagsViewModel @Inject constructor(
     val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
 
     fun start(editPostRepository: EditPostRepository) {
+        this.editPostRepository = editPostRepository
+
         if (isStarted) return
         isStarted = true
 
-        this.editPostRepository = editPostRepository
         setToolbarTitleUiState()
     }
 

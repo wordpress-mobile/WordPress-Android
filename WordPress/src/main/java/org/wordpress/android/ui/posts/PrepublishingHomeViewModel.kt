@@ -14,12 +14,10 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.PUBLISH
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.TAGS
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType.VISIBILITY
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
-import org.wordpress.android.ui.posts.prepublishing.visibility.usecases.GetPostVisibilityUseCase
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -35,7 +33,6 @@ private const val THROTTLE_DELAY = 500L
 
 class PrepublishingHomeViewModel @Inject constructor(
     private val getPostTagsUseCase: GetPostTagsUseCase,
-    private val getPostVisibilityUseCase: GetPostVisibilityUseCase,
     private val postSettingsUtils: PostSettingsUtils,
     private val getButtonUiStateUseCase: GetButtonUiStateUseCase,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
@@ -76,17 +73,6 @@ class PrepublishingHomeViewModel @Inject constructor(
                         })
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
-            }
-
-            if (!isStoryPost) {
-                add(
-                        HomeUiState(
-                                actionType = VISIBILITY,
-                                actionResult = getPostVisibilityUseCase.getVisibility(editPostRepository).textRes,
-                                actionClickable = true,
-                                onActionClicked = ::onActionClicked
-                        )
-                )
             }
 
             if (editPostRepository.status != PostStatus.PRIVATE) {
