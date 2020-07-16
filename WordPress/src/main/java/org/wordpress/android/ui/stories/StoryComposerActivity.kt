@@ -431,6 +431,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
         setUntitledStoryTitleIfTitleEmpty()
         processStorySaving()
     }
