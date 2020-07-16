@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2017-03-25 17:35:05+0000
 Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != 11) ? 2 : 3;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: cy_GB
 -->
 <resources>
@@ -616,7 +616,6 @@ Language: cy_GB
     <string name="httppassword">Cyfrinair HTTP</string>
     <string name="httpuser">Enw defnyddiwr HTTP</string>
     <string name="error_media_upload">Digwyddodd gwall wrth lwytho\'r cyfrwng</string>
-    <string name="publish_date">Cyhoeddi</string>
     <string name="incorrect_credentials">Enw cyfrif neu gyfrinair anghywir.</string>
     <string name="password">Cyfrinair</string>
     <string name="username">Enw defnyddiwr</string>

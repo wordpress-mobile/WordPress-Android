@@ -4,6 +4,8 @@ import dagger.Reusable
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.util.config.ExperimentConfig
+import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
 @Reusable
@@ -13,12 +15,24 @@ class AnalyticsTrackerWrapper
         AnalyticsTracker.track(stat)
     }
 
+    fun track(stat: Stat, feature: FeatureConfig) {
+        AnalyticsTracker.track(stat, mapOf(feature.remoteField to feature.isEnabled()))
+    }
+
+    fun track(stat: Stat, experimentConfig: ExperimentConfig) {
+        AnalyticsTracker.track(stat, mapOf(experimentConfig.remoteField to experimentConfig.getVariant().value))
+    }
+
     fun track(stat: Stat, properties: Map<String, *>) {
         AnalyticsTracker.track(stat, properties)
     }
 
     fun track(stat: Stat, site: SiteModel) {
         AnalyticsUtils.trackWithSiteDetails(stat, site)
+    }
+
+    fun track(stat: Stat, siteId: Long) {
+        AnalyticsUtils.trackWithSiteId(stat, siteId)
     }
 
     /**

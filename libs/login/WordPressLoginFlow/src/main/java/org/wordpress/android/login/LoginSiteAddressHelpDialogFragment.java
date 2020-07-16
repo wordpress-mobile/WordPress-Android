@@ -48,7 +48,11 @@ public class LoginSiteAddressHelpDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder alert = new MaterialAlertDialogBuilder(getActivity());
-        alert.setTitle(R.string.login_site_address_help_title);
+        if (mLoginListener.getLoginMode() != LoginMode.WOO_LOGIN_MODE) {
+            // Only set the title if not the woo app, since the woo app specifies an override
+            // layout that includes the title.
+            alert.setTitle(R.string.login_site_address_help_title);
+        }
 
         //noinspection InflateParams
         alert.setView(getActivity().getLayoutInflater().inflate(R.layout.login_alert_site_address_help, null));

@@ -167,8 +167,17 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
+
+        val imageData: ByteArray
+        try {
+            imageData = Base64.decode(base64ImageData, Base64.DEFAULT)
+        } catch (ex: IllegalArgumentException) {
+            AppLog.e(AppLog.T.UTILS, String.format("Cant parse base64 image data:" + ex.message))
+            return
+        }
+
         GlideApp.with(context)
-                .load(Base64.decode(base64ImageData, Base64.DEFAULT))
+                .load(imageData)
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .circleCrop()

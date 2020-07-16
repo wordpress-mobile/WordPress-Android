@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-05 20:32:28+0000
+Translation-Revision-Date: 2020-06-30 10:14:16+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigates to the previous content sheet</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigates to customise the gradient</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigates to custom colour picker</string>
+    <string name="gutenberg_native_gradient_type">Gradient Type</string>
+    <string name="gutenberg_native_go_back">Go back</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Double tap to select the option</string>
+    <string name="gutenberg_native_customize_gradient">Customise Gradient</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Page author</string>
+    <string name="photo_picker_use_gif">Use this GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Media thumbnail could not be loaded</string>
+    <string name="menu_content_info">Content structure</string>
+    <string name="everyone">Everyone</string>
+    <string name="me">Me</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this block using your device\'s web browser.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">Edit block in web browser</string>
+    <string name="gutenberg_native_dismiss">Dismiss</string>
+    <string name="prepublishing_nudges_visibility_password">Password Protected</string>
+    <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
+    <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
+    <string name="prepublishing_nudges_back_button">Back</string>
+    <string name="prepublishing_nudges_home_save_button">Save Now</string>
+    <string name="prepublishing_nudges_home_submit_button">Submit Now</string>
+    <string name="prepublishing_nudges_home_schedule_button">Schedule Now</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
+    <string name="prepublishing_nudges_tags_action">Tags</string>
+    <string name="prepublishing_nudges_publish_action">Publish Date</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">Cancel</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">Move to Draft</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">Binned posts can\'t be edited. Do you want to change the status of this post to \"draft\", so you can work on it?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">Move post to Drafts?</string>
+    <string name="reader_label_choose_your_interests">Choose your interests</string>
+    <string name="reader_label_discover_follow_tags">Discover and follow tags you love</string>
+    <string name="reader_choose_interests_content_description">Choose your interests</string>
+    <string name="reader_btn_done">Done</string>
+    <string name="reader_btn_select_few_interests">Select a few to continue</string>
+    <string name="post_status_post_published">Published</string>
+    <string name="post_status_post_trashed">Binned</string>
+    <string name="post_status_post_scheduled">Scheduled</string>
+    <string name="publish_date">Publish Date</string>
+    <string name="ccpa_privacy_notice_read">Read CCPA privacy notice</string>
+    <string name="ccpa_privacy_notice_caption">The California Consumer Privacy Act (\"CCPA\") requires us to provide California residents with some additional information about the categories of personal information we collect and share, where we get that personal information, and how and why we use it.</string>
+    <string name="ccpa_privacy_notice_header">Privacy notice for California users</string>
+    <string name="status_and_visibility">Status and Visibility</string>
+    <string name="update_now">Update Now</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">Remove %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
@@ -284,7 +332,7 @@ Language: en_GB
     <string name="reader_my_likes_display_name">Likes</string>
     <string name="site_cannot_be_loaded">We cannot load the data for your site right now. Please try again later</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Media Library</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">We are working hard to add more blocks with each release. In the meantime, you can also edit this post on the web.</string>
     <string name="gutenberg_native_ungroup">Ungroup</string>
     <string name="gutenberg_native_translate">Translate</string>
     <string name="gutenberg_native_title">Title:</string>
@@ -507,10 +555,6 @@ Language: en_GB
     <string name="stats_widget_all_time_title">All-time</string>
     <string name="stats_widget_views_title">Views This Week</string>
     <string name="stats_widget_add">Add widget</string>
-    <string name="dialog_confirm_update_yes">Update now</string>
-    <string name="dialog_confirm_update_message_page">This published page will be updated immediately.</string>
-    <string name="dialog_confirm_update_message_post">This published post will be updated immediately.</string>
-    <string name="dialog_confirm_update_title">Ready to Update?</string>
     <string name="plugin_fetching_error_after_at">It takes longer than usual to refresh plugin details. Please check again later.</string>
     <string name="plugin_install_site_ineligible_default_error">If you just registered a domain name, please wait until we finish setting it up and try again.\n\nIf not, looks like something went wrong and plugin feature might not be available for this site.</string>
     <string name="domain_contact_information_state_not_available_hint">State (Not Available)</string>
@@ -557,8 +601,6 @@ Language: en_GB
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_list_tab_drafts">Drafts</string>
-    <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -823,7 +865,6 @@ Language: en_GB
     <string name="pages_delete_permanently">Delete Permanently</string>
     <string name="pages_move_to_trash">Move to Bin</string>
     <string name="pages_move_to_draft">Move to Draft</string>
-    <string name="pages_publish_now">Publish Now</string>
     <string name="pages_set_parent">Set parent</string>
     <string name="pages_view">View</string>
     <string name="pages_trashed">Binned</string>
@@ -1076,7 +1117,6 @@ Language: en_GB
     <string name="menu_html_mode_done_snackbar">Switched to HTML mode</string>
     <string name="menu_html_mode">HTML Mode</string>
     <string name="menu_preview">Preview</string>
-    <string name="menu_publish_now">Publish Now</string>
     <string name="menu_save_as_draft">Save as Draft</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -1139,10 +1179,6 @@ Language: en_GB
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d pages, and %2$d of %3$d files remaining</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">1 post, and %1$d of %2$d files remaining</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">1 page, and %1$d of %2$d files remaining</string>
-    <string name="dialog_confirm_publish_yes">Publish now</string>
-    <string name="dialog_confirm_publish_message_page">This page will be published immediately.</string>
-    <string name="dialog_confirm_publish_message_post">This post will be published immediately.</string>
-    <string name="dialog_confirm_publish_title">Ready to Publish?</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">%1$d posts / pages not uploaded</string>
     <string name="media_file_pages_plural_only_not_uploaded">%1$d pages not uploaded</string>
     <string name="media_file_page_singular_only_not_uploaded">1 page not uploaded</string>
@@ -1477,7 +1513,6 @@ Language: en_GB
     <string name="post_settings_not_set">Not Set</string>
     <string name="post_settings_more_options">More Options</string>
     <string name="post_settings_categories_and_tags">Categories &amp; Tags</string>
-    <string name="post_settings_status">Status</string>
     <string name="notifications_tab_title_all">All</string>
     <string name="top_level_category_name">Top level</string>
     <string name="category_parent">Parent category (optional):</string>
@@ -1601,7 +1636,6 @@ Language: en_GB
     <string name="media_upload_state_deleting">Deleting</string>
     <string name="media_upload_state_uploading">Uploading</string>
     <string name="media_upload_state_queued">Queued</string>
-    <string name="keep_editing">Keep editing</string>
     <string name="image_quality">Image Quality</string>
     <string name="error_all_media_upload_canceled">All media uploads have been cancelled due to an unknown error. Please retry uploading</string>
     <string name="error_unknown_post_type">Unknown post format</string>
@@ -2264,7 +2298,6 @@ Language: en_GB
     <string name="httppassword">HTTP password</string>
     <string name="httpuser">HTTP username</string>
     <string name="error_media_upload">An error occurred while uploading media</string>
-    <string name="publish_date">Publish</string>
     <string name="incorrect_credentials">Incorrect username or password.</string>
     <string name="log_in">Log In</string>
     <string name="username">Username</string>
@@ -2301,6 +2334,7 @@ Language: en_GB
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="notification_settings">Notification Settings</string>
+    <string name="publish_now">Publish Now</string>
     <string name="reply">Reply</string>
     <string name="on">on</string>
     <string name="preview">Preview</string>

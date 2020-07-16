@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-02-28 09:54:01+0000
+Translation-Revision-Date: 2020-07-06 12:41:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
@@ -37,8 +37,7 @@ Language: el_GR
     <string name="gutenberg_native_link_inserted">Έγινε εισαγωγή συνδέσμου</string>
     <string name="gutenberg_native_help_icon">Εικονίδιο βοήθειας</string>
     <string name="gutenberg_native_content">Περιεχόμενο…</string>
-    <string name="post_list_author_everyone">Όλοι</string>
-    <string name="post_list_author_me">Εγώ</string>
+    <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
@@ -140,7 +139,6 @@ Language: el_GR
     <string name="pages_delete_permanently">Οριστική διαγραφή</string>
     <string name="pages_move_to_trash">Διαγραφή</string>
     <string name="pages_move_to_draft">Μετακίνηση σε Προσχέδια</string>
-    <string name="pages_publish_now">Δημοσίευση τώρα</string>
     <string name="pages_view">Εμφάνιση</string>
     <string name="pages_trashed">Διαγραμμένες</string>
     <string name="pages_scheduled">Προγραμματισμένες</string>
@@ -265,7 +263,6 @@ Language: el_GR
     <string name="menu_visual_mode">Οπτική λειτουργία</string>
     <string name="menu_html_mode">Λειτουργία HTML</string>
     <string name="menu_preview">Προεπισκόπηση</string>
-    <string name="menu_publish_now">Δημοσίευση τώρα</string>
     <string name="menu_save_as_draft">Αποθήκευση σαν προσχέδιο</string>
     <string name="file_size_in_terabytes">%s TB</string>
     <string name="file_size_in_gigabytes">%s GB</string>
@@ -298,10 +295,6 @@ Language: el_GR
     <string name="quickpress_shortcut_with_account_param">QP %s</string>
     <string name="uploading_subtitle_mixed_post_singular_media_one">1 άρθρο και 1 αρχείο απομένουν</string>
     <string name="uploading_subtitle_mixed_page_singular_media_one">1 σελίδα και 1 αρχείο απομένουν</string>
-    <string name="dialog_confirm_publish_yes">Δημοσίευση τώρα</string>
-    <string name="dialog_confirm_publish_message_page">Η σελίδα θα δημοσιευθεί αμέσως.</string>
-    <string name="dialog_confirm_publish_message_post">Το άρθρο θα δημοσιευθεί αμέσως.</string>
-    <string name="dialog_confirm_publish_title">Έτοιμοι να δημοσιεύσετε;</string>
     <string name="untitled_in_parentheses">(Χωρίς τίτλο)</string>
     <string name="at_username">\@%s</string>
     <string name="latitude_longitude">%1$f, %2$f</string>
@@ -488,7 +481,6 @@ Language: el_GR
     <string name="post_settings_not_set">Δεν έχει οριστεί</string>
     <string name="post_settings_more_options">Περισσότερες Επιλογές</string>
     <string name="post_settings_categories_and_tags">Κατηγορίες και Ετικέτες</string>
-    <string name="post_settings_status">Κατάσταση</string>
     <string name="notifications_tab_title_all">Όλα</string>
     <string name="category_parent">Γονική κατηγορία (προαιρετική):</string>
     <string name="media_error_http_too_large_video_upload">Το βίντεο είναι πολύ μεγάλο για μεταφόρτωση</string>
@@ -578,7 +570,6 @@ Language: el_GR
     <string name="media_upload_state_deleting">Γίνεται διαγραφή</string>
     <string name="media_upload_state_uploading">Γίνεται μεταφόρτωση</string>
     <string name="media_upload_state_queued">Σε αναμονή</string>
-    <string name="keep_editing">Συνέχεια επεξεργασίας</string>
     <string name="image_quality">Ποιότητα εικόνας</string>
     <string name="error_all_media_upload_canceled">Όλες οι μεταφορτώσεις πολυμέσων έχουν ακυρωθεί εξαιτίας άγνωστου σφάλματος. Παρακαλούμε δοκιμάστε ξανά να τα μεταφορτώσετε</string>
     <string name="error_unknown_post_type">Άγνωστη μορφή άρθρου</string>
@@ -606,6 +597,7 @@ Language: el_GR
     <string name="pending_draft_one_day_2">Το ξέρατε ότι το \'%1$s\' είναι ακόμα προσχέδιο; Δημοσιεύστε το!</string>
     <string name="pending_draft_one_day_1">Κάνατε το προσχέδιο του \'%1$s\' χθες. Μην ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="reader_photo_by">Φωτογραφία από %s</string>
+    <string name="reader_label_visit">Επισκεφθείτε</string>
     <string name="swipe_for_more">Σαρώστε για περισσότερα</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
     <string name="reader_err_get_post_not_authorized_signin">Δεν είστε εξουσιοδοτημένος να δείτε αυτό το άρθρο. Δοκιμάστε να συνδεθείτε στο WordPress.com πρώτα.</string>
@@ -1203,6 +1195,7 @@ Language: el_GR
     <string name="reader_btn_unfollow">Ακολουθούν</string>
     <string name="reader_btn_follow">Ακολουθήστε</string>
     <string name="reader_btn_share">Μοιράσου</string>
+    <string name="reader_view_reblog">Αναμετάδοση</string>
     <string name="reader_untitled_post">Ανώνυμο</string>
     <string name="comments_empty_list">Κανένα σχόλιο.</string>
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
@@ -1237,7 +1230,6 @@ Language: el_GR
     <string name="httppassword">Κωδικός χρήστη HTTP</string>
     <string name="httpuser">Όνομα χρήστη HTTP</string>
     <string name="error_media_upload">Ένα σφάλμα συνέβη κατά το ανέβασμα των πολυμέσων</string>
-    <string name="publish_date">Δημοσίευση</string>
     <string name="incorrect_credentials">Λανθασμένος συνδυασμός ονόματος χρήστη και κωδικού.</string>
     <string name="log_in">Σύνδεση</string>
     <string name="username">Ψευδώνυμο</string>

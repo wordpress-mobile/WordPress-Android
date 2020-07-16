@@ -156,9 +156,8 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
         siteAddressView.setText(UrlUtils.removeScheme(UrlUtils.removeXmlrpcSuffix(mInputSiteAddress)));
         siteAddressView.setVisibility(mInputSiteAddress != null ? View.VISIBLE : View.GONE);
 
-        String inputSiteAddressWithoutProtocol = UrlUtils.removeScheme(mInputSiteAddress);
         mInputSiteAddressWithoutSuffix = (mEndpointAddress == null || mEndpointAddress.isEmpty())
-                ? inputSiteAddressWithoutProtocol : UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
+                ? mInputSiteAddress : UrlUtils.removeXmlrpcSuffix(mEndpointAddress);
 
         mUsernameInput = rootView.findViewById(R.id.login_username_row);
         mUsernameInput.setText(mInputUsername);
@@ -194,6 +193,9 @@ public class LoginUsernamePasswordFragment extends LoginBaseDiscoveryFragment im
                     if (mIsWpcom) {
                         mLoginListener.forgotPassword(FORGOT_PASSWORD_URL_WPCOM);
                     } else {
+                        if (!mInputSiteAddressWithoutSuffix.endsWith("/")) {
+                            mInputSiteAddressWithoutSuffix += "/";
+                        }
                         mLoginListener.forgotPassword(mInputSiteAddressWithoutSuffix);
                     }
                 }

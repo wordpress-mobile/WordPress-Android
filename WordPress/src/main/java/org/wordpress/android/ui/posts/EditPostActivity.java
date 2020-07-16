@@ -187,6 +187,8 @@ import org.wordpress.android.util.WPUrlUtils;
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
+import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.image.ImageManager;
@@ -327,6 +329,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
 
+    private Handler mShowPrepublishingBottomSheetHandler;
+    private Runnable mShowPrepublishingBottomSheetRunnable;
+
     private boolean mHtmlModeMenuStateOn = false;
 
     @Inject Dispatcher mDispatcher;
@@ -360,6 +365,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject ReblogUtils mReblogUtils;
     @Inject AnalyticsTrackerWrapper mAnalyticsTrackerWrapper;
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
+    @Inject TenorFeatureConfig mTenorFeatureConfig;
+    @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -599,6 +606,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             setupViewPager();
         }
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
+
+        setupPrepublishingBottomSheetRunnable();
     }
 
     @SuppressWarnings("unused")
@@ -701,7 +710,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return null;
         }));
         mEditPostRepository.getPostChanged().observe(this, postEvent -> postEvent.applyIfNotHandled(post -> {
-            mViewModel.savePostToDb(this, mEditPostRepository, mSite);
+            mViewModel.savePostToDb(mEditPostRepository, mSite);
             return null;
         }));
     }
@@ -782,6 +791,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mAztecImageLoader != null && isFinishing()) {
             mAztecImageLoader.clearTargets();
             mAztecImageLoader = null;
+        }
+
+        if (mShowPrepublishingBottomSheetHandler != null && mShowPrepublishingBottomSheetRunnable != null) {
+            mShowPrepublishingBottomSheetHandler.removeCallbacks(mShowPrepublishingBottomSheetRunnable);
         }
     }
 
@@ -993,7 +1006,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     ActivityLauncher.showStockMediaPickerForResult(this, mSite, requestCode);
                     break;
                 case GIF:
-                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER);
+                    ActivityLauncher.showGifPickerForResult(this, mSite, RequestCodes.GIF_PICKER_SINGLE_SELECT);
                     break;
             }
         } else {
@@ -1528,6 +1541,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void updateAndSavePostAsync() {
+        if (mEditorFragment == null) {
+            AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
+            return;
+        }
         mViewModel.updatePostObjectWithUIAsync(mEditPostRepository, this::updateFromEditor, null);
     }
 
@@ -1756,17 +1773,24 @@ public class EditPostActivity extends LocaleAwareActivity implements
         setResult(RESULT_OK, i);
     }
 
+    private void setupPrepublishingBottomSheetRunnable() {
+        mShowPrepublishingBottomSheetHandler = new Handler();
+        mShowPrepublishingBottomSheetRunnable = () -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(
+                    PrepublishingBottomSheetFragment.TAG);
+            if (fragment == null) {
+                PrepublishingBottomSheetFragment prepublishingFragment =
+                        PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage, false);
+                prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
+            }
+        };
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
-
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(
-                PrepublishingBottomSheetFragment.TAG);
-        if (fragment == null) {
-            PrepublishingBottomSheetFragment prepublishingFragment =
-                    PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage, false);
-            prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
-        }
+        long delayMs = 100;
+        mShowPrepublishingBottomSheetHandler.postDelayed(mShowPrepublishingBottomSheetRunnable, delayMs);
     }
 
     @Override public void onSubmitButtonClicked(boolean publishPost) {
@@ -1947,12 +1971,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String postType = mIsPage ? "page" : "post";
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
-                        boolean supportsStockPhotos = mSite.isUsingWpComRestApi();
-                        boolean isWpCom = getSite().isWPCom();
+                        boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
+
+                        // The Unsupported Block Editor is disabled for all self-hosted sites
+                        // even the one that are connected via Jetpack to a WP.com account.
+                        // The option is disabled on Self-hosted sites because they can have their web editor
+                        // to be set to classic and then the fallback will not work.
+                        // We disable in Jetpack site because we don't have the self-hosted site's credentials
+                        // which are required for us to be able to fetch the site's authentication cookie.
+                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
 
                         return GutenbergEditorFragment.newInstance(
                                 "",
@@ -1960,15 +1991,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 postType,
                                 mIsNewPost,
                                 wpcomLocaleSlug,
-                                supportsStockPhotos,
                                 mSite.getUrl(),
                                 !isWpCom,
-                                mAccountStore.getAccount().getUserId(),
+                                isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
                                 isWpCom ? mAccountStore.getAccount().getUserName() : mSite.getUsername(),
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
-                                themeBundle);
+                                themeBundle,
+                                WordPress.getUserAgent(),
+                                mTenorFeatureConfig.isEnabled(),
+                                isUnsupportedBlockEditorEnabled,
+                                mGutenbergMentionsFeatureConfig.isEnabled()
+                        );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.
                         return AztecEditorFragment.newInstance("", "", AppPrefs.isAztecEditorToolbarExpanded());
@@ -2308,7 +2343,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 .addExistingMediaToEditorAsync(AddExistingMediaSource.STOCK_PHOTO_LIBRARY, mediaIds);
                     }
                     break;
-                case RequestCodes.GIF_PICKER:
+                case RequestCodes.GIF_PICKER_SINGLE_SELECT:
                     if (data.hasExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS)) {
                         int[] localIds = data.getIntArrayExtra(GifPickerActivity.KEY_SAVED_MEDIA_MODEL_LOCAL_IDS);
                         mEditorMedia.addGifMediaToPostAsync(localIds);
@@ -2563,6 +2598,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddStockMediaClicked(boolean allowMultipleSelection) {
         onPhotoPickerIconClicked(PhotoPickerIcon.STOCK_MEDIA, allowMultipleSelection);
+    }
+
+    @Override
+    public void onAddGifClicked(boolean allowMultipleSelection) {
+        onPhotoPickerIconClicked(PhotoPickerIcon.GIF, allowMultipleSelection);
     }
 
     @Override
@@ -2838,6 +2878,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorPhotoPicker.hidePhotoPicker();
                 break;
         }
+    }
+
+    @Override
+    public void onTrackableEvent(TrackableEvent event, Map<String, String> properties) {
+        mEditorTracker.trackEditorEvent(event, mEditorFragment.getEditorName(), properties);
     }
 
     // FluxC events
