@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.store
 
+import android.util.Base64
+import com.goterl.lazycode.lazysodium.utils.Key
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,14 +33,19 @@ import javax.inject.Singleton
 
 private const val MAX_RETRY_COUNT = 3
 
+data class EncryptedLoggingKey(val value: String)
+
 @Singleton
 class EncryptedLogStore @Inject constructor(
     private val encryptedLogRestClient: EncryptedLogRestClient,
     private val encryptedLogSqlUtils: EncryptedLogSqlUtils,
     private val coroutineEngine: CoroutineEngine,
-    dispatcher: Dispatcher
+    dispatcher: Dispatcher,
+    encryptedLoggingKey: EncryptedLoggingKey
 ) : Store(dispatcher) {
-    private val keyPair = EncryptionUtils.sodium.cryptoBoxKeypair()
+    private val publicKey by lazy {
+        createPublicKey(encryptedLoggingKey.value)
+    }
 
     override fun onRegister() {
         AppLog.d(API, this.javaClass.name + ": onRegister")
@@ -122,7 +129,7 @@ class EncryptedLogStore @Inject constructor(
         val contents = LogEncrypter(
                 sourceFile = encryptedLog.file,
                 uuid = encryptedLog.uuid,
-                publicKey = keyPair.publicKey
+                publicKey = publicKey
         ).encrypt()
         when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
@@ -181,6 +188,14 @@ class EncryptedLogStore @Inject constructor(
 
     private fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
+    }
+
+    private fun createPublicKey(publicKeyAsString: String): Key {
+        return if (publicKeyAsString.isNotBlank()) {
+            Key.fromBytes(Base64.decode(publicKeyAsString.toByteArray(), Base64.DEFAULT))
+        } else {
+            EncryptionUtils.sodium.cryptoBoxKeypair().publicKey
+        }
     }
 
     /**
