@@ -72,6 +72,7 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
+        buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -96,6 +97,7 @@ android {
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "false"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -113,6 +115,7 @@ android {
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
             applicationId "org.wordpress.android.prealpha"
             dimension "buildType"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
         }
     }
 

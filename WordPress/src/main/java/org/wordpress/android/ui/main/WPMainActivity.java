@@ -122,6 +122,7 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
+import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -199,6 +200,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
+    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -812,6 +814,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
+        if (mModalLayoutPickerFeatureConfig.isEnabled()) {
+            addNewPage(source); // TODO: Open MLP
+        } else {
+            addNewPage(source);
+        }
+    }
+
+    private void addNewPage(PagePostCreationSourcesDetail source) {
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction

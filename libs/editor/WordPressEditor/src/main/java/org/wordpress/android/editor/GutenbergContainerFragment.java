@@ -38,6 +38,7 @@ public class GutenbergContainerFragment extends Fragment {
     private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
             "param_site_is_unsupported_block_editor_enabled";
     private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
+    private static final String ARG_ENABLE_MODAL_LAYOUT_PICKER = "param_enable_modal_layout_picker";
 
     private boolean mHtmlModeEnabled;
     private boolean mHasReceivedAnyContent;
@@ -51,7 +52,8 @@ public class GutenbergContainerFragment extends Fragment {
                                                          boolean isSiteUsingWpComRestApi,
                                                          Bundle editorTheme,
                                                          boolean isUnsupportedBlockEditorEnabled,
-                                                         boolean enableMentionsFlag) {
+                                                         boolean enableMentionsFlag,
+                                                         boolean isModalLayoutPickerEnabled) {
         GutenbergContainerFragment fragment = new GutenbergContainerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_POST_TYPE, postType);
@@ -63,6 +65,7 @@ public class GutenbergContainerFragment extends Fragment {
         args.putBundle(ARG_EDITOR_THEME, editorTheme);
         args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
         args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
+        args.putBoolean(ARG_ENABLE_MODAL_LAYOUT_PICKER, isModalLayoutPickerEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -116,6 +119,7 @@ public class GutenbergContainerFragment extends Fragment {
         boolean isUnsupportedBlockEditorEnabled =
                 getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
         boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
+        boolean isModalLayoutPickerEnabled = getArguments().getBoolean(ARG_ENABLE_MODAL_LAYOUT_PICKER);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -144,7 +148,8 @@ public class GutenbergContainerFragment extends Fragment {
                 isSiteUsingWpComRestApi,
                 editorTheme,
                 isUnsupportedBlockEditorEnabled,
-                enableMentionsFlag);
+                enableMentionsFlag,
+                isModalLayoutPickerEnabled);
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
