@@ -25,7 +25,7 @@ class SignupUtils
                 builder.append(" ")
             }
         }
-        val displayName = builder.toString().trim { it <= ' ' }
+        val displayName = builder.toString().trim()
         return if (displayName.isNotEmpty()) displayName else null
     }
 
