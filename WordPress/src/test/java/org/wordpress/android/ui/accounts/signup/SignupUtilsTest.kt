@@ -85,8 +85,8 @@ class SignupUtilsTest {
         assertThat(displayName).isEqualTo(expectedDisplayName)
     }
 
-    private fun assertEmailMappedToUsername(email: String, expectedDisplayName: String? = null) {
-        val displayName = signupUtils.createUsernameFromEmail(email)
-        assertThat(displayName).isEqualTo(expectedDisplayName)
+    private fun assertEmailMappedToUsername(email: String, expectedUsername: String? = null) {
+        val username = signupUtils.createUsernameFromEmail(email)
+        assertThat(username).isEqualTo(expectedUsername)
     }
 }
