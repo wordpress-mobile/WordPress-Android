@@ -1,6 +1,7 @@
 package org.wordpress.android.ui;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
@@ -26,6 +28,8 @@ public class TextInputDialogFragment extends DialogFragment {
     private static final String IS_INPUT_ENABLED = "is_input_enabled";
 
     public static final String TAG = "text_input_dialog_fragment";
+
+    public int callbackId = -1;
 
     public static TextInputDialogFragment newInstance(String title,
                                                       String initialText,
@@ -64,7 +68,7 @@ public class TextInputDialogFragment extends DialogFragment {
         String hint = args.getString(HINT_TAG);
         boolean isMultiline = args.getBoolean(IS_MULTILINE_TAG);
         String initialText = args.getString(INITIAL_TEXT_TAG);
-        final int callbackId = args.getInt(CALLBACK_ID_TAG);
+        callbackId = args.getInt(CALLBACK_ID_TAG);
 
         textView.setText(title);
         if (!TextUtils.isEmpty(hint)) {
@@ -108,7 +112,18 @@ public class TextInputDialogFragment extends DialogFragment {
         return alertDialog;
     }
 
+    @Override public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (getTargetFragment() instanceof Callback) {
+            ((Callback) getTargetFragment()).onTextInputDialogDismissed(callbackId);
+        } else {
+            AppLog.e(AppLog.T.UTILS,
+                    "Target fragment doesn't implement TextInputDialogFragment.Callback");
+        }
+    }
+
     public interface Callback {
         void onSuccessfulInput(String input, int callbackId);
+        void onTextInputDialogDismissed(int callbackId);
     }
 }
