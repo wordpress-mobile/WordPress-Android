@@ -57,7 +57,7 @@ android {
         } else {
             versionName "alpha-234"
         }
-        versionCode 894
+        versionCode 895
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -90,7 +90,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "15.3-rc-2"
             }
-            versionCode 893
+            versionCode 894
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
