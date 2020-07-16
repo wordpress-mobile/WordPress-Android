@@ -138,6 +138,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
     @Inject protected ImageManager mImageManager;
     @Inject protected AppPrefsWrapper mAppPrefsWrapper;
     @Inject protected UnifiedLoginTracker mUnifiedLoginTracker;
+    @Inject protected SignupUtils mSignupUtils;
 
     public static SignupEpilogueFragment newInstance(String displayName, String emailAddress,
                                                      String photoUrl, String username,
@@ -559,36 +560,6 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
         return !TextUtils.equals(mAccount.getAccount().getUserName(), mUsername);
     }
 
-    /**
-     * Create a display name from the email address by taking everything before the "@" symbol,
-     * removing all non-letters and non-periods, replacing periods with spaces, and capitalizing
-     * the first letter of each word.
-     *
-     * @return {@link String} to be the display name
-     */
-    private String createDisplayNameFromEmail() {
-        String username = mEmailAddress.split("@")[0].replaceAll("[^A-Za-z/.]", "");
-        String[] array = username.split("\\.");
-        StringBuilder builder = new StringBuilder();
-
-        for (String s : array) {
-            String capitalized = s.substring(0, 1).toUpperCase(Locale.ROOT) + s.substring(1);
-            builder.append(capitalized.concat(" "));
-        }
-
-        return builder.toString().trim();
-    }
-
-    /**
-     * Create a username from the email address by taking everything before the "@" symbol and
-     * removing all non-alphanumeric characters.
-     *
-     * @return {@link String} to be the username
-     */
-    private String createUsernameFromEmail() {
-        return mEmailAddress.split("@")[0].replaceAll("[^A-Za-z0-9]", "").toLowerCase(Locale.ROOT);
-    }
-
     private boolean isPasswordInErrorMessage(String message) {
         String lowercaseMessage = message.toLowerCase(Locale.getDefault());
         String lowercasePassword = getString(R.string.password).toLowerCase(Locale.getDefault());
@@ -654,9 +625,9 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
 
     private void populateViews() {
         mEmailAddress = mAccountStore.getAccount().getEmail();
-        mDisplayName = createDisplayNameFromEmail();
+        mDisplayName = mSignupUtils.createDisplayNameFromEmail(mEmailAddress);
         mUsername = !TextUtils.isEmpty(mAccountStore.getAccount().getUserName())
-                ? mAccountStore.getAccount().getUserName() : createUsernameFromEmail();
+                ? mAccountStore.getAccount().getUserName() : mSignupUtils.createUsernameFromEmail(mEmailAddress);
         mHeaderDisplayName.setText(mDisplayName);
         mHeaderEmailAddress.setText(mEmailAddress);
         mEditTextDisplayName.setText(mDisplayName);

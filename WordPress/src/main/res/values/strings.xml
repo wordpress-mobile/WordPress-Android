@@ -2644,6 +2644,7 @@
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tap <![CDATA[<b>%1$s</b>]]> to set a new title</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_browse_themes_subtitle" translatable="false">@string/quick_start_dialog_browse_themes_message</string>
     <string name="quick_start_list_browse_themes_title" translatable="false">@string/quick_start_dialog_browse_themes_title</string>
@@ -2653,6 +2654,8 @@
     <string name="quick_start_list_create_page_title" translatable="false">@string/quick_start_dialog_create_page_title</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
+    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
     <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
     <string name="quick_start_list_enable_sharing_subtitle" translatable="false">@string/quick_start_dialog_enable_sharing_message</string>

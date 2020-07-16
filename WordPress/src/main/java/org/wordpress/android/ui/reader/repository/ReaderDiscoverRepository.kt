@@ -7,7 +7,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
@@ -15,13 +17,14 @@ import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseC
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-class ReaderPostRepository(
+class ReaderDiscoverRepository constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
@@ -36,9 +39,9 @@ class ReaderPostRepository(
 
     private var isStarted = false
 
-    private val _postsForTag = ReactiveMutableLiveData<ReaderPostList>(
-            onActive = { onActivePostsForTag() }, onInactive = { onInactivePostsForTag() })
-    val postsForTag: LiveData<ReaderPostList> = _postsForTag
+    private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
+            onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
+    val discoverFeed: LiveData<ReaderPostList> = _discoverFeed
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -82,25 +85,24 @@ class ReaderPostRepository(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure))
     }
 
-    private fun onActivePostsForTag() {
+    private fun onActiveDiscoverFeed() {
         loadPosts()
     }
 
-    private fun onInactivePostsForTag() {
+    private fun onInactiveDiscoverFeed() {
     }
 
     private fun loadPosts() {
         launch {
-            val existsInMemory = postsForTag.value?.let {
+            val existsInMemory = discoverFeed.value?.let {
                 !it.isEmpty()
             } ?: false
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
 
             if (!existsInMemory) {
                 val result = getPostsForTagUseCase.get(readerTag)
-                _postsForTag.postValue(result)
+                _discoverFeed.postValue(result)
             }
-
             if (refresh) {
                 val response = fetchPostsForTagUseCase.fetch(readerTag)
                 if (response != Success) _communicationChannel.postValue(Event(response))
@@ -111,13 +113,14 @@ class ReaderPostRepository(
     private fun reloadPosts() {
         launch {
             val result = getPostsForTagUseCase.get(readerTag)
-            _postsForTag.postValue(result)
+            _discoverFeed.postValue(result)
         }
     }
 
     class Factory
     @Inject constructor(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        private val readerUtilsWrapper: ReaderUtilsWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
         private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
@@ -125,10 +128,13 @@ class ReaderPostRepository(
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
     ) {
-        fun create(readerTag: ReaderTag): ReaderPostRepository {
-            return ReaderPostRepository(
+        fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
+            val tag = readerTag
+                    ?: readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_DISCOVER, DEFAULT)
+
+            return ReaderDiscoverRepository(
                     bgDispatcher,
-                    readerTag,
+                    tag,
                     getPostsForTagUseCase,
                     getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
