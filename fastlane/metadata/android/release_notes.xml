@@ -1,103 +1,101 @@
 <ar>
-15.0:
-إضافات محرِّر المكوّن: مكوِّن الشِعر الجديد. ادعم ألوان التراكب في مكوِّن "الغلاف". يمكنك إدخال/إنهاء رسم متحرك في شريط الأدوات العائم. تلميح الأداة لأزرار تحديد قالب الصفحة.
-- تحديثات محرِّر المكوّن: "مكوِّن سلة المهملات" في قائمة يمكن الوصول إليها من شريط أدوات المكوِّن.
-إصلاحات محرِّر المكوِّن: مشكلة دمج مكوِّن النص، ومحاذاة الزر في قوالب الصفحات، وتناقضات السلسلة.
-تحديثات أخرى: تمت إضافة إعدادات الصفحة الرئيسية إلى قائمة الصفحات وإعدادات الموقع. تم تحسين واجهة مستخدم القارئ.
+15.2:
+إضافات محرِّر المكوِّن: تمت إضافة دعم المحرِّر إلى الألوان والتدرجات المحدِّدة للقوالب على مكوِّني الغلاف والزر. تكتمل الآن عمليات رفع مقاطع الفيديو في مكوِّن الغلاف بعد إغلاق المحرِّر. تظهر الآن معلومات قياس عدد المكوِّنات والكلمات والأحرف.
+
+إصلاحات: تم إصلاح مشكلات عرض تفاصيل المقالات في القارئ، ومعالجة اكتمال الرفع في محرِّر المكوِّن، والأعطال التي ستحدث عندما تحوي استجابة واجهة برمجة التطبيقات في ووردبريس نصًا فارغًا.
 </ar>
 <de-DE>
-15.0:
-Neu im Block-Editor: Neuer Versblock. Support für Overlay-Farben im Cover-Block. Starten/Verlassen der Animation in der unverankerten Toolbar. Tooltip für Auswahlbuttons für die Seitenvorlage.
-Updates im Block-Editor: „Trash block“ (Block in Papierkorb verschieben) in einem Menü ist nun über die Block-Toolbar erreichbar.
-Weitere Updates: Startseite-Einstellungen wurden zur Seitenliste und den Website-Einstellungen hinzugefügt.
+15,2:
+Erweiterungen des Block-Editors: Unterstützt jetzt durch das Theme definierte Farben sowie Verläufe in Cover- und Button-Blöcken. Video-Uploads im Cover-Block werden abgeschlossen, nachdem der Editor geschlossen wurde. Die Kennzahlen für Blöcke, Wörter und Zeichen werden jetzt angezeigt.
+
+Behoben: Probleme mit der Darstellung von Beitragsdetails im Reader, Verarbeitung des Upload-Abschlusses im Block-Editor sowie ein Absturz, wenn die WordPress-API-Reaktion einen leeren Text besitzt.
 </de-DE>
 <en-US>
-15.0:
-Block editor additions: New Verse block. Support for overlay colors in Cover block. Enter/exit animation for the Floating Toolbar. Tooltip for page template selection buttons.
-Block editor updates: “Trash block” in a menu reachable from the block toolbar.
-Block editor fixes: Text block merging issue, button alignment in page templates, string inconsistencies.
-Other updates: Added homepage settings to pages list and to site settings. Improved Reader UI.
+15.2:
+Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.
+
+Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.
 </en-US>
 <es-ES>
-15.0:
-Añadido en el editor de bloques: Nuevo bloque de verso. Compatibilidad para colores de superposición en el bloque de cubierta. Animación de entrada/salida para la barra de herramientas flotante. Información emergente para los botones de selección de la plantilla de página.
-Actualizaciones del editor de bloques: «Bloque de papelera» en un menú accesible desde la barra de herramientas de bloques.
-Otras actualizaciones: Añadidos ajustes de la página de inicio a la lista de páginas y a los ajustes del sitio.
+15.2:
+Añadidos al editor de bloques: Se ha añadido al editor compatibilidad para colores y degradados definidos por el tema en los bloques de cubierta y botón. El bloque de vídeo de portada se completa ahora después de que el editor se haya cerrado. Ahora se muestra la información métrica del recuento de bloques, palabras y caracteres.
+
+Correcciones: Se han corregido los problemas de procesamiento de detalles de las entradas del lector y el bloqueo en la respuesta de la API de WordPress.
 </es-ES>
 <fr-CA>
-15.0 :
-Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
-Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
-Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
+15.2 
+Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
+
+Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
 </fr-CA>
 <fr-FR>
-15.0 :
-Ajouts de l’éditeur de blocs : Nouveau bloc Couplet. Prise en charge des couleurs de superposition dans le bloc de bannière. Animation d’ouverture/fermeture de la barre d’outils flottante. Info-bulle pour les boutons de sélection de modèle de page.
-Mises à jour de l’éditeur de blocs : « Bloc corbeille » dans un menu accessible depuis la barre d’outils du bloc.
-Autres mises à jour : Ajout de paramètres de page d’accueil dans la liste de pages et dans les réglages du site.
+15.2 
+Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
+
+Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
 </fr-FR>
 <iw-IL>
-15.0:
-תוספות לעורך הבלוקים: בלוק פסוק חדש. תמיכה בצבעים של שכבות בבלוק כיסוי. אפשרות להנפשה של כניסה/יציאה בסרגל הכלים הצף. תיאורי כלי בכפתורי בחירה של תבניות עמוד.
-עדכונים בעורך הבלוקים: ניתן להגיע אל הפעולה 'להעביר את הבלוק לפח' בתפריט מסרגל הכלים של הבלוק.
-תיקונים בעורך הבלוקים: בעיה עם שילוב של בלוק טקסט, יישור כפתורים בתבניות עמוד, חוסר עקביות במחרוזות.
-עדכונים אחרים: הוספנו הגדרות של עמוד הבית ברשימת עמודים ובהגדרות האתר. ממשק משתמש משופר ב-Reader.
+15.2:
+תוספות לעורך הבלוקים: הוספנו תמיכה בעורך לצבעים ולמעברי צבע שמוגדרים בערכת העיצוב בבלוקים 'כיסוי' ו'כפתור'. ההעלאות של וידאו בבלוק הכיסוי כעת מושלמות לאחר הסגירה של העורך. פרטי הספירה של בלוקים, מילים ותווים מוצגים כעת.
+
+תיקונים: תיקנו בעיות בעיבוד של פרטי הפוסט ב-Reader, את הטיפול בהשלמת ההעלאה בעורך הבלוקים וקריסה שהתרחשה כאשר המענה של API ב-WordPress היה ללא תוכן.
 </iw-IL>
 <id>
-15.0:
-Tambahan pada penyunting blok: Blok Bait baru. Dukungan untuk warna pelapis (overlay) pada blok Sampul. Animasi masuk/keluar untuk Bilah Peralatan Mengambang. Tip alat untuk tombol pemilihan template halaman.
-Pembaruan pada penyunting blok: “Blok Tempat Sampah” dalam menu yang dapat diakses dari bilah peralatan blok.
-Pembaruan lainnya: Penambahan pengaturan beranda ke daftar halaman dan ke pengaturan situs.
+15.2:
+Tambahan penyunting blok: Dukungan penyunting ditambahkan untuk warna dan gradasi yang berdasarkan tema pada blok Sampul dan Tombol. Pengunggahan video blok sampul kini selesai setelah penyunting ditutup. Informasi metrik mengenai jumlah blok, kata, dan karakter kini ditampilkan.
+
+Perbaikan: Masalah pemuatan detail pos Pembaca, penanganan penyelesaian unggahan pada penyunting Blok, dan crash yang terjadi ketika respons API WordPress tidak diisi telah diperbaiki.
 </id>
 <it-IT>
-15.0:
-Aggiunte all'editor a blocchi: nuovo blocco Verso. Supporto per i colori di sovrapposizione nel blocco Copertina. Animazione di ingresso/uscita per la barra degli strumenti mobile. Tooltip per i pulsanti di selezione del modello di pagina.
-Aggiornamenti all'editor a blocchi: il "blocco Cestino" in un menu è raggiungibile dalla barra degli strumenti del blocco.
-Altri aggiornamenti: aggiunte impostazioni della homepage all'elenco di pagine e alle impostazioni del sito.
+15.2:
+Aggiunte all'editor a blocchi: supporto all'editor aggiunto per colori e gradienti specifici del tema sui blocchi Copertina e Pulsante. I caricamenti di video del blocco Copertina vengono completati dopo la chiusura dell'editor. Vengono visualizzate le informazioni di tipo metrico del blocco, del conteggio di parole e caratteri.
+
+Correzioni: corretti problemi di restituzione dei dettagli dell'articolo del Reader e un arresto anomalo in risposta a un API di WordPress.
 </it-IT>
 <ja-JP>
-15.0:
-ブロックエディター追加機能 :新しい詩ブロック。カバーブロックのオーバーレイの色をサポート。「フローティングツールバー」のアニメーションの開始 / 終了機能。ページテンプレートの選択ボタンのツールチップ。
-ブロックエディターの更新 :ブロックツールバーから選択できるメニューに「ブロック削除」を追加。
-ブロックエディターの修正 :テキストブロックのマージ問題、ページテンプレートのボタン配置、文字列の不一致。
-その他アップデート :ページリストとサイト設定にホームページ設定を追加。Reader の UI を改善。
+15.2 : 
+ブロックエディターの追加 : カバーブロックとボタンブロックのテーマ定義カラーとグラデーションにエディターのサポートが追加されました。 エディターを閉じるとカバーブロックの動画アップロードが完了します。 ブロック数、単語数、文字数のメトリック情報が表示されます。
+
+修正 : Reader 投稿の詳細におけるレンダリングの問題、ブロックエディターにおけるアップロード完了処理、および WordPress API の応答に空の本文がある場合にクラッシュする問題を修正しました。
 </ja-JP>
 <nl-NL>
-15.0:
-Aanvullingen op de blokeditor: Nieuw Versblok. Ondersteuning voor overlaykleuren in het Omslagblok. Animatie starten/sluiten voor zwevende werkbalk. Tooltip voor selectieknoppen van paginasjabloon.
-Updates van de blokeditor: 'Blok naar prullenbak verplaatsen' in een menu dat via de blokwerkbalk geopend kan worden.
-Overige updates: Homepage-instellingen toegevoegd aan paginalijst en site-instellingen.
+Blok-editor toevoegingen: Redactionele ondersteuning toegevoegd voor thema gedefinieerde kleuren en kleurverlopen op cover- en knop blokken. Cover blok video-uploads zijn nu voltooid nadat de editor is gesloten. Blok-, woord- en karakter telling metrische informatie wordt nu weergegeven.
+
+Opgelost: Problemen met de weergave van de Reader bericht details, de afhandeling van de upload in de blok-editor, en een crash die zou optreden wanneer de WordPress API-reactie een lege body heeft
 </nl-NL>
+<pt-BR>
+15.2:
+Adições ao editor de blocos: adicionamos suporte aos blocos Cobertura e Botão a cores e gradientes definidos pelo tema . Enviar um vídeo usando o bloco Cobertura agora finaliza o envio mesmo que o editor seja fechado. Exibição de métricas de blocos, palavras e caracteres.
+
+Correções: corrigimos a exibição de detalhes de posts no Leitor, melhoramos como envio de arquivos são tratados no editor de blocos, e corrigimos um conflito com a API do WordPress quando a resposta estiver vazia.
+</pt-BR>
 <ru-RU>
-15.0:
-Редактор блоков, добавлено: Новый блок для стихов. Поддержка наложения цвета в блоке обложки. Анимация появления и скрытия для плавающей панели инструментов. Подсказки для кнопок выбора шаблонов.
-Обновлено: Удаление блока доступно в меню выбора блоков.
-Исправлено: Слияние текстовых блоков, выравнивание кнопок в шаблонах страниц, целостность строк.
-Другое: Добавлены настройки главной страницы в список страниц и настройки сайта. Улучшен интерфейс Чтива.
+15.2:
+Добавлено в редактор блоков: Поддержка редактором цветов темы и градиентов в блоках кнопки и обложки. Загрузка видео в блок обложки будет завершена даже если редактор будет закрыт. Отображение счетчика блоков, слов и символов.
+
+Исправлено: Отображение подробностей в Чтиве, завершение загрузки в редакторе, падение при пустом ответе WordPress API.
 </ru-RU>
 <sv-SE>
-15.0:
-Nytt i blockredigeraren: Diktblock. Överläggsfärger i omslagsblocket. Animering av flytande verktygsfält. Inforuta vid val av sidmall.
-Uppdaterat i blockredigeraren: ”Kasta block” nås via menyn från blockets verktygsfält.
-Andra uppdateringar: Inställningar för startsidan har lagts till i sidlista och webbplatsinställningar.
+15.2:
+Nytt i blockredigeraren: Stöd i redigeraren för temadefinierade färger och gradienter i omslags- och knappblock. Uppladdning av video för omslagsblock fullföljs även efter redigeraren har stängts. Räknare för block, ord och tecken visas.
+
+Rättelser: Rättat problem i läsaren med att visa inläggsuppgifter och fullföljande av uppladdning i blockredigeraren samt en krasch vid tomt svar från WordPress API.
 </sv-SE>
 <tr-TR>
-15.0:
-Blok düzenleyici eklemeleri: Yeni Dörtlük bloku. Kapak blokunda katman renklerine yönelik destek. Kayan Araç Çubuğu için giriş/çıkış animasyonu. Sayfa şablonu seçim düğmeleri için araç ipucu.
-Blok düzenleyici güncellemeleri: Blok araç çubuğundan ulaşılabilen bir menüde “Çöp Kutusu bloku”.
-Diğer güncellemeler: Sayfalar listesine ve site ayarlarına ana sayfa ayarları eklendi.
+15,2:
+Blok düzenleyicisi eklemeleri: Kapak ve Düğme bloklarında tema tanımlı renkler ve gradyanlar için düzenleyici desteği eklendi. Kapak bloğu video yüklemeleri, düzenleyici kapatıldıktan sonra tamamlanır. Blok, sözcük ve karakter sayısı ile ilgili ölçüm bilgileri görüntülenir.
+
+Düzeltmeler: Okuyucu gönderim ayrıntısı oluşturma sorunları ve bir WordPress API yanıt kilitlenmesi düzeltildi.
 </tr-TR>
 <zh-CN>
-15.0：
-区块编辑器新增内容：新的“诗篇”区块。在“封面”区块中支持叠加颜色。在浮动工具栏中增加了进入/退出动画。为页面模板选择按钮增加了工具提示。
-区块编辑器更新：“回收站区块”现在位于可通过区块工具栏访问的菜单中。
-区块编辑器修复：文本区块合并问题、页面模板中的按钮对齐问题、字符串不一致问题。
-其他更新：在页面列表和站点设置中增加了主页设置。改进了阅读器 UI。
+15.2：
+区块编辑器添加内容： 为封面和按钮区块上的主题定义颜色和渐变添加了编辑器支持。 现在，封面区块视频上传在关闭编辑器后完成。 现在显示区块、字词和字符计数指标信息。
+
+修复：修复了阅读器文章详细信息呈现问题、区块编辑器中上传完成的处理以及 WordPress API 响应的正文为空时可能发生的崩溃问题。
 </zh-CN>
 <zh-TW>
-15.0：
-區塊編輯器新增功能：全新詩句區塊。為封面區塊提供覆疊色彩支援。浮動工具列的進入/退出動畫。頁面範本選擇按鈕的工具提示。
-區塊編輯器更新：可從區塊工具列存取選單中的「垃圾區塊」。
-區塊編輯器修正：文字區塊合併問題、頁面範本中的按鈕對齊問題、字串不一致問題。
-其他更新：在頁面清單和網站設定中新增首頁設定。改善的閱讀器 UI。
+15.2：
+區塊編輯器新功能：新增編輯器支援，封面和按鈕區塊可設定佈景主題定義的顏色和漸層色彩。 封面區塊視訊現在會在編輯器關閉後上傳完成。 系統現在會顯示區塊、文字和字元數指標資訊。
+
+修正：修復讀取器文章詳細資料轉譯問題、區塊編輯器中上傳完成的處理工作，以及 WordPress API 回應本文空白時發生的當機情況。
 </zh-TW>

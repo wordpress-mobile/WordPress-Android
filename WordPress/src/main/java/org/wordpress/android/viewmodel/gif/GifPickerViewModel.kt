@@ -1,8 +1,8 @@
 package org.wordpress.android.viewmodel.gif
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.PagedList.BoundaryCallback
@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.getDistinct
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ import javax.inject.Inject
  * This creates a [PagedList] which can be bound to by a [PagedListAdapter] and also manages the logic of the
  * selected media. That includes but not limited to keeping the [GifMediaViewModel.selectionNumber] continuous.
  *
- * Calling [setup] is required before using this ViewModel.
+ * Calling [start] is required before using this ViewModel.
  */
 class GifPickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -53,12 +52,14 @@ class GifPickerViewModel @Inject constructor(
          * The default state where interaction with the UI like selecting and searching is allowed
          */
         IDLE,
+
         /**
          * This is reached when the user chose some items and pressed the "Add" button
          *
          * We're actively downloading and saving in the background during this state.
          */
         DOWNLOADING,
+
         /**
          * Reached after [DOWNLOADING] was successful
          *
@@ -72,14 +73,17 @@ class GifPickerViewModel @Inject constructor(
      */
     enum class EmptyDisplayMode {
         HIDDEN,
+
         /**
          * Visible because the user has not performed a search or the search string is blank.
          */
         VISIBLE_NO_SEARCH_QUERY,
+
         /**
          * Visible because the user has performed a search but there are no search results
          */
         VISIBLE_NO_SEARCH_RESULTS,
+
         /**
          * Visible because there was a network error on the first page load.
          */
@@ -89,6 +93,7 @@ class GifPickerViewModel @Inject constructor(
     private val _emptyDisplayMode = MutableLiveData<EmptyDisplayMode>().apply {
         value = EmptyDisplayMode.VISIBLE_NO_SEARCH_QUERY
     }
+
     /**
      * Describes how the empty view UI should be displayed
      */
@@ -103,19 +108,25 @@ class GifPickerViewModel @Inject constructor(
 
     private lateinit var site: SiteModel
 
+    private var isMultiSelectEnabled: Boolean = false
+    private var isStarted = false
+
     private val _state = MutableLiveData<State>().apply { value = State.IDLE }
+
     /**
      * Describes what state this ViewModel (and the corresponding Activity) is in.
      */
     val state: LiveData<State> = _state
 
     private val _downloadResult = SingleLiveEvent<DownloadResult>()
+
     /**
      * Produces results whenever [downloadSelected] finishes
      */
     val downloadResult: LiveData<DownloadResult> = _downloadResult
 
     private val _selectedMediaViewModelList = MutableLiveData<LinkedHashMap<String, GifMediaViewModel>>()
+
     /**
      * A [Map] of the [GifMediaViewModel]s that were selected by the user
      *
@@ -123,15 +134,8 @@ class GifPickerViewModel @Inject constructor(
      */
     val selectedMediaViewModelList: LiveData<LinkedHashMap<String, GifMediaViewModel>> = _selectedMediaViewModelList
 
-    /**
-     * Returns `true` if the selection bar (UI) should be shown
-     *
-     * This changes when the number of items change from 0 to 1 or 1 to 0.
-     */
-    val selectionBarIsVisible: LiveData<Boolean> =
-            Transformations.map(selectedMediaViewModelList) { it.isNotEmpty() }.getDistinct()
-
     private val _isPerformingInitialLoad = MutableLiveData<Boolean>()
+
     /**
      * Returns `true` if we are (or going to) perform an initial load due to a [search] call.
      *
@@ -153,6 +157,12 @@ class GifPickerViewModel @Inject constructor(
                 .setBoundaryCallback(pagedListBoundaryCallback)
                 .build()
     }
+
+    /**
+     * Represents visual state of selection bar that appears when you select an image
+     */
+    private val _selectionBarUiModel = MediatorLiveData<SelectionBarUiModel>()
+    val selectionBarUiModel: LiveData<SelectionBarUiModel> = _selectionBarUiModel
 
     /**
      * Update the [emptyDisplayMode] depending on the number of API search results or whether there was an error.
@@ -192,12 +202,34 @@ class GifPickerViewModel @Inject constructor(
     }
 
     /**
-     * Perform additional initialization for this ViewModel
+     * Perform initial initialization for this ViewModel
      *
      * The [site] usually comes from this ViewModel's corresponding Activity
+     *  [isMultiSelectEnabled] indicates if selection of multiple GIF's at ounce is supported
      */
-    fun setup(site: SiteModel) {
+    fun start(site: SiteModel, isMultiSelectEnabled: Boolean) {
+        if (isStarted) {
+            return
+        }
         this.site = site
+        this.isMultiSelectEnabled = isMultiSelectEnabled
+
+        // Initial Selection Bar UI state
+        _selectionBarUiModel.value = SelectionBarUiModel(
+                isVisible = false,
+                numberOfSelectedImages = 0,
+                isMultiselectEnabled = isMultiSelectEnabled
+        )
+
+        // isMultiSelectEnabled is a part of UI state, so we want to add source in here instead of init
+        _selectionBarUiModel.addSource(selectedMediaViewModelList) { selectedMediaViewModelList ->
+            _selectionBarUiModel.value = _selectionBarUiModel.value?.copy(
+                    isVisible = selectedMediaViewModelList.isNotEmpty(),
+                    numberOfSelectedImages = selectedMediaViewModelList.size
+            )
+        }
+
+        isStarted = true
     }
 
     /**
@@ -301,7 +333,20 @@ class GifPickerViewModel @Inject constructor(
 
         mediaViewModel.postIsSelected(isSelected)
 
+        // in single select mode we need to deselect previous gif if any
+        if (!isMultiSelectEnabled) {
+            selectedMediaViewModelList.value?.forEach {
+                val mutableGifMediaViewModel = it.value
+                if (mutableGifMediaViewModel is MutableGifMediaViewModel) {
+                    mutableGifMediaViewModel.postIsSelected(false)
+                }
+            }
+        }
+
         val selectedList = (selectedMediaViewModelList.value ?: LinkedHashMap()).apply {
+            if (!isMultiSelectEnabled) {
+                clear()
+            }
             // Add or remove the [mediaViewModel] from the list
             if (isSelected) {
                 set(mediaViewModel.id, mediaViewModel)
@@ -310,7 +355,10 @@ class GifPickerViewModel @Inject constructor(
                 remove(mediaViewModel.id)
             }
 
-            rebuildSelectionNumbers(this)
+            // no need to rebuild selection numbers in single selection mode
+            if (isMultiSelectEnabled) {
+                rebuildSelectionNumbers(this)
+            }
         }
 
         _selectedMediaViewModelList.postValue(selectedList)
@@ -358,4 +406,10 @@ class GifPickerViewModel @Inject constructor(
         private const val DEFAULT_INITIAL_LOAD_SIZE_HINT = 42
         private const val DEFAULT_PAGE_SIZE = 21
     }
+
+    data class SelectionBarUiModel(
+        val isVisible: Boolean = false,
+        val numberOfSelectedImages: Int = 0,
+        val isMultiselectEnabled: Boolean = true
+    )
 }

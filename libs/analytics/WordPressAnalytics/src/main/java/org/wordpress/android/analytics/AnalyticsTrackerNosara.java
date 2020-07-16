@@ -306,6 +306,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
+                predefinedEventProperties.put("task_name", "update_site_title");
+                break;
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
                 predefinedEventProperties.put("type", "customize");
                 break;
@@ -332,6 +335,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
+                predefinedEventProperties.put("task_name", "update_site_title");
                 break;
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "view_site");
@@ -395,6 +401,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
+                predefinedEventProperties.put("task_name", "update_site_title");
                 break;
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "view_site");
@@ -1485,6 +1494,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "site_settings_optimize_images_changed";
             case ABTEST_START:
                 return "abtest_start";
+            case FEATURE_FLAG_SET:
+                return "feature_flag_set";
+            case EXPERIMENT_VARIANT_SET:
+                return "experiment_variant_set";
             case TRAIN_TRACKS_RENDER:
                 return "traintracks_render";
             case TRAIN_TRACKS_INTERACT:
@@ -1638,6 +1651,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_GROW_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
             case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
             case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
@@ -1650,6 +1664,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
             case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
             case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
@@ -1662,6 +1677,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
+            case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
             case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
             case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:
@@ -1786,6 +1802,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plans_compare";
             case PAGES_LIST_AUTHOR_FILTER_CHANGED:
                 return "pages_list_author_filter_changed";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_SHOWN:
+                return "gutenberg_unsupported_block_webview_shown";
+            case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
+                return "gutenberg_unsupported_block_webview_closed";
             case PREPUBLISHING_BOTTOM_SHEET_OPENED:
                 return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
