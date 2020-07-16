@@ -1778,8 +1778,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "story_post_error_snackbar_manage_tapped";
             case STORY_POST_PUBLISH_TAPPED:
                 return "story_post_publish_tapped";
-            case STORY_POST_BOTTOM_SHEET_OPENED:
-                return "story_post_bottom_sheet_opened";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1790,6 +1788,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "plans_compare";
             case PAGES_LIST_AUTHOR_FILTER_CHANGED:
                 return "pages_list_author_filter_changed";
+            case PREPUBLISHING_BOTTOM_SHEET_OPENED:
+                return "prepublishing_bottom_sheet_opened";
             case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
                 return "prepublishing_bottom_sheet_dismissed";
         }

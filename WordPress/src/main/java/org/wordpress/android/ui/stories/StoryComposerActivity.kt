@@ -24,7 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_POST_BOTTOM_SHEET_OPENED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.PostImmutableModel
@@ -418,7 +418,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        analyticsTrackerWrapper.track(STORY_POST_BOTTOM_SHEET_OPENED)
+        analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
         showPrepublishingBottomSheet()
     }
 
