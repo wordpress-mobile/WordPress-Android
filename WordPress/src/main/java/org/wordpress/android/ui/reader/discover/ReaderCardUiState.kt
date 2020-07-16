@@ -28,6 +28,7 @@ sealed class ReaderCardUiState {
         val thumbnailStripSection: GalleryThumbnailStripData?,
         val discoverSection: DiscoverLayoutUiState?,
         val videoOverlayVisibility: Boolean,
+        val featuredImageVisibility: Boolean,
         val moreMenuVisibility: Boolean,
         val photoFrameVisibility: Boolean,
         val bookmarkAction: PrimaryAction,

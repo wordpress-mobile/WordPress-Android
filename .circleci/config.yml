@@ -19,6 +19,11 @@ commands:
       - run:
           name: Setup gradle.properties
           command: cp gradle.properties-example gradle.properties
+  update-gradle-memory:
+      steps:
+        - run:
+            name: Update memory setting
+            command: sed -i "s/org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx1537m -XX:+HeapDumpOnOutOfMemoryError/" gradle.properties
   npm-install:
     steps:
       - restore_cache:
@@ -105,6 +110,7 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - update-gradle-memory
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
@@ -132,6 +138,7 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - update-gradle-memory
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
@@ -178,6 +185,7 @@ jobs:
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
+      - update-gradle-memory
       - android/restore-gradle-cache
       - restore-gutenberg-bundle-cache
       - run:
@@ -224,6 +232,7 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - update-gradle-memory
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists
@@ -267,6 +276,7 @@ jobs:
       - checkout-submodules
       - android/restore-gradle-cache
       - copy-gradle-properties
+      - update-gradle-memory
       - restore-gutenberg-bundle-cache
       - run:
           name: Ensure assets folder exists

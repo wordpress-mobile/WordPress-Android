@@ -1,4 +1,0 @@
-15.1:
-Förbättringar: schemaläggning, tagg och synlighetspanelen poppar upp i redigeringsprogrammet och inläggslistan innan publicering. Tryck Retur efter att du lagt till bildtexter i Bild-, Video-, Galleri- eller Citat-block så läggs ett nytt block till automatiskt.
-
-Korrigeringar: videominiatyrer, inställningar och förhandsvisning visas korrekt på privata webbplatser. Flikarna Meddelanden och Installera Jetpack visas inte längre ovanpå varandra.

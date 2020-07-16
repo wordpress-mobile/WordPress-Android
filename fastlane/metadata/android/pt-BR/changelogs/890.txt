@@ -1,0 +1,4 @@
+15.2:
+Adições ao editor de blocos: adicionamos suporte aos blocos Cobertura e Botão a cores e gradientes definidos pelo tema . Enviar um vídeo usando o bloco Cobertura agora finaliza o envio mesmo que o editor seja fechado. Exibição de métricas de blocos, palavras e caracteres.
+
+Correções: corrigimos a exibição de detalhes de posts no Leitor, melhoramos como envio de arquivos são tratados no editor de blocos, e corrigimos um conflito com a API do WordPress quando a resposta estiver vazia.

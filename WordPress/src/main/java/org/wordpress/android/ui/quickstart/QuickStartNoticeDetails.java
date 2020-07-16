@@ -8,6 +8,11 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
  * Static data that represents info that goes into Quick Start notices
  **/
 public enum QuickStartNoticeDetails {
+    UPDATE_SITE_TITLE(
+            QuickStartTask.UPDATE_SITE_TITLE,
+            R.string.quick_start_list_update_site_title_title,
+            R.string.quick_start_list_update_site_title_subtitle
+    ),
     VIEW_SITE_TUTORIAL(
             QuickStartTask.VIEW_SITE,
             R.string.quick_start_dialog_view_site_title,
