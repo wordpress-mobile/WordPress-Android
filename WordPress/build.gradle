@@ -90,7 +90,7 @@ android {
             if (!project.hasProperty("versionName")) {
                 versionName "15.3-rc-1"
             }
-            versionCode 891
+            versionCode 893
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
