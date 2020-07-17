@@ -66,6 +66,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     extract_release_notes_for_version(version: new_version, 
       release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt", 
       extracted_notes_file_path:release_notes_path)
+    cleanup_release_files(files: [release_note_short_path])
     android_update_release_notes(new_version: new_version)
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
@@ -590,12 +591,28 @@ ENV["HAS_ALPHA_VERSION"]="true"
     )
   end
 
+  private_lane :cleanup_release_files do | options |
+    files = options[:files]
+    
+    files.each do | f |
+      File.open(f, "w") {}
+      sh("git add #{f}")
+    end
+
+    sh("git diff-index --quiet HEAD || git commit -m \"Clean up release files.\"")
+  end
+
   #####################################################################################
   # Utils
   #####################################################################################
   def release_notes_path
     "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt"
   end
+
+  def release_note_short_path
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    File.join(project_root, "WordPress", "metadata/release_notes_short.txt")
+  end 
 
   def universal_apk_name(version)
     "wpandroid-#{version["name"]}-universal.apk"
