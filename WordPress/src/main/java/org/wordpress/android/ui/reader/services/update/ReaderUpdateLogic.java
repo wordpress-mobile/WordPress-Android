@@ -51,7 +51,7 @@ public class ReaderUpdateLogic {
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
     }
-    public static final String INTERESTS = "interests";
+    private static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
