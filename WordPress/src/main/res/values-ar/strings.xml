@@ -1458,11 +1458,6 @@ Language: ar
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
-    <string name="login_promo_text_jetpack">إدارة موقعك المدعوم من Jetpack أثناء تنقلك — سيكون ووردبريس في متناول يدك.</string>
-    <string name="login_promo_text_notifications">تنتقل الإعلامات معك — راجع التعليقات والإعجابات عندما تحدث.</string>
-    <string name="login_promo_text_anytime">حافظ على مواقعك المفضلة وانضم إلى المحادثة أينما كنت ووقتما تشاء.</string>
-    <string name="login_promo_text_realtime">راقب القرّاء من جميع أنحاء العالم وهم يقرؤون ويتفاعلون مع موقعك — بصورة آنية.</string>
-    <string name="login_promo_text_onthego">نشر من قائمة الانتظار. تدوين من قائمة النقل. تعليق من المقهى. يذهب ووردبريس معك حيثما تذهب.</string>
     <string name="image_optimization_promo_desc">يقلل تحسين الصورة حجم الصور لتحميلها بسرعة.\n\nيمكنك تغيير هذا في أي وقت في إعدادات الموقع.</string>
     <string name="image_optimization_promo_title">هل تريد تشغيل تحسين الصورة؟</string>
     <string name="leave_off">التوقف عن الاستخدام</string>

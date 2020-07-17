@@ -306,6 +306,9 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
                 predefinedEventProperties.put("task_name", "create_site");
                 break;
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
+                predefinedEventProperties.put("task_name", "update_site_title");
+                break;
             case QUICK_START_TYPE_CUSTOMIZE_VIEWED:
                 predefinedEventProperties.put("type", "customize");
                 break;
@@ -332,6 +335,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
+                predefinedEventProperties.put("task_name", "update_site_title");
                 break;
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
                 predefinedEventProperties.put("task_name", "view_site");
@@ -395,6 +401,9 @@ public class AnalyticsTrackerNosara extends Tracker {
                 break;
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "create_site");
+                break;
+            case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
+                predefinedEventProperties.put("task_name", "update_site_title");
                 break;
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
                 predefinedEventProperties.put("task_name", "view_site");
@@ -1179,6 +1188,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "push_notification_received";
             case PUSH_NOTIFICATION_TAPPED:
                 return "push_notification_alert_tapped";
+            case UNIFIED_LOGIN_STEP:
+                return "unified_login_step";
+            case UNIFIED_LOGIN_INTERACTION:
+                return "unified_login_interaction";
+            case UNIFIED_LOGIN_FAILURE:
+                return "unified_login_failure";
             case LOGIN_ACCESSED:
                 return "login_accessed";
             case LOGIN_MAGIC_LINK_EXITED:
@@ -1203,16 +1218,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "login_autofill_credentials_updated";
             case LOGIN_PROLOGUE_PAGED:
                 return "login_prologue_paged";
-            case LOGIN_PROLOGUE_PAGED_JETPACK:
-                return "login_prologue_paged_jetpack";
-            case LOGIN_PROLOGUE_PAGED_NOTIFICATIONS:
-                return "login_prologue_paged_notifications";
-            case LOGIN_PROLOGUE_PAGED_POST:
-                return "login_prologue_paged_post";
-            case LOGIN_PROLOGUE_PAGED_READER:
-                return "login_prologue_paged_reader";
-            case LOGIN_PROLOGUE_PAGED_STATS:
-                return "login_prologue_paged_stats";
             case LOGIN_PROLOGUE_VIEWED:
                 return "login_prologue_viewed";
             case LOGIN_EMAIL_FORM_VIEWED:
@@ -1638,6 +1643,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_TYPE_GROW_VIEWED:
                 return "quick_start_list_viewed";
             case QUICK_START_LIST_CREATE_SITE_SKIPPED:
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_SKIPPED:
             case QUICK_START_LIST_VIEW_SITE_SKIPPED:
             case QUICK_START_LIST_BROWSE_THEMES_SKIPPED:
             case QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED:
@@ -1650,6 +1656,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
+            case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
             case QUICK_START_LIST_VIEW_SITE_TAPPED:
             case QUICK_START_LIST_BROWSE_THEMES_TAPPED:
             case QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED:
@@ -1662,6 +1669,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
+            case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
             case QUICK_START_VIEW_SITE_TASK_COMPLETED:
             case QUICK_START_BROWSE_THEMES_TASK_COMPLETED:
             case QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED:

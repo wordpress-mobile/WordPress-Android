@@ -135,6 +135,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
   desc "Updates a release branch for a new beta release"
   lane :new_beta_release do | options |
     android_betabuild_prechecks(options)
+    send_strings_for_translation()
     android_bump_version_beta()
     android_tag_build()
   end

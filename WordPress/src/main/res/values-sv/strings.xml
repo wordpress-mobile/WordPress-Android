@@ -1473,11 +1473,6 @@ Language: sv_SE
     <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
-    <string name="login_promo_text_jetpack">Hantera din Jetpack-förstärkta webbplats när som helst – WordPress finns i din ficka.</string>
-    <string name="login_promo_text_notifications">Du har alltid dina aviseringar med dig – ha full koll på kommentarer och gillanden i realtid.</string>
-    <string name="login_promo_text_anytime">Håll koll på dina favoritwebbplatser och delta i diskussion där och när det passar dig.</string>
-    <string name="login_promo_text_realtime">Se hur läsare från hela världen läser och interagerar med din webbplats – i direktsändning.</string>
-    <string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
     <string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
     <string name="leave_off">Behåll avstängt</string>
