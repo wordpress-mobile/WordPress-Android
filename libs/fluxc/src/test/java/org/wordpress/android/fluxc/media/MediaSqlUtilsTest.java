@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.persistence.MediaSqlUtils;
 import org.wordpress.android.fluxc.persistence.WellSqlConfig;
-import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeType.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,16 +135,16 @@ public class MediaSqlUtilsTest {
             imageIds.add(mRandom.nextLong());
             videoIds.add(mRandom.nextLong());
             MediaModel image = getTestMedia(imageIds.get(i));
-            image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
+            image.setMimeType(Type.IMAGE.getValue() + "jpg");
             MediaModel video = getTestMedia(videoIds.get(i));
-            video.setMimeType(MediaUtils.MIME_TYPE_VIDEO + "mp4");
+            video.setMimeType(Type.VIDEO.getValue() + "mp4");
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(image));
             Assert.assertEquals(0, MediaSqlUtils.insertOrUpdateMedia(video));
         }
         List<MediaModel> images = MediaSqlUtils.getSiteImages(getTestSiteWithLocalId(TEST_LOCAL_SITE_ID));
         Assert.assertEquals(imageIds.size(), images.size());
         for (int i = 0; i < imageIds.size(); ++i) {
-            Assert.assertTrue(images.get(0).getMimeType().contains(MediaUtils.MIME_TYPE_IMAGE));
+            Assert.assertTrue(images.get(0).getMimeType().contains(Type.IMAGE.getValue()));
             Assert.assertTrue(imageIds.contains(images.get(i).getMediaId()));
         }
     }
@@ -223,7 +223,7 @@ public class MediaSqlUtilsTest {
         String testPath = "testPath";
         String testFileName = "testFileName";
         String testFileExt = "testFileExt";
-        String testMimeType = MediaUtils.MIME_TYPE_VIDEO + "mp4";
+        String testMimeType = Type.VIDEO.getValue() + "mp4";
         String testAlt = "testAlt";
         int testWidth = 1024;
         int testHeight = 768;
@@ -385,7 +385,7 @@ public class MediaSqlUtilsTest {
 
         // Insert one deleted image
         MediaModel image = getTestMedia(42);
-        image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
+        image.setMimeType(Type.IMAGE.getValue() + "jpg");
         image.setUploadState(MediaUploadState.DELETED);
         Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
 
@@ -443,7 +443,7 @@ public class MediaSqlUtilsTest {
         for (int i = 0; i < num; ++i) {
             testItemIds[i] = Math.abs(mRandom.nextInt());
             MediaModel image = getTestMedia(testItemIds[i]);
-            image.setMimeType(MediaUtils.MIME_TYPE_IMAGE + "jpg");
+            image.setMimeType(Type.IMAGE.getValue() + "jpg");
             image.setUploadState(MediaUploadState.UPLOADED);
             Assert.assertEquals(1, MediaSqlUtils.insertOrUpdateMedia(image));
         }
