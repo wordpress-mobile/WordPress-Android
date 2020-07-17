@@ -154,7 +154,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ?.let { gravatarUtilsWrapper.fixGravatarUrlWithResource(it, R.dimen.avatar_sz_medium) }
 
     private fun buildDateLine(post: ReaderPost) =
-            dateTimeUtilsWrapper.javaDateToTimeSpan(post.displayDate)
+            dateTimeUtilsWrapper.javaDateToTimeSpan(post.getDisplayDate(dateTimeUtilsWrapper))
 
     private fun buildDiscoverSectionUiState(
         discoverData: ReaderPostDiscoverData,
