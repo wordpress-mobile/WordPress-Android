@@ -14,61 +14,39 @@ import java.io.File;
 import java.io.IOException;
 
 public class MediaUtils {
+    private static final MimeTypes MIME_TYPES = new MimeTypes();
     public static final double MEMORY_LIMIT_FILESIZE_MULTIPLIER = 0.75D;
 
-    //
-    // MIME types
-    //
-
-    public static final String MIME_TYPE_IMAGE = "image/";
-    public static final String MIME_TYPE_VIDEO = "video/";
-    public static final String MIME_TYPE_AUDIO = "audio/";
-    public static final String MIME_TYPE_APPLICATION = "application/";
-
-    // ref https://en.support.wordpress.com/accepted-filetypes/
-    public static final String[] SUPPORTED_IMAGE_SUBTYPES = {
-            "jpg", "jpeg", "png", "gif"
-    };
-    public static final String[] SUPPORTED_VIDEO_SUBTYPES = {
-            "mp4", "m4v", "mov", "wmv", "avi", "mpg", "ogv", "3gp", "3gpp", "3gpp2", "3g2", "mpeg", "quicktime", "webm"
-    };
-    public static final String[] SUPPORTED_AUDIO_SUBTYPES = {
-            "mp3", "m4a", "ogg", "wav"
-    };
-    public static final String[] SUPPORTED_APPLICATION_SUBTYPES = {
-            "pdf", "doc", "ppt", "odt", "pptx", "docx", "pps", "ppsx", "xls", "xlsx", "key", ".zip"
-    };
-
     public static boolean isImageMimeType(String type) {
-        return isExpectedMimeType(MIME_TYPE_IMAGE, type);
+        return MIME_TYPES.isImageType(type);
     }
 
     public static boolean isVideoMimeType(String type) {
-        return isExpectedMimeType(MIME_TYPE_VIDEO, type);
+        return MIME_TYPES.isVideoType(type);
     }
 
     public static boolean isAudioMimeType(String type) {
-        return isExpectedMimeType(MIME_TYPE_AUDIO, type);
+        return MIME_TYPES.isAudioType(type);
     }
 
     public static boolean isApplicationMimeType(String type) {
-        return isExpectedMimeType(MIME_TYPE_APPLICATION, type);
+        return MIME_TYPES.isApplicationType(type);
     }
 
     public static boolean isSupportedImageMimeType(String type) {
-        return isSupportedMimeType(MIME_TYPE_IMAGE, SUPPORTED_IMAGE_SUBTYPES, type);
+        return MIME_TYPES.isSupportedImageType(type);
     }
 
     public static boolean isSupportedVideoMimeType(String type) {
-        return isSupportedMimeType(MIME_TYPE_VIDEO, SUPPORTED_VIDEO_SUBTYPES, type);
+        return MIME_TYPES.isSupportedVideoType(type);
     }
 
     public static boolean isSupportedAudioMimeType(String type) {
-        return isSupportedMimeType(MIME_TYPE_AUDIO, SUPPORTED_AUDIO_SUBTYPES, type);
+        return MIME_TYPES.isSupportedAudioType(type);
     }
 
     public static boolean isSupportedApplicationMimeType(String type) {
-        return isSupportedMimeType(MIME_TYPE_APPLICATION, SUPPORTED_APPLICATION_SUBTYPES, type);
+        return MIME_TYPES.isSupportedApplicationType(type);
     }
 
     public static boolean isSupportedMimeType(String type) {
@@ -79,33 +57,7 @@ public class MediaUtils {
     }
 
     public static String getMimeTypeForExtension(String extension) {
-        if (isSupportedImageMimeType(MIME_TYPE_IMAGE + extension)) {
-            return MIME_TYPE_IMAGE + extension;
-        }
-        if (isSupportedVideoMimeType(MIME_TYPE_VIDEO + extension)) {
-            return MIME_TYPE_VIDEO + extension;
-        }
-        if (isSupportedAudioMimeType(MIME_TYPE_AUDIO + extension)) {
-            return MIME_TYPE_AUDIO + extension;
-        }
-        if (isSupportedApplicationMimeType(MIME_TYPE_APPLICATION + extension)) {
-            return MIME_TYPE_APPLICATION + extension;
-        }
-        return null;
-    }
-
-    private static boolean isExpectedMimeType(String expected, String type) {
-        if (type == null) return false;
-        String[] split = type.split("/");
-        return split.length == 2 && expected.startsWith(split[0]);
-    }
-
-    private static boolean isSupportedMimeType(String type, String[] supported, String mimeType) {
-        if (type == null || supported == null || mimeType == null) return false;
-        for (String supportedSubtype : supported) {
-            if (mimeType.equals(type + supportedSubtype)) return true;
-        }
-        return false;
+        return MIME_TYPES.getMimeTypeForExtension(extension);
     }
 
     //
