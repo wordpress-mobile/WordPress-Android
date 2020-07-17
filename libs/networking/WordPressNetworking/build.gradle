@@ -32,8 +32,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
 
     implementation 'org.wordpress:utils:1.18.1'
-    // TODO: Revert to com.automattic:rest
-    implementation ('com.github.automattic:android-wordpress-com-rest:2dca7ecd107c8653074d68f28e1b54b4359ee1fe') {
+    implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
 

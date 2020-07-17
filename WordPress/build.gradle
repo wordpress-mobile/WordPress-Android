@@ -214,8 +214,7 @@ dependencies {
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    // TODO: Revert to com.automattic:rest
-    implementation ('com.github.automattic:android-wordpress-com-rest:2dca7ecd107c8653074d68f28e1b54b4359ee1fe') {
+    implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation 'org.wordpress:graphview:3.4.0'
