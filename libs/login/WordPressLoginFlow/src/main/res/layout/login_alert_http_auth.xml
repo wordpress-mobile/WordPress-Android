@@ -9,7 +9,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:theme="@style/LoginTheme.EditText">
+        app:theme="@style/Widget.LoginFlow.TextInputLayout">
 
         <!-- use singleLine (even if deprecated) to have a scrolling single line. -->
         <com.google.android.material.textfield.TextInputEditText
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_extra_large"
         app:passwordToggleEnabled="true"
-        app:theme="@style/LoginTheme.EditText">
+        app:theme="@style/Widget.LoginFlow.TextInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_http_password"
