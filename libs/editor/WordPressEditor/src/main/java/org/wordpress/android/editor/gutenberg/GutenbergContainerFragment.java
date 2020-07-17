@@ -1,4 +1,4 @@
-package org.wordpress.android.editor;
+package org.wordpress.android.editor.gutenberg;
 
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -6,6 +6,9 @@ import android.view.ViewGroup;
 import androidx.core.util.Consumer;
 import androidx.fragment.app.Fragment;
 
+import org.wordpress.android.editor.BuildConfig;
+import org.wordpress.android.editor.ExceptionLogger;
+import org.wordpress.android.editor.R;
 import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
@@ -82,7 +85,6 @@ public class GutenbergContainerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         GutenbergPropsBuilder gutenbergPropsBuilder = getArguments().getParcelable(ARG_GUTENBERG_PROPS_BUILDER);
-        gutenbergPropsBuilder.setHtmlModeEnabled(mHtmlModeEnabled);
 
         Consumer<Exception> exceptionLogger = null;
         Consumer<String> breadcrumbLogger = null;
@@ -102,7 +104,7 @@ public class GutenbergContainerFragment extends Fragment {
                 getContext().getResources().getColor(R.color.background_color),
                 exceptionLogger,
                 breadcrumbLogger,
-                gutenbergPropsBuilder.build());
+                gutenbergPropsBuilder.build(getActivity(), mHtmlModeEnabled));
 
         // clear the content initialization flag since a new ReactRootView has been created;
         mHasReceivedAnyContent = false;
