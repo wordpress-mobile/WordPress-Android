@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -50,7 +51,7 @@ public class ReaderUpdateLogic {
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
     }
-
+    public static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
@@ -251,6 +252,31 @@ public class ReaderUpdateLogic {
         return topics;
     }
 
+    private static ReaderTagList parseInterestTags(JSONObject jsonObject) {
+        ReaderTagList interestTags = new ReaderTagList();
+
+        if (jsonObject == null) {
+            return interestTags;
+        }
+
+        JSONArray jsonInterests = jsonObject.optJSONArray(INTERESTS);
+
+        if (jsonInterests == null) {
+            return interestTags;
+        }
+
+        for (int i = 0; i < jsonInterests.length(); i++) {
+            JSONObject jsonInterest = jsonInterests.optJSONObject(i);
+            if (jsonInterest != null) {
+                String tagTitle = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_TITLE);
+                String tagSlug = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_SLUG);
+                interestTags.add(new ReaderTag(tagSlug, tagTitle, tagTitle, "", ReaderTagType.INTERESTS));
+            }
+        }
+
+        return interestTags;
+    }
+
     private static void deleteTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
@@ -276,13 +302,12 @@ public class ReaderUpdateLogic {
             taskCompleted(UpdateTask.INTEREST_TAGS);
         };
 
-        AppLog.d(AppLog.T.READER, "reader service > updating interest tags");
+        AppLog.d(AppLog.T.READER, "reader service > fetching interest tags");
 
-        // TODO - replace API
         HashMap<String, String> params = new HashMap<>();
-        params.put("locale", mLanguage);
-        mClientUtilsProvider.getRestClientForTagUpdate()
-                            .get("read/menu", params, null, listener, errorListener);
+        params.put("_locale", mLanguage);
+        mClientUtilsProvider.getRestClientForInterestTags()
+                            .get("read/interests", params, null, listener, errorListener);
     }
 
     private void handleInterestTagsResponse(final JSONObject jsonObject) {
@@ -290,7 +315,7 @@ public class ReaderUpdateLogic {
             @Override
             public void run() {
                 ReaderTagList interestTags = new ReaderTagList();
-                interestTags.addAll(parseTags(jsonObject, "recommended", ReaderTagType.INTERESTS));
+                interestTags.addAll(parseInterestTags(jsonObject));
                 EventBus.getDefault().post(new InterestTagsFetched(interestTags));
                 taskCompleted(UpdateTask.INTEREST_TAGS);
             }
