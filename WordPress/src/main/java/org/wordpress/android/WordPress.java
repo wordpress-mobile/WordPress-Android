@@ -135,6 +135,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     private static RestClientUtils sRestClientUtilsVersion1p1;
     private static RestClientUtils sRestClientUtilsVersion1p2;
     private static RestClientUtils sRestClientUtilsVersion1p3;
+    private static RestClientUtils sRestClientUtilsVersion2p1;
     private static RestClientUtils sRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
@@ -510,6 +511,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                                                              null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return sRestClientUtilsVersion1p3;
+    }
+
+    public static RestClientUtils getRestClientUtilsV2() {
+        if (sRestClientUtilsVersion2p1 == null) {
+            sRestClientUtilsVersion2p1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+                    null, RestClient.REST_CLIENT_VERSIONS.V2);
+        }
+        return sRestClientUtilsVersion2p1;
     }
 
     public static RestClientUtils getRestClientUtilsV0() {
