@@ -42,6 +42,8 @@
 
     <!-- LOGIN -->
     <color name="color_primary">@color/primary</color>
+    <color name="promo_indicator_color_default">@color/black_translucent_20</color>
+    <color name="login_promo_footer_background_color">#eff3f7</color>
 
     <!-- Prepublishing Nudges -->
     <color name="prepublishing_toolbar_icon_color">@color/gray_50</color>
@@ -306,6 +308,7 @@
     <color name="black_translucent_40">#66000000</color>
     <color name="black_translucent_50">#80000000</color>
     <color name="grey_lighten_30_translucent_50">#80e9eff3</color> <!-- Use for old Stats.  Will be removed soon. -->
+    <color name="white_translucent_20">#33ffffff</color>
     <color name="white_translucent_40">#66ffffff</color>
     <color name="white_translucent_65">#a6ffffff</color>
 

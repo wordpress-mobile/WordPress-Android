@@ -19,7 +19,8 @@ public interface LoginAnalyticsListener {
     void trackLoginSocial2faNeeded();
     void trackLoginSocialSuccess();
     void trackMagicLinkFailed(Map<String, ?> properties);
-    void trackMagicLinkOpenEmailClientViewed();
+    void trackSignupMagicLinkOpenEmailClientViewed();
+    void trackLoginMagicLinkOpenEmailClientViewed();
     void trackMagicLinkRequested();
     void trackMagicLinkRequestFormViewed();
     void trackPasswordFormViewed();
@@ -36,6 +37,7 @@ public interface LoginAnalyticsListener {
     void trackSignupSocialButtonFailure();
     void trackSignupSocialToLogin();
     void trackSignupTermsOfServiceTapped();
+    void trackSocialButtonStart();
     void trackSocialAccountsNeedConnecting();
     void trackSocialButtonClick();
     void trackSocialButtonFailure();
@@ -51,4 +53,32 @@ public interface LoginAnalyticsListener {
     void trackConnectedSiteInfoRequested(String url);
     void trackConnectedSiteInfoFailed(String url, String errorContext, String errorType, String errorDescription);
     void trackConnectedSiteInfoSucceeded(Map<String, ?> properties);
+    void trackFailure(String message);
+    void trackSendCodeWithTextClicked();
+
+    void trackSubmit2faCodeClicked();
+
+    void trackSubmitClicked();
+
+    void trackRequestMagicLinkClick();
+
+    void trackLoginWithPasswordClick();
+
+    void trackShowHelpClick();
+
+    void trackDismissDialog();
+
+    void trackSelectEmailField();
+
+    void trackPickEmailFromHint();
+
+    void trackShowEmailHints();
+
+    void emailFormScreenResumed();
+
+    void trackEmailSignupConfirmationViewed();
+
+    void trackSocialSignupConfirmationViewed();
+
+    void trackCreateAccountClick();
 }

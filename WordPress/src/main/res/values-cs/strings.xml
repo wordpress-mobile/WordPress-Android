@@ -754,11 +754,6 @@ Language: cs_CZ
     <string name="next">Další</string>
     <string name="open_mail">Otevřít email</string>
     <string name="enter_email_wordpress_com">Přihlaste se na stránku WordPress.com pomocí emailové adresy pro správu všech vašich stránek na WordPress.</string>
-    <string name="login_promo_text_jetpack">Spravujte své stránky s Jetpackem na cestách - budete mít WordPress všude sebou.</string>
-    <string name="login_promo_text_notifications">Vaše oznámení jsou vždy s vámi  - komentáře a liky uvidíte vždy v reálném čase.</string>
-    <string name="login_promo_text_anytime">Spojte se s oblíbenými stránkami a zapojte se do rozhovoru kdekoli a kdykoliv.</string>
-    <string name="login_promo_text_realtime">Sledujte čtenáře z celého světa, kteří čtou a interagují s vaším webem - v reálném čase.</string>
-    <string name="login_promo_text_onthego">Publikujte z parku. Blogujte z autobusu. Komentujte z kavárny. WordPress máte všude sebou.</string>
     <string name="image_optimization_promo_desc">Optimalizace obrazu mírně sníží kvalitu obrázků pro rychlejší nahrávání\n\nToto nastavení můžete kdykoli změnit v nastavení webu.</string>
     <string name="image_optimization_promo_title">Zapnout optimalizaci obrázků?</string>
     <string name="me_profile_photo">Profilová fotka</string>
