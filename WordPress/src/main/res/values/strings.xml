@@ -1858,6 +1858,7 @@
     <string name="verification_code">Verification code</string>
     <string name="auth_required">Log in again to continue.</string>
     <string name="logging_in">Logging in</string>
+    <string name="reset_your_password">Reset your password</string>
     <string name="magic_link_unavailable_error_message">Currently unavailable. Please enter your password</string>
     <string name="checking_email">Checking email</string>
     <string name="already_logged_in_wpcom">You\'re already logged in a WordPress.com account, you can\'t add a WordPress.com site bound to another account.</string>
@@ -1867,7 +1868,7 @@
 
     <!-- Help view -->
     <string name="help">Help</string>
-    <string name="forgot_password">Lost your password?</string>
+    <string name="forgot_password" tools:ignore="UnusedResources">Lost your password?</string>
     <string name="contact_us">Contact us</string>
     <string name="browse_our_faq_button">Browse our FAQ</string>
     <string name="my_tickets">My Tickets</string>
@@ -1907,7 +1908,7 @@
     <string name="my_site_icon_dialog_remove_button">Remove</string>
     <string name="my_site_icon_dialog_cancel_button">Cancel</string>
     <string name="my_site_icon_content_description">Change site icon</string>
-    <string name="my_site_title_changer_dialog_title">@string/site_settings_title_title</string>
+    <string name="my_site_title_changer_dialog_title" translatable="false">@string/site_settings_title_title</string>
     <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
 
@@ -2362,45 +2363,50 @@
     it may be used there and keeping it here is required for translation. -->
     <string name="log_in">Log In</string>
     <string name="login_promo_viewpager_content_description">Introduction</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_anytime">Catch up with your favorite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
+    <string name="login_promo_title_37_percent">37% of the web is built on WordPress.</string>
+    <string name="login_promo_text_unlock_the_power">Unlock the power of the most flexible website builder.</string>
     <string name="invalid_verification_code">Invalid verification code</string>
-    <string name="send_link">Send link</string>
-    <string name="enter_your_password_instead">Enter your password instead</string>
+    <string name="send_link" tools:ignore="UnusedResources">Send link</string>
+    <string name="enter_your_password_instead" tools:ignore="UnusedResources">Enter your password instead</string>
+    <string name="send_link_by_email">Send link by email</string>
+    <string name="create_account">Create account</string>
+    <string name="or_type_your_password">Or type your password</string>
     <string name="alternatively">Alternatively:</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
+    <string name="enter_email_to_continue_wordpress_com">Enter your email address to log in or create a WordPress.com account.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
+    <string name="get_started">Get Started</string>
     <string name="next">Next</string>
-    <string name="open_mail">Open mail</string>
+    <string name="open_mail" tools:ignore="UnusedResources">Open mail</string>
+    <string name="check_email">Check email</string>
     <string name="enter_site_address_instead">Log in by entering your site address.</string>
     <string name="enter_username_instead">Log in with your username.</string>
     <string name="enter_verification_code">Almost there! Please enter the verification code from your Authenticator app.</string>
     <string name="enter_verification_code_sms">We sent a text message to the phone number ending in %s. Please enter the verification code in the SMS.</string>
-    <string name="login_text_otp">Text me a code instead.</string>
-    <string name="login_text_otp_another">Text me another code instead.</string>
+    <string name="login_text_otp">Text me a code instead</string>
+    <string name="login_text_otp_another">Text me another code instead</string>
     <string name="requesting_otp">Requesting a verification code via SMS.</string>
     <string name="email_not_registered_wpcom">Hmm, we can\'t find a WordPress.com account connected to this email address. Try the link below to log in using your site address.</string>
     <string name="password_incorrect">It looks like this password is incorrect. Please double check your information and try again.</string>
-    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed. Hunt and peck no more!</string>
-    <string name="login_magic_links_sent_label">Your magic link is on its way! Check your email on this device and tap the link in the email you received from WordPress.com.</string>
+    <string name="login_magic_links_label">We\'ll email you a magic link that\'ll log you in instantly, no password needed.</string>
+    <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
+    <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
-    <string name="connect_more">Connect Another Site</string>
-    <string name="connect_site">Connect Site</string>
-    <string name="login_continue">Continue</string>
+    <string name="connect_more">Connect another site</string>
+    <string name="connect_site">Connect a site</string>
+    <string name="login_continue" tools:ignore="UnusedResources">Continue</string>
+    <string name="login_done">Done</string>
     <string name="login_already_logged_in_wpcom">Already logged in to WordPress.com</string>
-    <string name="login_username_at">\@%s</string>
     <string name="enter_site_address">Enter the address of the WordPress site you\'d like to connect.</string>
     <string name="enter_site_address_share_intent">Enter the address of your WordPress site you\'d like to share the content to.</string>
     <string name="login_site_address">Site address</string>
-    <string name="login_site_address_help">Need help finding your site address?</string>
+    <string name="login_site_address_help" tools:ignore="UnusedResources">Need help finding your site address?</string>
     <string name="login_site_address_help_title">What\'s my site address?</string>
     <string name="login_site_address_help_content">Your site address appears in the bar at the top of the screen when you visit your site in Chrome.</string>
     <string name="login_site_address_more_help">Need more help?</string>
+    <string name="login_find_your_site_adress">Find your site address</string>
     <string name="login_checking_site_address">Checking site address</string>
     <string name="login_error_while_adding_site">Error while adding site. Error code: %s</string>
     <string name="login_log_in_for_deeplink">Log in to WordPress.com to access the post.</string>
@@ -2411,10 +2417,11 @@
     <string name="login_empty_2fa">Please enter a verification code</string>
     <string name="login_email_button_signup">Don\'t have an account? %1$sSign up%2$s</string>
     <string name="login_email_client_not_found">Can\'t detect your email client app</string>
-    <string name="login_logged_in_as">Logged in as</string>
     <string name="login_epilogue_mysites_one">My site</string>
     <string name="login_epilogue_mysites_other">My sites</string>
     <string name="login_google_button_suffix">Log in with Google.</string>
+    <string name="continue_google_button_suffix">Continue with Google</string>
+    <string name="login_or">or</string>
     <string name="login_error_button">Close</string>
     <string name="login_error_email_not_found_v2">There\'s no WordPress.com account matching this Google account.</string>
     <string name="login_error_generic">There was some trouble connecting with the Google account.</string>
@@ -2425,8 +2432,9 @@
     <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
     <string name="send_verification_email">Send verification email</string>
-    <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
-    <string name="enter_site_credentials_instead">Log in with site credentials</string>
+    <string name="enter_credentials_for_site" tools:ignore="UnusedResources">Log in with your %1$s site credentials</string>
+    <string name="enter_account_info_for_site">Enter your account information for %1$s.</string>
+    <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b&gt;%1$s&lt;/b&gt;</string>
     <string name="login_discovery_error_xmlrpc">We were unable to access the &lt;b&gt;XMLRPC file&lt;/b&gt; on your site. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_http_auth">We were unable to access your site because it requires &lt;b&gt;HTTP Authentication&lt;/b&gt;. You will need to reach out to your host to resolve this.</string>
@@ -2441,6 +2449,7 @@
     <string name="verification_2fa_screen_title">Code verification</string>
 
     <!-- Signup -->
+    <string name="sign_up_label">Sign Up</string>
     <string name="sign_up">Sign Up for WordPress.com</string>
     <string name="signup_email_error_generic">There was some trouble checking the email address.</string>
     <string name="signup_email_header">To create your new WordPress.com account, please enter your email address.</string>
@@ -2449,7 +2458,6 @@
     <string name="signup_epilogue_error_generic">There was some trouble updating your account. You can retry or revert your changes to continue.</string>
     <string name="signup_epilogue_error_button_negative">Revert</string>
     <string name="signup_epilogue_error_button_positive">Retry</string>
-    <string name="signup_epilogue_heading">New account</string>
     <string name="signup_epilogue_hint_display">Display Name</string>
     <string name="signup_epilogue_hint_password">Password (optional)</string>
     <string name="signup_epilogue_hint_password_detail">You can always log in with a magic link like the one you just used, but you can also set up a password if you prefer.</string>
@@ -2457,9 +2465,13 @@
     <string name="signup_magic_link_error">There was some trouble sending the email. You can retry now or close and try again later.</string>
     <string name="signup_magic_link_error_button_negative">Close</string>
     <string name="signup_magic_link_error_button_positive">Retry</string>
-    <string name="signup_magic_link_message">We sent you a magic signup link! Check your email on this device, and tap the link in the email to finish signing up.</string>
+    <string name="signup_magic_link_message">We’ve emailed you a magic link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
+    <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
+    <string name="signup_confirmation_magic_link_message">We’ll email you a magic link to create your new WordPress.com account.</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
+    <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="signup_updating_account">Updating account…</string>
     <string name="signup_user_exists">Email already exists on WordPress.com.\nProceeding with login.</string>
     <string name="signup_with_email_button">Sign Up with Email</string>
@@ -2469,6 +2481,10 @@
     <!-- Screen titles -->
     <string name="signup_email_screen_title">Email signup</string>
     <string name="signup_magic_link_title">Magic link sent</string>
+    <string name="signup_confirmation_title">Signup confirmation</string>
+
+    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="enter_your_site_address">Enter your site address</string>
 
     <string name="username_changer_action">Save</string>
     <string name="username_changer_dismiss_button_positive">Discard</string>
@@ -2628,6 +2644,7 @@
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>
     <string name="quick_start_dialog_view_site_message_short" tools:ignore="UnusedResources">Tap %1$s View Site %2$s to preview your site</string>
     <string name="quick_start_dialog_view_site_title">View your site</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tap <![CDATA[<b>%1$s</b>]]> to set a new title</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_browse_themes_subtitle" translatable="false">@string/quick_start_dialog_browse_themes_message</string>
     <string name="quick_start_list_browse_themes_title" translatable="false">@string/quick_start_dialog_browse_themes_title</string>
@@ -2637,6 +2654,8 @@
     <string name="quick_start_list_create_page_title" translatable="false">@string/quick_start_dialog_create_page_title</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
+    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
     <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
     <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
     <string name="quick_start_list_enable_sharing_subtitle" translatable="false">@string/quick_start_dialog_enable_sharing_message</string>
@@ -2820,7 +2839,6 @@
 
     <!-- Prepublishing Nudges -->
     <string name="prepublishing_nudges_publish_action">Publish Date</string>
-    <string name="prepublishing_nudges_visibility_action" translatable="false">@string/status_and_visibility</string>
     <string name="prepublishing_nudges_tags_action">Tags</string>
     <string name="prepublishing_nudges_home_header_publishing_to">Publishing to</string>
     <string name="prepublishing_nudges_home_publish_button" translatable="false">@string/publish_now</string>
@@ -2831,11 +2849,8 @@
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
-    <string name="prepublishing_nudges_toolbar_title_visibility" translatable="false">@string/status_and_visibility</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
-
-    <string name="prepublishing_nudges_visibility_password">Password Protected</string>
 
     <!--Autogenerated:Gutenberg Native-->
     <!-- translators: accessibility text. Inform about current value. %1$s: Control label %2$s: Current value. -->
@@ -2869,6 +2884,15 @@
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
+    <!-- translators: displayed right after the block is copied. -->
+    <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
+    <!-- translators: displayed right after the block is cut. -->
+    <string name="gutenberg_native_block_cut" tools:ignore="UnusedResources">Block cut</string>
+    <!-- translators: displayed right after the block is duplicated. -->
+    <string name="gutenberg_native_block_duplicated" tools:ignore="UnusedResources">Block duplicated</string>
+    <!-- translators: displayed right after the block is pasted. -->
+    <string name="gutenberg_native_block_pasted" tools:ignore="UnusedResources">Block pasted</string>
+    <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
@@ -2876,10 +2900,13 @@
     <string name="gutenberg_native_city_10100" tools:ignore="UnusedResources">City, 10100</string>
     <string name="gutenberg_native_columns_settings" tools:ignore="UnusedResources">Columns Settings</string>
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
+    <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
+    <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
     <string name="gutenberg_native_customize_gradient" tools:ignore="UnusedResources">Customize Gradient</string>
+    <string name="gutenberg_native_cut_block" tools:ignore="UnusedResources">Cut block</string>
     <string name="gutenberg_native_dismiss" tools:ignore="UnusedResources">Dismiss</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened" tools:ignore="UnusedResources">Don’t cry because it’s over, smile because it happened.</string>
@@ -2909,6 +2936,7 @@
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_dr_seuss" tools:ignore="UnusedResources">Dr. Seuss</string>
+    <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
     <string name="gutenberg_native_edit_block_in_web_browser" tools:ignore="UnusedResources">Edit block in web browser</string>
     <string name="gutenberg_native_edit_media" tools:ignore="UnusedResources">Edit media</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
@@ -2950,24 +2978,20 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_link_inserted" tools:ignore="UnusedResources">Link inserted</string>
     <string name="gutenberg_native_link_text" tools:ignore="UnusedResources">Link text</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
+    <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Move block left</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block left from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Move block right</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block right from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_up" tools:ignore="UnusedResources">Move block up</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block up from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Move Image Backward</string>
     <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
-    <!-- translators: %s: block title e.g: "Paragraph" -->
-    <string name="gutenberg_native_move_s_down" tools:ignore="UnusedResources">Move %s Down</string>
-    <!-- translators: %s: block title e.g: "Paragraph" -->
-    <string name="gutenberg_native_move_s_left" tools:ignore="UnusedResources">Move %s Left</string>
-    <!-- translators: %s: block title e.g: "Paragraph" -->
-    <string name="gutenberg_native_move_s_right" tools:ignore="UnusedResources">Move %s Right</string>
-    <!-- translators: %s: block title e.g: "Paragraph" -->
-    <string name="gutenberg_native_move_s_up" tools:ignore="UnusedResources">Move %s Up</string>
     <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">My Document Setting Panel</string>
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car" tools:ignore="UnusedResources">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
@@ -2986,6 +3010,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
     <!-- translators: accessibility text. %s: Page break text. -->
     <string name="gutenberg_native_page_break_block_s" tools:ignore="UnusedResources">Page break block. %s</string>
+    <string name="gutenberg_native_paste_block" tools:ignore="UnusedResources">Paste block</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
     <!-- translators: title for "Portfolio" page template -->
     <string name="gutenberg_native_portfolio" tools:ignore="UnusedResources">Portfolio</string>
@@ -3000,21 +3025,20 @@ translators: sample content for "Services" page template -->
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_project_name" tools:ignore="UnusedResources">Project Name</string>
     <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
+    <string name="gutenberg_native_remove_block" tools:ignore="UnusedResources">Remove block</string>
     <string name="gutenberg_native_remove_image" tools:ignore="UnusedResources">Remove Image</string>
-    <!-- translators: %s: block title e.g: "Paragraph". -->
-    <string name="gutenberg_native_remove_s" tools:ignore="UnusedResources">Remove %s</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
     <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s block. Empty</string>
+    <!-- translators: %s: block title e.g: "Paragraph". -->
+    <string name="gutenberg_native_s_block_options" tools:ignore="UnusedResources">%s block options</string>
     <!-- translators: accessibility text for blocks with invalid content. %d: localized block title -->
     <string name="gutenberg_native_s_block_this_block_has_invalid_content" tools:ignore="UnusedResources">%s block. This block has invalid content</string>
     <!-- translators: %s: Name of the block -->
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android" tools:ignore="UnusedResources">\'%s\' isn\'t yet supported on WordPress for Android</string>
     <!-- translators: %s: Name of the block -->
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_ios" tools:ignore="UnusedResources">\'%s\' isn\'t yet supported on WordPress for iOS</string>
-    <!-- translators: %s: block title e.g: "Paragraph". -->
-    <string name="gutenberg_native_s_settings" tools:ignore="UnusedResources">%s Settings</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_sally_smith" tools:ignore="UnusedResources">Sally Smith</string>
     <!-- translators: sample content for "Team" page template -->
@@ -3069,5 +3093,6 @@ translators: sample content for "Services" page template -->
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_what_people_say" tools:ignore="UnusedResources">What People Say</string>
     <string name="gutenberg_native_wordpress_media_library" tools:ignore="UnusedResources">WordPress Media Library</string>
+    <string name="content_description_logo">WordPress Logo</string>
     <!--/Autogenerated:Gutenberg Native-->
 </resources>

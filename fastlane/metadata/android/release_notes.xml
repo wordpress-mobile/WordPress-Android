@@ -1,102 +1,101 @@
 <ar>
-15.1:
-تحسينات: تنبثق لوحة الجدولة والوسم والرؤية في المحرِّر والنشر السابق لقائمة المقالات. يؤدي الضغط على مفتاح "enter"، بعد إضافة التسميات التوضيحية في مكوِّنات الصورة والفيديو والمعرض والاقتباس والمكوِّن المهيأ مسبقًا، إلى إضافة مكوِّن جديد.
+15.2:
+إضافات محرِّر المكوِّن: تمت إضافة دعم المحرِّر إلى الألوان والتدرجات المحدِّدة للقوالب على مكوِّني الغلاف والزر. تكتمل الآن عمليات رفع مقاطع الفيديو في مكوِّن الغلاف بعد إغلاق المحرِّر. تظهر الآن معلومات قياس عدد المكوِّنات والكلمات والأحرف.
 
-الإصلاحات: تظهر الصور المصغَّرة للفيديوهات والإعدادات والمعاينة بشكل صحيح على المواقع الخاصة. لا تتراكب التنبيهات وعلامات تبويب "تثبيت Jetpack" بعد الآن.
+إصلاحات: تم إصلاح مشكلات عرض تفاصيل المقالات في القارئ، ومعالجة اكتمال الرفع في محرِّر المكوِّن، والأعطال التي ستحدث عندما تحوي استجابة واجهة برمجة التطبيقات في ووردبريس نصًا فارغًا.
 </ar>
 <de-DE>
-15.1:
- Verbesserungen: Bereich für Planen, Schlagwörter und Sichtbarkeit wird im Editor und der Vorab-Veröffentlichung der Beitragsliste angezeigt. Wenn du nach dem Hinzufügen von Beschriftungen in Bild-, Video-, Galerie-, Zitat- und Pullquote-Blöcken die Eingabetaste drückst, wird ein neuer Block hinzugefügt.
+15,2:
+Erweiterungen des Block-Editors: Unterstützt jetzt durch das Theme definierte Farben sowie Verläufe in Cover- und Button-Blöcken. Video-Uploads im Cover-Block werden abgeschlossen, nachdem der Editor geschlossen wurde. Die Kennzahlen für Blöcke, Wörter und Zeichen werden jetzt angezeigt.
 
-Korrekturen: Vorschaubilder, Einstellungen und die Vorschau für Videos werden auf privaten Websites richtig angezeigt. Die Tabs für Benachrichtigungen und "Jetpack installieren" überschneiden sich nicht mehr.
+Behoben: Probleme mit der Darstellung von Beitragsdetails im Reader, Verarbeitung des Upload-Abschlusses im Block-Editor sowie ein Absturz, wenn die WordPress-API-Reaktion einen leeren Text besitzt.
 </de-DE>
 <en-US>
-15.1:
-Block editor improvements: Scheduling, tag, and visibility settings pop up in the post editor and post list when you tap Publish — tweak them and tap “Publish Now” to complete publication. Pressing enter after adding a caption in Image, Video, Gallery, Quote, and Pullquote blocks automatically adds a new block.
+15.2:
+Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.
 
-Fixes: Video thumbnails, settings, and preview display properly in the Media section on private sites. Notifications and Install Jetpack tabs no longer display on top of one another.
+Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.
 </en-US>
 <es-ES>
-15.1:
-Mejoras: Mensajes emergentes de programación, etiquetas y visibilidad en el panel de lista previa a la publicación del editor. Pulsando intro tras añadir leyendas en bloques de imagen, vídeo, galería, cita y bloque de cita añade un nuevo bloque.
+15.2:
+Añadidos al editor de bloques: Se ha añadido al editor compatibilidad para colores y degradados definidos por el tema en los bloques de cubierta y botón. El bloque de vídeo de portada se completa ahora después de que el editor se haya cerrado. Ahora se muestra la información métrica del recuento de bloques, palabras y caracteres.
 
-Correcciones: Miniaturas de vídeo, ajustes y visualización de vista previa correctas en los sitios privados. Los avisos y pestañas de instalación de JetPack ya no se superponen.
+Correcciones: Se han corregido los problemas de procesamiento de detalles de las entradas del lector y el bloqueo en la respuesta de la API de WordPress.
 </es-ES>
 <fr-CA>
-15.1 :
-Améliorations : le volet de planification, étiquette et visibilité s’affiche dans l’éditeur et lors de la pré-publication de la liste d’articles. Appuyer sur Entrée après l’ajout d’une légende dans un bloc Image, Vidéo, Galerie, Citation ou Citation en exergue ajoute un nouveau bloc.
+15.2 
+Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
 
-Corrections : les miniatures de vidéo, les paramètres et les aperçus s’affichent correctement sur les sites privés. Les onglets Notifications et Installer Jetpack ne se superposent plus.
+Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
 </fr-CA>
 <fr-FR>
-15.1 :
-Améliorations : le volet de planification, étiquette et visibilité s’affiche dans l’éditeur et lors de la pré-publication de la liste d’articles. Appuyer sur Entrée après l’ajout d’une légende dans un bloc Image, Vidéo, Galerie, Citation ou Citation en exergue ajoute un nouveau bloc.
+15.2 
+Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
 
-Corrections : les miniatures de vidéo, les paramètres et les aperçus s’affichent correctement sur les sites privés. Les onglets Notifications et Installer Jetpack ne se superposent plus.
+Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
 </fr-FR>
 <iw-IL>
-15.1:
-שיפורים: הודעות לגבי קביעת לוח זמנים, תגיות וחלונית הנראות מופיעות כעת בחלון קופץ בעורך וברשימת הפוסטים לפני הפרסום. לחיצה על Enter אחרי הוספת תיאור לבלוקים של תמונה, וידאו, גלריה וציטוט מוסיפה בלוק חדש. 
+15.2:
+תוספות לעורך הבלוקים: הוספנו תמיכה בעורך לצבעים ולמעברי צבע שמוגדרים בערכת העיצוב בבלוקים 'כיסוי' ו'כפתור'. ההעלאות של וידאו בבלוק הכיסוי כעת מושלמות לאחר הסגירה של העורך. פרטי הספירה של בלוקים, מילים ותווים מוצגים כעת.
 
-תיקונים: תמונות ממוזערות, הגדרות ותצוגות מקדימות של סרטוני וידאו מוצגות כעת בצורה תקינה באתרים פרטיים. הלשוניות 'הודעות' ו-'להתקין את Jetpack' לא מופיעות עוד זו על גבי זו.
+תיקונים: תיקנו בעיות בעיבוד של פרטי הפוסט ב-Reader, את הטיפול בהשלמת ההעלאה בעורך הבלוקים וקריסה שהתרחשה כאשר המענה של API ב-WordPress היה ללא תוכן.
 </iw-IL>
 <id>
-15.1:
-Peningkatan: Penjadwalan, tag, dan panel visibilitas muncul di penyunting dan daftar pos sebelum publikasi. Menekan tombol enter setelah menambahkan keterangan di blok Gambar, Video, Galeri, Kutipan, Kutipan Besar akan menambahkan blok baru.
+15.2:
+Tambahan penyunting blok: Dukungan penyunting ditambahkan untuk warna dan gradasi yang berdasarkan tema pada blok Sampul dan Tombol. Pengunggahan video blok sampul kini selesai setelah penyunting ditutup. Informasi metrik mengenai jumlah blok, kata, dan karakter kini ditampilkan.
 
-Perbaikan: Thumbnail video, pengaturan, dan pratinjau ditampilkan dengan benar di situs pribadi. Tab Pemberiahuan dan Pemasangan Jetpack tidak lagi saling menghalangi.
+Perbaikan: Masalah pemuatan detail pos Pembaca, penanganan penyelesaian unggahan pada penyunting Blok, dan crash yang terjadi ketika respons API WordPress tidak diisi telah diperbaiki.
 </id>
 <it-IT>
-15.1:
-Miglioramenti: pianificazione, tag e pop up del pannello della visibilità nell'editor e nella prepubblicazione dell'elenco degli articoli. Premendo il tasto per l'inserimento dopo aver aggiunto didascalie in un blocco Immagine, Video, Galleria, Citazione o Citazione evidenziata si aggiunge un nuovo blocco.
+15.2:
+Aggiunte all'editor a blocchi: supporto all'editor aggiunto per colori e gradienti specifici del tema sui blocchi Copertina e Pulsante. I caricamenti di video del blocco Copertina vengono completati dopo la chiusura dell'editor. Vengono visualizzate le informazioni di tipo metrico del blocco, del conteggio di parole e caratteri.
 
-Correzioni: miniature dei video, impostazioni e anteprima visualizzati in modo corretto sui siti privati. Le schede Notifiche e Installazione di Jetpack non sono più sovrapposte
+Correzioni: corretti problemi di restituzione dei dettagli dell'articolo del Reader e un arresto anomalo in risposta a un API di WordPress.
 </it-IT>
 <ja-JP>
-15.1: 
-ブロックエディターの改善 :「公開」をタップすると投稿エディターと投稿リストにスケジュール設定、タグ設定、公開設定のポップアップが表示されます。これらを編集して「今すぐ公開」をタップすると、公開が完了します。 画像、動画、ギャラリー、引用、プルクオートブロックにキャプションを追加して Enter を押すと、新しいブロックが自動で作成されます。
+15.2 : 
+ブロックエディターの追加 : カバーブロックとボタンブロックのテーマ定義カラーとグラデーションにエディターのサポートが追加されました。 エディターを閉じるとカバーブロックの動画アップロードが完了します。 ブロック数、単語数、文字数のメトリック情報が表示されます。
 
-修正 : 非公開サイトの「メディア」セクションで、動画のサムネイル、設定、プレビューが正しく表示されるようになりました。 「通知」タブと「Jetpack をインストール」タブが重なって表示されなくなりました。
+修正 : Reader 投稿の詳細におけるレンダリングの問題、ブロックエディターにおけるアップロード完了処理、および WordPress API の応答に空の本文がある場合にクラッシュする問題を修正しました。
 </ja-JP>
 <nl-NL>
-15.1:
-Verbeteringen: het venster voor planning, tags en zichtbaarheid komt tevoorschijn in de editor en in de voorpublicatie van berichtlijsten. Door op enter te drukken na het toevoegen van bijschriften aan een Afbeelding-, Video-, Galerij-, Citaat- en Pullquote-blok wordt een nieuw blok toegevoegd.
+Blok-editor toevoegingen: Redactionele ondersteuning toegevoegd voor thema gedefinieerde kleuren en kleurverlopen op cover- en knop blokken. Cover blok video-uploads zijn nu voltooid nadat de editor is gesloten. Blok-, woord- en karakter telling metrische informatie wordt nu weergegeven.
 
-Fixes: video-miniatuurweergaven, instellingen en voorbeeldweergaven worden nu op de juiste manier weergegeven op privésites. Geen overlap meer van de tabbladen Meldingen en Installeren van Jetpack.
+Opgelost: Problemen met de weergave van de Reader bericht details, de afhandeling van de upload in de blok-editor, en een crash die zou optreden wanneer de WordPress API-reactie een lege body heeft
 </nl-NL>
 <pt-BR>
-15.1:
-Melhorias no editor de blocos: Agendamento, tag e configurações de visibilidade são exibidos no editor de post e lista de posts ao tocar em Publicar. Faça os ajustes necessários e toque em "Publicar agora" para concluir a publicação. Pressionar Enter após adicionar uma legenda nos blocos de Imagem, Vídeo ou Citação agora adiciona um novo bloco automaticamente.
+15.2:
+Adições ao editor de blocos: adicionamos suporte aos blocos Cobertura e Botão a cores e gradientes definidos pelo tema . Enviar um vídeo usando o bloco Cobertura agora finaliza o envio mesmo que o editor seja fechado. Exibição de métricas de blocos, palavras e caracteres.
 
-Correções: Miniaturas de vídeo, configurações e visualização são exibidos corretamente na seção Mídia em sites privados. As abas Notificações e Instalar Jetpack não são mais exibidas uma sobre a outra.
+Correções: corrigimos a exibição de detalhes de posts no Leitor, melhoramos como envio de arquivos são tratados no editor de blocos, e corrigimos um conflito com a API do WordPress quando a resposta estiver vazia.
 </pt-BR>
 <ru-RU>
-15.1:
-Улучшения в редакторе блоков: планирование метки и настройки видимости в всплыващей панели. Список записей при нажатии на кнопку публикации, вы можете настроить их и опубликовать. Добавление нового блока автоматически после ввода подписи для изображений, галерей, видео и цитат.
+15.2:
+Добавлено в редактор блоков: Поддержка редактором цветов темы и градиентов в блоках кнопки и обложки. Загрузка видео в блок обложки будет завершена даже если редактор будет закрыт. Отображение счетчика блоков, слов и символов.
 
-Исправления: миниатюры видео, настройки и предпросмотр в мультимедиа разделе личных сайтов будут корректными. Уведомления и вкладки установки Jetpack более не перекрывают друг друга.
+Исправлено: Отображение подробностей в Чтиве, завершение загрузки в редакторе, падение при пустом ответе WordPress API.
 </ru-RU>
 <sv-SE>
-15.1:
-Förbättringar: schemaläggning, tagg och synlighetspanelen poppar upp i redigeringsprogrammet och inläggslistan innan publicering. Tryck Retur efter att du lagt till bildtexter i Bild-, Video-, Galleri- eller Citat-block så läggs ett nytt block till automatiskt.
+15.2:
+Nytt i blockredigeraren: Stöd i redigeraren för temadefinierade färger och gradienter i omslags- och knappblock. Uppladdning av video för omslagsblock fullföljs även efter redigeraren har stängts. Räknare för block, ord och tecken visas.
 
-Korrigeringar: videominiatyrer, inställningar och förhandsvisning visas korrekt på privata webbplatser. Flikarna Meddelanden och Installera Jetpack visas inte längre ovanpå varandra.
+Rättelser: Rättat problem i läsaren med att visa inläggsuppgifter och fullföljande av uppladdning i blockredigeraren samt en krasch vid tomt svar från WordPress API.
 </sv-SE>
 <tr-TR>
-15.1:
-İyileştirmeler: Zamanlama, etiket ve görünürlük paneli, editör ve yazı listesi ön yayınında açılır. Görsel, video, galeri, alıntı ve tanıtım bloklarına başlıkı ekledikten sonra enter tuşuna basıldığında yeni bir blok eklenir.
+15,2:
+Blok düzenleyicisi eklemeleri: Kapak ve Düğme bloklarında tema tanımlı renkler ve gradyanlar için düzenleyici desteği eklendi. Kapak bloğu video yüklemeleri, düzenleyici kapatıldıktan sonra tamamlanır. Blok, sözcük ve karakter sayısı ile ilgili ölçüm bilgileri görüntülenir.
 
-Düzeltmeler: Video küçük resimleri, ayarları ve önizlemesi özel sitelerde düzgün bir şekilde görüntülenir. Bildirimler ve Jetpack yükle sekmeleri artık üst üste binmiyor.
+Düzeltmeler: Okuyucu gönderim ayrıntısı oluşturma sorunları ve bir WordPress API yanıt kilitlenmesi düzeltildi.
 </tr-TR>
 <zh-CN>
-15.1：
-区块编辑器改进：当您点按“发布”时，文章编辑器和文章列表中会弹出预发布、标签和可见性设置 - 调整设置并点按“立即发布”即可完成发布。 在图片、视频、图库、引用或醒目引文区块中添加说明之后按 Enter 键，即可自动添加新区块。
+15.2：
+区块编辑器添加内容： 为封面和按钮区块上的主题定义颜色和渐变添加了编辑器支持。 现在，封面区块视频上传在关闭编辑器后完成。 现在显示区块、字词和字符计数指标信息。
 
-修复：视频缩略图、设置和预览在私人站点上的“媒体”部分正确显示。 “通知”和“安装 Jetpack”选项卡不再叠加显示。
+修复：修复了阅读器文章详细信息呈现问题、区块编辑器中上传完成的处理以及 WordPress API 响应的正文为空时可能发生的崩溃问题。
 </zh-CN>
 <zh-TW>
-15.1：
-區塊編輯器改善功能：點選「發表」後，文章編輯器和文章清單會彈出排程、標籤和能見度設定。調整這些設定後點選「立即發表」，即可完成文章發表。 在圖片、影片、圖庫、引文和重要引述區塊新增說明後按下 Enter 鍵，系統會自動新增一個區塊。
+15.2：
+區塊編輯器新功能：新增編輯器支援，封面和按鈕區塊可設定佈景主題定義的顏色和漸層色彩。 封面區塊視訊現在會在編輯器關閉後上傳完成。 系統現在會顯示區塊、文字和字元數指標資訊。
 
-修正項目：影片縮圖、設定和預覽會在私人網站的「媒體」區段正確顯示。 「通知」和「安裝 Jetpack」分頁不再重疊顯示。
+修正：修復讀取器文章詳細資料轉譯問題、區塊編輯器中上傳完成的處理工作，以及 WordPress API 回應本文空白時發生的當機情況。
 </zh-TW>

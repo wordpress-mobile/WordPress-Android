@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 08:54:10+0000
+Translation-Revision-Date: 2020-07-10 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigiert zum vorherigen Content Sheet</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigiert zum Anpassen des Verlaufs</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigiert zur individuellen Farbauswahl</string>
+    <string name="gutenberg_native_gradient_type">Verlaufstyp</string>
+    <string name="gutenberg_native_go_back">Zurück</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Zum Auswählen der Option zweimal tippen</string>
+    <string name="gutenberg_native_customize_gradient">Verlauf anpassen</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Seitenautor</string>
+    <string name="photo_picker_use_gif">Dieses GIF verwenden</string>
+    <string name="error_media_thumbnail_not_loaded">Medien-Vorschaubild konnte nicht geladen werden</string>
+    <string name="menu_content_info">Inhaltliche Struktur</string>
+    <string name="everyone">Jeder</string>
+    <string name="me">Ich</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jeder Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Block auch über den Webbrowser deines Geräts bearbeiten.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Block in Webbrowser bearbeiten</string>
     <string name="gutenberg_native_dismiss">Verwerfen</string>
@@ -1458,11 +1473,6 @@ Language: de
     <string name="open_mail">E-Mail öffnen</string>
     <string name="next">Weiter</string>
     <string name="enter_email_wordpress_com">Melde dich auf WordPress.com mit einer E-Mail-Adresse an, um alle deine WordPress-Websites zu verwalten.</string>
-    <string name="login_promo_text_jetpack">Verwalte deine mit Jetpack betriebene Website unterwegs – du hast WordPress immer dabei.</string>
-    <string name="login_promo_text_notifications">Deine Benachrichtigungen hast du immer dabei – zeige Kommentare und Likes in Echtzeit an.</string>
-    <string name="login_promo_text_anytime">Du kannst überall und jederzeit deine bevorzugten Websites verfolgen und an der Unterhaltung teilnehmen.</string>
-    <string name="login_promo_text_realtime">Schau zu, wie Leser aus der ganzen Welt deine Website lesen und damit interagieren – in Echtzeit.</string>
-    <string name="login_promo_text_onthego">Veröffentliche deine Beiträge im Park. Blogge im Bus. Kommentiere im Café. WordPress ist immer und überall für dich verfügbar.</string>
     <string name="image_optimization_promo_desc">Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDies kannst du in den Website-Einstellungen jederzeit ändern.</string>
     <string name="image_optimization_promo_title">Bildoptimierung einschalten?</string>
     <string name="leave_off">Weiterhin ausschalten</string>

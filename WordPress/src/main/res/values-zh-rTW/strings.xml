@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 08:54:11+0000
+Translation-Revision-Date: 2020-07-09 08:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">在瀏覽器中開啟連結</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">瀏覽至上一個內容表</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">瀏覽至自訂漸層色彩</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">瀏覽至自訂顏色選擇器</string>
+    <string name="gutenberg_native_gradient_type">漸層色彩類型</string>
+    <string name="gutenberg_native_go_back">返回</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">按兩下以選擇</string>
+    <string name="gutenberg_native_customize_gradient">自訂漸層色彩</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">頁面作者</string>
+    <string name="photo_picker_use_gif">使用此 GIF</string>
+    <string name="error_media_thumbnail_not_loaded">無法載入媒體縮圖</string>
+    <string name="menu_content_info">內容結構</string>
+    <string name="everyone">所有人</string>
+    <string name="me">我</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我們正在努力開發，讓每次版本更新都可以新增更多區塊。 在此同時，你也可以使用裝置的網頁瀏覽器編輯此區塊。</string>
     <string name="gutenberg_native_edit_block_in_web_browser">在網頁瀏覽器編輯區塊</string>
     <string name="gutenberg_native_dismiss">關閉</string>
@@ -1440,11 +1455,6 @@ Language: zh_TW
     <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
-    <string name="login_promo_text_jetpack">隨時隨地管理以 Jetpack 建置的網站，就像把 WordPress 裝在口袋隨身帶著走。</string>
-    <string name="login_promo_text_notifications">你走到哪，通知就到哪，第一時間查看留言和讚。</string>
-    <string name="login_promo_text_anytime">隨時隨地掌握最愛網站的最新動態並加入討論。</string>
-    <string name="login_promo_text_realtime">第一時間看到來自世界各地的讀者閱讀你的網站，並與你的網站互動。</string>
-    <string name="login_promo_text_onthego">在公園發表文章，在公車上寫網誌，或在咖啡館留言，你走到哪，WordPress 跟你到哪。</string>
     <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>
     <string name="image_optimization_promo_title">開啟圖片最佳化？</string>
     <string name="leave_off">保持關閉</string>

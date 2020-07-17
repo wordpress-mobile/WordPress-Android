@@ -1473,11 +1473,6 @@ Language: nl
     <string name="open_mail">Open e-mail</string>
     <string name="next">Volgende</string>
     <string name="enter_email_wordpress_com">Log in op WordPress.com met behulp van een e-mailadres om al je WordPress-sites te beheren.</string>
-    <string name="login_promo_text_jetpack">Beheer je Jetpack-site waar je ook bent. Je draagt WordPress altijd met je mee.</string>
-    <string name="login_promo_text_notifications">Je meldingen reizen met je mee. Bekijk reacties en likes wanneer ze binnenkomen.</string>
-    <string name="login_promo_text_anytime">Volg je favoriete sites en neem altijd en overal deel aan het gesprek.</string>
-    <string name="login_promo_text_realtime">Kijk in realtime hoe mensen overal ter wereld je site lezen en bekijken.</string>
-    <string name="login_promo_text_onthego">Publiceren in het park. Bloggen in de bus. Reageren in het restaurant. WordPress gaat altijd met je mee.</string>
     <string name="image_optimization_promo_desc">Afbeeldingoptimalisatie maakt afbeeldingen kleiner, zodat ze sneller geüpload kunnen worden.\n\nJe kunt deze optie op elk moment wijzigen in de site-instellingen.</string>
     <string name="image_optimization_promo_title">Afbeeldingoptimalisatie aanzetten?</string>
     <string name="leave_off">Uit laten staan</string>

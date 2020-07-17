@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-29 20:45:36+0000
+Translation-Revision-Date: 2020-07-09 16:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
+    <string name="gutenberg_native_gradient_type">نوع التدرج</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
+    <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
+    <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
+    <string name="menu_content_info">هيكل المحتوى</string>
+    <string name="me">أنا</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. وفي هذه الأثناء، يمكنك أيضًا تحرير هذا المكوِّن باستخدام متصفح الويب في جهازك.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">تحرير المكوِّن في متصفح الويب</string>
     <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>
@@ -1447,11 +1458,6 @@ Language: ar
     <string name="open_mail">فتح البريد</string>
     <string name="next">التالي</string>
     <string name="enter_email_wordpress_com">سجِّل الدخول إلى WordPress.com باستخدام عنوان بريد إلكتروني لإدارة جميع مواقع ووردبريس الخاصة بك.</string>
-    <string name="login_promo_text_jetpack">إدارة موقعك المدعوم من Jetpack أثناء تنقلك — سيكون ووردبريس في متناول يدك.</string>
-    <string name="login_promo_text_notifications">تنتقل الإعلامات معك — راجع التعليقات والإعجابات عندما تحدث.</string>
-    <string name="login_promo_text_anytime">حافظ على مواقعك المفضلة وانضم إلى المحادثة أينما كنت ووقتما تشاء.</string>
-    <string name="login_promo_text_realtime">راقب القرّاء من جميع أنحاء العالم وهم يقرؤون ويتفاعلون مع موقعك — بصورة آنية.</string>
-    <string name="login_promo_text_onthego">نشر من قائمة الانتظار. تدوين من قائمة النقل. تعليق من المقهى. يذهب ووردبريس معك حيثما تذهب.</string>
     <string name="image_optimization_promo_desc">يقلل تحسين الصورة حجم الصور لتحميلها بسرعة.\n\nيمكنك تغيير هذا في أي وقت في إعدادات الموقع.</string>
     <string name="image_optimization_promo_title">هل تريد تشغيل تحسين الصورة؟</string>
     <string name="leave_off">التوقف عن الاستخدام</string>

@@ -16,7 +16,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -26,7 +26,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerPostRepository: ReaderPostRepository,
+    private val readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
@@ -57,20 +57,25 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
+    private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
+
     fun start() {
         if (isStarted) return
         isStarted = true
 
         init()
-        loadPosts()
     }
 
     private fun init() {
         // Start with loading state
         _uiState.value = LoadingUiState
 
+        // Get the correct repository
+        readerDiscoverRepository = readerDiscoverRepositoryFactory.create()
+        readerDiscoverRepository.start()
+
         // Listen to changes to the discover feed
-        _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
+        _uiState.addSource(readerDiscoverRepository.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
                     posts.map {
                         postUiStateBuilder.mapPostToUiState(
@@ -90,6 +95,13 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
             )
         }
+
+        readerDiscoverRepository.communicationChannel.observeForever { data ->
+            data?.let {
+                // TODO listen for communications from the reeaderPostRepository, but not 4ever!
+            }
+        }
+
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {
@@ -140,13 +152,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
-    private fun loadPosts() {
-        // TODO malinjir we'll remove this method when the repositories start managing the requests automatically
-        launch(bgDispatcher) {
-            readerPostRepository.getDiscoveryFeed()
-        }
-    }
-
     fun onReblogSiteSelected(siteLocalId: Int) {
         // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
         //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
@@ -158,6 +163,11 @@ class ReaderDiscoverViewModel @Inject constructor(
             _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
         pendingReblogPost = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        readerDiscoverRepository.stop()
     }
 
     sealed class DiscoverUiState(
