@@ -13,10 +13,10 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploade
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.util.helpers.logfile.LogFileProvider
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -52,15 +52,26 @@ class EncryptedLogging @Inject constructor(
         }
     }
 
-    fun queueCurrentLog(logFileProvider: LogFileProvider): String? {
+    /**
+     * Dispatches a FluxC action that will queue the given log to be uploaded as soon as possible.
+     *
+     * @param logFile Log file to be uploaded
+     * @param shouldStartUploadImmediately This parameter will decide whether we should try to upload the log file
+     * immediately. We are unlikely to have enough time to complete the upload, so we can use this parameter to avoid
+     * the unnecessary upload failure.
+     */
+    fun encryptAndUploadLogFile(logFile: File, shouldStartUploadImmediately: Boolean): String? {
         // TODO: Check how long log files are kept for and increase the duration if necessary
-        logFileProvider.getLogFiles().lastOrNull()?.let { file ->
-            if (file.exists()) {
-                val uuid = UUID.randomUUID().toString()
-                val payload = UploadEncryptedLogPayload(uuid = uuid, file = file)
-                dispatcher.dispatch(EncryptedLogActionBuilder.newUploadLogAction(payload))
-                return uuid
-            }
+        if (logFile.exists()) {
+            val uuid = UUID.randomUUID().toString()
+            val payload = UploadEncryptedLogPayload(
+                    uuid = uuid,
+                    file = logFile,
+                    // If the connection is not available, we shouldn't try to upload immediately
+                    shouldStartUploadImmediately = shouldStartUploadImmediately && lastConnectionStatus == AVAILABLE
+            )
+            dispatcher.dispatch(EncryptedLogActionBuilder.newUploadLogAction(payload))
+            return uuid
         }
         return null
     }

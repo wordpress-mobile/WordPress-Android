@@ -4,21 +4,25 @@ import android.content.Context
 import android.preference.PreferenceManager
 import io.sentry.android.core.SentryAndroid
 import io.sentry.core.Sentry
+import io.sentry.core.SentryLevel
 import io.sentry.core.protocol.User
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.helpers.logfile.LogFileProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private const val EXTRA_UUID = "uuid"
 private const val EVENT_BUS_MODULE = "org.greenrobot.eventbus"
 private const val EVENT_BUS_EXCEPTION = "EventBusException"
 private const val EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR = "Invoking subscriber failed"
 
 @Singleton
 class CrashLogging @Inject constructor(
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val encryptedLogging: EncryptedLogging
 ) {
     fun start(context: Context) {
         SentryAndroid.init(context) { options ->
@@ -47,6 +51,14 @@ class CrashLogging @Inject constructor(
                                 lastException.value == EVENT_BUS_INVOKING_SUBSCRIBER_FAILED_ERROR) {
                             event.exceptions.remove(lastException)
                         }
+                    }
+                }
+                LogFileProvider.fromContext(context).getLogFiles().lastOrNull()?.let { logFile ->
+                    if (logFile.exists()) {
+                        encryptedLogging.encryptAndUploadLogFile(logFile, event.level != SentryLevel.FATAL)
+                                ?.let { uuid ->
+                                    event.setExtra(EXTRA_UUID, uuid)
+                                }
                     }
                 }
                 event
