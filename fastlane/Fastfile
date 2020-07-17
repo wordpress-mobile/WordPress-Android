@@ -156,6 +156,20 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :new_hotfix_release do | options |
     prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
     android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
+  end
+
+  #####################################################################################
+  # finalize_hotfix_release
+  # -----------------------------------------------------------------------------------
+  # This lane finalizes the hotfix branch. 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane finalize_hotfix_release
+  #
+  # Example:
+  # bundle exec fastlane finalize_hotfix_release
+  desc "Finalizes a hotfix release by tagging the build"
+  lane :finalize_hotfix_release do | options |
     android_tag_build(tag_alpha: false)
   end
 
