@@ -1,4 +1,0 @@
-15.1:
-Peningkatan: Penjadwalan, tag, dan panel visibilitas muncul di penyunting dan daftar pos sebelum publikasi. Menekan tombol enter setelah menambahkan keterangan di blok Gambar, Video, Galeri, Kutipan, Kutipan Besar akan menambahkan blok baru.
-
-Perbaikan: Thumbnail video, pengaturan, dan pratinjau ditampilkan dengan benar di situs pribadi. Tab Pemberiahuan dan Pemasangan Jetpack tidak lagi saling menghalangi.

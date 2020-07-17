@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 13:54:09+0000
+Translation-Revision-Date: 2020-06-30 23:08:00+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Går till föregående innehållsblad</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Går till anpassning av gradient</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Går till färgväljare</string>
+    <string name="gutenberg_native_gradient_type">Gradienttyp</string>
+    <string name="gutenberg_native_go_back">Gå tillbaka</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Dubbeltryck för att välja alternativet</string>
+    <string name="gutenberg_native_customize_gradient">Anpassa gradient</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Sidans författare</string>
+    <string name="photo_picker_use_gif">Använd denna GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Ingen miniatyr av mediafilen kunde inte laddas</string>
+    <string name="menu_content_info">Innehållsstruktur</string>
+    <string name="everyone">Alla</string>
+    <string name="me">Jag</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Vi jobbar hårt med att lägga till fler block i varje version. Under tiden kan du även redigera det här blocket med din enhets webbläsare.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Redigera block i webbläsaren</string>
     <string name="gutenberg_native_dismiss">Avfärda</string>
@@ -586,8 +601,6 @@ Language: sv_SE
     <string name="editor_uploading_draft">Ditt utkast laddas upp</string>
     <string name="post_uploading_draft">Laddar upp utkast</string>
     <string name="post_list_tab_drafts">Utkast</string>
-    <string name="post_list_author_everyone">Alla</string>
-    <string name="post_list_author_me">Jag</string>
     <string name="error_restoring_post">Ett fel inträffade när inlägget skulle återställas</string>
     <string name="backdated_for">Backdaterad: %s</string>
     <string name="stats_insights_management_title">Visa endast den mest relevanta statistiken. Lägg till och organisera dina insikter nedan.</string>
@@ -1460,11 +1473,6 @@ Language: sv_SE
     <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
-    <string name="login_promo_text_jetpack">Hantera din Jetpack-förstärkta webbplats när som helst – WordPress finns i din ficka.</string>
-    <string name="login_promo_text_notifications">Du har alltid dina aviseringar med dig – ha full koll på kommentarer och gillanden i realtid.</string>
-    <string name="login_promo_text_anytime">Håll koll på dina favoritwebbplatser och delta i diskussion där och när det passar dig.</string>
-    <string name="login_promo_text_realtime">Se hur läsare från hela världen läser och interagerar med din webbplats – i direktsändning.</string>
-    <string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
     <string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
     <string name="leave_off">Behåll avstängt</string>

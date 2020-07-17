@@ -85,7 +85,7 @@ public class BaseTest {
     }
 
     protected void logoutIfNecessary() {
-        if (isElementDisplayed(R.id.login_button) || isElementDisplayed(R.id.login_open_email_client)) {
+        if (isElementDisplayed(R.id.first_button) || isElementDisplayed(R.id.login_open_email_client)) {
             return;
         }
 
@@ -93,9 +93,10 @@ public class BaseTest {
             logout();
         }
     }
+
     protected void wpLogin() {
         logoutIfNecessary();
-        new LoginFlow().chooseLogin()
+        new LoginFlow().chooseContinueWithWpCom()
                        .enterEmailAddress()
                        .enterPassword()
                        .confirmLogin();

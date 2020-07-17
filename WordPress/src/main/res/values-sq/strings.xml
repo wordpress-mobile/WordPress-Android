@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-17 09:37:18+0000
+Translation-Revision-Date: 2020-07-05 11:44:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Hape lidhjen në një shfletues</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Kalohet te fleta e mëparshme e lëndës</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Kalohet te përshtatja e gradientit</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Kalohet te zgjedhësi i ngjyrës vetjake</string>
+    <string name="gutenberg_native_gradient_type">Lloj Gradienti</string>
+    <string name="gutenberg_native_go_back">Shko mbrapsht</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
+    <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autor faqeje</string>
+    <string name="photo_picker_use_gif">Përdor këtë GIF</string>
+    <string name="error_media_thumbnail_not_loaded">S’u ngarkua dot miniaturë mediash</string>
+    <string name="menu_content_info">Strukturë lënde</string>
+    <string name="everyone">Gjithkush</string>
+    <string name="me">Unë</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Po punojmë fort për të shtuar më tepër blloqe me çdo hedhje në qarkullim. Ndërkohë, mundeni edhe ta përpunoni këtë bllok duke përdorur shfletuesin e pajisjes.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Përpunojeni bllokun në shfletues</string>
     <string name="gutenberg_native_dismiss">Hidhe tej</string>
@@ -586,8 +601,6 @@ Language: sq_AL
     <string name="editor_uploading_draft">Skica juaj po ngarkohet</string>
     <string name="post_uploading_draft">Po ngarkohet skicë</string>
     <string name="post_list_tab_drafts">Skica</string>
-    <string name="post_list_author_everyone">Cilido</string>
-    <string name="post_list_author_me">Unë</string>
     <string name="error_restoring_post">Ndodhi një gabim gjatë rikthimit të postimit</string>
     <string name="backdated_for">Vënë në plan për: %s</string>
     <string name="stats_insights_management_title">Shihni vetëm statistikat më me peshë. Shtoni dhe sistemoni më poshtë tendencat tuaja.</string>
@@ -1460,11 +1473,6 @@ Language: sq_AL
     <string name="open_mail">Hap postën</string>
     <string name="next">Pasuesi</string>
     <string name="enter_email_wordpress_com">Që të administroni krejt sajtet tuaj WordPress, bëni hyrjen te WordPress.com.</string>
-    <string name="login_promo_text_jetpack">Administroni në lëvizje e sipër sajtin tuaj nën Jetpack — e keni WordPress-in në xhep.</string>
-    <string name="login_promo_text_notifications">Njoftimet tuaja udhëtojnë tok me ju — shihini komentet dhe pëlqimet sapo të bëhen.</string>
-    <string name="login_promo_text_anytime">Ndiqni sajtet tuaj të parapëlqyer dhe merrni pjesë në bisedë nga kudo, kurdo.</string>
-    <string name="login_promo_text_realtime">Shihni lexues nga anembanë bota të lexojnë dhe ndërveprojnë me sajtin tuaj — aty për aty.</string>
-    <string name="login_promo_text_onthego">Botoni që nga parku. Blogoni që nga autobusi. Komentoni që nga kafja. WordPress-i vete ku veni ju.</string>
     <string name="image_optimization_promo_desc">Optimizimi i figurave i mpak figurat, për ngarkim më të shpejtë.\n\nKëtë mund ta ndryshoni kurdo, te rregullimet e sajtit.</string>
     <string name="image_optimization_promo_title">Të aktivizohet optimizimi i figurave?</string>
     <string name="leave_off">Lëre joaktive</string>

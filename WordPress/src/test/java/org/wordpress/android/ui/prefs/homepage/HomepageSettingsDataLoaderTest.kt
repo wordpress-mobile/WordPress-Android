@@ -10,12 +10,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.CauseOfOnPostChanged
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PageStore
-import org.wordpress.android.fluxc.store.PostStore.OnPostChanged
+import org.wordpress.android.fluxc.store.PageStore.OnPageChanged
 import org.wordpress.android.fluxc.store.PostStore.PostError
 import org.wordpress.android.fluxc.store.PostStore.PostErrorType.GENERIC_ERROR
 import org.wordpress.android.test
@@ -41,12 +40,7 @@ class HomepageSettingsDataLoaderTest {
         val databasePages = listOf(dbPage)
         val remotePages = listOf(remotePage)
         whenever(pageStore.getPagesFromDb(siteModel)).thenReturn(databasePages, remotePages)
-        whenever(pageStore.requestPagesFromServer(siteModel)).thenReturn(
-                OnPostChanged(
-                        CauseOfOnPostChanged.FetchPages,
-                        1
-                )
-        )
+        whenever(pageStore.requestPagesFromServer(siteModel, false)).thenReturn(OnPageChanged.Success)
         val results = mutableListOf<LoadingResult>()
 
         homepageSettingsDataLoader.loadPages(siteModel).collect { results.add(it) }
@@ -65,12 +59,7 @@ class HomepageSettingsDataLoaderTest {
         val nonPublishedPage = mock<PageModel>()
         val expectedPages = listOf(publishedPage)
         whenever(pageStore.getPagesFromDb(siteModel)).thenReturn(listOf(publishedPage, nonPublishedPage))
-        whenever(pageStore.requestPagesFromServer(siteModel)).thenReturn(
-                OnPostChanged(
-                        CauseOfOnPostChanged.FetchPages,
-                        1
-                )
-        )
+        whenever(pageStore.requestPagesFromServer(siteModel, false)).thenReturn(OnPageChanged.Success)
         val results = mutableListOf<LoadingResult>()
 
         homepageSettingsDataLoader.loadPages(siteModel).collect { results.add(it) }
@@ -86,13 +75,8 @@ class HomepageSettingsDataLoaderTest {
     fun `returns error when remote call fails`() = test {
         val pages = listOf<PageModel>()
         whenever(pageStore.getPagesFromDb(siteModel)).thenReturn(pages)
-        val errorResponse = OnPostChanged(
-                CauseOfOnPostChanged.FetchPages,
-                1
-        )
-        errorResponse.error = PostError(GENERIC_ERROR, "Generic error")
-        whenever(pageStore.requestPagesFromServer(siteModel)).thenReturn(
-                errorResponse
+        whenever(pageStore.requestPagesFromServer(siteModel, false)).thenReturn(
+                OnPageChanged.Error(PostError(GENERIC_ERROR, "Generic error"))
         )
         val results = mutableListOf<LoadingResult>()
 

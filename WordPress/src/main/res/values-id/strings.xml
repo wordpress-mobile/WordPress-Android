@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-26 08:54:10+0000
+Translation-Revision-Date: 2020-07-09 17:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Buka tautan pada perambah</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigasi ke halaman konten sebelumnya</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigasi untuk mengustomisasi gradien</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navigasi untuk mengustomisasi pemilih warna</string>
+    <string name="gutenberg_native_gradient_type">Jenis Gradasi</string>
+    <string name="gutenberg_native_go_back">Kembali</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Ketuk dua kali untuk memilih opsi</string>
+    <string name="gutenberg_native_customize_gradient">Kustomisasi Gradasi</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Pembuat halaman</string>
+    <string name="photo_picker_use_gif">Gunakan GIF ini</string>
+    <string name="error_media_thumbnail_not_loaded">Thumbnail media tidak dapat dimuat</string>
+    <string name="menu_content_info">Struktur konten</string>
+    <string name="everyone">Setiap Orang</string>
+    <string name="me">Saya</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat mengedit blok ini menggunakan web browser perangkat Anda.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Edit blok di browser web</string>
     <string name="gutenberg_native_dismiss">Tutup</string>
@@ -584,8 +599,6 @@ Language: id
     <string name="editor_failed_to_insert_media_tap_to_retry">Gagal memasukkan media.\nKetuk untuk mencoba lagi.</string>
     <string name="editor_uploading_draft">Konsep Anda sedang diunggah</string>
     <string name="post_uploading_draft">Mengunggah konsep</string>
-    <string name="post_list_author_everyone">Setiap Orang</string>
-    <string name="post_list_author_me">Saya</string>
     <string name="error_restoring_post">Terjadi error saat memulihkan pos</string>
     <string name="backdated_for">Dimundurkan selama: %s</string>
     <string name="stats_insights_management_title">Hanya lihat statistik yang paling relevan. Tambahkan dan kelola wawasan Anda di bawah ini.</string>
@@ -1448,11 +1461,6 @@ Language: id
     <string name="open_mail">Buka email</string>
     <string name="next">Selanjutnya</string>
     <string name="enter_email_wordpress_com">Login ke WordPress.com dengan alamat email untuk mengelola semua situs WordPress Anda.</string>
-    <string name="login_promo_text_jetpack">Kelola situs Anda yang didukung oleh Jetpack di mana saja — WordPress selalu ada di saku Anda.</string>
-    <string name="login_promo_text_notifications">Bawa pemberitahuan ke mana pun Anda pergi — lihat komentar dan suka seketika.</string>
-    <string name="login_promo_text_anytime">Dapatkan kabar terbaru dari situs favorit Anda dan bergabung dalam percakapan di mana pun, kapan pun.</string>
-    <string name="login_promo_text_realtime">Lihat pembaca dari seluruh dunia membaca dan berinteraksi dengan situs Anda, secara real-time.</string>
-    <string name="login_promo_text_onthego">Publikasikan dari taman. Tulis blog dari bus. Beri komentar dari kafe. WordPress ada di mana pun Anda berada.</string>
     <string name="image_optimization_promo_desc">Pengoptimalan gambar mengecilkan gambar agar pengunggahan lebih cepat.\n\nAnda dapat mengubahnya kapan saja di pengaturan situs.</string>
     <string name="image_optimization_promo_title">Aktifkan pengoptimalan gambar?</string>
     <string name="leave_off">Nonaktifkan</string>

@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-04-06 15:11:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ku_TR
 -->
 <resources>
@@ -134,8 +134,6 @@ Language: ku_TR
     <string name="editor_failed_to_insert_media_tap_to_retry">Tevlîkirina medyayê bi serneket.\nJi bo ceribandineke din, bitepîne.</string>
     <string name="editor_uploading_draft">Reşnivîsa te tê hilxistin</string>
     <string name="post_uploading_draft">Reşnivîs tê hilxistin</string>
-    <string name="post_list_author_everyone">Her kes</string>
-    <string name="post_list_author_me">Min</string>
     <string name="error_restoring_post">Di vegerandina şandiyê de çewtiyek pêk hat</string>
     <string name="backdated_for">Vegeriya ser: %s</string>
     <string name="stats_insights_management_title">Tenê rêjejimarên herî pêwendîdar bibîne. Kûrbînên xwe tevlî jêr bike û serast bike.</string>
@@ -1004,11 +1002,6 @@ Language: ku_TR
     <string name="open_mail">Epeyamê veke</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibe di WordPress.comê de bi navnîşaneke epeyamê têketinê bike.</string>
-    <string name="login_promo_text_jetpack">Di çûyînê de malpera xwe ya bi Jetpackê hatiye hêzdarkirin bi rê ve bibe  —  di bêrîka te de WordPress heye.</string>
-    <string name="login_promo_text_notifications">Danezanên te bi te re digerin — şîroveyan û ecibandinan zûtirîn bîbîne.</string>
-    <string name="login_promo_text_anytime">Xwe bigihîne malperên xwe yên favorî û tevlî gotûbêjan bibe, li her derî û her demî.</string>
-    <string name="login_promo_text_realtime">Xwînerên ji seranserê dinyayê temaşe bike, yên ku dixwînin û têkiliyê datînin bi malpera te re — bi zemanê rastîn.</string>
-    <string name="login_promo_text_onthego">Ji parkê biweşîne. Ji rêbusê blog çeke. Ji kafeye şîrove bike. Tu bi ku ve biçe WordPress bi te re ye.</string>
     <string name="image_optimization_promo_desc">Optîmîzasyona wêneyan, wêneyan biçûk dike ji bo hilxistina zûtir\nTu herdem dikarî vê biguherînî ji sazkariyên malperê.</string>
     <string name="image_optimization_promo_title">Bila optimizasyona wêneyê vebe?</string>
     <string name="leave_off">Girtî bihêle</string>

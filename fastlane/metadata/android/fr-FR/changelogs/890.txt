@@ -1,0 +1,4 @@
+15.2 
+Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
+
+Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.

@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.model.AccountModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.AccountStore.OnAccountChanged;
 import org.wordpress.android.fluxc.store.AccountStore.PushAccountSettingsPayload;
+import org.wordpress.android.ui.TextInputDialogFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPTextView;
@@ -27,9 +28,7 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 
-public class MyProfileFragment extends Fragment implements ProfileInputDialogFragment.Callback {
-    private static final String DIALOG_TAG = "DIALOG";
-
+public class MyProfileFragment extends Fragment implements TextInputDialogFragment.Callback {
     private WPTextView mFirstName;
     private WPTextView mLastName;
     private WPTextView mDisplayName;
@@ -138,13 +137,13 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
                                                        final WPTextView textView,
                                                        final boolean isMultiline) {
         return v -> {
-            ProfileInputDialogFragment inputDialog = ProfileInputDialogFragment.newInstance(dialogTitle,
+            TextInputDialogFragment inputDialog = TextInputDialogFragment.newInstance(dialogTitle,
                     textView.getText()
                             .toString(),
-                    hint, isMultiline,
+                    hint, isMultiline, true,
                     textView.getId());
             inputDialog.setTargetFragment(MyProfileFragment.this, 0);
-            inputDialog.show(getFragmentManager(), DIALOG_TAG);
+            inputDialog.show(getFragmentManager(), TextInputDialogFragment.TAG);
         };
     }
 
@@ -184,6 +183,11 @@ public class MyProfileFragment extends Fragment implements ProfileInputDialogFra
         WPTextView textView = rootView.findViewById(callbackId);
         updateLabel(textView, input);
         updateMyProfileForLabel(textView);
+    }
+
+    @Override
+    public void onTextInputDialogDismissed(int callbackId) {
+        // noop
     }
 
     @SuppressWarnings("unused")

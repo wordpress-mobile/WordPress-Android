@@ -112,6 +112,10 @@
     <dimen name="negative_margin_medium">-8dp</dimen>
     <dimen name="margin_my_site_quick_actions_bottom">40dp</dimen>
 
+    <!-- left/right margin for reader interests content -->
+    <dimen name="interests_content_margin">@dimen/margin_medium_large</dimen>
+    <dimen name="interests_done_button_margin">@dimen/margin_medium_large</dimen>
+
     <!-- left/right margin for reader cards -->
     <dimen name="reader_card_margin_normal">0dp</dimen>
     <dimen name="reader_card_margin_tablet">48dp</dimen>
@@ -131,7 +135,7 @@
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_tag_header_image_height">128dp</dimen>
+    <dimen name="reader_tag_header_height">165dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
@@ -157,7 +161,8 @@
     <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
-    <dimen name="avatar_sz_login">100dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
@@ -203,7 +208,7 @@
     <dimen name="reader_follow_button_extra_padding">32dp</dimen>
 
     <dimen name="reader_chip_radius">8dp</dimen>
-    <dimen name="reader_chip_height">38dp</dimen>
+    <dimen name="reader_chip_height">44dp</dimen>
 
     <dimen name="post_list_more_button_extra_padding">24dp</dimen>
 
@@ -276,14 +281,13 @@
     <dimen name="me_avatar_width">2dp</dimen>
 
     <!--site picker-->
-    <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
-    <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <dimen name="site_list_item_height">64dp</dimen>
 
     <!-- Site Settings -->
     <dimen name="site_settings_divider_height">1dp</dimen>
@@ -340,11 +344,24 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
+
+    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
+    <dimen name="prologue_intro_content_max_width">0dp</dimen>
+
+    <dimen name="prologue_logo_size">50dp</dimen>
+    <dimen name="prologue_logo_margin">16dp</dimen>
+
+    <dimen name="prologue_promo_title_size">34sp</dimen>
+    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_text_size">20sp</dimen>
+    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
@@ -463,7 +480,6 @@
     <dimen name="domain_suggestions_intro_horizontal_padding">16dp</dimen>
     <dimen name="domain_suggestions_intro_header_bottom_padding">8dp</dimen>
 
-    <dimen name="keyline_first">16dp</dimen>
     <dimen name="keyline_second">72dp</dimen>
 
     <dimen name="toolbar_navigation_ripple_radius">20dp</dimen>
@@ -509,7 +525,7 @@
 
     <!-- prepublishing nudges -->
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height">400dp</dimen>
-    <dimen name="prepublishing_fragment_container_min_height_for_page">300dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
+    <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
 
 </resources>

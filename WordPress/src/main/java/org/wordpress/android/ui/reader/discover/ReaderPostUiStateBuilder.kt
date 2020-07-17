@@ -77,6 +77,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
+                featuredImageVisibility = buildFeaturedImageVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
                 fullVideoUrl = buildFullVideoUrl(post),
                 discoverSection = buildDiscoverSection(post, onDiscoverSectionClicked),
@@ -122,6 +123,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     ?.let { post.featuredVideo }
 
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
+
+    private fun buildFeaturedImageVisibility(post: ReaderPost) =
+            (post.cardType == PHOTO || post.cardType == DEFAULT) && post.hasFeaturedImage() ||
+                    post.cardType == VIDEO && post.hasFeaturedVideo()
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
             post.takeIf { it.cardType == GALLERY }
@@ -191,8 +196,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         } else {
             R.string.reader_add_bookmark
         }
-        // TODO malinjir shouldn't the action be disabled just for posts which don't have blog and post id?
-        return if (!post.isDiscoverPost) {
+        return if (post.postId != 0L && post.blogId != 0L) {
             PrimaryAction(
                     isEnabled = true,
                     isSelected = post.isBookmarked,
