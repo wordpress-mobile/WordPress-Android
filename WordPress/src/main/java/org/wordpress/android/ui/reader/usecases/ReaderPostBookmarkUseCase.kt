@@ -9,12 +9,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_F
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_SAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_UNSAVED_FROM_SAVED_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_VIEWED_FROM_POST_LIST_NOTICE
-import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog

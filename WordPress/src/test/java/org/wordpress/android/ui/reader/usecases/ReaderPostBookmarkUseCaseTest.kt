@@ -205,7 +205,6 @@ class ReaderPostBookmarkUseCaseTest {
         assertThat(observedValue!!.peekContent()).isEqualTo(ShowBookmarkedTab)
     }
 
-
     private fun init(isBookmarked: Boolean = false, networkAvailable: Boolean = true): ReaderPost {
         val post = ReaderPost().apply { this.isBookmarked = isBookmarked }
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean()))
