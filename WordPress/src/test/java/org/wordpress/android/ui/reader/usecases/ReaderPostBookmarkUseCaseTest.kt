@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.usecases
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -18,10 +17,12 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.actions.ReaderPostActionsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
@@ -137,7 +138,7 @@ class ReaderPostBookmarkUseCaseTest {
     }
 
     @Test
-    fun `shows dialog on first use`() = test {
+    fun `shows dialog when shouldShow returns true`() = test {
         // Arrange
         init()
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(true)
@@ -152,11 +153,65 @@ class ReaderPostBookmarkUseCaseTest {
         assertThat(observedValue!!.peekContent()).isInstanceOf(ShowBookmarkedSavedOnlyLocallyDialog::class.java)
     }
 
+    @Test
+    fun `don't show dialog when shouldShow returns false`() = test {
+        // Arrange
+        init()
+        whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
+        var observedValue: Event<ReaderNavigationEvents>? = null
+        useCase.navigationEvents.observeForever {
+            observedValue = it
+        }
+        // Act
+        useCase.toggleBookmark(0L, 0L, false)
+
+        // Assert
+        assertThat(observedValue).isNull()
+    }
+
+    @Test
+    fun `shows snackbar on bookmark action`() = test {
+        // Arrange
+        init()
+        var observedValue: Event<SnackbarMessageHolder>? = null
+        useCase.snackbarEvents.observeForever {
+            observedValue = it
+        }
+        // Act
+        useCase.toggleBookmark(0L, 0L, false)
+
+        // Assert
+        assertThat(observedValue!!.peekContent()).isNotNull
+    }
+
+    @Test
+    fun `navigates to bookmark tab on snackbar action clicked`() = test {
+        // Arrange
+        init()
+        var snackbarEvent: Event<SnackbarMessageHolder>? = null
+        useCase.snackbarEvents.observeForever {
+            snackbarEvent = it
+        }
+
+        var observedValue: Event<ReaderNavigationEvents>? = null
+        useCase.navigationEvents.observeForever {
+            observedValue = it
+        }
+        // Act
+        useCase.toggleBookmark(0L, 0L, false)
+        snackbarEvent!!.peekContent().buttonAction.invoke()
+
+        // Assert
+        assertThat(observedValue!!.peekContent()).isEqualTo(ShowBookmarkedTab)
+    }
+
+
     private fun init(isBookmarked: Boolean = false, networkAvailable: Boolean = true): ReaderPost {
         val post = ReaderPost().apply { this.isBookmarked = isBookmarked }
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean()))
                 .thenReturn(post)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(networkAvailable)
+        whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         return post
     }
 }
