@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2019-11-20 03:34:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: en_AU
 -->
 <resources>
@@ -205,8 +205,6 @@ Language: en_AU
     <string name="editor_failed_to_insert_media_tap_to_retry">Failed to insert media.\nPlease tap to retry.</string>
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
-    <string name="post_list_author_everyone">Everyone</string>
-    <string name="post_list_author_me">Me</string>
     <string name="error_restoring_post">An error occurred while restoring the post</string>
     <string name="backdated_for">Backdated for: %s</string>
     <string name="stats_insights_management_title">Only see the most relevant stats. Add and organise your insights below.</string>
@@ -1075,11 +1073,6 @@ Language: en_AU
     <string name="open_mail">Open mail</string>
     <string name="next">Next</string>
     <string name="enter_email_wordpress_com">Log in to WordPress.com using an email address to manage all your WordPress sites.</string>
-    <string name="login_promo_text_jetpack">Manage your Jetpack-powered site on the go — you\'ve got WordPress in your pocket.</string>
-    <string name="login_promo_text_notifications">Your notifications travel with you — see comments and likes as they happen.</string>
-    <string name="login_promo_text_anytime">Catch up with your favourite sites and join the conversation anywhere, any time.</string>
-    <string name="login_promo_text_realtime">Watch readers from around the world read and interact with your site — in realtime.</string>
-    <string name="login_promo_text_onthego">Publish from the park. Blog from the bus. Comment from the café. WordPress goes where you go.</string>
     <string name="image_optimization_promo_desc">Image optimisation shrinks images for quicker uploading.\n\nYou can change this any time in site settings.</string>
     <string name="image_optimization_promo_title">Turn on image optimisation?</string>
     <string name="leave_off">Leave off</string>

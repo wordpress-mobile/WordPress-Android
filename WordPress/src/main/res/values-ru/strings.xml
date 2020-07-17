@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-18 20:32:56+0000
+Translation-Revision-Date: 2020-06-30 10:05:25+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Переход на предыдущий экран содержимого</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Переход к настройкам градиента</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Переход к выбору пользовательского цвета</string>
+    <string name="gutenberg_native_gradient_type">Тип градиента</string>
+    <string name="gutenberg_native_go_back">Вернуться</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
+    <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Автор страницы</string>
+    <string name="photo_picker_use_gif">Использовать этот GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Миниатюра не может быть загружена</string>
+    <string name="menu_content_info">Структура содержимого</string>
+    <string name="everyone">Все</string>
+    <string name="me">Мой профиль</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать этот блок в веб-браузере.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Редактировать блок в браузере</string>
     <string name="gutenberg_native_dismiss">Закрыть</string>
@@ -586,8 +601,6 @@ Language: ru
     <string name="editor_uploading_draft">Выполняется загрузка черновика</string>
     <string name="post_uploading_draft">Загрузка черновика</string>
     <string name="post_list_tab_drafts">Черновики</string>
-    <string name="post_list_author_everyone">Все</string>
-    <string name="post_list_author_me">Моё</string>
     <string name="error_restoring_post">Возникла ошибка при восстановлении записи</string>
     <string name="backdated_for">Датировано задним числом для: %s</string>
     <string name="stats_insights_management_title">Смотрите только нужную статистику, добавьте и отсортируйте данные ниже.</string>
@@ -1460,11 +1473,6 @@ Language: ru
     <string name="open_mail">Открыть почту</string>
     <string name="next">Вперед</string>
     <string name="enter_email_wordpress_com">Для управления всеми своими сайтами WordPress войдите в систему WordPress.com с помощью адреса электронной почты.</string>
-    <string name="login_promo_text_jetpack">Управляйте сайтом, созданным с помощью Jetpack, где угодно — WordPress можно всегда носить с собой.</string>
-    <string name="login_promo_text_notifications">Уведомления путешествуют вместе с вами — сразу же узнавайте о комментариях и отметках «Нравится».</string>
-    <string name="login_promo_text_anytime">Следите за обновлениями любимых сайтов и присоединяйтесь к беседе в любом месте и в любое время.</string>
-    <string name="login_promo_text_realtime">Наблюдайте, как пользователи со всего света читают ваш сайт и общаются на нем в реальном времени.</string>
-    <string name="login_promo_text_onthego">Публикуйте записи, гуляя в парке. Ведите блог из автобуса. Отправляйте комментарии из-за столика в кафе. WordPress можно брать с собой повсюду!</string>
     <string name="image_optimization_promo_desc">Средство оптимизации изображений сжимает их для ускорения загрузки.\n\nВы в любой момент можете изменить это в настройках сайта.</string>
     <string name="image_optimization_promo_title">Включить оптимизацию изображений?</string>
     <string name="leave_off">Не включать</string>

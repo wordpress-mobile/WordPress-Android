@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-17 06:38:41+0000
+Translation-Revision-Date: 2020-07-06 10:21:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Ouvrir le lien dans un navigateur</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Allez à la feuille de contenu précédente</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Allez à la personnalisation du dégradé</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Allez au sélecteur de couleurs personnalisées</string>
+    <string name="gutenberg_native_gradient_type">Type de dégradé</string>
+    <string name="gutenberg_native_go_back">Retour</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Touchez deux fois pour sélectionner l’option</string>
+    <string name="gutenberg_native_customize_gradient">Personnaliser le dégradé</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Auteur de la page</string>
+    <string name="photo_picker_use_gif">Utiliser ce GIF</string>
+    <string name="error_media_thumbnail_not_loaded">La miniature n’a pas pu être chargée</string>
+    <string name="menu_content_info">Structure du contenu</string>
+    <string name="everyone">Tout le monde</string>
+    <string name="me">Moi</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Nous travaillons dur pour ajouter des blocs supplémentaires à chaque nouvelle version. En attendant, vous pouvez également modifier cet article sur le navigateur web de votre appareil.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Modifier le bloc dans le navigateur web</string>
     <string name="gutenberg_native_dismiss">Ignorer</string>
@@ -436,11 +451,11 @@ Language: fr
     <string name="post_waiting_for_connection_scheduled">Nous planifierons la publication de votre article lorsque votre appareil sera de nouveau connecté.</string>
     <string name="post_waiting_for_connection_pending">Nous soumettrons votre article pour révision lorsque votre appareil sera de nouveau connecté.</string>
     <string name="post_waiting_for_connection_publish">Nous publierons l\'article lorsque votre appareil sera de nouveau connecté.</string>
-    <string name="settings_username_changer_snackbar_cancel">Impossible d\'annuler cette action. Le nom d\'utilisateur a probablement déjà été mis à jour.</string>
-    <string name="settings_username_changer_toast_content">Votre nouveau nom d\'utilisateur est %1$s.</string>
-    <string name="settings_username_changer_progress_dialog">Enregistrement du nom d\'utilisateur en cours…</string>
-    <string name="settings_username_changer_confirm_dialog_positive_action">Modifier le nom d\'utilisateur</string>
-    <string name="settings_username_changer_confirm_dialog_content">Vous remplacez votre nom d\'utilisateur par %1$s%2$s%3$s. La modification de votre nom d\'utilisateur affectera également l\'adresse de vos profils Gravatar et Intense Debate. Validez votre nouveau nom d\'utilisateur pour continuer.</string>
+    <string name="settings_username_changer_snackbar_cancel">Impossible d\'annuler cette action. L’identifiant a probablement déjà été mis à jour.</string>
+    <string name="settings_username_changer_toast_content">Votre nouvel identifiant est %1$s.</string>
+    <string name="settings_username_changer_progress_dialog">Enregistrement de l’identifiant…</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Changer l’identifiant</string>
+    <string name="settings_username_changer_confirm_dialog_content">Vous remplacez votre identifiant par %1$s%2$s%3$s. La modification de votre identifiant affectera également l\'adresse de vos profils Gravatar et Intense Debate. Validez votre nouvel identifiant pour continuer.</string>
     <string name="settings_username_changer_confirm_dialog_title">Attention !</string>
     <string name="settings_username_changer_header">Vous êtes sur le point de modifier votre identifiant actuel : %1$s%2$s%3$s. Vous ne pourrez pas réutiliser votre identifiant précédent.</string>
     <string name="site_settings_jetpack_performance_settings_hint">Voir et modifier vos paramètres de performances Jetpack</string>
@@ -586,8 +601,6 @@ Language: fr
     <string name="editor_uploading_draft">Your draft is uploading</string>
     <string name="post_uploading_draft">Uploading draft</string>
     <string name="post_list_tab_drafts">Brouillons</string>
-    <string name="post_list_author_everyone">Tout le monde</string>
-    <string name="post_list_author_me">Moi</string>
     <string name="error_restoring_post">Une erreur est survenue pendant la restauration de la publication</string>
     <string name="backdated_for">Antidaté pour : %s</string>
     <string name="stats_insights_management_title">N\'affichez que les statistiques les plus pertinentes. Ajoutez et organisez vos tendances ci-après.</string>
@@ -1190,10 +1203,10 @@ Language: fr
     <string name="google_error_timeout">Google a mis trop longtemps à répondre. Vous devrez peut-être attendre de profiter d\'une meilleure connexion Internet.</string>
     <string name="username_changer_title">Modifier l\'identifiant</string>
     <string name="username_changer_hint">Appuyez pour obtenir plus de suggestions.</string>
-    <string name="username_changer_header">Votre nom d\'utilisateur actuel est %1$s%2$s%3$s. À quelques exceptions près, le nom que verront les autres utilisateurs est %4$s%5$s%6$s.</string>
-    <string name="username_changer_error_none">Aucun nom d\'utilisateur n\'est suggéré à partir de %1$s%2$s%3$s. Veuillez saisir d\'autres lettres ou chiffres pour obtenir des suggestions.</string>
-    <string name="username_changer_error_generic">Une erreur s\'est produite lors de la récupération des suggestions de nom d\'utilisateur.</string>
-    <string name="username_changer_dismiss_message">Annuler la modification du nom d\'utilisateur ?</string>
+    <string name="username_changer_header">Votre identifiant actuel est %1$s%2$s%3$s. À quelques exceptions près, le nom que verront les autres utilisateurs est %4$s%5$s%6$s.</string>
+    <string name="username_changer_error_none">Aucun identifiant n\'est suggéré depuis %1$s%2$s%3$s. Veuillez saisir d\'autres lettres ou chiffres pour obtenir des suggestions.</string>
+    <string name="username_changer_error_generic">Une erreur s\'est produite lors de la récupération des suggestions d’identifiant.</string>
+    <string name="username_changer_dismiss_message">Annuler la modification de l’identifiant ?</string>
     <string name="username_changer_dismiss_button_positive">Supprimer</string>
     <string name="username_changer_action">Enregistrer</string>
     <string name="content_description_add_avatar">Ajouter un avatar</string>
@@ -1207,7 +1220,7 @@ Language: fr
     <string name="signup_magic_link_error_button_positive">Réessayer</string>
     <string name="signup_magic_link_error_button_negative">Fermer</string>
     <string name="signup_magic_link_error">Une erreur s\'est produite lors de l’envoi de l\'e-mail. Vous pouvez recommencer maintenant ou fermer et réessayer ultérieurement.</string>
-    <string name="signup_epilogue_hint_username">Nom d\'utilisateur</string>
+    <string name="signup_epilogue_hint_username">Identifiant</string>
     <string name="signup_epilogue_hint_password_detail">Vous pouvez toujours vous connecter avec un lien de connexion sans mot de passe comme celui que vous venez d\'utiliser. Vous pouvez également définir un mot de passe si vous le préférez.</string>
     <string name="signup_epilogue_hint_password">Mot de passe (facultatif)</string>
     <string name="signup_epilogue_hint_display">Nom affiché</string>
@@ -1219,7 +1232,7 @@ Language: fr
     <string name="signup_email_header">Pour créer votre nouveau compte WordPress.com, veuillez saisir votre adresse e-mail.</string>
     <string name="signup_email_error_generic">Une erreur s\'est produite lors de la vérification de l\'adresse e-mail.</string>
     <string name="sign_up">S\'inscrire sur WordPress.com</string>
-    <string name="enter_username_instead">Connectez-vous avec votre nom d\'utilisateur.</string>
+    <string name="enter_username_instead">Connectez-vous avec votre identifiant.</string>
     <string name="enter_site_address_instead">Connectez-vous en saisissant l\'adresse de votre site.</string>
     <string name="plugin_needs_update">Mise à jour nécessaire</string>
     <string name="plugin_caption_search">Chercher parmi les extensions</string>
@@ -1435,7 +1448,7 @@ Language: fr
     <string name="login_logged_in_as">Connecté·e en tant que</string>
     <string name="login_email_client_not_found">Aucune application de messagerie détectée</string>
     <string name="login_empty_2fa">Veuillez saisir votre code de vérification</string>
-    <string name="login_empty_username">Veuillez saisir un nom d’utilisateur</string>
+    <string name="login_empty_username">Veuillez saisir un identifiant</string>
     <string name="login_log_in_for_deeplink">Connectez-vous à WordPress.com pour accéder à l’article.</string>
     <string name="login_error_while_adding_site">Erreur lors de l’ajout du site. Code erreur : %s</string>
     <string name="login_checking_site_address">Vérification de l’adresse du site</string>
@@ -1460,11 +1473,6 @@ Language: fr
     <string name="open_mail">Ouvrir les e-mails</string>
     <string name="next">Suivant</string>
     <string name="enter_email_wordpress_com">Connectez-vous à WordPress.com en utilisant une adresse de messagerie pour gérer tous vos sites WordPress.com.</string>
-    <string name="login_promo_text_jetpack">Gérer votre site propulsé par Jetpack sur le pouce. Vous avez WordPress dans votre poche.</string>
-    <string name="login_promo_text_notifications">Vos notifications voyagent avec vous. Visualisez les commentaires et les réactions dès qu’ils arrivent.</string>
-    <string name="login_promo_text_anytime">Suivez vos sites favoris et rejoignez la conversation n’importe où, n’importe quand.</string>
-    <string name="login_promo_text_realtime">Observez les lecteurs du monde entier lire et interagir avec votre site, en temps réel.</string>
-    <string name="login_promo_text_onthego">Publiez pendant la sieste au parc. Bloguez dans le bus. Commentez depuis un café. WordPress vous suit partout.</string>
     <string name="image_optimization_promo_desc">L’optimisation réduit la taille des images pour un téléversement plus rapide.\n\nVous pouvez changer ceci à tout moment, dans les réglages du site.</string>
     <string name="image_optimization_promo_title">Activer l’optimisation des images ?</string>
     <string name="leave_off">Laisser désactivée</string>

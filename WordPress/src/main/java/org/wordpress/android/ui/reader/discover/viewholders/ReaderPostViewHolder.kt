@@ -65,12 +65,12 @@ class ReaderPostViewHolder(
         updateFeaturedImage(state)
         uiHelpers.updateVisibility(image_video_overlay, state.videoOverlayVisibility)
         uiHelpers.setTextOrHide(text_photo_title, state.photoTitle)
-        uiHelpers.updateVisibility(frame_photo, state.photoFrameVisibility)
         uiHelpers.updateVisibility(thumbnail_strip, state.thumbnailStripSection != null)
         state.thumbnailStripSection?.let {
             thumbnail_strip.loadThumbnails(it.images, it.isPrivate, it.content)
         }
         loadVideoThumbnail(state)
+        image_video_overlay.setOnClickListener { state.onVideoOverlayClicked(uiState.postId, uiState.blogId) }
 
         // Content section
         uiHelpers.setTextOrHide(text_title, state.title)
@@ -90,7 +90,7 @@ class ReaderPostViewHolder(
     }
 
     private fun updateFeaturedImage(state: ReaderPostUiState) {
-        uiHelpers.updateVisibility(image_featured, state.featuredImageUrl != null)
+        uiHelpers.updateVisibility(image_featured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_featured)
         } else {
@@ -116,6 +116,7 @@ class ReaderPostViewHolder(
     }
 
     private fun updateDiscoverSection(state: ReaderPostUiState) {
+        uiHelpers.updateVisibility(image_discover_avatar, state.discoverSection?.discoverAvatarUrl != null)
         uiHelpers.updateVisibility(layout_discover, state.discoverSection != null)
         uiHelpers.setTextOrHide(text_discover, state.discoverSection?.discoverText)
         if (state.discoverSection?.discoverAvatarUrl == null) {

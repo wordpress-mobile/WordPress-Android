@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2020-06-24 09:07:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
@@ -578,8 +578,6 @@ Language: gl_ES
     <string name="editor_uploading_draft">O teu borrador estase subindo</string>
     <string name="post_uploading_draft">Subindo borrador</string>
     <string name="post_list_tab_drafts">Borradores</string>
-    <string name="post_list_author_everyone">Todos</string>
-    <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">Ocurriu un erro mentres se restauraba a entrada</string>
     <string name="backdated_for">Retroceder a: %s</string>
     <string name="stats_insights_management_title">Só ves as estatísticas máis relevantes. Engade e organiza os teus detalles abaixo.</string>

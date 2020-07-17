@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-17 11:12:08+0000
+Translation-Revision-Date: 2020-07-09 06:42:41+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_open_link_in_a_browser">Deschide legătura într-un navigator</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navighează la foaia anterioară cu conținut</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">Navighează pentru a personaliza gradientul</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">Navighează la selectorul de culoare personalizat</string>
+    <string name="gutenberg_native_gradient_type">Tip de gradient</string>
+    <string name="gutenberg_native_go_back">Du-te înapoi</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">Atinge de două ori pentru a selecta opțiunea</string>
+    <string name="gutenberg_native_customize_gradient">Personalizează gradientul</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">Autor pagină</string>
+    <string name="photo_picker_use_gif">Folosește acest GIF</string>
+    <string name="error_media_thumbnail_not_loaded">Miniatura media nu a putut fi încărcată</string>
+    <string name="menu_content_info">Structură conținut</string>
+    <string name="everyone">Oricine</string>
+    <string name="me">Eu</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest bloc folosind navigatorul dispozitivului tău.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editează blocul în navigatorul web</string>
     <string name="gutenberg_native_dismiss">Respinge</string>
@@ -586,8 +601,6 @@ Language: ro
     <string name="editor_uploading_draft">Ciorna ta se încarcă acum</string>
     <string name="post_uploading_draft">Încarc ciorna</string>
     <string name="post_list_tab_drafts">Ciorne</string>
-    <string name="post_list_author_everyone">Toată lumea</string>
-    <string name="post_list_author_me">Eu</string>
     <string name="error_restoring_post">A apărut o eroare la restaurarea articolului</string>
     <string name="backdated_for">Antedatat pentru: %s</string>
     <string name="stats_insights_management_title">Vezi numai statisticile relevante. Adaugi informații și le organizezi în privirea generală de mai jos.</string>
@@ -850,7 +863,7 @@ Language: ro
     <string name="pages_search_suggestion">Caută pagini</string>
     <string name="pages_empty_search_result">Nu se potrivește nicio pagină cu căutarea ta</string>
     <string name="pages_delete_permanently">Șterge definitiv</string>
-    <string name="pages_move_to_trash">Mută la gunoi</string>
+    <string name="pages_move_to_trash">Aruncă la gunoi</string>
     <string name="pages_move_to_draft">Mută în ciorne</string>
     <string name="pages_set_parent">Setează un părinte</string>
     <string name="pages_view">Vezi</string>
@@ -1460,11 +1473,6 @@ Language: ro
     <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate siturile WordPress.</string>
-    <string name="login_promo_text_jetpack">Administrează-ți situl propulsat de Jetpack din mișcare — ai WordPress-ul în buzunar.</string>
-    <string name="login_promo_text_notifications">Notificările tale călătoresc împreună cu tine — vezi comentariile și aprecierile imediat ce apar.</string>
-    <string name="login_promo_text_anytime">Ești la curent cu siturile preferate și te alături conversației oriunde, oricând.</string>
-    <string name="login_promo_text_realtime">Urmărești cititorii din întreaga lume care îți citesc situl și interacționează cu el — în timp real.</string>
-    <string name="login_promo_text_onthego">Publici din parc. Scrii pe blog în autobuz. Comentezi dintr-o cafenea. WordPress merge oriunde ești.</string>
     <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
     <string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
     <string name="leave_off">Las-o oprită</string>
