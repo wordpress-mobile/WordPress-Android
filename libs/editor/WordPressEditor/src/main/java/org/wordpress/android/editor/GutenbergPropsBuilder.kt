@@ -7,14 +7,17 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 
 @Parcelize
 data class GutenbergPropsBuilder @JvmOverloads constructor(
-    val enableMentions: Boolean,
-    val enableUnsupportedBlockEditor: Boolean,
-    val localeSlug: String,
-    val postType: String,
-    val editorTheme: Bundle?,
-    var translations: Bundle? = null,
-    var isDarkMode: Boolean? = null,
-    var htmlModeEnabled: Boolean? = null
+    // parameters that are available at the time of construction
+    private val enableMentions: Boolean,
+    private val enableUnsupportedBlockEditor: Boolean,
+    private val localeSlug: String,
+    private val postType: String,
+    private val editorTheme: Bundle?,
+
+    // parameters that are not available at the time of construction and require setters
+    private var translations: Bundle? = null,
+    private var isDarkMode: Boolean? = null,
+    private var htmlModeEnabled: Boolean? = null
 ) : Parcelable {
     fun build() = GutenbergProps(
             enableMentions = enableMentions,
@@ -26,4 +29,16 @@ data class GutenbergPropsBuilder @JvmOverloads constructor(
             isDarkMode = requireNotNull(isDarkMode),
             htmlModeEnabled = requireNotNull(htmlModeEnabled)
     )
+
+    fun setTranslations(translations: Bundle) {
+        this.translations = translations
+    }
+
+    fun setDarkMode(isDarkMode: Boolean) {
+        this.isDarkMode = isDarkMode
+    }
+
+    fun setHtmlModeEnabled(htmlModeEnabled: Boolean) {
+        this.htmlModeEnabled = htmlModeEnabled
+    }
 }
