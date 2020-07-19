@@ -181,6 +181,7 @@ class PostsListActivity : LocaleAwareActivity(),
 
         quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
+    
     private fun setupActionBar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
