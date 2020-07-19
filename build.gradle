@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlinVersion = '1.3.61'
+    ext.serializationVersion = '0.14.0'
     ext.navComponentVersion = '2.0.0'
     ext.buildGutenbergMobileJSBundle = 1
 
@@ -13,6 +14,7 @@ buildscript {
         classpath 'com.automattic.android:fetchstyle:1.1'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
     }
 }
