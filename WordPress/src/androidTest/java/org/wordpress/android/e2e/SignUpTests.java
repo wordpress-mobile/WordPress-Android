@@ -26,7 +26,7 @@ public class SignUpTests extends BaseTest {
 
     @Test
     public void signUpWithMagicLink() {
-        new SignupFlow().chooseSignupWithEmail()
+        new SignupFlow().chooseContinueWithWpCom()
                         .enterEmail(E2E_SIGNUP_EMAIL)
                         .openMagicLink(mMagicLinkActivityTestRule)
                         .checkEpilogue(

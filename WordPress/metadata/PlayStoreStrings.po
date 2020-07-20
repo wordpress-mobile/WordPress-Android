@@ -11,20 +11,20 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_153"
+msgid ""
+"15.3:\n"
+"Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)\n"
+"\n"
+"UI updates: Clarified wording and added confirmation dialogs when trashing posts.\n"
+msgstr ""
+
 msgctxt "release_note_152"
 msgid ""
 "15.2:\n"
 "Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.\n"
 "\n"
 "Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.\n"
-msgstr ""
-
-msgctxt "release_note_151"
-msgid ""
-"15.1:\n"
-"Block editor improvements: Scheduling, tag, and visibility settings pop up in the post editor and post list when you tap Publish — tweak them and tap “Publish Now” to complete publication. Pressing enter after adding a caption in Image, Video, Gallery, Quote, and Pullquote blocks automatically adds a new block.\n"
-"\n"
-"Fixes: Video thumbnails, settings, and preview display properly in the Media section on private sites. Notifications and Install Jetpack tabs no longer display on top of one another.\n"
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
@@ -34,14 +34,6 @@ msgid ""
 "Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads completes after the editor has closed. Block, word, and character count metric information are displayed.\n"
 "\n"
 "Fixes: Fixed Reader post detail rendering issues and a WordPress API response crash.\n"
-msgstr ""
-
-msgctxt "release_note_short_151"
-msgid ""
-"15.1:\n"
-"Improvements: Scheduling, tag, and visibility panel pops up in editor and post list pre-publication. Pressing enter after adding captions in Image, Video, Gallery, Quote, and Pullquote blocks adds a new block.\n"
-"\n"
-"Fixes: Video thumbnails, settings, and preview display properly on private sites. Notifications and Install Jetpack tabs no longer overlay.\n"
 msgstr ""
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!

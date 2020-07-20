@@ -4,6 +4,10 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.login.LoginAnalyticsListener;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow;
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.util.Map;
@@ -14,9 +18,13 @@ import javax.inject.Singleton;
 public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     private AccountStore mAccountStore;
     private SiteStore mSiteStore;
-    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore) {
+    private UnifiedLoginTracker mUnifiedLoginTracker;
+
+    public LoginAnalyticsTracker(AccountStore accountStore, SiteStore siteStore,
+                                 UnifiedLoginTracker unifiedLoginTracker) {
         this.mAccountStore = accountStore;
         this.mSiteStore = siteStore;
+        mUnifiedLoginTracker = unifiedLoginTracker;
     }
 
     @Override
@@ -32,6 +40,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackEmailFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_EMAIL_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.WORDPRESS_COM, Step.START);
     }
 
     @Override
@@ -62,6 +71,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginForgotPasswordClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_FORGOT_PASSWORD_CLICKED);
+        mUnifiedLoginTracker.trackClick(Click.FORGOTTEN_PASSWORD);
     }
 
     @Override
@@ -77,6 +87,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackLoginMagicLinkOpenEmailClientClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.EMAIL_OPENED);
     }
 
     @Override
@@ -100,8 +111,15 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackMagicLinkOpenEmailClientViewed() {
+    public void trackSignupMagicLinkOpenEmailClientViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.MAGIC_LINK_REQUESTED);
+    }
+
+    @Override
+    public void trackLoginMagicLinkOpenEmailClientViewed() {
+        AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_OPEN_EMAIL_CLIENT_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.MAGIC_LINK_REQUESTED);
     }
 
     @Override
@@ -112,11 +130,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackMagicLinkRequestFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_MAGIC_LINK_REQUEST_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_MAGIC_LINK, Step.START);
     }
 
     @Override
     public void trackPasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_PASSWORD_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_PASSWORD, Step.START);
     }
 
     @Override
@@ -152,6 +172,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSignupMagicLinkOpenEmailClientClicked() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.SIGNUP_MAGIC_LINK_OPEN_EMAIL_CLIENT_CLICKED);
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.EMAIL_OPENED);
     }
 
     @Override
@@ -185,6 +206,11 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
+    public void trackSocialButtonStart() {
+        mUnifiedLoginTracker.track(Flow.GOOGLE_LOGIN, Step.START);
+    }
+
+    @Override
     public void trackSocialAccountsNeedConnecting() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_ACCOUNTS_NEED_CONNECTING);
     }
@@ -192,6 +218,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackSocialButtonClick() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_SOCIAL_BUTTON_CLICK);
+        mUnifiedLoginTracker.trackClick(Click.LOGIN_WITH_GOOGLE);
     }
 
     @Override
@@ -222,11 +249,13 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackTwoFactorFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_TWO_FACTOR_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Step.TWO_FACTOR_AUTHENTICATION);
     }
 
     @Override
     public void trackUrlFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_URL_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Flow.LOGIN_SITE_ADDRESS, Step.START);
     }
 
     @Override
@@ -237,6 +266,7 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     @Override
     public void trackUsernamePasswordFormViewed() {
         AnalyticsTracker.track(AnalyticsTracker.Stat.LOGIN_USERNAME_PASSWORD_FORM_VIEWED);
+        mUnifiedLoginTracker.track(Step.USERNAME_PASSWORD);
     }
 
     @Override
@@ -256,5 +286,81 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
 
     @Override public void trackConnectedSiteInfoSucceeded(Map<String, ?> properties) {
         // Not used in WordPress app
+    }
+
+    @Override
+    public void trackFailure(String message) {
+        mUnifiedLoginTracker.trackFailure(message);
+    }
+
+    @Override
+    public void trackSendCodeWithTextClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SEND_CODE_WITH_TEXT);
+    }
+
+    @Override
+    public void trackSubmit2faCodeClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SUBMIT_2FA_CODE);
+    }
+
+    @Override
+    public void trackSubmitClicked() {
+        mUnifiedLoginTracker.trackClick(Click.SUBMIT);
+    }
+
+    @Override
+    public void trackRequestMagicLinkClick() {
+        mUnifiedLoginTracker.trackClick(Click.REQUEST_MAGIC_LINK);
+    }
+
+    @Override
+    public void trackLoginWithPasswordClick() {
+        mUnifiedLoginTracker.trackClick(Click.LOGIN_WITH_PASSWORD);
+    }
+
+    @Override
+    public void trackShowHelpClick() {
+        mUnifiedLoginTracker.trackClick(Click.SHOW_HELP);
+        mUnifiedLoginTracker.track(Step.HELP);
+    }
+
+    @Override
+    public void trackDismissDialog() {
+        mUnifiedLoginTracker.trackClick(Click.DISMISS);
+    }
+
+    @Override
+    public void trackSelectEmailField() {
+        mUnifiedLoginTracker.trackClick(Click.SELECT_EMAIL_FIELD);
+    }
+
+    @Override
+    public void trackPickEmailFromHint() {
+        mUnifiedLoginTracker.trackClick(Click.PICK_EMAIL_FROM_HINT);
+    }
+
+    @Override
+    public void trackShowEmailHints() {
+        mUnifiedLoginTracker.track(Step.SHOW_EMAIL_HINTS);
+    }
+
+    @Override
+    public void emailFormScreenResumed() {
+        mUnifiedLoginTracker.setFlowAndStep(Flow.WORDPRESS_COM, Step.START);
+    }
+
+    @Override
+    public void trackEmailSignupConfirmationViewed() {
+        mUnifiedLoginTracker.track(Flow.SIGNUP, Step.START);
+    }
+
+    @Override
+    public void trackSocialSignupConfirmationViewed() {
+        mUnifiedLoginTracker.track(Flow.GOOGLE_SIGNUP, Step.START);
+    }
+
+    @Override
+    public void trackCreateAccountClick() {
+        mUnifiedLoginTracker.trackClick(Click.CREATE_ACCOUNT);
     }
 }

@@ -87,7 +87,7 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
                 share(ShareAction.SHARE_TO_POST, visibleSites.get(0).getId());
             } else {
                 // display a fragment with list of sites and list of actions the user can perform
-                initShareFragment(false);
+                initShareFragment();
             }
         } else {
             // start the login flow and wait onActivityResult
@@ -107,9 +107,9 @@ public class ShareIntentReceiverActivity extends LocaleAwareActivity implements 
         }
     }
 
-    private void initShareFragment(boolean afterLogin) {
+    private void initShareFragment() {
         ShareIntentReceiverFragment shareIntentReceiverFragment = ShareIntentReceiverFragment
-                .newInstance(!isSharingText(), loadLastUsedBlogLocalId(), afterLogin);
+                .newInstance(!isSharingText(), loadLastUsedBlogLocalId());
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, shareIntentReceiverFragment, ShareIntentReceiverFragment.TAG)
