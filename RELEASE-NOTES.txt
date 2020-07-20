@@ -1,5 +1,6 @@
 15.4
 -----
+* [***] The login and signup flows were unified and have a new design.
  
 15.3
 -----

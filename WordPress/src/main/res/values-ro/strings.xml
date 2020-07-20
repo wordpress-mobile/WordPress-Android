@@ -1473,11 +1473,6 @@ Language: ro
     <string name="open_mail">Deschide corespondența</string>
     <string name="next">Următor</string>
     <string name="enter_email_wordpress_com">Autentifică-te în WordPress.com folosind o adresă de email pentru a-ți administra toate siturile WordPress.</string>
-    <string name="login_promo_text_jetpack">Administrează-ți situl propulsat de Jetpack din mișcare — ai WordPress-ul în buzunar.</string>
-    <string name="login_promo_text_notifications">Notificările tale călătoresc împreună cu tine — vezi comentariile și aprecierile imediat ce apar.</string>
-    <string name="login_promo_text_anytime">Ești la curent cu siturile preferate și te alături conversației oriunde, oricând.</string>
-    <string name="login_promo_text_realtime">Urmărești cititorii din întreaga lume care îți citesc situl și interacționează cu el — în timp real.</string>
-    <string name="login_promo_text_onthego">Publici din parc. Scrii pe blog în autobuz. Comentezi dintr-o cafenea. WordPress merge oriunde ești.</string>
     <string name="image_optimization_promo_desc">Optimizarea imaginilor micșorează imaginile pentru a le încărca mai rapid.\n\nPoți modifica asta oricând în setările sitului.</string>
     <string name="image_optimization_promo_title">Pornești optimizarea imaginilor?</string>
     <string name="leave_off">Las-o oprită</string>

@@ -1424,11 +1424,6 @@ Language: ko_KR
     <string name="open_mail">메일 열기</string>
     <string name="next">다음</string>
     <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
-    <string name="login_promo_text_jetpack">이동 중에 젯팩 지원 사이트를 관리하세요. 어디에 가든지 워드프레스가 함께합니다.</string>
-    <string name="login_promo_text_notifications">어디에서든 알림을 받을 수 있습니다. 댓글 및 좋아요가 표시되면 즉시 확인하세요.</string>
-    <string name="login_promo_text_anytime">언제, 어디서든지 즐겨 찾는 사이트의 최신 소식을 확인하고 대화에 참여하세요.</string>
-    <string name="login_promo_text_realtime">전 세계 독자들이 회원님의 사이트의 글을 읽고 상호 작용하는 것을 실시간으로 지켜보세요.</string>
-    <string name="login_promo_text_onthego">공원에서 글을 발행하세요. 버스에서 블로그를 방문하세요. 카페에서 댓글을 다세요. 워드프레스는 어디에서든 사용할 수 있습니다.</string>
     <string name="image_optimization_promo_desc">이미지 최적화는 빠른 업로드를 위해 이미지를 줄입니다.\n\n사이트 설정에서 언제든지 변경할 수 있습니다.</string>
     <string name="image_optimization_promo_title">이미지 최적화를 켜시겠어요?</string>
     <string name="leave_off">중단</string>

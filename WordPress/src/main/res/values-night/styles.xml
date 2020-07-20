@@ -57,6 +57,8 @@
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
 
+        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
+
         <item name="android:statusBarColor">?attr/colorSurface</item>
 
         <item name="windowActionModeOverlay">true</item>

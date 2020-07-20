@@ -1002,11 +1002,6 @@ Language: ku_TR
     <string name="open_mail">Epeyamê veke</string>
     <string name="next">Pêşve</string>
     <string name="enter_email_wordpress_com">Ji bo ku tu hemû malperên xwe yên WordPressê bi rê ve bibe di WordPress.comê de bi navnîşaneke epeyamê têketinê bike.</string>
-    <string name="login_promo_text_jetpack">Di çûyînê de malpera xwe ya bi Jetpackê hatiye hêzdarkirin bi rê ve bibe  —  di bêrîka te de WordPress heye.</string>
-    <string name="login_promo_text_notifications">Danezanên te bi te re digerin — şîroveyan û ecibandinan zûtirîn bîbîne.</string>
-    <string name="login_promo_text_anytime">Xwe bigihîne malperên xwe yên favorî û tevlî gotûbêjan bibe, li her derî û her demî.</string>
-    <string name="login_promo_text_realtime">Xwînerên ji seranserê dinyayê temaşe bike, yên ku dixwînin û têkiliyê datînin bi malpera te re — bi zemanê rastîn.</string>
-    <string name="login_promo_text_onthego">Ji parkê biweşîne. Ji rêbusê blog çeke. Ji kafeye şîrove bike. Tu bi ku ve biçe WordPress bi te re ye.</string>
     <string name="image_optimization_promo_desc">Optîmîzasyona wêneyan, wêneyan biçûk dike ji bo hilxistina zûtir\nTu herdem dikarî vê biguherînî ji sazkariyên malperê.</string>
     <string name="image_optimization_promo_title">Bila optimizasyona wêneyê vebe?</string>
     <string name="leave_off">Girtî bihêle</string>

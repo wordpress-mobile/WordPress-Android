@@ -145,9 +145,10 @@
 
     <style name="ReaderTextView.Tag.Header.Title" parent="ReaderTextView">
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
-        <item name="android:maxLines">1</item>
         <item name="textColor">?attr/textColor</item>
+        <item name="android:textAlignment">center</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
     <style name="Reader.Follow.Button" parent="Widget.MaterialComponents.Button.OutlinedButton">

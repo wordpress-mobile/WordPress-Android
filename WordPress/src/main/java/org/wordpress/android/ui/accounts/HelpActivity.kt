@@ -168,6 +168,7 @@ class HelpActivity : LocaleAwareActivity() {
         RELEASE_NOTES("origin:release-notes"),
         SIGNUP_EMAIL("origin:signup-email"),
         SIGNUP_MAGIC_LINK("origin:signup-magic-link"),
+        SIGNUP_CONFIRMATION("origin:signup-confirmation"),
         SITE_CREATION_CREATING("origin:site-create-creating"),
         SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
         SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
