@@ -902,6 +902,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (mSelectedSite == null) {
+            initSelectedSite();
+        }
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
