@@ -72,7 +72,8 @@ class MimeTypes {
      * .docx - "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
      * .ppt - "application/mspowerpoint"
      * .pptx - "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-     * .pps, .ppsx - missing
+     * .pps - missing - "application/vnd.ms-powerpoint"
+     * .ppsx - missing - "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
      * .odt - missing - "application/vnd.oasis.opendocument.text"
      * .xls - "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -84,7 +85,9 @@ class MimeTypes {
             MimeType(APPLICATION, Subtype.MSWORD, listOf("doc")),
             MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
             MimeType(APPLICATION, Subtype.MSPOWERPOINT, listOf("ppt")),
+            MimeType(APPLICATION, Subtype.VND_MSPOWERPOINT, listOf("pps")),
             MimeType(APPLICATION, Subtype.PPTX, listOf("pptx")),
+            MimeType(APPLICATION, Subtype.PPSX, listOf("ppsx")),
             MimeType(APPLICATION, Subtype.ODT, listOf("odt")),
             MimeType(APPLICATION, Subtype.EXCEL, listOf("xls")),
             MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
