@@ -63,6 +63,10 @@ ENV["HAS_ALPHA_VERSION"]="true"
 
     android_bump_version_release()
     new_version = android_get_app_version()
+    extract_release_notes_for_version(version: new_version, 
+      release_notes_file_path:"#{ENV["PROJECT_ROOT_FOLDER"]}RELEASE-NOTES.txt", 
+      extracted_notes_file_path:release_notes_path)
+    cleanup_release_files(files: [release_note_short_path])
     android_update_release_notes(new_version: new_version)
     setbranchprotection(repository:GHHELPER_REPO, branch: "release/#{new_version}")
     setfrozentag(repository:GHHELPER_REPO, milestone: new_version)
@@ -156,6 +160,20 @@ ENV["HAS_ALPHA_VERSION"]="true"
   lane :new_hotfix_release do | options |
     prev_ver = android_hotfix_prechecks(version_name: options[:version_name], skip_confirm: options[:skip_confirm])
     android_bump_version_hotfix(previous_version_name: prev_ver, version_name: options[:version_name], version_code: options[:version_code])
+  end
+
+  #####################################################################################
+  # finalize_hotfix_release
+  # -----------------------------------------------------------------------------------
+  # This lane finalizes the hotfix branch. 
+  # -----------------------------------------------------------------------------------
+  # Usage:
+  # bundle exec fastlane finalize_hotfix_release
+  #
+  # Example:
+  # bundle exec fastlane finalize_hotfix_release
+  desc "Finalizes a hotfix release by tagging the build"
+  lane :finalize_hotfix_release do | options |
     android_tag_build(tag_alpha: false)
   end
 
@@ -190,16 +208,17 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   #####################################################################################
-  # build_release
+  # build_and_upload_release
   # -----------------------------------------------------------------------------------
   # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_release [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_and_upload_release [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
   #
   # Example:
-  # bundle exec fastlane build_release
-  # bundle exec fastlane build_release skip_confirm:true
+  # bundle exec fastlane build_and_upload_release
+  # bundle exec fastlane build_and_upload_release skip_confirm:true
+  # bundle exec fastlane build_and_upload_release create_release:true 
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_release do | options |
@@ -213,7 +232,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
     version=android_get_release_version()
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
 
-    upload_build_to_play_store(version: version["name"], track: "production")
+    upload_build_to_play_store(version: version, track: "production")
+
+    if (options[:create_release])
+      create_gh_release(version: version)
+    end
   end
 
   #####################################################################################
@@ -222,11 +245,12 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # This lane builds the app it for both internal and external distribution and uploads them
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>]
+  # bundle exec fastlane build_and_upload_pre_releases [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_and_upload_pre_releases
   # bundle exec fastlane build_and_upload_pre_releases skip_confirm:true
+  # bundle exec fastlane build_and_upload_beta create_release:true 
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_and_upload_pre_releases do | options |
@@ -235,8 +259,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
       beta: true,
       final: false)
     android_build_preflight()
-    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
-    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true)
+    build_alpha(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
+    build_beta(skip_prechecks: true, skip_confirm: options[:skip_confirm], upload_to_play_store: true, create_release: options[:create_release])
   end
 
   #####################################################################################
@@ -245,11 +269,12 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
+  # bundle exec fastlane build_alpha [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_alpha
   # bundle exec fastlane build_alpha skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_alpha create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_alpha do | options |
@@ -261,7 +286,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
     build_bundle(version: version, flavor:"Zalpha", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version["name"], track: "alpha")
+        upload_build_to_play_store(version: version, track: "alpha")
+    end
+
+    if (options[:create_release])
+      create_gh_release(version: version)
     end
   end
 
@@ -271,11 +300,12 @@ ENV["HAS_ALPHA_VERSION"]="true"
   # This lane builds the app it for internal testing and optionally uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>]
+  # bundle exec fastlane build_beta [skip_confirm:<skip confirm>] [upload_to_play_store:<upload to play store>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_beta
   # bundle exec fastlane build_beta skip_confirm:true upload_to_play_store:true
+  # bundle exec fastlane build_beta create_release:true
   #####################################################################################
   desc "Builds and updates for distribution"
   lane :build_beta do | options |
@@ -287,7 +317,11 @@ ENV["HAS_ALPHA_VERSION"]="true"
     build_bundle(version: version, flavor:"Vanilla", buildType: "release")
 
     if (options[:upload_to_play_store]) then
-        upload_build_to_play_store(version: version["name"], track: "beta")
+        upload_build_to_play_store(version: version, track: "beta")
+    end
+
+    if (options[:create_release])
+      create_gh_release(version: version)
     end
   end
 
@@ -306,8 +340,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
   #####################################################################################
   desc "Upload Build to Play Store"
   lane :upload_build_to_play_store do | options |
-    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
-    aab_file_path = File.join(project_root, "build", "wpandroid-#{ options[:version] }.aab")
+    aab_file_path = bundle_file_path(options[:version])
+
     if File.exists? aab_file_path then
       upload_to_play_store(
         package_name: 'org.wordpress.android',
@@ -442,7 +476,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     # Create the file names
     version=options[:version]
     name="wpandroid-#{version["name"]}.aab"
-    apk_name="wpandroid-#{version["name"]}-universal.apk"
+    apk_name=universal_apk_name(version)
     aab_file="org.wordpress.android-#{options[:flavor]}-#{options[:buildType]}.aab"
     output_dir="WordPress/build/outputs/bundle/"
     build_dir="build/"
@@ -560,5 +594,53 @@ ENV["HAS_ALPHA_VERSION"]="true"
     sh("unzip \"#{temp_dir}/universal.apks\" -d \"#{temp_dir}\"")
     FileUtils.cp_r("#{temp_dir}/universal.apk", "#{apk_path}", remove_destination: true)
     FileUtils.rm_rf("#{temp_dir}")
+  end
+
+  private_lane :create_gh_release do | options |
+    version = options[:version]
+    apk_file_path = universal_apk_file_path(version)
+    aab_file_path = bundle_file_path(version)
+    create_release(repository:GHHELPER_REPO, 
+      version: version["name"], 
+      release_notes_file_path:release_notes_path,
+      release_assets:"#{apk_file_path},#{aab_file_path}"
+    )
+  end
+
+  private_lane :cleanup_release_files do | options |
+    files = options[:files]
+    
+    files.each do | f |
+      File.open(f, "w") {}
+      sh("git add #{f}")
+    end
+
+    sh("git diff-index --quiet HEAD || git commit -m \"Clean up release files.\"")
+  end
+
+  #####################################################################################
+  # Utils
+  #####################################################################################
+  def release_notes_path
+    "#{ENV["PROJECT_ROOT_FOLDER"]}WordPress/metadata/release_notes.txt"
+  end
+
+  def release_note_short_path
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    File.join(project_root, "WordPress", "metadata/release_notes_short.txt")
+  end 
+
+  def universal_apk_name(version)
+    "wpandroid-#{version["name"]}-universal.apk"
+  end
+
+  def bundle_file_path(version)
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    File.join(project_root, "build", "wpandroid-#{ version["name"] }.aab")
+  end
+
+  def universal_apk_file_path(version)
+    project_root = File.dirname(File.expand_path(File.dirname(__FILE__)))
+    File.join(project_root, "build", universal_apk_name(version))
   end
 end
