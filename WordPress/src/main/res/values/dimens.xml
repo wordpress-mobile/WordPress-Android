@@ -147,6 +147,10 @@
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
 
+    <!-- padding inside the tag header view -->
+    <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
+    <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
+
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>
