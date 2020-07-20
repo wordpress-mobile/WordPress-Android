@@ -1343,7 +1343,7 @@
     <string name="post_settings_slug_dialog_hint">The slug is the URL-friendly version of the post title.</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
-    <string name="post_settings_time_and_date">Time and Date</string>
+    <string name="post_settings_time_and_date">Date and Time</string>
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_add_to_calendar">Add to calendar</string>
 
@@ -2848,7 +2848,7 @@
     <string name="prepublishing_nudges_home_update_button" translatable="false">@string/update_now</string>
     <string name="prepublishing_nudges_back_button">Back</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Add Tags</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
 
