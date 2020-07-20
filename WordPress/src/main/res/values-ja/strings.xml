@@ -1473,11 +1473,6 @@ Language: ja_JP
     <string name="open_mail">メールを開く</string>
     <string name="next">次へ</string>
     <string name="enter_email_wordpress_com">メールアドレスを使用して WordPress.com にログインすると、自分のすべての WordPress サイトを管理できます。</string>
-    <string name="login_promo_text_jetpack">Jetpack 搭載のサイトを外出先で管理 — WordPress をどこにでも持ち歩けます。</string>
-    <string name="login_promo_text_notifications">通知がモバイルでも表示されます。コメントやいいねをリアルタイムで確認できます。</string>
-    <string name="login_promo_text_anytime">お気に入りのサイトを常時チェックして、好きな時に好きな場所で会話に加わることができます。</string>
-    <string name="login_promo_text_realtime">あなたのサイトを読んで、やり取りしている世界中の読者の動向をリアルタイムで確認できます。</string>
-    <string name="login_promo_text_onthego">公園から投稿を公開。バスからブログを投稿。カフェからコメントを送信。WordPress をどこでも使えます。</string>
     <string name="image_optimization_promo_desc">画像の最適化により、画像サイズを縮小して迅速に読み込めます。\n\nこれはサイト設定でいつでも変更できます。</string>
     <string name="image_optimization_promo_title">画像の最適化を有効にしますか ?</string>
     <string name="leave_off">無効のままにする</string>
