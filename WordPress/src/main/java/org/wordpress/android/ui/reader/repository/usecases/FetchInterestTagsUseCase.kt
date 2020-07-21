@@ -19,7 +19,6 @@ import kotlin.coroutines.suspendCoroutine
 class FetchInterestTagsUseCase @Inject constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper
-
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
