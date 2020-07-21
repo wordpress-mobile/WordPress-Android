@@ -34,10 +34,13 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogOnDismissByOutsideTouchInterface
@@ -80,6 +83,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject internal lateinit var snackbarSequencer: SnackbarSequencer
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
 
     private lateinit var site: SiteModel
@@ -342,6 +346,12 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun loadIntentData(intent: Intent) {
+        if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+            val notificationType: NotificationType =
+                    intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
+            systemNotificationTracker.trackTappedNotification(notificationType)
+        }
+
         val targetPostId = intent.getIntExtra(EXTRA_TARGET_POST_LOCAL_ID, -1)
         if (targetPostId != -1) {
             viewModel.showTargetPost(targetPostId)

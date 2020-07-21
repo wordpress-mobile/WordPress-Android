@@ -941,6 +941,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
+                AppPrefs.setLastSkippedQuickStartTask(null);
 
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
@@ -978,6 +979,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        AppPrefs.setLastSkippedQuickStartTask(null);
                         mPrivateAtomicCookie.clearCookie();
                     }
 
