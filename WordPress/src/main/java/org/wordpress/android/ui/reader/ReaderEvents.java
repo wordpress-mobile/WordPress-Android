@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import org.wordpress.android.models.ReaderPost;
 import org.wordpress.android.models.ReaderTag;
+import org.wordpress.android.models.ReaderTagList;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
@@ -40,6 +41,18 @@ public class ReaderEvents {
     }
 
     public static class RecommendedBlogsChanged {
+    }
+
+    public static class InterestTagsFetched {
+        private final ReaderTagList mInterestTags;
+
+        public InterestTagsFetched(ReaderTagList interestTags) {
+            mInterestTags = interestTags;
+        }
+
+        public ReaderTagList getInterestTags() {
+            return mInterestTags;
+        }
     }
 
     public static class SinglePostDownloaded {
