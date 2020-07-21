@@ -76,12 +76,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
-        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onCloseClicked()
-            }
-        })
-
         viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
                 ActivityUtils.hideKeyboardForced(tags_edit_text)
