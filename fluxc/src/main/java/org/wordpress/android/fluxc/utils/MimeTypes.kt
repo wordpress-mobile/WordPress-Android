@@ -131,6 +131,8 @@ class MimeTypes {
     fun buildVideoMimeTypes(): Array<String> = buildMimeTypeStrings(videoTypes)
     fun buildImageMimeTypes(): Array<String> = buildMimeTypeStrings(imageTypes)
     fun buildDocumentMimeTypes(): Array<String> = buildMimeTypeStrings(documentTypes)
+    fun buildAllMimeTypes(): Array<String> =
+            buildImageMimeTypes() + buildAudioMimeTypes() + buildVideoMimeTypes() + buildDocumentMimeTypes()
 
     private fun buildMimeTypeStrings(mimeTypes: List<MimeType>): Array<String> {
         return mimeTypes.map { "${it.type}/${it.subtype}" }.toSet().toTypedArray()
