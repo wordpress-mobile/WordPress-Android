@@ -121,6 +121,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { post.cardType == VIDEO }
                     ?.let { post.featuredVideo }
 
+    // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO
 
     private fun buildThumbnailStripUrls(post: ReaderPost) =
@@ -140,9 +141,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
             (post.hasFeaturedVideo() || post.hasFeaturedImage()) &&
                     post.cardType != GALLERY
 
+    // TODO malinjir show title only when buildPhotoTitle == null
     private fun buildTitle(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && it.hasTitle() }?.title
 
+    // TODO malinjir show excerpt only when buildPhotoTitle == null
     private fun buildExcerpt(post: ReaderPost) =
             post.takeIf { post.cardType != PHOTO && post.hasExcerpt() }?.excerpt
 
@@ -209,29 +212,21 @@ class ReaderPostUiStateBuilder @Inject constructor(
         isBookmarkList: Boolean,
         onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): PrimaryAction {
-        val showLikes = when {
-            /* TODO malinjir why we don't show likes on bookmark list??? I think we wanted
-                 to keep the card as simple as possible. However, since we are showing all the actions now, some of them
-                 are just disabled, I think it's ok to enable the action. */
-            post.isDiscoverPost || isBookmarkList -> false
-            !accountStore.hasAccessToken() -> post.numLikes > 0
-            else -> post.canLikePost()
-        }
+        /* TODO malinjir why we don't show likes on bookmark list??? I think we wanted
+             to keep the card as simple as possible. However, since we are showing all the actions now, some of them
+             are just disabled, I think it's ok to enable the action. */
+        val likesEnabled = !isBookmarkList && post.canLikePost() && accountStore.hasAccessToken()
 
-        return if (showLikes) {
-            PrimaryAction(
-                    isEnabled = true,
-                    isSelected = post.isLikedByCurrentUser,
-                    contentDescription = UiStringText(
-                            readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
-                    ),
-                    count = post.numLikes,
-                    onClicked = if (accountStore.hasAccessToken()) onClicked else null,
-                    type = LIKE
-            )
-        } else {
-            PrimaryAction(isEnabled = false, type = LIKE)
-        }
+        return PrimaryAction(
+                isEnabled = likesEnabled,
+                isSelected = post.isLikedByCurrentUser,
+                contentDescription = UiStringText(
+                        readerUtilsWrapper.getLongLikeLabelText(post.numLikes, post.isLikedByCurrentUser)
+                ),
+                count = post.numLikes,
+                onClicked = if (likesEnabled) onClicked else null,
+                type = LIKE
+        )
     }
 
     private fun buildReblogSection(
@@ -257,7 +252,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                  to keep the card as simple as possible. However, since we are showing all the actions now, some of them
                  are just disabled, I think it's ok to enable the action. */
             post.isDiscoverPost || isBookmarkList -> false
-            !accountStore.hasAccessToken() -> post.numLikes > 0
+            !accountStore.hasAccessToken() -> post.numReplies > 0
             else -> post.isWP && (post.isCommentsOpen || post.numReplies > 0)
         }
 
