@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.stories
 
 import android.content.Intent
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -68,5 +70,11 @@ class StoryComposerViewModel @Inject constructor(
                 PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
                 post, site, true
         )
+    }
+
+    fun writeToBundle(outState: Bundle) {
+        outState.putSerializable(WordPress.SITE, site)
+        outState.putInt(StoryComposerActivity.STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
+        outState.putSerializable(StoryComposerActivity.STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
     }
 }

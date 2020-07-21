@@ -42,7 +42,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
@@ -110,8 +109,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
         // See https://wordpress.org/support/article/post-formats/
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
-        private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
-        private const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
+        const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
@@ -170,9 +169,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
-        outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
-        outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        viewModel.writeToBundle(outState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
