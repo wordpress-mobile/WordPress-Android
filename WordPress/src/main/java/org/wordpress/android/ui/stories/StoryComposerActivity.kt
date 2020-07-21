@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.webkit.URLUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
@@ -27,6 +29,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -64,7 +67,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -93,11 +95,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
     @Inject lateinit var updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase
     @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
-    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -126,39 +128,36 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
         setPrepublishingEventProvider(this)
 
+        initViewModel(savedInstanceState)
+    }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        var localPostId = 0
+        var notificationType: NotificationType? = null
+
         if (savedInstanceState == null) {
+            localPostId = getBackingPostIdFromIntent()
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            var localPostId = getBackingPostIdFromIntent()
-            if (localPostId == 0) {
-                // Create a new post
-                saveInitialPost()
-                // Bump post created analytics only once, first time the editor is opened
-                AnalyticsUtils.trackEditorCreatedPost(
-                        intent.action,
-                        intent,
-                        site,
-                        editPostRepository.getPost()
-                )
-            } else {
-                editPostRepository.loadPostByLocalPostId(localPostId)
-            }
-            createPostEditorAnalyticsSessionTracker(editPostRepository.getPost(), site)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-                val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
-                systemNotificationsTracker.trackTappedNotification(notificationType)
+                notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
+                localPostId = savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)
             }
-            postEditorAnalyticsSession =
-                    savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
+        val postEditorAnalyticsSession =
+                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(StoryComposerViewModel::class.java)
+        viewModel.start(editPostRepository, LocalId(localPostId), intent, postEditorAnalyticsSession,notificationType )
+
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
-        postEditorAnalyticsSession?.start(null)
+
         startObserving()
         updateStoryPostWithChanges()
     }
@@ -391,18 +390,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // delete empty post from database
         dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
         postEditorAnalyticsSession?.setOutcome(CANCEL)
-    }
-
-    private fun createPostEditorAnalyticsSessionTracker(
-        post: PostImmutableModel?,
-        site: SiteModel?
-    ) {
-        if (postEditorAnalyticsSession == null) {
-            postEditorAnalyticsSession = PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
-                    PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
-                    post, site, true
-            )
-        }
     }
 
     private fun showPrepublishingBottomSheet() {

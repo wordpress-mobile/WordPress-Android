@@ -1,25 +1,72 @@
 package org.wordpress.android.ui.stories
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
-import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
-import org.wordpress.android.fluxc.store.PostStore
+import org.wordpress.android.push.NotificationType
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.EditPostRepository
-import org.wordpress.android.ui.posts.SavePostToDbUseCase
-import org.wordpress.android.ui.stories.StoryComposerActivity.Companion
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 
 class StoryComposerViewModel @Inject constructor(
-    val postStore: PostStore,
-    val savePostToDbUseCase: SavePostToDbUseCase
+    private val systemNotificationsTracker: SystemNotificationsTracker,
+    private val saveInitialPostUseCase: SaveInitialPostUseCase,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) :
         ViewModel() {
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
-    fun start(editPostRepository: EditPostRepository) {
+    private lateinit var postEditorAnalyticsSession: PostEditorAnalyticsSession
+
+    fun start(
+        editPostRepository: EditPostRepository,
+        postId: LocalId,
+        intent: Intent,
+        postEditorAnalyticsSession: PostEditorAnalyticsSession?,
+        notificationType: NotificationType?
+    ) {
         this.editPostRepository = editPostRepository
+
+        if (postId.value == 0) {
+            // Create a new post
+            saveInitialPostUseCase.saveInitialPost(editPostRepository, site)
+            // Bump post created analytics only once, first time the editor is opened
+            analyticsUtilsWrapper.trackEditorCreatedPost(
+                    intent.action,
+                    intent,
+                    site,
+                    editPostRepository.getPost()
+            )
+        } else {
+            editPostRepository.loadPostByLocalPostId(postId.value)
+        }
+
+        setupPostEditorAnalyticsSession(postEditorAnalyticsSession)
+
+        notificationType?.let {
+            systemNotificationsTracker.trackTappedNotification(it)
+        }
     }
 
+    private fun setupPostEditorAnalyticsSession(postEditorAnalyticsSession: PostEditorAnalyticsSession?) {
+        this.postEditorAnalyticsSession = postEditorAnalyticsSession ?: createPostEditorAnalyticsSessionTracker(
+                editPostRepository.getPost(),
+                site
+        )
+        this.postEditorAnalyticsSession.start(null)
+    }
 
+    private fun createPostEditorAnalyticsSessionTracker(
+        post: PostImmutableModel?,
+        site: SiteModel?
+    ): PostEditorAnalyticsSession {
+        return PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
+                PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
+                post, site, true
+        )
+    }
 }
