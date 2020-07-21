@@ -744,11 +744,12 @@ class ReaderPostUiStateBuilderTest {
     @Test
     fun `Count on Comments button corresponds to number of comments on the post`() {
         // Arrange
-        val post = createPost()
+        val numReplies = 15
+        val post = createPost(numOfReplies = numReplies)
         // Act
-        val uiState = mapPostToUiState(post, isBookmarkList = true)
+        val uiState = mapPostToUiState(post)
         // Assert
-        assertThat(uiState.commentsAction.isEnabled).isFalse()
+        assertThat(uiState.commentsAction.count).isEqualTo(numReplies)
     }
     // endregion
 
