@@ -58,10 +58,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        close_button.setOnClickListener {
-            trackTagsChangedEvent()
-            viewModel.onCloseButtonClicked()
-        }
         back_button.setOnClickListener {
             trackTagsChangedEvent()
             viewModel.onBackButtonClicked()
