@@ -28,6 +28,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 
@@ -56,7 +57,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -71,7 +72,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -97,7 +98,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify progress bar initial state
             coroutineScope.pauseDispatcher()
@@ -119,7 +120,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify title initial state
             coroutineScope.pauseDispatcher()
@@ -141,7 +142,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify subtitle initial state
             coroutineScope.pauseDispatcher()
@@ -163,7 +164,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -185,7 +186,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify done button initial state
             coroutineScope.pauseDispatcher()
@@ -209,7 +210,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectedIndex = 0
 
             // When
@@ -228,7 +229,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectedIndex = 0
 
             // When
@@ -248,7 +249,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -269,7 +270,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -285,7 +286,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -301,7 +302,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectInterestAtIndex = 2
 
             // When
@@ -323,7 +324,7 @@ class ReaderInterestsViewModelTest {
                 uiStates.add(it)
             }
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             viewModel.onRetryButtonClick()
