@@ -123,6 +123,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
+import org.wordpress.android.viewmodel.main.ModalLayoutPickerViewModel;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -180,9 +181,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
 
     private SiteModel mSelectedSite;
     private WPMainActivityViewModel mViewModel;
+    private ModalLayoutPickerViewModel mMLPViewModel;
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
+    private static final String MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG";
     private final Handler mHandler = new Handler();
 
     @Inject AccountStore mAccountStore;
@@ -387,6 +390,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mFabTooltip = findViewById(R.id.fab_tooltip);
 
         mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+        mMLPViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
@@ -415,9 +419,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    if (mModalLayoutPickerFeatureConfig.isEnabled()) {
+                        mMLPViewModel.show();
+                    } else {
+                        handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    }
                     break;
             }
+        });
+
+        mMLPViewModel.getOnCreateNewPageRequested().observe(this, action -> {
+            handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
         });
 
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
@@ -466,6 +478,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
             });
         });
 
+        mMLPViewModel.isModalLayoutPickerShowing().observe(this, event -> {
+            event.applyIfNotHandled(isShowing -> {
+                FragmentManager fm = getSupportFragmentManager();
+                if (fm != null) {
+                    ModalLayoutPickerFragment mlpFragment =
+                            (ModalLayoutPickerFragment) fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG);
+                    if (isShowing && mlpFragment == null) {
+                        mlpFragment = new ModalLayoutPickerFragment();
+                        mlpFragment.show(getSupportFragmentManager(), MODAL_LAYOUT_PICKER_TAG);
+                    } else if (!isShowing && mlpFragment != null) {
+                        mlpFragment.dismiss();
+                    }
+                }
+                return null;
+            });
+        });
+
         mViewModel.getStartLoginFlow().observe(this, event -> {
             event.applyIfNotHandled(startLoginFlow -> {
                 if (mBottomNav != null) {
@@ -485,6 +514,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 mSiteStore.hasSite() && mBottomNav.getCurrentSelectedPage() == PageType.MY_SITE,
                 hasFullAccessToContent()
         );
+
+        mMLPViewModel.init();
     }
 
     private @Nullable String getAuthToken() {
@@ -814,14 +845,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-        if (mModalLayoutPickerFeatureConfig.isEnabled()) {
-            addNewPage(source); // TODO: Open MLP
-        } else {
-            addNewPage(source);
-        }
-    }
-
-    private void addNewPage(PagePostCreationSourcesDetail source) {
         SiteModel site = getSelectedSite();
         if (site != null) {
             // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction

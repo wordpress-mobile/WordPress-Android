@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/bottom_sheet_handle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="@string/navigate_back_desc"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:tint="?attr/colorControlNormal" />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/ModalLayoutPickerHeader"
+            android:visibility="gone"
+            android:text="@string/mlp_choose_layout_title" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/content_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
+        android:scrollbars="vertical" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_container_shadow_height"
+        android:background="@drawable/login_shadow" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/margin_small_medium"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/createBlankPageButton"
+            style="@style/Widget.ModalLayoutPicker.Button.Secondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small_medium"
+            android:layout_weight="1"
+            android:text="@string/mlp_create_blank_page" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/previewButton"
+            style="@style/Widget.LoginFlow.Button.Secondary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small_medium"
+            android:layout_weight="1"
+            android:text="@string/mlp_preview_page"
+            android:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/createPageButton"
+            style="@style/Widget.ModalLayoutPicker.Button.Primary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small_medium"
+            android:layout_weight="1"
+            android:text="@string/mlp_create_page"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</LinearLayout>
