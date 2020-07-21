@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import kotlin.coroutines.CoroutineContext
@@ -25,11 +24,6 @@ abstract class ReaderRepositoryDispatchingUseCase(
 
     open fun stop() {
         parentJob.cancel()
-    }
-
-    companion object {
-        const val EXCLUDE_TEXT_COLUMN = true
-        const val MAX_ROWS = ReaderConstants.READER_MAX_POSTS_TO_DISPLAY
     }
 }
 // todo: annmarie - this should be removed - it's a helper log fun for coroutines

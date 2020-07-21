@@ -6,11 +6,12 @@ import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded
 import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -18,7 +19,7 @@ class PostLikeActionUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper
 ) : ReaderRepositoryDispatchingUseCase(ioDispatcher) {
-    private var continuation: kotlin.coroutines.Continuation<OnReaderRepositoryEvent>? = null
+    private val continuations: MutableMap<PostLikeRequest, Continuation<ReaderRepositoryEvent>?> = mutableMapOf()
 
     init {
         eventBusWrapper.register(this)
@@ -28,27 +29,56 @@ class PostLikeActionUseCase @Inject constructor(
         post: ReaderPost,
         isAskingToLike: Boolean,
         wpComUserId: Long
-    ): OnReaderRepositoryEvent {
-        if (continuation != null) {
-            throw IllegalStateException("Perform Like action has already been sent")
+    ): ReaderRepositoryEvent {
+        val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
+
+        if (continuations[request] != null) {
+            throw IllegalStateException("Perform Like action has already been sent for this request")
         }
+
         return suspendCoroutine { cont ->
-            continuation = cont
+            continuations[request] = cont
             ReaderPostActions.performLikeAction(post, isAskingToLike, wpComUserId)
         }
     }
 
     @Subscribe(threadMode = BACKGROUND)
     @SuppressWarnings("unused")
-    fun onPerformPostLikeEnded(event: OnReaderRepositoryEvent) {
-        if (event is OnPostLikeEnded) {
-            continuation?.resume(event)
-            continuation = null
+    fun onPerformPostLikeEnded(event: ReaderRepositoryEvent) {
+        if (event is PostLikeEnded) {
+            val request = PostLikeRequest(event.postId, event.blogId, event.isAskingToLike, event.wpComUserId)
+            continuations[request]?.resume(event)
+            continuations[request] = null
         }
     }
 
     override fun stop() {
         super.stop()
         eventBusWrapper.unregister(this)
+        continuations.run { clear() }
+    }
+
+    data class PostLikeRequest(val postId: Long, val blogId: Long, val isAskingToLike: Boolean, val wpComUserId: Long) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+
+            if (other == null) return false
+
+            (other as PostLikeRequest).let {
+                if (it.postId == postId &&
+                        it.blogId == blogId &&
+                        it.isAskingToLike == isAskingToLike &&
+                        it.wpComUserId == wpComUserId)
+                    return true
+            }
+
+            return false
+        }
+
+        override fun hashCode(): Int {
+            var result = postId.hashCode()
+            result = 31 * result + blogId.hashCode()
+            return result
+        }
     }
 }

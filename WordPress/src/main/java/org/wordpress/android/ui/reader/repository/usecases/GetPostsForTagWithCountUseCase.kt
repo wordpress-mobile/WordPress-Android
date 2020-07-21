@@ -13,13 +13,17 @@ import javax.inject.Named
 class GetPostsForTagWithCountUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(ioDispatcher) {
-    suspend fun get(readerTag: ReaderTag): Pair<ReaderPostList, Int> =
+    suspend fun get(
+        readerTag: ReaderTag,
+        maxRows: Int = 0,
+        excludeTextColumns: Boolean = true
+    ): Pair<ReaderPostList, Int> =
             withContext(coroutineContext) {
                 val postsForTagFromLocalDeferred = async {
                     ReaderPostTable.getPostsWithTag(
                             readerTag,
-                            MAX_ROWS,
-                            EXCLUDE_TEXT_COLUMN
+                            maxRows,
+                            excludeTextColumns
                     )
                 }
 

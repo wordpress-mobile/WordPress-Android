@@ -35,10 +35,10 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult;
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener;
 import org.wordpress.android.ui.reader.models.ReaderSimplePost;
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList;
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent;
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeFailure;
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess;
-import org.wordpress.android.ui.reader.repository.OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeUnChanged;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess;
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -71,7 +71,10 @@ public class ReaderPostActions {
         boolean isCurrentlyLiked = ReaderPostTable.isPostLikedByCurrentUser(post);
         if (isCurrentlyLiked == isAskingToLike) {
             AppLog.w(T.READER, "post like unchanged");
-            EventBus.getDefault().post(OnPostLikeUnChanged.INSTANCE);
+            final PostLikeUnChanged onPostLikeUnChanged =
+                    new ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged(
+                            post.postId, post.blogId, isAskingToLike, wpComUserId);
+            EventBus.getDefault().post(onPostLikeUnChanged);
             return false;
         }
 
@@ -96,8 +99,9 @@ public class ReaderPostActions {
             @Override
             public void onResponse(JSONObject jsonObject) {
                 AppLog.d(T.READER, String.format("post %s succeeded", actionName));
-                final OnPostLikeSuccess onPostLikeSuccess =
-                        new OnReaderRepositoryEvent.OnPostLikeEnded.OnPostLikeSuccess(post.postId, post.blogId);
+                final PostLikeSuccess onPostLikeSuccess =
+                        new ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess(
+                                post.postId, post.blogId, isAskingToLike, wpComUserId);
                 EventBus.getDefault().post(onPostLikeSuccess);
             }
         };
@@ -114,7 +118,10 @@ public class ReaderPostActions {
                 AppLog.e(T.READER, volleyError);
                 ReaderPostTable.setLikesForPost(post, post.numLikes, post.isLikedByCurrentUser);
                 ReaderLikeTable.setCurrentUserLikesPost(post, post.isLikedByCurrentUser, wpComUserId);
-                EventBus.getDefault().post(OnPostLikeFailure.INSTANCE);
+                final PostLikeFailure onPostLikeFailure =
+                        new ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure(
+                                post.postId, post.blogId, isAskingToLike, wpComUserId);
+                EventBus.getDefault().post(onPostLikeFailure);
             }
         };
 
