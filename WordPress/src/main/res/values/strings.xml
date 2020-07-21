@@ -144,6 +144,7 @@
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
     <string name="pick_media">Add image or video</string>
+    <string name="pick_file">Add file</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
     <string name="reader_toast_err_get_post">Unable to retrieve this post</string>
     <string name="media_error_no_permission">You don\'t have permission to view the media library</string>

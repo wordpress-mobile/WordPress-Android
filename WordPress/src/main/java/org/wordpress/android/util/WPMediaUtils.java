@@ -262,7 +262,7 @@ public class WPMediaUtils {
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
-        return Intent.createChooser(intent, context.getString(R.string.pick_media));
+        return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
 
     public static void launchVideoCamera(Activity activity) {
