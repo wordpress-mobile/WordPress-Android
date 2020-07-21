@@ -127,17 +127,6 @@ class MimeTypes {
         return isSupportedMimeType(documentTypes, type)
     }
 
-    fun buildAudioMimeTypes(): Array<String> = buildMimeTypeStrings(audioTypes)
-    fun buildVideoMimeTypes(): Array<String> = buildMimeTypeStrings(videoTypes)
-    fun buildImageMimeTypes(): Array<String> = buildMimeTypeStrings(imageTypes)
-    fun buildDocumentMimeTypes(): Array<String> = buildMimeTypeStrings(documentTypes)
-    fun buildAllMimeTypes(): Array<String> =
-            buildImageMimeTypes() + buildAudioMimeTypes() + buildVideoMimeTypes() + buildDocumentMimeTypes()
-
-    private fun buildMimeTypeStrings(mimeTypes: List<MimeType>): Array<String> {
-        return mimeTypes.map { "${it.type}/${it.subtype}" }.toSet().toTypedArray()
-    }
-
     private fun isExpectedMimeType(
         expected: List<MimeType>,
         type: String?
