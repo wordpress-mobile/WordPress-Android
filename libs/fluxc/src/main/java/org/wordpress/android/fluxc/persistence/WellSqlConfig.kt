@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 113
+        return 114
     }
 
     override fun getDbName(): String {
@@ -1259,6 +1259,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "MAXIMUM_APP_VERSION TEXT NOT NULL,APP_VERSION_TARGETS TEXT NOT NULL," +
                                     "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
                     )
+                }
+                113 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
             }
         }
