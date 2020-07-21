@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-09 16:54:11+0000
+Translation-Revision-Date: 2020-07-09 16:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
+    <string name="gutenberg_native_gradient_type">نوع التدرج</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
+    <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
+    <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
+    <string name="menu_content_info">هيكل المحتوى</string>
+    <string name="me">أنا</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. وفي هذه الأثناء، يمكنك أيضًا تحرير هذا المكوِّن باستخدام متصفح الويب في جهازك.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">تحرير المكوِّن في متصفح الويب</string>
+    <string name="prepublishing_tags_description">تساعد الوسوم على إخبار القراء بما تدور حوله المقالة.</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">إضافة وسوم</string>
+    <string name="prepublishing_nudges_home_save_button">حفظ الآن</string>
+    <string name="prepublishing_nudges_home_submit_button">إرسال الآن</string>
+    <string name="prepublishing_nudges_tags_action">وسوم</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">يتعذر تحرير المقالات التي تمت إضافتها إلى سلة المهملات. هل ترغب في تغيير حالة هذه المقالة إلى \"مسودة\" حتى تتمكن من العمل عليها؟</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">هل تريد نقل المقالة إلى المسودات؟</string>
+    <string name="reader_label_choose_your_interests">اختيار اهتماماتك</string>
+    <string name="reader_label_discover_follow_tags">اكتشاف الوسوم التي تحبها ومتابعتها</string>
+    <string name="reader_choose_interests_content_description">اختيار اهتماماتك</string>
+    <string name="reader_btn_done">انتهى</string>
+    <string name="reader_btn_select_few_interests">تحديد القليل للاستمرار</string>
+    <string name="post_status_post_published">منشور</string>
+    <string name="post_status_post_trashed">أُضيف إلى سلة المهملات</string>
+    <string name="publish_date">تاريخ النشر</string>
+    <string name="ccpa_privacy_notice_read">قراءة إشعار الخصوصية لقانون خصوصية المستهلك في كاليفورنيا</string>
+    <string name="ccpa_privacy_notice_caption">يتطلب قانون خصوصية المستهلك في كاليفورنيا (\"CCPA\") منا تزويد سكان كاليفورنيا ببعض المعلومات الإضافية حول تصنيفات المعلومات الشخصية التي نقوم بتجميعها ومشاركتها، مع تحديد المصدر الذي نحصل على تلك المعلومات الشخصية منه، وكيف نستخدمها ولماذا.</string>
+    <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
+    <string name="status_and_visibility">الحالة والظهور</string>
+    <string name="update_now">قم بالتحديث الآن</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_remove_s">إزالة %s</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
@@ -284,7 +317,7 @@ Language: ar
     <string name="reader_my_likes_display_name">الإعجابات</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
-    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. في غضون ذلك، يمكنك أيضًا تحرير هذه المقالة على الويب.</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">نعمل بجد لإضافة المزيد من المكوِّنات مع كل إصدار. في غضون ذلك، يمكنك أيضًا تحرير هذه المقالة على الويب.</string>
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
     <string name="gutenberg_native_translate">الترجمة</string>
     <string name="gutenberg_native_title">العنوان:</string>
@@ -507,10 +540,6 @@ Language: ar
     <string name="stats_widget_all_time_title">كل الوقت</string>
     <string name="stats_widget_views_title">المشاهدات هذا الأسبوع</string>
     <string name="stats_widget_add">أضف الودجت</string>
-    <string name="dialog_confirm_update_yes">تحديث الآن</string>
-    <string name="dialog_confirm_update_message_page">سيتم تحديث هذه الصفحة المنشورة فورًا.</string>
-    <string name="dialog_confirm_update_message_post">سيتم تحديث هذه المقالة المنشورة فورًا.</string>
-    <string name="dialog_confirm_update_title">مستعد للتحديث؟</string>
     <string name="plugin_fetching_error_after_at">استغرق تحديث تفاصيل الإضافة وقتًا أطول من المعتاد. يرجى التحقق مرة أخرى لاحقًا.</string>
     <string name="plugin_install_site_ineligible_default_error">إذا قمت للتو بتسجيل اسم نطاق، فيرجى الانتظار حتى ننتهي من إعداده ومن ثم المحاولة مرة أخرى.\n\nإذا لم يكن الأمر كذلك، يبدو أنه حدث خطأ ما وقد لا تكون ميزة الإضافة متاحة لهذا الموقع.</string>
     <string name="domain_contact_information_state_not_available_hint">الحالة (غير متوفرة)</string>
@@ -557,8 +586,6 @@ Language: ar
     <string name="editor_uploading_draft">جاري رفع مسودّتك</string>
     <string name="post_uploading_draft">رفع المسودّة</string>
     <string name="post_list_tab_drafts">المسودات</string>
-    <string name="post_list_author_everyone">الجميع</string>
-    <string name="post_list_author_me">أنا</string>
     <string name="error_restoring_post">حدث خطأ أثناء استعادة المقالة</string>
     <string name="backdated_for">تاريخ سابق ليوم: %s</string>
     <string name="stats_insights_management_title">لن ترى إلا الإحصاءات الأكثر أهمية. أضف الرؤى الخاصة بك ونظِّمها أدناه.</string>
@@ -823,7 +850,6 @@ Language: ar
     <string name="pages_delete_permanently">حذف نهائيًّا</string>
     <string name="pages_move_to_trash">نقل إلى سلة المهملات</string>
     <string name="pages_move_to_draft">نقل إلى المسودة</string>
-    <string name="pages_publish_now">النشر الآن</string>
     <string name="pages_set_parent">تعيين الأصل</string>
     <string name="pages_view">عرض</string>
     <string name="pages_trashed">محذوف</string>
@@ -1076,7 +1102,6 @@ Language: ar
     <string name="menu_html_mode_done_snackbar">تم التبديل إلى وضع HTML</string>
     <string name="menu_html_mode">وضع HTML</string>
     <string name="menu_preview">معاينة</string>
-    <string name="menu_publish_now">النشر الآن</string>
     <string name="menu_save_as_draft">حفظ كمسودة</string>
     <string name="file_size_in_terabytes">%s تيرابايت</string>
     <string name="file_size_in_gigabytes">%s جيجابايت</string>
@@ -1139,10 +1164,6 @@ Language: ar
     <string name="uploading_subtitle_mixed_pages_plural_media_plural">%1$d من الصفحات و%2$d من %3$dالملفات متبقٍّ</string>
     <string name="uploading_subtitle_mixed_post_singular_media_plural">مقالة واحدة و%1$d من%2$d الملفات متبقٍّ</string>
     <string name="uploading_subtitle_mixed_page_singular_media_plural">صفحة واحدة و%1$d من %2$dالملفات متبقٍّ</string>
-    <string name="dialog_confirm_publish_yes">النشر الآن</string>
-    <string name="dialog_confirm_publish_message_page">سيتم نشر هذه الصفحة فورًا.</string>
-    <string name="dialog_confirm_publish_message_post">سيتم نشر هذه المقالة فورًا.</string>
-    <string name="dialog_confirm_publish_title">هل أنت جاهز للنشر؟</string>
     <string name="media_file_pages_and_posts_only_not_uploaded">لم يتم رفع %1$d من المقالات / الصفحات</string>
     <string name="media_file_pages_plural_only_not_uploaded">لم يتم رفع %1$d من الصفحات</string>
     <string name="media_file_page_singular_only_not_uploaded">لم يتم رفع صفحة واحدة</string>
@@ -1477,7 +1498,6 @@ Language: ar
     <string name="post_settings_not_set">غير مُعيَّن</string>
     <string name="post_settings_more_options">المزيد من الخيارات</string>
     <string name="post_settings_categories_and_tags">الفئات والوسوم</string>
-    <string name="post_settings_status">الحالة</string>
     <string name="notifications_tab_title_all">الكل</string>
     <string name="top_level_category_name">أعلى مستوى</string>
     <string name="category_parent">التصنيف الأب (اختياري):</string>
@@ -1601,7 +1621,6 @@ Language: ar
     <string name="media_upload_state_deleting">جاري الحذف</string>
     <string name="media_upload_state_uploading">جاري الرفع</string>
     <string name="media_upload_state_queued">تم الوضع في قائمة الانتظار</string>
-    <string name="keep_editing">متابعة التحرير</string>
     <string name="image_quality">جودة الصورة</string>
     <string name="error_all_media_upload_canceled">تم إلغاء جميع عمليات رفع الوسائط بسبب خطأ غير معروف. يُرجى إعادة محاولة الرفع</string>
     <string name="error_unknown_post_type">تنسيق المقالة غير معروف</string>
@@ -2264,7 +2283,6 @@ Language: ar
     <string name="httppassword">كلمة مرور HTTP</string>
     <string name="httpuser">اسم مستخدم HTTP</string>
     <string name="error_media_upload">حدث خطأ أثناء رفع ملفات الوسائط</string>
-    <string name="publish_date">نشر</string>
     <string name="incorrect_credentials">اسم المستخدم و/أو كلمة المرور غير صحيحين.</string>
     <string name="log_in">تسجيل الدخول</string>
     <string name="username">اسم المستخدم</string>
@@ -2301,6 +2319,7 @@ Language: ar
     <string name="no">لا</string>
     <string name="yes">نعم</string>
     <string name="notification_settings">إعدادات التنبيهات</string>
+    <string name="publish_now">النشر الآن</string>
     <string name="reply">الرد</string>
     <string name="on">تشغيل</string>
     <string name="preview">معاينة</string>

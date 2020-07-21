@@ -67,6 +67,10 @@ class AppPrefsWrapper @Inject constructor() {
         get() = AppPrefs.getReaderTagsUpdatedTimestamp()
         set(timestamp) = AppPrefs.setReaderTagsUpdatedTimestamp(timestamp)
 
+    var readerCssUpdatedTimestamp: Long
+        get() = AppPrefs.getReaderCssUpdatedTimestamp()
+        set(timestamp) = AppPrefs.setReaderCssUpdatedTimestamp(timestamp)
+
     fun getAppWidgetSiteId(appWidgetId: Int) = AppPrefs.getStatsWidgetSelectedSiteId(appWidgetId)
     fun setAppWidgetSiteId(siteId: Long, appWidgetId: Int) = AppPrefs.setStatsWidgetSelectedSiteId(siteId, appWidgetId)
     fun removeAppWidgetSiteId(appWidgetId: Int) = AppPrefs.removeStatsWidgetSelectedSiteId(appWidgetId)
@@ -141,6 +145,11 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun setReaderTag(selectedTag: ReaderTag?) = AppPrefs.setReaderTag(selectedTag)
     fun getReaderTag(): ReaderTag? = AppPrefs.getReaderTag()
+
+    fun isReaderImprovementsPhase2Enabled(): Boolean = AppPrefs.isReaderImprovementsPhase2Enabled()
+
+    fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
+    fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 
     companion object {
         private const val LIGHT_MODE_ID = 0

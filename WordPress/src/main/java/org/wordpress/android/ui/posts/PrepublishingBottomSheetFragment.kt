@@ -23,7 +23,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
-import org.wordpress.android.ui.posts.prepublishing.visibility.PrepublishingVisibilityFragment
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import javax.inject.Inject
 
@@ -157,10 +156,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             PrepublishingScreen.PUBLISH -> Pair(
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
-            )
-            PrepublishingScreen.VISIBILITY -> Pair(
-                    PrepublishingVisibilityFragment.newInstance(),
-                    PrepublishingVisibilityFragment.TAG
             )
             PrepublishingScreen.TAGS -> Pair(
                     PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG

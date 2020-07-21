@@ -8,7 +8,7 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.appbar.AppBarLayout
@@ -28,9 +28,15 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:visibility="gone"
             app:layout_collapseMode="pin"
             app:layout_scrollFlags="noScroll"
             app:tabMode="scrollable" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/interests_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

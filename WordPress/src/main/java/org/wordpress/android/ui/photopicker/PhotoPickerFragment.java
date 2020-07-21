@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -48,11 +47,14 @@ import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.TenorFeatureConfig;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 public class PhotoPickerFragment extends Fragment {
     private static final String KEY_LAST_TAPPED_ICON = "last_tapped_icon";
@@ -107,6 +109,8 @@ public class PhotoPickerFragment extends Fragment {
     private ArrayList<Integer> mSelectedPositions;
     private FloatingActionButton mWPStoriesTakePicture;
 
+    @Inject TenorFeatureConfig mTenorFeatureConfig;
+
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull MediaBrowserType browserType,
                                                   @Nullable SiteModel site) {
@@ -125,6 +129,7 @@ public class PhotoPickerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((WordPress) getActivity().getApplication()).component().inject(this);
 
         mBrowserType = (MediaBrowserType) getArguments().getSerializable(ARG_BROWSER_TYPE);
         mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
@@ -356,7 +361,7 @@ public class PhotoPickerFragment extends Fragment {
             });
 
             // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (BuildConfig.TENOR_AVAILABLE && !mBrowserType.isWPStoriesPicker()) {
+            if (mTenorFeatureConfig.isEnabled() && !mBrowserType.isWPStoriesPicker()) {
                 MenuItem itemGif = popup.getMenu().add(R.string.photo_picker_gif);
                 itemGif.setOnMenuItemClickListener(item -> {
                     doIconClicked(PhotoPickerIcon.GIF);

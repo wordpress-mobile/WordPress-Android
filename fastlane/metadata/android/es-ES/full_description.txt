@@ -1,14 +1,14 @@
-WordPress para Android pone el poder de la publicación web en tu bolsillo. ¡Es un creador de sitios web y mucho más!
+WordPress para Android pone el poder de la publicación web en tu bolsillo. ¡Es un creador de webs y mucho más!
 
 CREA
-- Dale a tus grandes ideas un hogar en la web. WordPress para Android es un constructor de sitios web y un creador de blogs. Úsalo para crear tu web.
-- Elige el aspecto adecuado de una amplia selección de temas de WordPress y personalízalo con fotos, colores y fuentes para que sea único para ti.
-- Los consejos de inicio rápido incorporados te guían a través de los conceptos básicos de configuración para configurar tu nueva web con éxito. (No somos sólo un creador de sitios web, ¡somos tu compañero y tu equipo de animadores!)
+- Dale a tus grandes ideas un hogar en la web. WordPress para Android es un constructor de webs y un creador de blogs. Úsalo para crear tu web.
+- Elige el aspecto adecuado de una amplia selección de temas para WordPress y personalízalo con fotos, colores y fuentes para que sea único para ti.
+- Los consejos de inicio rápido incorporados te guían a través de los conceptos básicos de configuración para configurar tu nueva web con éxito. (No somos solo un creador de webs, ¡somos tu compañero y tu equipo de animadores!)
 
 ESTADÍSTICAS
 - Comprueba las estadísticas de tu web en tiempo real para hacer un seguimiento de la actividad en tu sitio.
 - Realiza un seguimiento de las entradas y páginas que generan más tráfico a través del tiempo mediante la exploración de información diaria, semanal, mensual y anual.
-- Utiliza el mapa de tráfico para ver de qué países vienen sus visitantes.
+- Utiliza el mapa de tráfico para ver de qué países vienen tus visitantes.
 
 AVISOS
 - Recibe avisos sobre comentarios, me gusta y nuevos seguidores para que puedas ver a la gente reaccionar a tu web en el momento en que sucede.
@@ -16,28 +16,30 @@ AVISOS
 
 PUBLICA
 - Crea actualizaciones, historias, anuncios de ensayos fotográficos, ¡cualquier cosa! -- con el editor.
-- Da vida a tus entradas y páginas con fotos y vídeos de tu cámara y álbumes, o encuentra la imagen perfecta con la colección de fotografías profesionales gratuitas.
-- Guarda las ideas como borradores y vuelve a ellas cuando vuelva tu musa, o programa nuevas entradas para el futuro para que tu sitio esté siempre fresco y atractivo.
-- Añada etiquetas y categorías para ayudar a los nuevos lectores a descubrir tus entradas y ver cómo crece su audiencia.
+- Da vida a tus entradas y páginas con fotos y vídeos de tu cámara y álbumes o encuentra la imagen perfecta con la colección de fotografías profesionales gratuitas.
+- Guarda las ideas como borradores y vuelve a ellas cuando vuelva tu musa o programa nuevas entradas para el futuro para que tu sitio esté siempre fresco y atractivo.
+- Añada etiquetas y categorías para ayudar a los nuevos lectores a descubrir tus entradas y ver cómo crece tu audiencia.
 
 LECTOR
-- WordPress es más que un creador de blogs - úsalo para conectarte con una comunidad de escritores en WordPress Reader. Explora miles de temas por etiqueta, descubre nuevos autores y organizaciones, y sigue a aquellos que despiertan tu interés.
+- WordPress es más que un creador de blogs - úsalo para conectarte con una comunidad de escritores en WordPress Reader. Explora miles de temas por etiqueta, descubre nuevos autores y organizaciones y sigue a aquellos que despiertan tu interés.
 - Aférrate a las entradas que te fascinen con la función de guardar para más tarde.
 
 COMPARTE
 - Configura el uso compartido automatizado para avisar a tus seguidores en los medios sociales cuando publiques una nueva entrada. Lanza automáticamente tus entradas a Facebook, Twitter y más.
-- Añade botones de compartición social a tus entradas para que tus visitantes puedan compartirlas con su red, y deja que tus fans se conviertan en tus embajadores.
+- Añade botones de compartición social a tus entradas para que tus visitantes puedan compartirlas con su red y deja que tus fans se conviertan en tus embajadores.
 
 ¿Por qué WordPress?
 
-Hay muchos servicios de blogs, creadores de sitios web y redes sociales por ahí. ¿Por qué crear tu web con WordPress?
+Hay muchos servicios de blogs, creadores de webs y redes sociales por ahí. ¿Por qué crear tu web con WordPress?
 
 WordPress hace funcionar un tercio de la web. Lo utilizan blogs de aficionados, empresas de todos los tamaños, tiendas online e incluso los sitios de noticias más grandes de Internet. Lo más probable es que muchas de tus webs favoritas se ejecuten en WordPress.
 
-Con WordPress posees tu propio contenido.  Otras redes sociales te tratan como mercancía y asumen la propiedad del contenido que publicas. Pero con WordPress todo lo que publiques es tuyo, y puedes llevártelo contigo a donde quieras.
+Con WordPress posees tu propio contenido. Otras redes sociales te tratan como mercancía y asumen la propiedad del contenido que publicas. Pero con WordPress todo lo que publiques es tuyo y puedes llevártelo contigo a donde quieras.
 
-WordPress es un creador de sitios web de código abierto, lo que significa que cualquiera puede ver cómo se hace, e incluso contribuir.  Otros servicios y redes sociales son sistemas propietarios y cerrados; nunca se puede estar seguro de cómo funcionan o qué están haciendo, ¡y pueden desaparecer!
+WordPress es un creador de webs de código abierto, lo que significa que cualquiera puede ver cómo se hace e incluso contribuir.  Otros servicios y redes sociales son sistemas propietarios y cerrados; nunca se puede estar seguro de cómo funcionan o qué están haciendo, ¡y pueden desaparecer!
 
-Tanto si necesitas un constructor de sitios web para crear tu web, como un simple creador de blogs, WordPress puede ayudarte. Te da bonitos diseños, características poderosas y la libertad de crear lo que quieras.
+Tanto si necesitas un constructor de webs para crear tu web, como un simple creador de blogs, WordPress puede ayudarte. Te da bonitos diseños, características poderosas y la libertad de crear lo que quieras.
 
-WordPress para Android es compatible con los sitios autoalojados que ejecutan WordPress 4.0 y posteriores, y con todos los sitios de WordPress.com. Al igual que WordPress, WordPress para Android es de código abierto. Obtén más información en https://apps.wordpress.com/contribute/  ¿Necesitas ayuda con la aplicación? Envíanos un tuit a @WPAndroid, o visita nuestros foros en https://android.forums.wordpress.org/forum/troubleshooting
+WordPress para Android es compatible con los sitios autoalojados que ejecutan WordPress 4.0 y posteriores y con todos los sitios de WordPress.com. Al igual que WordPress, WordPress para Android es de código abierto. Obtén más información en https://wp.me/P7jrAc-tJ. ¿Necesitas ayuda con la aplicación? Envíanos un tuit a @WPAndroid, o visita nuestros foros en https://android.forums.wordpress.org/forum/troubleshooting.
+
+Aviso de privacidad para los usuarios de California: https://wp.me/Pe4R-d/#california-consumer-privacy-act-ccpa.

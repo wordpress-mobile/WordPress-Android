@@ -299,13 +299,13 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         // this is an artifact to be able to call savePostToDb()
         editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
         site?.let {
-            savePostToDbUseCase.savePostToDb(this, editPostRepository, it)
+            savePostToDbUseCase.savePostToDb(editPostRepository, it)
         }
     }
 
     private fun updateStoryPostWithChanges() {
         editPostRepository.postChanged.observe(this, Observer {
-            savePostToDbUseCase.savePostToDb(this, editPostRepository, requireNotNull(site))
+            savePostToDbUseCase.savePostToDb(editPostRepository, requireNotNull(site))
         })
     }
 

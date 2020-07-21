@@ -1,4 +1,0 @@
-15.0:
-Neu im Block-Editor: Neuer Versblock. Support für Overlay-Farben im Cover-Block. Starten/Verlassen der Animation in der unverankerten Toolbar. Tooltip für Auswahlbuttons für die Seitenvorlage.
-Updates im Block-Editor: „Trash block“ (Block in Papierkorb verschieben) in einem Menü ist nun über die Block-Toolbar erreichbar.
-Weitere Updates: Startseite-Einstellungen wurden zur Seitenliste und den Website-Einstellungen hinzugefügt.

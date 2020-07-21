@@ -2,7 +2,7 @@
 <!--
 Translation-Revision-Date: 2018-03-05 11:25:08+0000
 Plural-Forms: nplurals=1; plural=0;
-Generator: GlotPress/3.0.0-alpha
+Generator: GlotPress/3.0.0-alpha.2
 Language: uz
 -->
 <resources>
@@ -62,7 +62,6 @@ Language: uz
     <string name="httppassword">HTTP parol</string>
     <string name="httpuser">HTTP foydalanuvchi nomi</string>
     <string name="error_media_upload">Media yuklash jarayonida xatolik yuz berdi.</string>
-    <string name="publish_date">Chop etish</string>
     <string name="incorrect_credentials">Foydalanuvchi nomi yoki parol xato.</string>
     <string name="log_in">Kirish</string>
     <string name="password">Parol</string>

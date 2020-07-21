@@ -269,11 +269,11 @@ class PagesViewModel
         }
     }
 
-    private suspend fun reloadPages(state: PageListState = REFRESHING) {
+    private suspend fun reloadPages(state: PageListState = REFRESHING, forced: Boolean = false) {
         if (performIfNetworkAvailableAsync {
                     _listState.setOnUi(state)
 
-                    val result = pageStore.requestPagesFromServer(site)
+                    val result = pageStore.requestPagesFromServer(site, forced)
                     if (result.isError) {
                         _listState.setOnUi(ERROR)
                         showSnackbar(SnackbarMessageHolder(R.string.error_refresh_pages))
@@ -598,7 +598,7 @@ class PagesViewModel
     fun onPullToRefresh() {
         uploadStarter.queueUploadFromSite(site)
         launch {
-            reloadPages(FETCHING)
+            reloadPages(FETCHING, forced = true)
         }
     }
 

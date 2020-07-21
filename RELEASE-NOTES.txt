@@ -1,8 +1,22 @@
+15.4
+-----
+ 
+15.3
+-----
+* [*] Improve wording for confirmation dialogs when trashing posts
+* [***] Block Editor: Adds Copy, Cut, Paste, and Duplicate functionality to blocks
+* [***] Block Editor: Users can now individually edit unsupported blocks found in posts or pages. Not available on self-hosted sites or sites defaulted to classic editor.
+ 
 15.2
 -----
+* [**] Fixes tons of rendering issues in Reader post detail by changing the technical solution (shared CSS file).
 * [**] Block editor: Display content metrics information (blocks, words, characters count).
 * [**] Block Editor: Adds editor support for theme defined colors and theme defined gradients on cover and button blocks.
- 
+* [**] Block Editor: Add support allowing Cover Block video uploads to complete after the editor has closed
+* [*] Block Editor: Fix handling of upload completion while re-opening the editor
+* [*] Fix crash when WordPress api response has an empty body
+* [*] Added ability to change Site Title from My Site screen
+
 15.1
 -----
 * Fixes issue on Notifications tab when two screens were drawn on top of each other
@@ -33,7 +47,7 @@
 * [**] Block Editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.
 * [**] Block Editor: Update page templates to use recently added blocks
 * [**] Block editor: Fix bug in Free Photo Library which allowed selecting multiple images but only inserted one
- 
+
 14.8
 -----
 * Block editor: Prefill caption for image blocks when available on the Media library
@@ -49,7 +63,7 @@
 * Block editor: You can now crop, zoom in/out and rotate images from the device that are being inserted in a post.
 * Block editor: Remove Subscription Button from the Blog template since it didn't have an initial functionality and it is hard to configure for users.
 * Added reblog functionality
- 
+
 14.7
 -----
 * Block editor: Disable ripple effect for Slider control
@@ -59,7 +73,7 @@
 * Block editor: Fix a bug which caused to show URL settings modal randomly when changing the device orientation multiple times during the time Starter Page Template Preview is open
 * Block editor: "Choose media from device" now opens our built-in media picker instead of the OS default media picker.
 * Added user Gravatar to the Me menu in My Site.
-* Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area. 
+* Updated site details screen title to "My site", to avoid duplicating the title of the current site which is displayed in the screen's header area.
 
 14.6
 -----

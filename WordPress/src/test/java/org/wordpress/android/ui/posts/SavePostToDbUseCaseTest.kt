@@ -43,13 +43,15 @@ class SavePostToDbUseCaseTest {
     private lateinit var actionCaptor: KArgumentCaptor<Action<PostModel>>
     private val currentTime = "2019-08-09T10:01:03+00:00"
     private val postId = 1
+
     @Before
     fun setUp() {
         savePostToDbUseCase = SavePostToDbUseCase(
                 uploadUtils,
                 dateTimeUtils,
                 dispatcher,
-                pendingDraftsNotificationsUtils
+                pendingDraftsNotificationsUtils,
+                context
         )
         actionCaptor = argumentCaptor()
         whenever(dateTimeUtils.currentTimeInIso8601()).thenReturn(currentTime)
@@ -63,7 +65,7 @@ class SavePostToDbUseCaseTest {
         // Given
         setupPost(postHasChanges = true)
         // When
-        savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+        savePostToDbUseCase.savePostToDb(postRepository, siteModel)
         // Then
         verify(postRepository).savePostSnapshot()
         assertThat(actionCaptor.firstValue).isNotNull
@@ -76,7 +78,7 @@ class SavePostToDbUseCaseTest {
         // Given
         setupPost(postHasChanges = false)
         // When
-        savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+        savePostToDbUseCase.savePostToDb(postRepository, siteModel)
         // Then
         verify(postRepository, never()).savePostSnapshot()
         assertThat(actionCaptor.allValues).isEmpty()
@@ -95,7 +97,7 @@ class SavePostToDbUseCaseTest {
             // Given
             setupPost(userCanPublish = false, postStatus = postStatus)
             // When
-            savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+            savePostToDbUseCase.savePostToDb(postRepository, siteModel)
             // Then
             assertThat(postModel.status).isEqualTo(PENDING.toString())
         }
@@ -111,7 +113,7 @@ class SavePostToDbUseCaseTest {
             // Given
             setupPost(userCanPublish = false, postStatus = postStatus)
             // When
-            savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+            savePostToDbUseCase.savePostToDb(postRepository, siteModel)
             // Then
             assertThat(postModel.status).isEqualTo(postStatus.toString())
         }
@@ -131,7 +133,7 @@ class SavePostToDbUseCaseTest {
             // Given
             setupPost(userCanPublish = true, postStatus = postStatus)
             // When
-            savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+            savePostToDbUseCase.savePostToDb(postRepository, siteModel)
             // Then
             assertThat(postModel.status).isEqualTo(postStatus.toString())
         }
@@ -142,7 +144,7 @@ class SavePostToDbUseCaseTest {
         // Given
         setupPost(postStatus = PUBLISHED)
         // When
-        savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+        savePostToDbUseCase.savePostToDb(postRepository, siteModel)
         // Then
         verify(pendingDraftsNotificationsUtils).cancelPendingDraftAlarms(context, postId)
     }
@@ -153,7 +155,7 @@ class SavePostToDbUseCaseTest {
         setupPost(postStatus = DRAFT)
         whenever(postRepository.dateLocallyChanged).thenReturn(currentTime)
         // When
-        savePostToDbUseCase.savePostToDb(context, postRepository, siteModel)
+        savePostToDbUseCase.savePostToDb(postRepository, siteModel)
         // Then
         verify(pendingDraftsNotificationsUtils).scheduleNextNotifications(
                 context,

@@ -12,29 +12,31 @@ include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
 include ':libs:login:WordPressLoginFlow'
+include ':libs:WordPressProcessors'
+include ':libs:WordPressAnnotations'
 
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
-include ':react-native-aztec'
-project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-aztec/android')
+include ':@wordpress_react-native-aztec'
+project(':@wordpress_react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
 
-include ':react-native-gutenberg-bridge'
-project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-gutenberg-bridge/android')
+include ':@wordpress_react-native-bridge'
+project(':@wordpress_react-native-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
 
 if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()) {
     include ':react-native-linear-gradient'
-    project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-linear-gradient/android')
+    project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-linear-gradient/android')
     include ':react-native-svg'
-    project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-svg/android')
+    project(':react-native-svg').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-svg/android')
     include ':react-native-aztec'
-    project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-aztec/android')
-    include ':react-native-recyclerview-list'
-    project(':react-native-recyclerview-list').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-recyclerview-list/android')
+    project(':react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
     include ':react-native-gutenberg-bridge'
-    project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/react-native-gutenberg-bridge/android')
+    project(':react-native-gutenberg-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
     include ':react-native-video'
-    project(':react-native-video').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/react-native-video/android-exoplayer')
+    project(':react-native-video').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-video/android-exoplayer')
     include ':@react-native-community_slider'
-    project(':@react-native-community_slider').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/node_modules/@react-native-community/slider/src/android')
+    project(':@react-native-community_slider').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/@react-native-community/slider/src/android')
+    include ':react-native-get-random-values'
+    project(':react-native-get-random-values').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-get-random-values/android')
 }
