@@ -2305,6 +2305,7 @@
     <string name="photo_picker_photo_or_video_title">Choose media</string>
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
+    <string name="photo_picker_choose_file">Choose from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>

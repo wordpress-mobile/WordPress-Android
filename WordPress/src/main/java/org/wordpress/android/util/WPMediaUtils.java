@@ -231,6 +231,11 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
+    public static void launchFileLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
+                RequestCodes.FILE_LIBRARY);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
@@ -244,6 +249,16 @@ public class WPMediaUtils {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*"});
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_media));
+    }
+
+    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*", "audio/*", "application/*"});
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
