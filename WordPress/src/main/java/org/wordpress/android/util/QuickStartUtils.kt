@@ -239,7 +239,12 @@ class QuickStartUtils {
                 AppPrefs.setQuickStartNoticeRequired(true)
             } else {
                 if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
-                    val nextTask = getNextUncompletedQuickStartTask(quickStartStore, siteId, task.taskType)
+                    val nextTask =
+                            getNextUncompletedQuickStartTaskForReminderNotification(
+                                    quickStartStore,
+                                    siteId,
+                                    task.taskType
+                            )
                     if (nextTask != null) {
                         startQuickStartReminderTimer(context, nextTask)
                     }
@@ -345,7 +350,7 @@ class QuickStartUtils {
          * if no uncompleted task of taskType remain it tries to find and return uncompleted task of other task type
          */
         @JvmStatic
-        fun getNextUncompletedQuickStartTask(
+        fun getNextUncompletedQuickStartTaskForReminderNotification(
             quickStartStore: QuickStartStore,
             siteId: Long,
             taskType: QuickStartTaskType
@@ -370,6 +375,47 @@ class QuickStartUtils {
             }
 
             return nextTask
+        }
+
+        /**
+         * This method tries to return the next uncompleted task from complete tasks pool
+         */
+        @JvmStatic
+        fun getNextUncompletedQuickStartTask(
+            quickStartStore: QuickStartStore,
+            siteId: Long,
+            taskType: QuickStartTaskType
+        ): QuickStartTask? {
+            // get all the uncompleted tasks for all task types
+            val uncompletedTasks = ArrayList<QuickStartTask>()
+            QuickStartTaskType.values().forEach { type ->
+                if (type != UNKNOWN) {
+                    uncompletedTasks.addAll(quickStartStore.getUncompletedTasksByType(siteId, type))
+                }
+            }
+            uncompletedTasks.sortBy { it.order }
+
+            // Looks like we completed all the tasks. Nothing in the pipeline!
+            if (uncompletedTasks.isEmpty()) {
+                return null
+            }
+
+            // Only one task remaining, no need for extra logic.
+            if (uncompletedTasks.size == 1) {
+                return uncompletedTasks.first()
+            }
+
+            // if we have not skipped a task yet, return the first available task from the list
+            val lastSkippedTask = AppPrefs.getLastSkippedQuickStartTask()
+                    ?: return uncompletedTasks.first()
+
+            // look for a task that follows the one we skipped
+            val taskThatFollowsSkippedOne = uncompletedTasks.firstOrNull {
+                it.order > lastSkippedTask.order
+            }
+
+            // if we reached the end of the list (no tasks after skipped one) return task from the top of the list
+            return taskThatFollowsSkippedOne ?: uncompletedTasks.first()
         }
     }
 }
