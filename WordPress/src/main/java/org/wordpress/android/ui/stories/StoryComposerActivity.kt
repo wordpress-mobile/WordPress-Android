@@ -27,8 +27,6 @@ import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
@@ -48,7 +46,6 @@ import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListen
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
-import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
 import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
@@ -93,7 +90,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase
     @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
@@ -149,11 +145,21 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         val postEditorAnalyticsSession =
-                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
+                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)
-        viewModel.start(editPostRepository, LocalId(localPostId), intent, postEditorAnalyticsSession,notificationType )
+
+        site?.let {
+            viewModel.start(
+                    it,
+                    editPostRepository,
+                    LocalId(localPostId),
+                    intent,
+                    postEditorAnalyticsSession,
+                    notificationType
+            )
+        }
 
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
 
@@ -195,7 +201,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun onDestroy() {
         editorMedia.cancelAddMediaToEditorActions()
-        postEditorAnalyticsSession?.end()
         super.onDestroy()
     }
 
@@ -384,9 +389,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStoryDiscarded() {
-        // delete empty post from database
-        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-        postEditorAnalyticsSession?.setOutcome(CANCEL)
+        viewModel.onStoryDiscarded()
     }
 
     private fun showPrepublishingBottomSheet() {
