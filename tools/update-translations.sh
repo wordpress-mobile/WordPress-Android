@@ -21,6 +21,7 @@ base_url="http://translate.wordpress.org/projects/apps/android/dev"
 
 if [ -n "$BUILD_TYPE" ]; then 
     base_url="https://translate.wordpress.com/projects/wporg/apps/android";
+    LANG_FILE="${SCRIPT_DIR}/../tools/review-language-codes.csv"
 fi
 
 if [ "$BUILD_FILTER" == "review" ]; then 
