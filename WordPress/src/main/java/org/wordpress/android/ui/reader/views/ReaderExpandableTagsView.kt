@@ -42,10 +42,11 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
-        addOverflowIndicatorChip()
     }
 
     fun loadTags(tags: ReaderTagList) {
+        removeAllViews()
+        addOverflowIndicatorChip()
         addTagChips(tags)
         expandLayout(false)
     }
@@ -67,22 +68,18 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     private fun addTagChips(tags: List<ReaderTag>) {
         tags.forEachIndexed { index, tag ->
-            findViewWithTag<Chip>(tag.tagSlug) ?: createTagChip(tag, index)
+            val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val chip = inflater.inflate(
+                    R.layout.reader_expandable_tags_view_chip,
+                    this,
+                    false
+            ) as Chip
+            chip.tag = tag.tagSlug
+            chip.text = tag.tagTitle
+            chip.setOnClickListener { // TODO - set click listener
+            }
+            addView(chip, index)
         }
-    }
-
-    private fun createTagChip(tag: ReaderTag, index: Int) {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val chip = inflater.inflate(
-                R.layout.reader_expandable_tags_view_chip,
-                this,
-                false
-        ) as Chip
-        chip.tag = tag.tagSlug
-        chip.text = tag.tagTitle
-        chip.setOnClickListener { // TODO - set click listener
-        }
-        addView(chip, index)
     }
 
     private fun expandLayout(isChecked: Boolean) {
