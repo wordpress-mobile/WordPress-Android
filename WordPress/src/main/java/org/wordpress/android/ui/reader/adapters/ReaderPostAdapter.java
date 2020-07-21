@@ -341,7 +341,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (success) {
-            renderTagHeader(currentTag, tagHolder, false, true);
+            renderTagHeader(currentTag, tagHolder, false, false);
         }
     }
 
