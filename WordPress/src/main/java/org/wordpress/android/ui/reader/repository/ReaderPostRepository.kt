@@ -91,6 +91,7 @@ class ReaderPostRepository(
                 }
                 is PostLikeFailure -> {
                     _communicationChannel.postValue(Event(Failure(event)))
+                    reloadPosts()
                 }
                 is PostLikeUnChanged -> {
                     // Unused

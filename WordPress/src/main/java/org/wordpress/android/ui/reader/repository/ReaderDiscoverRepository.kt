@@ -87,6 +87,7 @@ class ReaderDiscoverRepository constructor(
                 }
                 is PostLikeFailure -> {
                     _communicationChannel.postValue(Event(Failure(event)))
+                    reloadPosts()
                 }
                 is PostLikeUnChanged -> { }
             }
