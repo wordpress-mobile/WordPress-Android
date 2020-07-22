@@ -15,7 +15,7 @@
     <attr name="wpColorWarningLight" format="reference|color" />
     <attr name="wpColorActionModeIcon" format="reference|color" />
 
-    <attr name="wpColorSecondarySurface" format="reference|color" />
+    <attr name="wpColorSurfaceSecondary" format="reference|color" />
 
     <!-- Gutenberg colors-->
     <attr name="colorGutenbergDivider" format="reference|color" />
