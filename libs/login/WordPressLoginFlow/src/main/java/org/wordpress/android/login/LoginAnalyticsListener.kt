@@ -4,7 +4,7 @@ import java.util.Locale
 
 interface LoginAnalyticsListener {
     fun trackAnalyticsSignIn(isWpcomLogin: Boolean)
-    fun trackCreatedAccount(username: String?, email: String?)
+    fun trackCreatedAccount(username: String?, email: String?, source: CreatedAccountSource)
     fun trackEmailFormViewed()
     fun trackInsertedInvalidUrl()
     fun trackLoginAccessed()
