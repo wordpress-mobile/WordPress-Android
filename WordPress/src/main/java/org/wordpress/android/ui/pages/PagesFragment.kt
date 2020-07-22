@@ -458,10 +458,11 @@ class PagesFragment : Fragment() {
 
         mlpViewModel.isModalLayoutPickerShowing.observe(viewLifecycleOwner, Observer { event: Event<Boolean> ->
             event.applyIfNotHandled {
-                var mlpFragment = activity.supportFragmentManager.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
+                val fm = activity.supportFragmentManager
+                var mlpFragment = fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG) as ModalLayoutPickerFragment?
                 if (this && mlpFragment == null) {
                     mlpFragment = ModalLayoutPickerFragment()
-                    mlpFragment.show(activity.supportFragmentManager, MODAL_LAYOUT_PICKER_TAG)
+                    mlpFragment.show(fm, MODAL_LAYOUT_PICKER_TAG)
                 } else if (!this && mlpFragment != null) {
                     mlpFragment.dismiss()
                 }
