@@ -162,8 +162,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
-
-        startObserving()
+        setupEditorMediaObserver()
     }
 
     override fun onLoadFromIntent(intent: Intent) {
@@ -244,7 +243,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return true
     }
 
-    fun handleMediaPickerIntentData(data: Intent) {
+    private fun handleMediaPickerIntentData(data: Intent) {
         // TODO move this to EditorMedia
         val ids = ListUtils.fromLongArray(
                 data.getLongArrayExtra(
@@ -258,7 +257,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
-    private fun startObserving() {
+    private fun setupEditorMediaObserver() {
         editorMedia.uiState.observe(this,
                 Observer { uiState: AddMediaToPostUiState? ->
                     if (uiState != null) {
@@ -291,20 +290,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     contentIfNotHandled?.show(this)
                 }
         )
-    }
-
-    private fun saveInitialPost() {
-        editPostRepository.set {
-            val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(PostStatus.DRAFT.toString())
-            post
-        }
-        editPostRepository.savePostSnapshot()
-        // this is an artifact to be able to call savePostToDb()
-        editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
-        site?.let {
-            savePostToDbUseCase.savePostToDb(editPostRepository, it)
-        }
     }
 
     // EditorMediaListener
