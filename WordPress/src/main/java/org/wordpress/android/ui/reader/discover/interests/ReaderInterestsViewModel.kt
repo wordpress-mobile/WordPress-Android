@@ -65,7 +65,7 @@ class ReaderInterestsViewModel @Inject constructor(
                 is RemoteRequestFailure -> {
                     GenericErrorUiState
                 }
-                else -> {
+                else -> { // TODO - refactor ReaderRepositoryCommunication to remove else
                     null
                 }
             }

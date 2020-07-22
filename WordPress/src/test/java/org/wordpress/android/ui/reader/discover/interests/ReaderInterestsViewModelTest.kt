@@ -27,7 +27,11 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.GenericErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
@@ -332,6 +336,40 @@ class ReaderInterestsViewModelTest {
             // Then
             assertThat(uiStates.size).isEqualTo(2)
             assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `network error shown when internet access not available`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as ConnectionErrorUiState)
+            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.no_network_message)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `error shown on remote request failure`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
+
+            // When
+            initViewModel()
+
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(GenericErrorUiState::class.java)
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value as GenericErrorUiState)
+            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+            assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.reader_error_generic_title)
         }
 
     private fun initViewModel() = viewModel.start(parentViewModel)
