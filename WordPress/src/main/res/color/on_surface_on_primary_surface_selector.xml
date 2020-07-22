@@ -2,8 +2,8 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:color="?attr/colorSurface" android:state_checked="true" />
-    <item android:color="?attr/colorSurface" android:state_pressed="true" />
+    <item android:color="?attr/colorOnPrimarySurface" android:state_checked="true" />
+    <item android:color="?attr/colorOnPrimarySurface" android:state_pressed="true" />
     <item android:color="?attr/colorOnSurface" />
 
 </selector>
