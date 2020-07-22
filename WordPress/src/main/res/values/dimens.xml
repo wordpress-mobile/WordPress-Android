@@ -49,7 +49,7 @@
     <dimen name="media_settings_margin_tablet_large">96dp</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
-    <item name="media_grid_item_ratio" type="string" format="string">3:2</item>
+    <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
