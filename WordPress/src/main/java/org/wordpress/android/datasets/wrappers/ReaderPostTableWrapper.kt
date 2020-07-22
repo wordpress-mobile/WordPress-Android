@@ -9,4 +9,6 @@ import javax.inject.Inject
 class ReaderPostTableWrapper @Inject constructor() {
     fun getBlogPost(blogId: Long, postId: Long, excludeTextColumn: Boolean): ReaderPost? =
             ReaderPostTable.getBlogPost(blogId, postId, excludeTextColumn)
+
+    fun isPostFollowed(post: ReaderPost): Boolean = ReaderPostTable.isPostFollowed(post)
 }
