@@ -6,7 +6,8 @@ public enum ReaderTagType {
     BOOKMARKED,
     RECOMMENDED,
     CUSTOM_LIST,
-    SEARCH;
+    SEARCH,
+    INTERESTS;
 
     private static final int INT_DEFAULT = 0;
     private static final int INT_FOLLOWED = 1;
@@ -14,6 +15,7 @@ public enum ReaderTagType {
     private static final int INT_CUSTOM_LIST = 3;
     private static final int INT_SEARCH = 4;
     private static final int INT_BOOKMARKED = 5;
+    private static final int INT_INTERESTS = 6;
 
 
     public static ReaderTagType fromInt(int value) {
@@ -28,6 +30,8 @@ public enum ReaderTagType {
                 return SEARCH;
             case INT_BOOKMARKED:
                 return BOOKMARKED;
+            case INT_INTERESTS:
+                return INTERESTS;
             default:
                 return DEFAULT;
         }
@@ -45,6 +49,8 @@ public enum ReaderTagType {
                 return INT_SEARCH;
             case BOOKMARKED:
                 return INT_BOOKMARKED;
+            case INTERESTS:
+                return INT_INTERESTS;
             case DEFAULT:
             default:
                 return INT_DEFAULT;
