@@ -185,7 +185,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private FloatingActionButton mFloatingActionButton;
     private WPTooltipView mFabTooltip;
     private static final String MAIN_BOTTOM_SHEET_TAG = "MAIN_BOTTOM_SHEET_TAG";
-    private static final String MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG";
     private final Handler mHandler = new Handler();
 
     @Inject AccountStore mAccountStore;
@@ -483,10 +482,12 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 FragmentManager fm = getSupportFragmentManager();
                 if (fm != null) {
                     ModalLayoutPickerFragment mlpFragment =
-                            (ModalLayoutPickerFragment) fm.findFragmentByTag(MODAL_LAYOUT_PICKER_TAG);
+                            (ModalLayoutPickerFragment) fm
+                                    .findFragmentByTag(ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
                     if (isShowing && mlpFragment == null) {
                         mlpFragment = new ModalLayoutPickerFragment();
-                        mlpFragment.show(getSupportFragmentManager(), MODAL_LAYOUT_PICKER_TAG);
+                        mlpFragment
+                                .show(getSupportFragmentManager(), ModalLayoutPickerFragment.MODAL_LAYOUT_PICKER_TAG);
                     } else if (!isShowing && mlpFragment != null) {
                         mlpFragment.dismiss();
                     }
