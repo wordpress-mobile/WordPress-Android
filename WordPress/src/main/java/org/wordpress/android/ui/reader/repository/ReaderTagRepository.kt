@@ -12,9 +12,7 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.usecases.FetchInterestTagsUseCase
-import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
@@ -27,16 +25,13 @@ import javax.inject.Named
 class ReaderTagRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private val fetchInterestTagUseCase: FetchInterestTagsUseCase,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val fetchInterestTagUseCase: FetchInterestTagsUseCase
 ) {
     private val mutableRecommendedInterests = MutableLiveData<ReaderTagList>()
     private val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
 
     suspend fun getInterests(): ReaderRepositoryCommunication {
-        return if (!networkUtilsWrapper.isNetworkAvailable()) {
-            NetworkUnavailable
-        } else withContext(ioDispatcher) {
+        return withContext(ioDispatcher) {
             fetchInterestTagUseCase.fetch()
         }
     }
