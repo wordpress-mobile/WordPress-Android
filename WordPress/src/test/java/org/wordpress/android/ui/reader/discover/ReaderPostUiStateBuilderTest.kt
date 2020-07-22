@@ -237,7 +237,7 @@ class ReaderPostUiStateBuilderTest {
             // Act
             val uiState = mapPostToUiState(post)
             // Assert
-            assertThat(uiState.fullVideoUrl).isNull()
+            assertThat(uiState.videoOverlayVisibility).isFalse()
         }
     }
     // endregion
