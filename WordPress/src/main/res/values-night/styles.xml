@@ -26,6 +26,7 @@
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+        <item name="wpColorSecondarySurface">@color/background_dark_elevated</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
         <item name="toolbarIconHighlightColor">?attr/colorPrimary</item>

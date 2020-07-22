@@ -44,6 +44,7 @@
         <item name="wpColorAppBar">@color/primary</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
+        <item name="wpColorSecondarySurface">@color/neutral_5</item>
 
         <item name="colorGutenbergDivider">@color/wp_grey_lighten_30</item>
         <item name="colorGutenbergBackground">@android:color/white</item>
