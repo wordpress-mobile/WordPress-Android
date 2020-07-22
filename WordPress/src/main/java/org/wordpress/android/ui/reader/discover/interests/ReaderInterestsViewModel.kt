@@ -51,20 +51,23 @@ class ReaderInterestsViewModel @Inject constructor(
     private fun loadInterests() {
         updateUiState(LoadingUiState)
         viewModelScope.launch {
-            val result = readerTagRepository.getInterests()
-
-            val newUiState: UiState? = if (result is SuccessWithData<*>) {
-                val tags = result.data as ReaderTagList
-                ContentUiState(
-                    interestsUiState = transformToInterestsUiState(tags),
-                    interests = tags
-                )
-            } else if (result is NetworkUnavailable) {
-                ConnectionErrorUiState
-            } else if (result is RemoteRequestFailure) {
-                GenericErrorUiState
-            } else {
-                null
+            val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
+                is SuccessWithData<*> -> {
+                    val tags = result.data as ReaderTagList
+                    ContentUiState(
+                        interestsUiState = transformToInterestsUiState(tags),
+                        interests = tags
+                    )
+                }
+                is NetworkUnavailable -> {
+                    ConnectionErrorUiState
+                }
+                is RemoteRequestFailure -> {
+                    GenericErrorUiState
+                }
+                else -> {
+                    null
+                }
             }
 
             newUiState?.let {
