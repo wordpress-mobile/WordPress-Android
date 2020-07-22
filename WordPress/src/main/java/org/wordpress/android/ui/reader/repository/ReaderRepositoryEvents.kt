@@ -7,11 +7,11 @@ sealed class ReaderRepositoryEvent {
         val isAskingToLike: Boolean,
         val wpComUserId: Long
     ) : ReaderRepositoryEvent() {
-        data class PostLikeSuccess(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+        class PostLikeSuccess(postId: Long,  blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-        data class PostLikeFailure(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+        class PostLikeFailure(postId: Long,  blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
-        data class PostLikeUnChanged(postId: Long, blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
+        class PostLikeUnChanged(postId: Long,  blogId: Long, isAskingToLike: Boolean, wpComUserId: Long) :
                 PostLikeEnded(postId, blogId, isAskingToLike, wpComUserId)
     }
 }
