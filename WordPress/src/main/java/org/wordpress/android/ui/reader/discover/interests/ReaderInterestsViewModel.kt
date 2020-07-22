@@ -26,7 +26,6 @@ import javax.inject.Inject
 class ReaderInterestsViewModel @Inject constructor(
     private val readerTagRepository: ReaderTagRepository
 ) : ViewModel() {
-    private var isStarted = false
     private lateinit var parentViewModel: ReaderViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
@@ -34,11 +33,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun start(parentViewModel: ReaderViewModel) {
         this.parentViewModel = parentViewModel
-        if (isStarted) {
-            return
-        }
         loadUserTags()
-        isStarted = true
     }
 
     private fun loadUserTags() {
