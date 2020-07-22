@@ -188,7 +188,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
@@ -370,7 +369,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2045,8 +2043,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
                                 isUnsupportedBlockEditorEnabled,
-                                mGutenbergMentionsFeatureConfig.isEnabled(),
-                                mModalLayoutPickerFeatureConfig.isEnabled()
+                                mGutenbergMentionsFeatureConfig.isEnabled()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

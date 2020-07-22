@@ -90,7 +90,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_ENABLE_MENTIONS_FLAG = "param_enable_mentions_flag";
     private static final String ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED =
             "param_site_is_unsupported_block_editor_enabled";
-    private static final String ARG_ENABLE_MODAL_LAYOUT_PICKER = "param_enable_modal_layout_picker";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -139,8 +138,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       String userAgent,
                                                       boolean tenorEnabled,
                                                       boolean isUnsupportedBlockEditorEnabled,
-                                                      boolean enableMentionsFlag,
-                                                      boolean isModalLayoutPickerEnabled) {
+                                                      boolean enableMentionsFlag) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -160,7 +158,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putBoolean(ARG_ENABLE_MENTIONS_FLAG, enableMentionsFlag);
         args.putBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED, isUnsupportedBlockEditorEnabled);
-        args.putBoolean(ARG_ENABLE_MODAL_LAYOUT_PICKER, isModalLayoutPickerEnabled);
         fragment.setArguments(args);
         return fragment;
     }
@@ -264,7 +261,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             Bundle editorTheme = getArguments().getBundle(ARG_EDITOR_THEME);
             boolean siteJetpackIsConnected = getArguments().getBoolean(ARG_SITE_IS_UNSUPPORTED_BLOCK_EDITOR_ENABLED);
             boolean enableMentionsFlag = getArguments().getBoolean(ARG_ENABLE_MENTIONS_FLAG);
-            boolean isModalLayoutPickerEnabled = getArguments().getBoolean(ARG_ENABLE_MODAL_LAYOUT_PICKER);
 
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -278,8 +274,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             isSiteUsingWpComRestApi,
                             editorTheme,
                             siteJetpackIsConnected,
-                            enableMentionsFlag,
-                            isModalLayoutPickerEnabled);
+                            enableMentionsFlag);
             gutenbergContainerFragment.setRetainInstance(true);
             fragmentTransaction.add(gutenbergContainerFragment, GutenbergContainerFragment.TAG);
             fragmentTransaction.commitNow();
