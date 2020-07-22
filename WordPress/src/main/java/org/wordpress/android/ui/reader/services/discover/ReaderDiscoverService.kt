@@ -6,11 +6,10 @@ import android.content.Intent
 import android.os.IBinder
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASKS
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.LocaleManager
-import java.util.EnumSet
 
 /**
  * Service which updates data for discover tab in Reader, relies on EventBus to notify of changes.
@@ -37,9 +36,9 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (intent != null && intent.hasExtra(ARG_DISCOVER_TASKS)) {
-            val tasks = intent.getSerializableExtra(ARG_DISCOVER_TASKS) as EnumSet<DiscoverTasks>
-            readerDiscoverLogic.performTasks(tasks, null)
+        if (intent != null && intent.hasExtra(ARG_DISCOVER_TASK)) {
+            val task = intent.getSerializableExtra(ARG_DISCOVER_TASK) as DiscoverTasks
+            readerDiscoverLogic.performTasks(task, null)
         }
         return START_NOT_STICKY
     }

@@ -8,7 +8,6 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.LocaleManager
-import java.util.EnumSet
 
 class ReaderDiscoverJobService : JobService(), ServiceCompletionListener {
     private lateinit var readerDiscoverLogic: ReaderDiscoverLogic
@@ -17,16 +16,12 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener {
         super.attachBaseContext(LocaleManager.setLocale(newBase))
     }
 
-    override fun onStartJob(params: JobParameters?): Boolean {
+    override fun onStartJob(params: JobParameters): Boolean {
         AppLog.i(READER, "reader discover job service > started")
-        if (params?.extras?.containsKey(ReaderDiscoverServiceStarter.ARG_DISCOVER_TASKS) == true) {
-            val tmp = params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASKS] as IntArray
-            val tasks = EnumSet.noneOf(DiscoverTasks::class.java)
-            for (i in tmp) {
-                tasks.add(DiscoverTasks.values()[i])
-            }
-            readerDiscoverLogic.performTasks(tasks, params)
-        }
+
+        val task = DiscoverTasks.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK] as Int)]
+
+        readerDiscoverLogic.performTasks(task, params)
         return true
     }
 

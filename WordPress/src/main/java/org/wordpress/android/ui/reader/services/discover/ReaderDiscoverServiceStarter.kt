@@ -13,32 +13,25 @@ import org.wordpress.android.JobServiceId
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import java.util.EnumSet
 
 /*
 * This class provides a way to decide which kind of Service to start, depending on the platform we're running on.
 *
 */
 object ReaderDiscoverServiceStarter {
-    const val ARG_DISCOVER_TASKS = "discover_tasks"
+    const val ARG_DISCOVER_TASK = "discover_task"
 
-    fun startService(context: Context, tasks: EnumSet<DiscoverTasks>) {
+    fun startService(context: Context, task: DiscoverTasks) {
         if (VERSION.SDK_INT < VERSION_CODES.O) {
-            if (tasks.size == 0) {
-                return
-            }
             val intent = Intent(context, ReaderDiscoverService::class.java)
-            intent.putExtra(ARG_DISCOVER_TASKS, tasks)
+            intent.putExtra(ARG_DISCOVER_TASK, task)
             context.startService(intent)
         } else {
             // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
             // it's preferable to use it only since enforcement in API 26 to not break any old behavior
-            val componentName = ComponentName(context, ReaderDiscoverService::class.java)
+            val componentName = ComponentName(context, ReaderDiscoverJobService::class.java)
             val extras = PersistableBundle()
-            extras.putIntArray(
-                    ARG_DISCOVER_TASKS,
-                    getIntArrayFromEnumSet(tasks)
-            )
+            extras.putInt(ARG_DISCOVER_TASK, task.ordinal)
             val jobInfo = Builder(JobServiceId.JOB_READER_DISCOVER_SERVICE_ID, componentName)
                     .setRequiresCharging(false)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
@@ -53,14 +46,5 @@ object ReaderDiscoverServiceStarter {
                 AppLog.e(READER, "reader discover service > job could not be scheduled")
             }
         }
-    }
-
-    private fun getIntArrayFromEnumSet(enumSet: EnumSet<DiscoverTasks>): IntArray {
-        val ordinals2 = IntArray(enumSet.size)
-        var index = 0
-        for (e in enumSet) {
-            ordinals2[index++] = e.ordinal
-        }
-        return ordinals2
     }
 }
