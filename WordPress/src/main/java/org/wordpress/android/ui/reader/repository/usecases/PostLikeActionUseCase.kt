@@ -58,5 +58,10 @@ class PostLikeActionUseCase @Inject constructor(
         continuations.run { clear() }
     }
 
-    data class PostLikeRequest(val postId: Long, val blogId: Long, val isAskingToLike: Boolean, val wpComUserId: Long) 
+    data class PostLikeRequest(
+        val postId: Long,
+        val blogId: Long,
+        val isAskingToLike: Boolean,
+        val wpComUserId: Long
+    )
 }
