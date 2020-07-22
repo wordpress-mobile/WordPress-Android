@@ -2,6 +2,10 @@ package org.wordpress.android.ui.stories
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -14,19 +18,27 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 
 class StoryComposerViewModel @Inject constructor(
     private val systemNotificationsTracker: SystemNotificationsTracker,
     private val saveInitialPostUseCase: SaveInitialPostUseCase,
+    private val savePostToDbUseCase: SavePostToDbUseCase,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val dispatcher: Dispatcher
-) :
-        ViewModel() {
+) : ViewModel(), LifecycleOwner {
+    private val lifecycleRegistry = LifecycleRegistry(this)
+    override fun getLifecycle(): Lifecycle = lifecycleRegistry
+
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
     private lateinit var postEditorAnalyticsSession: PostEditorAnalyticsSession
+
+    init {
+        lifecycleRegistry.currentState = Lifecycle.State.CREATED
+    }
 
     fun start(
         site: SiteModel,
@@ -58,6 +70,9 @@ class StoryComposerViewModel @Inject constructor(
         notificationType?.let {
             systemNotificationsTracker.trackTappedNotification(it)
         }
+
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
+        updateStoryPostWithChanges()
     }
 
     private fun setupPostEditorAnalyticsSession(postEditorAnalyticsSession: PostEditorAnalyticsSession?) {
@@ -90,8 +105,15 @@ class StoryComposerViewModel @Inject constructor(
         postEditorAnalyticsSession.setOutcome(CANCEL)
     }
 
+    private fun updateStoryPostWithChanges() {
+        editPostRepository.postChanged.observe(this, Observer {
+            savePostToDbUseCase.savePostToDb(editPostRepository, site)
+        })
+    }
+
     override fun onCleared() {
         super.onCleared()
+        lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
         postEditorAnalyticsSession.end()
     }
 }

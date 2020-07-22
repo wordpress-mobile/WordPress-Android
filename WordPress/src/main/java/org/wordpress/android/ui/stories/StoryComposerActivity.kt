@@ -164,7 +164,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
 
         startObserving()
-        updateStoryPostWithChanges()
     }
 
     override fun onLoadFromIntent(intent: Intent) {
@@ -306,12 +305,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         site?.let {
             savePostToDbUseCase.savePostToDb(editPostRepository, it)
         }
-    }
-
-    private fun updateStoryPostWithChanges() {
-        editPostRepository.postChanged.observe(this, Observer {
-            savePostToDbUseCase.savePostToDb(editPostRepository, requireNotNull(site))
-        })
     }
 
     // EditorMediaListener
