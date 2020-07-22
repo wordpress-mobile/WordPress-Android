@@ -44,9 +44,9 @@ class ReaderPostRepository(
     private var isStarted = false
     private var isDirty = false
 
-    private val _mutablePosts = ReactiveMutableLiveData<ReaderPostList>(
+    private val _posts = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActivePosts() }, onInactive = { onInactivePosts() })
-    val posts: LiveData<ReaderPostList> = _mutablePosts
+    val posts: LiveData<ReaderPostList> = _posts
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -133,7 +133,7 @@ class ReaderPostRepository(
 
             if (!existsInMemory) {
                 val result = getPostsForTagUseCase.get(readerTag)
-                _mutablePosts.postValue(result)
+                _posts.postValue(result)
             }
 
             if (refresh) {
@@ -146,7 +146,7 @@ class ReaderPostRepository(
     private fun reloadPosts() {
         launch {
             val result = getPostsForTagUseCase.get(readerTag)
-            _mutablePosts.postValue(result)
+            _posts.postValue(result)
         }
     }
 
