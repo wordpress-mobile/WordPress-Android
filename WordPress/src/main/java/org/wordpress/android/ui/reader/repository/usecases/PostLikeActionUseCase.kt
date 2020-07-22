@@ -58,27 +58,5 @@ class PostLikeActionUseCase @Inject constructor(
         continuations.run { clear() }
     }
 
-    data class PostLikeRequest(val postId: Long, val blogId: Long, val isAskingToLike: Boolean, val wpComUserId: Long) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-
-            if (other == null) return false
-
-            (other as PostLikeRequest).let {
-                if (it.postId == postId &&
-                        it.blogId == blogId &&
-                        it.isAskingToLike == isAskingToLike &&
-                        it.wpComUserId == wpComUserId)
-                    return true
-            }
-
-            return false
-        }
-
-        override fun hashCode(): Int {
-            var result = postId.hashCode()
-            result = 31 * result + blogId.hashCode()
-            return result
-        }
-    }
+    data class PostLikeRequest(val postId: Long, val blogId: Long, val isAskingToLike: Boolean, val wpComUserId: Long) 
 }
