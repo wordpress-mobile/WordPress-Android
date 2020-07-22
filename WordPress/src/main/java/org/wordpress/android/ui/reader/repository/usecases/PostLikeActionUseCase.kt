@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderPost
@@ -13,7 +14,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class PostLikeActionUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
@@ -33,10 +33,10 @@ class PostLikeActionUseCase @Inject constructor(
         val request = PostLikeRequest(post.postId, post.blogId, isAskingToLike, wpComUserId)
 
         if (continuations[request] != null) {
-            throw IllegalStateException("Perform Like action has already been sent for this request")
+            return PostLikeEnded.PostLikeUnChanged(post.postId, post.blogId, isAskingToLike, wpComUserId)
         }
 
-        return suspendCoroutine { cont ->
+        return suspendCancellableCoroutine { cont ->
             continuations[request] = cont
             ReaderPostActions.performLikeAction(post, isAskingToLike, wpComUserId)
         }
@@ -47,7 +47,7 @@ class PostLikeActionUseCase @Inject constructor(
     fun onPerformPostLikeEnded(event: ReaderRepositoryEvent) {
         if (event is PostLikeEnded) {
             val request = PostLikeRequest(event.postId, event.blogId, event.isAskingToLike, event.wpComUserId)
-            continuations[request]?.resume(event)
+            continuations[request]?.resume(event) // this just ends the method, passing the event back to the caller
             continuations[request] = null
         }
     }

@@ -73,15 +73,10 @@ class ReaderDiscoverRepository constructor(
         postLikeActionUseCase.stop()
     }
 
+    // todo - can change this to blogId, feedId, etc
     fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
         launch {
-            val event: ReaderRepositoryEvent
-            try {
-                event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)
-            } catch (e: IllegalStateException) {
-                return@launch
-            }
-            when (event) {
+            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
                 }

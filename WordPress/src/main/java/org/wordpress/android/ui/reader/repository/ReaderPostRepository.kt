@@ -79,13 +79,7 @@ class ReaderPostRepository(
     // todo: annmarie - Possibly implement a "LikeManager" that will encapsulate all the "UseCase".
     fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
         launch {
-            val event: ReaderRepositoryEvent
-            try {
-                event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)
-            } catch (e: IllegalStateException) {
-                return@launch
-            }
-            when (event) {
+            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
                 }
