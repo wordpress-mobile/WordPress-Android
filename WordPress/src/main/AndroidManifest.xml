@@ -640,6 +640,16 @@
             android:label="Reader Update JobService" />
 
         <service
+            android:name=".ui.reader.services.discover.ReaderDiscoverService"
+            android:exported="false"
+            android:label="Reader Discover Service" />
+        <service
+            android:name=".ui.reader.services.discover.ReaderDiscoverJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="false"
+            android:label="Reader Discover JobService" />
+
+        <service
             android:name=".ui.reader.services.post.ReaderPostService"
             android:exported="false"
             android:label="Reader Post Service" />
