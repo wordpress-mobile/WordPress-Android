@@ -63,6 +63,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -93,6 +94,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase
     @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StoryComposerViewModel
 
@@ -155,7 +157,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     it,
                     editPostRepository,
                     LocalId(localPostId),
-                    intent,
                     postEditorAnalyticsSession,
                     notificationType
             )
@@ -165,6 +166,20 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         startObserving()
         updateStoryPostWithChanges()
+        setupViewModelObservers()
+    }
+
+    private fun setupViewModelObservers() {
+        viewModel.trackEditorCreatedPost.observe(this, Observer { event->event.applyIfNotHandled {
+            site?.let {
+                analyticsUtilsWrapper.trackEditorCreatedPost(
+                        intent.action,
+                        intent,
+                        it,
+                        editPostRepository.getPost()
+                )
+            }
+        } })
     }
 
     override fun onLoadFromIntent(intent: Intent) {

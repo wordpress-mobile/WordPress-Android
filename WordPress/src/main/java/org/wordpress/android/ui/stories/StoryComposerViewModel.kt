@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.stories
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
@@ -14,13 +15,12 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class StoryComposerViewModel @Inject constructor(
     private val systemNotificationsTracker: SystemNotificationsTracker,
     private val saveInitialPostUseCase: SaveInitialPostUseCase,
-    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val dispatcher: Dispatcher
 ) :
         ViewModel() {
@@ -28,11 +28,13 @@ class StoryComposerViewModel @Inject constructor(
     private lateinit var site: SiteModel
     private lateinit var postEditorAnalyticsSession: PostEditorAnalyticsSession
 
+    private val _trackEditorCreatedPost = MutableLiveData<Event<Unit>>()
+    val trackEditorCreatedPost: LiveData<Event<Unit>> = _trackEditorCreatedPost
+
     fun start(
         site: SiteModel,
         editPostRepository: EditPostRepository,
         postId: LocalId,
-        intent: Intent,
         postEditorAnalyticsSession: PostEditorAnalyticsSession?,
         notificationType: NotificationType?
     ) {
@@ -43,12 +45,7 @@ class StoryComposerViewModel @Inject constructor(
             // Create a new post
             saveInitialPostUseCase.saveInitialPost(editPostRepository, site)
             // Bump post created analytics only once, first time the editor is opened
-            analyticsUtilsWrapper.trackEditorCreatedPost(
-                    intent.action,
-                    intent,
-                    site,
-                    editPostRepository.getPost()
-            )
+            _trackEditorCreatedPost.postValue(Event(Unit))
         } else {
             editPostRepository.loadPostByLocalPostId(postId.value)
         }
