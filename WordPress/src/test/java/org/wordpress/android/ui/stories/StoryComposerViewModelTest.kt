@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stories
 
-import android.content.Intent
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
@@ -28,7 +27,6 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
@@ -37,12 +35,10 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     @Mock lateinit var saveInitialPostUseCase: SaveInitialPostUseCase
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Mock lateinit var setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase
-    @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var site: SiteModel
-    @Mock lateinit var intent: Intent
 
     @InternalCoroutinesApi
     @Before
@@ -52,7 +48,6 @@ class StoryComposerViewModelTest : BaseUnitTest() {
                 saveInitialPostUseCase,
                 savePostToDbUseCase,
                 setUntitledStoryTitleIfTitleEmptyUseCase,
-                analyticsUtilsWrapper,
                 postEditorAnalyticsSessionWrapper,
                 dispatcher
         )
@@ -71,31 +66,31 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val expectedPostId = LocalId(0)
 
         // act
-        viewModel.start(site, editPostRepository, expectedPostId, intent, mock(), mock())
+        viewModel.start(site, editPostRepository, expectedPostId, mock(), mock())
 
         verify(saveInitialPostUseCase, times(1)).saveInitialPost(eq(editPostRepository), eq(site))
     }
 
     @Test
-    fun `if postId is 0 then track the post with the AnalyticsUtilsWrapper`() {
+    fun `if postId is 0 then trackEditorCreatedPost is not null`() {
         // arrange
         val expectedPostId = LocalId(0)
 
         // act
-        viewModel.start(site, editPostRepository, expectedPostId, intent, mock(), mock())
+        viewModel.start(site, editPostRepository, expectedPostId, mock(), mock())
 
-        verify(analyticsUtilsWrapper, times(1)).trackEditorCreatedPost(anyOrNull(), any(), any(), anyOrNull())
+        assertThat(viewModel.trackEditorCreatedPost.value).isNotNull
     }
 
     @Test
-    fun `if postId is not 0 then don't the post with the AnalyticsUtilsWrapper`() {
+    fun `if postId is not 0 then trackEditorCreatedPost is null`() {
         // arrange
         val expectedPostId = LocalId(2)
 
         // act
-        viewModel.start(site, editPostRepository, expectedPostId, intent, mock(), mock())
+        viewModel.start(site, editPostRepository, expectedPostId, mock(), mock())
 
-        verify(analyticsUtilsWrapper, times(0)).trackEditorCreatedPost(anyOrNull(), any(), any(), anyOrNull())
+        assertThat(viewModel.trackEditorCreatedPost.value).isNull()
     }
 
     @Test
@@ -104,7 +99,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val expectedPostId = LocalId(2)
 
         // act
-        viewModel.start(site, editPostRepository, expectedPostId, intent, mock(), mock())
+        viewModel.start(site, editPostRepository, expectedPostId, mock(), mock())
 
         verify(postStore, times(1)).getPostByLocalPostId(eq(expectedPostId.value))
     }
@@ -123,7 +118,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         ).thenReturn(mock())
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, postEditorAnalyticsSession, mock())
+        viewModel.start(site, editPostRepository, LocalId(0), postEditorAnalyticsSession, mock())
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(1)).getNewPostEditorAnalyticsSession(
@@ -140,7 +135,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val postEditorAnalyticsSession: PostEditorAnalyticsSession? = mock()
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, postEditorAnalyticsSession, mock())
+        viewModel.start(site, editPostRepository, LocalId(0), postEditorAnalyticsSession, mock())
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(0)).getNewPostEditorAnalyticsSession(
@@ -157,7 +152,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val notificationType: NotificationType? = mock()
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), notificationType)
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), notificationType)
 
         verify(systemNotificationsTracker, times(1)).trackTappedNotification(eq(notificationType!!))
     }
@@ -168,7 +163,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val notificationType: NotificationType? = null
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), notificationType)
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), notificationType)
 
         verify(systemNotificationsTracker, times(0)).trackTappedNotification(any())
     }
@@ -180,7 +175,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         val action = { _: PostModel -> true }
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), mock())
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
         editPostRepository.updateAsync(action, null)
 
         // assert
@@ -190,7 +185,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     @Test
     fun `If EditPostRepository is not updated then the savePostToDbUseCase should not be called`() {
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), mock())
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
 
         // assert
         verify(savePostToDbUseCase, times(0)).savePostToDb(any(), any())
@@ -199,7 +194,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     @Test
     fun `If onStoryDiscarded is called then the post is removed with the dispatcher`() {
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), mock())
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
         viewModel.onStoryDiscarded()
 
         // assert
@@ -207,9 +202,9 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `verify that triggering openPrepublishingBottomsheet will trigger the associated LiveData event`() {
+    fun `verify that triggering onStorySaveButtonPressed will trigger the associated openPrepublishingBottomSheet`() {
         // act
-        viewModel.openPrepublishingBottomSheet()
+        viewModel.onStorySaveButtonPressed()
 
         // assert
         assertThat(viewModel.openPrepublishingBottomSheet.value).isNotNull
@@ -218,7 +213,7 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     @Test
     fun `if onSubmitClicked then setUntitledStoryTitleIfTitleEmptyUseCase should be triggered`() {
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), mock())
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
         viewModel.onSubmitButtonClicked()
 
         // assert
@@ -227,13 +222,13 @@ class StoryComposerViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if onSubmitClicked then saveStory LiveData event should be triggered`() {
+    fun `if onSubmitClicked then submitButtonClicked LiveData event should be triggered`() {
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), intent, mock(), mock())
+        viewModel.start(site, editPostRepository, LocalId(0), mock(), mock())
         viewModel.onSubmitButtonClicked()
 
         // assert
-        assertThat(viewModel.saveStory.value).isNotNull
+        assertThat(viewModel.submitButtonClicked.value).isNotNull
     }
 
     @Test
