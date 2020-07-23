@@ -12,12 +12,16 @@ import javax.inject.Named
 class GetPostsForTagUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ReaderRepositoryDispatchingUseCase(ioDispatcher) {
-    suspend fun get(readerTag: ReaderTag): ReaderPostList =
+    suspend fun get(
+        readerTag: ReaderTag,
+        maxRows: Int = 0,
+        excludeTextColumns: Boolean = true
+    ): ReaderPostList =
             withContext(coroutineContext) {
                 ReaderPostTable.getPostsWithTag(
                         readerTag,
-                        MAX_ROWS,
-                        EXCLUDE_TEXT_COLUMN
+                        maxRows,
+                        excludeTextColumns
                 )
             }
 }
