@@ -57,6 +57,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -84,6 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StoryComposerViewModel
 
@@ -146,7 +148,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     it,
                     editPostRepository,
                     LocalId(localPostId),
-                    intent,
                     postEditorAnalyticsSession,
                     notificationType
             )
@@ -172,6 +173,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.saveStory.observe(this, Observer { event ->
             event.applyIfNotHandled {
                 processStorySaving()
+            }
+        })
+
+        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                site?.let {
+                    analyticsUtilsWrapper.trackEditorCreatedPost(
+                            intent.action,
+                            intent,
+                            it,
+                            editPostRepository.getPost()
+                    )
+                }
             }
         })
     }
