@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.AppCompatButton
 import org.wordpress.android.R
 import org.wordpress.android.util.DisplayUtils
@@ -118,7 +117,6 @@ class ActionableEmptyView : LinearLayout {
      */
     fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
         val params = layout.layoutParams as MarginLayoutParams
-
 
         if (isSearching) {
             params.width = MarginLayoutParams.MATCH_PARENT
