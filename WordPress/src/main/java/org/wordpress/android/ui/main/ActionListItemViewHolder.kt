@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.image.ImageManager
 
 class ActionListItemViewHolder(
@@ -19,9 +21,10 @@ class ActionListItemViewHolder(
     private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
     private val mediumTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
-    fun bind(action: CreateAction) {
+    fun bind(action: CreateAction, showQuickStartFocusPoint: Boolean = false) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
+        val actionRowContainer: ViewGroup = this.itemView.findViewById(R.id.action_row_container)
 
         if (action.iconRes > 0) {
             imageManager.load(actionIcon, action.iconRes)
@@ -51,6 +54,18 @@ class ActionListItemViewHolder(
                 action.onClickAction.invoke(action.actionType)
             }
             this.itemView.isClickable = true
+        }
+
+        if (showQuickStartFocusPoint) {
+            val focusPointSize = actionRowContainer.resources.getDimensionPixelOffset(
+                    dimen.quick_start_focus_point_size
+            )
+            val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
+            val horizontalOffset = (actionRowContainer.height - focusPointSize) / 2
+            QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                    actionRowContainer, actionTitle,
+                    verticalOffset, horizontalOffset
+            )
         }
     }
 }
