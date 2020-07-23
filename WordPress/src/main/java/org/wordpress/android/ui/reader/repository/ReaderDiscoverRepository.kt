@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -93,11 +94,21 @@ class ReaderDiscoverRepository constructor(
         return readerTag
     }
 
+    fun refreshPosts() {
+        Log.i(javaClass.simpleName, "***=> Made it to repo for a refresh")
+        launch {
+            val response = fetchPostsForTagUseCase.fetch(readerTag)
+            if (response != Success) _communicationChannel.postValue(Event(response))
+        }
+    }
+
     private fun onNewPosts(event: UpdatePostsEnded) {
+        Log.i(javaClass.simpleName, "***=> onNewPosts")
         reloadPosts()
     }
 
     private fun onChangedPosts(event: UpdatePostsEnded) {
+        Log.i(javaClass.simpleName, "***=> onChangedPosts")
         reloadPosts()
     }
 

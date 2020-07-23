@@ -76,6 +76,13 @@ class ReaderPostRepository(
         return readerTag
     }
 
+    fun refreshPosts() {
+        launch {
+            val response = fetchPostsForTagUseCase.fetch(readerTag)
+            if (response != Success) _communicationChannel.postValue(Event(response))
+        }
+    }
+
     // todo: annmarie - Possibly implement a "LikeManager" that will encapsulate all the "UseCase".
     fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
         launch {
