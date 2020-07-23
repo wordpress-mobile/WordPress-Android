@@ -1358,15 +1358,15 @@ class MySiteFragment : Fragment(),
     }
 
     @JvmOverloads
-    fun requestNextStepOfActiveQuickStartTask(keepActiveQuickStartTask: Boolean = false) {
+    fun requestNextStepOfActiveQuickStartTask(fireQuickStartEvent: Boolean = true) {
         if (!hasActiveQuickStartTask()) {
             return
         }
         removeQuickStartFocusPoint()
-        EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
-        if (!keepActiveQuickStartTask) {
-            clearActiveQuickStartTask()
+        if (fireQuickStartEvent) {
+            EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
         }
+        clearActiveQuickStartTask()
     }
 
     private fun clearActiveQuickStartTask() {
