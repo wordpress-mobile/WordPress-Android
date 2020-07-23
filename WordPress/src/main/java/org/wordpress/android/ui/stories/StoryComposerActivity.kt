@@ -166,12 +166,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
                 openPrepublishingBottomSheet()
             }
         })
 
-        viewModel.saveStory.observe(this, Observer { event ->
+        viewModel.submitButtonClicked.observe(this, Observer { event ->
             event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
                 processStorySaving()
             }
         })
@@ -397,12 +399,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
-        viewModel.openPrepublishingBottomSheet()
+        viewModel.onStorySaveButtonPressed()
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
-        analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
         viewModel.onSubmitButtonClicked()
     }
 }

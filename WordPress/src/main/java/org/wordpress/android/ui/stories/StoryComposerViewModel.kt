@@ -47,8 +47,8 @@ class StoryComposerViewModel @Inject constructor(
     private val _openPrepublishingBottomSheet = MutableLiveData<Event<Unit>>()
     val openPrepublishingBottomSheet: LiveData<Event<Unit>> = _openPrepublishingBottomSheet
 
-    private val _saveStory = MutableLiveData<Event<Unit>>()
-    val saveStory: LiveData<Event<Unit>> = _saveStory
+    private val _submitButtonClicked = MutableLiveData<Event<Unit>>()
+    val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
 
     init {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
@@ -136,13 +136,13 @@ class StoryComposerViewModel @Inject constructor(
         _mediaFilesUris.postValue(uriList)
     }
 
-    fun openPrepublishingBottomSheet() {
+    fun onStorySaveButtonPressed() {
         _openPrepublishingBottomSheet.postValue(Event(Unit))
     }
 
     fun onSubmitButtonClicked() {
         setUntitledStoryTitleIfTitleEmptyUseCase.setUntitledStoryTitleIfTitleEmpty(editPostRepository)
-        _saveStory.postValue(Event(Unit))
+        _submitButtonClicked.postValue(Event(Unit))
     }
 
     override fun onCleared() {
