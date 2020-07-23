@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Other
+import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Categories
+import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Layouts
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Subtitle
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Title
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType
@@ -40,14 +41,16 @@ class ModalLayoutPickerAdapter(context: Context) : Adapter<ModalLayoutPickerView
         when (holder) {
             is TitleItemViewHolder -> holder.bind(items[position] as Title)
             is SubtitleItemViewHolder -> holder.bind(items[position] as Subtitle)
-            is OtherItemViewHolder -> holder.bind(items[position] as Other)
+            is CategoriesItemViewHolder -> holder.bind(items[position] as Categories)
+            is LayoutsItemViewHolder -> holder.bind(items[position] as Layouts)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModalLayoutPickerViewHolder = when (viewType) {
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
-        ViewType.OTHER.id -> OtherItemViewHolder(parent)
+        ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent)
+        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 

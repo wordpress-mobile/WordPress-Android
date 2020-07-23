@@ -52,8 +52,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 
-        repeat(20) { // Demo Code: TO BE REMOVED
-            listItems.add(ModalLayoutPickerListItem.Other(R.string.mlp_empty_text))
+        listItems.add(ModalLayoutPickerListItem.Categories())
+
+        repeat(10) { // Demo Code: TO BE REMOVED
+            listItems.add(ModalLayoutPickerListItem.Layouts(" "))
         }
 
         _listItems.postValue(listItems)
@@ -78,6 +80,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * @param headerShouldBeVisible if true the header is shown and the title row hidden
      */
     fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
+        if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
         _isHeaderVisible.postValue(Event(headerShouldBeVisible))
         loadListItems(!headerShouldBeVisible)
     }

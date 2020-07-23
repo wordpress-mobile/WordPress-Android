@@ -50,16 +50,26 @@ class SubtitleItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 }
 
 /**
- * A dummy other list item view holder used to test the Modal Layout Picker list behavior
- * WILL BE REMOVED in next iterations
+ * Modal Layout Picker categories view holder
  */
-class OtherItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
+class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
         parent,
-        R.layout.modal_layout_picker_subtitle_row
+        R.layout.modal_layout_picker_categories_row
 ) {
-    private val text: TextView = itemView.findViewById(R.id.subtitle)
+    fun bind(item: ModalLayoutPickerListItem.Categories) {
+    }
+}
 
-    fun bind(item: ModalLayoutPickerListItem.Other) {
-        text.setText(item.labelRes)
+/**
+ * Modal Layout Picker layouts view holder
+ */
+class LayoutsItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
+        parent,
+        R.layout.modal_layout_picker_layouts_row
+) {
+    private val title: TextView = itemView.findViewById(R.id.title)
+
+    fun bind(item: ModalLayoutPickerListItem.Layouts) {
+        title.text = item.title
     }
 }

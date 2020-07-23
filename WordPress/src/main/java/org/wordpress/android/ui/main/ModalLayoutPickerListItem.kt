@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.main
 
 import androidx.annotation.StringRes
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.OTHER
+import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.CATEGORIES
+import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.LAYOUTS
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.SUBTITLE
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.TITLE
 
@@ -12,7 +13,8 @@ sealed class ModalLayoutPickerListItem(val type: ViewType) {
     enum class ViewType(val id: Int) {
         TITLE(0),
         SUBTITLE(1),
-        OTHER(2)
+        CATEGORIES(2),
+        LAYOUTS(3)
     }
 
     /**
@@ -29,9 +31,13 @@ sealed class ModalLayoutPickerListItem(val type: ViewType) {
     data class Subtitle(@StringRes val labelRes: Int) : ModalLayoutPickerListItem(SUBTITLE)
 
     /**
-     * A dummy other list item used to test the list behavior
-     * WILL BE REMOVED in next iterations
-     * @param labelRes the string resource that the lis item should render
+     * The categories row list item
      */
-    data class Other(@StringRes val labelRes: Int) : ModalLayoutPickerListItem(OTHER)
+    class Categories : ModalLayoutPickerListItem(CATEGORIES)
+
+    /**
+     * The layouts row list item
+     * @param title the layout title
+     */
+    data class Layouts(val title: String) : ModalLayoutPickerListItem(LAYOUTS)
 }

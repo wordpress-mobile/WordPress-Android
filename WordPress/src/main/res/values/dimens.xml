@@ -528,4 +528,14 @@
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
 
+    <!-- Modal Layout Picker Styles -->
+    bottom_sheet_handle_margin_top
+    <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
+    <dimen name="mlp_layouts_row_height">150dp</dimen>
+    <dimen name="mlp_layouts_title_start_margin">15dp</dimen>
+    <dimen name="mlp_bottom_shadow_height">5dp</dimen>
+    <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
+    <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
+    <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
+
 </resources>

@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.modal_layout_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
+import kotlinx.android.synthetic.main.modal_layout_picker_header.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.main.ModalLayoutPickerViewModel
@@ -48,25 +51,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = ModalLayoutPickerAdapter(requireActivity())
 
-        // View model binding
-
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
-                .get(ModalLayoutPickerViewModel::class.java)
-
-        viewModel.listItems.observe(this, Observer {
-            (dialog?.content_recycler_view?.adapter as? ModalLayoutPickerAdapter)?.update(it ?: listOf())
-        })
-
-        viewModel.isHeaderVisible.observe(this,
-                Observer { event: Event<Boolean> ->
-                    event.applyIfNotHandled {
-                        title.setVisible(this)
-                    }
-                }
-        )
-
-        // Event handling
-
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
              * We track the first row visibility to show/hide the header title accordingly
@@ -82,19 +66,46 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         backButton.setOnClickListener { viewModel.dismiss() }
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
+
+        setupViewModel()
     }
 
-    /**
-     * Overriding this method allows us to set the dialog to fill the screen
-     */
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
-        setOnShowListener { dialogInterface ->
+        fillTheScreen(this)
+        setStatusBarColor(this)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    private fun setupViewModel() {
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(ModalLayoutPickerViewModel::class.java)
+
+        viewModel.listItems.observe(this, Observer {
+            (dialog?.content_recycler_view?.adapter as? ModalLayoutPickerAdapter)?.update(it ?: listOf())
+        })
+
+        viewModel.isHeaderVisible.observe(this,
+                Observer { event: Event<Boolean> ->
+                    event.applyIfNotHandled {
+                        title.setVisible(this)
+                    }
+                }
+        )
+    }
+
+    private fun fillTheScreen(dialog: BottomSheetDialog) {
+        dialog.setOnShowListener { dialogInterface ->
             val bottomSheetDialog = dialogInterface as BottomSheetDialog
             val parentLayout =
                     bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             parentLayout?.let { it ->
                 val behaviour = BottomSheetBehavior.from(it)
                 setupFullHeight(it)
+                behaviour.skipCollapsed = true
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
             }
         }
@@ -106,8 +117,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         bottomSheet.layoutParams = layoutParams
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (requireActivity().applicationContext as WordPress).component().inject(this)
+    private fun setStatusBarColor(dialog: BottomSheetDialog) {
+        dialog.behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                WPActivityUtils.setLightStatusBar(activity?.window, newState == BottomSheetBehavior.STATE_EXPANDED)
+            }
+        })
     }
 }
