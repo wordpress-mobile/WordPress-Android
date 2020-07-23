@@ -276,6 +276,7 @@ class MySiteFragment : Fragment(),
                         .setNegativeButton(
                                 getString(R.string.quick_start_button_negative)
                         ) {
+                            AppPrefs.setLastSkippedQuickStartTask(taskToPrompt)
                             AnalyticsTracker.track(
                                     QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
                             )
