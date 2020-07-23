@@ -62,8 +62,8 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
                 is SuccessWithData<*> -> {
-                    val tags = (result.data as ReaderTagList).distinctBy { it.tagSlug }
-                    val distinctTags = ReaderTagList().apply { addAll(tags) }
+                    val tags = result.data as ReaderTagList
+                    val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
                     ContentUiState(
                         interestsUiState = transformToInterestsUiState(distinctTags),
                         interests = distinctTags
@@ -75,7 +75,7 @@ class ReaderInterestsViewModel @Inject constructor(
                 is RemoteRequestFailure -> {
                     GenericErrorUiState
                 }
-                else -> { // TODO - refactor ReaderRepositoryCommunication to remove else
+                else -> {
                     null
                 }
             }
