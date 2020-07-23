@@ -1469,11 +1469,6 @@ Language: he_IL
     <string name="open_mail">פתיחת דואר</string>
     <string name="next">הבא</string>
     <string name="enter_email_wordpress_com">התחברות ל-WordPress.com באמצעות כתובת אימייל כדי לנהל את האתרים שלך ב-WordPress.</string>
-    <string name="login_promo_text_jetpack">ניהול אתרים שמופעלים על ידי Jetpack מכל מקום - השירות של WordPress תמיד בהישג יד.</string>
-    <string name="login_promo_text_notifications">ההודעות שלך אתך בכל מקום - אפשר לראות תגובות ולייקים בזמן אמת.</string>
-    <string name="login_promo_text_anytime">אפשר לבדוק את העדכונים באתרים המועדפים עליך ולהצטרף לשיחה בכל מקום ובכל זמן.</string>
-    <string name="login_promo_text_realtime">ניתן לראות את הפעולות של קוראים מכל העולם באתר שלך - בזמן אמת.</string>
-    <string name="login_promo_text_onthego">עדכונים לאתר מהפארק. פרסום פוסט בבלוג מהאוטובוס. כתיבת תגובה מבית הקפה. השירות של WordPress אתך בכל מקום.</string>
     <string name="image_optimization_promo_desc">מיטוב התמונות מכווץ כעת תמונות להעלאה מהירה יותר.\n\nאפשר לשנות את האפשרות הזו בכל עת דרך הגדרות האתר.</string>
     <string name="image_optimization_promo_title">להפעיל את מיטוב התמונות?</string>
     <string name="leave_off">להשאיר מכובה</string>

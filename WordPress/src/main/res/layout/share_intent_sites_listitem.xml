@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layout_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_extra_large"
     android:layout_marginStart="@dimen/margin_extra_large"
     android:layout_marginTop="@dimen/margin_medium"
-    android:layout_marginEnd="@dimen/margin_extra_large"
-    android:layout_marginBottom="@dimen/margin_medium"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <include
-        layout="@layout/login_epilogue_sites_listitem"
-        android:layout_width="match_parent"
+        layout="@layout/base_site_listitem"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@+id/radio_selected"
-        tools:ignore="DuplicateIncludedIds" />
+        android:layout_weight="1" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/radio_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/margin_small_medium"
         android:layout_marginEnd="@dimen/margin_small_medium"
+        android:layout_marginStart="@dimen/margin_small_medium"
         android:clickable="false"
         android:focusableInTouchMode="false" />
 
-</RelativeLayout>
+</LinearLayout>

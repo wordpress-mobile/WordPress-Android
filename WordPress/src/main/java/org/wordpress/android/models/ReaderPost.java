@@ -11,6 +11,7 @@ import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DateTimeUtilsWrapper;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
@@ -769,6 +770,13 @@ public class ReaderPost {
     public java.util.Date getDisplayDate() {
         if (mDateDisplay == null) {
             mDateDisplay = DateTimeUtils.dateFromIso8601(this.mDatePublished);
+        }
+        return mDateDisplay;
+    }
+
+    public java.util.Date getDisplayDate(DateTimeUtilsWrapper dateTimeUtilsWrapper) {
+        if (mDateDisplay == null) {
+            mDateDisplay = dateTimeUtilsWrapper.dateFromIso8601(this.mDatePublished);
         }
         return mDateDisplay;
     }

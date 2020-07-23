@@ -98,7 +98,10 @@ def merge_strings(main_xml, extra_sections):
         add_section(main_root, insertion_point_index, section_name, new_elements)
     # make sure xml file ends with a newline
     main_root.tail = '\n'
-    xml_output_tree.write(main_xml, encoding='utf-8', xml_declaration=True)
+    xml_string = ('<?xml version="1.0" encoding="UTF-8"?>' + '\n' + 
+        ET.tostring(main_root, encoding='utf8').split('\n',1)[1])
+    with open(main_xml, 'wb') as xml_file:
+        xml_file.write(xml_string)
 
 def main():
     merge_strings(
