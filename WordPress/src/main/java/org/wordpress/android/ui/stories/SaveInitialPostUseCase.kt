@@ -5,6 +5,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import javax.inject.Inject
 
@@ -20,9 +21,15 @@ class SaveInitialPostUseCase @Inject constructor(
         }
         editPostRepository.savePostSnapshot()
         // this is an artifact to be able to call savePostToDb()
-        editPostRepository.getEditablePost()?.setPostFormat(StoryComposerActivity.POST_FORMAT_WP_STORY_KEY)
-        site?.let {
-            savePostToDbUseCase.savePostToDb(editPostRepository, it)
-        }
+        editPostRepository.updateAsync({ postModel ->
+            postModel.setPostFormat(StoryComposerActivity.POST_FORMAT_WP_STORY_KEY)
+            true
+        }, { _, result ->
+            if (result == UpdatePostResult.Updated) {
+                site?.let {
+                    savePostToDbUseCase.savePostToDb(editPostRepository, it)
+                }
+            }
+        })
     }
 }

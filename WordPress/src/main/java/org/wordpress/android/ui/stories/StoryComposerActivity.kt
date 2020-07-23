@@ -57,6 +57,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -84,6 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject internal lateinit var editPostRepository: EditPostRepository
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StoryComposerViewModel
 
@@ -146,7 +148,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     it,
                     editPostRepository,
                     LocalId(localPostId),
-                    intent,
                     postEditorAnalyticsSession,
                     notificationType
             )
@@ -165,13 +166,28 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
         viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
             event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
                 openPrepublishingBottomSheet()
             }
         })
 
-        viewModel.saveStory.observe(this, Observer { event ->
+        viewModel.submitButtonClicked.observe(this, Observer { event ->
             event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
                 processStorySaving()
+            }
+        })
+
+        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                site?.let {
+                    analyticsUtilsWrapper.trackEditorCreatedPost(
+                            intent.action,
+                            intent,
+                            it,
+                            editPostRepository.getPost()
+                    )
+                }
             }
         })
     }
@@ -383,12 +399,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
-        viewModel.openPrepublishingBottomSheet()
+        viewModel.onStorySaveButtonPressed()
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
-        analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
         viewModel.onSubmitButtonClicked()
     }
 }
