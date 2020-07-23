@@ -27,6 +27,7 @@ class ActionableEmptyView : LinearLayout {
     lateinit var layout: View
     lateinit var subtitle: WPTextView
     lateinit var title: WPTextView
+
     /**
      * Image shown at the bottom after the subtitle.
      *
@@ -116,13 +117,13 @@ class ActionableEmptyView : LinearLayout {
      * @param topMargin top margin in pixels to offset with other views (e.g. toolbar or tabs)
      */
     fun updateLayoutForSearch(isSearching: Boolean, topMargin: Int) {
-        val params: RelativeLayout.LayoutParams
+        val params = layout.layoutParams as MarginLayoutParams
+
 
         if (isSearching) {
-            params = RelativeLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT
-            )
+            params.width = MarginLayoutParams.MATCH_PARENT
+            params.height = MarginLayoutParams.WRAP_CONTENT
+
             layout.setPadding(
                     0,
                     context.resources.getDimensionPixelSize(R.dimen.margin_extra_extra_large),
@@ -133,10 +134,8 @@ class ActionableEmptyView : LinearLayout {
             image.visibility = View.GONE
             button.visibility = View.GONE
         } else {
-            params = RelativeLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT
-            )
+            params.width = MarginLayoutParams.MATCH_PARENT
+            params.height = MarginLayoutParams.MATCH_PARENT
             layout.setPadding(0, 0, 0, 0)
         }
 
