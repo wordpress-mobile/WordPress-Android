@@ -53,10 +53,11 @@ class ReaderInterestsViewModel @Inject constructor(
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
                 is SuccessWithData<*> -> {
-                    val tags = result.data as ReaderTagList
+                    val tags = (result.data as ReaderTagList).distinctBy { it.tagSlug }
+                    val distinctTags = ReaderTagList().apply { addAll(tags) }
                     ContentUiState(
-                        interestsUiState = transformToInterestsUiState(tags),
-                        interests = tags
+                        interestsUiState = transformToInterestsUiState(distinctTags),
+                        interests = distinctTags
                     )
                 }
                 is NetworkUnavailable -> {
@@ -104,7 +105,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
-            InterestUiState(interest.tagTitle)
+            InterestUiState(interest.tagTitle, interest.tagSlug)
         }
 
     private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
@@ -196,6 +197,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     data class InterestUiState(
         val title: String,
+        val slug: String,
         val isChecked: Boolean = false
     )
 
