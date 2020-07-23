@@ -29,7 +29,6 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.helpers.MediaFile
 
 class StoryComposerViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: StoryComposerViewModel
