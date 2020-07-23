@@ -206,7 +206,7 @@ public class WPMediaUtils {
                 // This error happens when the user tries to upload a file that's not allowed on their user plan.
                 // Unfortunately it still has the standard 400 error code so there is no other way to differentiate it.
                 if ("Sorry, this file type is not permitted for security reasons.".equals(error.message)) {
-                    return context.getString(R.string.media_error_not_allowed_on_free_plan, media.getFileExtension());
+                    return context.getString(R.string.media_error_file_not_allowed_on_free_plan);
                 } else {
                     return context.getString(R.string.error_generic_error);
                 }
