@@ -38,6 +38,7 @@ class WPMainActivityViewModelTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
+    @Mock lateinit var onQuickStartCompletedEventObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
 
@@ -73,6 +74,9 @@ class WPMainActivityViewModelTest {
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
                 onFeatureAnnouncementRequestedObserver
+        )
+        viewModel.completeBottomSheetQuickStartTask.observeForever(
+                onQuickStartCompletedEventObserver
         )
     }
 
@@ -162,6 +166,44 @@ class WPMainActivityViewModelTest {
         viewModel.onFabClicked(hasFullAccessToContent = true)
         assertThat(viewModel.createAction.value).isNull()
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `bottom sheet does not show quick start focus point by default`() {
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(hasFullAccessToContent = true)
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
+    }
+
+    @Test
+    fun `CREATE_NEW_POST action in bottom sheet with active Quick Start completes task and hides the focus point`() {
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(true)
+
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_POST)
+        verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
+
+        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
+    }
+
+    @Test
+    fun `actions that are not CREATE_NEW_POST will not complete quick start task`() {
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(true)
+
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_PAGE)
+        verify(onQuickStartCompletedEventObserver, never()).onChanged(anyOrNull())
+
+        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
     }
 
     @Test
