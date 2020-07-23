@@ -170,16 +170,18 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun setupViewModelObservers() {
-        viewModel.trackEditorCreatedPost.observe(this, Observer { event->event.applyIfNotHandled {
-            site?.let {
-                analyticsUtilsWrapper.trackEditorCreatedPost(
-                        intent.action,
-                        intent,
-                        it,
-                        editPostRepository.getPost()
-                )
+        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                site?.let {
+                    analyticsUtilsWrapper.trackEditorCreatedPost(
+                            intent.action,
+                            intent,
+                            it,
+                            editPostRepository.getPost()
+                    )
+                }
             }
-        } })
+        })
     }
 
     override fun onLoadFromIntent(intent: Intent) {
