@@ -411,19 +411,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getCreateAction().observe(this, createAction -> {
             switch (createAction) {
                 case CREATE_NEW_POST:
+                    // complete quick start task outside of QS process
                     if (getSelectedSite() != null) {
-                        QuickStartEvent event = null;
-                        if (getMySiteFragment() != null
-                            && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
-                            event = new QuickStartEvent(QuickStartTask.PUBLISH_POST);
-                        }
-
                         QuickStartUtils.completeTaskAndRemindNextOne(
                                 mQuickStartStore,
                                 QuickStartTask.PUBLISH_POST,
                                 mDispatcher,
                                 getSelectedSite(),
-                                event,
+                                null,
                                 this
                         );
                     }
@@ -435,19 +430,37 @@ public class WPMainActivity extends LocaleAwareActivity implements
             }
         });
 
+        mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
+             // complete quick start task during QS process and remind of a next one
+            if (getSelectedSite() != null) {
+                QuickStartUtils.completeTaskAndRemindNextOne(
+                        mQuickStartStore,
+                        QuickStartTask.PUBLISH_POST,
+                        mDispatcher,
+                        getSelectedSite(),
+                        new QuickStartEvent(QuickStartTask.PUBLISH_POST),
+                        this
+                );
+            }
+        });
+
         mViewModel.getOnFeatureAnnouncementRequested().observe(this, action -> {
             new FeatureAnnouncementDialogFragment()
                     .show(getSupportFragmentManager(), FeatureAnnouncementDialogFragment.TAG);
         });
 
         mFloatingActionButton.setOnClickListener(v -> {
-            if (getMySiteFragment() != null && getMySiteFragment()
-                    .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST)) {
+            boolean shouldShowPublishPostQuickStartTask = getMySiteFragment() != null && getMySiteFragment()
+                    .isQuickStartTaskActive(QuickStartTask.PUBLISH_POST);
+
+            if (shouldShowPublishPostQuickStartTask) {
                 QuickStartUtils.removeQuickStartFocusPoint(findViewById(R.id.fab_container));
                 hideQuickStartSnackBar();
-                getMySiteFragment().requestNextStepOfActiveQuickStartTask(true);
+                if (getMySiteFragment() != null) {
+                    getMySiteFragment().requestNextStepOfActiveQuickStartTask(false);
+                }
             }
-            mViewModel.onFabClicked(hasFullAccessToContent());
+            mViewModel.onFabClicked(hasFullAccessToContent(), shouldShowPublishPostQuickStartTask);
         });
 
         mFloatingActionButton.setOnLongClickListener(v -> {
@@ -1339,7 +1352,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return;
         }
 
-       refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
+        refreshCurrentSelectedSiteAfterEditorChanges(false, event.site.getId());
     }
 
     @SuppressWarnings("unused")

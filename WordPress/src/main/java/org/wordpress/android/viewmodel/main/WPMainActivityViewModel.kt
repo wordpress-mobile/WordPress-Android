@@ -42,6 +42,9 @@ class WPMainActivityViewModel @Inject constructor(
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
+    private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
+    val showQuickStarInBottomSheet: LiveData<Boolean> = _showQuickStarInBottomSheet
+
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
@@ -50,6 +53,9 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+
+    private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
+    val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
 
     fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
@@ -96,6 +102,15 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onCreateActionClicked(actionType: ActionType) {
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
+
+        showQuickStarInBottomSheet.value?.let { showQuickStart ->
+            if (showQuickStart) {
+                if (actionType == CREATE_NEW_POST) {
+                    _completeBottomSheetQuickStartTask.call()
+                }
+                _showQuickStarInBottomSheet.postValue(false)
+            }
+        }
     }
 
     private fun disableTooltip(hasFullAccessToContent: Boolean) {
@@ -111,9 +126,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(hasFullAccessToContent: Boolean) {
+    fun onFabClicked(hasFullAccessToContent: Boolean, shouldShowQuickStartFocusPoint: Boolean = false) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
+
+        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
 
         // Currently this bottom sheet has only 2 options.
         // We should evaluate to re-introduce the bottom sheet also for users without full access to content
