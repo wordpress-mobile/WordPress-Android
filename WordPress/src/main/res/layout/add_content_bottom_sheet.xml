@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/add_content_bottom_sheet_root_view"
-    android:animateLayoutChanges="false">
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
 
     <include
-        android:id="@+id/bottom_sheet_handle"
-        android:layout_alignParentTop="true"
         layout="@layout/bottom_sheet_handle_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@+id/bottom_sheet_handle"
         android:id="@+id/content_recycler_view"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -21,4 +18,4 @@
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="vertical"
         android:layout_marginBottom="@dimen/margin_extra_large"/>
-</RelativeLayout>
+</LinearLayout>
