@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.WPActivityUtils
 import javax.inject.Inject
 
@@ -79,7 +80,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.start(parentViewModel)
+        viewModel.start(parentViewModel, LocaleManager.getLanguage(WordPress.getContext()))
     }
 
     private fun updateDoneButton(doneButtonUiState: DoneButtonUiState) {

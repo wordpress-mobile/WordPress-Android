@@ -36,6 +36,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 
+private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
     @Rule
@@ -372,7 +373,10 @@ class ReaderInterestsViewModelTest {
             assertThat(contentLoadFailedUiState.titleResId).isEqualTo(R.string.reader_error_generic_title)
         }
 
-    private fun initViewModel() = viewModel.start(parentViewModel)
+    private fun initViewModel() = viewModel.start(
+        parentViewModel = parentViewModel,
+        currentLanguage = CURRENT_LANGUAGE
+    )
 
     @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {

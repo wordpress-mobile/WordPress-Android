@@ -26,15 +26,24 @@ import javax.inject.Inject
 class ReaderInterestsViewModel @Inject constructor(
     private val readerTagRepository: ReaderTagRepository
 ) : ViewModel() {
+    private var isStarted = false
+    private lateinit var currentLanguage: String
     private lateinit var parentViewModel: ReaderViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(parentViewModel: ReaderViewModel) {
+    fun start(parentViewModel: ReaderViewModel, currentLanguage: String) {
         this.parentViewModel = parentViewModel
+        if (isStarted && isLanguageSame(currentLanguage)) {
+            return
+        }
         loadUserTags()
+        this.currentLanguage = currentLanguage
+        isStarted = true
     }
+
+    private fun isLanguageSame(currentLanguage: String) = this.currentLanguage == currentLanguage
 
     private fun loadUserTags() {
         updateUiState(LoadingUiState)
