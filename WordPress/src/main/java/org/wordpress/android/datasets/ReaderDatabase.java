@@ -215,6 +215,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.createTables(db);
         ReaderBlogTable.createTables(db);
         ReaderSearchTable.createTables(db);
+        ReaderDiscoverCardsTable.INSTANCE.createTable(db);
     }
 
     private void dropAllTables(SQLiteDatabase db) {
@@ -226,6 +227,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
         ReaderThumbnailTable.dropTables(db);
         ReaderBlogTable.dropTables(db);
         ReaderSearchTable.dropTables(db);
+        ReaderDiscoverCardsTable.INSTANCE.dropTables(db);
     }
 
     /*
