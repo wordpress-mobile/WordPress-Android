@@ -60,6 +60,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.WPSnackbar
+import java.lang.ref.WeakReference
 import java.util.Objects
 import javax.inject.Inject
 
@@ -154,7 +155,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             )
         }
 
-        storyEditorMediaViewModel.start(requireNotNull(site), this)
+        storyEditorMediaViewModel.start(requireNotNull(site), WeakReference(this))
         setupStoryEditorMediaObserver()
         setupViewModelObservers()
     }
