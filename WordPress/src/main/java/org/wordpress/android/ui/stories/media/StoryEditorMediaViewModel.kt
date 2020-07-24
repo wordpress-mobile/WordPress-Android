@@ -3,6 +3,7 @@ package org.wordpress.android.ui.stories.media
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -18,9 +19,9 @@ import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMediaToStoryIdle
-import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
-import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingSingleMediaToStory
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState.AddingMediaToStoryIdle
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState.AddingSingleMediaToStory
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -28,12 +29,12 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-class StoryEditorMedia @Inject constructor(
+class StoryEditorMediaViewModel @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : CoroutineScope {
+) : ViewModel(), CoroutineScope {
     // region Fields
     private var job: Job = Job()
 

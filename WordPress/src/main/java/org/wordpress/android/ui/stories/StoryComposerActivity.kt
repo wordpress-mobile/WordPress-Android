@@ -49,8 +49,8 @@ import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
-import org.wordpress.android.ui.stories.media.StoryEditorMedia
-import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -59,7 +59,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
@@ -77,7 +76,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         PrepublishingBottomSheetListener {
     private var site: SiteModel? = null
 
-    @Inject lateinit var storyEditorMedia: StoryEditorMedia
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
@@ -87,6 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StoryComposerViewModel
+    private lateinit var storyEditorMedia: StoryEditorMediaViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 

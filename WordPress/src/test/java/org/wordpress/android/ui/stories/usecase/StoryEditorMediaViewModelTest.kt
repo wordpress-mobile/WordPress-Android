@@ -21,13 +21,13 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.stories.media.StoryEditorMedia
-import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel
+import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 
 @UseExperimental(InternalCoroutinesApi::class)
-class StoryEditorMediaTest : BaseUnitTest() {
+class StoryEditorMediaViewModelTest : BaseUnitTest() {
     @Test
     fun `advertiseImageOptimisationAndAddMedia shows dialog when shouldAdvertiseImageOptimization is true`() {
         // Arrange
@@ -165,8 +165,8 @@ class StoryEditorMediaTest : BaseUnitTest() {
             addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase = mock(),
             siteModel: SiteModel = mock(),
             editorMediaListener: EditorMediaListener = mock()
-        ): StoryEditorMedia {
-            val editorMedia = StoryEditorMedia(
+        ): StoryEditorMediaViewModel {
+            val editorMedia = StoryEditorMediaViewModel(
                     mediaUtilsWrapper,
                     addLocalMediaToPostUseCase,
                     addExistingMediaToPostUseCase,
