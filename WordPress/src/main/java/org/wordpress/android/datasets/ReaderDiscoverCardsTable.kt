@@ -2,7 +2,6 @@ package org.wordpress.android.datasets
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import org.wordpress.android.WordPress
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.SqlUtils
 
