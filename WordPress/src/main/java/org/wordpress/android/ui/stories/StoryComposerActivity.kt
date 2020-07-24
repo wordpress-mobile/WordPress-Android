@@ -5,7 +5,6 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.webkit.URLUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -22,16 +21,13 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryIndex
 import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
-import org.wordpress.android.R
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostImmutableModel
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -50,14 +46,12 @@ import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.PublishPost
-import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
-import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -90,9 +84,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
     @Inject internal lateinit var editPostRepository: EditPostRepository
-    @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Inject lateinit var updateStoryPostTitleUseCase: UpdateStoryPostTitleUseCase
-    @Inject lateinit var storyRepositoryWrapper: StoryRepositoryWrapper
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -163,13 +154,30 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
-
-        startObserving()
-        updateStoryPostWithChanges()
+        setupEditorMediaObserver()
         setupViewModelObservers()
     }
 
     private fun setupViewModelObservers() {
+        viewModel.mediaFilesUris.observe(this, Observer { uriList ->
+            addFramesToStoryFromMediaUriList(uriList)
+            setDefaultSelectionAndUpdateBackgroundSurfaceUI(uriList)
+        })
+
+        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
+                openPrepublishingBottomSheet()
+            }
+        })
+
+        viewModel.submitButtonClicked.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
+                processStorySaving()
+            }
+        })
+
         viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
             event.applyIfNotHandled {
                 site?.let {
@@ -262,7 +270,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return true
     }
 
-    fun handleMediaPickerIntentData(data: Intent) {
+    private fun handleMediaPickerIntentData(data: Intent) {
         // TODO move this to EditorMedia
         val ids = ListUtils.fromLongArray(
                 data.getLongArrayExtra(
@@ -276,7 +284,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         editorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
-    private fun startObserving() {
+    private fun setupEditorMediaObserver() {
         editorMedia.uiState.observe(this,
                 Observer { uiState: AddMediaToPostUiState? ->
                     if (uiState != null) {
@@ -311,40 +319,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         )
     }
 
-    private fun saveInitialPost() {
-        editPostRepository.set {
-            val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(PostStatus.DRAFT.toString())
-            post
-        }
-        editPostRepository.savePostSnapshot()
-        // this is an artifact to be able to call savePostToDb()
-        editPostRepository.getEditablePost()?.setPostFormat(POST_FORMAT_WP_STORY_KEY)
-        site?.let {
-            savePostToDbUseCase.savePostToDb(editPostRepository, it)
-        }
-    }
-
-    private fun updateStoryPostWithChanges() {
-        editPostRepository.postChanged.observe(this, Observer {
-            savePostToDbUseCase.savePostToDb(editPostRepository, requireNotNull(site))
-        })
-    }
-
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        val uriList = ArrayList<Uri>()
-        for ((key) in mediaFiles.entries) {
-            val url = if (URLUtil.isNetworkUrl(key)) {
-                key
-            } else {
-                "file://$key"
-            }
-            uriList.add(Uri.parse(url))
-        }
-
-        addFramesToStoryFromMediaUriList(uriList)
-        setDefaultSelectionAndUpdateBackgroundSurfaceUI(uriList)
+        viewModel.appendMediaFiles(mediaFiles)
     }
 
     override fun getImmutablePost(): PostImmutableModel {
@@ -409,7 +386,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel.onStoryDiscarded()
     }
 
-    private fun showPrepublishingBottomSheet() {
+    private fun openPrepublishingBottomSheet() {
         val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
         if (fragment == null) {
             val prepublishingFragment = PrepublishingBottomSheetFragment.newInstance(
@@ -422,21 +399,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStorySaveButtonPressed() {
-        analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
-        showPrepublishingBottomSheet()
-    }
-
-    private fun setUntitledStoryTitleIfTitleEmpty() {
-        if (editPostRepository.title.isEmpty()) {
-            val untitledStoryTitle = resources.getString(R.string.untitled)
-            storyRepositoryWrapper.setCurrentStoryTitle(untitledStoryTitle)
-            updateStoryPostTitleUseCase.updateStoryTitle(untitledStoryTitle, editPostRepository)
-        }
+        viewModel.onStorySaveButtonPressed()
     }
 
     override fun onSubmitButtonClicked(publishPost: PublishPost) {
-        analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
-        setUntitledStoryTitleIfTitleEmpty()
-        processStorySaving()
+        viewModel.onSubmitButtonClicked()
     }
 }
