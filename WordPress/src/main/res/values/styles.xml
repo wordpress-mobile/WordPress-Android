@@ -41,7 +41,7 @@
         <item name="wpColorSuccess">@color/green_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
         <item name="wpColorWarningLight">@color/yellow_20</item>
-        <item name="wpColorAppBar">@color/primary</item>
+        <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
         <item name="wpColorActionModeIcon">?attr/colorOnPrimary</item>
 
@@ -77,7 +77,6 @@
 
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
-        <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
     </style>
 
     <style name="WordPress" parent="Base.Wordpress">
@@ -204,14 +203,29 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
     </style>
 
-    <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="titleTextColor">?attr/colorOnPrimary</item>
-        <item name="android:background">?attr/wpColorAppBar</item>
+    <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="android:background">@null</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="titleTextAppearance">@style/WordPress.ToolBar.Title</item>
+        <item name="android:elevation">0dp</item>
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+        <item name="android:background">?attr/colorSurface</item>
+        <item name="liftOnScroll">true</item>
     </style>
 
     <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">?attr/colorOnPrimarySurface</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
+        <item name="iconTint">?attr/colorOnSurface</item>
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.ToolBar.Title" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="WordPress.WebPreview.ActionBar" parent="Theme.MaterialComponents.DayNight">
@@ -230,13 +244,11 @@
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
-        <item name="android:background">?attr/wpColorAppBar</item>
-        <item name="android:elevation">@dimen/appbar_elevation</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
-        <item name="android:background">@color/primary_50</item>
+        <item name="android:background">@null</item>
+        <item name="android:elevation">0dp</item>
+        <item name="tabTextColor">?attr/wpColorOnSurfaceMedium</item>
+        <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
+        <item name="tabIndicatorColor">?attr/colorPrimary</item>
     </style>
 
     <style name="ActionButton.CloseMode.WordPress" parent="android:Widget.Material.ActionButton.CloseMode">
@@ -1125,6 +1137,29 @@
         <item name="android:drawablePadding">@dimen/margin_medium</item>
         <item name="android:paddingTop">@dimen/margin_small_medium</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+    </style>
+
+    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="fontFamily">serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="WordPress.CollapsedToolbarLayout">
+        <item name="layout_scrollFlags">scroll|exitUntilCollapsed</item>
+        <item name="collapsedTitleTextAppearance">
+            @style/TextAppearance.App.CollapsingToolbar.Collapsed
+        </item>
+        <item name="expandedTitleTextAppearance">
+            @style/TextAppearance.App.CollapsingToolbar.Expanded
+        </item>
+        <item name="expandedTitleMarginBottom">28dp</item>
     </style>
 
 </resources>

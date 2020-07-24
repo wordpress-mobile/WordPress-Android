@@ -98,14 +98,13 @@
         <item name="android:navigationBarColor">?attr/colorSurface</item>
     </style>
 
-    <style name="WordPress.ToolBar" parent="Widget.MaterialComponents.Toolbar.Surface" />
-
-    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
-        <item name="android:elevation">@dimen/appbar_elevation</item>
+     <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
+        <item name="liftOnScroll">true</item>
     </style>
 
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:elevation">0dp</item>
+        <item name="android:background">@null</item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
