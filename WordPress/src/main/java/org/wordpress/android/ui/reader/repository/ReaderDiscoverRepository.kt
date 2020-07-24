@@ -5,18 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
+import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
-import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
+import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
+import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -27,11 +28,11 @@ import kotlin.coroutines.CoroutineContext
 class ReaderDiscoverRepository constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val readerTag: ReaderTag,
-    private val getPostsForTagUseCase: GetPostsForTagUseCase,
+    private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
-    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
+    private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
     private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
@@ -39,9 +40,9 @@ class ReaderDiscoverRepository constructor(
 
     private var isStarted = false
 
-    private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
+    private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
-    val discoverFeed: LiveData<ReaderPostList> = _discoverFeed
+    val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -58,7 +59,7 @@ class ReaderDiscoverRepository constructor(
     }
 
     fun stop() {
-        getPostsForTagUseCase.stop()
+        getDiscoverCardsUseCase.stop()
         getNumPostsForTagUseCase.stop()
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
@@ -86,25 +87,23 @@ class ReaderDiscoverRepository constructor(
     }
 
     private fun onActiveDiscoverFeed() {
-        loadPosts()
+        loadCards()
     }
 
     private fun onInactiveDiscoverFeed() {
     }
 
-    private fun loadPosts() {
+    private fun loadCards() {
         launch {
-            val existsInMemory = discoverFeed.value?.let {
-                !it.isEmpty()
-            } ?: false
+            val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
 
             if (!existsInMemory) {
-                val result = getPostsForTagUseCase.get(readerTag)
+                val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
             }
             if (refresh) {
-                val response = fetchPostsForTagUseCase.fetch(readerTag)
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
                 if (response != Success) _communicationChannel.postValue(Event(response))
             }
         }
@@ -112,7 +111,7 @@ class ReaderDiscoverRepository constructor(
 
     private fun reloadPosts() {
         launch {
-            val result = getPostsForTagUseCase.get(readerTag)
+            val result = getDiscoverCardsUseCase.get()
             _discoverFeed.postValue(result)
         }
     }
@@ -121,11 +120,11 @@ class ReaderDiscoverRepository constructor(
     @Inject constructor(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
-        private val getPostsForTagUseCase: GetPostsForTagUseCase,
+        private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
         private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
-        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
+        private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
@@ -135,11 +134,11 @@ class ReaderDiscoverRepository constructor(
             return ReaderDiscoverRepository(
                     bgDispatcher,
                     tag,
-                    getPostsForTagUseCase,
+                    getDiscoverCardsUseCase,
                     getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
                     getPostsForTagWithCountUseCase,
-                    fetchPostsForTagUseCase,
+                    fetchDiscoverCardsUseCase,
                     readerUpdatePostsEndedHandler
             )
         }

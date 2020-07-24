@@ -8,6 +8,8 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.discover.ReaderDiscoverCard
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -77,9 +79,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         // Listen to changes to the discover feed
         _uiState.addSource(readerDiscoverRepository.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    posts.map {
+                    // TODO malinjir we currently ignore all other types but ReaderPostCards
+                    posts.cards.filterIsInstance<ReaderPostCard>().map {
                         postUiStateBuilder.mapPostToUiState(
-                                post = it,
+                                post = it.post,
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
@@ -27,6 +28,7 @@ import org.wordpress.android.ui.reader.ReaderConstants.JSON_TAG_TITLE
 import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_SITE_ID
+import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -54,13 +56,13 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         when (task) {
             REQUEST -> {
                 requestDataForDiscover(false, UpdateResultListener {
-                    // TODO malinjir emit REQUEST finish event
+                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
                     completionListener.onCompleted(listenerCompanion)
                 })
             }
             REQUEST_FORCE -> {
                 requestDataForDiscover(true, UpdateResultListener {
-                    // TODO malinjir emit REQUEST_FORCE finish event
+                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
                     completionListener.onCompleted(listenerCompanion)
                 })
             }
