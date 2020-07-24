@@ -127,6 +127,16 @@ class MimeTypes {
         return isSupportedMimeType(documentTypes, type)
     }
 
+    fun getAllTypes(): Array<String> {
+        return (audioTypes.toStrings() + videoTypes.toStrings() + imageTypes.toStrings() + documentTypes.toStrings())
+                .toSet()
+                .toTypedArray()
+    }
+
+    private fun List<MimeType>.toStrings(): List<String> {
+        return this.map { "${it.type.value}/${it.subtype.value}" }
+    }
+
     private fun isExpectedMimeType(
         expected: List<MimeType>,
         type: String?
