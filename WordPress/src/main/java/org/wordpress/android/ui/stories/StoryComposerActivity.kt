@@ -85,7 +85,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: StoryComposerViewModel
-    private lateinit var storyEditorMedia: StoryEditorMediaViewModel
+    private lateinit var storyEditorMediaViewModel: StoryEditorMediaViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
 
@@ -141,6 +141,9 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)
 
+        storyEditorMediaViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(StoryEditorMediaViewModel::class.java)
+
         site?.let {
             viewModel.start(
                     it,
@@ -151,7 +154,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             )
         }
 
-        storyEditorMedia.start(requireNotNull(site), this)
+        storyEditorMediaViewModel.start(requireNotNull(site), this)
         setupStoryEditorMediaObserver()
         setupViewModelObservers()
     }
@@ -213,7 +216,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
                                 it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
                         )
-                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
+                        storyEditorMediaViewModel.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                         handleMediaPickerIntentData(it)
                     }
@@ -223,7 +226,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onDestroy() {
-        storyEditorMedia.cancelAddMediaToEditorActions()
+        storyEditorMediaViewModel.cancelAddMediaToEditorActions()
         super.onDestroy()
     }
 
@@ -279,11 +282,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+        storyEditorMediaViewModel.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
     private fun setupStoryEditorMediaObserver() {
-        storyEditorMedia.uiState.observe(this,
+        storyEditorMediaViewModel.uiState.observe(this,
                 Observer { uiState: AddMediaToStoryPostUiState? ->
                     if (uiState != null) {
                         updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
@@ -295,7 +298,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        storyEditorMedia.snackBarMessage.observe(this,
+        storyEditorMediaViewModel.snackBarMessage.observe(this,
                 Observer<Event<SnackbarMessageHolder>> { event: Event<SnackbarMessageHolder?> ->
                     val messageHolder = event.getContentIfNotHandled()
                     if (messageHolder != null) {
