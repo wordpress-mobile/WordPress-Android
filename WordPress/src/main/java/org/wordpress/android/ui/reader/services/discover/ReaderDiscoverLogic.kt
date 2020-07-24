@@ -143,15 +143,16 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
      * as it's already stored in the db.
      */
     private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
+        var index = 0
         val simplifiedJson = JSONArray()
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    simplifiedJson.put(i, cardJson)
+                    simplifiedJson.put(index++, cardJson)
                 }
                 JSON_CARD_POST -> {
-                    simplifiedJson.put(i, createSimplifiedPostJson(cardJson))
+                    simplifiedJson.put(index++, createSimplifiedPostJson(cardJson))
                 }
             }
         }
