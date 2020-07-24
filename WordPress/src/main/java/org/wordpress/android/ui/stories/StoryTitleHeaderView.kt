@@ -48,7 +48,9 @@ class StoryTitleHeaderView @JvmOverloads constructor(
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(view: Editable?) {
-                uiState.onStoryTitleChanged.invoke(view.toString())
+                view?.let {
+                    uiState.onStoryTitleChanged.invoke(it.toString())
+                }
             }
         })
     }
