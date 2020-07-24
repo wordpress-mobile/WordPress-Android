@@ -43,9 +43,9 @@ class FetchInterestTagsUseCase @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onEventMainThread(event: InterestTagsFetchEnded) {
+    fun onInterestTagsFetchEnded(event: InterestTagsFetchEnded) {
         val result = if (event.didSucceed()) {
                 SuccessWithData(event.interestTags)
             } else {
