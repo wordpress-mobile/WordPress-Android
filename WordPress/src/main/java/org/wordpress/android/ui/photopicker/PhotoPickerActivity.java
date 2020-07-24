@@ -43,6 +43,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import static org.wordpress.android.ui.RequestCodes.IMAGE_EDITOR_EDIT_IMAGE;
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.posts.FeaturedImageHelperKt.EMPTY_LOCAL_POST_ID;
 
 public class PhotoPickerActivity extends LocaleAwareActivity
@@ -109,11 +110,11 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
 
         if (savedInstanceState == null) {
-            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(PhotoPickerFragment.ARG_BROWSER_TYPE);
+            mBrowserType = (MediaBrowserType) getIntent().getSerializableExtra(ARG_BROWSER_TYPE);
             mSite = (SiteModel) getIntent().getSerializableExtra(WordPress.SITE);
             mLocalPostId = getIntent().getIntExtra(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         } else {
-            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE);
+            mBrowserType = (MediaBrowserType) savedInstanceState.getSerializable(ARG_BROWSER_TYPE);
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
             mLocalPostId = savedInstanceState.getInt(LOCAL_POST_ID, EMPTY_LOCAL_POST_ID);
         }
@@ -152,7 +153,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(PhotoPickerFragment.ARG_BROWSER_TYPE, mBrowserType);
+        outState.putSerializable(ARG_BROWSER_TYPE, mBrowserType);
         outState.putInt(LOCAL_POST_ID, mLocalPostId);
         if (mSite != null) {
             outState.putSerializable(WordPress.SITE, mSite);
@@ -319,7 +320,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                     .putExtra(EXTRA_MEDIA_URIS, convertUrisListToStringArray(mediaUris))
                     .putExtra(EXTRA_MEDIA_SOURCE, source.name())
                     // set the browserType in the result, so caller can distinguish and handle things as needed
-                    .putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, mBrowserType);
+                    .putExtra(ARG_BROWSER_TYPE, mBrowserType);
             setResult(RESULT_OK, intent);
             finish();
         }

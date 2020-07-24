@@ -84,6 +84,8 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
+
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener {
     private EditText mEditTextDisplayName;
@@ -173,7 +175,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PhotoPickerActivity.class);
-                intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
+                intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
                 startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
             }
         });
