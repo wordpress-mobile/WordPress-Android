@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
@@ -16,11 +17,10 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLike
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import javax.inject.Inject
@@ -31,18 +31,17 @@ class ReaderPostRepository(
     private val bgDispatcher: CoroutineDispatcher,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
-    private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
     private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
     private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
+    private var job: Job = Job()
+
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher
+        get() = bgDispatcher + job
 
     private var isStarted = false
-    private var isDirty = false
 
     private val _posts = ReactiveMutableLiveData<ReaderPostList>(
             onActive = { onActivePosts() }, onInactive = { onInactivePosts() })
@@ -60,30 +59,23 @@ class ReaderPostRepository(
                 ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
                         this::onNewPosts,
                         this::onChangedPosts, this::onUnchanged, this::onFailed
-                )
-        )
+                ))
     }
 
     fun stop() {
-        getPostsForTagUseCase.stop()
-        getNumPostsForTagUseCase.stop()
-        shouldAutoUpdateTagUseCase.stop()
-        getPostsForTagWithCountUseCase.stop()
-        readerUpdatePostsEndedHandler.stop()
+        job.cancel()
     }
 
-    fun getTag(): ReaderTag {
-        return readerTag
-    }
+    fun getTag(): ReaderTag = readerTag
 
     fun refreshPosts() {
         launch {
-            val response = fetchPostsForTagUseCase.fetch(readerTag)
+            val response =
+                    fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
             if (response != Success) _communicationChannel.postValue(Event(response))
         }
     }
 
-    // todo: annmarie - Possibly implement a "LikeManager" that will encapsulate all the "UseCase".
     fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
         launch {
             when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
@@ -101,30 +93,7 @@ class ReaderPostRepository(
         }
     }
 
-    private fun onNewPosts(event: UpdatePostsEnded) {
-        reloadPosts()
-    }
-
-    private fun onChangedPosts(event: UpdatePostsEnded) {
-        reloadPosts()
-    }
-
-    private fun onUnchanged(event: UpdatePostsEnded) {
-    }
-
-    private fun onFailed(event: UpdatePostsEnded) {
-        _communicationChannel.postValue(
-                Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure)
-        )
-    }
-
-    private fun onActivePosts() {
-        loadPosts()
-    }
-
-    private fun onInactivePosts() {
-    }
-
+    // Internal functionality
     private fun loadPosts() {
         launch {
             val existsInMemory = posts.value?.let {
@@ -151,13 +120,37 @@ class ReaderPostRepository(
         }
     }
 
+    // Handlers for ReaderPostServices
+    private fun onNewPosts(event: UpdatePostsEnded) {
+        reloadPosts()
+    }
+
+    private fun onChangedPosts(event: UpdatePostsEnded) {
+        reloadPosts()
+    }
+
+    private fun onUnchanged(event: UpdatePostsEnded) {
+    }
+
+    private fun onFailed(event: UpdatePostsEnded) {
+        _communicationChannel.postValue(
+                Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure)
+        )
+    }
+
+    // React to posts observers
+    private fun onActivePosts() {
+        loadPosts()
+    }
+
+    private fun onInactivePosts() {
+    }
+
     class Factory
     @Inject constructor(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
-        private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
         private val postLikeActionUseCase: PostLikeActionUseCase
@@ -167,9 +160,7 @@ class ReaderPostRepository(
                     bgDispatcher,
                     readerTag,
                     getPostsForTagUseCase,
-                    getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    getPostsForTagWithCountUseCase,
                     fetchPostsForTagUseCase,
                     readerUpdatePostsEndedHandler,
                     postLikeActionUseCase
