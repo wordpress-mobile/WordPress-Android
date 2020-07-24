@@ -57,7 +57,6 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.prefs.AppPrefsWrapper;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -83,6 +82,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import javax.inject.Inject;
+
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 
 public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogueListener>
         implements OnConfirmListener, OnDismissListener {
@@ -173,7 +174,7 @@ public class SignupEpilogueFragment extends LoginBaseFormFragment<SignupEpilogue
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), PhotoPickerActivity.class);
-                intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
+                intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.GRAVATAR_IMAGE_PICKER);
                 startActivityForResult(intent, RequestCodes.PHOTO_PICKER);
             }
         });

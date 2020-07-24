@@ -809,7 +809,7 @@ class MySiteFragment : Fragment(),
     private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
         if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
             val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
-            return browserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER
+            return (browserType as MediaBrowserType).isWPStoriesPicker()
         }
         return false
     }
