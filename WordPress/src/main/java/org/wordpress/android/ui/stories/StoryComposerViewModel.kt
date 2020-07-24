@@ -21,6 +21,7 @@ import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
 import org.wordpress.android.util.helpers.MediaFile
@@ -32,6 +33,7 @@ class StoryComposerViewModel @Inject constructor(
     private val saveInitialPostUseCase: SaveInitialPostUseCase,
     private val savePostToDbUseCase: SavePostToDbUseCase,
     private val setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase,
+    private val postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper,
     private val dispatcher: Dispatcher
 ) : ViewModel(), LifecycleOwner {
     private val lifecycleRegistry = LifecycleRegistry(this)
@@ -98,7 +100,7 @@ class StoryComposerViewModel @Inject constructor(
         post: PostImmutableModel?,
         site: SiteModel?
     ): PostEditorAnalyticsSession {
-        return PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
+        return postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
                 PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
                 post, site, true
         )
