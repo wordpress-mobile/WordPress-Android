@@ -93,6 +93,13 @@ class ReaderDiscoverRepository constructor(
         return readerTag
     }
 
+    fun refreshPosts() {
+        launch {
+            val response = fetchPostsForTagUseCase.fetch(readerTag)
+            if (response != Success) _communicationChannel.postValue(Event(response))
+        }
+    }
+
     private fun onNewPosts(event: UpdatePostsEnded) {
         reloadPosts()
     }
