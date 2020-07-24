@@ -194,7 +194,7 @@ public class ReaderUpdateLogic {
                     // now replace local topics with the server topics
                     ReaderTagTable.replaceTags(serverTopics);
                     // broadcast the fact that there are changes
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged());
+                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
 
                 // save changes to recommended topics
