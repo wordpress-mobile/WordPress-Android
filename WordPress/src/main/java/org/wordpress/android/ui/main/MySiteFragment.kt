@@ -8,9 +8,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.text.HtmlCompat
@@ -19,9 +23,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -183,6 +185,7 @@ class MySiteFragment : Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
             activeTutorialPrompt = savedInstanceState
@@ -203,25 +206,12 @@ class MySiteFragment : Fragment(),
         super.onDestroy()
     }
 
-    private fun refreshMeGravatar() {
-        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
-        meGravatarLoader.load(
-                false,
-                avatarUrl,
-                null,
-                avatar,
-                USER,
-                null
-        )
-    }
-
     override fun onResume() {
         super.onResume()
         updateSiteSettingsIfNecessary()
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
-        refreshMeGravatar()
         selectedSite?.let { site ->
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -535,8 +525,16 @@ class MySiteFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        toolbar_main.setTitle(R.string.my_site_section_screen_title)
-        toolbar_main.inflateMenu(R.menu.my_site_menu)
+        collapsing_toolbar.setTitle(getString(R.string.my_site_section_screen_title))
+        (activity as AppCompatActivity).setSupportActionBar(toolbar_main)
+        if (activeTutorialPrompt != null) {
+            showQuickStartFocusPoint()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.my_site_menu, menu)
         val meMenu = toolbar_main.menu.findItem(R.id.me_item)
         val actionView = meMenu.actionView
         actionView.setOnClickListener {
@@ -547,9 +545,20 @@ class MySiteFragment : Fragment(),
         actionView.let {
             TooltipCompat.setTooltipText(it, meMenu.title)
         }
-        if (activeTutorialPrompt != null) {
-            showQuickStartFocusPoint()
-        }
+
+        refreshMeGravatar(actionView.findViewById(R.id.avatar))
+    }
+
+    private fun refreshMeGravatar(gravatarImageView: ImageView) {
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        meGravatarLoader.load(
+                false,
+                avatarUrl,
+                null,
+                gravatarImageView,
+                USER,
+                null
+        )
     }
 
     private fun updateQuickStartContainer() {

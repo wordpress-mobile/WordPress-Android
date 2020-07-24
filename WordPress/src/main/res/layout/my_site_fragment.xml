@@ -1,18 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar_main" />
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/prominent_toolbar_height"
+        app:liftOnScroll="false"
+        android:fitsSystemWindows="true">
 
-    <ScrollView
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            style="@style/WordPress.CollapsedToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar_main"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:theme="@style/WordPress.ActionBar" />
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/toolbar_height"
         android:clipToPadding="false"
-        android:paddingBottom="@dimen/my_site_bottom_spacing">
+        android:paddingBottom="@dimen/my_site_bottom_spacing"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
         <RelativeLayout
@@ -76,8 +97,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:paddingEnd="@dimen/content_margin"
-                    android:paddingStart="@dimen/content_margin">
+                    android:paddingStart="@dimen/content_margin"
+                    android:paddingEnd="@dimen/content_margin">
 
                     <org.wordpress.android.widgets.WPTextView
                         android:id="@+id/my_site_title_label"
@@ -90,8 +111,8 @@
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:paddingEnd="@dimen/margin_extra_large"
                         android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingEnd="@dimen/margin_extra_large"
                         android:textAppearance="?attr/textAppearanceHeadline6"
                         tools:text="Example" />
 
@@ -100,15 +121,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingStart="@dimen/margin_extra_large"
-                        android:paddingEnd="@dimen/margin_extra_large"
                         android:layout_marginTop="@dimen/margin_extra_small"
-                        android:paddingTop="@dimen/margin_extra_small"
-                        android:paddingBottom="@dimen/margin_extra_small"
                         android:background="?attr/selectableItemBackground"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:maxLines="1"
+                        android:paddingStart="@dimen/margin_extra_large"
+                        android:paddingTop="@dimen/margin_extra_small"
+                        android:paddingEnd="@dimen/margin_extra_large"
+                        android:paddingBottom="@dimen/margin_extra_small"
                         android:textAppearance="?attr/textAppearanceBody2"
                         android:textColor="?attr/wpColorOnSurfaceMedium"
                         tools:text="example.wordpress.com" />
@@ -128,10 +149,10 @@
                     android:text="@string/my_site_btn_switch_site" />
 
                 <LinearLayout
-                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:id="@+id/quick_action_buttons_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:layout_marginBottom="@dimen/margin_my_site_quick_actions_bottom"
                     android:orientation="horizontal"
                     android:paddingStart="@dimen/content_margin"
@@ -650,7 +671,7 @@
 
         </RelativeLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
@@ -663,4 +684,4 @@
         app:aevSubtitle="@string/my_site_create_new_site"
         app:aevTitle="@string/my_site_create_new_site_title" />
 
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
