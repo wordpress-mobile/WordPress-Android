@@ -26,7 +26,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
-import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
@@ -38,7 +37,6 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
-import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
@@ -47,7 +45,6 @@ import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.PublishPost
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
-import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel
 import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMediaToStoryPostUiState
@@ -57,16 +54,13 @@ import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.WPSnackbar
-import java.util.Objects
 import javax.inject.Inject
 
 class StoryComposerActivity : ComposeLoopFrameActivity(),
         SnackbarProvider,
         MediaPickerProvider,
-        EditorMediaListener,
         AuthenticationHeadersProvider,
         NotificationIntentLoader,
         MetadataProvider,
@@ -154,7 +148,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             )
         }
 
-        storyEditorMediaViewModel.start(requireNotNull(site), this)
+        storyEditorMediaViewModel.start(requireNotNull(site), viewModel)
         setupStoryEditorMediaObserver()
         setupViewModelObservers()
     }
@@ -189,6 +183,12 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             editPostRepository.getPost()
                     )
                 }
+            }
+        })
+
+        viewModel.shouldShowOptimizeImagesAdvertising.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                WPMediaUtils.advertiseImageOptimization(this@StoryComposerActivity) { this.invoke() }
             }
         })
     }
@@ -312,26 +312,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-    }
-
-    // EditorMediaListener
-    override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        viewModel.appendMediaFiles(mediaFiles)
-    }
-
-    override fun getImmutablePost(): PostImmutableModel {
-        return Objects.requireNonNull(editPostRepository.getPost()!!)
-    }
-
-    override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
-        // TODO will implement when we support StoryPost editing
-        // updateAndSavePostAsync(listener)
-        // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
-        listener?.onPostUpdatedFromUI()
-    }
-
-    override fun advertiseImageOptimization(listener: () -> Unit) {
-        WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
     }
 
     private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {

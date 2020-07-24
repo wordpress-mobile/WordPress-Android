@@ -18,14 +18,18 @@ import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
+import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
+import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
+import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
+import java.util.Objects
 import javax.inject.Inject
 
 class StoryComposerViewModel @Inject constructor(
@@ -35,7 +39,7 @@ class StoryComposerViewModel @Inject constructor(
     private val setUntitledStoryTitleIfTitleEmptyUseCase: SetUntitledStoryTitleIfTitleEmptyUseCase,
     private val postEditorAnalyticsSessionWrapper: PostEditorAnalyticsSessionWrapper,
     private val dispatcher: Dispatcher
-) : ViewModel(), LifecycleOwner {
+) : ViewModel(), LifecycleOwner, EditorMediaListener {
     private val lifecycleRegistry = LifecycleRegistry(this)
     override fun getLifecycle(): Lifecycle = lifecycleRegistry
 
@@ -51,6 +55,9 @@ class StoryComposerViewModel @Inject constructor(
 
     private val _submitButtonClicked = MutableLiveData<Event<Unit>>()
     val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
+
+    private val _shouldShowOptimizeImagesAdvertising = MutableLiveData<Event<() -> Unit>>()
+    val shouldShowOptimizeImagesAdvertising: LiveData<Event<() -> Unit>> = _shouldShowOptimizeImagesAdvertising
 
     init {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
@@ -124,7 +131,8 @@ class StoryComposerViewModel @Inject constructor(
         })
     }
 
-    fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
+    // EditorMediaListener
+    override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
         val uriList = ArrayList<Uri>()
         for ((key) in mediaFiles.entries) {
             val url = if (URLUtil.isNetworkUrl(key)) {
@@ -136,6 +144,21 @@ class StoryComposerViewModel @Inject constructor(
         }
 
         _mediaFilesUris.postValue(uriList)
+    }
+
+    override fun getImmutablePost(): PostImmutableModel {
+        return Objects.requireNonNull(editPostRepository.getPost()!!)
+    }
+
+    override fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener?) {
+        // TODO will implement when we support StoryPost editing
+        // updateAndSavePostAsync(listener)
+        // Ignore the result as we want to invoke the listener even when the PostModel was up-to-date
+        listener?.onPostUpdatedFromUI()
+    }
+
+    override fun advertiseImageOptimization(listener: () -> Unit) {
+        _shouldShowOptimizeImagesAdvertising.postValue(Event(listener))
     }
 
     fun onStorySaveButtonPressed() {
