@@ -10,4 +10,3 @@ interface EditorMediaListener {
     fun advertiseImageOptimization(listener: () -> Unit)
     fun getImmutablePost(): PostImmutableModel
 }
-
