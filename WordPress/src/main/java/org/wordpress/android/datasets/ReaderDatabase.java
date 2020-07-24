@@ -22,7 +22,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 138;
+    private static final int DB_VERSION = 139;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -94,6 +94,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 136 - added tbl_posts.is_bookmarked
      * 137 - added support for migration scripts
      * 138 - added tbl_posts.is_private_atomic
+     * 139 - introduced new DiscoverCardsTable
      */
 
     /*
@@ -185,6 +186,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 currentVersion++;
             case 137:
                 db.execSQL("ALTER TABLE tbl_posts ADD is_private_atomic BOOLEAN;");
+                currentVersion++;
+            case 138:
+                ReaderDiscoverCardsTable.INSTANCE.createTable(db);
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

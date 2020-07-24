@@ -6,7 +6,10 @@ import com.wordpress.rest.RestRequest.Listener
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
+import org.wordpress.android.datasets.ReaderDiscoverCardsTable
+import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType.DEFAULT
@@ -87,11 +90,11 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
 
         // Parse the json into cards model objects
         val cards = parseCards(fullCardsJson)
-        // TODO malinjir Save posts into db
+        insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
 
         // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
         val simplifiedCardsJson = simplifyJson(fullCardsJson)
-        // TODO malinjir Save simplified json into db
+        insertCardsJsonIntoDb(simplifiedCardsJson)
 
         val nextPageHandle = parseNextPageHandle(json)
         // TODO malinjir save next page handle into shared preferences
@@ -115,6 +118,12 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
             }
         }
         return cards
+    }
+
+    private fun insertPostsIntoDb(posts: List<ReaderPost>) {
+        val postList = ReaderPostList()
+        postList.addAll(posts)
+        ReaderPostTable.addOrUpdatePosts(null, postList)
     }
 
     /**
@@ -155,6 +164,10 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
             interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
         }
         return interestTags
+    }
+
+    private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray) {
+        ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString())
     }
 
     private fun parseInterestTag(jsonInterest: JSONObject): ReaderTag {
