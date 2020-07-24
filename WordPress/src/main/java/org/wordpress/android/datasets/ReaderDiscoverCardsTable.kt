@@ -46,17 +46,17 @@ object ReaderDiscoverCardsTable {
     fun loadDiscoverCardsJsons(): List<String> {
         val c = getReadableDb()
                 .rawQuery("SELECT * FROM $DISCOVER_CARDS_TABLE ORDER BY _id ASC", null)
-        return try {
-            val cardJsonList = arrayListOf<String>()
+        val cardJsonList = arrayListOf<String>()
+        try {
             if (c.moveToFirst()) {
                 do {
                     val cardJson = c.getString(c.getColumnIndex(CARDS_JSON_COLUMN))
                     cardJsonList.add(cardJson)
                 } while (c.moveToNext())
             }
-            return cardJsonList
         } finally {
             SqlUtils.closeCursor(c)
         }
+        return cardJsonList
     }
 }
