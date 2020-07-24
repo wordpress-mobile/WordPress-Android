@@ -1,101 +1,84 @@
 <ar>
-15.2:
-إضافات محرِّر المكوِّن: تمت إضافة دعم المحرِّر إلى الألوان والتدرجات المحدِّدة للقوالب على مكوِّني الغلاف والزر. تكتمل الآن عمليات رفع مقاطع الفيديو في مكوِّن الغلاف بعد إغلاق المحرِّر. تظهر الآن معلومات قياس عدد المكوِّنات والكلمات والأحرف.
+15.3:
+تحديثات محرِّر المكوِّن: يوجد في جميع المكوِّنات الآن وظائف النسخ والقص واللصق والتكرار. يمكن تحرير المكوِّنات غير المدعومة على حدة. (ملحوظة: لا يتوافر تحرير المكوِّن غير المدعوم للمواقع المستضافة ذاتيًا أو المواقع التي تتحوَّل افتراضيًا إلى المحرِّر التقليدي).
 
-إصلاحات: تم إصلاح مشكلات عرض تفاصيل المقالات في القارئ، ومعالجة اكتمال الرفع في محرِّر المكوِّن، والأعطال التي ستحدث عندما تحوي استجابة واجهة برمجة التطبيقات في ووردبريس نصًا فارغًا.
+تحديثات واجهة المستخدم: تم توضيح الصياغة وإضافة مربعات حوار التأكيد عند نقل المقالات إلى سلة المهملات.
 </ar>
-<de-DE>
-15,2:
-Erweiterungen des Block-Editors: Unterstützt jetzt durch das Theme definierte Farben sowie Verläufe in Cover- und Button-Blöcken. Video-Uploads im Cover-Block werden abgeschlossen, nachdem der Editor geschlossen wurde. Die Kennzahlen für Blöcke, Wörter und Zeichen werden jetzt angezeigt.
-
-Behoben: Probleme mit der Darstellung von Beitragsdetails im Reader, Verarbeitung des Upload-Abschlusses im Block-Editor sowie ein Absturz, wenn die WordPress-API-Reaktion einen leeren Text besitzt.
-</de-DE>
 <en-US>
-15.2:
-Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.
+15.3:
+Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)
 
-Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.
+UI updates: Clarified wording and added confirmation dialogs when trashing posts.
 </en-US>
 <es-ES>
-15.2:
-Añadidos al editor de bloques: Se ha añadido al editor compatibilidad para colores y degradados definidos por el tema en los bloques de cubierta y botón. El bloque de vídeo de portada se completa ahora después de que el editor se haya cerrado. Ahora se muestra la información métrica del recuento de bloques, palabras y caracteres.
+15.3:
+Actualizaciones del editor de bloques: Ahora, todos los bloques tienen la funcionalidad de copiar, cortar, pegar y duplicar. Los bloques no compatibles pueden ser editados individualmente. (Nota: La edición de bloques no compatibles no está disponible para los sitios autoalojados o los sitios con el editor clásico por defecto).
 
-Correcciones: Se han corregido los problemas de procesamiento de detalles de las entradas del lector y el bloqueo en la respuesta de la API de WordPress.
+Actualizaciones de la interfaz de usuario: Se ha aclarado la redacción y se han añadido diálogos de confirmación al enviar entradas a la papelera.
 </es-ES>
-<fr-CA>
-15.2 
-Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
-
-Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
-</fr-CA>
-<fr-FR>
-15.2 
-Ajouts à l’éditeur de bloc : ajout de la prise en charge de l'éditeur pour les couleurs et les dégradés définis par thème sur les blocs Bannière et Bouton. Le téléchargement des vidéos du bloc Bannière s'achève après la fermeture de l'éditeur. Les informations métriques sur les blocs, les mots et le nombre de caractères sont affichées.
-
-Corrections : Correctifs sur des problèmes de rendu de publication sur le Lecteur et d’un plantage de la réponse de l’API WordPress.
-</fr-FR>
 <iw-IL>
-15.2:
-תוספות לעורך הבלוקים: הוספנו תמיכה בעורך לצבעים ולמעברי צבע שמוגדרים בערכת העיצוב בבלוקים 'כיסוי' ו'כפתור'. ההעלאות של וידאו בבלוק הכיסוי כעת מושלמות לאחר הסגירה של העורך. פרטי הספירה של בלוקים, מילים ותווים מוצגים כעת.
+15.3:
+עדכונים בעורך הבלוקים: הוספנו לכל הבלוקים אפשרויות של העתקה, חיתוך, הדבקה ושכפול. ניתן לערוך בנפרד בלוקים שלא תומכים באפשרויות. (לתשומת ליבך: עריכה של בלוקים שלא נתמכים לא זמינה באתרים באחסון עצמי או באתרים שבהם העורך הקלאסי הוא ברירת המחדל.)
 
-תיקונים: תיקנו בעיות בעיבוד של פרטי הפוסט ב-Reader, את הטיפול בהשלמת ההעלאה בעורך הבלוקים וקריסה שהתרחשה כאשר המענה של API ב-WordPress היה ללא תוכן.
+עדכון לממשק המשתמש: הוספנו מלל ברור יותר ותיבות דו-שיח לאישור כאשר מעבירים פוסטים לפח.
 </iw-IL>
 <id>
-15.2:
-Tambahan penyunting blok: Dukungan penyunting ditambahkan untuk warna dan gradasi yang berdasarkan tema pada blok Sampul dan Tombol. Pengunggahan video blok sampul kini selesai setelah penyunting ditutup. Informasi metrik mengenai jumlah blok, kata, dan karakter kini ditampilkan.
+15.3:
+Pembaruan penyunting blok: Semua blok kini memiliki fungsionalitas Salin, Potong, Tempel, dan Duplikasi. Blok yang tidak didukung dapat diedit secara individual. (Catatan: Pengeditan blok yang tidak didukung belum tersedia untuk situs yang di-hosting sendiri atau situs yang menggunakan editor lama sebagai editor asal.)
 
-Perbaikan: Masalah pemuatan detail pos Pembaca, penanganan penyelesaian unggahan pada penyunting Blok, dan crash yang terjadi ketika respons API WordPress tidak diisi telah diperbaiki.
+Pembaruan UI: Susunan kata yang lebih jelas dan penambahan dialog konfirmasi ketika membuang pos.
 </id>
-<it-IT>
-15.2:
-Aggiunte all'editor a blocchi: supporto all'editor aggiunto per colori e gradienti specifici del tema sui blocchi Copertina e Pulsante. I caricamenti di video del blocco Copertina vengono completati dopo la chiusura dell'editor. Vengono visualizzate le informazioni di tipo metrico del blocco, del conteggio di parole e caratteri.
-
-Correzioni: corretti problemi di restituzione dei dettagli dell'articolo del Reader e un arresto anomalo in risposta a un API di WordPress.
-</it-IT>
 <ja-JP>
-15.2 : 
-ブロックエディターの追加 : カバーブロックとボタンブロックのテーマ定義カラーとグラデーションにエディターのサポートが追加されました。 エディターを閉じるとカバーブロックの動画アップロードが完了します。 ブロック数、単語数、文字数のメトリック情報が表示されます。
+15.3: 
+ブロックエディターの更新 : すべてのブロックにコピー、切り取り、貼り付け、複製の機能が追加されました。 サポート対象外のブロックを個別に編集できます (注 : サポート対象外ブロックの編集はインストール型のサイトまたは初期設定で旧エディターに設定されているサイトでは利用できません)。 
 
-修正 : Reader 投稿の詳細におけるレンダリングの問題、ブロックエディターにおけるアップロード完了処理、および WordPress API の応答に空の本文がある場合にクラッシュする問題を修正しました。
+UI の更新 : 表現を明確化し、投稿をゴミ箱に移動する前の確認メッセージを追加しました。
 </ja-JP>
-<nl-NL>
-Blok-editor toevoegingen: Redactionele ondersteuning toegevoegd voor thema gedefinieerde kleuren en kleurverlopen op cover- en knop blokken. Cover blok video-uploads zijn nu voltooid nadat de editor is gesloten. Blok-, woord- en karakter telling metrische informatie wordt nu weergegeven.
+<ko-KR>
+15.3:
+블록 편집기 업데이트: 모든 블록이 이제 복사, 잘라내기, 붙여넣기, 그리고 복제 기능을 가져요. 지원하지 않는 블록은 개별적으로 편집할 수 있어요. (안내: 지원하지 않는 블록 편집은 자체 호스팅 사이트나 클래식 편집기가 기본인 사이트에서는 사용할 수 없어요.)
 
-Opgelost: Problemen met de weergave van de Reader bericht details, de afhandeling van de upload in de blok-editor, en een crash die zou optreden wanneer de WordPress API-reactie een lege body heeft
+UI 업데이트: 표현을 명확하게 하고 글을 휴지통에 버릴 때 확인 대화상자를 추가했어요.
+</ko-KR>
+<nl-NL>
+15.3:
+Block editor updates: Alle blokken hebben nu de functies Kopiëren, Knippen, Plakken en Dupliceren. Niet ondersteunde blokken kunnen afzonderlijk worden bewerkt. (Opmerking: niet ondersteunde blokbewerking is niet beschikbaar voor zelf gehoste sites of sites die standaard de klassieke editor gebruiken.)
+
+UI updates: Verduidelijkte bewoordingen en toegevoegde bevestiging dialogen bij het verplaatsen van berichten naar de prullenbak.
 </nl-NL>
 <pt-BR>
-15.2:
-Adições ao editor de blocos: adicionamos suporte aos blocos Cobertura e Botão a cores e gradientes definidos pelo tema . Enviar um vídeo usando o bloco Cobertura agora finaliza o envio mesmo que o editor seja fechado. Exibição de métricas de blocos, palavras e caracteres.
+15.3:
+Atualizações do editor de bloco: Todos os blocos agora têm a funcionalidade Copiar, Recortar, Colar e Duplicar. Blocos não suportados podem ser editados individualmente. (Nota: A edição de bloco não suportados não está disponível para sites auto-hospedados ou sites com o padrão do editor clássico.)
 
-Correções: corrigimos a exibição de detalhes de posts no Leitor, melhoramos como envio de arquivos são tratados no editor de blocos, e corrigimos um conflito com a API do WordPress quando a resposta estiver vazia.
+Atualizações na interface de usuário: Formulação esclarecida e caixas de diálogo de confirmação adicionadas ao enviar mensagens para a lixeira.
 </pt-BR>
 <ru-RU>
-15.2:
-Добавлено в редактор блоков: Поддержка редактором цветов темы и градиентов в блоках кнопки и обложки. Загрузка видео в блок обложки будет завершена даже если редактор будет закрыт. Отображение счетчика блоков, слов и символов.
+15,3:
+Обновления редактора блоков: все блоки теперь имеют функции копирования, вырезания, вставки и дублирования. Неподдерживаемые блоки можно редактировать индивидуально. (Примечание. Неподдерживаемое редактирование блоков недоступно для сайтов с самостоятельным размещением или сайтов, для которых по умолчанию используется классический редактор.)
 
-Исправлено: Отображение подробностей в Чтиве, завершение загрузки в редакторе, падение при пустом ответе WordPress API.
+Обновления интерфейса: уточнены формулировки и добавлены диалоги подтверждения при удалении сообщений.
 </ru-RU>
 <sv-SE>
-15.2:
-Nytt i blockredigeraren: Stöd i redigeraren för temadefinierade färger och gradienter i omslags- och knappblock. Uppladdning av video för omslagsblock fullföljs även efter redigeraren har stängts. Räknare för block, ord och tecken visas.
+15.3:
+Nytt i blockredigeraren: Nu har alla block funktionerna kopiera, klipp ut, klistra och duplicera. Block som saknar stöd kan redigeras individuellt. (Obs: redigering av block som inte stöds är inte tillgängligt för webbplats på eget webbhotell eller om webbplatsen som standard använder den klassiska redigeraren.)
 
-Rättelser: Rättat problem i läsaren med att visa inläggsuppgifter och fullföljande av uppladdning i blockredigeraren samt en krasch vid tomt svar från WordPress API.
+Uppdateringar av användargränssnittet: Förtydligat vissa beskrivningar, lagt till bekräftelsedialog när inlägg kastas.
 </sv-SE>
 <tr-TR>
-15,2:
-Blok düzenleyicisi eklemeleri: Kapak ve Düğme bloklarında tema tanımlı renkler ve gradyanlar için düzenleyici desteği eklendi. Kapak bloğu video yüklemeleri, düzenleyici kapatıldıktan sonra tamamlanır. Blok, sözcük ve karakter sayısı ile ilgili ölçüm bilgileri görüntülenir.
+15.3:
+Blok düzenleyici güncellemeleri: Artık tüm bloklar kopyala, kes, yapıştır ve çoğalt işlevlerine sahiptir. Desteklenmeyen bloklar ayrı ayrı düzenlenebilir. (Not: Desteklenmeyen blok düzenleme, kendi kendine barındırılan siteler veya varsayılan olarak klasik düzenleyiciye sahip siteler için kullanılamaz.)
 
-Düzeltmeler: Okuyucu gönderim ayrıntısı oluşturma sorunları ve bir WordPress API yanıt kilitlenmesi düzeltildi.
+Kullanıcı arayüzü güncellemeleri: Mesajları çöp kutusuna gönderirken açıklamalı ifadeler ve onay iletişim kutuları eklendi.
 </tr-TR>
 <zh-CN>
-15.2：
-区块编辑器添加内容： 为封面和按钮区块上的主题定义颜色和渐变添加了编辑器支持。 现在，封面区块视频上传在关闭编辑器后完成。 现在显示区块、字词和字符计数指标信息。
+15.3：
+区块编辑器更新：所有区块现在都提供拷贝、剪切、粘贴和复杂功能。 您可以单独编辑不受支持的区块。 （注意：编辑不受支持区块功能不适用于自托管站点或默认使用经典编辑器的站点。）
 
-修复：修复了阅读器文章详细信息呈现问题、区块编辑器中上传完成的处理以及 WordPress API 响应的正文为空时可能发生的崩溃问题。
+UI 更新：将文章放入回收站时显示说明内容，并添加了确认对话框。
 </zh-CN>
 <zh-TW>
-15.2：
-區塊編輯器新功能：新增編輯器支援，封面和按鈕區塊可設定佈景主題定義的顏色和漸層色彩。 封面區塊視訊現在會在編輯器關閉後上傳完成。 系統現在會顯示區塊、文字和字元數指標資訊。
+15.3：
+區塊編輯器更新：所有區塊現在提供「複製」、「剪下」、「貼上」和「重複」功能。 你現在可以個別編輯不支援的區塊。 (請注意：自助託管和預設使用傳統編輯器的網站無法編輯不支援的區塊。)
 
-修正：修復讀取器文章詳細資料轉譯問題、區塊編輯器中上傳完成的處理工作，以及 WordPress API 回應本文空白時發生的當機情況。
+UI 更新：將文章移至垃圾桶時，系統會顯示說明文字，並新增確認對話方塊。
 </zh-TW>

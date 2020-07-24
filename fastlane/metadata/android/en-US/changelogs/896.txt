@@ -1,0 +1,4 @@
+15.3:
+Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)
+
+UI updates: Clarified wording and added confirmation dialogs when trashing posts.
