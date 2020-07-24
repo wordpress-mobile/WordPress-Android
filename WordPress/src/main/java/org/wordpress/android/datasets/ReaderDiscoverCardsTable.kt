@@ -11,10 +11,10 @@ object ReaderDiscoverCardsTable {
     private const val CARDS_JSON_COLUMN = "cards_json"
     fun createTable(db: SQLiteDatabase) {
         db.execSQL(
-                "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE ("
-                        + "  _id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                        + " $CARDS_JSON_COLUMN TEXT"
-                        + ")"
+                "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE (" +
+                        "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                        " $CARDS_JSON_COLUMN TEXT" +
+                        ")"
         )
     }
 
