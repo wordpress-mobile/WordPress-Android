@@ -1124,9 +1124,17 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
-                    findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, mSite, event.errorMessage);
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.tab_layout),
+                    true,
+                    !TextUtils.isEmpty(event.errorMessage)
+                    && event.errorMessage.contains(getString(R.string.error_media_quota_exceeded))
+                        ? null
+                        : event.mediaModelList,
+                    mSite,
+                    event.errorMessage
+            );
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }
