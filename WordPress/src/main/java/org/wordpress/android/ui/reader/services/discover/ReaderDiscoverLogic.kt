@@ -16,7 +16,17 @@ import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
-import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_POST
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_TYPE
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_NEXT_PAGE_HANDLE
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_TAG_SLUG
+import org.wordpress.android.ui.reader.ReaderConstants.JSON_TAG_TITLE
+import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
+import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
+import org.wordpress.android.ui.reader.ReaderConstants.POST_SITE_ID
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
@@ -86,14 +96,14 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
             resultListener.onUpdateResult(FAILED)
             return
         }
-        val fullCardsJson = json.optJSONArray(ReaderConstants.JSON_CARDS)
+        val fullCardsJson = json.optJSONArray(JSON_CARDS)
 
         // Parse the json into cards model objects
         val cards = parseCards(fullCardsJson)
         insertPostsIntoDb(cards.filterIsInstance<ReaderPostCard>().map { it.post })
 
         // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
-        val simplifiedCardsJson = simplifyJson(fullCardsJson)
+        val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
         insertCardsJsonIntoDb(simplifiedCardsJson)
 
         val nextPageHandle = parseNextPageHandle(json)
@@ -106,13 +116,13 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
-            when (cardJson.getString(ReaderConstants.JSON_CARD_TYPE)) {
-                ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
+            when (cardJson.getString(JSON_CARD_TYPE)) {
+                JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
                     val interests = parseInterestTagsList(cardJson)
                     cards.add(InterestsYouMayLikeCard(interests))
                 }
-                ReaderConstants.JSON_CARD_POST -> {
-                    val post = ReaderPost.fromJson(cardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA))
+                JSON_CARD_POST -> {
+                    val post = ReaderPost.fromJson(cardJson.getJSONObject(JSON_CARD_DATA))
                     cards.add(ReaderPostCard(post))
                 }
             }
@@ -127,31 +137,43 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
     }
 
     /**
-     * This methods replace the gigantic post object with its simplified version. The post data are already stored in
-     * the database so we don't need to store them within the json.
+     * This method creates a simplified version of the provided json.
+     *
+     * It for example copies only ids from post object as we don't need to store the gigantic post in the json
+     * as it's already stored in the db.
      */
-    private fun simplifyJson(cardsJsonArray: JSONArray): JSONArray {
+    private fun createSimplifiedJson(cardsJsonArray: JSONArray): JSONArray {
+        val simplifiedJson = JSONArray()
         for (i in 0 until cardsJsonArray.length()) {
             val cardJson = cardsJsonArray.getJSONObject(i)
-            if (cardJson.getString(ReaderConstants.JSON_CARD_TYPE) == ReaderConstants.JSON_CARD_POST) {
-                cardsJsonArray.put(i, convertToSimplifiedPostJson(cardJson))
+            when (cardJson.getString(JSON_CARD_TYPE)) {
+                JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
+                    simplifiedJson.put(i, cardJson)
+                }
+                JSON_CARD_POST -> {
+                    simplifiedJson.put(i, createSimplifiedPostJson(cardJson))
+                }
             }
         }
-        return cardsJsonArray
+        return simplifiedJson
     }
 
     /**
-     * Removes all unnecessary fields from the gigantic post object - keeps only postId, siteId and pseudoId.
+     * Create a simplified copy of the json - keeps only postId, siteId and pseudoId.
      */
-    private fun convertToSimplifiedPostJson(cardJson: JSONObject): JSONObject {
-        val originalPostData = cardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA)
+    private fun createSimplifiedPostJson(originalCardJson: JSONObject): JSONObject {
+        val originalPostData = originalCardJson.getJSONObject(JSON_CARD_DATA)
+
         val simplifiedPostData = JSONObject()
         // copy only fields which uniquely identify this post
-        simplifiedPostData.put(ReaderConstants.POST_ID, originalPostData.get(ReaderConstants.POST_ID))
-        simplifiedPostData.put(ReaderConstants.POST_SITE_ID, originalPostData.get(ReaderConstants.POST_SITE_ID))
-        simplifiedPostData.put(ReaderConstants.POST_PSEUDO_ID, originalPostData.get(ReaderConstants.POST_PSEUDO_ID))
-        cardJson.put(ReaderConstants.JSON_CARD_DATA, simplifiedPostData)
-        return cardJson
+        simplifiedPostData.put(POST_ID, originalPostData.get(POST_ID))
+        simplifiedPostData.put(POST_SITE_ID, originalPostData.get(POST_SITE_ID))
+        simplifiedPostData.put(POST_PSEUDO_ID, originalPostData.get(POST_PSEUDO_ID))
+
+        val simplifiedCardJson = JSONObject()
+        simplifiedCardJson.put(JSON_CARD_TYPE, originalCardJson.getString(JSON_CARD_TYPE))
+        simplifiedCardJson.put(JSON_CARD_DATA, simplifiedPostData)
+        return simplifiedCardJson
     }
 
     private fun parseInterestTagsList(jsonObject: JSONObject?): ReaderTagList {
@@ -159,7 +181,7 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         if (jsonObject == null) {
             return interestTags
         }
-        val jsonInterests = jsonObject.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
+        val jsonInterests = jsonObject.optJSONArray(JSON_CARD_DATA) ?: return interestTags
         for (i in 0 until jsonInterests.length()) {
             interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
         }
@@ -171,11 +193,11 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
     }
 
     private fun parseInterestTag(jsonInterest: JSONObject): ReaderTag {
-        val tagTitle = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_TITLE)
-        val tagSlug = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_SLUG)
+        val tagTitle = JSONUtils.getStringDecoded(jsonInterest, JSON_TAG_TITLE)
+        val tagSlug = JSONUtils.getStringDecoded(jsonInterest, JSON_TAG_SLUG)
         return ReaderTag(tagSlug, tagTitle, tagTitle, "", DEFAULT)
     }
 
     private fun parseNextPageHandle(jsonObject: JSONObject): String =
-            jsonObject.getString(ReaderConstants.JSON_NEXT_PAGE_HANDLE)
+            jsonObject.getString(JSON_NEXT_PAGE_HANDLE)
 }
