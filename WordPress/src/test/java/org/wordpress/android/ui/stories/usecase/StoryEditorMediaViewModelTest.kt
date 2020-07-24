@@ -84,7 +84,8 @@ class StoryEditorMediaViewModelTest : BaseUnitTest() {
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(
                 resultForAddNewMediaToEditorAsync = false
         )
-        val storyEditorMediaViewModel = createStoryEditorMediaViewModel(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
+        val storyEditorMediaViewModel =
+                createStoryEditorMediaViewModel(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
 
         val captor = argumentCaptor<Event<SnackbarMessageHolder>>()
         val observer: Observer<Event<SnackbarMessageHolder>> = mock()
@@ -104,7 +105,8 @@ class StoryEditorMediaViewModelTest : BaseUnitTest() {
         val addLocalMediaToPostUseCase = createAddLocalMediaToPostUseCase(
                 resultForAddNewMediaToEditorAsync = true
         )
-        val storyEditorMediaViewModel = createStoryEditorMediaViewModel(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
+        val storyEditorMediaViewModel =
+                createStoryEditorMediaViewModel(addLocalMediaToPostUseCase = addLocalMediaToPostUseCase)
 
         val captor = argumentCaptor<Event<SnackbarMessageHolder>>()
         val observer: Observer<Event<SnackbarMessageHolder>> = mock()

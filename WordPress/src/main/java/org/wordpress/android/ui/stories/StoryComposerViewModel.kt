@@ -26,7 +26,6 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
-import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import java.util.Objects
