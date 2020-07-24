@@ -344,6 +344,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
                 // TODO WPSTORIES add TRACKS (see how it's tracked above? maybe do along the same lines)
                 Intent data = new Intent()
                         .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
+                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
                         .putExtra(EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
