@@ -25,7 +25,6 @@ import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
@@ -43,7 +42,7 @@ class StoryEditorMediaViewModel @Inject constructor(
         get() = mainDispatcher + job
 
     private lateinit var site: SiteModel
-    private lateinit var editorMediaListener: WeakReference<EditorMediaListener>
+    private lateinit var editorMediaListener: EditorMediaListener
 
     private val _uiState: MutableLiveData<AddMediaToStoryPostUiState> = MutableLiveData()
     val uiState: LiveData<AddMediaToStoryPostUiState> = _uiState
@@ -51,7 +50,7 @@ class StoryEditorMediaViewModel @Inject constructor(
     private val _snackBarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val snackBarMessage = _snackBarMessage as LiveData<Event<SnackbarMessageHolder>>
 
-    fun start(site: SiteModel, editorMediaListener: WeakReference<EditorMediaListener>) {
+    fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
         this.site = site
         this.editorMediaListener = editorMediaListener
         _uiState.value = AddingMediaToStoryIdle
@@ -60,7 +59,7 @@ class StoryEditorMediaViewModel @Inject constructor(
     // region Adding new media to a post
     fun advertiseImageOptimisationAndAddMedia(uriList: List<Uri>) {
         if (mediaUtilsWrapper.shouldAdvertiseImageOptimization()) {
-            editorMediaListener.get()?.advertiseImageOptimization {
+            editorMediaListener.advertiseImageOptimization {
                 addNewMediaItemsToEditorAsync(
                         uriList,
                         false
@@ -78,25 +77,19 @@ class StoryEditorMediaViewModel @Inject constructor(
             } else {
                 AddingSingleMediaToStory
             }
-            editorMediaListener.get()?.let {
-                val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
-                        uriList,
-                        site,
-                        freshlyTaken,
-                        it,
-                        false // don't start upload for StoryComposer, that'll be all started
-                        // when finished composing
-                )
-                if (!allMediaSucceed) {
-                    throwSnackBarMessageError()
-                }
-                _uiState.value = AddingMediaToStoryIdle
-            } ?: throwSnackBarMessageError()
+            val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
+                    uriList,
+                    site,
+                    freshlyTaken,
+                    editorMediaListener,
+                    false // don't start upload for StoryComposer, that'll be all started
+                                            // when finished composing
+            )
+            if (!allMediaSucceed) {
+                _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
+            }
+            _uiState.value = AddingMediaToStoryIdle
         }
-    }
-
-    private fun throwSnackBarMessageError () {
-        _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
     }
 
     fun onPhotoPickerMediaChosen(uriList: List<Uri>) {
@@ -111,14 +104,12 @@ class StoryEditorMediaViewModel @Inject constructor(
 
     fun addExistingMediaToEditorAsync(source: AddExistingMediaSource, mediaIdList: List<Long>) {
         launch {
-            editorMediaListener.get()?.let {
-                addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
-                        site,
-                        source,
-                        mediaIdList,
-                        it
-                )
-            }
+            addExistingMediaToPostUseCase.addMediaExistingInRemoteToEditorAsync(
+                    site,
+                    source,
+                    mediaIdList,
+                    editorMediaListener
+            )
         }
     }
 
