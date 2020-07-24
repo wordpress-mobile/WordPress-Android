@@ -46,12 +46,11 @@ import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.PublishPost
-import org.wordpress.android.ui.posts.editor.media.EditorMedia
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.media.StoryEditorMedia
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -78,7 +77,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         PrepublishingBottomSheetListener {
     private var site: SiteModel? = null
 
-    @Inject lateinit var editorMedia: EditorMedia
+    @Inject lateinit var editorMedia: StoryEditorMedia
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
@@ -153,7 +152,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             )
         }
 
-        editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
+        editorMedia.start(requireNotNull(site), this)
         setupEditorMediaObserver()
         setupViewModelObservers()
     }
@@ -286,7 +285,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     private fun setupEditorMediaObserver() {
         editorMedia.uiState.observe(this,
-                Observer { uiState: AddMediaToPostUiState? ->
+                Observer { uiState: AddMediaToStoryPostUiState? ->
                     if (uiState != null) {
                         updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
                         if (uiState.editorOverlayVisibility) {

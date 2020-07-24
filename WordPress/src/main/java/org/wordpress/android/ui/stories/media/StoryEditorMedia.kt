@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.posts.editor.media
+package org.wordpress.android.ui.stories.media
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -30,9 +30,19 @@ import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
 import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialog
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
+import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
+import org.wordpress.android.ui.posts.editor.media.CleanUpMediaToPostAssociationUseCase
+import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
+import org.wordpress.android.ui.posts.editor.media.ReattachUploadingMediaUseCase
+import org.wordpress.android.ui.posts.editor.media.RemoveMediaUseCase
+import org.wordpress.android.ui.posts.editor.media.RetryFailedMediaUploadUseCase
+import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMediaToStoryIdle
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingSingleMediaToStory
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -44,12 +54,11 @@ import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-class EditorMedia @Inject constructor(
+class StoryEditorMedia @Inject constructor(
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val getMediaModelUseCase: GetMediaModelUseCase,
     private val dispatcher: Dispatcher,
@@ -77,8 +86,8 @@ class EditorMedia @Inject constructor(
 
     private val deletedMediaItemIds = mutableListOf<String>()
 
-    private val _uiState: MutableLiveData<AddMediaToPostUiState> = MutableLiveData()
-    val uiState: LiveData<AddMediaToPostUiState> = _uiState
+    private val _uiState: MutableLiveData<AddMediaToStoryPostUiState> = MutableLiveData()
+    val uiState: LiveData<AddMediaToStoryPostUiState> = _uiState
 
     private val _snackBarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     val snackBarMessage = _snackBarMessage as LiveData<Event<SnackbarMessageHolder>>
@@ -86,14 +95,10 @@ class EditorMedia @Inject constructor(
     private val _toastMessage = SingleLiveEvent<Event<ToastMessageHolder>>()
     val toastMessage: LiveData<Event<ToastMessageHolder>> = _toastMessage
 
-    // for keeping the media uri while asking for permissions
-    var droppedMediaUris: ArrayList<Uri> = ArrayList()
-    // endregion
-
     fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
         this.site = site
         this.editorMediaListener = editorMediaListener
-        _uiState.value = AddingMediaIdle
+        _uiState.value = AddingMediaToStoryIdle
     }
 
     // region Adding new media to a post
@@ -117,21 +122,22 @@ class EditorMedia @Inject constructor(
     fun addNewMediaItemsToEditorAsync(uriList: List<Uri>, freshlyTaken: Boolean) {
         launch {
             _uiState.value = if (uriList.size > 1) {
-                AddingMultipleMedia
+                AddingMultipleMediaToStory
             } else {
-                AddingSingleMedia
+                AddingSingleMediaToStory
             }
             val allMediaSucceed = addLocalMediaToPostUseCase.addNewMediaToEditorAsync(
                     uriList,
                     site,
                     freshlyTaken,
                     editorMediaListener,
-                    true
+                    false // don't start upload for StoryComposer, that'll be all started
+                                            // when finished composing
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
             }
-            _uiState.value = AddingMediaIdle
+            _uiState.value = AddingMediaToStoryIdle
         }
     }
 
@@ -306,7 +312,7 @@ class EditorMedia @Inject constructor(
         listener.onMediaUploadFailed(media.id.toString())
     }
 
-    sealed class AddMediaToPostUiState(
+    sealed class AddMediaToStoryPostUiState(
         val editorOverlayVisibility: Boolean,
         val progressDialogUiState: ProgressDialogUiState
     ) {
@@ -315,7 +321,7 @@ class EditorMedia @Inject constructor(
          * progress dialog in this situation - otherwise the user could accidentally back out of the process
          * before all items were added
          */
-        object AddingMultipleMedia : AddMediaToPostUiState(
+        object AddingMultipleMediaToStory : AddMediaToStoryPostUiState(
                 editorOverlayVisibility = true,
                 progressDialogUiState = VisibleProgressDialog(
                         messageString = UiStringRes(R.string.add_media_progress),
@@ -324,8 +330,8 @@ class EditorMedia @Inject constructor(
                 )
         )
 
-        object AddingSingleMedia : AddMediaToPostUiState(true, HiddenProgressDialog)
+        object AddingSingleMediaToStory : AddMediaToStoryPostUiState(true, HiddenProgressDialog)
 
-        object AddingMediaIdle : AddMediaToPostUiState(false, HiddenProgressDialog)
+        object AddingMediaToStoryIdle : AddMediaToStoryPostUiState(false, HiddenProgressDialog)
     }
 }
