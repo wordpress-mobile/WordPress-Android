@@ -29,11 +29,11 @@ object ReaderDiscoverCardsTable {
     }
 
     private fun getReadableDb(): SQLiteDatabase {
-        return WordPress.wpDB.database
+        return ReaderDatabase.getReadableDb()
     }
 
     private fun getWritableDb(): SQLiteDatabase {
-        return WordPress.wpDB.database
+        return ReaderDatabase.getWritableDb()
     }
 
     fun addCardsPage(cardsJson: String) {
