@@ -187,6 +187,10 @@ public class StockMediaPickerActivity extends LocaleAwareActivity implements Sea
 
         mTextAdd.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+                if (null != mSite && mSite.hasDiskSpaceQuotaInformation() && mSite.getSpaceAvailable() <= 0) {
+                    ToastUtils.showToast(StockMediaPickerActivity.this, R.string.error_media_quota_exceeded);
+                    return;
+                }
                 uploadSelection();
             }
         });
