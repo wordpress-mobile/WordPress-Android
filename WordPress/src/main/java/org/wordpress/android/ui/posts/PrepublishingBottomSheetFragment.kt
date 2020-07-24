@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -142,6 +143,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.triggerOnSubmitButtonClickedListener.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { publishPost ->
                 prepublishingBottomSheetListener?.onSubmitButtonClicked(publishPost)
+            }
+        })
+
+        viewModel.dismissKeyboard.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                ActivityUtils.hideKeyboardForced(view)
             }
         })
 
