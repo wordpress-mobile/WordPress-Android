@@ -18,7 +18,6 @@ import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource
 import org.wordpress.android.ui.posts.editor.media.AddExistingMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.editor.media.UpdateMediaModelUseCase
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMediaToStoryIdle
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingMultipleMediaToStory
 import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState.AddingSingleMediaToStory
@@ -32,7 +31,6 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class StoryEditorMedia @Inject constructor(
-    private val updateMediaModelUseCase: UpdateMediaModelUseCase,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
