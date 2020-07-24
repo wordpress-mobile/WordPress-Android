@@ -8,7 +8,6 @@ Language: gl_ES
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">Dalle ao teu sitio un nome que reflicte a súa personalidade e temática. As primeiras impresións contan!</string>
     <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
     <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
     <string name="gutenberg_native_remove_block">Eliminar bloque</string>

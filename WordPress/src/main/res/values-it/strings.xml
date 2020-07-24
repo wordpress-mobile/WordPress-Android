@@ -8,7 +8,6 @@ Language: it
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento. La prima impressione conta.</string>
     <string name="quick_start_list_update_site_title_title">Imposta il titolo del sito</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b>%1$s&lt;/b> per impostare un nuovo titolo</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>
     <string name="gutenberg_native_s_block_options">%s opzioni blocco</string>
     <string name="gutenberg_native_remove_block">Rimuovi il blocco</string>

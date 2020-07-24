@@ -8,7 +8,6 @@ Language: en_GB
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
     <string name="quick_start_list_update_site_title_title">Set your site title</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b>%1$s&lt;/b> to set a new title</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Binning this post will also discard local changes, are you sure you want to continue?</string>
     <string name="gutenberg_native_s_block_options">%s block options</string>
     <string name="gutenberg_native_remove_block">Remove block</string>

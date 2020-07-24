@@ -8,7 +8,6 @@ Language: ja_JP
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
     <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
-    <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b>%1$s&lt;/b>をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
     <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
     <string name="gutenberg_native_remove_block">ブロックを削除</string>

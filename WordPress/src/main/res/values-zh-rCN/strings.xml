@@ -8,7 +8,6 @@ Language: zh_CN
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
-    <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b>%1$s&lt;/b> 以设置新标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
     <string name="gutenberg_native_s_block_options">%s 区块选项</string>
     <string name="gutenberg_native_remove_block">移除区块</string>

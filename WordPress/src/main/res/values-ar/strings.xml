@@ -8,7 +8,6 @@ Language: ar
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>
     <string name="quick_start_list_update_site_title_title">تعيين عنوان موقعك</string>
-    <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b>⁦%1$s⁩&lt;/b> لتعيين عنوان جديد</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="gutenberg_native_s_block_options">%s خيارات المكوِّن</string>
     <string name="gutenberg_native_remove_block">إزالة المكوِّن</string>

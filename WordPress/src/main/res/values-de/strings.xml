@@ -8,7 +8,6 @@ Language: de
 <resources>
     <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>
     <string name="quick_start_list_update_site_title_title">Lege deinen Website-Titel fest</string>
-    <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b>%1$s&lt;/b>, um einen neuen Titel festzulegen.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
     <string name="gutenberg_native_s_block_options">%s Blockoptionen</string>
     <string name="gutenberg_native_remove_block">Block entfernen</string>
