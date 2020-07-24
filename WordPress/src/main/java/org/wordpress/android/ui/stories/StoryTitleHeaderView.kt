@@ -10,10 +10,9 @@ import kotlinx.android.synthetic.main.prepublishing_story_title_list_item.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.focusAndShowKeyboard
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
-
-private const val STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY = 1000L
 
 class StoryTitleHeaderView @JvmOverloads constructor(
     context: Context,
@@ -39,9 +38,11 @@ class StoryTitleHeaderView @JvmOverloads constructor(
             story_title.setSelection(title.text.length)
         }
 
-        story_title.postDelayed({
-            story_title.requestFocus()
-        }, STORY_TITLE_EDIT_TEXT_REQUEST_FOCUS_DELAY)
+        story_title.focusAndShowKeyboard()
+
+        story_title_content.setOnClickListener {
+            story_title.focusAndShowKeyboard()
+        }
 
         story_title.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
