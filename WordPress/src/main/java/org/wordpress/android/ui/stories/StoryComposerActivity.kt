@@ -153,7 +153,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         }
 
         storyEditorMedia.start(requireNotNull(site), this)
-        setupEditorMediaObserver()
+        setupStoryEditorMediaObserver()
         setupViewModelObservers()
     }
 
@@ -283,11 +283,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
-    private fun setupEditorMediaObserver() {
+    private fun setupStoryEditorMediaObserver() {
         storyEditorMedia.uiState.observe(this,
                 Observer { uiState: AddMediaToStoryPostUiState? ->
                     if (uiState != null) {
-                        updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
+                        updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
                         if (uiState.editorOverlayVisibility) {
                             showLoading()
                         } else {
@@ -338,7 +338,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
     }
 
-    private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
+    private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
     }
