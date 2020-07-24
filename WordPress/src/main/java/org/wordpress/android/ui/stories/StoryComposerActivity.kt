@@ -310,12 +310,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        storyEditorMedia.toastMessage.observe(this,
-                Observer<Event<ToastMessageHolder>> { event: Event<ToastMessageHolder?> ->
-                    val contentIfNotHandled = event.getContentIfNotHandled()
-                    contentIfNotHandled?.show(this)
-                }
-        )
     }
 
     // EditorMediaListener
