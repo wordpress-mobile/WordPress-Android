@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-03 19:25:40+0000
+Translation-Revision-Date: 2020-07-16 21:36:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e tópico. As primeiras impressões contam!</string>
+    <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
+    <string name="gutenberg_native_s_block_options">Opções do bloco %s</string>
+    <string name="gutenberg_native_remove_block">Remover bloco</string>
+    <string name="gutenberg_native_paste_block">Colar bloco</string>
+    <string name="gutenberg_native_duplicate_block">Duplicar bloco</string>
+    <string name="gutenberg_native_copy_block">Copiar bloco</string>
+    <string name="gutenberg_native_copied_block">Bloco copiado</string>
+    <string name="gutenberg_native_block_settings">Configurações do bloco</string>
+    <string name="gutenberg_native_block_pasted">Bloco colado</string>
+    <string name="gutenberg_native_block_duplicated">Bloco duplicado</string>
+    <string name="gutenberg_native_block_cut">Bloco recortado</string>
+    <string name="gutenberg_native_block_copied">Bloco copiado</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">O título do site pode ser editado somente por contas com função de administrador.</string>
+    <string name="my_site_title_changer_dialog_hint">O título do site é exibido na barra de título do navegador e também no cabeçalho da maioria dos temas.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Tópico</string>
+    <string name="error_update_site_title_network">Não foi possível atualizar o título do site. Verifique sua conexão de rede e tente novamente.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Alterações não salvas</string>
     <string name="gutenberg_native_open_link_in_a_browser">Abrir link no navegador</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Ir para a folha de conteúdo anterior</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Ir para a personalização de gradiente</string>
@@ -24,7 +45,6 @@ Language: pt_BR
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Estamos trabalhando para adicionar novos blocos a cada versão. Enquanto isso, você também pode editar este bloco no navegador.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editar bloco no navegador</string>
     <string name="gutenberg_native_dismiss">Dispensar</string>
-    <string name="prepublishing_nudges_visibility_password">Protegido por senha</string>
     <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
     <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
@@ -55,12 +75,7 @@ Language: pt_BR
     <string name="status_and_visibility">Status e visibilidade</string>
     <string name="update_now">Atualizar agora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Remover %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
-    <string name="gutenberg_native_move_s_up">Mover %s para cima</string>
-    <string name="gutenberg_native_move_s_right">Mover %s para a direita</string>
-    <string name="gutenberg_native_move_s_left">Mover %s para a esquerda</string>
-    <string name="gutenberg_native_move_s_down">Mover %s para baixo</string>
     <string name="gutenberg_native_try_a_starter_layout">Experimente começar com um modelo</string>
     <string name="gutenberg_native_insert_mention">Inserir menção</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
@@ -119,7 +134,9 @@ Language: pt_BR
     <string name="copy_text">Copiar</string>
     <string name="gutenberg_native_number_of_columns">Número de colunas</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mover o bloco para a direita da posição %1$s para a posição %2$s</string>
+    <string name="gutenberg_native_move_block_right">Mover o bloco para a direita</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mover o bloco para a esquerda da posição %1$s para a posição %2$s</string>
+    <string name="gutenberg_native_move_block_left">Mover o bloco para a esquerda</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toque duas vezes para mover o bloco para a direita</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toque duas vezes para mover o bloco para a esquerda</string>
     <string name="gutenberg_native_columns_settings">Configurações de colunas</string>
@@ -202,7 +219,6 @@ Language: pt_BR
     <string name="gutenberg_native_only_show_excerpt">Mostrar apenas o resumo</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Meu portfólio exibe diversos projetos feitos durante minha carreira. Veja minhas informações de contato abaixo e fale comigo.</string>
     <string name="gutenberg_native_link_to">Link para</string>
-    <string name="gutenberg_native_s_settings">Configurações de %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Vamos conversar 👋 Não hesite em entrar em contato usando as informações abaixo ou me envie uma mensagem usando o formulário de contato.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Vamos construir algo juntos!</string>
     <string name="gutenberg_native_let_s_build_something_together">Vamos construir algo juntos!</string>
@@ -349,6 +365,7 @@ Language: pt_BR
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' ainda não é suportado no WordPress para Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
     <string name="gutenberg_native_s_block_empty">Bloco %s. Vazio.</string>
+    <string name="gutenberg_native_cut_block">Recortar bloco</string>
     <string name="gutenberg_native_reset_block">Redefinir bloco</string>
     <string name="gutenberg_native_remove_annotations">Remover anotações</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema ao abrir o vídeo</string>
@@ -365,7 +382,9 @@ Language: pt_BR
     <string name="gutenberg_native_my_post_publish_panel">Meu painel de publicação do post</string>
     <string name="gutenberg_native_my_document_setting_panel">Meu painel de configurações do documento</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mover o bloco acima da linha %1$s para a linha %2$s</string>
+    <string name="gutenberg_native_move_block_up">Mover o bloco para cima</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover o bloco abaixo da linha %1$s para a linha %2$s</string>
+    <string name="gutenberg_native_move_block_down">Mover o bloco para baixo</string>
     <string name="gutenberg_native_link_text">Texto do link</string>
     <string name="gutenberg_native_link_inserted">Link adicionado</string>
     <string name="gutenberg_native_image_caption_s">Legenda da imagem. %s</string>
@@ -594,7 +613,7 @@ Language: pt_BR
     <string name="stats_management_new">Novo</string>
     <string name="stats_management_dismiss_insights_news_card">Dispensar</string>
     <string name="stats_management_try_it_now">Faça um teste</string>
-    <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Clique em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
+    <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Toque em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
     <string name="stats_manage_your_stats">Gerenciar suas estatísticas</string>
     <string name="history_fetching_revisions">Coletando revisões…</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
@@ -620,7 +639,7 @@ Language: pt_BR
     <string name="post_restoring">O post está sendo restaurado</string>
     <string name="post_restored">Post restaurado</string>
     <string name="post_trashing">O post está sendo enviado para a lixeira</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira apagará as alterações salvas localmente. Você tem certeza de que deseja continuar?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Alterações locais</string>
     <string name="button_move_to_draft">Mover para rascunho</string>
     <string name="post_list_toggle_item_layout_list_view">Mudar para visualização de lista</string>
@@ -694,11 +713,11 @@ Language: pt_BR
     <string name="quick_start_dialog_view_site_message">Aproveite seu produto concluído!</string>
     <string name="quick_start_dialog_upload_icon_title">Enviar um ícone do site</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
-    <string name="quick_start_dialog_explore_plans_message_short">Clique em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Clique em %1$s Adicionar página %2$s para criar uma nova página.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Clique em %1$s Páginas do site %2$s para continuar.</string>
-    <string name="quick_start_dialog_check_stats_message_short">Clique em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
-    <string name="quick_start_dialog_upload_site_icon_message_short">Clique em %1$s Ícone do seu site %2$s para enviar um ícone</string>
+    <string name="quick_start_dialog_explore_plans_message_short">Toque em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>
+    <string name="quick_start_dialog_create_new_page_message_short_pages">Toque em %1$s Adicionar página %2$s para criar uma nova página.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Toque em %1$s Páginas %2$s para continuar.</string>
+    <string name="quick_start_dialog_check_stats_message_short">Toque em %1$s Estatísticas %2$s para ver o desempenho de seu site.</string>
+    <string name="quick_start_dialog_upload_site_icon_message_short">Toque em %1$s Ícone do seu site %2$s para enviar um ícone</string>
     <string name="quick_start_dialog_publish_post_message">Crie um rascunho e publique seu primeiro post.</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos pelos passos básicos em criar um site.</string>
     <string name="quick_start_dialog_migration_title">Fizemos algumas alterações em sua lista</string>
@@ -892,26 +911,26 @@ Language: pt_BR
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar.</string>
     <string name="quick_start_dialog_view_site_title">Ver seu site</string>
-    <string name="quick_start_dialog_view_site_message_short">Clique em %1$s Ver site %2$s para visualizar seu site</string>
+    <string name="quick_start_dialog_view_site_message_short">Toque em %1$s Ver site %2$s para visualizar seu site</string>
     <string name="quick_start_dialog_share_site_title">Compartilhar seu site</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Clique em %1$s Compartilhar %2$s para continuar</string>
-    <string name="quick_start_dialog_enable_sharing_message_short_connections">Clique em %1$s Conexões %2$s para adicionar suas contas em redes sociais</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_sharing">Toque em %1$s Compartilhar %2$s para continuar</string>
+    <string name="quick_start_dialog_enable_sharing_message_short_connections">Toque em %1$s Conexões %2$s para adicionar suas contas em redes sociais</string>
     <string name="quick_start_dialog_share_site_message">Conectar suas contas em redes sociais para compartilhar novos posts automaticamente.</string>
     <string name="quick_start_dialog_publish_post_title">Publicar um post</string>
-    <string name="quick_start_dialog_publish_post_message_short">Clique em %1$s Criar post %2$s para criar um novo post</string>
+    <string name="quick_start_dialog_publish_post_message_short">Toque em %1$s Criar post %2$s para criar um novo post</string>
     <string name="quick_start_dialog_need_help_title">Precisa de alguma ajuda para iniciar?</string>
     <string name="quick_start_dialog_need_help_button_positive">Aceitar</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nunca</string>
     <string name="quick_start_dialog_need_help_button_negative">Não obrigado</string>
     <string name="quick_start_dialog_follow_sites_title">Seguir outros sites</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Clique em %1$s Pesquisar %2$s para procurar por sites com interesses similares</string>
-    <string name="quick_start_dialog_follow_sites_message_short_reader">Clique em %1$s Leitor %2$s para continuar</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Toque em %1$s Pesquisar %2$s para procurar por sites com interesses similares</string>
+    <string name="quick_start_dialog_follow_sites_message_short_reader">Toque em %1$s Leitor %2$s para continuar</string>
     <string name="quick_start_dialog_follow_sites_message">Encontre sites com conteúdos de seu interesse e siga-os para receber atualizações assim que forem publicadas.</string>
     <string name="quick_start_dialog_customize_site_title">Personalize seu site</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Clique em %1$s Temas %2$s para continuar</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Clique em %1$s Personalizar %2$s para começar a editar seu site</string>
+    <string name="quick_start_dialog_customize_site_message_short_themes">Toque em %1$s Temas %2$s para continuar</string>
+    <string name="quick_start_dialog_customize_site_message_short_customize">Toque em %1$s Personalizar %2$s para começar a editar seu site</string>
     <string name="quick_start_dialog_choose_theme_title">Escolha um tema</string>
-    <string name="quick_start_dialog_browse_themes_message_short">Clique em %1$s Temas %2$s para descobrir novos temas</string>
+    <string name="quick_start_dialog_browse_themes_message_short">Toque em %1$s Temas %2$s para descobrir novos temas</string>
     <string name="quick_start_dialog_choose_theme_message">Procurar em todos os nossos temas para encontrar um perfeito para você.</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
@@ -1001,7 +1020,7 @@ Language: pt_BR
     <string name="site_address_login_title">Endereço do site para acesso</string>
     <string name="email_address_login_title">Endereço de e-mail para acesso</string>
     <string name="alternatively">Alternativamente:</string>
-    <string name="reader_empty_saved_posts_description">Clique em %s para salvar um post em sua lista.</string>
+    <string name="reader_empty_saved_posts_description">Toque em %s para salvar um post em sua lista.</string>
     <string name="reader_empty_saved_posts_title">Nenhum post salvo ainda.</string>
     <string name="reader_bookmark_snack_title">Post salvo</string>
     <string name="reader_bookmark_snack_btn">Ver tudo</string>
@@ -1662,7 +1681,6 @@ Language: pt_BR
     <string name="pending_draft_one_week_1">O rascunho \"%1$s\" está à sua espera - não se esqueça de publicá-lo!</string>
     <string name="pending_draft_one_day_2">Você sabia que \"%1$s\" ainda é um rascunho? Então é hora de publicar!</string>
     <string name="pending_draft_one_day_1">Você criou o rascunho \"%1$s\" ontem. Não se esqueça de publicá-lo!</string>
-    <string name="reader_photo_by">Foto por %s</string>
     <string name="reader_label_visit">Visitar site</string>
     <string name="swipe_for_more">Deslize para mais</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Você não tem permissão para ver este post. Tente fazer login em WordPress.com primeiro ou use o botão de ação no topo para abrir um navegador.</string>
@@ -2154,7 +2172,6 @@ Language: pt_BR
     <string name="reader_hint_add_tag_or_url">Insira um URL ou tag para seguir</string>
     <string name="reader_page_followed_blogs">Sites seguidos</string>
     <string name="reader_page_followed_tags">Tags seguidas</string>
-    <string name="reader_title_tag_preview">Tag do Leitor</string>
     <string name="reader_title_blog_preview">Leitor do site</string>
     <string name="ssl_certificate_ask_trust">Se você geralmente se conecta a este site sem problemas, talvez este erro signifique que alguém está tentando imitar o site, e você não deve continuar. Deseja confiar no certificado mesmo assim?</string>
     <string name="ssl_certificate_error">Certificado SSL inválido</string>

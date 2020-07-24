@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-24 09:07:20+0000
+Translation-Revision-Date: 2020-07-17 10:12:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Dalle ao teu sitio un nome que reflicte a súa personalidade e temática. As primeiras impresións contan!</string>
+    <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un novo título</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
+    <string name="gutenberg_native_s_block_options">Opciones do bloque %s</string>
+    <string name="gutenberg_native_remove_block">Eliminar bloque</string>
+    <string name="gutenberg_native_paste_block">Pegar bloque</string>
+    <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>
+    <string name="gutenberg_native_copy_block">Copiar bloque</string>
+    <string name="gutenberg_native_copied_block">Bloque copiado</string>
+    <string name="gutenberg_native_block_settings">Axustes do bloque</string>
+    <string name="gutenberg_native_block_pasted">Bloque pegado</string>
+    <string name="gutenberg_native_block_duplicated">Bloque duplicado</string>
+    <string name="gutenberg_native_block_cut">Bloque cortado</string>
+    <string name="gutenberg_native_block_copied">Bloque copiado</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editar bloque no navegador web</string>
     <string name="gutenberg_native_dismiss">Rexeitar</string>
-    <string name="prepublishing_nudges_visibility_password">Protexido con contrasinal</string>
     <string name="prepublishing_nudges_home_tags_not_set">Non establecido</string>
     <string name="prepublishing_tags_description">As etiquetas axudan aos lectores dicíndolles de que se trata a entrada.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
@@ -32,12 +46,7 @@ Language: gl_ES
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Eliminar %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
-    <string name="gutenberg_native_move_s_up">Mover %s arriba</string>
-    <string name="gutenberg_native_move_s_right">Mover %s á dereita</string>
-    <string name="gutenberg_native_move_s_left">Mover %s á esquerda</string>
-    <string name="gutenberg_native_move_s_down">Mover %s abaixo</string>
     <string name="gutenberg_native_try_a_starter_layout">Proba un deseño de inicio</string>
     <string name="gutenberg_native_insert_mention">Insertar unha mención</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
@@ -179,7 +188,6 @@ Language: gl_ES
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">O meu porfolio presenta varios proxectos creados ao longo da miña carreira. Mira a continuación a miña información de contacto e ponte en contacto.</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
-    <string name="gutenberg_native_s_settings">Axustes de %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Falemos 👋 Non dubides en contactar na seguinte información de contacto ou envía unha mensaxe usando o formulario.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Imos a construír algo xuntos!</string>
     <string name="gutenberg_native_let_s_build_something_together">Imos a construír algo xuntos!</string>
@@ -597,7 +605,7 @@ Language: gl_ES
     <string name="post_restoring">La entrada estase restaurando</string>
     <string name="post_restored">Entrada restaurada</string>
     <string name="post_trashing">A entrada estase enviando á papeleira</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Enviar á papeleira esta entrada descartará os cambios locais, estás seguro de querer continuar?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Enviar á papeleira esta entrada descartará os cambios locais, estás seguro de querer continuar?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Cambios locais</string>
     <string name="button_move_to_draft">Mover a borradores</string>
     <string name="post_list_toggle_item_layout_list_view">Cambiará vista de lista</string>
@@ -1639,7 +1647,6 @@ Language: gl_ES
     <string name="pending_draft_one_week_1">O borrador «%1$s» estate esperando - asegúrate de publicalo!</string>
     <string name="pending_draft_one_day_2">Sabías que «%1$s» está aínda en borrador? Publícaa!</string>
     <string name="pending_draft_one_day_1">Onte gardaches «%1$s» coma borrador. No olvides publicala!</string>
-    <string name="reader_photo_by">Foto de %s</string>
     <string name="reader_label_visit">Visitar o sitio</string>
     <string name="swipe_for_more">Deslizar para ver máis</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Non estás autorizado a ver esta publicación. Proba a iniciar sesión en WordPress.com primeiro ou no seu lugar usa o botón de acción arriba para abrir un navegador.</string>
@@ -2131,7 +2138,6 @@ Language: gl_ES
     <string name="reader_hint_add_tag_or_url">Introduce unha URL ou unha etiqueta para seguila</string>
     <string name="reader_page_followed_blogs">Sitios que sigo</string>
     <string name="reader_page_followed_tags">Etiquetas que sigo</string>
-    <string name="reader_title_tag_preview">Etiqueta da Guía de Lectura</string>
     <string name="reader_title_blog_preview">Blogue da Guía de Lectura</string>
     <string name="ssl_certificate_ask_trust">Se habitualmente conectas a este sitio sen problema, este erro pode significar que alguén esta¡á tentando suplantarche no sitio, así que que non deberías continuar.  Queres confiar no certificado aínda así?</string>
     <string name="ssl_certificate_error">Certificado SSL non válido</string>

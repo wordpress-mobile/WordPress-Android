@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-30 10:14:16+0000
+Translation-Revision-Date: 2020-07-15 09:03:27+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
+    <string name="quick_start_list_update_site_title_title">Set your site title</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b>%1$s&lt;/b> to set a new title</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Binning this post will also discard local changes, are you sure you want to continue?</string>
+    <string name="gutenberg_native_s_block_options">%s block options</string>
+    <string name="gutenberg_native_remove_block">Remove block</string>
+    <string name="gutenberg_native_paste_block">Paste block</string>
+    <string name="gutenberg_native_duplicate_block">Duplicate block</string>
+    <string name="gutenberg_native_copy_block">Copy block</string>
+    <string name="gutenberg_native_copied_block">Copied block</string>
+    <string name="gutenberg_native_block_settings">Block settings</string>
+    <string name="gutenberg_native_block_pasted">Block pasted</string>
+    <string name="gutenberg_native_block_duplicated">Block duplicated</string>
+    <string name="gutenberg_native_block_cut">Block cut</string>
+    <string name="gutenberg_native_block_copied">Block copied</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">The Site Title can only be changed by a user with the administrator role.</string>
+    <string name="my_site_title_changer_dialog_hint">The Site Title is displayed in the title bar of a web browser and is displayed in the header for most themes.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Topic</string>
+    <string name="error_update_site_title_network">Couldn\'t update site title. Check your network connection and try again.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in a browser</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigates to the previous content sheet</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigates to customise the gradient</string>
@@ -24,7 +45,6 @@ Language: en_GB
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We are working hard to add more blocks with each release. In the meantime, you can also edit this block using your device\'s web browser.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Edit block in web browser</string>
     <string name="gutenberg_native_dismiss">Dismiss</string>
-    <string name="prepublishing_nudges_visibility_password">Password Protected</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publish</string>
@@ -55,12 +75,7 @@ Language: en_GB
     <string name="status_and_visibility">Status and Visibility</string>
     <string name="update_now">Update Now</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Remove %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
-    <string name="gutenberg_native_move_s_up">Move %s Up</string>
-    <string name="gutenberg_native_move_s_right">Move %s Right</string>
-    <string name="gutenberg_native_move_s_left">Move %s Left</string>
-    <string name="gutenberg_native_move_s_down">Move %s Down</string>
     <string name="gutenberg_native_try_a_starter_layout">Try a starter layout</string>
     <string name="gutenberg_native_insert_mention">Insert mention</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Double tap to open Bottom Sheet with available options</string>
@@ -119,7 +134,9 @@ Language: en_GB
     <string name="copy_text">Copy</string>
     <string name="gutenberg_native_number_of_columns">Number of columns</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Move block right from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Move block right</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Move block left from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Move block left</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Double tap to move the block to the right</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Double tap to move the block to the left</string>
     <string name="gutenberg_native_columns_settings">Columns Settings</string>
@@ -202,7 +219,6 @@ Language: en_GB
     <string name="gutenberg_native_only_show_excerpt">Only show excerpt</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
     <string name="gutenberg_native_link_to">Link To</string>
-    <string name="gutenberg_native_s_settings">%s Settings</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Let\'s talk 👋. Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Let\'s build something together!</string>
     <string name="gutenberg_native_let_s_build_something_together">Let’s build something together!</string>
@@ -349,6 +365,7 @@ Language: en_GB
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' isn\'t yet supported on WordPress for Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>
     <string name="gutenberg_native_s_block_empty">%s block. Empty</string>
+    <string name="gutenberg_native_cut_block">Cut block</string>
     <string name="gutenberg_native_reset_block">Reset Block</string>
     <string name="gutenberg_native_remove_annotations">Remove annotations</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem opening the video</string>
@@ -365,7 +382,9 @@ Language: en_GB
     <string name="gutenberg_native_my_post_publish_panel">My post publish panel</string>
     <string name="gutenberg_native_my_document_setting_panel">My Document Setting Panel</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Move block up from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_block_up">Move block up</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Move block down from row %1$s to row %2$s</string>
+    <string name="gutenberg_native_move_block_down">Move block down</string>
     <string name="gutenberg_native_link_text">Link text</string>
     <string name="gutenberg_native_link_inserted">Link inserted</string>
     <string name="gutenberg_native_image_caption_s">Image caption. %s</string>
@@ -620,7 +639,7 @@ Language: en_GB
     <string name="post_restoring">Post is being restored</string>
     <string name="post_restored">Post restored</string>
     <string name="post_trashing">Post is being binned</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Binning this post will discard local changes, are you sure you want to continue?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Binning this post will also discard unsaved changes, are you sure you want to continue?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
@@ -696,7 +715,7 @@ Language: en_GB
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tap %1$s Site Pages %2$s to continue.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tap %1$s Pages %2$s to continue.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
@@ -1662,7 +1681,6 @@ Language: en_GB
     <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
-    <string name="reader_photo_by">Photo by %s</string>
     <string name="reader_label_visit">Visit site</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
@@ -2154,7 +2172,6 @@ Language: en_GB
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>

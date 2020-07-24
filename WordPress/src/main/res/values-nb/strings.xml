@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 13:33:54+0000
+Translation-Revision-Date: 2020-07-16 17:56:51+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
+    <string name="gutenberg_native_s_block_options">%s blokk-alternativer</string>
+    <string name="gutenberg_native_remove_block">Fjern blokk</string>
+    <string name="gutenberg_native_paste_block">Lim inn blokk</string>
+    <string name="gutenberg_native_duplicate_block">Dupliser blokk</string>
+    <string name="gutenberg_native_copy_block">Kopier blokk</string>
+    <string name="gutenberg_native_copied_block">Kopiert blokk</string>
+    <string name="gutenberg_native_block_settings">Blokkinnstillinger</string>
+    <string name="gutenberg_native_block_pasted">Blokk limt inn</string>
+    <string name="gutenberg_native_block_duplicated">Blokk duplisert</string>
+    <string name="gutenberg_native_block_cut">Blokk kuttet</string>
+    <string name="gutenberg_native_block_copied">Blokk kopiert</string>
+    <string name="reader_title_tag_preview">Emne</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ulagrede endringer</string>
+    <string name="gutenberg_native_open_link_in_a_browser">Åpne lenke i en nettleser</string>
+    <string name="pages_list_author">Sideforfatter</string>
+    <string name="everyone">Alle</string>
+    <string name="me">Meg</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Rediger blokk i nettleser</string>
     <string name="gutenberg_native_dismiss">Avfei</string>
-    <string name="prepublishing_nudges_visibility_password">Passordbeskyttet</string>
     <string name="prepublishing_nudges_home_tags_not_set">Ikke bestemt</string>
     <string name="prepublishing_tags_description">Stikkord hjelper leserne vit hva innlegg er om.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publiser</string>
@@ -35,12 +52,7 @@ Language: nb_NO
     <string name="status_and_visibility">Status og synlighet</string>
     <string name="update_now">Oppdater nå</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Fjern %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
-    <string name="gutenberg_native_move_s_up">Flytt %s opp</string>
-    <string name="gutenberg_native_move_s_right">Flytt %s mot høyre</string>
-    <string name="gutenberg_native_move_s_left">Flytt %s mot venstre</string>
-    <string name="gutenberg_native_move_s_down">Flytt %s ned</string>
     <string name="gutenberg_native_try_a_starter_layout">Prøv et startoppsett</string>
     <string name="gutenberg_native_insert_mention">Sett inn omtale</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
@@ -83,7 +95,9 @@ Language: nb_NO
     <string name="copy_text">Kopier</string>
     <string name="gutenberg_native_number_of_columns">Antall kolonner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytt blokken mot høyre fra posisjon %1$s til posisjon %2$s</string>
+    <string name="gutenberg_native_move_block_right">Flytt blokken mot høyre</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytt blokken mot venstre fra posisjon %1$s til posisjon %2$s</string>
+    <string name="gutenberg_native_move_block_left">Flytt blokken mot venstre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dobbelttrykk for å flytte blokken mot høyre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dobbelttrykk for å flytte blokken mot venstre</string>
     <string name="gutenberg_native_columns_settings">Kolonneinnstillinger</string>
@@ -156,7 +170,6 @@ Language: nb_NO
     <string name="gutenberg_native_portfolio">Portefølje</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
-    <string name="gutenberg_native_s_settings">%s-innstillinger</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">La oss bygge noe sammen!</string>
     <string name="gutenberg_native_let_s_build_something_together">La oss bygge noe sammen!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -285,6 +298,7 @@ Language: nb_NO
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' er ennå ikke støttet i WordPress for Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>
+    <string name="gutenberg_native_cut_block">Kutt blokk</string>
     <string name="gutenberg_native_reset_block">Tilbakestill blokk</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem under åpning av videoen</string>
     <string name="gutenberg_native_problem_displaying_block">Problem ved visning av blokk</string>
@@ -300,7 +314,9 @@ Language: nb_NO
     <string name="gutenberg_native_my_post_publish_panel">Mitt etterpubliseringspanel</string>
     <string name="gutenberg_native_my_document_setting_panel">Mitt innstillingspanel for dokument</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Flytt blokk opp fra rad %1$s til rad %2$s</string>
+    <string name="gutenberg_native_move_block_up">Flytt blokk opp</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytt blokk ned fra rad %1$s til rad %2$s</string>
+    <string name="gutenberg_native_move_block_down">Flytt blokk ned</string>
     <string name="gutenberg_native_link_text">Lenketekst</string>
     <string name="gutenberg_native_link_inserted">Lenke satt inn</string>
     <string name="gutenberg_native_image_caption_s">Bildetekst. %s</string>
@@ -553,7 +569,7 @@ Language: nb_NO
     <string name="post_restoring">Innlegget gjenopprettes</string>
     <string name="post_restored">Innlegg gjenopprettet</string>
     <string name="post_trashing">Innlegget kastes</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer som ikke er lagret. Er du sikker på at du vil fortsette?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokale endringer</string>
     <string name="button_move_to_draft">Flytt til kladd</string>
     <string name="post_list_toggle_item_layout_list_view">Bytt til listevisning</string>
@@ -629,7 +645,7 @@ Language: nb_NO
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Trykk %1$s Legg til side %2$s for å lage en ny side.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Trykk %1$s Sider på nettstedet %2$s for å fortstte.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Trykk %1$s sider %2$s for å fortsette.</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
@@ -1569,7 +1585,6 @@ Language: nb_NO
     <string name="pending_draft_one_week_1">\'%1$s\'-utkastet ditt venter på deg — sørg for å publisere den!</string>
     <string name="pending_draft_one_day_2">Visste du at \'%1$s\' fortsatt er et utkast? Publiser i vei!</string>
     <string name="pending_draft_one_day_1">Du lagde et utkast for \'%1$s\' i går. Ikke glem å publisere den!</string>
-    <string name="reader_photo_by">Bilde av %s</string>
     <string name="reader_label_visit">Besøk nettstedet</string>
     <string name="swipe_for_more">Sveip for mer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du er ikke autorisert til å se dette innlegget. Prøv å logge inn på WordPress.com først, eller bruk den øverste handlingsknappen for å åpne opp en nettleser istedet.</string>
@@ -2061,7 +2076,6 @@ Language: nb_NO
     <string name="reader_hint_add_tag_or_url">Skriv inn en URL eller et stikkord for å følge</string>
     <string name="reader_page_followed_blogs">Fulgte nettsteder</string>
     <string name="reader_page_followed_tags">Fulgte stikkord</string>
-    <string name="reader_title_tag_preview">Leser-stikkord</string>
     <string name="reader_title_blog_preview">Leser-nettsted</string>
     <string name="ssl_certificate_ask_trust">Hvis du vanligvis har koblet deg til dette nettstedet uten problemer, kan denne feilen bety at noen prøver å imitere dette nettstedet, og at du ikke bør fortsette. Er du helt sikker på at du vil stole på dette sertifikatet likevel?</string>
     <string name="ssl_certificate_error">Ugyldig SSL-sertifikat</string>

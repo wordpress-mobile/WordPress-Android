@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-10 10:54:08+0000
+Translation-Revision-Date: 2020-07-23 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>
+    <string name="quick_start_list_update_site_title_title">Lege deinen Website-Titel fest</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b>%1$s&lt;/b>, um einen neuen Titel festzulegen.</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
+    <string name="gutenberg_native_s_block_options">%s Blockoptionen</string>
+    <string name="gutenberg_native_remove_block">Block entfernen</string>
+    <string name="gutenberg_native_paste_block">Block einfügen</string>
+    <string name="gutenberg_native_duplicate_block">Block duplizieren</string>
+    <string name="gutenberg_native_copy_block">Block kopieren</string>
+    <string name="gutenberg_native_copied_block">Kopierter Block</string>
+    <string name="gutenberg_native_block_settings">Blockeinstellungen</string>
+    <string name="gutenberg_native_block_pasted">Bock wurde eingefügt</string>
+    <string name="gutenberg_native_block_duplicated">Block wurde dupliziert</string>
+    <string name="gutenberg_native_block_cut">Block wurde ausgeschnitten</string>
+    <string name="gutenberg_native_block_copied">Block wurde kopiert</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Der Website-Titel kann nur von einem Benutzer mit Administratorrolle geändert werden.</string>
+    <string name="my_site_title_changer_dialog_hint">Der Website-Titel wird in der Titelleiste eines Webbrowsers angezeigt und wird bei den meisten Themes im Header angezeigt.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Thema</string>
+    <string name="error_update_site_title_network">Konnte den Website-Titel nicht aktualisieren. Bitte überprüfe deine Netzwerkverbindung und versuche es erneut.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ungespeicherte Änderungen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Link in einem Browser öffnen</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigiert zum vorherigen Content Sheet</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigiert zum Anpassen des Verlaufs</string>
@@ -24,7 +45,6 @@ Language: de
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Wir arbeiten intensiv daran, mit jeder Release mehr Blöcke hinzuzufügen. In der Zwischenzeit kannst du diesen Block auch über den Webbrowser deines Geräts bearbeiten.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Block in Webbrowser bearbeiten</string>
     <string name="gutenberg_native_dismiss">Verwerfen</string>
-    <string name="prepublishing_nudges_visibility_password">Passwortgeschützt</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nicht festgelegt</string>
     <string name="prepublishing_tags_description">Schlagwörter helfen den Lesern zu verstehen, worum es in einem Beitrag geht.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Veröffentlichen</string>
@@ -55,12 +75,7 @@ Language: de
     <string name="status_and_visibility">Status und Sichtbarkeit</string>
     <string name="update_now">Jetzt aktualisieren</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">%s entfernen</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
-    <string name="gutenberg_native_move_s_up">%s nach oben verschieben</string>
-    <string name="gutenberg_native_move_s_right">%s nach rechts verschieben</string>
-    <string name="gutenberg_native_move_s_left">%s nach links verschieben</string>
-    <string name="gutenberg_native_move_s_down">%s nach unten verschieben</string>
     <string name="gutenberg_native_try_a_starter_layout">Probiere ein Layout für Neueinsteiger aus</string>
     <string name="gutenberg_native_insert_mention">Erwähnung einfügen</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
@@ -119,7 +134,9 @@ Language: de
     <string name="copy_text">Kopieren</string>
     <string name="gutenberg_native_number_of_columns">Anzahl an Spalten</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Block von Position %1$s nach rechts zur Position %2$s verschieben</string>
+    <string name="gutenberg_native_move_block_right">Block nach rechts verschieben</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Block von Position %1$s nach links zur Position %2$s verschieben</string>
+    <string name="gutenberg_native_move_block_left">Block nach links verschieben</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Zum Verschieben des Blocks nach rechts zweimal tippen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Zum Verschieben des Blocks nach links zweimal tippen</string>
     <string name="gutenberg_native_columns_settings">Spalten-Einstellungen</string>
@@ -202,7 +219,6 @@ Language: de
     <string name="gutenberg_native_only_show_excerpt">Nur Textauszug anzeigen</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mein Portfolio zeigt verschiedene Projekte, die im Laufe meiner Karriere entstanden sind. Meine Kontaktinformationen findest du unten. Setz dich mit mir in Verbindung.</string>
     <string name="gutenberg_native_link_to">Link zu</string>
-    <string name="gutenberg_native_s_settings">%s-Einstellungen</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Lass uns reden. 👋 Zögere nicht, dich mit den untenstehenden Kontaktinformationen zu melden oder eine Nachricht über das Formular zu senden.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Lasst uns gemeinsam etwas aufbauen!</string>
     <string name="gutenberg_native_let_s_build_something_together">Lasst uns gemeinsam etwas aufbauen!</string>
@@ -349,6 +365,7 @@ Language: de
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' wird in WordPress für Android noch nicht unterstützt</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block %s. Dieser Block hat ungültigen Inhalt</string>
     <string name="gutenberg_native_s_block_empty">Block %s. Leer</string>
+    <string name="gutenberg_native_cut_block">Block ausschneiden</string>
     <string name="gutenberg_native_reset_block">Block zurücksetzen</string>
     <string name="gutenberg_native_remove_annotations">Anmerkungen entfernen</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem beim Öffnen des Videos</string>
@@ -365,7 +382,9 @@ Language: de
     <string name="gutenberg_native_my_post_publish_panel">Mein Bedienfeld nach der Beitragsveröffentlichung</string>
     <string name="gutenberg_native_my_document_setting_panel">Mein Bedienfeld für Dokumenteinstellungen</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Block von Zeile %1$s nach oben in Zeile %2$s verschieben</string>
+    <string name="gutenberg_native_move_block_up">Block nach oben verschieben</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Block von Zeile %1$s nach unten in Zeile %2$s verschieben</string>
+    <string name="gutenberg_native_move_block_down">Block nach unten verschieben</string>
     <string name="gutenberg_native_link_text">Linktext</string>
     <string name="gutenberg_native_link_inserted">Link eingefügt</string>
     <string name="gutenberg_native_image_caption_s">Bildunterschrift. %s</string>
@@ -620,7 +639,7 @@ Language: de
     <string name="post_restoring">Beitrag wird wiederhergestellt</string>
     <string name="post_restored">Beitrag wiederhergestellt</string>
     <string name="post_trashing">Beitrag wird in den Papierkorb verschoben</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden ungespeicherte Änderungen verworfen. Bist du sicher, dass du fortfahren möchtest?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokale Änderungen</string>
     <string name="button_move_to_draft">In Entwurf verschieben</string>
     <string name="post_list_toggle_item_layout_list_view">Zur Listenansicht wechseln</string>
@@ -696,7 +715,7 @@ Language: de
     <string name="quick_start_dialog_upload_icon_message">Deine Besucher sehen dein Symbol in ihrem Browser. Füge ein individuelles Symbol hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tippe auf %1$s Plan %2$s, um deinen aktuellen Plan und andere verfügbare Pläne anzuzeigen</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tippe auf %1$s Seite hinzufügen %2$s, um eine neue Seite zu erstellen.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tippe auf %1$s Webseiten %2$s, um fortzufahren.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tippe auf %1$s Seiten %2$s, um fortzufahren.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tippe auf %1$s Statistiken %2$s, um zu sehen, wie deine Website funktioniert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tippe auf %1$s Dein Website-Icon %2$s, um ein neues hochzuladen.</string>
     <string name="quick_start_dialog_publish_post_message">Entwirf und veröffentliche deinen ersten Beitrag.</string>
@@ -1662,7 +1681,6 @@ Language: de
     <string name="pending_draft_one_week_1">Dein Entwurf „%1$s“ wartet auf dich – denke daran, ihn zu veröffentlichen!</string>
     <string name="pending_draft_one_day_2">Wusstest du, dass „%1$s“ noch ein Entwurf ist? Veröffentliche ihn doch!</string>
     <string name="pending_draft_one_day_1">Du hast gestern „%1$s“ geschrieben. Vergiss nicht, es zu veröffentlichen!</string>
-    <string name="reader_photo_by">Foto von %s</string>
     <string name="reader_label_visit">Website besuchen</string>
     <string name="swipe_for_more">Wischen für mehr</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du bist nicht berechtigt, diesen Beitrag anzuzeigen. Versuche, dich zuerst auf WordPress.com anzumelden, oder öffne stattdessen über den oberen Aktions-Button einen Browser.</string>
@@ -2154,7 +2172,6 @@ Language: de
     <string name="reader_hint_add_tag_or_url">Gib eine URL oder einen Tag zum Folgen ein</string>
     <string name="reader_page_followed_blogs">Abonnierte Websites</string>
     <string name="reader_page_followed_tags">Abonnierte Tags</string>
-    <string name="reader_title_tag_preview">Reader-Schlagwort</string>
     <string name="reader_title_blog_preview">Reader-Website</string>
     <string name="ssl_certificate_ask_trust">Wenn du dich üblicherweise ohne Probleme mit dieser Website verbinden kannst, könnte dieser Fehler bedeute, dass sich jemand als diese Website ausgibt und du daher nicht weitermachen solltest. Möchtest du dem Zertifikat trotzdem vertrauen?</string>
     <string name="ssl_certificate_error">Ungültiges SSL Zertifikat</string>
@@ -2254,7 +2271,7 @@ Language: de
     <string name="reader_toast_err_share_intent">Teilen nicht möglich</string>
     <string name="reader_toast_err_tag_invalid">Das ist kein gültiges Schlagwort</string>
     <string name="reader_toast_err_tag_exists">Du folgt diesem Schlagwort bereits</string>
-    <string name="reader_toast_err_comment_failed">Konnte Deinen Kommentar nicht veröffentlichen</string>
+    <string name="reader_toast_err_comment_failed">Konnte deinen Kommentar nicht veröffentlichen</string>
     <string name="reader_likes_only_you">Dir gefällt das</string>
     <string name="reader_likes_one">Einer Person gefällt das</string>
     <string name="reader_label_removed_tag">%s entfernt</string>

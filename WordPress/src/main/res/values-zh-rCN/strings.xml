@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 13:54:09+0000
+Translation-Revision-Date: 2020-07-23 10:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
+    <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
+    <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b>%1$s&lt;/b> 以设置新标题</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
+    <string name="gutenberg_native_s_block_options">%s 区块选项</string>
+    <string name="gutenberg_native_remove_block">移除区块</string>
+    <string name="gutenberg_native_paste_block">粘贴区块</string>
+    <string name="gutenberg_native_duplicate_block">复制区块</string>
+    <string name="gutenberg_native_copy_block">拷贝区块</string>
+    <string name="gutenberg_native_copied_block">已拷贝区块</string>
+    <string name="gutenberg_native_block_settings">区块设置</string>
+    <string name="gutenberg_native_block_pasted">已粘贴区块</string>
+    <string name="gutenberg_native_block_duplicated">已复制区块</string>
+    <string name="gutenberg_native_block_cut">已剪切区块</string>
+    <string name="gutenberg_native_block_copied">已拷贝区块</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">站点标题只能由担任管理员角色的用户更改。</string>
+    <string name="my_site_title_changer_dialog_hint">站点标题显示在网络浏览器的标题栏中，以及大部分主题的页眉中。</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">主题</string>
+    <string name="error_update_site_title_network">无法更新站点标题。 请检查您的网络连接，然后重试。</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">未保存的更改</string>
     <string name="gutenberg_native_open_link_in_a_browser">在浏览器中打开链接</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">导航到上一个内容工作表</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">导航以自定义渐变</string>
@@ -24,7 +45,6 @@ Language: zh_CN
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">我们正在努力在每个版本中添加更多区块。 与此同时，您还可以使用设备的 Web 浏览器编辑此区块。</string>
     <string name="gutenberg_native_edit_block_in_web_browser">在 Web 浏览器中编辑区块</string>
     <string name="gutenberg_native_dismiss">忽略</string>
-    <string name="prepublishing_nudges_visibility_password">加密</string>
     <string name="prepublishing_nudges_home_tags_not_set">未设置</string>
     <string name="prepublishing_tags_description">标签有助于读者了解文章内容。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">发布</string>
@@ -55,12 +75,7 @@ Language: zh_CN
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
     <string name="pages_item_subtitle">%1$s· %2$s</string>
-    <string name="gutenberg_native_remove_s">移除 %s</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
-    <string name="gutenberg_native_move_s_up">向上移动 %s</string>
-    <string name="gutenberg_native_move_s_right">向右移动 %s</string>
-    <string name="gutenberg_native_move_s_left">向左移动 %s</string>
-    <string name="gutenberg_native_move_s_down">向下移动 %s</string>
     <string name="gutenberg_native_try_a_starter_layout">试用初学者布局</string>
     <string name="gutenberg_native_insert_mention">插入提及</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
@@ -117,7 +132,9 @@ Language: zh_CN
     <string name="copy_text">复制</string>
     <string name="gutenberg_native_number_of_columns">栏目数</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向右移动到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_right">向右移动区块</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">将区块从位置 %1$s 向左移动到位置 %2$s</string>
+    <string name="gutenberg_native_move_block_left">向左移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">轻按两下以向右移动区块</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">轻按两下以向左移动区块</string>
     <string name="gutenberg_native_columns_settings">栏目设置</string>
@@ -200,7 +217,6 @@ Language: zh_CN
     <string name="gutenberg_native_only_show_excerpt">仅显示摘录</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">我的作品集展示了我职业生涯中完成的各种项目。请在下面查看我的联系信息并与我联系。</string>
     <string name="gutenberg_native_link_to">链接到</string>
-    <string name="gutenberg_native_s_settings">%s设置</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">我们来交流一下 👋 您可以随时通过以下联系信息联系我们，或者使用表单发送消息。</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">让我们一起创造精彩！</string>
     <string name="gutenberg_native_let_s_build_something_together">让我们一起创造精彩！</string>
@@ -347,6 +363,7 @@ Language: zh_CN
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">适用于 Android 的 WordPress 尚不支持“%s”</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 区块。此区块包含无效内容</string>
     <string name="gutenberg_native_s_block_empty">%s 区块。空白</string>
+    <string name="gutenberg_native_cut_block">剪切区块</string>
     <string name="gutenberg_native_reset_block">重置区块</string>
     <string name="gutenberg_native_remove_annotations">删除注释</string>
     <string name="gutenberg_native_problem_opening_the_video">打开视频时出现问题</string>
@@ -363,7 +380,9 @@ Language: zh_CN
     <string name="gutenberg_native_my_post_publish_panel">我的文章发布面板</string>
     <string name="gutenberg_native_my_document_setting_panel">我的文档设置面板</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">将区块从第 %1$s 行向上移动到第 %2$s 行</string>
+    <string name="gutenberg_native_move_block_up">向上移动区块</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">将区块从第 %1$s 行向下移动到第 %2$s 行</string>
+    <string name="gutenberg_native_move_block_down">向下移动区块</string>
     <string name="gutenberg_native_link_text">链接文本</string>
     <string name="gutenberg_native_link_inserted">已插入链接</string>
     <string name="gutenberg_native_image_caption_s">图片说明。%s</string>
@@ -618,7 +637,7 @@ Language: zh_CN
     <string name="post_restoring">文章已成功恢复</string>
     <string name="post_restored">文章已恢复</string>
     <string name="post_trashing">文章正移至回收站</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">将此文章移至回收站将会放弃本地更改，是否确定要继续操作？</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">将此文章放入回收站还将放弃未保存的更改，是否确定要继续？</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">本地更改</string>
     <string name="button_move_to_draft">移动到草稿</string>
     <string name="post_list_toggle_item_layout_list_view">切换到列表视图</string>
@@ -694,7 +713,7 @@ Language: zh_CN
     <string name="quick_start_dialog_upload_icon_message">访客将在其浏览器中看到您的图标。添加自定义图标，打造精美的专业外观。</string>
     <string name="quick_start_dialog_explore_plans_message_short">点击%1$s套餐%2$s查看您的当前套餐和其他可选套餐</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">点击%1$s添加页面%2$s创建一个新页面。</string>
-    <string name="quick_start_dialog_create_new_page_message_short">点击%1$s站点页面%2$s以继续。</string>
+    <string name="quick_start_dialog_create_new_page_message_short">轻按%1$s页面%2$s以继续。</string>
     <string name="quick_start_dialog_check_stats_message_short">点击%1$s统计信息%2$s查看您站点的效果。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">点击%1$s您的站点图标%2$s上传一个新图标</string>
     <string name="quick_start_dialog_publish_post_message">撰写并发布您的第一篇文章。</string>
@@ -1660,7 +1679,6 @@ Language: zh_CN
     <string name="pending_draft_one_week_1">您的草稿「%1$s」还在等待您，一定要记得发布哦！</string>
     <string name="pending_draft_one_day_2">您知道吗，「%1$s」仍是草稿状态。去发布吧！</string>
     <string name="pending_draft_one_day_1">您昨天将「%1$s」存为草稿。不要忘记去发布哦！</string>
-    <string name="reader_photo_by">照片拍摄者：%s</string>
     <string name="reader_label_visit">访问站点</string>
     <string name="swipe_for_more">滑动以查看更多内容</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">您未被授权查看这篇文章。请尝试先登录 WordPress.com，或可以使用顶部的操作按钮打开浏览器。</string>
@@ -2152,7 +2170,6 @@ Language: zh_CN
     <string name="reader_hint_add_tag_or_url">输入要关注的 URL 或标签</string>
     <string name="reader_page_followed_blogs">已关注的博客</string>
     <string name="reader_page_followed_tags">关注的标签</string>
-    <string name="reader_title_tag_preview">阅读器标签</string>
     <string name="reader_title_blog_preview">“阅读器”站点</string>
     <string name="ssl_certificate_ask_trust">如果你平时连接到这个网站没有任何问题，这个错误可能意味着有人试图冒充该网站，你不应该继续下去。你想仍然信任这个证书？</string>
     <string name="ssl_certificate_error">无效的SSL证书</string>

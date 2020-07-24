@@ -153,7 +153,6 @@ Language: ku_TR
     <string name="post_restoring">Şandî tê vegerandin</string>
     <string name="post_restored">Şandî hat vegerandin</string>
     <string name="post_trashing">Şandî tê jêbirin</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê dê guhertinên xwecihî biavêje, bi rastî jî tu dixwazî bidomîne?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Guhertinên xwecihî</string>
     <string name="button_move_to_draft">Vegerîne Reşnîvîsê</string>
     <string name="post_list_toggle_item_layout_list_view">Derbasî xuyanga lîsteyê bibe</string>
@@ -229,7 +228,6 @@ Language: ku_TR
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te dê nîşaneka te di gerokên xwe de bibînin. Ji bo xuyangeke birqonek û profesyonel nîşanekeke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo plana derbasdar û ên din ên berdest bibînî pê li  %1$s Plan %2$s ê bike</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Ji bo rûpeleke nû biafirînî pêlî %1$s Rûpel Tevlî Bike %2$s yê bike.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Ji bo domandinê pêlî %1$s Rûpelên Malperê %2$s bike.</string>
     <string name="quick_start_dialog_check_stats_message_short">Ji bo performansa malpera xwe bibîne pêlî %1$s Rêjejimar %2$sê bike.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ji bo yeka din bar bike, pêlî %1$s Nîşaneka Te ya Malperê %2$s bike</string>
     <string name="quick_start_dialog_publish_post_message">Yekem şandiya xwe bike reşnivîs û biweşîne.</string>
@@ -1191,7 +1189,6 @@ Language: ku_TR
     <string name="pending_draft_one_week_1">Reşnivisa te \'%1$s\' li hêviya te ye - pê emîn be ku te wê weşandiye!</string>
     <string name="pending_draft_one_day_2">Te dizanibû ku \'%1$s\' hê jî reşnivîsek e? Hema biweşîne!</string>
     <string name="pending_draft_one_day_1">Te do \'%1$s\' kir reşnivîs. Weşandina wê ji bîr nekî!</string>
-    <string name="reader_photo_by">Wêneya ji aliye %s ve hatiye kişandin</string>
     <string name="swipe_for_more">Ji bo zêdetir bişemitîne</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Tu nehatî destûrdarkirin bo dîtina vê şandiyê. Pêşî biceribîne ku tu têkevî WordPress.comê an jî li şûna wê bo vekirina gerokeke webê, bişkoka çalakiya jorîn bi kar bîne.</string>
     <string name="reader_err_get_post_not_authorized_signin">Tu ne destûrdayî yî bo dîtina vê şandiyê. Pêşî biceribîne ku tu têkevî WordPress.comê.</string>
@@ -1682,7 +1679,6 @@ Language: ku_TR
     <string name="reader_hint_add_tag_or_url">Ji bo şopandinê URL an nîşankek binivîse</string>
     <string name="reader_page_followed_blogs">Malperên şopandî</string>
     <string name="reader_page_followed_tags">Nîşankên şopandî</string>
-    <string name="reader_title_tag_preview">Nîşankê xwînerê</string>
     <string name="reader_title_blog_preview">Malpera xwînerê</string>
     <string name="ssl_certificate_ask_trust">Eger tu bi pirranî bêyî pirsgirêkek karibî werî girêdan li vê malperê, ev dibe ku were maneya yek dixwaze malpera te teqlîd bike, û tu nikaribî dewam bikî. Dîsa jî dixwazî bi sertîfîkayê bawer bibî?</string>
     <string name="ssl_certificate_error">Sertîfîkaya SSLê ya nederbasdar</string>

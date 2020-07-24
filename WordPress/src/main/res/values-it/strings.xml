@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 11:54:08+0000
+Translation-Revision-Date: 2020-07-23 08:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento. La prima impressione conta.</string>
+    <string name="quick_start_list_update_site_title_title">Imposta il titolo del sito</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b>%1$s&lt;/b> per impostare un nuovo titolo</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>
+    <string name="gutenberg_native_s_block_options">%s opzioni blocco</string>
+    <string name="gutenberg_native_remove_block">Rimuovi il blocco</string>
+    <string name="gutenberg_native_paste_block">Incolla il blocco</string>
+    <string name="gutenberg_native_duplicate_block">Duplica il blocco</string>
+    <string name="gutenberg_native_copy_block">Copia il blocco</string>
+    <string name="gutenberg_native_copied_block">Blocco copiato</string>
+    <string name="gutenberg_native_block_settings">Impostazioni del blocco</string>
+    <string name="gutenberg_native_block_pasted">Blocco incollato</string>
+    <string name="gutenberg_native_block_duplicated">Blocco duplicato</string>
+    <string name="gutenberg_native_block_cut">Blocco tagliato</string>
+    <string name="gutenberg_native_block_copied">Blocco copiato</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Il titolo del sito può essere modificato solamente da un utente con il ruolo di amministratore.</string>
+    <string name="my_site_title_changer_dialog_hint">Il titolo del sito viene visualizzato nella barra del titolo di un browser web e nell\'intestazione nella maggior parte dei temi.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Argomento</string>
+    <string name="error_update_site_title_network">Impossibile aggiornare il titolo del sito. Controlla la connessione di rete e riprova.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modifiche non salvate.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Apri il link in un browser.</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Naviga al foglio dei contenuti precedente</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Naviga alla personalizzazione del gradiente</string>
@@ -24,7 +45,6 @@ Language: it
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Stiamo lavorando duramente per aggiungere più blocchi con ogni versione. Nel frattempo, puoi anche modificare questo blocco usando il browser web del dispositivo.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Modifica il blocco sul browser web</string>
     <string name="gutenberg_native_dismiss">Chiudi</string>
-    <string name="prepublishing_nudges_visibility_password">Protetto da password</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nessuna impostazione</string>
     <string name="prepublishing_tags_description">I tag aiutano a dire al lettore di cosa parla un articolo.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Pubblica</string>
@@ -55,12 +75,7 @@ Language: it
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Rimuovi %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Apri menu azioni del blocco</string>
-    <string name="gutenberg_native_move_s_up">Sposta %s in alto</string>
-    <string name="gutenberg_native_move_s_right">Sposta %s a destra</string>
-    <string name="gutenberg_native_move_s_left">Sposta %s a sinistra</string>
-    <string name="gutenberg_native_move_s_down">Sposta %s in basso</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova un layout di inizio</string>
     <string name="gutenberg_native_insert_mention">Inserisci riferimento</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tocca due volte per aprire il foglio in basso con le opzioni disponibili</string>
@@ -119,7 +134,9 @@ Language: it
     <string name="copy_text">Copia</string>
     <string name="gutenberg_native_number_of_columns">Numero di colonne</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Sposta il blocco a destra dalla posizione %1$s alla posizione %2$s</string>
+    <string name="gutenberg_native_move_block_right">Sposta il blocco a destra</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Sposta il blocco a sinistra dalla posizione %1$s alla posizione %2$s</string>
+    <string name="gutenberg_native_move_block_left">Sposta il blocco a sinistra</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Tocca due volte per spostare il blocco a destra</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Tocca due volte per spostare il blocco a sinistra</string>
     <string name="gutenberg_native_columns_settings">Impostazioni delle colonne</string>
@@ -202,7 +219,6 @@ Language: it
     <string name="gutenberg_native_only_show_excerpt">Mostra solo estratto</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Il mio portfolio mostra i vari progetti che ho creato durante la mia carriera. Vedi le mie informazioni di contatto qui sotto e contattami.</string>
     <string name="gutenberg_native_link_to">Link a</string>
-    <string name="gutenberg_native_s_settings">Impostazioni di %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parliamo 👋 Non esitare a contattarci tramite le informazioni di contatto riportate di seguito, altrimenti inviaci un messaggio utilizzando il modulo.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Costruiamo qualcosa insieme!</string>
     <string name="gutenberg_native_let_s_build_something_together">Costruiamo qualcosa insieme!</string>
@@ -344,6 +360,7 @@ Language: it
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' non è ancora supportato su WordPress per Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Blocco %s. Questo blocco ha contenuti non validi</string>
     <string name="gutenberg_native_s_block_empty">Blocco %s. Vuoto</string>
+    <string name="gutenberg_native_cut_block">Taglia il blocco</string>
     <string name="gutenberg_native_reset_block">Reimposta blocco</string>
     <string name="gutenberg_native_remove_annotations">Rimuovi annotazioni</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema durante l\'apertura del video</string>
@@ -360,7 +377,9 @@ Language: it
     <string name="gutenberg_native_my_post_publish_panel">Il mio pannello di pubblicazione dell\'articolo</string>
     <string name="gutenberg_native_my_document_setting_panel">Il mio pannello di impostazioni dei documenti</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Sposta blocco su dalla riga %1$s alla riga %2$s</string>
+    <string name="gutenberg_native_move_block_up">Sposta il blocco verso l\'alto</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Sposta il blocco in basso dalla riga %1$s alla riga %2$s</string>
+    <string name="gutenberg_native_move_block_down">Sposta il blocco verso il basso</string>
     <string name="gutenberg_native_link_text">Testo del link</string>
     <string name="gutenberg_native_link_inserted">Link inserito</string>
     <string name="gutenberg_native_image_caption_s">Didascalia dell\'immagine. %s</string>
@@ -615,7 +634,7 @@ Language: it
     <string name="post_restoring">L\'articolo è stato ripristinato</string>
     <string name="post_restored">Articolo ripristinato</string>
     <string name="post_trashing">L\'articolo è stato spostato nel cestino</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Lo spostamento dell\'articolo nel cestino scarterà le modifiche in locale. Desideri continuare?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche non salvate. Continuare?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Modifiche in locale</string>
     <string name="button_move_to_draft">Sposta in bozze</string>
     <string name="post_list_toggle_item_layout_list_view">Passa alla vista a lista</string>
@@ -691,7 +710,7 @@ Language: it
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tocca %1$s Aggiungi pagina %2$s per creare una nuova pagina.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tocca %1$s Pagine del sito %2$s per continuare.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tocca %1$s Pagine %2$s per continuare.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tocca %1$s l\'icona del tuo sito %2$s per caricarne una nuova</string>
     <string name="quick_start_dialog_publish_post_message">Scrivi e pubblica il tuo primo articolo.</string>
@@ -1657,7 +1676,6 @@ Language: it
     <string name="pending_draft_one_week_1">La tua bozza di \'%1$s\' ti sta aspettando - assicurati di pubblicarla!</string>
     <string name="pending_draft_one_day_2">Lo sapevi che \'%1$s\' è ancora una bozza? Pubblicalo!</string>
     <string name="pending_draft_one_day_1">Ieri hai messo in bozza \'%1$s\'. Non dimenticarti di pubblicarlo!</string>
-    <string name="reader_photo_by">Foto di %s</string>
     <string name="reader_label_visit">Visita il sito</string>
     <string name="swipe_for_more">Scorri per altre info</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Non sei autorizzato a vedere questo articolo. Prova a registrarti prima su WordPress.com o a fare clic sul pulsante di azione qua sopra per aprire un browser.</string>
@@ -2149,7 +2167,6 @@ Language: it
     <string name="reader_hint_add_tag_or_url">Inserisci una URL o untag da seguire</string>
     <string name="reader_page_followed_blogs">Siti che segui</string>
     <string name="reader_page_followed_tags">Tag seguiti</string>
-    <string name="reader_title_tag_preview">Reader tag</string>
     <string name="reader_title_blog_preview">Reader del sito</string>
     <string name="ssl_certificate_ask_trust">Se in genere ti connetti al sito senza problemi, questo errore potrebbe significare che qualcuno sta tentando di impersonare il sito, pertanto non dovresti continuare. Desideri comunque confermare l\'affidabilità del certificato?</string>
     <string name="ssl_certificate_error">Certificato SSL non valido</string>

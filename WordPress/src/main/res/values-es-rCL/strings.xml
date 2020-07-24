@@ -73,7 +73,6 @@ Language: es_CL
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu ícono en su navegador. Agrega un ícono personalizado para un look pulido y profesional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Puntea %1$s Plan %2$s para ver su plan actual y otros planes disponibles</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Punte %1$s Agregar Página %2$s para crear una nueva página.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Puntea %1$s Páginas del Sitio %2$s para continuar.</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca %1$s Estadísticas %2$s para ver cómo está funcionando tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Puntea %1$sEl Icono de tu Sitio%2$s para cargar uno nuevo</string>
     <string name="quick_start_dialog_publish_post_message">Redacta y publica tu primera entrada.</string>
@@ -1026,7 +1025,6 @@ Language: es_CL
     <string name="pending_draft_one_week_1">Tu borrador \'%1$s\' te espera - ¡asegúrate de publicarlo!</string>
     <string name="pending_draft_one_day_2">¿Sabías que \'%1$s\' sigue siendo un borrador? ¡Publícalo!</string>
     <string name="pending_draft_one_day_1">Redactaste \'%1$s’. ¡No olvides publicarlo!</string>
-    <string name="reader_photo_by">Foto por %s</string>
     <string name="swipe_for_more">Deslízate para más</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">No estás autorizado para ver esta entrada. Primero intenta iniciar sesión en WordPress.com o utiliza el botón de acción para abrirlo en un navegador.</string>
     <string name="reader_err_get_post_not_authorized_signin">No estás autorizado para ver esta entrada. Intenta iniciar sesión en WordPress.com primero.</string>
@@ -1517,7 +1515,6 @@ Language: es_CL
     <string name="reader_hint_add_tag_or_url">Introduce la URL o etiqueta que quieras seguir</string>
     <string name="reader_page_followed_blogs">Sitios que sigues</string>
     <string name="reader_page_followed_tags">Etiquetas que se siguen</string>
-    <string name="reader_title_tag_preview">Etiqueta del lector</string>
     <string name="reader_title_blog_preview">Lector del Sitio</string>
     <string name="ssl_certificate_ask_trust">SI normalmente se conecta sin problemas a este sitio sin problemas, este error puede significar que alguien están intentando suplantar el sitio, por lo que no deberías continuar. ¿Quieres, de todas formas, confiar en el certificado?</string>
     <string name="ssl_certificate_error">Certificado SSL no válido</string>
