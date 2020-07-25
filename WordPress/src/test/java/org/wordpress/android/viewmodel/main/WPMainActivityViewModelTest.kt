@@ -217,18 +217,37 @@ class WPMainActivityViewModelTest {
     }
 
     @Test
-    fun `onResume set expected content message when user has full access to content`() {
+    fun `onResume set expected content message when user has full access to content if stories not enabled`() {
+        setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
         viewModel.onResume(true)
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip)
     }
 
     @Test
-    fun `onResume set expected content message when user has not full access to content`() {
+    fun `onResume set expected content message when user has not full access to content if stories not enabled`() {
+        setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
         viewModel.onResume(false)
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_page_fab_tooltip_contributors)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has full access to content if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has not full access to content if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onResume(false)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on)
     }
 
     @Test
