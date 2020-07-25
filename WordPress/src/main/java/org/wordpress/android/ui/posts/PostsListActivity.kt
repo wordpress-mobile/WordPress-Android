@@ -28,6 +28,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.main_activity.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -181,6 +182,7 @@ class PostsListActivity : LocaleAwareActivity(),
         setupActionBar()
         setupContent()
         initViewModel(initPreviewState, currentBottomSheetPostId)
+        initCreateMenuViewModel()
         loadIntentData(intent)
 
         quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
@@ -259,6 +261,10 @@ class PostsListActivity : LocaleAwareActivity(),
         }
         fab.redirectContextClickToLongPressListener()
 
+        fab_tooltip.setOnClickListener {
+            postListCreateMenuViewModel.onTooltipTapped()
+        }
+
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
         pager.adapter = postsPagerAdapter
     }
@@ -267,6 +273,35 @@ class PostsListActivity : LocaleAwareActivity(),
         postListCreateMenuViewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
+        postListCreateMenuViewModel.isBottomSheetShowing.observe(this, Observer { event ->
+            event.getContentIfNotHandled()?.let { isBottomSheetShowing ->
+                var postListCreateMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
+                if (postListCreateMenuFragment == null) {
+                    if (isBottomSheetShowing) {
+                        postListCreateMenuFragment = PostListCreateMenuFragment.newInstance()
+                        postListCreateMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
+                    }
+                } else {
+                    if (!isBottomSheetShowing) {
+                        postListCreateMenuFragment as PostListCreateMenuFragment
+                        postListCreateMenuFragment.dismiss()
+                    }
+                }
+            }
+        })
+
+        postListCreateMenuViewModel.fabUiState.observe(this, Observer { fabUiState ->
+            val message = resources.getString(fabUiState.CreateContentMessageId)
+
+            if (fabUiState.isFabTooltipVisible) {
+                fab_tooltip.setMessage(message)
+                fab_tooltip.show()
+            } else {
+                fab_tooltip.hide()
+            }
+
+            fab.contentDescription = message
+        })
 
         postListCreateMenuViewModel.createAction.observe(this, Observer {  })
     }
