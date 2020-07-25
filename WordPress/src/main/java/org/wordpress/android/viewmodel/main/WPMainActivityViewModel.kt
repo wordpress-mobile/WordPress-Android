@@ -195,6 +195,21 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun getCreateContentMessageId(hasFullAccessToContent: Boolean): Int {
+        return if (wpStoriesFeatureConfig.isEnabled())
+            return getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent)
+        else
+            return getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent)
+    }
+
+    // create_post_page_fab_tooltip_stories_feature_flag_on
+    private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
+        return if (hasFullAccessToContent)
+            R.string.create_post_page_fab_tooltip_stories_feature_flag_on
+        else
+            R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
+    }
+
+    private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
         return if (hasFullAccessToContent)
             R.string.create_post_page_fab_tooltip
         else
