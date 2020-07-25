@@ -19,6 +19,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -30,6 +31,7 @@ class WPMainActivityViewModel @Inject constructor(
     private val buildConfigWrapper: BuildConfigWrapper,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
+    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -86,12 +88,14 @@ class WPMainActivityViewModel @Inject constructor(
                     onClickAction = ::onCreateActionClicked
             ))
         }
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_STORY,
-                iconRes = R.drawable.ic_story_icon_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_story,
-                onClickAction = ::onCreateActionClicked
-        ))
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            actionsList.add(CreateAction(
+                    actionType = CREATE_NEW_STORY,
+                    iconRes = R.drawable.ic_story_icon_24dp,
+                    labelRes = R.string.my_site_bottom_sheet_add_story,
+                    onClickAction = ::onCreateActionClicked
+            ))
+        }
 
         _mainActions.postValue(actionsList)
     }
@@ -117,9 +121,25 @@ class WPMainActivityViewModel @Inject constructor(
     fun onFabClicked(hasFullAccessToContent: Boolean) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
-        loadMainActions(hasFullAccessToContent)
 
-        _isBottomSheetShowing.value = Event(true)
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            loadMainActions(hasFullAccessToContent)
+            _isBottomSheetShowing.value = Event(true)
+        } else {
+            // NOTE: this whole piece of code and comment below to be removed when we remove the feature flag.
+            // Also note: This comment below and code as is is in `develop` at the time of writing the feature
+            // flag, so bringing it all back in. See https://github.com/wordpress-mobile/WordPress-Android/pull/11930
+            // ----------------------
+            // Currently this bottom sheet has only 2 options.
+            // We should evaluate to re-introduce the bottom sheet also for users without full access to content
+            // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
+            // See p5T066-1cA-p2/#comment-4463
+            if (hasFullAccessToContent) {
+                _isBottomSheetShowing.value = Event(true)
+            } else {
+                _createAction.postValue(CREATE_NEW_POST)
+            }
+        }
     }
 
     fun onPageChanged(showFab: Boolean, hasFullAccessToContent: Boolean) {
