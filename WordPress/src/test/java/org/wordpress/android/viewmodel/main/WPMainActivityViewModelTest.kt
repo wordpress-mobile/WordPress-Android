@@ -238,7 +238,8 @@ class WPMainActivityViewModelTest {
         setupWPStoriesFeatureConfigEnabled(true)
         startViewModelWithDefaultParameters()
         viewModel.onResume(true)
-        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
     }
 
     @Test
