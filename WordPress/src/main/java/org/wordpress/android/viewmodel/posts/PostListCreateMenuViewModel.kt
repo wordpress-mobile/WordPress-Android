@@ -15,8 +15,6 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -41,11 +39,11 @@ class PostListCreateMenuViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    fun start(isFabVisible: Boolean) {
+    fun start() {
         if (isStarted) return
         isStarted = true
 
-        setMainFabUiState(isFabVisible)
+        setMainFabUiState()
 
         loadMainActions()
     }
@@ -89,10 +87,10 @@ class PostListCreateMenuViewModel @Inject constructor(
         _createAction.postValue(actionType)
     }
 
-    private fun setMainFabUiState(isFabVisible: Boolean) {
+    private fun setMainFabUiState() {
         val newState = MainFabUiState(
-                isFabVisible = isFabVisible,
-                isFabTooltipVisible = if (appPrefsWrapper.isPostListFabTooltipDisabled()) false else isFabVisible,
+                isFabVisible = true,
+                isFabTooltipVisible = !appPrefsWrapper.isPostListFabTooltipDisabled(),
                 CreateContentMessageId = R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on
         )
 
@@ -101,10 +99,7 @@ class PostListCreateMenuViewModel @Inject constructor(
 
     fun onFabClicked() {
         appPrefsWrapper.setPostListFabTooltipDisabled(true)
-        setMainFabUiState(true)
-
-        // TODO verify that this logic below is needed.
-        loadMainActions()
+        setMainFabUiState()
         _isBottomSheetShowing.value = Event(true)
     }
 
