@@ -66,8 +66,10 @@ import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
+import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import org.wordpress.android.widgets.WPDialogSnackbar
 import javax.inject.Inject
 
@@ -94,6 +96,7 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var quickStartStore: QuickStartStore
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
+    @Inject internal lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
 
     private lateinit var site: SiteModel
 
@@ -101,6 +104,7 @@ class PostsListActivity : LocaleAwareActivity(),
     override fun getEditPostRepository() = editPostRepository
 
     private lateinit var viewModel: PostListMainViewModel
+    private lateinit var postListCreateMenuViewModel: PostListCreateMenuViewModel
 
     private lateinit var authorSelectionAdapter: AuthorSelectionAdapter
     private lateinit var authorSelection: AppCompatSpinner
@@ -234,19 +238,37 @@ class PostsListActivity : LocaleAwareActivity(),
         tabLayout.setupWithViewPager(pager)
         pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
-        fab.setOnClickListener { viewModel.newPost() }
-        fab.setOnLongClickListener {
-            if (fab.isHapticFeedbackEnabled) {
-                fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+        fab.setOnClickListener {
+            if (wpStoriesFeatureConfig.isEnabled()) {
+                postListCreateMenuViewModel.onFabClicked()
+            } else {
+                viewModel.newPost()
             }
+        }
 
-            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+        fab.setOnLongClickListener {
+            if (wpStoriesFeatureConfig.isEnabled()) {
+                postListCreateMenuViewModel.onFabLongPressed()
+            } else {
+                if (fab.isHapticFeedbackEnabled) {
+                    fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                }
+                Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+            }
             return@setOnLongClickListener true
         }
         fab.redirectContextClickToLongPressListener()
 
         postsPagerAdapter = PostsPagerAdapter(POST_LIST_PAGES, site, supportFragmentManager)
         pager.adapter = postsPagerAdapter
+    }
+
+    private fun initCreateMenuViewModel() {
+        postListCreateMenuViewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(PostListCreateMenuViewModel::class.java)
+
+
+        postListCreateMenuViewModel.createAction.observe(this, Observer {  })
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
