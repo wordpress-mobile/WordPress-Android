@@ -8,7 +8,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.EditPostPublishSettingsViewModel;
-import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListMainViewModel;
 import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
