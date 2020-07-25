@@ -46,6 +46,8 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
@@ -303,7 +305,12 @@ class PostsListActivity : LocaleAwareActivity(),
             fab.contentDescription = message
         })
 
-        postListCreateMenuViewModel.createAction.observe(this, Observer {  })
+        postListCreateMenuViewModel.createAction.observe(this, Observer { createAction ->
+            when (createAction) {
+                CREATE_NEW_POST -> viewModel.newPost()
+                CREATE_NEW_STORY -> viewModel.newStoryPost()
+            }
+        })
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
