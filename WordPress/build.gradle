@@ -73,6 +73,7 @@ android {
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
         buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
+        buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -97,6 +98,7 @@ android {
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "false"
+            buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
