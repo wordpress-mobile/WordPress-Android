@@ -311,6 +311,8 @@ class PostsListActivity : LocaleAwareActivity(),
                 CREATE_NEW_STORY -> viewModel.newStoryPost()
             }
         })
+
+        postListCreateMenuViewModel.start()
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {

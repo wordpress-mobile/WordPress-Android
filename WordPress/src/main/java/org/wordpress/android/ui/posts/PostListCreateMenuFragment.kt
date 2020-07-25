@@ -41,7 +41,6 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
         recyclerView.adapter = AddContentAdapter(requireActivity())
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(PostListCreateMenuViewModel::class.java)
-        viewModel.start()
         viewModel.mainActions.observe(this, Observer {
             (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
