@@ -2,8 +2,8 @@ package org.wordpress.android.ui.reader.discover
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.datasets.ReaderBlogTable
-import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
+import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -17,14 +17,17 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import javax.inject.Inject
 
 @Reusable
-class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
+class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper
+) {
     fun buildMoreMenuItems(
         post: ReaderPost,
         postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
-        if (ReaderPostTable.isPostFollowed(post)) {
+        if (readerPostTableWrapper.isPostFollowed(post)) {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
@@ -38,7 +41,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor() {
 
             // When blogId and feedId are not equal, post is not a feed so show notifications option.
             if (post.blogId != post.feedId) {
-                if (ReaderBlogTable.isNotificationsEnabled(post.blogId)) {
+                if (readerBlogTableWrapper.isNotificationsEnabled(post.blogId)) {
                     menuItems.add(
                             SecondaryAction(
                                     type = SITE_NOTIFICATIONS,

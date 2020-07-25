@@ -11,14 +11,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_tag_info"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/reader_tag_header_height">
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/reader_tag_header_horizontal_padding"
+        android:paddingEnd="@dimen/reader_tag_header_horizontal_padding"
+        android:paddingTop="@dimen/reader_tag_header_vertical_padding"
+        android:paddingBottom="@dimen/reader_tag_header_vertical_padding">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/text_tag"
             style="@style/ReaderTextView.Tag.Header.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             app:layout_constraintBottom_toTopOf="@+id/follow_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_chainStyle="packed"

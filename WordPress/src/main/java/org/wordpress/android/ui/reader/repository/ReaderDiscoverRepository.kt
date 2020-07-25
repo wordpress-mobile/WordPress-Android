@@ -5,17 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -32,7 +38,8 @@ class ReaderDiscoverRepository constructor(
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+    private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher
@@ -63,10 +70,34 @@ class ReaderDiscoverRepository constructor(
         shouldAutoUpdateTagUseCase.stop()
         getPostsForTagWithCountUseCase.stop()
         readerUpdatePostsEndedHandler.stop()
+        postLikeActionUseCase.stop()
+    }
+
+    // todo - can change this to blogId, feedId, etc
+    fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
+        launch {
+            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
+                is PostLikeSuccess -> {
+                    reloadPosts()
+                }
+                is PostLikeFailure -> {
+                    _communicationChannel.postValue(Event(Failure(event)))
+                    reloadPosts()
+                }
+                is PostLikeUnChanged -> { }
+            }
+        }
     }
 
     fun getTag(): ReaderTag {
         return readerTag
+    }
+
+    fun refreshPosts() {
+        launch {
+            val response = fetchPostsForTagUseCase.fetch(readerTag)
+            if (response != Success) _communicationChannel.postValue(Event(response))
+        }
     }
 
     private fun onNewPosts(event: UpdatePostsEnded) {
@@ -126,7 +157,8 @@ class ReaderDiscoverRepository constructor(
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
+        private val postLikeActionUseCase: PostLikeActionUseCase
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
             val tag = readerTag
@@ -140,7 +172,8 @@ class ReaderDiscoverRepository constructor(
                     shouldAutoUpdateTagUseCase,
                     getPostsForTagWithCountUseCase,
                     fetchPostsForTagUseCase,
-                    readerUpdatePostsEndedHandler
+                    readerUpdatePostsEndedHandler,
+                    postLikeActionUseCase
             )
         }
     }

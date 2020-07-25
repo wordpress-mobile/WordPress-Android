@@ -16,10 +16,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.datasets.ReaderPostTable;
+import org.wordpress.android.datasets.ReaderTagTable;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderPost;
@@ -40,6 +42,7 @@ import org.wordpress.android.ui.reader.ReaderTypes;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
+import org.wordpress.android.ui.reader.actions.ReaderTagActions;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
@@ -49,6 +52,8 @@ import org.wordpress.android.ui.reader.utils.ReaderXPostUtils;
 import org.wordpress.android.ui.reader.views.ReaderGapMarkerView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
+import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState;
+import org.wordpress.android.ui.reader.views.ReaderTagHeaderViewUiState.ReaderTagHeaderUiState.FollowButtonUiState;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -67,6 +72,7 @@ import java.util.HashSet;
 import javax.inject.Inject;
 
 import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
 
@@ -184,6 +190,10 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             super(itemView);
             mTagHeaderView = (ReaderTagHeaderView) itemView;
         }
+
+        public void onBind(ReaderTagHeaderUiState uiState) {
+            mTagHeaderView.updateUi(uiState);
+        }
     }
 
     private static class GapMarkerViewHolder extends RecyclerView.ViewHolder {
@@ -267,12 +277,71 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         } else if (holder instanceof TagHeaderViewHolder) {
             TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
-            tagHolder.mTagHeaderView.setCurrentTag(mCurrentTag);
+            renderTagHeader(mCurrentTag, tagHolder, true, false);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
         } else if (holder instanceof NewsViewHolder) {
             ((NewsViewHolder) holder).bind(mNewsItem);
+        }
+    }
+
+    private void renderTagHeader(
+        ReaderTag currentTag,
+        TagHeaderViewHolder tagHolder,
+        Boolean isFollowButtonEnabled,
+        Boolean shouldFollowButtonAnimate
+    ) {
+        if (currentTag == null) {
+            return;
+        }
+        Function0<Unit> onFollowButtonClicked = () -> {
+            toggleFollowButton(tagHolder.itemView.getContext(), currentTag, tagHolder);
+            return Unit.INSTANCE;
+        };
+
+        ReaderTagHeaderUiState uiState = new ReaderTagHeaderUiState(
+            currentTag.getLabel(),
+            new FollowButtonUiState(
+                onFollowButtonClicked,
+                mAccountStore.hasAccessToken(),
+                ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
+                isFollowButtonEnabled,
+                shouldFollowButtonAnimate
+            )
+        );
+        tagHolder.onBind(uiState);
+    }
+
+    private void toggleFollowButton(
+        Context context,
+        @NotNull ReaderTag currentTag,
+        TagHeaderViewHolder tagHolder
+    ) {
+        if (!NetworkUtils.checkConnection(context)) {
+            return;
+        }
+
+        final boolean isAskingToFollow = !ReaderTagTable.isFollowedTagName(currentTag.getTagSlug());
+
+        ReaderActions.ActionListener listener = succeeded -> {
+            if (!succeeded) {
+                int errResId = isAskingToFollow ? R.string.reader_toast_err_add_tag
+                        : R.string.reader_toast_err_remove_tag;
+                ToastUtils.showToast(context, errResId);
+            }
+            renderTagHeader(currentTag, tagHolder, true, false);
+        };
+
+        boolean success;
+        if (isAskingToFollow) {
+            success = ReaderTagActions.addTag(mCurrentTag, listener);
+        } else {
+            success = ReaderTagActions.deleteTag(mCurrentTag, listener);
+        }
+
+        if (success) {
+            renderTagHeader(currentTag, tagHolder, false, false);
         }
     }
 

@@ -20,10 +20,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/margin_extra_large"
+            android:paddingBottom="@dimen/margin_extra_medium_large"
             android:paddingEnd="@dimen/margin_medium_large"
             android:paddingStart="@dimen/margin_medium_large"
-            android:paddingTop="@dimen/margin_extra_large"
+            android:paddingTop="@dimen/margin_extra_medium_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

@@ -135,6 +135,7 @@ import javax.inject.Inject;
 import static androidx.lifecycle.Lifecycle.State.STARTED;
 import static org.wordpress.android.WordPress.SITE;
 import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS;
+import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
 
@@ -945,6 +946,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
+                AppPrefs.setLastSkippedQuickStartTask(null);
 
                 // Enable the block editor on sites created on mobile
                 if (data != null) {
@@ -982,6 +984,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
+                        AppPrefs.setLastSkippedQuickStartTask(null);
                         mPrivateAtomicCookie.clearCookie();
                     }
 
@@ -1149,7 +1152,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     private void trackMagicLinkSignupIfNeeded() {
         AccountModel account = mAccountStore.getAccount();
         if (!TextUtils.isEmpty(account.getUserName()) && !TextUtils.isEmpty(account.getEmail())) {
-            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail());
+            mLoginAnalyticsListener.trackCreatedAccount(account.getUserName(), account.getEmail(), EMAIL);
             mLoginAnalyticsListener.trackSignupMagicLinkSucceeded();
             mLoginAnalyticsListener.trackAnalyticsSignIn(true);
             AppPrefs.removeShouldTrackMagicLinkSignup();
