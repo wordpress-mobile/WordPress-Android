@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import org.wordpress.android.ui.main.AddContentAdapter
-
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.add_content_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.main.AddContentAdapter
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
 import javax.inject.Inject
 
@@ -42,7 +41,7 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
         recyclerView.adapter = AddContentAdapter(requireActivity())
 
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(PostListCreateMenuViewModel::class.java)
-
+        viewModel.start()
         viewModel.mainActions.observe(this, Observer {
             (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })
@@ -64,5 +63,11 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    companion object {
+        const val TAG = "post_list_create_menu_fragment"
+
+        fun newInstance() = PostListCreateMenuFragment()
     }
 }
