@@ -151,6 +151,9 @@ class AppPrefsWrapper @Inject constructor() {
     fun shouldShowBookmarksSavedLocallyDialog(): Boolean = AppPrefs.shouldShowBookmarksSavedLocallyDialog()
     fun setBookmarksSavedLocallyDialogShown() = AppPrefs.setBookmarksSavedLocallyDialogShown()
 
+    fun isPostListFabTooltipDisabled() = AppPrefs.isMainFabTooltipDisabled()
+    fun setPostListFabTooltipDisabled(disable: Boolean) = AppPrefs.setMainFabTooltipDisabled(disable)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
