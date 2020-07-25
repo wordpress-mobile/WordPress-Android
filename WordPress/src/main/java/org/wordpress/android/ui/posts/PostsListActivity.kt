@@ -451,6 +451,7 @@ class PostsListActivity : LocaleAwareActivity(),
     public override fun onResume() {
         super.onResume()
         ActivityId.trackLastActivity(ActivityId.POSTS)
+        postListCreateMenuViewModel.onResume()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

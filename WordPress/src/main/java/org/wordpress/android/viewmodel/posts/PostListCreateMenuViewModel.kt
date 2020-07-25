@@ -124,7 +124,7 @@ class PostListCreateMenuViewModel @Inject constructor(
         }
     }
 
-    fun onResume(hasFullAccessToContent: Boolean) {
+    fun onResume() {
         val oldState = _fabUiState.value
         oldState?.let {
             _fabUiState.value = MainFabUiState(
