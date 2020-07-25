@@ -135,6 +135,9 @@ class WPMainActivityViewModel @Inject constructor(
             // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
             // See p5T066-1cA-p2/#comment-4463
             if (hasFullAccessToContent) {
+                // reload main actions given the first time this is initialized, the SiteModel may not contain the
+                // latest info
+                loadMainActions(hasFullAccessToContent)
                 _isBottomSheetShowing.value = Event(true)
             } else {
                 _createAction.postValue(CREATE_NEW_POST)
