@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -70,16 +71,16 @@ class ReaderDiscoverRepository constructor(
 
     fun getTag(): ReaderTag = readerTag
 
-    fun refreshPosts() {
-        launch {
+    suspend fun refreshPosts() {
+        withContext(bgDispatcher) {
             val response =
                     fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
             if (response != Success) _communicationChannel.postValue(Event(response))
         }
     }
 
-    fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        launch {
+    suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
+        withContext(bgDispatcher) {
             when (val event= postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
@@ -94,8 +95,8 @@ class ReaderDiscoverRepository constructor(
     }
 
     // Internal functionality
-    private fun loadPosts() {
-        launch {
+    private suspend fun loadPosts() {
+        withContext(bgDispatcher) {
             val existsInMemory = discoverFeed.value?.let {
                 !it.isEmpty()
             } ?: false
@@ -111,8 +112,8 @@ class ReaderDiscoverRepository constructor(
         }
     }
 
-    private fun reloadPosts() {
-        launch {
+    private suspend fun reloadPosts() {
+        withContext(bgDispatcher) {
             val result = getPostsForTagUseCase.get(readerTag)
             _discoverFeed.postValue(result)
         }
@@ -120,11 +121,15 @@ class ReaderDiscoverRepository constructor(
 
     // Handlers for ReaderPostServices
     private fun onNewPosts(event: UpdatePostsEnded) {
-        reloadPosts()
+        launch {
+            reloadPosts()
+        }
     }
 
     private fun onChangedPosts(event: UpdatePostsEnded) {
-        reloadPosts()
+        launch {
+            reloadPosts()
+       }
     }
 
     private fun onUnchanged(event: UpdatePostsEnded) {
@@ -137,7 +142,9 @@ class ReaderDiscoverRepository constructor(
 
     // React to discoverFeed observers
     private fun onActiveDiscoverFeed() {
-        loadPosts()
+        launch {
+            loadPosts()
+        }
     }
 
     private fun onInactiveDiscoverFeed() {
