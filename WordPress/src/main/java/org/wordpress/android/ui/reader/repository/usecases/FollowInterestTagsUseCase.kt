@@ -28,14 +28,15 @@ class FollowInterestTagsUseCase @Inject constructor(
         if (continuation != null) {
             throw IllegalStateException("Follow interest tags already in progress.")
         }
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        val isLoggedIn = accountStore.hasAccessToken()
+        if (isLoggedIn && !networkUtilsWrapper.isNetworkAvailable()) {
             return NetworkUnavailable
         }
         return suspendCoroutine { cont ->
             continuation = cont
             eventBusWrapper.register(this)
 
-            ReaderTagActions.addTags(tags, accountStore.hasAccessToken())
+            ReaderTagActions.addTags(tags, isLoggedIn)
         }
     }
 
