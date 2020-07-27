@@ -81,7 +81,7 @@ class ReaderDiscoverRepository constructor(
 
     suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
         withContext(bgDispatcher) {
-            when (val event= postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
+            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
                 }
@@ -129,7 +129,7 @@ class ReaderDiscoverRepository constructor(
     private fun onChangedPosts(event: UpdatePostsEnded) {
         launch {
             reloadPosts()
-       }
+        }
     }
 
     private fun onUnchanged(event: UpdatePostsEnded) {
