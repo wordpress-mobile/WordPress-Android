@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 17:54:08+0000
+Translation-Revision-Date: 2020-07-24 08:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>
+    <string name="quick_start_list_update_site_title_title">Atur judul situs Anda</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
+    <string name="gutenberg_native_s_block_options">%s pilihan blok</string>
+    <string name="gutenberg_native_remove_block">Hapus blok</string>
+    <string name="gutenberg_native_paste_block">Tempelkan blok</string>
+    <string name="gutenberg_native_duplicate_block">Duplikasi blok</string>
+    <string name="gutenberg_native_copy_block">Salin blok</string>
+    <string name="gutenberg_native_copied_block">Blok disalin</string>
+    <string name="gutenberg_native_block_settings">Pengaturan blok</string>
+    <string name="gutenberg_native_block_pasted">Blok ditempelkan</string>
+    <string name="gutenberg_native_block_duplicated">Blok diduplikasi</string>
+    <string name="gutenberg_native_block_cut">Blok dipotong</string>
+    <string name="gutenberg_native_block_copied">Blok disalin</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Judul Situs hanya dapat diubah oleh pengguna yang berperan sebagai administrator.</string>
+    <string name="my_site_title_changer_dialog_hint">Judul Situs ditampilkan di bilah judul perambah web dan ditampilkan pada header sebagian besar tema.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Topik</string>
+    <string name="error_update_site_title_network">Tidak dapat memperbarui judul situs. Periksa koneksi jaringan Anda dan coba lagi.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Perubahan yang belum disimpan</string>
     <string name="gutenberg_native_open_link_in_a_browser">Buka tautan pada perambah</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigasi ke halaman konten sebelumnya</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigasi untuk mengustomisasi gradien</string>
@@ -24,7 +44,6 @@ Language: id
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Kami berusaha keras untuk menambahkan banyak blok setiap rilis. Sementara itu, Anda juga dapat mengedit blok ini menggunakan web browser perangkat Anda.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Edit blok di browser web</string>
     <string name="gutenberg_native_dismiss">Tutup</string>
-    <string name="prepublishing_nudges_visibility_password">Dilindungi Kata sandi</string>
     <string name="prepublishing_nudges_home_tags_not_set">Tidak ditentukan</string>
     <string name="prepublishing_tags_description">Tag membantu memberi tahu para pembaca tentang isi sebuah pos.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publikasikan</string>
@@ -55,12 +74,7 @@ Language: id
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Hapus %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
-    <string name="gutenberg_native_move_s_up">Pindahkan %s ke Atas</string>
-    <string name="gutenberg_native_move_s_right">Pindahkan %s ke Kanan</string>
-    <string name="gutenberg_native_move_s_left">Pindahkan %s ke Kiri</string>
-    <string name="gutenberg_native_move_s_down">Pindahkan %s ke Bawah</string>
     <string name="gutenberg_native_try_a_starter_layout">Coba tampilan pengantar</string>
     <string name="gutenberg_native_insert_mention">Sertakan penyebutan</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ketuk dua kali untuk membuka Lembar Bawah dengan opsi yang tersedia</string>
@@ -119,7 +133,9 @@ Language: id
     <string name="copy_text">Salin</string>
     <string name="gutenberg_native_number_of_columns">Jumlah kolom</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Geser blok ke kanan dari posisi %1$s ke posisi %2$s\"</string>
+    <string name="gutenberg_native_move_block_right">Geser blok ke kanan</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Geser blok ke kiri dari posisi %1$s ke posisi %2$s\"</string>
+    <string name="gutenberg_native_move_block_left">Geser blok ke kiri</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Ketuk dua kali untuk memindahkan blok ke kanan</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Ketuk dua kali untuk memindahkan blok ke kiri</string>
     <string name="gutenberg_native_columns_settings">Pengaturan Kolom</string>
@@ -202,7 +218,6 @@ Language: id
     <string name="gutenberg_native_only_show_excerpt">Hanya tampilkan kutipan</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofolio saya menampilkan berbagai proyek yang saya hasilkan sepanjang karier. Lihat informasi kontak di bawah ini dan hubungi.</string>
     <string name="gutenberg_native_link_to">Tautan Ke</string>
-    <string name="gutenberg_native_s_settings">Pengaturan %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ayo bicara 👋 Jangan ragu untuk menghubungi kami melalui informasi kontak di bawah ini, atau kirimkan pesan menggunakan formulir.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Ayo buat sesuatu bersama!</string>
     <string name="gutenberg_native_let_s_build_something_together">Ayo buat sesuatu bersama!</string>
@@ -348,6 +363,7 @@ Language: id
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' belum didukung di WordPress untuk Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Kosong</string>
+    <string name="gutenberg_native_cut_block">Potong blok</string>
     <string name="gutenberg_native_reset_block">Reset Blok</string>
     <string name="gutenberg_native_remove_annotations">Hilangkan anotasi</string>
     <string name="gutenberg_native_problem_opening_the_video">Terjadi masalah saat membuka video</string>
@@ -364,7 +380,9 @@ Language: id
     <string name="gutenberg_native_my_post_publish_panel">Panel setelah dipublikasikan milik saya</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel Pengaturan Dokumen Saya</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Pindahkan balok ke atas dari baris %1$s ke baris %2$s</string>
+    <string name="gutenberg_native_move_block_up">Naikkan blok</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Pindahkan balok ke bawah dari baris %1$s ke baris %2$s</string>
+    <string name="gutenberg_native_move_block_down">Turunkan blok</string>
     <string name="gutenberg_native_link_text">Teks tautan</string>
     <string name="gutenberg_native_link_inserted">Tautan disisipkan</string>
     <string name="gutenberg_native_image_caption_s">Keterangan gambar. %s</string>
@@ -614,7 +632,7 @@ Language: id
     <string name="post_restoring">Pos sedang dipulihkan</string>
     <string name="post_restored">Pos dipulihkan</string>
     <string name="post_trashing">Pos sedang dibuang</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Membuang pos ini juga akan menghapus perubahan yang belum disimpan, Anda yakin ingin melanjutkan?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Perubahan lokal</string>
     <string name="button_move_to_draft">Pindahkan ke Konsep</string>
     <string name="post_list_toggle_item_layout_list_view">Beralih ke tampilan daftar</string>
@@ -690,7 +708,7 @@ Language: id
     <string name="quick_start_dialog_upload_icon_message">Pengunjung akan melihat ikon Anda di perambah mereka. Tambahkan ikon kustom untuk tampilan yang lebih pro dan elegan.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ketuk %1$s Paket %2$s untuk melihat paket Anda saat ini dan paket yang tersedia</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Ketuk %1$s Tambahkan Halaman %2$s untuk membuat halaman baru.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Ketuk %1$s Halaman Situs %2$s untuk melanjutkan.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Ketuk %1$s Halaman %2$s untuk melanjutkan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Ketuk %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>
     <string name="quick_start_dialog_publish_post_message">Buat konsep dan publikasikan pos pertama Anda.</string>
@@ -1645,7 +1663,6 @@ Language: id
     <string name="pending_draft_one_week_1">Konsep \'%1$s\' menanti Anda - pastikan untuk menerbitkannya!</string>
     <string name="pending_draft_one_day_2">Tahukah Anda bahwa \'%1$s\' masih berupa konsep? Terbitkan saja!</string>
     <string name="pending_draft_one_day_1">Anda membuat konsep \'%1$s\' kemarin. Jangan lupa menerbitkannya!</string>
-    <string name="reader_photo_by">Foto oleh %s</string>
     <string name="reader_label_visit">Kunjungi situs</string>
     <string name="swipe_for_more">Geser untuk selengkapnya</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Anda tidak diizinkan menampilkan pos ini. Cobalah untuk masuk ke WordPress.com lebih dahulu atau gunakan tombol tindakan di atas untuk membuka browser.</string>
@@ -2133,7 +2150,6 @@ Language: id
     <string name="reader_hint_add_tag_or_url">Masukkan sebuah URL atau tag untuk mengikuti</string>
     <string name="reader_page_followed_blogs">Situs yang diikuti</string>
     <string name="reader_page_followed_tags">Tag yang diikuti</string>
-    <string name="reader_title_tag_preview">Tag Pembaca</string>
     <string name="reader_title_blog_preview">Situs Pembaca</string>
     <string name="ssl_certificate_ask_trust">Jika biasanya Anda bisa terhubung dengan situs ini tanpa masalah, galat ini bisa berarti seseorang sedang mencoba meniru situs, dan Anda sebaiknya tidak melanjutkannya. Apakah Anda ingin mempercayai sertifikat ini?</string>
     <string name="ssl_certificate_error">Sertifikat SSL tidak sah</string>

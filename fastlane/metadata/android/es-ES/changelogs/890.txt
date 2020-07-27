@@ -1,4 +1,0 @@
-15.2:
-Añadidos al editor de bloques: Se ha añadido al editor compatibilidad para colores y degradados definidos por el tema en los bloques de cubierta y botón. El bloque de vídeo de portada se completa ahora después de que el editor se haya cerrado. Ahora se muestra la información métrica del recuento de bloques, palabras y caracteres.
-
-Correcciones: Se han corregido los problemas de procesamiento de detalles de las entradas del lector y el bloqueo en la respuesta de la API de WordPress.
