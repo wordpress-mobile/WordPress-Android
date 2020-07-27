@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLike
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
+import org.wordpress.android.ui.reader.repository.usecases.PostBookmarkActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
@@ -38,7 +39,8 @@ class ReaderDiscoverRepository constructor(
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
     private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-    private val postLikeActionUseCase: PostLikeActionUseCase
+    private val postLikeActionUseCase: PostLikeActionUseCase,
+    private val postBookmarkActionUseCase: PostBookmarkActionUseCase
 ) : CoroutineScope {
     private var job: Job = Job()
 
@@ -91,6 +93,12 @@ class ReaderDiscoverRepository constructor(
                 }
                 is PostLikeUnChanged -> { }
             }
+        }
+    }
+
+    suspend fun performBookmarkAction(post: ReaderPost, isAskingToBookmark: Boolean) {
+        withContext(bgDispatcher) {
+            postBookmarkActionUseCase.perform(post, isAskingToBookmark)
         }
     }
 
@@ -158,7 +166,8 @@ class ReaderDiscoverRepository constructor(
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-        private val postLikeActionUseCase: PostLikeActionUseCase
+        private val postLikeActionUseCase: PostLikeActionUseCase,
+        private val postBookmarkActionUseCase: PostBookmarkActionUseCase
     ) {
         fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
             val tag = readerTag
@@ -171,7 +180,8 @@ class ReaderDiscoverRepository constructor(
                     shouldAutoUpdateTagUseCase,
                     fetchPostsForTagUseCase,
                     readerUpdatePostsEndedHandler,
-                    postLikeActionUseCase
+                    postLikeActionUseCase,
+                    postBookmarkActionUseCase
             )
         }
     }
