@@ -186,7 +186,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             }
         })
 
-        viewModel.shouldShowOptimizeImagesAdvertising.observe(this, Observer { event ->
+        viewModel.showOptimizeImagesAdvertisingDialog.observe(this, Observer { event ->
             event.applyIfNotHandled {
                 WPMediaUtils.advertiseImageOptimization(this@StoryComposerActivity) { this.invoke() }
             }

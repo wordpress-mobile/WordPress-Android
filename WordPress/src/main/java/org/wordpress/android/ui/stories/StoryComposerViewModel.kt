@@ -55,8 +55,8 @@ class StoryComposerViewModel @Inject constructor(
     private val _submitButtonClicked = MutableLiveData<Event<Unit>>()
     val submitButtonClicked: LiveData<Event<Unit>> = _submitButtonClicked
 
-    private val _shouldShowOptimizeImagesAdvertising = MutableLiveData<Event<() -> Unit>>()
-    val shouldShowOptimizeImagesAdvertising: LiveData<Event<() -> Unit>> = _shouldShowOptimizeImagesAdvertising
+    private val _showOptimizeImagesAdvertisingDialog = MutableLiveData<Event<() -> Unit>>()
+    val showOptimizeImagesAdvertisingDialog: LiveData<Event<() -> Unit>> = _showOptimizeImagesAdvertisingDialog
 
     init {
         lifecycleRegistry.currentState = Lifecycle.State.CREATED
@@ -157,7 +157,7 @@ class StoryComposerViewModel @Inject constructor(
     }
 
     override fun advertiseImageOptimization(listener: () -> Unit) {
-        _shouldShowOptimizeImagesAdvertising.postValue(Event(listener))
+        _showOptimizeImagesAdvertisingDialog.postValue(Event(listener))
     }
 
     fun onStorySaveButtonPressed() {
