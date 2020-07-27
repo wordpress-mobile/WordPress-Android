@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.content.Context
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
@@ -33,7 +34,7 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener {
 
     override fun onCreate() {
         super.onCreate()
-        readerDiscoverLogic = ReaderDiscoverLogic(this)
+        readerDiscoverLogic = ReaderDiscoverLogic(this, (application as WordPress).component())
         AppLog.i(READER, "reader discover job service > created")
     }
 

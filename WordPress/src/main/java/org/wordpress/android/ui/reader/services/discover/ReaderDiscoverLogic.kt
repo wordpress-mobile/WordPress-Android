@@ -14,6 +14,7 @@ import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE
@@ -33,14 +34,22 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.Dis
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
+import java.util.HashMap
+import javax.inject.Inject
 
 /**
  * This class contains logic related to fetching data for the discover tab in the Reader.
  */
 class ReaderDiscoverLogic constructor(
     private val completionListener: ServiceCompletionListener,
-    private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+    appComponent: AppComponent
 ) {
+    init {
+        appComponent.inject(this)
+    }
+
+    @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+
     enum class DiscoverTasks {
         REQUEST, REQUEST_FORCE
     }
@@ -67,14 +76,15 @@ class ReaderDiscoverLogic constructor(
     }
 
     private fun requestDataForDiscover(forceRefresh: Boolean, resultListener: ReaderActions.UpdateResultListener) {
-        val path = "read/tags/cards"
-
-        val sb = StringBuilder(path)
+        val params = HashMap<String, String>()
+        // TODO malinjir pass interests the user is following
+        params["tags"] = "android"
 
         if (!forceRefresh) {
-            sb.append("?page_handle=")
+            params["page_handle"] = ""
             // TODO malinjir load page handle
         }
+
         val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
             if (forceRefresh) {
                 // TODO malinjir clear cache
@@ -86,7 +96,7 @@ class ReaderDiscoverLogic constructor(
             resultListener.onUpdateResult(FAILED)
         }
 
-        WordPress.getRestClientUtilsV2()[sb.toString(), null, null, listener, errorListener]
+        WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
     }
 
     private fun handleRequestDiscoverDataResponse(json: JSONObject?, resultListener: UpdateResultListener) {

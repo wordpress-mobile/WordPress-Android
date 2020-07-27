@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK
@@ -26,7 +27,7 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener {
 
     override fun onCreate() {
         super.onCreate()
-        readerDiscoverLogic = ReaderDiscoverLogic(this)
+        readerDiscoverLogic = ReaderDiscoverLogic(this, (application as WordPress).component())
         AppLog.i(READER, "reader discover service > created")
     }
 
