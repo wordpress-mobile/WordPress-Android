@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -36,11 +35,11 @@ class PostListCreateMenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.content_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = AddContentAdapter(requireActivity())
+        content_recycler_view.layoutManager = LinearLayoutManager(requireActivity())
+        content_recycler_view.adapter = AddContentAdapter(requireActivity())
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(PostListCreateMenuViewModel::class.java)
+        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+                .get(PostListCreateMenuViewModel::class.java)
         viewModel.mainActions.observe(this, Observer {
             (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
         })

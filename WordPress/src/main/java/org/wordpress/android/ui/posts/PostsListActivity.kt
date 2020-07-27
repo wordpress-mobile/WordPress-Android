@@ -277,16 +277,16 @@ class PostsListActivity : LocaleAwareActivity(),
 
         postListCreateMenuViewModel.isBottomSheetShowing.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let { isBottomSheetShowing ->
-                var postListCreateMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
-                if (postListCreateMenuFragment == null) {
+                var createMenuFragment = supportFragmentManager.findFragmentByTag(PostListCreateMenuFragment.TAG)
+                if (createMenuFragment == null) {
                     if (isBottomSheetShowing) {
-                        postListCreateMenuFragment = PostListCreateMenuFragment.newInstance()
-                        postListCreateMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
+                        createMenuFragment = PostListCreateMenuFragment.newInstance()
+                        createMenuFragment.show(supportFragmentManager, PostListCreateMenuFragment.TAG)
                     }
                 } else {
                     if (!isBottomSheetShowing) {
-                        postListCreateMenuFragment as PostListCreateMenuFragment
-                        postListCreateMenuFragment.dismiss()
+                        createMenuFragment as PostListCreateMenuFragment
+                        createMenuFragment.dismiss()
                     }
                 }
             }

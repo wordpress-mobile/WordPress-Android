@@ -68,7 +68,6 @@ class PostListCreateMenuViewModel @Inject constructor(
                 )
         )
 
-
         actionsList.add(
                 CreateAction(
                         actionType = CREATE_NEW_STORY,
