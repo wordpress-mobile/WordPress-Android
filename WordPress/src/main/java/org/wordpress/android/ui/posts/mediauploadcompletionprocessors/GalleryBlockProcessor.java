@@ -68,15 +68,16 @@ public class GalleryBlockProcessor extends BlockProcessor {
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonArray ids = jsonAttributes.getAsJsonArray("ids");
-        if (ids == null) {
+        if (ids == null || ids.isJsonNull()) {
             return false;
         }
         JsonElement linkTo = jsonAttributes.get("linkTo");
-        if (linkTo != null) {
+        if (linkTo != null && !linkTo.isJsonNull()) {
             mLinkTo = linkTo.getAsString();
         }
         for (int i = 0; i < ids.size(); i++) {
-            if (ids.get(i).getAsString().equals(mLocalId)) {
+            JsonElement id = ids.get(i);
+            if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
                 ids.set(i, new JsonPrimitive(Integer.parseInt(mRemoteId, 10)));
                 return true;
             }

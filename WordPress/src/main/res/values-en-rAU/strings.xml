@@ -224,7 +224,6 @@ Language: en_AU
     <string name="post_restoring">Post is being restored</string>
     <string name="post_restored">Post restored</string>
     <string name="post_trashing">Post is being trashed</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will discard local changes, are you sure you want to continue?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="button_move_to_draft">Move to Draft</string>
     <string name="post_list_toggle_item_layout_list_view">Switch to list view</string>
@@ -300,7 +299,6 @@ Language: en_AU
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tap %1$s Site Pages %2$s to continue.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tap %1$s Stats %2$s to see how your site is performing.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_publish_post_message">Draft and publish your first post.</string>
@@ -1257,7 +1255,6 @@ Language: en_AU
     <string name="pending_draft_one_week_1">Your draft \'%1$s\' awaits you - be sure to publish it!</string>
     <string name="pending_draft_one_day_2">Did you know that \'%1$s\' is still a draft? Publish away!</string>
     <string name="pending_draft_one_day_1">You drafted \'%1$s\' yesterday. Don\'t forget to publish it!</string>
-    <string name="reader_photo_by">Photo by %s</string>
     <string name="swipe_for_more">Swipe for more</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">You\'re not authorised to view this post. Try signing in to WordPress.com first or use the top action button to open a browser instead.</string>
     <string name="reader_err_get_post_not_authorized_signin">You\'re not authorised to view this post. Try signing in to WordPress.com first.</string>
@@ -1748,7 +1745,6 @@ Language: en_AU
     <string name="reader_hint_add_tag_or_url">Enter a URL or tag to follow</string>
     <string name="reader_page_followed_blogs">Followed sites</string>
     <string name="reader_page_followed_tags">Followed tags</string>
-    <string name="reader_title_tag_preview">Reader Tag</string>
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="ssl_certificate_ask_trust">If you usually connect to this site without problems, this error could mean that someone is trying to impersonate the site, and you shouldn\'t continue. Would you like to trust the certificate anyway?</string>
     <string name="ssl_certificate_error">Invalid SSL certificate</string>

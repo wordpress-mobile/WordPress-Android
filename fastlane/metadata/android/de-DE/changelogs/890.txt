@@ -1,4 +1,0 @@
-15,2:
-Erweiterungen des Block-Editors: Unterstützt jetzt durch das Theme definierte Farben sowie Verläufe in Cover- und Button-Blöcken. Video-Uploads im Cover-Block werden abgeschlossen, nachdem der Editor geschlossen wurde. Die Kennzahlen für Blöcke, Wörter und Zeichen werden jetzt angezeigt.
-
-Behoben: Probleme mit der Darstellung von Beitragsdetails im Reader, Verarbeitung des Upload-Abschlusses im Block-Editor sowie ein Absturz, wenn die WordPress-API-Reaktion einen leeren Text besitzt.

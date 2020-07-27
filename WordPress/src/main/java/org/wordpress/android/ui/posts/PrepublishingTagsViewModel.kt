@@ -29,9 +29,6 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
 
-    private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
-    val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
-
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
 
@@ -58,8 +55,6 @@ class PrepublishingTagsViewModel @Inject constructor(
             updatePostTagsUseCase.updateTags(selectedTags, editPostRepository)
         }
     }
-
-    fun onCloseButtonClicked() = _dismissBottomSheet.postValue(Event(Unit))
 
     fun onBackButtonClicked() {
         _dismissKeyboard.postValue(Event(Unit))

@@ -1307,6 +1307,7 @@
     <string name="reader_filter_empty_tags_action">Add a tag</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Log in to WordPress.com</string>
     <string name="reader_dot_separator" translatable="false">\u0020\u2022\u0020</string>
+    <string name="reader_error_generic_title">There was a problem handling the request. Please try again later.</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
