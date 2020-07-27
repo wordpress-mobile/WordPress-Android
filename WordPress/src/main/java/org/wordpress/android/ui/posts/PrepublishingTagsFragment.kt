@@ -112,7 +112,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.start(getEditPostRepository())
+        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
+        viewModel.start(getEditPostRepository(), needsRequestLayout)
     }
 
     private fun getEditPostRepository(): EditPostRepository {
