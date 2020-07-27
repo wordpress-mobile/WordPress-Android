@@ -60,6 +60,16 @@ class PrepublishingHomeFragment : Fragment() {
         initViewModel()
     }
 
+    override fun onResume() {
+        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+            "arguments can't be null."
+        }
+        if (isStoryPost) {
+            requireActivity().getWindow().getDecorView().requestLayout()
+        }
+        super.onResume()
+    }
+
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
