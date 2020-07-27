@@ -27,6 +27,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.fluxc.model.MediaModel;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
+import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment;
 import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.EditImageData;
 import org.wordpress.android.ui.RequestCodes;
@@ -262,9 +263,9 @@ public class WPMediaUtils {
     }
 
     private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/*", "video/*", "audio/*", "application/*"});
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAllTypes());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
