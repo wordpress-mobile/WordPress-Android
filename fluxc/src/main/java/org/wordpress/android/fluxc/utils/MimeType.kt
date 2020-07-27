@@ -1,6 +1,12 @@
 package org.wordpress.android.fluxc.utils
 
-data class MimeType(val type: Type, val subtype: Subtype, val extensions: List<String> = listOf()) {
+data class MimeType(val type: Type, val subtypes: List<Subtype>, val extensions: List<String> = listOf()) {
+    constructor(type: Type, subtype: Subtype, extensions: List<String>) : this(
+            type,
+            listOf<Subtype>(subtype),
+            extensions
+    )
+
     enum class Type(val value: String) {
         AUDIO("audio"),
         VIDEO("video"),
@@ -23,20 +29,27 @@ data class MimeType(val type: Type, val subtype: Subtype, val extensions: List<S
         PNG("png"),
         GIF("gif"),
         PDF("pdf"),
+        DOC("doc"),
+        MSDOC("ms-doc"),
         MSWORD("msword"),
         DOCX("vnd.openxmlformats-officedocument.wordprocessingml.document"),
+        POWERPOINT("powerpoint"),
         MSPOWERPOINT("mspowerpoint"),
         VND_MSPOWERPOINT("vnd.ms-powerpoint"),
+        X_MSPOWERPOINT("x-mspowerpoint"),
         PPTX("vnd.openxmlformats-officedocument.presentationml.presentation"),
         PPSX("vnd.openxmlformats-officedocument.presentationml.slideshow"),
         ODT("vnd.oasis.opendocument.text"),
-        EXCEL("vnd.ms-excel"),
+        EXCEL("excel"),
+        X_EXCEL("x-excel"),
+        X_MS_EXCEL("x-msexcel"),
+        VND_MS_EXCEL("vnd.ms-excel"),
         XLSX("vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
         KEYNOTE("keynote"),
         ZIP("zip")
     }
 
     override fun toString(): String {
-        return "${type.value}/${subtype.value}"
+        return "${type.value}/${subtypes.first().value}"
     }
 }

@@ -156,7 +156,8 @@ public class MediaUtilsTest {
         final String[] unsupportedApplicationTypes = {"com", "bin", "exe", "jar", "xif", "xsl"};
         for (String supportedApplicationType : mSupportedApplicationSubtypes) {
             String supportedApplicationMimeType = "application/" + supportedApplicationType;
-            assertThat(MediaUtils.isSupportedApplicationMimeType(supportedApplicationMimeType)).isTrue();
+            assertThat(MediaUtils.isSupportedApplicationMimeType(supportedApplicationMimeType))
+                    .withFailMessage("MimeType not supported: " + supportedApplicationMimeType).isTrue();
         }
         for (String unsupportedApplicationType : mSupportedImageSubtypes) {
             String unsupportedApplicationMimeType = "application/" + unsupportedApplicationType;

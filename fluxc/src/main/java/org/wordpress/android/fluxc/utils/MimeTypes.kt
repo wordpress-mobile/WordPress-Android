@@ -68,28 +68,36 @@ class MimeTypes {
      * .pdf (Portable Document Format; Adobe Acrobat), .doc, .docx (Microsoft Word Document), .ppt, .pptx, .pps, .ppsx (Microsoft PowerPoint Presentation), .odt (OpenDocument Text Document), .xls, .xlsx (Microsoft Excel Document), .key (Apple Keynote Presentation), .zip (Archive File Format)
      * This translates (based on https://android.googlesource.com/platform/frameworks/base/+/cd92588/media/java/android/media/MediaFile.java) to:
      * .pdf - "application/pdf"
-     * .doc - "application/msword"
+     * .doc - "application/msword", "application/doc", "application/ms-doc"
      * .docx - "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-     * .ppt - "application/mspowerpoint"
+     * .ppt - "application/mspowerpoint", "application/powerpoint", "application/x-mspowerpoint"
      * .pptx - "application/vnd.openxmlformats-officedocument.presentationml.presentation"
      * .pps - missing - "application/vnd.ms-powerpoint"
      * .ppsx - missing - "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
      * .odt - missing - "application/vnd.oasis.opendocument.text"
-     * .xls - "application/vnd.ms-excel"
+     * .xls - "application/excel", "application/x-excel", "application/x-msexcel", "application/vnd.ms-excel"
      * .xlsx - "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
      */
     private val documentTypes = listOf(
             MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
-            MimeType(APPLICATION, Subtype.MSWORD, listOf("doc")),
+            MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
             MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
-            MimeType(APPLICATION, Subtype.MSPOWERPOINT, listOf("ppt")),
+            MimeType(
+                    APPLICATION,
+                    listOf(Subtype.POWERPOINT, Subtype.MSPOWERPOINT, Subtype.X_MSPOWERPOINT),
+                    listOf("ppt")
+            ),
             MimeType(APPLICATION, Subtype.VND_MSPOWERPOINT, listOf("pps")),
             MimeType(APPLICATION, Subtype.PPTX, listOf("pptx")),
             MimeType(APPLICATION, Subtype.PPSX, listOf("ppsx")),
             MimeType(APPLICATION, Subtype.ODT, listOf("odt")),
-            MimeType(APPLICATION, Subtype.EXCEL, listOf("xls")),
+            MimeType(
+                    APPLICATION,
+                    listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
+                    listOf("xls")
+            ),
             MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
@@ -134,7 +142,7 @@ class MimeTypes {
     }
 
     private fun List<MimeType>.toStrings(): List<String> {
-        return this.map { "${it.type.value}/${it.subtype.value}" }
+        return this.map { mimeType -> mimeType.subtypes.map { print(mimeType.type, it) } }.flatten()
     }
 
     private fun isExpectedMimeType(
@@ -151,11 +159,13 @@ class MimeTypes {
         type: String?
     ): Boolean {
         if (type == null) return false
-        return expected.any { it.toString() == type }
+        return expected.any { mimeType -> mimeType.subtypes.any { print(mimeType.type, it) == type } }
     }
 
     fun getMimeTypeForExtension(extension: String): String? {
         return (imageTypes + videoTypes + audioTypes + documentTypes).find { it.extensions.contains(extension) }
                 ?.toString()
     }
+
+    private fun print(type: MimeType.Type, subtype: Subtype) = "${type.value}/${subtype.value}"
 }
