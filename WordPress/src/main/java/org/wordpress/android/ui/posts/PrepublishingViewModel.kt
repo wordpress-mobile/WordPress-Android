@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.TaxonomyStore.OnTaxonomyChanged
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
+import org.wordpress.android.ui.posts.PrepublishingScreen.TAGS
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -67,7 +68,9 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
     }
 
     private fun navigateToScreen(prepublishingScreen: PrepublishingScreen) {
-        _dismissKeyboard.postValue(Event(Unit))
+        if (prepublishingScreen != TAGS && prepublishingScreen != HOME) {
+            _dismissKeyboard.postValue(Event(Unit))
+        }
         updateNavigationTarget(PrepublishingNavigationTarget(site, prepublishingScreen))
     }
 
