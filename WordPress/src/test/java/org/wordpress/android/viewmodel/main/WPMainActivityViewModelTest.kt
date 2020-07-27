@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.test
@@ -29,10 +30,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 @RunWith(MockitoJUnitRunner::class)
-class WPMainActivityViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
-
+class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
 
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
@@ -78,6 +76,8 @@ class WPMainActivityViewModelTest {
         viewModel.completeBottomSheetQuickStartTask.observeForever(
                 onQuickStartCompletedEventObserver
         )
+        // mainActions is MediatorLiveData and needs observer in order for us to access it's value
+        viewModel.mainActions.observeForever { }
     }
 
     @Test
@@ -173,7 +173,9 @@ class WPMainActivityViewModelTest {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = true)
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
-        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
+        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
+                false
+        )
     }
 
     @Test
@@ -181,14 +183,18 @@ class WPMainActivityViewModelTest {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
-        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(true)
+        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
+                true
+        )
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
         verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
 
-        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
+        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
+                false
+        )
     }
 
     @Test
@@ -196,14 +202,18 @@ class WPMainActivityViewModelTest {
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = true, shouldShowQuickStartFocusPoint = true)
         assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
-        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(true)
+        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
+                true
+        )
 
         val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_PAGE } as CreateAction
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_PAGE)
         verify(onQuickStartCompletedEventObserver, never()).onChanged(anyOrNull())
 
-        assertThat(viewModel.showQuickStarInBottomSheet.value).isEqualTo(false)
+        assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
+                false
+        )
     }
 
     @Test
