@@ -3,10 +3,7 @@ package org.wordpress.android.ui.stories.media
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,22 +22,17 @@ import org.wordpress.android.ui.stories.media.StoryEditorMediaViewModel.AddMedia
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.CoroutineContext
 
 class StoryEditorMediaViewModel @Inject constructor(
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val addLocalMediaToPostUseCase: AddLocalMediaToPostUseCase,
     private val addExistingMediaToPostUseCase: AddExistingMediaToPostUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ScopedViewModel(mainDispatcher) {
     // region Fields
-    private var job: Job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = mainDispatcher + job
-
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
 
