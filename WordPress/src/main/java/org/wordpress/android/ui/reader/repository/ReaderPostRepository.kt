@@ -6,9 +6,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
-import kotlinx.coroutines.withContext
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -24,8 +24,8 @@ import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCa
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 import java.util.concurrent.atomic.AtomicBoolean
@@ -138,7 +138,7 @@ class ReaderPostRepository(
         if (_posts.hasObservers()) {
             isDirty.compareAndSet(true, false)
             launch {
-              reloadPosts()
+                reloadPosts()
             }
         } else {
             isDirty.compareAndSet(false, true)
