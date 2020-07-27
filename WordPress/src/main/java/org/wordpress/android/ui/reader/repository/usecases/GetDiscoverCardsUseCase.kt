@@ -25,7 +25,9 @@ class GetDiscoverCardsUseCase @Inject constructor(
                 val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
 
                 if (cardJsonList.isNotEmpty()) {
-                    val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(cardJsonList)
+                    val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
+                            cardJsonList
+                    )
 
                     for (i in 0 until jsonObjects.length()) {
                         val cardJson = jsonObjects.getJSONObject(i)
