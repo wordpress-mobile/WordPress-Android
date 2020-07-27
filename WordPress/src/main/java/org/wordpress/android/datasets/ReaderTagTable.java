@@ -291,8 +291,27 @@ public class ReaderTagTable {
         if (tag == null) {
             return;
         }
-        String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
-        ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_slug=? AND tag_type=?", args);
+        ReaderTagList tags = new ReaderTagList();
+        tags.add(tag);
+        deleteTags(tags);
+    }
+
+    public static void deleteTags(ReaderTagList tagList) {
+        if (tagList == null || tagList.size() == 0) {
+            return;
+        }
+
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            for (ReaderTag tag : tagList) {
+                String[] args = {tag.getTagSlug(), Integer.toString(tag.tagType.toInt())};
+                ReaderDatabase.getWritableDb().delete("tbl_tags", "tag_slug=? AND tag_type=?", args);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
     }
 
 

@@ -195,7 +195,7 @@ public class ReaderUpdateLogic {
                     } else {
                         // if any local topics have been removed from the server, make sure to delete
                         // them locally (including their posts)
-                        deleteTags(localTopics.getDeletions(serverTopics));
+                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
                         // now replace local topics with the server topics
                         ReaderTagTable.replaceTags(serverTopics);
                     }
@@ -283,16 +283,16 @@ public class ReaderUpdateLogic {
         return interestTags;
     }
 
-    private static void deleteTags(ReaderTagList tagList) {
+    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
+        ReaderTagTable.deleteTags(tagList);
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
             for (ReaderTag tag : tagList) {
-                ReaderTagTable.deleteTag(tag);
                 ReaderPostTable.deletePostsWithTag(tag);
             }
             db.setTransactionSuccessful();
