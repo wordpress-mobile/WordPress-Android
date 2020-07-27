@@ -1,4 +1,0 @@
-15.2:
-Nytt i blockredigeraren: Stöd i redigeraren för temadefinierade färger och gradienter i omslags- och knappblock. Uppladdning av video för omslagsblock fullföljs även efter redigeraren har stängts. Räknare för block, ord och tecken visas.
-
-Rättelser: Rättat problem i läsaren med att visa inläggsuppgifter och fullföljande av uppladdning i blockredigeraren samt en krasch vid tomt svar från WordPress API.

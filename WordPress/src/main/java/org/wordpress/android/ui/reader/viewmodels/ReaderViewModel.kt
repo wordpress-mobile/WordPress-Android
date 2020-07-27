@@ -173,7 +173,14 @@ class ReaderViewModel @Inject constructor(
 
     @Subscribe(threadMode = MAIN)
     fun onTagsUpdated(event: ReaderEvents.FollowedTagsChanged) {
-        loadTabs()
+        if (appPrefsWrapper.isReaderImprovementsPhase2Enabled() &&
+            _uiState.value == InitialUiState &&
+            isReaderInterestsShown
+        ) {
+            return
+        } else {
+            loadTabs()
+        }
     }
 
     fun onScreenInForeground() {
