@@ -173,9 +173,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
             )
-            PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
-            )
+            PrepublishingScreen.TAGS -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.TAG
+                )
+            }
         }
 
         fadeInFragment(fragment, tag)

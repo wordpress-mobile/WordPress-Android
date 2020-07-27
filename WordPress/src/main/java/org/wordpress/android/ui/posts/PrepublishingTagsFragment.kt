@@ -49,9 +49,11 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
-        @JvmStatic fun newInstance(site: SiteModel): PrepublishingTagsFragment {
+        const val NEEDS_REQUEST_LAYOUT = "prepublishing_tags_fragment_needs_request_layout"
+        @JvmStatic fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
+                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
             return PrepublishingTagsFragment().apply { arguments = bundle }
         }
@@ -74,6 +76,14 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         if (wereTagsChanged()) {
             analyticsTrackerWrapper.trackPrepublishingNudges(Stat.EDITOR_POST_TAGS_CHANGED)
         }
+    }
+
+    override fun onResume() {
+        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
+        if (needsRequestLayout) {
+            requireActivity().getWindow().getDecorView().requestLayout()
+        }
+        super.onResume()
     }
 
     private fun initViewModel() {
