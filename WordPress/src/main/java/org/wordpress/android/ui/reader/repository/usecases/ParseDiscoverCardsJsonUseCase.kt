@@ -13,23 +13,23 @@ import javax.inject.Inject
 
 @Reusable
 class ParseDiscoverCardsJsonUseCase @Inject constructor() {
-    fun parsePost(jsonObject: JSONObject): ReaderPost {
-        return ReaderPost.fromJson(jsonObject.getJSONObject(ReaderConstants.JSON_CARD_DATA))
+    fun parsePostCard(postCardJson: JSONObject): ReaderPost {
+        return ReaderPost.fromJson(postCardJson.getJSONObject(ReaderConstants.JSON_CARD_DATA))
     }
 
-    fun parsePostIds(jsonObject: JSONObject): Pair<Long, Long> {
-        val postDataJson = jsonObject.getJSONObject(ReaderConstants.JSON_CARD_DATA)
+    fun parseSimplifiedPostCard(simplifiedPostCardjson: JSONObject): Pair<Long, Long> {
+        val postDataJson = simplifiedPostCardjson.getJSONObject(ReaderConstants.JSON_CARD_DATA)
         val postId = postDataJson.optLong(ReaderConstants.POST_ID)
         val blogId = postDataJson.optLong(ReaderConstants.POST_SITE_ID)
         return Pair(blogId, postId)
     }
 
-    fun parseInterestTagsList(jsonObject: JSONObject?): ReaderTagList {
+    fun parseInterestCard(interestCardJson: JSONObject?): ReaderTagList {
         val interestTags = ReaderTagList()
-        if (jsonObject == null) {
+        if (interestCardJson == null) {
             return interestTags
         }
-        val jsonInterests = jsonObject.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
+        val jsonInterests = interestCardJson.optJSONArray(ReaderConstants.JSON_CARD_DATA) ?: return interestTags
         for (i in 0 until jsonInterests.length()) {
             interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
         }
@@ -44,9 +44,9 @@ class ParseDiscoverCardsJsonUseCase @Inject constructor() {
         return concatArrays(arrays)
     }
 
-    private fun parseInterestTag(jsonInterest: JSONObject): ReaderTag {
-        val tagTitle = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_TITLE)
-        val tagSlug = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_SLUG)
+    private fun parseInterestTag(interestJsonCard: JSONObject): ReaderTag {
+        val tagTitle = JSONUtils.getStringDecoded(interestJsonCard, ReaderConstants.JSON_TAG_TITLE)
+        val tagSlug = JSONUtils.getStringDecoded(interestJsonCard, ReaderConstants.JSON_TAG_SLUG)
         return ReaderTag(tagSlug, tagTitle, tagTitle, "", DEFAULT)
     }
 

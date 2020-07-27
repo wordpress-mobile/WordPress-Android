@@ -117,11 +117,11 @@ class ReaderDiscoverLogic constructor(
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    val interests = parseDiscoverCardsJsonUseCase.parseInterestTagsList(cardJson)
+                    val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
                     cards.add(InterestsYouMayLikeCard(interests))
                 }
                 JSON_CARD_POST -> {
-                    val post = parseDiscoverCardsJsonUseCase.parsePost(cardJson)
+                    val post = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
                     cards.add(ReaderPostCard(post))
                 }
             }

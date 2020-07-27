@@ -31,12 +31,12 @@ class GetDiscoverCardsUseCase @Inject constructor(
                         val cardJson = jsonObjects.getJSONObject(i)
                         when (cardJson.getString(ReaderConstants.JSON_CARD_TYPE)) {
                             ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                                val interests = parseDiscoverCardsJsonUseCase.parseInterestTagsList(cardJson)
+                                val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
                                 cards.add(InterestsYouMayLikeCard(interests))
                             }
                             ReaderConstants.JSON_CARD_POST -> {
                                 // TODO we might want to load the data in batch
-                                val (blogId, postId) = parseDiscoverCardsJsonUseCase.parsePostIds(cardJson)
+                                val (blogId, postId) = parseDiscoverCardsJsonUseCase.parseSimplifiedPostCard(cardJson)
                                 val post = ReaderPostTable.getBlogPost(blogId, postId, false)
                                 cards.add(ReaderPostCard(post))
                             }
