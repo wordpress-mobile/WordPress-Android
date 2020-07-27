@@ -21,7 +21,7 @@ class ActionListItemViewHolder(
     private val regularTypeface = Typeface.create("sans-serif", Typeface.NORMAL)
     private val mediumTypeface = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
-    fun bind(action: CreateAction, showQuickStartFocusPoint: Boolean = false) {
+    fun bind(action: CreateAction) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
         val actionRowContainer: ViewGroup = this.itemView.findViewById(R.id.action_row_container)
@@ -56,15 +56,17 @@ class ActionListItemViewHolder(
             this.itemView.isClickable = true
         }
 
-        if (showQuickStartFocusPoint) {
+        if (action.showQuickStartFocusPoint) {
             val focusPointSize = actionRowContainer.resources.getDimensionPixelOffset(
                     dimen.quick_start_focus_point_size
             )
-            val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
-            QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                    actionRowContainer, actionTitle,
-                    verticalOffset, 0
-            )
+            actionRowContainer.post {
+                val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        actionRowContainer, actionTitle,
+                        verticalOffset, 0
+                )
+            }
         }
     }
 }

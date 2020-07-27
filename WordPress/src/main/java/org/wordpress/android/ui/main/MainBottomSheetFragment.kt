@@ -17,7 +17,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.add_content_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel
 import javax.inject.Inject
 
@@ -44,15 +43,6 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
 
         viewModel.mainActions.observe(this, Observer {
             (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())
-        })
-
-        viewModel.showQuickStarInBottomSheet.observe(this, Observer { showQuickStartFocusPoint ->
-            val adapter = (recyclerView?.adapter as? AddContentAdapter)
-            adapter?.let {
-                val payload = if (showQuickStartFocusPoint) SHOW_QUICK_START_PAYLOAD else null
-                val positionOfQuickStartTarget = adapter.getItemPositionByActionType(CREATE_NEW_POST)
-                recyclerView.post { adapter.notifyItemChanged(positionOfQuickStartTarget, payload) }
-            }
         })
 
         dialog?.setOnShowListener { dialogInterface ->
