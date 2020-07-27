@@ -8,9 +8,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
+import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
@@ -19,11 +19,11 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
-import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
+import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
+import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
-import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -34,9 +34,9 @@ import kotlin.coroutines.CoroutineContext
 class ReaderDiscoverRepository constructor(
     private val bgDispatcher: CoroutineDispatcher,
     private val readerTag: ReaderTag,
-    private val getPostsForTagUseCase: GetPostsForTagUseCase,
+    private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
+    private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
     private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
     private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
@@ -47,9 +47,9 @@ class ReaderDiscoverRepository constructor(
 
     private var isStarted = false
 
-    private val _discoverFeed = ReactiveMutableLiveData<ReaderPostList>(
+    private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
-    val discoverFeed: LiveData<ReaderPostList> = _discoverFeed
+    val discoverFeed: LiveData<ReaderDiscoverCards> = _discoverFeed
 
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
@@ -73,8 +73,7 @@ class ReaderDiscoverRepository constructor(
 
     suspend fun refreshPosts() {
         withContext(bgDispatcher) {
-            val response =
-                    fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
+            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
             if (response != Success) _communicationChannel.postValue(Event(response))
         }
     }
@@ -97,16 +96,14 @@ class ReaderDiscoverRepository constructor(
     // Internal functionality
     private suspend fun loadPosts() {
         withContext(bgDispatcher) {
-            val existsInMemory = discoverFeed.value?.let {
-                !it.isEmpty()
-            } ?: false
+            val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
             if (!existsInMemory) {
-                val result = getPostsForTagUseCase.get(readerTag)
+                val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
             }
             if (refresh) {
-                val response = fetchPostsForTagUseCase.fetch(readerTag)
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
                 if (response != Success) _communicationChannel.postValue(Event(response))
             }
         }
@@ -114,7 +111,7 @@ class ReaderDiscoverRepository constructor(
 
     private suspend fun reloadPosts() {
         withContext(bgDispatcher) {
-            val result = getPostsForTagUseCase.get(readerTag)
+            val result = getDiscoverCardsUseCase.get()
             _discoverFeed.postValue(result)
         }
     }
@@ -154,9 +151,9 @@ class ReaderDiscoverRepository constructor(
     @Inject constructor(
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
-        private val getPostsForTagUseCase: GetPostsForTagUseCase,
+        private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
+        private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
         private val postLikeActionUseCase: PostLikeActionUseCase
     ) {
@@ -167,9 +164,9 @@ class ReaderDiscoverRepository constructor(
             return ReaderDiscoverRepository(
                     bgDispatcher,
                     tag,
-                    getPostsForTagUseCase,
+                    getDiscoverCardsUseCase,
                     shouldAutoUpdateTagUseCase,
-                    fetchPostsForTagUseCase,
+                    fetchDiscoverCardsUseCase,
                     readerUpdatePostsEndedHandler,
                     postLikeActionUseCase
             )

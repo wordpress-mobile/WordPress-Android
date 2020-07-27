@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
@@ -10,38 +11,45 @@ import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
-import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.modules.AppComponent
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_POST
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_TYPE
-import org.wordpress.android.ui.reader.ReaderConstants.JSON_NEXT_PAGE_HANDLE
-import org.wordpress.android.ui.reader.ReaderConstants.JSON_TAG_SLUG
-import org.wordpress.android.ui.reader.ReaderConstants.JSON_TAG_TITLE
 import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_SITE_ID
+import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
+import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.JSONUtils
+import java.util.HashMap
+import javax.inject.Inject
 
 /**
  * This class contains logic related to fetching data for the discover tab in the Reader.
  */
-class ReaderDiscoverLogic constructor(private val completionListener: ServiceCompletionListener) {
+class ReaderDiscoverLogic constructor(
+    private val completionListener: ServiceCompletionListener,
+    appComponent: AppComponent
+) {
+    init {
+        appComponent.inject(this)
+    }
+
+    @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+
     enum class DiscoverTasks {
         REQUEST, REQUEST_FORCE
     }
@@ -54,13 +62,13 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         when (task) {
             REQUEST -> {
                 requestDataForDiscover(false, UpdateResultListener {
-                    // TODO malinjir emit REQUEST finish event
+                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
                     completionListener.onCompleted(listenerCompanion)
                 })
             }
             REQUEST_FORCE -> {
                 requestDataForDiscover(true, UpdateResultListener {
-                    // TODO malinjir emit REQUEST_FORCE finish event
+                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
                     completionListener.onCompleted(listenerCompanion)
                 })
             }
@@ -68,14 +76,15 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
     }
 
     private fun requestDataForDiscover(forceRefresh: Boolean, resultListener: ReaderActions.UpdateResultListener) {
-        val path = "read/tags/cards"
-
-        val sb = StringBuilder(path)
+        val params = HashMap<String, String>()
+        // TODO malinjir pass interests the user is following
+        params["tags"] = "android"
 
         if (!forceRefresh) {
-            sb.append("?page_handle=")
+            params["page_handle"] = ""
             // TODO malinjir load page handle
         }
+
         val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
             if (forceRefresh) {
                 // TODO malinjir clear cache
@@ -87,7 +96,7 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
             resultListener.onUpdateResult(FAILED)
         }
 
-        WordPress.getRestClientUtilsV2()[sb.toString(), null, null, listener, errorListener]
+        WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
     }
 
     private fun handleRequestDiscoverDataResponse(json: JSONObject?, resultListener: UpdateResultListener) {
@@ -106,7 +115,7 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
         insertCardsJsonIntoDb(simplifiedCardsJson)
 
-        val nextPageHandle = parseNextPageHandle(json)
+        val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
         // TODO malinjir save next page handle into shared preferences
 
         resultListener.onUpdateResult(HAS_NEW)
@@ -118,11 +127,11 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
             val cardJson = cardsJsonArray.getJSONObject(i)
             when (cardJson.getString(JSON_CARD_TYPE)) {
                 JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                    val interests = parseInterestTagsList(cardJson)
+                    val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
                     cards.add(InterestsYouMayLikeCard(interests))
                 }
                 JSON_CARD_POST -> {
-                    val post = ReaderPost.fromJson(cardJson.getJSONObject(JSON_CARD_DATA))
+                    val post = parseDiscoverCardsJsonUseCase.parsePostCard(cardJson)
                     cards.add(ReaderPostCard(post))
                 }
             }
@@ -177,28 +186,7 @@ class ReaderDiscoverLogic constructor(private val completionListener: ServiceCom
         return simplifiedCardJson
     }
 
-    private fun parseInterestTagsList(jsonObject: JSONObject?): ReaderTagList {
-        val interestTags = ReaderTagList()
-        if (jsonObject == null) {
-            return interestTags
-        }
-        val jsonInterests = jsonObject.optJSONArray(JSON_CARD_DATA) ?: return interestTags
-        for (i in 0 until jsonInterests.length()) {
-            interestTags.add(parseInterestTag(jsonInterests.optJSONObject(i)))
-        }
-        return interestTags
-    }
-
     private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray) {
         ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString())
     }
-
-    private fun parseInterestTag(jsonInterest: JSONObject): ReaderTag {
-        val tagTitle = JSONUtils.getStringDecoded(jsonInterest, JSON_TAG_TITLE)
-        val tagSlug = JSONUtils.getStringDecoded(jsonInterest, JSON_TAG_SLUG)
-        return ReaderTag(tagSlug, tagTitle, tagTitle, "", DEFAULT)
-    }
-
-    private fun parseNextPageHandle(jsonObject: JSONObject): String =
-            jsonObject.getString(JSON_NEXT_PAGE_HANDLE)
 }

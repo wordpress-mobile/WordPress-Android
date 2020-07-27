@@ -142,6 +142,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -544,6 +545,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PhotoPickerFragment object);
 
     void inject(LoginPrologueFragment object);
+
+    void inject(ReaderDiscoverLogic object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
