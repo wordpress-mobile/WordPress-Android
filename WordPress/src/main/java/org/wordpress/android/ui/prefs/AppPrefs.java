@@ -145,7 +145,9 @@ public class AppPrefs {
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
         // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP
+        READER_CSS_UPDATED_TIMESTAMP,
+
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
     }
 
     /**
@@ -1148,6 +1150,14 @@ public class AppPrefs {
 
     public static void setReaderCssUpdatedTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
+    }
+
+    public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
+        return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
+    }
+
+    public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
+        setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
     }
 
      public static QuickStartTask getLastSkippedQuickStartTask() {

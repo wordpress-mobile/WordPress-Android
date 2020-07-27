@@ -115,7 +115,7 @@ public class ReaderTagTable {
         addOrUpdateTags(tags);
     }
 
-    private static void addOrUpdateTags(ReaderTagList tagList) {
+    public static void addOrUpdateTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
