@@ -76,18 +76,21 @@ public class ReaderTagActions {
     }
 
     public static boolean addTag(@NotNull final ReaderTag tag,
-                                 final ReaderActions.ActionListener actionListener) {
+                                 final ReaderActions.ActionListener actionListener,
+                                 final boolean isLoggedIn) {
         ReaderTagList tags = new ReaderTagList();
         tags.add(tag);
-        return addTags(tags, actionListener);
-    }
-
-    public static boolean addTags(@NotNull final List<ReaderTag> tags) {
-        return addTags(tags, null);
+        return addTags(tags, actionListener, isLoggedIn);
     }
 
     public static boolean addTags(@NotNull final List<ReaderTag> tags,
-                                  final ReaderActions.ActionListener actionListener) {
+                                  final boolean isLoggedIn) {
+        return addTags(tags, null, isLoggedIn);
+    }
+
+    public static boolean addTags(@NotNull final List<ReaderTag> tags,
+                                  final ReaderActions.ActionListener actionListener,
+                                  final boolean isLoggedIn) {
         ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
 
         ReaderTagList newTags = new ReaderTagList();
@@ -103,7 +106,18 @@ public class ReaderTagActions {
                     ReaderTagType.FOLLOWED);
             newTags.add(newTag);
         }
-        if (isLoggedIn) {
+        if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+            // TODO: Revisit logic when ReaderTagRepository's getUserTags is implemented
+            if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                // Delete any previously saved recommended followed tags
+                ReaderTagTable.setRecommendedTags(new ReaderTagList());
+                ReaderTagTable.replaceFollowedTags(newTags);
+                AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+            } else {
+                ReaderTagTable.addOrUpdateTags(newTags);
+            }
+            EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+        } else {
             com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
                 AppLog.i(T.READER, "add tag succeeded");
                 // the response will contain the list of the user's followed tags
@@ -148,17 +162,6 @@ public class ReaderTagActions {
             params.put("tags", newTagSlugs);
 
             WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
-        } else {
-            // TODO: Revisit logic when ReaderTagRepository's getUserTags is implemented
-            if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                // Delete previously saved recommended followed tags
-                ReaderTagTable.setRecommendedTags(new ReaderTagList());
-                ReaderTagTable.replaceFollowedTags(newTags);
-                AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-            } else {
-                ReaderTagTable.addOrUpdateTags(newTags);
-            }
-            EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
         }
 
         return true;
