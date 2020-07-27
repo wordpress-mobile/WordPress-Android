@@ -113,7 +113,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         })
 
         val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
-        viewModel.start(getEditPostRepository(), needsRequestLayout)
+        viewModel.start(getEditPostRepository(), !needsRequestLayout)
     }
 
     private fun getEditPostRepository(): EditPostRepository {
