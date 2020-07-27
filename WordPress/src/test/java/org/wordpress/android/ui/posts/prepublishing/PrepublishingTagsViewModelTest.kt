@@ -91,7 +91,7 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when viewModel is started with closeKeyboard=true then dismissKeyboard is effectively called when tapping back`() {
+    fun `when viewModel is started with closeKeyboard=true then dismissKeyboard is called when tapping back`() {
         var event: Event<Unit>? = null
         viewModel.dismissKeyboard.observeForever {
             event = it
