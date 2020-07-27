@@ -135,7 +135,6 @@
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_tag_header_height">165dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
@@ -146,6 +145,10 @@
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
+
+    <!-- padding inside the tag header view -->
+    <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
+    <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>

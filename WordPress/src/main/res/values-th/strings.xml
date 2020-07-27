@@ -243,7 +243,6 @@ Language: th
     <string name="update_verb">อัปเดต</string>
     <string name="schedule_verb">ตารางงาน</string>
     <string name="reader_page_followed_tags">ป้ายกำกับที่ติดตามแล้ว</string>
-    <string name="reader_title_tag_preview">การอ่านป้ายกำกับ</string>
     <string name="reader_page_followed_blogs">เว็บที่ติดตามแล้ว</string>
     <string name="reader_hint_add_tag_or_url">ใส่ URL หรือ ป้ายกำกับเพื่อติดตาม</string>
     <string name="help">ช่วยเหลือ</string>

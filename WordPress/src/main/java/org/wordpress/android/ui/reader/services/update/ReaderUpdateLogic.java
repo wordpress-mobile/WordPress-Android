@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -23,6 +24,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
@@ -45,10 +47,11 @@ public class ReaderUpdateLogic {
 
     public enum UpdateTask {
         TAGS,
+        INTEREST_TAGS,
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
     }
-
+    private static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
@@ -73,6 +76,9 @@ public class ReaderUpdateLogic {
         // the Reader can't show anything
         if (tasks.contains(UpdateTask.TAGS)) {
             updateTags();
+        }
+        if (tasks.contains(UpdateTask.INTEREST_TAGS)) {
+            fetchInterestTags();
         }
         if (tasks.contains(UpdateTask.FOLLOWED_BLOGS)) {
             updateFollowedBlogs();
@@ -246,6 +252,31 @@ public class ReaderUpdateLogic {
         return topics;
     }
 
+    private static ReaderTagList parseInterestTags(JSONObject jsonObject) {
+        ReaderTagList interestTags = new ReaderTagList();
+
+        if (jsonObject == null) {
+            return interestTags;
+        }
+
+        JSONArray jsonInterests = jsonObject.optJSONArray(INTERESTS);
+
+        if (jsonInterests == null) {
+            return interestTags;
+        }
+
+        for (int i = 0; i < jsonInterests.length(); i++) {
+            JSONObject jsonInterest = jsonInterests.optJSONObject(i);
+            if (jsonInterest != null) {
+                String tagTitle = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_TITLE);
+                String tagSlug = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_SLUG);
+                interestTags.add(new ReaderTag(tagSlug, tagTitle, tagTitle, "", ReaderTagType.INTERESTS));
+            }
+        }
+
+        return interestTags;
+    }
+
     private static void deleteTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
@@ -264,6 +295,33 @@ public class ReaderUpdateLogic {
         }
     }
 
+    private void fetchInterestTags() {
+        RestRequest.Listener listener = this::handleInterestTagsResponse;
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.READER, volleyError);
+            EventBus.getDefault().post(new InterestTagsFetchEnded(new ReaderTagList(), false));
+            taskCompleted(UpdateTask.INTEREST_TAGS);
+        };
+
+        AppLog.d(AppLog.T.READER, "reader service > fetching interest tags");
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("_locale", mLanguage);
+        mClientUtilsProvider.getRestClientForInterestTags()
+                            .get("read/interests", params, null, listener, errorListener);
+    }
+
+    private void handleInterestTagsResponse(final JSONObject jsonObject) {
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderTagList interestTags = new ReaderTagList();
+                interestTags.addAll(parseInterestTags(jsonObject));
+                EventBus.getDefault().post(new InterestTagsFetchEnded(interestTags, true));
+                taskCompleted(UpdateTask.INTEREST_TAGS);
+            }
+        }.start();
+    }
 
     /***
      * request the list of blogs the current user is following

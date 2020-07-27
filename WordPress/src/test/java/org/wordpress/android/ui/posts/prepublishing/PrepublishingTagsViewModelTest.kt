@@ -54,18 +54,6 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onCloseClicked is triggered dismissBottomSheet is called`() {
-        var event: Event<Unit>? = null
-        viewModel.dismissBottomSheet.observeForever {
-            event = it
-        }
-
-        viewModel.onCloseButtonClicked()
-
-        assertThat(event).isNotNull
-    }
-
-    @Test
     fun `when onTagsSelected is called updatePostTagsUseCase's updateTags should be called`() = test {
         val expectedTags = "test, data"
         val captor = ArgumentCaptor.forClass(String::class.java)
