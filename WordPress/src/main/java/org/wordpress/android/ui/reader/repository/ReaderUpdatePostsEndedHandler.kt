@@ -3,11 +3,13 @@ package org.wordpress.android.ui.reader.repository
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
 import org.wordpress.android.util.EventBusWrapper
 import javax.inject.Inject
 
@@ -37,12 +39,15 @@ class ReaderUpdatePostsEndedHandler @Inject constructor(
     private fun onNewPosts(event: UpdatePostsEnded) {
         onReaderRepositoryUpdatePostsEndedListener.onNewPosts(event)
     }
+
     private fun onChangedPosts(event: UpdatePostsEnded) {
         onReaderRepositoryUpdatePostsEndedListener.onChangedPosts(event)
     }
+
     private fun onUnchanged(event: UpdatePostsEnded) {
         onReaderRepositoryUpdatePostsEndedListener.onUnchanged(event)
     }
+
     private fun onFailed(event: UpdatePostsEnded) {
         onReaderRepositoryUpdatePostsEndedListener.onFailed(event)
     }
@@ -70,6 +75,12 @@ class ReaderUpdatePostsEndedHandler @Inject constructor(
                 }
             }
         }
+    }
+
+    @Subscribe(threadMode = MAIN)
+    fun onCardsUpdated(event: FetchDiscoverCardsEnded) {
+        // TODO malinjir dummy implementation for testing purposes
+        onNewPosts(UpdatePostsEnded(CHANGED, REQUEST_OLDER))
     }
 
     companion object {
