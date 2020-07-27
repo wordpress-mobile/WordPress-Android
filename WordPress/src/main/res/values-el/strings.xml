@@ -596,7 +596,6 @@ Language: el_GR
     <string name="pending_draft_one_week_1">Το προσχέδιό σας \'%1$s\' σας περιμένει - μη ξεχάσετε να το δημοσιεύσετε!</string>
     <string name="pending_draft_one_day_2">Το ξέρατε ότι το \'%1$s\' είναι ακόμα προσχέδιο; Δημοσιεύστε το!</string>
     <string name="pending_draft_one_day_1">Κάνατε το προσχέδιο του \'%1$s\' χθες. Μην ξεχάσετε να το δημοσιεύσετε!</string>
-    <string name="reader_photo_by">Φωτογραφία από %s</string>
     <string name="reader_label_visit">Επισκεφθείτε</string>
     <string name="swipe_for_more">Σαρώστε για περισσότερα</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Δεν είστε εγκεκριμένος να δείτε αυτό το άρθρο. Προσπαθήστε να συνδεθείτε στο WordPress.com πρώτα ή χρησιμοποιήστε το κουμπί στην μπάρα ενεργειών για να ανοίξετε έναν περιηγητή.</string>
@@ -1088,7 +1087,6 @@ Language: el_GR
     <string name="reader_hint_add_tag_or_url">Εισάγετε μια ετικέτα ή URL για παρακολούθηση</string>
     <string name="reader_page_followed_blogs">Παρακολουθούμενα ιστολόγια</string>
     <string name="reader_page_followed_tags">Παρακολουθούμενες ετικέτες</string>
-    <string name="reader_title_tag_preview">Προεπισκόπηση Ετικέτας</string>
     <string name="ssl_certificate_ask_trust">Αν συνήθως δεν έχετε προβλήματα σύνδεσης σε αυτό τον ιστότοπο, αυτό το σφάλμα θα μπορούσε να σημαίνει ότι κάποιος προσπαθεί να μιμηθεί τον ιστότοπο και δεν θα πρέπει να συνεχίσετε. Θα θέλατε να εμπιστευτείτε το πιστοποιητικό όπως και να\'χει;</string>
     <string name="ssl_certificate_error">Μη έγκυρο πιστοποιητικό SSL</string>
     <string name="forgot_password">Έχασες τον κωδικό σου;</string>

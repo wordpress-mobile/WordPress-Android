@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
+import kotlinx.coroutines.withContext
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -21,11 +23,10 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLike
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetNumPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagWithCountUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
@@ -40,15 +41,15 @@ class ReaderDiscoverRepository constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
-    private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
     private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
     private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
     private val postLikeActionUseCase: PostLikeActionUseCase
 ) : CoroutineScope {
+    private var job: Job = Job()
+
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher
+        get() = bgDispatcher + job
 
     private var isStarted = false
     private val isDirty = AtomicBoolean()
@@ -74,16 +75,21 @@ class ReaderDiscoverRepository constructor(
 
     fun stop() {
         eventBusWrapper.unregister(this)
-        getPostsForTagUseCase.stop()
-        getNumPostsForTagUseCase.stop()
-        shouldAutoUpdateTagUseCase.stop()
-        getPostsForTagWithCountUseCase.stop()
-        readerUpdatePostsEndedHandler.stop()
-        postLikeActionUseCase.stop()
+        job.cancel()
     }
 
-    fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        launch {
+    fun getTag(): ReaderTag = readerTag
+
+    suspend fun refreshPosts() {
+        withContext(bgDispatcher) {
+            val response =
+                    fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
+            if (response != Success) _communicationChannel.postValue(Event(response))
+        }
+    }
+
+    suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
+        withContext(bgDispatcher) {
             when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
@@ -97,16 +103,43 @@ class ReaderDiscoverRepository constructor(
         }
     }
 
-    fun getTag(): ReaderTag {
-        return readerTag
+    // Internal functionality
+    private suspend fun loadPosts() {
+        withContext(bgDispatcher) {
+            val existsInMemory = discoverFeed.value?.let {
+                !it.isEmpty()
+            } ?: false
+            val refresh =
+                    shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
+            if (!existsInMemory) {
+                val result = getPostsForTagUseCase.get(readerTag)
+                _discoverFeed.postValue(result)
+            }
+            if (refresh) {
+                val response = fetchPostsForTagUseCase.fetch(readerTag)
+                if (response != Success) _communicationChannel.postValue(Event(response))
+            }
+        }
     }
 
+    private suspend fun reloadPosts() {
+        withContext(bgDispatcher) {
+            val result = getPostsForTagUseCase.get(readerTag)
+            _discoverFeed.postValue(result)
+        }
+    }
+
+    // Handlers for ReaderPostServices
     private fun onNewPosts(event: UpdatePostsEnded) {
-        reloadPosts()
+        launch {
+            reloadPosts()
+        }
     }
 
     private fun onChangedPosts(event: UpdatePostsEnded) {
-        reloadPosts()
+        launch {
+            reloadPosts()
+        }
     }
 
     private fun onUnchanged(event: UpdatePostsEnded) {
@@ -117,36 +150,14 @@ class ReaderDiscoverRepository constructor(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure))
     }
 
+    // React to discoverFeed observers
     private fun onActiveDiscoverFeed() {
-        loadPosts()
-    }
-
-    private fun onInactiveDiscoverFeed() {}
-
-    private fun loadPosts() {
         launch {
-            val existsInMemory = discoverFeed.value?.let {
-                !it.isEmpty()
-            } ?: false
-            val refresh =
-                    shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
-
-            if (!existsInMemory) {
-                reloadPosts()
-            }
-
-            if (refresh) {
-                val response = fetchPostsForTagUseCase.fetch(readerTag)
-                if (response != Success) _communicationChannel.postValue(Event(response))
-            }
+            loadPosts()
         }
     }
 
-    private fun reloadPosts() {
-        launch {
-            val result = getPostsForTagUseCase.get(readerTag)
-            _discoverFeed.postValue(result)
-        }
+    private fun onInactiveDiscoverFeed() {
     }
 
     @Subscribe(threadMode = BACKGROUND)
@@ -154,7 +165,9 @@ class ReaderDiscoverRepository constructor(
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_discoverFeed.hasObservers()) {
             isDirty.compareAndSet(true, false)
-            reloadPosts()
+            launch {
+                reloadPosts()
+            }
         } else {
             isDirty.compareAndSet(false, true)
         }
@@ -166,9 +179,7 @@ class ReaderDiscoverRepository constructor(
         private val eventBusWrapper: EventBusWrapper,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
-        private val getNumPostsForTagUseCase: GetNumPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val getPostsForTagWithCountUseCase: GetPostsForTagWithCountUseCase,
         private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
         private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
         private val postLikeActionUseCase: PostLikeActionUseCase
@@ -182,9 +193,7 @@ class ReaderDiscoverRepository constructor(
                     eventBusWrapper,
                     tag,
                     getPostsForTagUseCase,
-                    getNumPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    getPostsForTagWithCountUseCase,
                     fetchPostsForTagUseCase,
                     readerUpdatePostsEndedHandler,
                     postLikeActionUseCase

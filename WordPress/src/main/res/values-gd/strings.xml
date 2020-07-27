@@ -125,7 +125,6 @@ Language: gd_GB
     <string name="schedule_verb">Cuir air an sgeideal</string>
     <string name="update_verb">Ùraich</string>
     <string name="reader_page_followed_tags">Tagaichean a tha thu a’ leantainn</string>
-    <string name="reader_title_tag_preview">Taga leughadair</string>
     <string name="reader_page_followed_blogs">Làraichean a tha thu a’ leantainn</string>
     <string name="reader_hint_add_tag_or_url">Cuir a-steach URL no taga gus a leantainn</string>
     <string name="ssl_certificate_ask_trust">Ma gheibh thu cothrom air an làrach seo gun duilgheadas sam bith a ghnàth, dh’fhaoidte gu bheil a’ mhearachd seo a’ ciallachadh gu bheil cuideigin a’ leigeil orra gur iad-san an làrach cheart is cha bu chòir dhut leantainn air adhart. A bheil thu airson gabhail ris an teisteanas co-dhiù?</string>

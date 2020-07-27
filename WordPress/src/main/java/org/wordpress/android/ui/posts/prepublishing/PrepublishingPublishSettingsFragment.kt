@@ -41,19 +41,11 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
     }
 
     override fun setupContent(rootView: ViewGroup, viewModel: PublishSettingsViewModel) {
-        val closeButton = rootView.findViewById<View>(R.id.close_button)
         val backButton = rootView.findViewById<View>(R.id.back_button)
         val toolbarTitle = rootView.findViewById<TextView>(R.id.toolbar_title)
 
         (viewModel as PrepublishingPublishSettingsViewModel).let {
-            closeButton.setOnClickListener { viewModel.onCloseButtonClicked() }
             backButton.setOnClickListener { viewModel.onBackButtonClicked() }
-
-            viewModel.dismissBottomSheet.observe(this, Observer { event ->
-                event?.applyIfNotHandled {
-                    closeListener?.onCloseClicked()
-                }
-            })
 
             viewModel.navigateToHomeScreen.observe(this, Observer { event ->
                 event?.applyIfNotHandled {
