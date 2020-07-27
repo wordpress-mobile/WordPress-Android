@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-30 21:00:05+0000
+Translation-Revision-Date: 2020-07-15 14:29:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Geef je site een naam die zijn personaliteit en onderwerp reflecteerd. De eerste indruk telt!</string>
+    <string name="quick_start_list_update_site_title_title">Stel je site titel in</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Dit bericht naar de prullenbak verplaatsen zal ook lokale wijzigingen negeren, weet je zeker dat je verder wil gaan?</string>
+    <string name="gutenberg_native_s_block_options">%s blok opties</string>
+    <string name="gutenberg_native_remove_block">Blok verwijderen</string>
+    <string name="gutenberg_native_paste_block">Blok plakken</string>
+    <string name="gutenberg_native_duplicate_block">Blok dupliceren</string>
+    <string name="gutenberg_native_copy_block">Blok copieren</string>
+    <string name="gutenberg_native_copied_block">Blok gecopieerd</string>
+    <string name="gutenberg_native_block_settings">Blok instellingen</string>
+    <string name="gutenberg_native_block_pasted">Blok geplakt</string>
+    <string name="gutenberg_native_block_duplicated">Blok gedupliceerd</string>
+    <string name="gutenberg_native_block_cut">Blok geknipt</string>
+    <string name="gutenberg_native_block_copied">Blok gekopieerd</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">De site titel kan alleen gewijzigd worden door een gebruiker met de beheerder rol.</string>
+    <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Onderwerp</string>
+    <string name="error_update_site_title_network">Kon de site titel niet updaten. Controleer je netwerkverbinding en probeer het dan opnieuw.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niet opgeslagen wijzigingen</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navigeert naar het vorige inhoudsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navigeert naar aanpassen van het verloop</string>
@@ -24,7 +44,6 @@ Language: nl
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">We werken er hard aan om met iedere release nieuwe blokken toe te voegen. Tot die tijd kan je dit blok ook op het web met je browser bewerken.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Bewerk blok in je browser</string>
     <string name="gutenberg_native_dismiss">Negeren</string>
-    <string name="prepublishing_nudges_visibility_password">Beschermd met wachtwoord</string>
     <string name="prepublishing_nudges_home_tags_not_set">Niet ingesteld</string>
     <string name="prepublishing_tags_description">Tags helpen de lezers om aan te geven waar het bericht over gaat</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publiceren</string>
@@ -55,12 +74,7 @@ Language: nl
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="update_now">Update nu</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Verwijder %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
-    <string name="gutenberg_native_move_s_up">Verplaats %s naar boven</string>
-    <string name="gutenberg_native_move_s_right">Verplaats %s naar rechts</string>
-    <string name="gutenberg_native_move_s_left">Verplaats %s naar links</string>
-    <string name="gutenberg_native_move_s_down">Verplaats %s naar beneden</string>
     <string name="gutenberg_native_try_a_starter_layout">Probeer een starter lay-out</string>
     <string name="gutenberg_native_insert_mention">Voeg vermelding in</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
@@ -119,7 +133,9 @@ Language: nl
     <string name="copy_text">Kopieer</string>
     <string name="gutenberg_native_number_of_columns">Aantal kolommen</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Blok naar rechts verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_right">Blok naar rechts verplaatsen</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Blok naar links verplaatsen van positie %1$s naar positie %2$s</string>
+    <string name="gutenberg_native_move_block_left">Blok naar links verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Tik tweemaal om het blok naar rechts te verplaatsen</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Tik tweemaal om het blok naar links te verplaatsen</string>
     <string name="gutenberg_native_columns_settings">Kolominstellingen</string>
@@ -202,7 +218,6 @@ Language: nl
     <string name="gutenberg_native_only_show_excerpt">Alleen samenvatting weergeven</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
     <string name="gutenberg_native_link_to">Link naar</string>
-    <string name="gutenberg_native_s_settings">%s Instellingen</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Laten we samen wat bouwen!</string>
     <string name="gutenberg_native_let_s_build_something_together">Laten we samen wat bouwen!</string>
@@ -349,6 +364,7 @@ Language: nl
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\' wordt nog niet ondersteund door WordPress voor Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blok. Dit blok bevat ongeldige inhoud</string>
     <string name="gutenberg_native_s_block_empty">%s-blok. Leegmaken</string>
+    <string name="gutenberg_native_cut_block">Blok knippen</string>
     <string name="gutenberg_native_reset_block">Blok resetten</string>
     <string name="gutenberg_native_remove_annotations">Aantekeningen verwijderen</string>
     <string name="gutenberg_native_problem_opening_the_video">Probleem bij het openen van de video</string>
@@ -365,7 +381,9 @@ Language: nl
     <string name="gutenberg_native_my_post_publish_panel">Mijn venster voor publicatie van berichten</string>
     <string name="gutenberg_native_my_document_setting_panel">Mijn venster met documentinstellingen</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Blok omhoog bewegen van rij %1$s naar rij %2$s</string>
+    <string name="gutenberg_native_move_block_up">Blok omhoog verplaatsen</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Blok omlaag bewegen van rij %1$s naar rij %2$s</string>
+    <string name="gutenberg_native_move_block_down">Blok omlaag verplaatsen</string>
     <string name="gutenberg_native_link_text">Tekst van link</string>
     <string name="gutenberg_native_link_inserted">Link ingevoerd</string>
     <string name="gutenberg_native_image_caption_s">Afbeelding vastleggen. %s</string>
@@ -620,7 +638,7 @@ Language: nl
     <string name="post_restoring">Bericht wordt hersteld</string>
     <string name="post_restored">Bericht hersteld</string>
     <string name="post_trashing">Bericht wordt naar prullenbak verplaatst</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Door dit bericht naar de prullenbak te verplaatsen, worden lokale wijzigingen geannuleerd. Weet je zeker dat je wilt doorgaan?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Door dit bericht naar de prullenbak te verplaatsen, worden niet bewaarde wijzigingen genegeerd. Weet je zeker dat je wil doorgaan?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokale wijzigingen</string>
     <string name="button_move_to_draft">Verplaatsen naar concept</string>
     <string name="post_list_toggle_item_layout_list_view">Overschakelen op lijstweergave</string>
@@ -696,7 +714,7 @@ Language: nl
     <string name="quick_start_dialog_upload_icon_message">Je bezoekers zien je pictogram in hun browser. Voeg een aangepast pictogram toe voor een stijlvolle, professionele look.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tik op %1$s Abonnement %2$s om je huidige abonnement en andere beschikbare abonnementen in te zien</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tik op %1$s Pagina toevoegen %2$s om een nieuwe pagina aan te maken.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tik op %1$s Site-pagina\'s %2$s om verder te gaan.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tik op %1$s pagina\'s %2$s om verder te gaan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tik op %1$s Statistieken %2$s om te zien hoe je site presteert.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tik op %1$s Jouw favicon %2$s om een nieuwe te uploaden</string>
     <string name="quick_start_dialog_publish_post_message">Stel je eerste bericht op en publiceer het.</string>
@@ -1662,7 +1680,6 @@ Language: nl
     <string name="pending_draft_one_week_1">Je concept \'%1$s\' wacht op je - vergeet niet deze te publiceren!</string>
     <string name="pending_draft_one_day_2">Wist je dat \'%1$s\' nog steeds een concept is? Publiceren maar!</string>
     <string name="pending_draft_one_day_1">Je hebt gisteren \'%1$s\' opgeslagen als concept. Vergeet niet deze te publiceren!</string>
-    <string name="reader_photo_by">Foto van %s</string>
     <string name="reader_label_visit">Bezoek de site</string>
     <string name="swipe_for_more">Veeg voor meer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Je hebt geen toestemming om dit bericht te lezen. Probeer je eerst aan te melden op WordPress.com of gebruik in plaats daarvan de actieknop hierboven om een browser te openen.</string>
@@ -2154,7 +2171,6 @@ Language: nl
     <string name="reader_hint_add_tag_or_url">Voer een tag of URL in om te volgen</string>
     <string name="reader_page_followed_blogs">Gevolgde sites</string>
     <string name="reader_page_followed_tags">Gevolgde tags</string>
-    <string name="reader_title_tag_preview">Reader-tag</string>
     <string name="reader_title_blog_preview">Lezer site</string>
     <string name="ssl_certificate_ask_trust">Als je normaal gesproken zonder problemen verbinding maakt met deze site kan deze fout betekenen dat iemand zich probeert voor te doen als deze site. Ga niet verder als dat zo is. Wil je het certificaat toch vertrouwen?</string>
     <string name="ssl_certificate_error">Ongeldig SSL-certificaat</string>

@@ -18,7 +18,6 @@ Language: sk
     <string name="dialog_confirm_autosave_body_first_part_for_page">Nedávno ste na tejto stránke vykonali zmeny, ale neboli uložené. Zvoľte verziu k načítaniu:\n\n</string>
     <string name="gutenberg_native_walt_disney">Walt Disney</string>
     <string name="gutenberg_native_link_to">Odkaz na</string>
-    <string name="gutenberg_native_s_settings">Nastavenia %s</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Poďme spolu niečo vybudovať!</string>
     <string name="gutenberg_native_let_s_build_something_together">Poďme spolu niečo vybudovať!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -936,7 +935,6 @@ Language: sk
     <string name="pending_draft_one_week_1">Váš koncept %1$s\' čaká - určite ju zverejnite!</string>
     <string name="pending_draft_one_day_2">Vedeli ste, že \'%1$s\' je stále konceptom? Zverejnite ho! </string>
     <string name="pending_draft_one_day_1">\'%1$s\' ste  včera uložili ako koncept. Nezabudnite ho zverejniť!</string>
-    <string name="reader_photo_by">Fotografie od %s</string>
     <string name="reader_label_visit">Navštívte webstránku</string>
     <string name="swipe_for_more">Potiahnite prstom pre viac informácii </string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie ste poverený vidieť tento článok. Pokúste sa prihlásiť do WordPress.com alebo použite tlačidlo akcie a prehliadač sa otvorí.</string>
@@ -1418,7 +1416,6 @@ Language: sk
     <string name="update_verb">Aktualizovať</string>
     <string name="reader_page_followed_tags">Sledované značky</string>
     <string name="reader_page_followed_blogs">Sledované webové stránky</string>
-    <string name="reader_title_tag_preview">Značka čítačky</string>
     <string name="reader_hint_add_tag_or_url">Zadajte adresu URL alebo značku, ktorú chcete sledovať</string>
     <string name="reader_toast_err_unfollow_blog">Nepodarilo sa zrušiť sledovanie tejto webovej stránky</string>
     <string name="reader_label_followed_blog">Sledovaná webová stránka</string>

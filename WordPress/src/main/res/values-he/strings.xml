@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 08:54:09+0000
+Translation-Revision-Date: 2020-07-22 14:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו. הרושם הראשוני חשוב!</string>
+    <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
+    <string name="gutenberg_native_s_block_options">%s אפשרויות הבלוק</string>
+    <string name="gutenberg_native_remove_block">להסיר בלוק</string>
+    <string name="gutenberg_native_paste_block">להדביק בלוק</string>
+    <string name="gutenberg_native_duplicate_block">לשכפל בלוק</string>
+    <string name="gutenberg_native_copy_block">להעתיק בלוק</string>
+    <string name="gutenberg_native_copied_block">הבלוק הועתק</string>
+    <string name="gutenberg_native_block_settings">הגדרות הבלוק</string>
+    <string name="gutenberg_native_block_pasted">הבלוק הודבק</string>
+    <string name="gutenberg_native_block_duplicated">הבלוק שוכפל</string>
+    <string name="gutenberg_native_block_cut">הבלוק נחתך</string>
+    <string name="gutenberg_native_block_copied">הבלוק הועתק</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">רק משתמשים בעלי תפקיד של מנהלי מערכת יכולים לשנות את שם האתר.</string>
+    <string name="my_site_title_changer_dialog_hint">שם האתר מוצג בסרגל הכותרת של הדפדפן ובתור הכותרת עליונה ברוב ערכות העיצוב.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">נושא</string>
+    <string name="error_update_site_title_network">לא ניתן היה לעדכן את שם האתר. יש לבדוק את החיבור לרשת ולנסות שוב.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">שינויים שלא נשמרו</string>
     <string name="gutenberg_native_open_link_in_a_browser">לפתוח את הקישור בדפדפן</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">הפעולה מנווטת אל גיליון התוכן הקודם</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">הפעולה מנווטת אל האפשרות להתאים את מעבר הצבע</string>
@@ -24,7 +44,6 @@ Language: he_IL
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">אנחנו משתדלים להוסיף עוד בלוקים בכל גרסה שמתפרסמת. בינתיים, אפשר גם לערוך את הבלוק הזה באמצעות הדפדפן במכשיר שלך.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">לערוך את הבלוק בדפדפן הרשת</string>
     <string name="gutenberg_native_dismiss">ביטול</string>
-    <string name="prepublishing_nudges_visibility_password">מוגן בסיסמה</string>
     <string name="prepublishing_nudges_home_tags_not_set">לא הוגדר</string>
     <string name="prepublishing_tags_description">התגיות יעזרו לקוראים להבין מה הנושא של הפוסט.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">פרסום</string>
@@ -55,12 +74,7 @@ Language: he_IL
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">להסיר את %s</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
-    <string name="gutenberg_native_move_s_up">להזיז את %s למעלה</string>
-    <string name="gutenberg_native_move_s_right">להזיז את %s ימינה</string>
-    <string name="gutenberg_native_move_s_left">להזיז את %s שמאלה</string>
-    <string name="gutenberg_native_move_s_down">להזיז את %s למטה</string>
     <string name="gutenberg_native_try_a_starter_layout">לנסות את הפריסה למתחילים</string>
     <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
@@ -119,7 +133,9 @@ Language: he_IL
     <string name="copy_text">להעתיק</string>
     <string name="gutenberg_native_number_of_columns">מספר הטורים</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">להזיז את הבלוק ימינה מהמיקום %1$s למיקום %2$s</string>
+    <string name="gutenberg_native_move_block_right">להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">להזיז את הבלוק שמאלה מהמיקום %1$s למיקום %2$s</string>
+    <string name="gutenberg_native_move_block_left">להזיז את הבלוק שמאלה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">להקיש פעמיים כדי להזיז את הבלוק ימינה</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">להקיש פעמיים כדי להזיז את הבלוק שמאלה</string>
     <string name="gutenberg_native_columns_settings">הגדרות טורים</string>
@@ -202,7 +218,6 @@ Language: he_IL
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
-    <string name="gutenberg_native_s_settings">%s הגדרות</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">נשמח לבנות משהו ביחד!</string>
     <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד!</string>
@@ -348,6 +363,7 @@ Language: he_IL
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">הפריט \'%s\' עדיין לא נתמך ב-WordPress למערכת Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">הבלוק %s. בלוק זה כולל תוכן לא חוקי</string>
     <string name="gutenberg_native_s_block_empty">הבלוק %s. ריק</string>
+    <string name="gutenberg_native_cut_block">לחתוך את הבלוק</string>
     <string name="gutenberg_native_reset_block">לאפס את הבלוק</string>
     <string name="gutenberg_native_remove_annotations">להסיר את ההסברים</string>
     <string name="gutenberg_native_problem_opening_the_video">בעיה בפתיחת הווידאו</string>
@@ -364,7 +380,9 @@ Language: he_IL
     <string name="gutenberg_native_my_post_publish_panel">החלונית של תוכן שפרסמתי</string>
     <string name="gutenberg_native_my_document_setting_panel">החלונית של הגדרות המסמכים שלי</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">להזיז את הבלוק למעלה משורה %1$s לשורה %2$s</string>
+    <string name="gutenberg_native_move_block_up">להזיז את הבלוק למעלה</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">להזיז את הבלוק למטה משורה %1$s לשורה %2$s</string>
+    <string name="gutenberg_native_move_block_down">להזיז את הבלוק למטה</string>
     <string name="gutenberg_native_link_text">טקסט לקישור</string>
     <string name="gutenberg_native_link_inserted">הקישור הוכנס</string>
     <string name="gutenberg_native_image_caption_s">כיתוב התמונה. %s</string>
@@ -618,7 +636,7 @@ Language: he_IL
     <string name="post_restoring">הפוסט משוחזר</string>
     <string name="post_restored">הפוסט שוחזר</string>
     <string name="post_trashing">הפוסט מועבר לפח</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">העבר הפוסט לפח תבטל שינויים מקומיים, האם ברצונך להמשיך?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">העברת הפוסט לפח תבטל גם שינויים שלא נשמרו, האם ברצונך להמשיך?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">שינויים מקומיים</string>
     <string name="button_move_to_draft">העברה לטיוטות</string>
     <string name="post_list_toggle_item_layout_list_view">החלפה לתצוגת רשימה</string>
@@ -693,7 +711,7 @@ Language: he_IL
     <string name="quick_start_dialog_upload_icon_message">המבקרים באתר יראו את הסמל שלך בדפדפן שלהם. ניתן להוסיף סמל מותאם אישית למראה נקי ומקצועי.</string>
     <string name="quick_start_dialog_explore_plans_message_short">יש להקיש על %1$s התוכנית %2$s כדי להציג את התוכנית הנוכחית שלך ותוכניות אחרות שזמינות</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">יש להקיש על %1$s הוספת עמוד %2$s כדי ליצור עמוד חדש.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">יש להקיש על %1$s עמודי האתר %2$s כדי להמשיך.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">יש להקיש על  ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להמשיך.</string>
     <string name="quick_start_dialog_check_stats_message_short">יש להקיש על %1$s נתונים סטטיסטיים %2$s כדי להציג את הביצועים של האתר שלך.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">יש להקיש על %1$s סמל האתר שלך %2$s כדי להעלות פריט חדש</string>
     <string name="quick_start_dialog_publish_post_message">אפשר כעת לכתוב טיוטה ולפרסם את הפוסט הראשון שלך.</string>
@@ -1658,7 +1676,6 @@ Language: he_IL
     <string name="pending_draft_one_week_1">הטיוטה שלך של \'%1$s\' ממתינה לך - לא לשכוח לפרסם אותה!</string>
     <string name="pending_draft_one_day_2">שמת לב ש-\'%1$s\' עדיין טיוטה בלבד? קדימה, לפרסם!</string>
     <string name="pending_draft_one_day_1">אתמול שמרת את \'%1$s\' בתור טיוטה. לא לשכוח לפרסם אותה!</string>
-    <string name="reader_photo_by">צולם על ידי %s</string>
     <string name="reader_label_visit">לבקר באתר</string>
     <string name="swipe_for_more">יש להחליק לקבלת מידע נוסף</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">אין לך הרשאה להציג פוסט זה. יש לנסות להתחבר ל-WordPress.com תחילה או להשתמש בכפתור הפעולה העליון כדי לפתוח דפדפן במקום.</string>
@@ -2150,7 +2167,6 @@ Language: he_IL
     <string name="reader_hint_add_tag_or_url">הזן תגית או כתובת אתר למעקב</string>
     <string name="reader_page_followed_blogs">אתרים במעקב</string>
     <string name="reader_page_followed_tags">תגיות במעקב</string>
-    <string name="reader_title_tag_preview">קורא תגית</string>
     <string name="reader_title_blog_preview">אתר</string>
     <string name="ssl_certificate_ask_trust">אם בדרך כלל אתה מתחבר לאתר זה ללא בעיות, ייתכן ששגיאה זו נובעת מכך שמישהו מנסה להתחזות לאתר ולכן אסור לך להמשיך. האם ברצונך בכל זאת לתת אמון באישור?</string>
     <string name="ssl_certificate_error">אישור SSL לא תקף</string>

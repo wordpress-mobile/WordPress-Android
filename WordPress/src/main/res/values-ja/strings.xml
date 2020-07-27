@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-01 04:52:59+0000
+Translation-Revision-Date: 2020-07-24 08:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
+    <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>
+    <string name="gutenberg_native_s_block_options">%s ブロックオプション</string>
+    <string name="gutenberg_native_remove_block">ブロックを削除</string>
+    <string name="gutenberg_native_paste_block">ブロックをペースト</string>
+    <string name="gutenberg_native_duplicate_block">ブロックを複製</string>
+    <string name="gutenberg_native_copy_block">ブロックをコピー</string>
+    <string name="gutenberg_native_copied_block">コピーしたブロック</string>
+    <string name="gutenberg_native_block_settings">ブロックの設定</string>
+    <string name="gutenberg_native_block_pasted">ブロックを貼り付けました</string>
+    <string name="gutenberg_native_block_duplicated">ブロックを複製しました</string>
+    <string name="gutenberg_native_block_cut">ブロックを切り取りました</string>
+    <string name="gutenberg_native_block_copied">ブロックをコピーしました</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">サイトのタイトルを変更できるのは管理者の役割を持つユーザーだけです。</string>
+    <string name="my_site_title_changer_dialog_hint">サイトのタイトルは、Web ブラウザーのタイトルバーに表示され、ほとんどのテーマのヘッダーに表示されます。</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">トピック</string>
+    <string name="error_update_site_title_network">サイトのタイトルを更新できませんでした。 ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">保存されていない変更</string>
     <string name="gutenberg_native_open_link_in_a_browser">リンクをブラウザーで開く</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">前のコンテンツシートへ移動</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">グラデーションのカスタマイズへ移動</string>
@@ -24,7 +44,6 @@ Language: ja_JP
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">リリースごとにブロックを追加できるよう努めています。 その間は、デバイスの Web ブラウザーを使用してこのブロックを編集できます。</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Web ブラウザーでブロックを編集</string>
     <string name="gutenberg_native_dismiss">非表示</string>
-    <string name="prepublishing_nudges_visibility_password">パスワード保護</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">タグは、投稿の内容を読者に伝えるのに役立ちます。</string>
     <string name="prepublishing_nudges_toolbar_title_publish">公開</string>
@@ -55,12 +74,7 @@ Language: ja_JP
     <string name="status_and_visibility">ステータスと公開状態</string>
     <string name="update_now">今すぐ更新</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">%s を削除</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
-    <string name="gutenberg_native_move_s_up">%sを上に移動</string>
-    <string name="gutenberg_native_move_s_right">%sを右に移動</string>
-    <string name="gutenberg_native_move_s_left">%sを左に移動</string>
-    <string name="gutenberg_native_move_s_down">%sを下に移動</string>
     <string name="gutenberg_native_try_a_starter_layout">スターターレイアウトを試す</string>
     <string name="gutenberg_native_insert_mention">メンションを挿入</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
@@ -119,7 +133,9 @@ Language: ja_JP
     <string name="copy_text">コピー</string>
     <string name="gutenberg_native_number_of_columns">カラム数</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に右に移動</string>
+    <string name="gutenberg_native_move_block_right">ブロックを右に移動</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">ブロックを%1$sの位置から%2$sの位置に左に移動</string>
+    <string name="gutenberg_native_move_block_left">ブロックを左に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">ダブルタップしてブロックを右に移動</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">ダブルタップしてブロックを左に移動</string>
     <string name="gutenberg_native_columns_settings">カラム設定</string>
@@ -202,7 +218,6 @@ Language: ja_JP
     <string name="gutenberg_native_only_show_excerpt">抜粋のみを表示</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">これまでのキャリアで制作してきたプロジェクトを、ポートフォリオにて紹介しています。下記のお問い合わせ先までご連絡ください。</string>
     <string name="gutenberg_native_link_to">リンク先</string>
-    <string name="gutenberg_native_s_settings">%s設定</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">詳細はご相談にて。ぜひお気軽に以下の連絡先にお問い合わせください。フォームでのご連絡もお待ちしています。</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">一緒に何かを作り上げましょう。</string>
     <string name="gutenberg_native_let_s_build_something_together">一緒に何かを作り上げましょう。</string>
@@ -349,6 +364,7 @@ Language: ja_JP
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">「%s」は WordPress for Android ではまだサポートされていません</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>
     <string name="gutenberg_native_s_block_empty">%sブロック。空</string>
+    <string name="gutenberg_native_cut_block">ブロックを切り取る</string>
     <string name="gutenberg_native_reset_block">ブロックをリセット</string>
     <string name="gutenberg_native_remove_annotations">注釈を削除</string>
     <string name="gutenberg_native_problem_opening_the_video">動画を開く際に問題が発生しました</string>
@@ -365,7 +381,9 @@ Language: ja_JP
     <string name="gutenberg_native_my_post_publish_panel">公開後パネル</string>
     <string name="gutenberg_native_my_document_setting_panel">ドキュメント設定パネル</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に上に移動します</string>
+    <string name="gutenberg_native_move_block_up">ブロックを上に移動</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">ブロックを行 %1$s から行 %2$s に下に移動します</string>
+    <string name="gutenberg_native_move_block_down">ブロックを下に移動</string>
     <string name="gutenberg_native_link_text">リンク文字列</string>
     <string name="gutenberg_native_link_inserted">リンクを挿入しました</string>
     <string name="gutenberg_native_image_caption_s">画像キャプション。%s</string>
@@ -620,7 +638,7 @@ Language: ja_JP
     <string name="post_restoring">投稿が復元されています</string>
     <string name="post_restored">投稿を復元しました</string>
     <string name="post_trashing">投稿はゴミ箱に移動中です。</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更が破棄されます。続行してもよいですか ?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">この投稿をゴミ箱に移動すると保存されていない変更も破棄されます。続行してもよいですか ?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">ローカルの変更</string>
     <string name="button_move_to_draft">下書きに移動</string>
     <string name="post_list_toggle_item_layout_list_view">リスト表示に切り替え</string>
@@ -696,7 +714,7 @@ Language: ja_JP
     <string name="quick_start_dialog_upload_icon_message">訪問者のブラウザーにアイコンが表示されます。センスのよいカスタムアイコンを追加しましょう。</string>
     <string name="quick_start_dialog_explore_plans_message_short">現在のプランと、その他の利用可能なプランを表示するには %1$s プラン %2$s をタップします</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">新しいページを作成するには %1$s「ページを追加」%2$s をタップします。</string>
-    <string name="quick_start_dialog_create_new_page_message_short">続行するには %1$s「サイトのページ」%2$s をタップします。</string>
+    <string name="quick_start_dialog_create_new_page_message_short">続行するには%1$sページ%2$sをタップします。</string>
     <string name="quick_start_dialog_check_stats_message_short">サイトのパフォーマンスを表示するには %1$s「統計情報」%2$s をタップします。</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">新しいアイコンをアップロードするには %1$s サイトアイコン %2$s をタップ</string>
     <string name="quick_start_dialog_publish_post_message">最初の投稿の下書きを作成して公開してください。</string>
@@ -1662,7 +1680,6 @@ Language: ja_JP
     <string name="pending_draft_one_week_1">下書き「%1$s」を公開するのを忘れないようにしてください。</string>
     <string name="pending_draft_one_day_2">「%1$s」はまだ下書きの状態です。公開しましょう。</string>
     <string name="pending_draft_one_day_1">昨日「%1$s」の下書きを作成しました。公開するのを忘れないで下さい。</string>
-    <string name="reader_photo_by">%s の写真</string>
     <string name="reader_label_visit">サイトを表示</string>
     <string name="swipe_for_more">スワイプしてさらに表示</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">この投稿を表示する権限がありません。最初に WordPress.com へのログインを試みるか、代わりに上部の操作ボタンを使用してブラウザーを開いてください。</string>
@@ -2154,7 +2171,6 @@ Language: ja_JP
     <string name="reader_hint_add_tag_or_url">フォローしたい URL またはタグを入力</string>
     <string name="reader_page_followed_blogs">フォロー中のサイト</string>
     <string name="reader_page_followed_tags">フォロー中のタグ</string>
-    <string name="reader_title_tag_preview">Reader タグ</string>
     <string name="reader_title_blog_preview">Reader サイト</string>
     <string name="ssl_certificate_ask_trust">通常問題なくサイトに接続できる場合、このエラーは誰かがあなたのサイトになりすましていることを意味しているかもしれないので、そのまま進むべきではありません。それでもこの証明書を信頼してもよいですか ?</string>
     <string name="ssl_certificate_error">無効な SSL 証明書</string>

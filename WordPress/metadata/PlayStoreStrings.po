@@ -28,11 +28,6 @@ msgid ""
 msgstr ""
 
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_short_153"
-msgid ""
-"15.3:\n"
-msgstr ""
-
 msgctxt "release_note_short_152"
 msgid ""
 "15.2:\n"
