@@ -18,9 +18,9 @@ import javax.inject.Named
 class GetDiscoverCardsUseCase @Inject constructor(
     private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
-) : ReaderRepositoryDispatchingUseCase(ioDispatcher) {
+) {
     suspend fun get(): ReaderDiscoverCards =
-            withContext(coroutineContext) {
+            withContext(ioDispatcher) {
                 val cardJsonList = ReaderDiscoverCardsTable.loadDiscoverCardsJsons()
                 val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
 

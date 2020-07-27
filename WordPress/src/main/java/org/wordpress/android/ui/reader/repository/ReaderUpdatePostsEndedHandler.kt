@@ -77,7 +77,7 @@ class ReaderUpdatePostsEndedHandler @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = MAIN)
+    @Subscribe(threadMode = BACKGROUND)
     fun onCardsUpdated(event: FetchDiscoverCardsEnded) {
         // TODO malinjir dummy implementation for testing purposes
         onNewPosts(UpdatePostsEnded(CHANGED, REQUEST_OLDER))
