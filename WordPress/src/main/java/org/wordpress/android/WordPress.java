@@ -1,5 +1,6 @@
 package org.wordpress.android;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -131,16 +132,17 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     public static WordPressDB wpDB;
     public static boolean sAppIsInTheBackground = true;
 
-    private static RestClientUtils sRestClientUtils;
-    private static RestClientUtils sRestClientUtilsVersion1p1;
-    private static RestClientUtils sRestClientUtilsVersion1p2;
-    private static RestClientUtils sRestClientUtilsVersion1p3;
-    private static RestClientUtils sRestClientUtilsVersion0;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtils;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtilsVersion1p1;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtilsVersion1p2;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtilsVersion1p3;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtilsVersion2p1;
+    @SuppressLint("StaticFieldLeak") private static RestClientUtils sRestClientUtilsVersion0;
 
     private static final int SECONDS_BETWEEN_SITE_UPDATE = 60 * 60; // 1 hour
     private static final int SECONDS_BETWEEN_BLOGLIST_UPDATE = 15 * 60; // 15 minutes
 
-    private static Context mContext;
+    @SuppressLint("StaticFieldLeak") private static Context mContext;
     private static BitmapLruCache mBitmapCache;
     private static ApplicationLifecycleMonitor mApplicationLifecycleMonitor;
 
@@ -510,6 +512,14 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
                                                              null, RestClient.REST_CLIENT_VERSIONS.V1_3);
         }
         return sRestClientUtilsVersion1p3;
+    }
+
+    public static RestClientUtils getRestClientUtilsV2() {
+        if (sRestClientUtilsVersion2p1 == null) {
+            sRestClientUtilsVersion2p1 = new RestClientUtils(mContext, sRequestQueue, sOAuthAuthenticator,
+                    null, RestClient.REST_CLIENT_VERSIONS.V2);
+        }
+        return sRestClientUtilsVersion2p1;
     }
 
     public static RestClientUtils getRestClientUtilsV0() {

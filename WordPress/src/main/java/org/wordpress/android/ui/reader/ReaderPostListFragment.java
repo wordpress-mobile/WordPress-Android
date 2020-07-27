@@ -895,6 +895,11 @@ public class ReaderPostListFragment extends Fragment
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms));
 
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
+
+            if (getSelectedSite() != null) {
+                QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
+                        mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
+            }
         }
     }
 
@@ -1171,11 +1176,6 @@ public class ReaderPostListFragment extends Fragment
                 // hide the bottom navigation when search is active
                 if (mBottomNavController != null) {
                     mBottomNavController.onRequestHideBottomNavigation();
-                }
-
-                if (getSelectedSite() != null) {
-                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
-                            mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
                 }
 
                 return true;

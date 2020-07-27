@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.GOOGLE;
 
 import dagger.android.support.AndroidSupportInjection;
 
@@ -228,7 +229,7 @@ public class SignupGoogleFragment extends GoogleFragment {
         } else if (event.createdAccount) {
             AppLog.d(T.MAIN,
                     "GOOGLE SIGNUP: onAuthenticationChanged - new wordpress account created");
-            mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail);
+            mAnalyticsListener.trackCreatedAccount(event.userName, mGoogleEmail, GOOGLE);
             mAnalyticsListener.trackAnalyticsSignIn(true);
             mGoogleListener.onGoogleSignupFinished(mDisplayName, mGoogleEmail, mPhotoUrl, event.userName);
             // Continue with login since existing account was selected.
