@@ -65,7 +65,7 @@ class PrepublishingHomeFragment : Fragment() {
             "arguments can't be null."
         }
         if (isStoryPost) {
-            requireActivity().getWindow().getDecorView().requestLayout()
+            requireActivity().window.decorView.requestLayout()
         }
         super.onResume()
     }
