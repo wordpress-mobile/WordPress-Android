@@ -1260,6 +1260,10 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
                     )
                 }
+                113 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductLeaderboardsModel")
+                    db.execSQL("CREATE TABLE WCProductLeaderboardsModel (ID INTEGER, PRODUCTS TEXT)")
+                }
             }
         }
         db.setTransactionSuccessful()
