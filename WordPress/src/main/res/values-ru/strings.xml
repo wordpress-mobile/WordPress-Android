@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-30 10:05:25+0000
+Translation-Revision-Date: 2020-07-15 09:06:24+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Первое впечатление важно! Назовите свой сайт так, как это отразит его индивидуальность и содержание.</string>
+    <string name="quick_start_list_update_site_title_title">Задайте название сайта</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
+    <string name="gutenberg_native_s_block_options">настройки блока %s</string>
+    <string name="gutenberg_native_remove_block">Удалить блок</string>
+    <string name="gutenberg_native_paste_block">Вставить блок</string>
+    <string name="gutenberg_native_duplicate_block">Дублировать блок</string>
+    <string name="gutenberg_native_copy_block">Копировать блок</string>
+    <string name="gutenberg_native_copied_block">Скопированный блок</string>
+    <string name="gutenberg_native_block_settings">Настройки блока</string>
+    <string name="gutenberg_native_block_pasted">Блок вставлен</string>
+    <string name="gutenberg_native_block_duplicated">Блок продублирован</string>
+    <string name="gutenberg_native_block_cut">Блок вырезан</string>
+    <string name="gutenberg_native_block_copied">Блок скопирован</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Название сайта может быть изменено только администратором.</string>
+    <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Тема</string>
+    <string name="error_update_site_title_network">Невозможно обновить название сайта. Проверьте подключение к сети и попробуйте снова.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несохранённые изменения</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Переход на предыдущий экран содержимого</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Переход к настройкам градиента</string>
@@ -24,7 +44,6 @@ Language: ru
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Мы стараемся добавить больше блоков в каждом выпуске. А пока вы можете отредактировать этот блок в веб-браузере.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Редактировать блок в браузере</string>
     <string name="gutenberg_native_dismiss">Закрыть</string>
-    <string name="prepublishing_nudges_visibility_password">Защищено паролем</string>
     <string name="prepublishing_nudges_home_tags_not_set">Не установлены</string>
     <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Опубликовать</string>
@@ -55,12 +74,7 @@ Language: ru
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="update_now">Обновить сейчас</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Удалить %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
-    <string name="gutenberg_native_move_s_up">Сдвинуть %s наверх</string>
-    <string name="gutenberg_native_move_s_right">Сдвинуть %s вправо</string>
-    <string name="gutenberg_native_move_s_left">Сдвинуть %s влево</string>
-    <string name="gutenberg_native_move_s_down">Сдвинуть %s вниз</string>
     <string name="gutenberg_native_try_a_starter_layout">Попробуйте стартовый макет</string>
     <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Нажмите дважды для того, чтобы открыть нижнюю панель действий с доступными возможностями</string>
@@ -119,7 +133,9 @@ Language: ru
     <string name="copy_text">Копировать</string>
     <string name="gutenberg_native_number_of_columns">Число столбцов</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Переместить блок вправо из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_move_block_right">Переместить блок вправо</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Переместить блок влево из позиции %1$s в позицию %2$s</string>
+    <string name="gutenberg_native_move_block_left">Переместить блок влево</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Нажмите дважды для перемещения блока вправо</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Нажмите дважды для перемещения блока влево</string>
     <string name="gutenberg_native_columns_settings">Настройки столбцов</string>
@@ -202,7 +218,6 @@ Language: ru
     <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Мое портфолио демонстрирует различные проекты созданные в течении моей карьеры. Информация для договора представлена ниже, свяжитесь со мной.</string>
     <string name="gutenberg_native_link_to">Ссылка на</string>
-    <string name="gutenberg_native_s_settings">%s: настройки</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Давайте общаться 👋 Не стесняйтесь воспользоваться контактной информацией ниже или послать сообщение через форму.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Давайте сотворим что-нибудь вместе!</string>
     <string name="gutenberg_native_let_s_build_something_together">Давайте сотворим что-нибудь вместе!</string>
@@ -349,6 +364,7 @@ Language: ru
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s пока не поддерживается WordPress для Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_s_block_empty">Блок %s. Пустой</string>
+    <string name="gutenberg_native_cut_block">Вырезать блок</string>
     <string name="gutenberg_native_reset_block">Сбросить блок</string>
     <string name="gutenberg_native_remove_annotations">Удалить аннотации</string>
     <string name="gutenberg_native_problem_opening_the_video">Проблема с открытием видео</string>
@@ -365,7 +381,9 @@ Language: ru
     <string name="gutenberg_native_my_post_publish_panel">Панель публикации моей записи</string>
     <string name="gutenberg_native_my_document_setting_panel">Панель настроек моего документа</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Переместить блок вверх из ряда %1$s в ряд %2$s</string>
+    <string name="gutenberg_native_move_block_up">Переместить блок вверх</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Переместить блок вниз из ряда %1$s в ряд %2$s</string>
+    <string name="gutenberg_native_move_block_down">Переместить блок ниже</string>
     <string name="gutenberg_native_link_text">Текст ссылки</string>
     <string name="gutenberg_native_link_inserted">Ссылка вставлена</string>
     <string name="gutenberg_native_image_caption_s">Подпись к изображению. %s</string>
@@ -620,7 +638,7 @@ Language: ru
     <string name="post_restoring">Запись восстанавливается</string>
     <string name="post_restored">Запись восстановлена</string>
     <string name="post_trashing">Запись удаляется в корзину</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Удаление в корзину этой записи отменит несохраненные изменения, вы точно хотите продолжить?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Локальные изменения</string>
     <string name="button_move_to_draft">Переместить в черновики</string>
     <string name="post_list_toggle_item_layout_list_view">Переключиться на просмотр списком</string>
@@ -696,7 +714,7 @@ Language: ru
     <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Нажмите %1$s Тариф %2$s для просмотра вашего и других доступных тарифов</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Нажмите %1$s Добавить страницу %2$s для создания новой страницы.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Нажмите %1$s Страницы сайта %2$s для продолжения.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Нажмите %1$s Страницы %2$s для продолжения.</string>
     <string name="quick_start_dialog_check_stats_message_short">Нажмите %1$s Статистика %2$s для просмотра как живет ваш сайт.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Нажмите %1$s Значок вашего сайта %2$s для загрузки нового</string>
     <string name="quick_start_dialog_publish_post_message">Создайте черновик и опубликуйте свою первую запись.</string>
@@ -1657,7 +1675,6 @@ Language: ru
     <string name="pending_draft_one_week_1">Черновик «%1$s» ждёт публикации — не забудьте про него!</string>
     <string name="pending_draft_one_day_2">Вы помните, что запись «%1$s» все ещё в черновиках? Опубликуйте её!</string>
     <string name="pending_draft_one_day_1">Вчера вы сохранили черновик «%1$s». Не забудьте опубликовать эту запись!</string>
-    <string name="reader_photo_by">Автор фото: %s</string>
     <string name="reader_label_visit">Посетить сайт</string>
     <string name="swipe_for_more">Перелистните, чтобы перейти далее</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">У вас нет прав на просмотр этой записи. Попробуйте сначала выполнить вход на WordPress.com или откройте браузер с помощью управляющей кнопки вверху.</string>
@@ -2149,7 +2166,6 @@ Language: ru
     <string name="reader_hint_add_tag_or_url">Введите URL или метку для подписки</string>
     <string name="reader_page_followed_blogs">Отслеживаемые сайты</string>
     <string name="reader_page_followed_tags">Отслеживаемые метки</string>
-    <string name="reader_title_tag_preview">Метка из Чтива</string>
     <string name="reader_title_blog_preview">Сайт из Чтива</string>
     <string name="ssl_certificate_ask_trust">Если вы обычно заходите на этот сайт без проблем, эта ошибка может означать, что кто-то пытается подделать сайт и вам не стоит сюда заходить. Хотите ли вы доверять ssl сертификату?</string>
     <string name="ssl_certificate_error">Недействительный сертификат SSL</string>

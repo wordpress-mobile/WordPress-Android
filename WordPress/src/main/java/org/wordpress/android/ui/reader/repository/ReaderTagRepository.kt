@@ -10,8 +10,8 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
-import org.wordpress.android.ui.reader.repository.usecases.FetchInterestTagsUseCase
-import org.wordpress.android.ui.reader.repository.usecases.FollowInterestTagsUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.FetchInterestTagsUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.FollowInterestTagsUseCase
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
