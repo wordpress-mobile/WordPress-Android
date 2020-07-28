@@ -91,7 +91,6 @@ import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
 import org.wordpress.android.ui.FullScreenDialogFragment.OnConfirmListener
 import org.wordpress.android.ui.FullScreenDialogFragment.OnDismissListener
-import org.wordpress.android.ui.PagePostCreationSourcesDetail
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
@@ -100,8 +99,6 @@ import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistr
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.media.MediaBrowserActivity
-import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -123,6 +120,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler.Companion.handleMediaPickerResultForStories
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
@@ -738,7 +736,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (!handleMediaPickerResultForStories(data)) {
+                if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -805,59 +803,6 @@ class MySiteFragment : Fragment(),
                 requestEmailValidation(requireContext(), email)
             }
         }
-    }
-
-    private fun isWPStoriesMediaBrowserTypeResult(data: Intent): Boolean {
-        if (data.hasExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)) {
-            val browserType = data.getSerializableExtra(MediaBrowserActivity.ARG_BROWSER_TYPE)
-            return (browserType as MediaBrowserType).isWPStoriesPicker()
-        }
-        return false
-    }
-
-    /*
-        return true if MediaPickerResult was handled
-     */
-    private fun handleMediaPickerResultForStories(data: Intent): Boolean {
-        if (data.getBooleanExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, false)) {
-            ActivityLauncher.addNewStoryForResult(
-                    activity,
-                    selectedSite,
-                    PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-            )
-            return true
-        } else if (isWPStoriesMediaBrowserTypeResult(data)) {
-            if (data.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                ActivityLauncher.addNewStoryWithMediaIdsForResult(
-                        activity,
-                        selectedSite,
-                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
-                        data.getLongArrayExtra(
-                                MediaBrowserActivity.RESULT_IDS
-                        )
-                )
-                return true
-            } else {
-                val mediaUriStringsArray = data.getStringArrayExtra(
-                        PhotoPickerActivity.EXTRA_MEDIA_URIS
-                )
-                if (mediaUriStringsArray.isNullOrEmpty()) {
-                    AppLog.e(
-                            UTILS,
-                            "Can't resolve picked or captured image"
-                    )
-                    return false
-                }
-                ActivityLauncher.addNewStoryWithMediaUrisForResult(
-                        activity,
-                        selectedSite,
-                        PagePostCreationSourcesDetail.STORY_FROM_MY_SITE,
-                        mediaUriStringsArray
-                )
-                return true
-            }
-        }
-        return false
     }
 
     override fun onConfirm(result: Bundle?) {

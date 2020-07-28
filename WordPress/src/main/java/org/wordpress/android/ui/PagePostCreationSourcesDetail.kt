@@ -5,6 +5,8 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_SHORTCUT("post-from-shortcut"),
     // post created from the posts list fab
     POST_FROM_POSTS_LIST("post-from-posts-list"),
+    // story created from the posts list fab
+    STORY_FROM_POSTS_LIST("story-from-posts-list"),
     // page created from the pages list fab
     PAGE_FROM_PAGES_LIST("page-from-pages-list"),
     // post created from the navigation bar (until we will remove it)
