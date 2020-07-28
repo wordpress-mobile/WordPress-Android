@@ -12,7 +12,7 @@ import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
@@ -34,7 +34,7 @@ import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class ReaderPostRepository(
-    private val bgDispatcher: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
@@ -46,7 +46,7 @@ class ReaderPostRepository(
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher + job
+        get() = ioDispatcher + job
 
     private var isStarted = false
     private val isDirty = AtomicBoolean()
@@ -80,7 +80,7 @@ class ReaderPostRepository(
     fun getTag(): ReaderTag = readerTag
 
     suspend fun refreshPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val response =
                     fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
             if (response != Success) _communicationChannel.postValue(Event(response))
@@ -88,7 +88,7 @@ class ReaderPostRepository(
     }
 
     suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
@@ -106,7 +106,7 @@ class ReaderPostRepository(
 
     // Internal functionality
     private suspend fun loadPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val existsInMemory = posts.value?.let {
                 !it.isEmpty()
             } ?: false
@@ -126,7 +126,7 @@ class ReaderPostRepository(
     }
 
     private suspend fun reloadPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val result = getPostsForTagUseCase.get(readerTag)
             _posts.postValue(result)
         }
@@ -179,7 +179,7 @@ class ReaderPostRepository(
 
     class Factory
     @Inject constructor(
-        @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
         private val eventBusWrapper: EventBusWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
@@ -189,7 +189,7 @@ class ReaderPostRepository(
     ) {
         fun create(readerTag: ReaderTag): ReaderPostRepository {
             return ReaderPostRepository(
-                    bgDispatcher,
+                    ioDispatcher,
                     eventBusWrapper,
                     readerTag,
                     getPostsForTagUseCase,
