@@ -24,7 +24,6 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ButtonUiState.PublishButtonUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HeaderUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
-import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.GetButtonUiStateUseCase
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.usecase.UpdateStoryPostTitleUseCase
@@ -308,7 +307,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         viewModel.start(editPostRepository, site, expectedIsStoryPost)
 
-        assertThat(getStoryTitleUiStateList()).isNotEmpty
+        assertThat(getStoryTitleUiState()).isNotNull
     }
 
     @Test
@@ -317,7 +316,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
 
         viewModel.start(editPostRepository, site, expectedIsStoryPost)
 
-        assertThat(getStoryTitleUiStateList()).isEmpty()
+        assertThat(getStoryTitleUiState()).isNull()
     }
 
     @Test
@@ -370,9 +369,7 @@ class PrepublishingHomeViewModelTest : BaseUnitTest() {
     }
 
     private fun getHeaderUiState() = viewModel.uiState.value?.filterIsInstance(HeaderUiState::class.java)?.first()
-    private fun getStoryTitleUiState() = getStoryTitleUiStateList()?.first()
-    private fun getStoryTitleUiStateList() =
-            viewModel.uiState.value?.filterIsInstance(StoryTitleUiState::class.java)
+    private fun getStoryTitleUiState() = viewModel.storyTitleUiState.value
 
     private fun getButtonUiState(): ButtonUiState? {
         return viewModel.uiState.value?.filterIsInstance(ButtonUiState::class.java)?.first()

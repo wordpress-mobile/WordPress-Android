@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
+import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.KeyboardResizeViewUtil
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
@@ -145,6 +146,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
+        viewModel.dismissKeyboard.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                ActivityUtils.hideKeyboardForced(view)
+            }
+        })
+
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
@@ -166,9 +173,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
             )
-            PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
-            )
+            PrepublishingScreen.TAGS -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.TAG
+                )
+            }
         }
 
         fadeInFragment(fragment, tag)

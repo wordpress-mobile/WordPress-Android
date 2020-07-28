@@ -56,7 +56,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:hint="@string/prepublishing_nudges_story_title_hint"
-            android:inputType="textMultiLine"
+            android:inputType="textCapSentences|textMultiLine"
             android:maxLines="3"
             android:textAlignment="viewStart"
             android:textAppearance="?attr/textAppearanceHeadline5"

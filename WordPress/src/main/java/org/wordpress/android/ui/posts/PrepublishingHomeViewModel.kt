@@ -47,6 +47,9 @@ class PrepublishingHomeViewModel @Inject constructor(
     private val _uiState = MutableLiveData<List<PrepublishingHomeItemUiState>>()
     val uiState: LiveData<List<PrepublishingHomeItemUiState>> = _uiState
 
+    private val _storyTitleUiState = MutableLiveData<StoryTitleUiState>()
+    val storyTitleUiState: LiveData<StoryTitleUiState> = _storyTitleUiState
+
     private val _onActionClicked = MutableLiveData<Event<ActionType>>()
     val onActionClicked: LiveData<Event<ActionType>> = _onActionClicked
 
@@ -64,13 +67,12 @@ class PrepublishingHomeViewModel @Inject constructor(
     private fun setupHomeUiState(editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean) {
         val prepublishingHomeUiStateList = mutableListOf<PrepublishingHomeItemUiState>().apply {
             if (isStoryPost) {
-                add(
-                        StoryTitleUiState(
-                                storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
-                                storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
-                        ) { storyTitle ->
-                            onStoryTitleChanged(storyTitle)
-                        })
+                _storyTitleUiState.postValue(StoryTitleUiState(
+                        storyTitle = UiStringText(StringUtils.notNullStr(editPostRepository.title)),
+                        storyThumbnailUrl = storyRepositoryWrapper.getCurrentStoryThumbnailUrl()
+                ) { storyTitle ->
+                    onStoryTitleChanged(storyTitle)
+                })
             } else {
                 add(HeaderUiState(UiStringText(site.name), StringUtils.notNullStr(site.iconUrl)))
             }
