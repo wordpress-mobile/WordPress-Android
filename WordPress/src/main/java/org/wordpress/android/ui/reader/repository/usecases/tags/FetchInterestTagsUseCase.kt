@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository.usecases
+package org.wordpress.android.ui.reader.repository.usecases.tags
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
