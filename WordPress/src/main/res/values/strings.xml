@@ -1916,6 +1916,7 @@
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
+    <string name="my_site_bottom_sheet_add_story">Story post</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2765,6 +2766,11 @@
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>
 
+    <!--  these are needed while WPStories sits behind a feature flag  -->
+    <!--  TODO we'll need to replace them when the feature flag is gone -->
+    <string name="create_post_page_fab_tooltip_stories_feature_flag_on">Create a post, page or story</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_feature_flag_on">Create a post or story</string>
+
     <!-- News Card -->
     <!-- When announcing a new feature, add new strings and make sure to update LocalNewsItem.kt -->
     <!-- Never reuse same keys for new announcements! The new value might not be translated before the release
@@ -2851,6 +2857,7 @@
     <string name="prepublishing_nudges_toolbar_title_publish">Publish Date</string>
     <string name="prepublishing_tags_description">Tags help tell readers what a post is about.</string>
     <string name="prepublishing_nudges_home_tags_not_set">Not set</string>
+    <string name="prepublishing_nudges_story_title_hint">Give your story a title</string>
 
     <string name="content_description_logo">WordPress Logo</string>
 

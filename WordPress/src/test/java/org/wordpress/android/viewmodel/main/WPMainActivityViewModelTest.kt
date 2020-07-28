@@ -18,6 +18,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMEN
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
+import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
@@ -26,6 +27,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
@@ -37,6 +39,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var onQuickStartCompletedEventObserver: Observer<Unit>
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -66,6 +69,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 buildConfigWrapper,
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
+                wpStoriesFeatureConfig,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -159,7 +163,18 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `bottom sheet is visualized when user has full access to content`() {
+    fun `bottom sheet action is new story when new story is tapped if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
+        viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_STORY } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_STORY)
+        assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_STORY)
+    }
+
+    @Test
+    fun `bottom sheet is visualized when user has full access to content if stories disabled`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = false)
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = true)
         assertThat(viewModel.createAction.value).isNull()
@@ -215,11 +230,32 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `new post action is triggered from FAB when user has not full access to content`() {
+    fun `new post action is triggered from FAB when user has not full access to content if stories disabled`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = false)
         startViewModelWithDefaultParameters()
         viewModel.onFabClicked(hasFullAccessToContent = false)
         assertThat(viewModel.isBottomSheetShowing.value).isNull()
         assertThat(viewModel.createAction.value).isEqualTo(CREATE_NEW_POST)
+    }
+
+    @Test
+    fun `bottom sheet is visualized when user has full access to content and has all 3 options if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(hasFullAccessToContent = true)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(4) // 3 options plus NO_ACTION, first in list
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
+    }
+
+    @Test
+    fun `bottom sheet is visualized when user has partial access and has only 2 options if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(buildConfigValue = true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(hasFullAccessToContent = false)
+        assertThat(viewModel.createAction.value).isNull()
+        assertThat(viewModel.mainActions.value?.size).isEqualTo(3) // 2 options plus NO_ACTION, first in list
+        assertThat(viewModel.isBottomSheetShowing.value!!.peekContent()).isEqualTo(true)
     }
 
     @Test
@@ -231,18 +267,38 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `onResume set expected content message when user has full access to content`() {
+    fun `onResume set expected content message when user has full access to content if stories not enabled`() {
+        setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
         viewModel.onResume(true)
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId).isEqualTo(R.string.create_post_page_fab_tooltip)
     }
 
     @Test
-    fun `onResume set expected content message when user has not full access to content`() {
+    fun `onResume set expected content message when user has not full access to content if stories not enabled`() {
+        setupWPStoriesFeatureConfigEnabled(false)
         startViewModelWithDefaultParameters()
         viewModel.onResume(false)
         assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
                 .isEqualTo(R.string.create_post_page_fab_tooltip_contributors)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has full access to content if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onResume(true)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_stories_feature_flag_on)
+    }
+
+    @Test
+    fun `onResume set expected content message when user has not full access to content if stories enabled`() {
+        setupWPStoriesFeatureConfigEnabled(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onResume(false)
+        assertThat(viewModel.fabUiState.value!!.CreateContentMessageId)
+                .isEqualTo(R.string.create_post_page_fab_tooltip_contributors_stories_feature_flag_on)
     }
 
     @Test
@@ -347,5 +403,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     private fun startViewModelWithDefaultParameters() {
         viewModel.start(isFabVisible = true, hasFullAccessToContent = true)
+    }
+
+    private fun setupWPStoriesFeatureConfigEnabled(buildConfigValue: Boolean) {
+        whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(buildConfigValue)
     }
 }

@@ -81,6 +81,7 @@ import org.wordpress.android.ui.accounts.LoginActivity;
 import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.news.NewsManager;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -427,6 +428,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     break;
                 case CREATE_NEW_PAGE:
                     handleNewPageAction(PagePostCreationSourcesDetail.PAGE_FROM_MY_SITE);
+                    break;
+                case CREATE_NEW_STORY:
+                    handleNewStoryAction(PagePostCreationSourcesDetail.STORY_FROM_MY_SITE);
                     break;
             }
         });
@@ -866,6 +870,26 @@ public class WPMainActivity extends LocaleAwareActivity implements
         ActivityLauncher.addNewPostForResult(this, getSelectedSite(), false, source);
     }
 
+    private void handleNewStoryAction(PagePostCreationSourcesDetail source) {
+        if (!mSiteStore.hasSite()) {
+            // No site yet - Move to My Sites fragment that shows the create new site screen
+            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
+            return;
+        }
+
+        SiteModel site = getSelectedSite();
+        if (site != null) {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_FOR_STORIES);
+            // TODO: evaluate to include the QuickStart logic like in the handleNewPostAction
+            ActivityLauncher.showPhotoPickerForResult(
+                    this,
+                    MediaBrowserType.WP_STORIES_MEDIA_PICKER,
+                    site,
+                    null // this is not required, only used for featured image in normal Posts
+            );
+        }
+    }
+
     private void trackLastVisiblePage(PageType pageType, boolean trackAnalytics) {
         switch (pageType) {
             case MY_SITE:
@@ -915,6 +939,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (mSelectedSite == null) {
+            initSelectedSite();
+        }
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
                 if (resultCode != Activity.RESULT_OK || data == null || isFinishing()) {
