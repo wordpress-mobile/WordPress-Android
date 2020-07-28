@@ -1,0 +1,252 @@
+[
+  {
+    "id": "customers",
+    "label": "Top Customers - Total Spend",
+    "headers": [
+      {
+        "label": "Customer Name"
+      },
+      {
+        "label": "Orders"
+      },
+      {
+        "label": "Total Spend"
+      }
+    ],
+    "rows": [
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/customers&filter=single_customer&customers=2'>Test Test<\/a>",
+          "value": "Test Test"
+        },
+        {
+          "display": "1",
+          "value": 1
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>206.300,00<\/span>",
+          "value": 206300
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/customers&filter=single_customer&customers=3'>More Test From Tester<\/a>",
+          "value": "More Test From Tester"
+        },
+        {
+          "display": "1",
+          "value": 1
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>63.800,00<\/span>",
+          "value": 63800
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/customers&filter=single_customer&customers=1'>Test Order<\/a>",
+          "value": "Test Order"
+        },
+        {
+          "display": "7",
+          "value": 7
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>1.036,00<\/span>",
+          "value": 1036
+        }
+      ]
+    ]
+  },
+  {
+    "id": "coupons",
+    "label": "Top Coupons - Number of Orders",
+    "headers": [
+      {
+        "label": "Coupon Code"
+      },
+      {
+        "label": "Orders"
+      },
+      {
+        "label": "Amount Discounted"
+      }
+    ],
+    "rows": [
+    ]
+  },
+  {
+    "id": "categories",
+    "label": "Top Categories - Items Sold",
+    "headers": [
+      {
+        "label": "Category"
+      },
+      {
+        "label": "Items Sold"
+      },
+      {
+        "label": "Net Sales"
+      }
+    ],
+    "rows": [
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/categories&filter=single_category&categories=16'>Clothing<\/a>",
+          "value": "Clothing"
+        },
+        {
+          "display": "6.650",
+          "value": 6650
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>239.300,00<\/span>",
+          "value": 239300
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/categories&filter=single_category&categories=19'>Accessories<\/a>",
+          "value": "Accessories"
+        },
+        {
+          "display": "4.550",
+          "value": 4550
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>191.800,00<\/span>",
+          "value": 191800
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/categories&filter=single_category&categories=17'>Tshirts<\/a>",
+          "value": "Tshirts"
+        },
+        {
+          "display": "2.000",
+          "value": 2000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>43.000,00<\/span>",
+          "value": 43000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/categories&filter=single_category&categories=20'>Music<\/a>",
+          "value": "Music"
+        },
+        {
+          "display": "2.000",
+          "value": 2000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>30.000,00<\/span>",
+          "value": 30000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/categories&filter=single_category&categories=18'>Hoodies<\/a>",
+          "value": "Hoodies"
+        },
+        {
+          "display": "100",
+          "value": 100
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>4.500,00<\/span>",
+          "value": 4500
+        }
+      ]
+    ]
+  },
+  {
+    "id": "products",
+    "label": "Top Products - Items Sold",
+    "headers": [
+      {
+        "label": "Product"
+      },
+      {
+        "label": "Items Sold"
+      },
+      {
+        "label": "Net Sales"
+      }
+    ],
+    "rows": [
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=14'>Beanie<\/a>",
+          "value": "Beanie"
+        },
+        {
+          "display": "2.000",
+          "value": 2000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>36.000,00<\/span>",
+          "value": 36000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=22'>Album<\/a>",
+          "value": "Album"
+        },
+        {
+          "display": "2.000",
+          "value": 2000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>30.000,00<\/span>",
+          "value": 30000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=15'>Belt<\/a>",
+          "value": "Belt"
+        },
+        {
+          "display": "2.000",
+          "value": 2000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>110.000,00<\/span>",
+          "value": 110000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=20'>Long Sleeve Tee<\/a>",
+          "value": "Long Sleeve Tee"
+        },
+        {
+          "display": "1.000",
+          "value": 1000
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>25.000,00<\/span>",
+          "value": 25000
+        }
+      ],
+      [
+        {
+          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=13'>T-Shirt<\/a>",
+          "value": "T-Shirt"
+        },
+        {
+          "display": "500",
+          "value": 500
+        },
+        {
+          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>9.000,00<\/span>",
+          "value": 9000
+        }
+      ]
+    ]
+  }
+]
