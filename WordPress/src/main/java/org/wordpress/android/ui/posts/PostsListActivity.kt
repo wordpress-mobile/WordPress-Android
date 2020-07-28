@@ -59,6 +59,7 @@ import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment.Companion
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.quickstart.QuickStartEvent
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -473,6 +474,8 @@ class PostsListActivity : LocaleAwareActivity(),
             viewModel.handleEditPostResult(data)
         } else if (requestCode == RequestCodes.REMOTE_PREVIEW_POST) {
             viewModel.handleRemotePreviewClosing()
+        } else if (requestCode == RequestCodes.PHOTO_PICKER && resultCode == Activity.RESULT_OK && data != null) {
+            StoriesMediaPickerResultHandler.handleMediaPickerResultForStories(data, this, site)
         }
     }
 
