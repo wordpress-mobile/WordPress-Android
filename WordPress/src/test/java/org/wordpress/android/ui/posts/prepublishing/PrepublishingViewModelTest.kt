@@ -128,12 +128,4 @@ class PrepublishingViewModelTest : BaseUnitTest() {
         assertThat(viewModel.dismissBottomSheet.value?.peekContent()).isNotNull()
         assertThat(viewModel.triggerOnSubmitButtonClickedListener.value?.peekContent()).isNotNull()
     }
-
-    @Test
-    fun `when onActionClicked is called with a PrepublishingScreen, dismiss keyboard`() {
-        viewModel.start(mock(), mock())
-        viewModel.onActionClicked(ActionType.TAGS)
-
-        assertThat(viewModel.dismissKeyboard.value).isNotNull
-    }
 }
