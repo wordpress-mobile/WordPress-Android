@@ -18,7 +18,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState
-import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.CancelMediaPayload
@@ -27,7 +26,6 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaError
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.ProgressDialogUiState.HiddenProgressDialog
@@ -35,7 +33,6 @@ import org.wordpress.android.ui.posts.ProgressDialogUiState.VisibleProgressDialo
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMediaIdle
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingMultipleMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState.AddingSingleMedia
-import org.wordpress.android.ui.posts.editor.media.EditorType.POST_EDITOR
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -44,7 +41,6 @@ import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
@@ -52,18 +48,6 @@ import java.util.ArrayList
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
-
-interface EditorMediaListener {
-    fun appendMediaFiles(mediaFiles: Map<String, MediaFile>)
-    fun syncPostObjectWithUiAndSaveIt(listener: OnPostUpdatedFromUIListener? = null)
-    fun advertiseImageOptimization(listener: () -> Unit)
-    fun getImmutablePost(): PostImmutableModel
-}
-
-enum class EditorType {
-    POST_EDITOR,
-    STORY_EDITOR
-}
 
 class EditorMedia @Inject constructor(
     private val updateMediaModelUseCase: UpdateMediaModelUseCase,
@@ -90,7 +74,6 @@ class EditorMedia @Inject constructor(
 
     private lateinit var site: SiteModel
     private lateinit var editorMediaListener: EditorMediaListener
-    private lateinit var editorType: EditorType
 
     private val deletedMediaItemIds = mutableListOf<String>()
 
@@ -107,10 +90,9 @@ class EditorMedia @Inject constructor(
     var droppedMediaUris: ArrayList<Uri> = ArrayList()
     // endregion
 
-    fun start(site: SiteModel, editorMediaListener: EditorMediaListener, editorType: EditorType) {
+    fun start(site: SiteModel, editorMediaListener: EditorMediaListener) {
         this.site = site
         this.editorMediaListener = editorMediaListener
-        this.editorType = editorType
         _uiState.value = AddingMediaIdle
     }
 
@@ -144,7 +126,7 @@ class EditorMedia @Inject constructor(
                     site,
                     freshlyTaken,
                     editorMediaListener,
-                    (editorType == POST_EDITOR) // also start upload if this is a Posts editor
+                    true
             )
             if (!allMediaSucceed) {
                 _snackBarMessage.value = Event(SnackbarMessageHolder(R.string.gallery_error))
@@ -322,11 +304,6 @@ class EditorMedia @Inject constructor(
         }
         analyticsTrackerWrapper.track(EDITOR_UPLOAD_MEDIA_FAILED, properties)
         listener.onMediaUploadFailed(media.id.toString())
-    }
-
-    enum class AddExistingMediaSource {
-        WP_MEDIA_LIBRARY,
-        STOCK_PHOTO_LIBRARY
     }
 
     sealed class AddMediaToPostUiState(

@@ -91,7 +91,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
-import org.wordpress.android.ui.stories.StoryMediaSaveUploadBridge;
+import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
