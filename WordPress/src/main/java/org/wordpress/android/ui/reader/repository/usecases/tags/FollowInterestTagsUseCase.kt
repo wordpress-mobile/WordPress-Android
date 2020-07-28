@@ -1,33 +1,30 @@
-package org.wordpress.android.ui.reader.repository.usecases
+package org.wordpress.android.ui.reader.repository.usecases.tags
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded
+import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
+import org.wordpress.android.ui.reader.actions.ReaderTagActions
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.INTEREST_TAGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.viewmodel.ContextProvider
-import java.util.EnumSet
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class FetchInterestTagsUseCase @Inject constructor(
-    private val contextProvider: ContextProvider,
+class FollowInterestTagsUseCase @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val networkUtilsWrapper: NetworkUtilsWrapper
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
-    suspend fun fetch(): ReaderRepositoryCommunication {
+    suspend fun followInterestTags(tags: List<ReaderTag>): ReaderRepositoryCommunication {
         if (continuation != null) {
-            throw IllegalStateException("Fetch already in progress.")
+            throw IllegalStateException("Follow interest tags already in progress.")
         }
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return NetworkUnavailable
@@ -36,21 +33,18 @@ class FetchInterestTagsUseCase @Inject constructor(
             continuation = cont
             eventBusWrapper.register(this)
 
-            ReaderUpdateServiceStarter.startService(
-                contextProvider.getContext(),
-                EnumSet.of(INTEREST_TAGS)
-            )
+            ReaderTagActions.addTags(tags)
         }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
-    fun onInterestTagsFetchEnded(event: InterestTagsFetchEnded) {
+    fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         val result = if (event.didSucceed()) {
-                SuccessWithData(event.interestTags)
-            } else {
-                RemoteRequestFailure
-            }
+            Success
+        } else {
+            RemoteRequestFailure
+        }
 
         continuation?.resume(result)
 
