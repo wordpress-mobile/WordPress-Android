@@ -1262,7 +1262,12 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 113 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS WCProductLeaderboardsModel")
-                    db.execSQL("CREATE TABLE WCProductLeaderboardsModel (ID INTEGER, PRODUCTS TEXT)")
+                    db.execSQL("CREATE TABLE WCProductLeaderboardsModel (" +
+                            "ID INTEGER, " +
+                            "PRODUCT_INFO TEXT, " +
+                            "CURRENCY TEXT, " +
+                            "QUANTITY INTEGER, " +
+                            "TOTAL REAL)")
                 }
             }
         }
