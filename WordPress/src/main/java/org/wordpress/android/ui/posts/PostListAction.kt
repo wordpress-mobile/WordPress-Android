@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.push.NativeNotificationsUtils
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.POST_FROM_POSTS_LIST
-import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_POSTS_LIST
 import org.wordpress.android.ui.media.MediaBrowserType.WP_STORIES_MEDIA_PICKER
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType
 import org.wordpress.android.ui.uploads.UploadService
