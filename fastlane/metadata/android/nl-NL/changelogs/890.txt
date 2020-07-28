@@ -1,3 +1,0 @@
-Blok-editor toevoegingen: Redactionele ondersteuning toegevoegd voor thema gedefinieerde kleuren en kleurverlopen op cover- en knop blokken. Cover blok video-uploads zijn nu voltooid nadat de editor is gesloten. Blok-, woord- en karakter telling metrische informatie wordt nu weergegeven.
-
-Opgelost: Problemen met de weergave van de Reader bericht details, de afhandeling van de upload in de blok-editor, en een crash die zou optreden wanneer de WordPress API-reactie een lege body heeft
