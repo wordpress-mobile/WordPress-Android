@@ -8,12 +8,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+
+import org.wordpress.android.login.util.AvatarHelper;
+import org.wordpress.android.login.util.AvatarHelper.AvatarRequestListener;
 
 import javax.inject.Inject;
 
@@ -70,6 +75,18 @@ public class LoginMagicLinkSentFragment extends Fragment {
             }
         });
 
+        final View avatarProgressBar = view.findViewById(R.id.avatar_progress);
+        ImageView avatarView = view.findViewById(R.id.gravatar);
+
+        TextView emailView = view.findViewById(R.id.email);
+        emailView.setText(mEmail);
+
+        AvatarHelper.loadAvatarFromEmail(this, mEmail, avatarView, new AvatarRequestListener() {
+            @Override public void onRequestFinished() {
+                avatarProgressBar.setVisibility(View.GONE);
+            }
+        });
+
         return view;
     }
 
@@ -82,12 +99,12 @@ public class LoginMagicLinkSentFragment extends Fragment {
 
         ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.log_in);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
         if (savedInstanceState == null) {
-            mAnalyticsListener.trackMagicLinkOpenEmailClientViewed();
+            mAnalyticsListener.trackLoginMagicLinkOpenEmailClientViewed();
         }
     }
 
@@ -122,6 +139,7 @@ public class LoginMagicLinkSentFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
+            mAnalyticsListener.trackShowHelpClick();
             if (mLoginListener != null) {
                 mLoginListener.helpMagicLinkSent(mEmail);
             }

@@ -12,4 +12,6 @@ class DateTimeUtilsWrapper @Inject constructor(
             DateTimeUtils.iso8601FromTimestamp(localeManagerWrapper.getCurrentCalendar().timeInMillis / 1000)
 
     fun javaDateToTimeSpan(date: Date?): String = DateTimeUtils.javaDateToTimeSpan(date, appContext)
+
+    fun dateFromIso8601(date: String) = DateTimeUtils.dateFromIso8601(date)
 }

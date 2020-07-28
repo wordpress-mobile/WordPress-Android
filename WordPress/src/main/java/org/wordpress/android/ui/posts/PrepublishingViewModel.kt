@@ -53,12 +53,10 @@ class PrepublishingViewModel @Inject constructor(private val dispatcher: Dispatc
         isStarted = true
 
         this.site = site
-        this.currentScreen = currentScreenFromSavedState
+        this.currentScreen = currentScreenFromSavedState ?: HOME
 
         currentScreen?.let { screen ->
             navigateToScreen(screen)
-        } ?: run {
-            navigateToScreen(HOME)
         }
         fetchTags()
     }

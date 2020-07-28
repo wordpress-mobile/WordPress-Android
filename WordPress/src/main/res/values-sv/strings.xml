@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-30 23:08:00+0000
+Translation-Revision-Date: 2020-07-15 09:36:46+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>
+    <string name="quick_start_list_update_site_title_title">Ange webbplatsens rubrik</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
+    <string name="gutenberg_native_s_block_options">Inställningar för blocket %s</string>
+    <string name="gutenberg_native_remove_block">Ta bort block</string>
+    <string name="gutenberg_native_paste_block">Klistra in block</string>
+    <string name="gutenberg_native_duplicate_block">Duplicera block</string>
+    <string name="gutenberg_native_copy_block">Kopiera block</string>
+    <string name="gutenberg_native_copied_block">Blocket kopierat</string>
+    <string name="gutenberg_native_block_settings">Blockinställningar</string>
+    <string name="gutenberg_native_block_pasted">Blocket har klistrats in</string>
+    <string name="gutenberg_native_block_duplicated">Blocket har duplicerats</string>
+    <string name="gutenberg_native_block_cut">Blocket har klippts ut</string>
+    <string name="gutenberg_native_block_copied">Blocket kopierat</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Webbplatsrubriken kan bara ändras av en användare med rollen administratör.</string>
+    <string name="my_site_title_changer_dialog_hint">Webbplatsrubriken syns webbläsarens titelrad och de flesta teman visar den också i sidhuvudet.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Ämne</string>
+    <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
     <string name="gutenberg_native_open_link_in_a_browser">Öppna länken i en webbläsare</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Går till föregående innehållsblad</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Går till anpassning av gradient</string>
@@ -24,7 +44,6 @@ Language: sv_SE
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Vi jobbar hårt med att lägga till fler block i varje version. Under tiden kan du även redigera det här blocket med din enhets webbläsare.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Redigera block i webbläsaren</string>
     <string name="gutenberg_native_dismiss">Avfärda</string>
-    <string name="prepublishing_nudges_visibility_password">Lösenordsskyddat</string>
     <string name="prepublishing_nudges_home_tags_not_set">Inte inställd</string>
     <string name="prepublishing_tags_description">Etiketter hjälper till att berätta för läsarna vad ett inlägg handlar om.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publicera</string>
@@ -55,12 +74,7 @@ Language: sv_SE
     <string name="status_and_visibility">Status och synlighet</string>
     <string name="update_now">Uppdatera nu</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Ta bort %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Öppna menyn för blockåtgärder</string>
-    <string name="gutenberg_native_move_s_up">Flytta %s uppåt</string>
-    <string name="gutenberg_native_move_s_right">Flytta %s åt höger</string>
-    <string name="gutenberg_native_move_s_left">Flytta %s åt vänster</string>
-    <string name="gutenberg_native_move_s_down">Flytta %s nedåt</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova någon av grundlayouterna</string>
     <string name="gutenberg_native_insert_mention">Infoga omnämnande</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltryck för att öppna det nedre arket med tillgänliga alternativ</string>
@@ -119,7 +133,9 @@ Language: sv_SE
     <string name="copy_text">Kopiera</string>
     <string name="gutenberg_native_number_of_columns">Antal kolumner</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Flytta blocket åt höger från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_right">Flytta blocket åt höger</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Flytta blocket åt vänster från position %1$s till position %2$s</string>
+    <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
     <string name="gutenberg_native_columns_settings">Kolumninställningar</string>
@@ -202,7 +218,6 @@ Language: sv_SE
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
     <string name="gutenberg_native_link_to">Länk till</string>
-    <string name="gutenberg_native_s_settings">%s-inställningar</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Låt oss skapa något tillsammans!</string>
     <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans!</string>
@@ -349,6 +364,7 @@ Language: sv_SE
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">Blocktypen ”%s” stöds ännu inte i WordPress för Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
+    <string name="gutenberg_native_cut_block">Klipp ut blocket</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
     <string name="gutenberg_native_remove_annotations">Ta bort bildtexter/förklaringar</string>
     <string name="gutenberg_native_problem_opening_the_video">Svårigheter att öppna videoklippet</string>
@@ -365,7 +381,9 @@ Language: sv_SE
     <string name="gutenberg_native_my_post_publish_panel">Min panel för publicering av inlägg</string>
     <string name="gutenberg_native_my_document_setting_panel">Min panel för dokumentinställningar</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Flytta block uppåt från rad  %1$s till rad %2$s</string>
+    <string name="gutenberg_native_move_block_up">Flytta block uppåt</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Flytta block nedåt från rad %1$s till rad %2$s</string>
+    <string name="gutenberg_native_move_block_down">Flytta block nedåt</string>
     <string name="gutenberg_native_link_text">Länktext</string>
     <string name="gutenberg_native_link_inserted">Länk infogad</string>
     <string name="gutenberg_native_image_caption_s">Bildtext. %s</string>
@@ -620,7 +638,7 @@ Language: sv_SE
     <string name="post_restoring">Inlägget återställs</string>
     <string name="post_restored">Inlägget har återställts</string>
     <string name="post_trashing">Inlägget läggs i papperskorgen</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer lokalt utförd redigering att kastas. Vill du fortsätta?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Om du lägger detta inlägg i papperskorgen kommer redigering som inte sparats att kastas. Vill du fortsätta?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokala ändringar</string>
     <string name="button_move_to_draft">Flytta till utkast</string>
     <string name="post_list_toggle_item_layout_list_view">Växla till listvy</string>
@@ -696,7 +714,7 @@ Language: sv_SE
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
     <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Tryck på %1$sskapa sida%2$s för att lägga till en ny sida.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tryck på %1$swebbplatssidor%2$s för att fortsätta.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Tryck på %1$ssidor%2$s för att fortsätta.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Skriv och publicera ditt första inlägg.</string>
@@ -1473,11 +1491,6 @@ Language: sv_SE
     <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
     <string name="enter_email_wordpress_com">Logga in på WordPress.com med hjälp av en e-postadress för att hantera alla dina WordPress-webbplatser.</string>
-    <string name="login_promo_text_jetpack">Hantera din Jetpack-förstärkta webbplats när som helst – WordPress finns i din ficka.</string>
-    <string name="login_promo_text_notifications">Du har alltid dina aviseringar med dig – ha full koll på kommentarer och gillanden i realtid.</string>
-    <string name="login_promo_text_anytime">Håll koll på dina favoritwebbplatser och delta i diskussion där och när det passar dig.</string>
-    <string name="login_promo_text_realtime">Se hur läsare från hela världen läser och interagerar med din webbplats – i direktsändning.</string>
-    <string name="login_promo_text_onthego">Publicera från parkbänken. Blogga från bussen. Kommentera när du dricker kaffe. WordPress finns där du är.</string>
     <string name="image_optimization_promo_desc">Bildoptimering minskar storleken på blder för snabbare uppladdning.\n\nDu kan när som helst ändra detta i webbplatsinställningarna.</string>
     <string name="image_optimization_promo_title">Aktivera bildoptimering?</string>
     <string name="leave_off">Behåll avstängt</string>
@@ -1662,7 +1675,6 @@ Language: sv_SE
     <string name="pending_draft_one_week_1">Ditt inlägg \'%1$s\' väntar – se till att publicera det!</string>
     <string name="pending_draft_one_day_2">Visste du att \'%1$s\' fortfarande är ett utkast? Publicera det!</string>
     <string name="pending_draft_one_day_1">Du skapade \'%1$s\' igår. Glöm inte att publicera det!</string>
-    <string name="reader_photo_by">Foto: %s</string>
     <string name="reader_label_visit">Besök webbplats</string>
     <string name="swipe_for_more">Dra för att se mer</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Du har inte behörighet att visa detta inlägg. Testa att logga in på WordPress.com först och sedan använda knappen högst upp för att öppna ett webbläsarfönster istället.</string>
@@ -2154,7 +2166,6 @@ Language: sv_SE
     <string name="reader_hint_add_tag_or_url">Ange en URL eller tagg att följa</string>
     <string name="reader_page_followed_blogs">Följda webbplatser</string>
     <string name="reader_page_followed_tags">Följda taggar</string>
-    <string name="reader_title_tag_preview">Läsare-etikett</string>
     <string name="reader_title_blog_preview">Läsarwebbplats</string>
     <string name="ssl_certificate_ask_trust">Om du vanligtvis kan nå denna webbplats utan problem kan felet betyda att någon försöker efterlikna webbplatsen och du borde inte fortsätta. Vill du lita på certifikatet ändå?</string>
     <string name="ssl_certificate_error">Ogiltigt SSL-ceritfikat</string>

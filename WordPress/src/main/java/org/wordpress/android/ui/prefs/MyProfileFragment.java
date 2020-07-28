@@ -185,6 +185,11 @@ public class MyProfileFragment extends Fragment implements TextInputDialogFragme
         updateMyProfileForLabel(textView);
     }
 
+    @Override
+    public void onTextInputDialogDismissed(int callbackId) {
+        // noop
+    }
+
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAccountChanged(OnAccountChanged event) {
