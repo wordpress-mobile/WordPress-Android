@@ -80,6 +80,7 @@ public class AnalyticsUtils {
     private static final String NEWS_CARD_VERSION = "version";
 
     public static final String HAS_GUTENBERG_BLOCKS_KEY = "has_gutenberg_blocks";
+    public static final String HAS_WP_STORIES_BLOCKS_KEY = "has_wp_stories_blocks";
     public static final String EDITOR_HAS_HW_ACCELERATION_DISABLED_KEY = "editor_has_hw_disabled";
     public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
 
@@ -599,11 +600,11 @@ public class AnalyticsUtils {
      * @param username
      * @param email
      */
-    public static void trackAnalyticsAccountCreated(String username, String email) {
+    public static void trackAnalyticsAccountCreated(String username, String email, Map<String, Object> properties) {
         AnalyticsUtils.refreshMetadataNewUser(username, email);
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+        AnalyticsTracker.track(Stat.CREATED_ACCOUNT, properties);
     }
 
     public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {

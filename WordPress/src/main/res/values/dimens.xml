@@ -135,7 +135,6 @@
     <dimen name="reader_detail_header_avatar_frame">64dp</dimen>
 
     <dimen name="reader_thumbnail_strip_image_height">96dp</dimen>
-    <dimen name="reader_tag_header_height">165dp</dimen>
     <dimen name="reader_xpost_avatar_margin_start">12dp</dimen>
 
     <dimen name="reader_card_gutters">6dp</dimen>
@@ -146,6 +145,10 @@
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
+
+    <!-- padding inside the tag header view -->
+    <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
+    <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
@@ -161,7 +164,8 @@
     <dimen name="avatar_sz_medium">40dp</dimen>
     <dimen name="avatar_sz_inner_circle">60dp</dimen>
     <dimen name="avatar_sz_large">64dp</dimen>
-    <dimen name="avatar_sz_login">100dp</dimen>
+    <dimen name="avatar_sz_login">40dp</dimen>
+    <dimen name="avatar_sz_login_epilogue">72dp</dimen>
     <dimen name="blavatar_sz_small">32dp</dimen>
     <dimen name="blavatar_sz">40dp</dimen>
     <dimen name="my_site_blavatar_sz">64dp</dimen>
@@ -280,14 +284,13 @@
     <dimen name="me_avatar_width">2dp</dimen>
 
     <!--site picker-->
-    <dimen name="site_picker_blavatar_margin_left">7dp</dimen>
-    <dimen name="site_picker_blavatar_margin_right">15dp</dimen>
-
     <dimen name="menu_item_height">48dp</dimen>
     <dimen name="menu_item_width">256sp</dimen>
     <dimen name="menu_item_margin_normal">16dp</dimen>
     <dimen name="menu_item_margin_tablet">24dp</dimen>
     <dimen name="menu_item_margin">@dimen/menu_item_margin_normal</dimen>
+
+    <dimen name="site_list_item_height">64dp</dimen>
 
     <!-- Site Settings -->
     <dimen name="site_settings_divider_height">1dp</dimen>
@@ -344,11 +347,24 @@
     <dimen name="post_settings_retry_image_size">60dp</dimen>
 
     <!-- login -->
-    <dimen name="margin_extra_extra_extra_large">92dp</dimen>
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
     <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
+
+    <dimen name="prologue_intro_content_margin_vertical">24dp</dimen>
+    <dimen name="prologue_intro_content_max_width">0dp</dimen>
+
+    <dimen name="prologue_logo_size">50dp</dimen>
+    <dimen name="prologue_logo_margin">16dp</dimen>
+
+    <dimen name="prologue_promo_title_size">34sp</dimen>
+    <dimen name="prologue_promo_title_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_text_size">20sp</dimen>
+    <dimen name="prologue_promo_text_margin_vertical">16dp</dimen>
+
+    <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
 
     <!-- signup -->
     <dimen name="progress_spinner_small">24dp</dimen>
@@ -514,5 +530,9 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
+    <dimen name="story_thumbnail_margin">6dp</dimen>
+    <dimen name="thumbnail_background_margin">10dp</dimen>
 
 </resources>

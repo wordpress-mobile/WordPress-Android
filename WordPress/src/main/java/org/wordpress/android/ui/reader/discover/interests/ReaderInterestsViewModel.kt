@@ -12,8 +12,13 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.GenericErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import javax.inject.Inject
@@ -22,19 +27,23 @@ class ReaderInterestsViewModel @Inject constructor(
     private val readerTagRepository: ReaderTagRepository
 ) : ViewModel() {
     private var isStarted = false
+    private lateinit var currentLanguage: String
     private lateinit var parentViewModel: ReaderViewModel
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(parentViewModel: ReaderViewModel) {
+    fun start(parentViewModel: ReaderViewModel, currentLanguage: String) {
         this.parentViewModel = parentViewModel
-        if (isStarted) {
+        if (isStarted && isLanguageSame(currentLanguage)) {
             return
         }
         loadUserTags()
+        this.currentLanguage = currentLanguage
         isStarted = true
     }
+
+    private fun isLanguageSame(currentLanguage: String) = this.currentLanguage == currentLanguage
 
     private fun loadUserTags() {
         updateUiState(LoadingUiState)
@@ -51,13 +60,29 @@ class ReaderInterestsViewModel @Inject constructor(
     private fun loadInterests() {
         updateUiState(LoadingUiState)
         viewModelScope.launch {
-            val tagList = readerTagRepository.getInterests() // TODO: error handling
-            updateUiState(
-                ContentUiState(
-                    interestsUiState = transformToInterestsUiState(tagList),
-                    interests = tagList
-                )
-            )
+            val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
+                is SuccessWithData<*> -> {
+                    val tags = result.data as ReaderTagList
+                    val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
+                    ContentUiState(
+                        interestsUiState = transformToInterestsUiState(distinctTags),
+                        interests = distinctTags
+                    )
+                }
+                is NetworkUnavailable -> {
+                    ConnectionErrorUiState
+                }
+                is RemoteRequestFailure -> {
+                    GenericErrorUiState
+                }
+                else -> {
+                    null
+                }
+            }
+
+            newUiState?.let {
+                updateUiState(it)
+            }
         }
     }
 
@@ -89,7 +114,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun transformToInterestsUiState(interests: ReaderTagList) =
         interests.map { interest ->
-            InterestUiState(interest.tagTitle)
+            InterestUiState(interest.tagTitle, interest.tagSlug)
         }
 
     private fun getUpdatedInterestsUiState(index: Int, isChecked: Boolean): List<InterestUiState> {
@@ -136,6 +161,10 @@ class ReaderInterestsViewModel @Inject constructor(
             object ConnectionErrorUiState : ErrorUiState(
                 titleResId = R.string.no_network_message
             )
+
+            object GenericErrorUiState : ErrorUiState(
+                titleResId = R.string.reader_error_generic_title
+            )
         }
 
         private fun getCheckedInterestsUiState(): List<InterestUiState> {
@@ -177,6 +206,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     data class InterestUiState(
         val title: String,
+        val slug: String,
         val isChecked: Boolean = false
     )
 

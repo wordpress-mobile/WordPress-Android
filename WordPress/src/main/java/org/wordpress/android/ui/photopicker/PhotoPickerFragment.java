@@ -56,12 +56,13 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
+
 public class PhotoPickerFragment extends Fragment {
     private static final String KEY_LAST_TAPPED_ICON = "last_tapped_icon";
     private static final String KEY_SELECTED_POSITIONS = "selected_positions";
 
     static final int NUM_COLUMNS = 3;
-    public static final String ARG_BROWSER_TYPE = "browser_type";
 
     public enum PhotoPickerIcon {
         ANDROID_CHOOSE_PHOTO(true),

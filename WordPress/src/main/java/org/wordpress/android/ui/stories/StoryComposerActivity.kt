@@ -5,14 +5,16 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.webkit.URLUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
 import com.wordpress.stories.compose.MediaPickerProvider
 import com.wordpress.stories.compose.MetadataProvider
 import com.wordpress.stories.compose.NotificationIntentLoader
+import com.wordpress.stories.compose.PrepublishingEventProvider
 import com.wordpress.stories.compose.SnackbarProvider
 import com.wordpress.stories.compose.StoryDiscardListener
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
@@ -21,13 +23,11 @@ import com.wordpress.stories.util.KEY_STORY_INDEX
 import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import org.wordpress.android.R.id
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.PostActionBuilder
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.PREPUBLISHING_BOTTOM_SHEET_OPENED
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostImmutableModel
-import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.page.PageStatus.DRAFT
-import org.wordpress.android.fluxc.model.post.PostStatus.PUBLISHED
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.push.NotificationType
 import org.wordpress.android.push.NotificationsProcessingService
@@ -36,29 +36,29 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.notifications.SystemNotificationsTracker
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity
 import org.wordpress.android.ui.posts.EditPostActivity.OnPostUpdatedFromUIListener
 import org.wordpress.android.ui.posts.EditPostRepository
+import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession
-import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.CANCEL
+import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
-import org.wordpress.android.ui.posts.SavePostToDbUseCase
-import org.wordpress.android.ui.posts.editor.media.EditorMedia
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
+import org.wordpress.android.ui.posts.PublishPost
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
+import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.media.StoryEditorMedia
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
 import org.wordpress.android.util.WPMediaUtils
-import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
@@ -70,28 +70,34 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         AuthenticationHeadersProvider,
         NotificationIntentLoader,
         MetadataProvider,
-        StoryDiscardListener {
+        StoryDiscardListener,
+        EditPostActivityHook,
+        PrepublishingEventProvider,
+        PrepublishingBottomSheetListener {
     private var site: SiteModel? = null
 
-    @Inject lateinit var editorMedia: EditorMedia
+    @Inject lateinit var storyEditorMedia: StoryEditorMedia
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
     @Inject lateinit var authenticationUtils: AuthenticationUtils
-    @Inject lateinit var editPostRepository: EditPostRepository
-    @Inject lateinit var savePostToDbUseCase: SavePostToDbUseCase
-    @Inject lateinit var dispatcher: Dispatcher
-    @Inject lateinit var systemNotificationsTracker: SystemNotificationsTracker
-    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
+    @Inject internal lateinit var editPostRepository: EditPostRepository
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Inject lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: StoryComposerViewModel
 
     private var addingMediaToEditorProgressDialog: ProgressDialog? = null
+
+    override fun getSite() = site
+    override fun getEditPostRepository() = editPostRepository
 
     companion object {
         // arbitrary post format for Stories. Will be used in Posts lists for filtering.
         // See https://wordpress.org/support/article/post-formats/
         const val POST_FORMAT_WP_STORY_KEY = "wpstory"
-        private const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
-        private const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
+        const val STATE_KEY_POST_LOCAL_ID = "state_key_post_model_local_id"
+        const val STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData"
         const val KEY_POST_LOCAL_ID = "key_post_model_local_id"
         const val BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID: Int = 72300
     }
@@ -106,48 +112,93 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         setMetadataProvider(this)
         setStoryDiscardListener(this)
         setNotificationTrackerProvider((application as WordPress).getStoryNotificationTrackerProvider())
+        setPrepublishingEventProvider(this)
+
+        initViewModel(savedInstanceState)
+    }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        var localPostId = 0
+        var notificationType: NotificationType? = null
 
         if (savedInstanceState == null) {
+            localPostId = getBackingPostIdFromIntent()
             site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-            var localPostId = getBackingPostIdFromIntent()
-            if (localPostId == 0) {
-                // Create a new post
-                saveInitialPost()
-                // Bump post created analytics only once, first time the editor is opened
-                AnalyticsUtils.trackEditorCreatedPost(
-                        intent.action,
-                        intent,
-                        site,
-                        editPostRepository.getPost()
-                )
-            } else {
-                editPostRepository.loadPostByLocalPostId(localPostId)
-            }
-            createPostEditorAnalyticsSessionTracker(editPostRepository.getPost(), site)
 
             if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
-                val notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
-                systemNotificationsTracker.trackTappedNotification(notificationType)
+                notificationType = intent.getSerializableExtra(ARG_NOTIFICATION_TYPE) as NotificationType
             }
         } else {
             site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
             if (savedInstanceState.containsKey(STATE_KEY_POST_LOCAL_ID)) {
-                editPostRepository.loadPostByLocalPostId(savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID))
+                localPostId = savedInstanceState.getInt(STATE_KEY_POST_LOCAL_ID)
             }
-            postEditorAnalyticsSession =
-                    savedInstanceState.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession
         }
 
-        editorMedia.start(site!!, this, STORY_EDITOR)
-        postEditorAnalyticsSession?.start(null)
-        startObserving()
+        val postEditorAnalyticsSession =
+                savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(StoryComposerViewModel::class.java)
+
+        site?.let {
+            viewModel.start(
+                    it,
+                    editPostRepository,
+                    LocalId(localPostId),
+                    postEditorAnalyticsSession,
+                    notificationType
+            )
+        }
+
+        storyEditorMedia.start(requireNotNull(site), this)
+        setupStoryEditorMediaObserver()
+        setupViewModelObservers()
+    }
+
+    private fun setupViewModelObservers() {
+        viewModel.mediaFilesUris.observe(this, Observer { uriList ->
+            addFramesToStoryFromMediaUriList(uriList)
+            setDefaultSelectionAndUpdateBackgroundSurfaceUI(uriList)
+        })
+
+        viewModel.openPrepublishingBottomSheet.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(PREPUBLISHING_BOTTOM_SHEET_OPENED)
+                openPrepublishingBottomSheet()
+            }
+        })
+
+        viewModel.submitButtonClicked.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                analyticsTrackerWrapper.track(Stat.STORY_POST_PUBLISH_TAPPED)
+                processStorySaving()
+            }
+        })
+
+        viewModel.trackEditorCreatedPost.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                site?.let {
+                    analyticsUtilsWrapper.trackEditorCreatedPost(
+                            intent.action,
+                            intent,
+                            it,
+                            editPostRepository.getPost()
+                    )
+                }
+            }
+        })
+    }
+
+    override fun onLoadFromIntent(intent: Intent) {
+        super.onLoadFromIntent(intent)
+        // now see if we need to handle information coming from the MediaPicker to populate
+        handleMediaPickerIntentData(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
-        outState.putInt(STATE_KEY_POST_LOCAL_ID, editPostRepository.id)
-        outState.putSerializable(STATE_KEY_EDITOR_SESSION_DATA, postEditorAnalyticsSession)
+        viewModel.writeToBundle(outState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -155,16 +206,16 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         data?.let {
             when (requestCode) {
                 RequestCodes.MULTI_SELECT_MEDIA_PICKER, RequestCodes.SINGLE_SELECT_MEDIA_PICKER -> {
-                    handleMediaPickerResult(it)
+                    handleMediaPickerIntentData(it)
                 }
                 RequestCodes.PHOTO_PICKER -> {
                     if (it.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
                                 it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
                         )
-                        editorMedia.onPhotoPickerMediaChosen(uriList)
+                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
-                        handleMediaPickerResult(it)
+                        handleMediaPickerIntentData(it)
                     }
                 }
             }
@@ -172,8 +223,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onDestroy() {
-        editorMedia.cancelAddMediaToEditorActions()
-        postEditorAnalyticsSession?.end()
+        storyEditorMedia.cancelAddMediaToEditorActions()
         super.onDestroy()
     }
 
@@ -218,7 +268,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         return true
     }
 
-    fun handleMediaPickerResult(data: Intent) {
+    private fun handleMediaPickerIntentData(data: Intent) {
         // TODO move this to EditorMedia
         val ids = ListUtils.fromLongArray(
                 data.getLongArrayExtra(
@@ -229,14 +279,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        editorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+        storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
-    private fun startObserving() {
-        editorMedia.uiState.observe(this,
-                Observer { uiState: AddMediaToPostUiState? ->
+    private fun setupStoryEditorMediaObserver() {
+        storyEditorMedia.uiState.observe(this,
+                Observer { uiState: AddMediaToStoryPostUiState? ->
                     if (uiState != null) {
-                        updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
+                        updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
                         if (uiState.editorOverlayVisibility) {
                             showLoading()
                         } else {
@@ -245,7 +295,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        editorMedia.snackBarMessage.observe(this,
+        storyEditorMedia.snackBarMessage.observe(this,
                 Observer<Event<SnackbarMessageHolder>> { event: Event<SnackbarMessageHolder?> ->
                     val messageHolder = event.getContentIfNotHandled()
                     if (messageHolder != null) {
@@ -259,44 +309,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        editorMedia.toastMessage.observe(this,
-                Observer<Event<ToastMessageHolder>> { event: Event<ToastMessageHolder?> ->
-                    val contentIfNotHandled = event.getContentIfNotHandled()
-                    contentIfNotHandled?.show(this)
-                }
-        )
-    }
-
-    private fun saveInitialPost() {
-        editPostRepository.set {
-            val post: PostModel = postStore.instantiatePostModel(site, false, null, null)
-            post.setStatus(DRAFT.toString())
-            post.setPostFormat(POST_FORMAT_WP_STORY_KEY)
-            post
-        }
-        editPostRepository.savePostSnapshot()
-        // this is an artifact to be able to call savePostToDb()
-        // also, Story posts are always PUBLISHED
-        editPostRepository.getEditablePost()?.setStatus(PUBLISHED.toString())
-        site?.let {
-            savePostToDbUseCase.savePostToDb(editPostRepository, it)
-        }
     }
 
     // EditorMediaListener
     override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
-        val uriList = ArrayList<Uri>()
-        for ((key) in mediaFiles.entries) {
-            val url = if (URLUtil.isNetworkUrl(key)) {
-                key
-            } else {
-                "file://$key"
-            }
-            uriList.add(Uri.parse(url))
-        }
-
-        addFramesToStoryFromMediaUriList(uriList)
-        setDefaultSelectionAndUpdateBackgroundSurfaceUI()
+        viewModel.appendMediaFiles(mediaFiles)
     }
 
     override fun getImmutablePost(): PostImmutableModel {
@@ -314,7 +331,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
     }
 
-    private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
+    private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
     }
@@ -337,11 +354,11 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
     override fun loadPendingIntentForErrorNotificationDeletion(notificationId: Int): PendingIntent? {
         return NotificationsProcessingService
-            .getPendingIntentForNotificationDismiss(
-                applicationContext,
-                notificationId,
-                NotificationType.STORY_SAVE_ERROR
-            )
+                .getPendingIntentForNotificationDismiss(
+                        applicationContext,
+                        notificationId,
+                        NotificationType.STORY_SAVE_ERROR
+                )
     }
 
     override fun setupErrorNotificationBaseId(): Int {
@@ -358,20 +375,26 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onStoryDiscarded() {
-        // delete empty post from database
-        dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
-        postEditorAnalyticsSession?.setOutcome(CANCEL)
+        viewModel.onStoryDiscarded()
     }
 
-    private fun createPostEditorAnalyticsSessionTracker(
-        post: PostImmutableModel?,
-        site: SiteModel?
-    ) {
-        if (postEditorAnalyticsSession == null) {
-            postEditorAnalyticsSession = PostEditorAnalyticsSession.getNewPostEditorAnalyticsSession(
-                    PostEditorAnalyticsSession.Editor.WP_STORIES_CREATOR,
-                    post, site, true
+    private fun openPrepublishingBottomSheet() {
+        val fragment = supportFragmentManager.findFragmentByTag(PrepublishingBottomSheetFragment.TAG)
+        if (fragment == null) {
+            val prepublishingFragment = PrepublishingBottomSheetFragment.newInstance(
+                    site = requireNotNull(site),
+                    isPage = editPostRepository.isPage,
+                    isStoryPost = true
             )
+            prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
         }
+    }
+
+    override fun onStorySaveButtonPressed() {
+        viewModel.onStorySaveButtonPressed()
+    }
+
+    override fun onSubmitButtonClicked(publishPost: PublishPost) {
+        viewModel.onSubmitButtonClicked()
     }
 }

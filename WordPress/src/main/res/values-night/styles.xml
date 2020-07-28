@@ -10,7 +10,7 @@
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>
         <item name="colorOnPrimary">@android:color/black</item>
-        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorOnBackground">@android:color/white</item>
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>
@@ -56,6 +56,8 @@
 
         <!-- we can remove it after moving away from Bridge version of theme -->
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
+
+        <item name="followButtonStyle">@style/Reader.Follow.Button</item>
 
         <item name="android:statusBarColor">?attr/colorSurface</item>
 

@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_IN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_CREATE_NEW_SITE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_DISMISSED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.WELCOME_NO_SITES_INTERSTITIAL_SHOWN
+import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.accounts.PostSignupInterstitialViewModel.NavigationAction
@@ -25,6 +26,7 @@ class PostSignupInterstitialViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
 
     private val appPrefs: AppPrefsWrapper = mock()
+    private val unifiedLoginTracker: UnifiedLoginTracker = mock()
     private val analyticsTracker: AnalyticsTrackerWrapper = mock()
     private val observer: Observer<NavigationAction> = mock()
 
@@ -32,7 +34,7 @@ class PostSignupInterstitialViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = PostSignupInterstitialViewModel(appPrefs, analyticsTracker)
+        viewModel = PostSignupInterstitialViewModel(appPrefs, unifiedLoginTracker, analyticsTracker)
         viewModel.navigationAction.observeForever(observer)
     }
 
