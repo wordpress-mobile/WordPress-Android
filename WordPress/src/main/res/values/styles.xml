@@ -960,10 +960,15 @@
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentStart">true</item>
     </style>
 
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
     <!-- Reader styles -->
