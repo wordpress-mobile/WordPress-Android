@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-05 12:35:28+0000
+Translation-Revision-Date: 2020-07-21 10:07:36+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedla jej osobowość i tematykę. Pierwsze wrażenie się liczy!</string>
+    <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
+    <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
+    <string name="gutenberg_native_remove_block">Usuń blok</string>
+    <string name="gutenberg_native_paste_block">Wklej blok</string>
+    <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
+    <string name="gutenberg_native_copy_block">Skopiuj blok</string>
+    <string name="gutenberg_native_copied_block">Skopiowany blok</string>
+    <string name="gutenberg_native_block_settings">Ustawienia bloku</string>
+    <string name="gutenberg_native_block_pasted">Blok wklejony</string>
+    <string name="gutenberg_native_block_duplicated">Blok zduplikowany</string>
+    <string name="gutenberg_native_block_cut">Blok wycięty</string>
+    <string name="gutenberg_native_block_copied">Blok skopiowano</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Tytuł witryny może być zmieniony wyłącznie przez użytkownika z rolą administratora.</string>
+    <string name="my_site_title_changer_dialog_hint">Tytuł witryny jest wyświetlony na pasku tytułu przeglądarki a także w nagłówku większości motywów.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Zagadnienie</string>
+    <string name="error_update_site_title_network">Nie można było zaktualizować tytułu witryny. Sprawdź ustawienia sieci i spróbuj ponownie.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Niezapisane zmiany</string>
     <string name="gutenberg_native_open_link_in_a_browser">Otwórz odnośnik w przeglądarce</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Przechodzi do poprzedniego arkusza z treściami</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Przechodzi do personalizacji gradientów</string>
@@ -24,7 +44,6 @@ Language: pl
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Pracujemy ciężko aby dodać więcj bloków z każdym kolejnym wydaniem. W międzyczasie, możesz również edytować ten blok przy pomocy przeglądarki swojego urządzenia.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Edytuj blok w przeglądarce</string>
     <string name="gutenberg_native_dismiss">Odrzuć</string>
-    <string name="prepublishing_nudges_visibility_password">Zabezpieczone hasłem</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nie ustawiono</string>
     <string name="prepublishing_tags_description">Tagi pomagają czytelnikom w zorientowaniu się o czym jest wpis</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publikuj</string>
@@ -55,12 +74,7 @@ Language: pl
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Usuń %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
-    <string name="gutenberg_native_move_s_up">Przesuń %s w górę</string>
-    <string name="gutenberg_native_move_s_right">Przesuń %s w prawo</string>
-    <string name="gutenberg_native_move_s_left">Przesuń %s w lewo</string>
-    <string name="gutenberg_native_move_s_down">Przesuń %s w dół</string>
     <string name="gutenberg_native_try_a_starter_layout">Wypróbuj układ startowy</string>
     <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
@@ -119,7 +133,9 @@ Language: pl
     <string name="copy_text">Kopiuj</string>
     <string name="gutenberg_native_number_of_columns">Liczba kolumn</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Przesuń blok w prawo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_move_block_right">Przesuń blok w prawo</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
+    <string name="gutenberg_native_move_block_left">Przesuń blok w lewo</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Stuknij dwukrotnie, aby przesunąć blok w prawo</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Stuknij dwukrotnie, aby przesunąć blok w lewo</string>
     <string name="gutenberg_native_columns_settings">Ustawienia kolumn</string>
@@ -202,7 +218,6 @@ Language: pl
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
-    <string name="gutenberg_native_s_settings">Ustawienia %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Zbudujmy coś razem!</string>
     <string name="gutenberg_native_let_s_build_something_together">Zbudujmy coś razem!</string>
@@ -349,6 +364,7 @@ Language: pl
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">%s\' nie jest jeszcze wspierane na WordPressie dla Androida</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Ten blok ma nieprawidłową zawartość</string>
     <string name="gutenberg_native_s_block_empty">%s blok. Puste</string>
+    <string name="gutenberg_native_cut_block">Wytnij blok</string>
     <string name="gutenberg_native_reset_block">Resetuj blok</string>
     <string name="gutenberg_native_remove_annotations">Usuń przypis</string>
     <string name="gutenberg_native_problem_opening_the_video">Problem podczas otwierania filmu</string>
@@ -365,7 +381,9 @@ Language: pl
     <string name="gutenberg_native_my_post_publish_panel">Panel publikacji mojego wpisu</string>
     <string name="gutenberg_native_my_document_setting_panel">Panel ustawień dokumentu</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Przesuń blok w górę z wiersza %1$s do wiersza %2$s</string>
+    <string name="gutenberg_native_move_block_up">Przesuń blok w górę</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Przesuń blok w dół z wiersza %1$s do wiersza %2$s</string>
+    <string name="gutenberg_native_move_block_down">Przesuń blok w dół</string>
     <string name="gutenberg_native_link_text">Tekst odnośnika</string>
     <string name="gutenberg_native_link_inserted">Wstawiono odnośnik</string>
     <string name="gutenberg_native_image_caption_s">Podpis pod obrazkiem. %s</string>
@@ -620,7 +638,7 @@ Language: pl
     <string name="post_restoring">Wpis jest odzyskiwany</string>
     <string name="post_restored">Wpis został odzyskany</string>
     <string name="post_trashing">Wpis jest usuwany </string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany. Czy jesteś pewien że chcesz kontynuować?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Usunięcie tego wpisu anuluje niezapisane zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Lokalne zmiany</string>
     <string name="button_move_to_draft">Przesuń do szkiców</string>
     <string name="post_list_toggle_item_layout_list_view">Przełącz na widok listy</string>
@@ -696,7 +714,7 @@ Language: pl
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Stuknij %1$s Dodaj stronę %2$s  aby stworzyć nową stronę. </string>
-    <string name="quick_start_dialog_create_new_page_message_short">Stuknij %1$s Strony Witryny %2$s aby kontynuować. </string>
+    <string name="quick_start_dialog_create_new_page_message_short">Stuknij %1$s Strony %2$s aby kontynuować. </string>
     <string name="quick_start_dialog_check_stats_message_short">Stuknij%1$s Statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
@@ -1657,7 +1675,6 @@ Language: pl
     <string name="pending_draft_one_week_1">Twój szkic \'%1$s\' czeka na ciebie -  upewnij się że go opublikujesz! </string>
     <string name="pending_draft_one_day_2">Czy wiesz że \'%1$s\' jest wciąż szkicem? Opublikuj ten wpis! </string>
     <string name="pending_draft_one_day_1">Stworzyłeś wczoraj szkic  \'%1$s\'. Nie zapomnij go opublikować! </string>
-    <string name="reader_photo_by">Zdjęcie wykonane przez %s</string>
     <string name="reader_label_visit">Przejdź do witryny</string>
     <string name="swipe_for_more">Przeciągnij aby wczytać więcej</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nie masz uprawnień do podglądu tego wpisu. Spróbuj najpierw zalogować się do WordPress.com lub skorzystaj z przycisku akcji aby otworzyć przeglądarkę.</string>
@@ -2149,7 +2166,6 @@ Language: pl
     <string name="reader_hint_add_tag_or_url">Wpisz adres lub tag aby obserwować</string>
     <string name="reader_page_followed_blogs">Obserwowane blogi</string>
     <string name="reader_page_followed_tags">Obserwowane tagi</string>
-    <string name="reader_title_tag_preview">Tag Czytnika</string>
     <string name="reader_title_blog_preview">Witryna Czytnika</string>
     <string name="ssl_certificate_ask_trust">Jeśli zazwyczaj łączysz się z tą stroną bez problemów, ten błąd może oznaczać, że ktoś próbuje się pod nią podszyć i nie powinieneś kontynuować. Czy mimo to chcesz zaufać temu certyfikatowi?</string>
     <string name="ssl_certificate_error">Niepoprawny certyfikat SSL</string>

@@ -20,6 +20,14 @@ public class ReaderEvents {
     }
 
     public static class FollowedTagsChanged {
+        private final boolean mDidSucceed;
+
+        public FollowedTagsChanged(boolean didSucceed) {
+            mDidSucceed = didSucceed;
+        }
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
     }
 
     public static class RecommendedTagsChanged {
