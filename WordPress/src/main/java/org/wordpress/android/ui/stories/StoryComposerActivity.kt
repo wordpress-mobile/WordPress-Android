@@ -46,12 +46,11 @@ import org.wordpress.android.ui.posts.PrepublishingBottomSheetFragment
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.ProgressDialogUiState
 import org.wordpress.android.ui.posts.PublishPost
-import org.wordpress.android.ui.posts.editor.media.EditorMedia
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource.WP_MEDIA_LIBRARY
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddMediaToPostUiState
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource.WP_MEDIA_LIBRARY
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.posts.editor.media.EditorType.STORY_EDITOR
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
+import org.wordpress.android.ui.stories.media.StoryEditorMedia
+import org.wordpress.android.ui.stories.media.StoryEditorMedia.AddMediaToStoryPostUiState
 import org.wordpress.android.ui.utils.AuthenticationUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ListUtils
@@ -60,7 +59,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
 import javax.inject.Inject
@@ -78,7 +76,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         PrepublishingBottomSheetListener {
     private var site: SiteModel? = null
 
-    @Inject lateinit var editorMedia: EditorMedia
+    @Inject lateinit var storyEditorMedia: StoryEditorMedia
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var postStore: PostStore
@@ -153,8 +151,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             )
         }
 
-        editorMedia.start(requireNotNull(site), this, STORY_EDITOR)
-        setupEditorMediaObserver()
+        storyEditorMedia.start(requireNotNull(site), this)
+        setupStoryEditorMediaObserver()
         setupViewModelObservers()
     }
 
@@ -215,7 +213,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                         val uriList: List<Uri> = convertStringArrayIntoUrisList(
                                 it.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)
                         )
-                        editorMedia.onPhotoPickerMediaChosen(uriList)
+                        storyEditorMedia.onPhotoPickerMediaChosen(uriList)
                     } else if (it.hasExtra(MediaBrowserActivity.RESULT_IDS)) {
                         handleMediaPickerIntentData(it)
                     }
@@ -225,7 +223,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     override fun onDestroy() {
-        editorMedia.cancelAddMediaToEditorActions()
+        storyEditorMedia.cancelAddMediaToEditorActions()
         super.onDestroy()
     }
 
@@ -281,14 +279,14 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             return
         }
 
-        editorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
+        storyEditorMedia.addExistingMediaToEditorAsync(WP_MEDIA_LIBRARY, ids)
     }
 
-    private fun setupEditorMediaObserver() {
-        editorMedia.uiState.observe(this,
-                Observer { uiState: AddMediaToPostUiState? ->
+    private fun setupStoryEditorMediaObserver() {
+        storyEditorMedia.uiState.observe(this,
+                Observer { uiState: AddMediaToStoryPostUiState? ->
                     if (uiState != null) {
-                        updateAddingMediaToEditorProgressDialogState(uiState.progressDialogUiState)
+                        updateAddingMediaToStoryComposerProgressDialogState(uiState.progressDialogUiState)
                         if (uiState.editorOverlayVisibility) {
                             showLoading()
                         } else {
@@ -297,7 +295,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                     }
                 }
         )
-        editorMedia.snackBarMessage.observe(this,
+        storyEditorMedia.snackBarMessage.observe(this,
                 Observer<Event<SnackbarMessageHolder>> { event: Event<SnackbarMessageHolder?> ->
                     val messageHolder = event.getContentIfNotHandled()
                     if (messageHolder != null) {
@@ -309,12 +307,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                 )
                                 .show()
                     }
-                }
-        )
-        editorMedia.toastMessage.observe(this,
-                Observer<Event<ToastMessageHolder>> { event: Event<ToastMessageHolder?> ->
-                    val contentIfNotHandled = event.getContentIfNotHandled()
-                    contentIfNotHandled?.show(this)
                 }
         )
     }
@@ -339,7 +331,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         WPMediaUtils.advertiseImageOptimization(this) { listener.invoke() }
     }
 
-    private fun updateAddingMediaToEditorProgressDialogState(uiState: ProgressDialogUiState) {
+    private fun updateAddingMediaToStoryComposerProgressDialogState(uiState: ProgressDialogUiState) {
         addingMediaToEditorProgressDialog = progressDialogHelper
                 .updateProgressDialogState(this, addingMediaToEditorProgressDialog, uiState, uiHelpers)
     }

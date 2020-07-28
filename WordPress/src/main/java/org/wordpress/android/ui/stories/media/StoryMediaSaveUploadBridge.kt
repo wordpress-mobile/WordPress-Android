@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.stories
+package org.wordpress.android.ui.stories.media
 
 import android.content.Context
 import android.net.Uri
@@ -25,6 +25,9 @@ import org.wordpress.android.ui.posts.PostUtilsWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.posts.editor.media.AddLocalMediaToPostUseCase
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
+import org.wordpress.android.ui.stories.StoriesTrackerHelper
+import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.uploads.UploadServiceFacade
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
