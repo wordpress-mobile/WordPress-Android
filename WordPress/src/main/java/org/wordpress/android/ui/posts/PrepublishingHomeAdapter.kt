@@ -11,16 +11,15 @@ import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.HomeUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.StoryTitleUiState
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHeaderListItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingHomeListItemViewHolder
-import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingStoryTitleItemViewHolder
 import org.wordpress.android.ui.posts.PrepublishingHomeViewHolder.PrepublishingSubmitButtonViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 private const val headerViewType: Int = 1
 private const val homeItemViewType: Int = 2
 private const val submitButtonViewType: Int = 3
-private const val storyTitleViewType: Int = 4
 
 class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<PrepublishingHomeViewHolder>() {
     private var items: List<PrepublishingHomeItemUiState> = listOf()
@@ -33,7 +32,6 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrepublishingHomeViewHolder {
         return when (viewType) {
-            storyTitleViewType -> PrepublishingStoryTitleItemViewHolder(parent, uiHelpers, imageManager)
             headerViewType -> PrepublishingHeaderListItemViewHolder(parent, uiHelpers, imageManager)
             homeItemViewType -> PrepublishingHomeListItemViewHolder(parent, uiHelpers)
             submitButtonViewType -> PrepublishingSubmitButtonViewHolder(parent, uiHelpers)
@@ -54,10 +52,11 @@ class PrepublishingHomeAdapter(context: Context) : RecyclerView.Adapter<Prepubli
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is StoryTitleUiState -> storyTitleViewType
             is HeaderUiState -> headerViewType
             is HomeUiState -> homeItemViewType
             is ButtonUiState -> submitButtonViewType
+            is StoryTitleUiState ->
+                throw IllegalStateException("StoryTitleUiState is not supported by the PrepublishingHomeAdapter")
         }
     }
 
