@@ -51,21 +51,21 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onFabClicked then bottom sheet showing is true`(){
+    fun `when onFabClicked then bottom sheet showing is true`() {
         viewModel.onFabClicked()
 
         Assertions.assertThat(viewModel.isBottomSheetShowing.value?.getContentIfNotHandled()).isTrue()
     }
 
     @Test
-    fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`(){
+    fun `when onFabClicked then appPrefsWrapper's setPostListFabTooltipDisabled is called with true`() {
         viewModel.onFabClicked()
 
         verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
     }
 
     @Test
-    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is false then isFabTooltipVisible is true`(){
+    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is false then isFabTooltipVisible is true`() {
         whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(false)
         viewModel.start()
 
@@ -73,7 +73,7 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is true then isFabTooltipVisible is false`(){
+    fun `if appPrefsWrapper's isPostListFabTooltipDisabled is true then isFabTooltipVisible is false`() {
         whenever(appPrefsWrapper.isPostListFabTooltipDisabled()).thenReturn(true)
         viewModel.start()
 
@@ -81,14 +81,14 @@ class PostListCreateMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when tooltipTapped then setPostListFabTooltipDisabled is called with true`(){
+    fun `when tooltipTapped then setPostListFabTooltipDisabled is called with true`() {
         viewModel.onTooltipTapped()
 
         verify(appPrefsWrapper).setPostListFabTooltipDisabled(eq(true))
     }
 
     @Test
-    fun `when tooltipTapped then isFabTooltipVisible is false`(){
+    fun `when tooltipTapped then isFabTooltipVisible is false`() {
         viewModel.start()
         viewModel.onTooltipTapped()
 
