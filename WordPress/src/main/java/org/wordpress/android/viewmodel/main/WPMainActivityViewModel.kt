@@ -18,6 +18,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -36,9 +37,23 @@ class WPMainActivityViewModel @Inject constructor(
     private val _fabUiState = MutableLiveData<MainFabUiState>()
     val fabUiState: LiveData<MainFabUiState> = _fabUiState
 
-    private val _mainActions = MutableLiveData<List<MainActionListItem>>()
-    val mainActions: LiveData<List<MainActionListItem>> = _mainActions
+    private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
 
+    private val _mainActions = MutableLiveData<List<MainActionListItem>>()
+    val mainActions: LiveData<List<MainActionListItem>> = merge(
+            _mainActions,
+            _showQuickStarInBottomSheet
+    ) { mainActions, showQuickStart ->
+        if (showQuickStart != null && mainActions != null) {
+            mainActions.map {
+                if (it is CreateAction && it.actionType == CREATE_NEW_POST) it.copy(
+                        showQuickStartFocusPoint = showQuickStart
+                ) else it
+            }
+        } else {
+            mainActions
+        }
+    }
     private val _createAction = SingleLiveEvent<ActionType>()
     val createAction: LiveData<ActionType> = _createAction
 
@@ -50,6 +65,9 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
+
+    private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
+    val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
 
     fun start(isFabVisible: Boolean, hasFullAccessToContent: Boolean) {
         if (isStarted) return
@@ -96,6 +114,15 @@ class WPMainActivityViewModel @Inject constructor(
     private fun onCreateActionClicked(actionType: ActionType) {
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
+
+        _showQuickStarInBottomSheet.value?.let { showQuickStart ->
+            if (showQuickStart) {
+                if (actionType == CREATE_NEW_POST) {
+                    _completeBottomSheetQuickStartTask.call()
+                }
+                _showQuickStarInBottomSheet.postValue(false)
+            }
+        }
     }
 
     private fun disableTooltip(hasFullAccessToContent: Boolean) {
@@ -111,9 +138,11 @@ class WPMainActivityViewModel @Inject constructor(
         }
     }
 
-    fun onFabClicked(hasFullAccessToContent: Boolean) {
+    fun onFabClicked(hasFullAccessToContent: Boolean, shouldShowQuickStartFocusPoint: Boolean = false) {
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, hasFullAccessToContent)
+
+        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
 
         // Currently this bottom sheet has only 2 options.
         // We should evaluate to re-introduce the bottom sheet also for users without full access to content
