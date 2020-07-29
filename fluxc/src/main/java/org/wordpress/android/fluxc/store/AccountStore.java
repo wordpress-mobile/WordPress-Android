@@ -698,6 +698,7 @@ public class AccountStore extends Store {
 
     public enum AuthOptionsErrorType {
         UNKNOWN_USER,
+        EMAIL_LOGIN_NOT_ALLOWED,
         GENERIC_ERROR;
 
         public static AuthOptionsErrorType fromString(String string) {
