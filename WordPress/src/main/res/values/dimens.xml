@@ -543,5 +543,6 @@
     <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
     <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
+    <dimen name="mlp_categories_row_height">52dp</dimen>
 
 </resources>

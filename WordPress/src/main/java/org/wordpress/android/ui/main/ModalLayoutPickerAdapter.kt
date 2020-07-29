@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main
 import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Categories
@@ -54,7 +55,13 @@ class ModalLayoutPickerAdapter(context: Context) : Adapter<ModalLayoutPickerView
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.addItemDecoration(CategoriesItemDecoration())
+    }
+
     override fun getItemViewType(position: Int): Int {
+        if (position < 0) return ViewType.CATEGORIES.id
         return items[position].type.id
     }
 }
