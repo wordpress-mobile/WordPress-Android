@@ -46,7 +46,8 @@ sealed class PostListDescriptor(
                                 "-${site.id}" +
                                 "-st$statusStr" +
                                 "-o${order.value}" +
-                                "-ob${orderBy.value}").hashCode()
+                                "-ob${orderBy.value}" +
+                                "-sq$searchQuery").hashCode()
                 )
             }
         }
