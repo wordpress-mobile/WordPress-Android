@@ -52,7 +52,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 
-        listItems.add(ModalLayoutPickerListItem.Categories())
+        // listItems.add(ModalLayoutPickerListItem.Categories())
 
         repeat(10) { // Demo Code: TO BE REMOVED
             listItems.add(ModalLayoutPickerListItem.Layouts(" "))

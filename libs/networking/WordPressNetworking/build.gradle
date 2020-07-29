@@ -32,7 +32,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
 
     implementation 'org.wordpress:utils:1.18.1'
-    implementation ('com.automattic:rest:1.0.7') {
+    implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
 

@@ -15,9 +15,14 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityHook
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class PrepublishingHomeFragment : Fragment() {
+    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
+
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PrepublishingHomeViewModel
 
@@ -55,9 +60,24 @@ class PrepublishingHomeFragment : Fragment() {
         initViewModel()
     }
 
+    override fun onResume() {
+        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+            "arguments can't be null."
+        }
+        if (isStoryPost) {
+            requireActivity().window.decorView.requestLayout()
+        }
+        super.onResume()
+    }
+
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
+
+        viewModel.storyTitleUiState.observe(viewLifecycleOwner, Observer { storyTitleUiState ->
+            uiHelpers.updateVisibility(story_title_header_view, true)
+            story_title_header_view.init(uiHelpers, imageManager, storyTitleUiState)
+        })
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             (actions_recycler_view.adapter as PrepublishingHomeAdapter).update(uiState)
@@ -75,7 +95,11 @@ class PrepublishingHomeFragment : Fragment() {
             }
         })
 
-        viewModel.start(getEditPostRepository(), getSite())
+        val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+            "arguments can't be null."
+        }
+
+        viewModel.start(getEditPostRepository(), getSite(), isStoryPost)
     }
 
     private fun getSite(): SiteModel {
@@ -106,7 +130,13 @@ class PrepublishingHomeFragment : Fragment() {
 
     companion object {
         const val TAG = "prepublishing_home_fragment_tag"
+        const val IS_STORY_POST = "prepublishing_home_fragment_is_story_post"
 
-        fun newInstance() = PrepublishingHomeFragment()
+        fun newInstance(isStoryPost: Boolean) =
+                PrepublishingHomeFragment().apply {
+                    arguments = Bundle().apply {
+                        putBoolean(IS_STORY_POST, isStoryPost)
+                    }
+                }
     }
 }

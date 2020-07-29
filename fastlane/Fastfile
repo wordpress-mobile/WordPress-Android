@@ -400,7 +400,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
     {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
+    {library: "Stories Creator", strings_path: "./libs/portkey-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   private_lane :send_strings_for_translation do | options |
@@ -557,9 +558,9 @@ ENV["HAS_ALPHA_VERSION"]="true"
       cmd_params=" -PversionName=\"#{options[:custom_version]}\""
     end
 
-    sh("../tools/update-translations.sh")
-    sh("../tools/update-translations.sh waiting")
-    sh("../tools/update-translations.sh fuzzy")
+    sh("../tools/update-translations.sh review")
+    sh("../tools/update-translations.sh review waiting")
+    sh("../tools/update-translations.sh review fuzzy")
 
     android_merge_translators_strings(strings_folder:"./WordPress/src/main/res/")
     sh("export SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 && cd .. && ./gradlew --stacktrace assembleJalapenoDebug #{cmd_params}")

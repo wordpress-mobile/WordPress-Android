@@ -349,6 +349,10 @@ class PostListMainViewModel @Inject constructor(
         postActionHandler.newPost()
     }
 
+    fun newStoryPost() {
+        postActionHandler.newStoryPost()
+    }
+
     fun updateAuthorFilterSelection(selectionId: Long) {
         val selection = AuthorFilterSelection.fromId(selectionId)
 
