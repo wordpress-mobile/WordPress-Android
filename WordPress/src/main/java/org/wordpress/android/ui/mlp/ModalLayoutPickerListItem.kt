@@ -1,10 +1,10 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.mlp
 
 import androidx.annotation.StringRes
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.CATEGORIES
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.LAYOUTS
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.SUBTITLE
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.TITLE
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.CATEGORIES
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.LAYOUTS
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.TITLE
 
 /**
  * Represents the Modal Layout Picker list items

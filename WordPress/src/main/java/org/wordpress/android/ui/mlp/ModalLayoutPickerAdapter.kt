@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.mlp
 
 import android.content.Context
 import android.view.ViewGroup
@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Categories
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Layouts
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Subtitle
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.Title
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Categories
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Layouts
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Subtitle
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Title
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 

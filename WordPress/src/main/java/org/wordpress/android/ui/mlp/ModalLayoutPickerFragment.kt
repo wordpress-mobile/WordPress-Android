@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.mlp
 
 import android.content.Context
 import android.os.Bundle
@@ -22,7 +22,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.main.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import javax.inject.Inject
 
 /**

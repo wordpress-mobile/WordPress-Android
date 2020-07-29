@@ -1,4 +1,4 @@
-package org.wordpress.android.viewmodel.main
+package org.wordpress.android.viewmodel.mlp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -11,8 +11,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.SUBTITLE
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType.TITLE
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.TITLE
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 
 @RunWith(MockitoJUnitRunner::class)
@@ -26,7 +26,9 @@ class ModalLayoutPickerViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = ModalLayoutPickerViewModel(NoDelayCoroutineDispatcher())
+        viewModel = ModalLayoutPickerViewModel(
+                NoDelayCoroutineDispatcher()
+        )
         viewModel.onCreateNewPageRequested.observeForever(
                 onCreateNewPageRequestedObserver
         )

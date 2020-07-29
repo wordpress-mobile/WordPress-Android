@@ -43,8 +43,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
-import org.wordpress.android.ui.main.ModalLayoutPickerFragment
-import org.wordpress.android.ui.main.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment.Companion.MODAL_LAYOUT_PICKER_TAG
 import org.wordpress.android.ui.posts.EditPostActivity
 import org.wordpress.android.ui.posts.PostListAction.PreviewPost
 import org.wordpress.android.ui.posts.PreviewStateHelper
@@ -64,7 +64,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
-import org.wordpress.android.viewmodel.main.ModalLayoutPickerViewModel
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState.FETCHING
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType

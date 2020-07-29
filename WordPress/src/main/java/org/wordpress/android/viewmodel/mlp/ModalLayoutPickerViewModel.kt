@@ -1,11 +1,11 @@
-package org.wordpress.android.viewmodel.main
+package org.wordpress.android.viewmodel.mlp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent

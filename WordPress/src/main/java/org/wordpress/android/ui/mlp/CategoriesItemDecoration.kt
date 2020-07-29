@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.main
+package org.wordpress.android.ui.mlp
 
 import android.graphics.Canvas
 import android.graphics.Rect
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.main.ModalLayoutPickerListItem.ViewType
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 import kotlin.math.max
 
 /**
