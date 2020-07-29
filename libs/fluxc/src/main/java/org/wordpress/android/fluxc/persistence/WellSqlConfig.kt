@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 113
+        return 115
     }
 
     override fun getDbName(): String {
@@ -1261,6 +1261,9 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 113 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
+                }
+                114 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS WCProductLeaderboardsModel")
                     db.execSQL("CREATE TABLE WCProductLeaderboardsModel (" +
                             "ID INTEGER, " +
