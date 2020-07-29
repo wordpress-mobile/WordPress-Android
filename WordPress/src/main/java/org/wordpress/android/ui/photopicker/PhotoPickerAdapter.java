@@ -2,7 +2,6 @@ package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,15 +68,18 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     private final ArrayList<PhotoPickerItem> mMediaList = new ArrayList<>();
 
     protected final ImageManager mImageManager;
+    private final DeviceMediaListBuilder mDeviceMediaListBuilder;
 
     PhotoPickerAdapter(Context context,
                        MediaBrowserType browserType,
-                       PhotoPickerAdapterListener listener) {
+                       PhotoPickerAdapterListener listener,
+                       DeviceMediaListBuilder deviceMediaListBuilder) {
         super();
         mContext = context;
         mListener = listener;
         mInflater = LayoutInflater.from(context);
         mBrowserType = browserType;
+        mDeviceMediaListBuilder = deviceMediaListBuilder;
         mImageManager = ImageManager.getInstance();
 
         setHasStableIds(true);
@@ -118,7 +120,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mustReload = forceReload;
         }
         mIsListTaskRunning = true;
-        new BuildDeviceMediaListTask(mustReload, mBrowserType, mContext, new BuildDeviceMediaListListener() {
+        mDeviceMediaListBuilder.buildDeviceMedia(mustReload, mBrowserType, new BuildDeviceMediaListListener() {
             @Override
             public void onCancelled() {
                 mIsListTaskRunning = false;
@@ -136,7 +138,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                     mListener.onAdapterLoaded(isEmpty());
                 }
             }
-        }).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        });
     }
 
     // returns true if the media list built here is the same as the existing one

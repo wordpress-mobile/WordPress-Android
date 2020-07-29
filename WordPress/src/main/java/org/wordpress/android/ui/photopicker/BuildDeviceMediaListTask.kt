@@ -16,7 +16,7 @@ import java.util.Collections
 /*
  * builds the list of media items from the device
  */
-internal class BuildDeviceMediaListTask(
+class BuildDeviceMediaListTask(
     private val mReload: Boolean, private val mBrowserType: MediaBrowserType, private val mContext: Context,
     private val mListener: BuildDeviceMediaListListener
 ) : AsyncTask<Void?, Void?, Boolean>() {
@@ -82,7 +82,7 @@ internal class BuildDeviceMediaListTask(
         mListener.onSuccess(mTmpList)
     }
 
-    internal interface BuildDeviceMediaListListener {
+    interface BuildDeviceMediaListListener {
         fun onCancelled()
         fun onSuccess(result: List<PhotoPickerItem>?)
     }
