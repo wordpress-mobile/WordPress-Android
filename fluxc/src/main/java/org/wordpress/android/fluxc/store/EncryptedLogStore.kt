@@ -33,20 +33,16 @@ import javax.inject.Singleton
 
 private const val MAX_RETRY_COUNT = 3
 
-data class EncryptedLoggingKey(val value: String)
+data class EncryptedLoggingKey(val publicKey: Key)
 
 @Singleton
 class EncryptedLogStore @Inject constructor(
     private val encryptedLogRestClient: EncryptedLogRestClient,
     private val encryptedLogSqlUtils: EncryptedLogSqlUtils,
     private val coroutineEngine: CoroutineEngine,
-    dispatcher: Dispatcher,
-    encryptedLoggingKey: EncryptedLoggingKey
+    private val encryptedLoggingKey: EncryptedLoggingKey,
+    dispatcher: Dispatcher
 ) : Store(dispatcher) {
-    private val publicKey by lazy {
-        createPublicKey(encryptedLoggingKey.value)
-    }
-
     override fun onRegister() {
         AppLog.d(API, this.javaClass.name + ": onRegister")
     }
@@ -129,7 +125,7 @@ class EncryptedLogStore @Inject constructor(
         val contents = LogEncrypter(
                 sourceFile = encryptedLog.file,
                 uuid = encryptedLog.uuid,
-                publicKey = publicKey
+                publicKey = encryptedLoggingKey.publicKey
         ).encrypt()
         when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
