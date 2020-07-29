@@ -153,7 +153,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 listDescriptor.getStatusList(),
                 fields,
                 listDescriptor.getOrderBy().getValue(),
-                listDescriptor.getOrder().getValue());
+                listDescriptor.getOrder().getValue(),
+                listDescriptor.getSearchQuery());
         final boolean loadedMore = offset > 0;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
@@ -194,6 +195,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                 offset,
                 PostStore.NUM_POSTS_PER_FETCH,
                 statusList,
+                null,
                 null,
                 null,
                 null);
@@ -609,7 +611,8 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             @Nullable final List<PostStatus> statusList,
             @Nullable final List<String> fields,
             @Nullable final String orderBy,
-            @Nullable final String order) {
+            @Nullable final String order,
+            @Nullable final String searchQuery) {
         Map<String, Object> contentStruct = new HashMap<>();
         contentStruct.put("number", number);
         contentStruct.put("offset", offset);
@@ -621,6 +624,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         }
         if (statusList != null && statusList.size() > 0) {
             contentStruct.put("post_status", PostStatus.postStatusListToString(statusList));
+        }
+        if (!TextUtils.isEmpty(searchQuery)) {
+            contentStruct.put("s", searchQuery);
         }
 
         if (getPages) {
