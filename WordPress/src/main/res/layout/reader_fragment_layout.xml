@@ -31,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="bottom"
-            android:elevation="0dp"
             android:visibility="visible"
             app:layout_scrollFlags="scroll|enterAlways"
             app:tabMode="scrollable" />

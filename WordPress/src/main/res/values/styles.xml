@@ -212,7 +212,7 @@
         <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
 
-    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
+    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface">
         <item name="android:background">?attr/colorSurface</item>
         <item name="liftOnScroll">true</item>
     </style>

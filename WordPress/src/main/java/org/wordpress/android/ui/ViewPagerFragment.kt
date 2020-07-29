@@ -30,14 +30,14 @@ abstract class ViewPagerFragment : Fragment {
         // set unique ID to scrollable view and notify parent fragment/activity
         val scrollableContainer = getScrollableViewForUniqueIdProvision()
         scrollableContainer?.let {
-            if (parentFragment is NestedScrollableContainerInitializedListener) {
+            if (parentFragment is ViewPagerScrollableViewInitializedListener) {
                 scrollableContainer.id = View.generateViewId()
-                (parentFragment as NestedScrollableContainerInitializedListener).onScrollableContainerInitialized(
+                (parentFragment as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
                         scrollableContainer.id
                 )
-            } else if (activity is NestedScrollableContainerInitializedListener) {
+            } else if (activity is ViewPagerScrollableViewInitializedListener) {
                 scrollableContainer.id = View.generateViewId()
-                (activity as NestedScrollableContainerInitializedListener).onScrollableContainerInitialized(
+                (activity as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
                         scrollableContainer.id
                 )
             }
