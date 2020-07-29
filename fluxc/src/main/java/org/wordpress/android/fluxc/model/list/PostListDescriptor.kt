@@ -88,6 +88,7 @@ sealed class PostListDescriptor(
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
+        val searchQuery: String? = null,
         config: ListConfig = ListConfig.default
     ) : PostListDescriptor(site, statusList, order, orderBy, config)
 }
