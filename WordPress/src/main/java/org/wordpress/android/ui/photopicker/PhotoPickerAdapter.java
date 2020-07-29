@@ -120,7 +120,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mustReload = forceReload;
         }
         mIsListTaskRunning = true;
-        mDeviceMediaListBuilder.buildDeviceMedia(mustReload, mBrowserType, new BuildDeviceMediaListListener() {
+        mDeviceMediaListBuilder.buildDeviceMedia(mBrowserType, new BuildDeviceMediaListListener() {
             @Override
             public void onCancelled() {
                 mIsListTaskRunning = false;

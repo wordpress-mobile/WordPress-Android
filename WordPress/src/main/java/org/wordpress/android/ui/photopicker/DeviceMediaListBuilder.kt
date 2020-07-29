@@ -8,10 +8,12 @@ import javax.inject.Inject
 
 class DeviceMediaListBuilder
 @Inject constructor(val context: Context) {
-    fun buildDeviceMedia(mustReload: Boolean, mBrowserType: MediaBrowserType, callback: BuildDeviceMediaListListener) {
+    fun buildDeviceMedia(
+        browserType: MediaBrowserType,
+        callback: BuildDeviceMediaListListener
+    ) {
         BuildDeviceMediaListTask(
-                mustReload,
-                mBrowserType,
+                browserType,
                 context,
                 callback
         ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)

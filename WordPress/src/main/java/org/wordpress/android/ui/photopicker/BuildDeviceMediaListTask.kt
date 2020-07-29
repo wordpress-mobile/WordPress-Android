@@ -10,39 +10,34 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.SqlUtils
-import java.util.ArrayList
-import java.util.Collections
 
 /*
  * builds the list of media items from the device
  */
 class BuildDeviceMediaListTask(
-    private val mReload: Boolean, private val mBrowserType: MediaBrowserType, private val mContext: Context,
+    private val mBrowserType: MediaBrowserType,
+    private val mContext: Context,
     private val mListener: BuildDeviceMediaListListener
-) : AsyncTask<Void?, Void?, Boolean>() {
-    private val mTmpList = ArrayList<PhotoPickerItem>()
-    override fun doInBackground(vararg params: Void?): Boolean {
+) : AsyncTask<Void, Void, List<PhotoPickerItem>>() {
+    override fun doInBackground(vararg params: Void): List<PhotoPickerItem> {
+        val result = mutableListOf<PhotoPickerItem>()
         // images
         if (mBrowserType.isImagePicker) {
-            addMedia(Media.EXTERNAL_CONTENT_URI, false)
+            result.addAll(addMedia(Media.EXTERNAL_CONTENT_URI, false))
         }
 
         // videos
         if (mBrowserType.isVideoPicker) {
-            addMedia(Video.Media.EXTERNAL_CONTENT_URI, true)
+            result.addAll(addMedia(Video.Media.EXTERNAL_CONTENT_URI, true))
         }
-
-        // sort by id in reverse (newest first)
-        mTmpList.sortWith(Comparator { item1, item2 -> item2.id.compareTo(item1.id) })
-
-        // if we're reloading then return true so the adapter is updated, otherwise only
-        // return true if changes are detected
-        return mReload
+        result.sortByDescending { it.id }
+        return result
     }
 
-    private fun addMedia(baseUri: Uri, isVideo: Boolean) {
+    private fun addMedia(baseUri: Uri, isVideo: Boolean): List<PhotoPickerItem> {
         val projection = arrayOf(ID_COL)
         var cursor: Cursor? = null
+        val result = mutableListOf<PhotoPickerItem>()
         try {
             cursor = mContext.contentResolver.query(
                     baseUri,
@@ -55,7 +50,7 @@ class BuildDeviceMediaListTask(
             AppLog.e(MEDIA, e)
         }
         if (cursor == null) {
-            return
+            return result
         }
         try {
             val idIndex = cursor.getColumnIndexOrThrow(ID_COL)
@@ -66,11 +61,12 @@ class BuildDeviceMediaListTask(
                         Uri.withAppendedPath(baseUri, "" + id),
                         isVideo
                 )
-                mTmpList.add(item)
+                result.add(item)
             }
         } finally {
             SqlUtils.closeCursor(cursor)
         }
+        return result
     }
 
     override fun onCancelled() {
@@ -78,8 +74,8 @@ class BuildDeviceMediaListTask(
         mListener.onCancelled()
     }
 
-    override fun onPostExecute(result: Boolean) {
-        mListener.onSuccess(mTmpList)
+    override fun onPostExecute(result: List<PhotoPickerItem>) {
+        mListener.onSuccess(result)
     }
 
     interface BuildDeviceMediaListListener {
