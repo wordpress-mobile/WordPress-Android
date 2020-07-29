@@ -746,13 +746,16 @@ public class EditPostSettingsFragment extends Fragment {
         EditPostRepository editPostRepository = getEditPostRepository();
         if (editPostRepository == null) return;
 
-        String newPassword = password.trim();
+        String trimmedPassword = password.trim();
+        Boolean isNewPasswordBlank = trimmedPassword.isEmpty();
         String previousPassword = editPostRepository.getPassword();
-        Boolean isNewPasswordBlank = newPassword.isEmpty();
         Boolean isPreviousPasswordBlank = previousPassword.isEmpty() || previousPassword.trim().isEmpty();
 
         // Nothing to save
         if (isNewPasswordBlank && isPreviousPasswordBlank) return;
+
+        // Save untrimmed password if not blank, else save empty string
+        String newPassword = isNewPasswordBlank ? trimmedPassword : password;
 
         editPostRepository.updateAsync(postModel -> {
             postModel.setPassword(newPassword);
