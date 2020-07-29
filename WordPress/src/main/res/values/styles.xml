@@ -1159,7 +1159,7 @@
         <item name="expandedTitleTextAppearance">
             @style/TextAppearance.App.CollapsingToolbar.Expanded
         </item>
-        <item name="expandedTitleMarginBottom">28dp</item>
+        <item name="expandedTitleMarginBottom">@dimen/collapsible_toolbar_expanded_bottom_margin</item>
     </style>
 
 </resources>
