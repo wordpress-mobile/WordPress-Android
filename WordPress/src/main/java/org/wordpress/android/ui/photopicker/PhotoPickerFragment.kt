@@ -12,7 +12,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.view.ActionMode.Callback
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
+import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -93,7 +93,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var mAdapter: PhotoPickerAdapter? = null
-    private var mInsertEditBottomBar: View? = null
     private var mSoftAskView: ActionableEmptyView? = null
     private var mActionMode: ActionMode? = null
     private var mGridManager: GridLayoutManager? = null
@@ -169,7 +168,6 @@ class PhotoPickerFragment : Fragment() {
                 }
             }
         })
-        mInsertEditBottomBar = view.findViewById(R.id.container_insert_edit_bar)
         if (!canShowMediaSourceBottomBar()) {
             container_media_source_bar.visibility = View.GONE
         } else {
@@ -212,16 +210,16 @@ class PhotoPickerFragment : Fragment() {
             }
         }
         if (canShowInsertEditBottomBar()) {
-            mInsertEditBottomBar?.findViewById<View>(R.id.text_edit)
-                    ?.setOnClickListener {
+            container_insert_edit_bar.text_edit
+                    .setOnClickListener {
                         val inputData = WPMediaUtils.createListOfEditImageInputData(
                                 requireContext(),
                                 adapter.selectedURIs
                         )
                         ActivityLauncher.openImageEditor(activity, inputData)
                     }
-            mInsertEditBottomBar?.findViewById<View>(R.id.text_insert)
-                    ?.setOnClickListener { performInsertAction() }
+            container_insert_edit_bar.text_insert
+                    .setOnClickListener { performInsertAction() }
         }
         mSoftAskView = view.findViewById(R.id.soft_ask_view)
     }
@@ -386,11 +384,8 @@ class PhotoPickerFragment : Fragment() {
             } else {
                 val activity = activity ?: return
                 if (canShowInsertEditBottomBar()) {
-                    val editView = mInsertEditBottomBar!!.findViewById<TextView>(
-                            R.id.text_edit
-                    )
                     val isVideoFileSelected = adapter.isVideoFileSelected
-                    editView.visibility = if (isVideoFileSelected) View.GONE else View.VISIBLE
+                    container_insert_edit_bar.text_edit.visibility = if (isVideoFileSelected) View.GONE else View.VISIBLE
                 }
                 if (mActionMode == null) {
                     (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
@@ -507,7 +502,7 @@ class PhotoPickerFragment : Fragment() {
         ): Boolean {
             mActionMode = actionMode
             if (canShowInsertEditBottomBar()) {
-                showBottomBar(mInsertEditBottomBar)
+                showBottomBar(container_insert_edit_bar)
             } else {
                 val inflater = actionMode.menuInflater
                 inflater.inflate(R.menu.photo_picker_action_mode, menu)
@@ -543,7 +538,7 @@ class PhotoPickerFragment : Fragment() {
             if (canShowMediaSourceBottomBar()) {
                 showBottomBar(container_media_source_bar)
             }
-            hideBottomBar(mInsertEditBottomBar)
+            hideBottomBar(container_insert_edit_bar)
             adapter.clearSelection()
         }
     }
