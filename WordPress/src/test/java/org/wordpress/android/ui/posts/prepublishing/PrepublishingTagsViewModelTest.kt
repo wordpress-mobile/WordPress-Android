@@ -54,18 +54,6 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when onCloseClicked is triggered dismissBottomSheet is called`() {
-        var event: Event<Unit>? = null
-        viewModel.dismissBottomSheet.observeForever {
-            event = it
-        }
-
-        viewModel.onCloseButtonClicked()
-
-        assertThat(event).isNotNull
-    }
-
-    @Test
     fun `when onTagsSelected is called updatePostTagsUseCase's updateTags should be called`() = test {
         val expectedTags = "test, data"
         val captor = ArgumentCaptor.forClass(String::class.java)
@@ -75,5 +63,31 @@ class PrepublishingTagsViewModelTest : BaseUnitTest() {
         viewModel.onTagsSelected(expectedTags)
 
         assertThat(captor.value).isEqualTo(expectedTags)
+    }
+
+    @Test
+    fun `when viewModel is started with closeKeyboard=false then dismissKeyboard is not called when tapping back`() {
+        var event: Event<Unit>? = null
+        viewModel.dismissKeyboard.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), closeKeyboard = false)
+        viewModel.onBackButtonClicked()
+
+        assertThat(event).isNull()
+    }
+
+    @Test
+    fun `when viewModel is started with closeKeyboard=true then dismissKeyboard is called when tapping back`() {
+        var event: Event<Unit>? = null
+        viewModel.dismissKeyboard.observeForever {
+            event = it
+        }
+
+        viewModel.start(mock(), closeKeyboard = true)
+        viewModel.onBackButtonClicked()
+
+        assertThat(event).isNotNull
     }
 }

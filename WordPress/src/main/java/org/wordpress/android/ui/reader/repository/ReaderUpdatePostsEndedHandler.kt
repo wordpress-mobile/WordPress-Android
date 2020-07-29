@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
 import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode.MAIN
+import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
@@ -47,7 +47,7 @@ class ReaderUpdatePostsEndedHandler @Inject constructor(
         onReaderRepositoryUpdatePostsEndedListener.onFailed(event)
     }
 
-    @Subscribe(threadMode = MAIN)
+    @Subscribe(threadMode = BACKGROUND)
     fun onEventMainThread(event: UpdatePostsEnded) {
         if (event.readerTag != null && !ReaderTag.isSameTag(event.readerTag, readerTag)) {
             // ignore events not related to this instance of Repository

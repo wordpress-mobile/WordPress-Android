@@ -26,7 +26,6 @@ Language: cy_GB
     <string name="pending_draft_one_week_1">Mae eich drafft \'%1$s\' yn eich aros - cofiwch ei gyhoeddi!</string>
     <string name="pending_draft_one_day_2">Wyddoch chi fod \'%1$s\' yn dal i fod yn ddrafft? Cyhoeddwch!</string>
     <string name="pending_draft_one_day_1">Cafodd \'%1$s\' ei ddrafftio ddoe. Peidiwch ag anghofio\'i gyhoeddi!</string>
-    <string name="reader_photo_by">Llun gan %s</string>
     <string name="swipe_for_more">Llusgo am rhagor</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf neu ddefnyddiwch y botwm gweithred uchaf i agor porwr yn lle hynny.</string>
     <string name="reader_err_get_post_not_authorized_signin">Nid oes gennych hawl i weld y cofnod hwn. Mewngofnodwch i WordPress.com yn gyntaf.</string>
@@ -479,7 +478,6 @@ Language: cy_GB
     <string name="update_verb">Diweddaru</string>
     <string name="schedule_verb">Amserlen</string>
     <string name="reader_page_followed_tags">Tagiau sy\'n cael eu dilyn</string>
-    <string name="reader_title_tag_preview">Tag Darllenydd</string>
     <string name="reader_page_followed_blogs">Gwefannau sy\'n cael eu dilyn</string>
     <string name="reader_hint_add_tag_or_url">Rhowch URL neu dag i\'w ddilyn</string>
     <string name="ssl_certificate_ask_trust">Os ydych fel arfer yn cysylltu â\'r wefan hon heb broblemau, gall y gwall hwn olygu bod rhywun yn ceisio dynwared y wefan a dylech chi beidio parhau. Hoffech chi ymddiried yn y dystysgrif beth bynnag?</string>

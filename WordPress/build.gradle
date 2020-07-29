@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-234"
+            versionName "alpha-235"
         }
-        versionCode 895
+        versionCode 898
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -73,6 +73,7 @@ android {
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
         buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
+        buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -89,14 +90,15 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.3-rc-2"
+                versionName "15.4-rc-1"
             }
-            versionCode 894
+            versionCode 897
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "false"
+            buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -173,6 +175,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(path:':libs:portkey-android:stories')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -180,7 +183,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'androidx.core:core:1.2.0'
+    implementation "androidx.core:core:$coreVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 
@@ -338,6 +341,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
     implementation "org.jsoup:jsoup:1.10.3"
+    implementation 'androidx.emoji:emoji:1.0.0'
 }
 
 configurations.all {

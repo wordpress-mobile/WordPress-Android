@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover.interests
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -21,16 +22,24 @@ import org.wordpress.android.R
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 
+private const val CURRENT_LANGUAGE = "en"
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
     @Rule
@@ -56,7 +65,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -71,7 +80,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -97,7 +106,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify progress bar initial state
             coroutineScope.pauseDispatcher()
@@ -119,7 +128,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify title initial state
             coroutineScope.pauseDispatcher()
@@ -141,7 +150,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify subtitle initial state
             coroutineScope.pauseDispatcher()
@@ -163,7 +172,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -185,7 +194,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // Pause dispatcher so we can verify done button initial state
             coroutineScope.pauseDispatcher()
@@ -209,7 +218,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectedIndex = 0
 
             // When
@@ -228,7 +237,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectedIndex = 0
 
             // When
@@ -248,7 +257,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -269,7 +278,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             initViewModel()
@@ -281,11 +290,12 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `close reader interests screen triggered on done button click`() =
+    fun `close reader interests screen triggered when interests are saved successfully`() =
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
             // When
             initViewModel()
@@ -301,7 +311,7 @@ class ReaderInterestsViewModelTest {
         testWithEmptyUserTags {
             // Given
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
             val selectInterestAtIndex = 2
 
             // When
@@ -323,17 +333,137 @@ class ReaderInterestsViewModelTest {
                 uiStates.add(it)
             }
             val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(mockInterests)
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
 
             // When
             viewModel.onRetryButtonClick()
 
             // Then
             assertThat(uiStates.size).isEqualTo(2)
-            assertThat(uiStates[0]).isInstanceOf(LoadingUiState::class.java)
+            assertThat(uiStates[0]).isInstanceOf(InitialLoadingUiState::class.java)
         }
 
-    private fun initViewModel() = viewModel.start(parentViewModel)
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `error layout is shown on interests load error`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+
+            // Then
+            val contentLoadFailedUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `network error shown when internet access not available on interests load`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
+            assertThat(errorUiState.titleResId).isEqualTo(R.string.no_network_message)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `request failed error shown on load interests remote request failure`() =
+        testWithEmptyUserTags {
+            // Given
+            whenever(readerTagRepository.getInterests()).thenReturn(RemoteRequestFailure)
+
+            // When
+            initViewModel()
+
+            // Then
+            assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
+            val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
+            assertThat(errorUiState.titleResId).isEqualTo(R.string.reader_error_request_failed_title)
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `snackbar is shown on save interests error`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNotNull
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `snackbar is not shown when interests are saved successfully`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(viewModel.snackbarEvents.value).isNull()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `network error shown when internet access not available on save interests`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                    .isEqualTo(SnackbarMessageHolder(R.string.no_network_message))
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `request failed error shown on save interests remote request failure`() =
+        testWithEmptyUserTags {
+            // Given
+            val mockInterests = getMockInterests()
+            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+            whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
+
+            // When
+            initViewModel()
+            viewModel.onDoneButtonClick()
+
+            // Then
+            assertThat(requireNotNull(viewModel.snackbarEvents.value).peekContent())
+                .isEqualTo(SnackbarMessageHolder(R.string.reader_error_request_failed_title))
+        }
+
+    private fun initViewModel() = viewModel.start(
+        parentViewModel = parentViewModel,
+        currentLanguage = CURRENT_LANGUAGE
+    )
 
     @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {

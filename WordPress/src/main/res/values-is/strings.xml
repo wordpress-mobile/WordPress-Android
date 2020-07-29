@@ -59,7 +59,6 @@ Language: is
     <string name="pending_draft_one_week_1">Drögin að ‘%1$s’ bíða þín - vertu viss um að birta þau!</string>
     <string name="pending_draft_one_day_2">Vissir þú að ‘%1$s’ er enn í drögum? Birtu!</string>
     <string name="pending_draft_one_day_1">Þú skrifaðir drög að ‘%1$s’ í gær. Ekki gleyma að birta!</string>
-    <string name="reader_photo_by">Mynd eftir %s</string>
     <string name="swipe_for_more">Strjúktu fyrir meira</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst eða nota hnappinn efst til þess að opna í vafra í staðinn.</string>
     <string name="reader_err_get_post_not_authorized_signin">Þú hefur ekki heimild til þess að skoða þessa færslu. Reyndu að skrá þig inn á WordPress.com fyrst.</string>
@@ -515,7 +514,6 @@ Language: is
     <string name="reader_page_followed_blogs">Vefir sem ég fylgi</string>
     <string name="reader_page_followed_tags">Merki sem ég fylgi</string>
     <string name="reader_hint_add_tag_or_url">Sláðu inn vefslóð eða merki til þess að fylgja</string>
-    <string name="reader_title_tag_preview">Merki lesara</string>
     <string name="help">Hjálp</string>
     <string name="forgot_password">Tapað lykilorð?</string>
     <string name="ssl_certificate_error">Ógilt SSL skírteini</string>

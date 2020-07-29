@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 06:42:41+0000
+Translation-Revision-Date: 2020-07-15 09:31:02+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Dă-i sitului un nume care să-i reflecte personalitatea și subiectul (tema). Prima impresie este foarte importantă!</string>
+    <string name="quick_start_list_update_site_title_title">Setează titlul sitului</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula și modificările locale, sigur vrei să continui?</string>
+    <string name="gutenberg_native_s_block_options">Opțiuni bloc %s</string>
+    <string name="gutenberg_native_remove_block">Înlătură blocul</string>
+    <string name="gutenberg_native_paste_block">Plasează blocul</string>
+    <string name="gutenberg_native_duplicate_block">Fă un duplicat al blocului</string>
+    <string name="gutenberg_native_copy_block">Copiază blocul</string>
+    <string name="gutenberg_native_copied_block">Bloc copiat</string>
+    <string name="gutenberg_native_block_settings">Setări blocuri</string>
+    <string name="gutenberg_native_block_pasted">Bloc plasat</string>
+    <string name="gutenberg_native_block_duplicated">Bloc duplicat</string>
+    <string name="gutenberg_native_block_cut">Bloc șters</string>
+    <string name="gutenberg_native_block_copied">Bloc copiat</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Titlul sitului poate fi modificat numai de un utilizator cu rolul de administrator.</string>
+    <string name="my_site_title_changer_dialog_hint">Titlul sitului este afișat în bara de titluri a unui navigator web și, pentru majoritatea temelor, este afișat în antet.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Subiect</string>
+    <string name="error_update_site_title_network">Nu am putut actualiza titlul sitului. Verifică conexiunea la rețea și încearcă din nou.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Modificări nesalvate</string>
     <string name="gutenberg_native_open_link_in_a_browser">Deschide legătura într-un navigator</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Navighează la foaia anterioară cu conținut</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Navighează pentru a personaliza gradientul</string>
@@ -24,7 +44,6 @@ Language: ro
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Lucrăm cu sârguință pentru a adăuga mai multe blocuri la fiecare lansare a unei versiuni noi. Între timp, poți edita acest bloc folosind navigatorul dispozitivului tău.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Editează blocul în navigatorul web</string>
     <string name="gutenberg_native_dismiss">Respinge</string>
-    <string name="prepublishing_nudges_visibility_password">Protejat cu parolă</string>
     <string name="prepublishing_nudges_home_tags_not_set">Nesetat</string>
     <string name="prepublishing_tags_description">Etichetele le spun cititorilor la ce se referă articolul.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Publică</string>
@@ -55,12 +74,7 @@ Language: ro
     <string name="status_and_visibility">Stare și vizibilitate</string>
     <string name="update_now">Actualizează acum</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">Înlătură %s</string>
     <string name="gutenberg_native_open_block_actions_menu">Deschide meniul acțiuni blocuri</string>
-    <string name="gutenberg_native_move_s_up">Mută %s în sus</string>
-    <string name="gutenberg_native_move_s_right">Mută %s în dreapta</string>
-    <string name="gutenberg_native_move_s_left">Mută %s în stânga</string>
-    <string name="gutenberg_native_move_s_down">Mută %s în jos</string>
     <string name="gutenberg_native_try_a_starter_layout">Încearcă un aranjament de început</string>
     <string name="gutenberg_native_insert_mention">Inserează mențiunea</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide Foaia de jos cu opțiunile disponibile</string>
@@ -119,7 +133,9 @@ Language: ro
     <string name="copy_text">Copiază</string>
     <string name="gutenberg_native_number_of_columns">Număr de coloane</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Mută blocul în dreapta din poziția %1$s în poziția %2$s</string>
+    <string name="gutenberg_native_move_block_right">Mută blocul în dreapta</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Mută blocul în stânga din poziția %1$s în poziția %2$s</string>
+    <string name="gutenberg_native_move_block_left">Mută blocul în stânga</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Atinge de două ori pentru a muta blocul în dreapta</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Atinge de două ori pentru a muta blocul în stânga</string>
     <string name="gutenberg_native_columns_settings">Setări coloane</string>
@@ -202,7 +218,6 @@ Language: ro
     <string name="gutenberg_native_only_show_excerpt">Arată numai rezumatul</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoliul meu prezintă diferite proiecte create de-a lungul carierei mele. Vezi informațiile mele de contact de mai jos și intrăm în legătură.</string>
     <string name="gutenberg_native_link_to">Legătură la</string>
-    <string name="gutenberg_native_s_settings">Setări %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hai să vorbim 👋 Nu ezita să mă contactezi, ai mai jos informațiile mele de contact, sau să-mi trimiți un mesaj folosind formularul.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Hai să construim ceva împreună!</string>
     <string name="gutenberg_native_let_s_build_something_together">Hai să construim ceva împreună!</string>
@@ -349,6 +364,7 @@ Language: ro
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">„%s” nu este încă suportat pe WordPress pentru Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>
     <string name="gutenberg_native_s_block_empty">Bloc %s. Gol</string>
+    <string name="gutenberg_native_cut_block">Șterge blocul</string>
     <string name="gutenberg_native_reset_block">Resetează blocul</string>
     <string name="gutenberg_native_remove_annotations">Înlătură adnotările</string>
     <string name="gutenberg_native_problem_opening_the_video">Problemă la deschiderea videoului</string>
@@ -365,7 +381,9 @@ Language: ro
     <string name="gutenberg_native_my_post_publish_panel">Panoul meu pentru publicare articole</string>
     <string name="gutenberg_native_my_document_setting_panel">Panoul meu pentru setări documente</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Mută blocul în sus de pe rândul %1$s pe rândul %2$s</string>
+    <string name="gutenberg_native_move_block_up">Mută blocul în sus</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mută blocul în jos de pe rândul %1$s pe rândul %2$s</string>
+    <string name="gutenberg_native_move_block_down">Mută blocul în jos</string>
     <string name="gutenberg_native_link_text">Text legătură</string>
     <string name="gutenberg_native_link_inserted">Legătură inserată</string>
     <string name="gutenberg_native_image_caption_s">Text asociat imagine. %s</string>
@@ -620,7 +638,7 @@ Language: ro
     <string name="post_restoring">Articolul este restaurat acum</string>
     <string name="post_restored">Articol restaurat</string>
     <string name="post_trashing">Articolul este aruncat la gunoi</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula modificările locale, sigur vrei să continui?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Aruncarea acestui articol la gunoi va anula și modificările nesalvate, sigur vrei să continui?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Modificări locale</string>
     <string name="button_move_to_draft">Mută în ciorne</string>
     <string name="post_list_toggle_item_layout_list_view">Comută la vizualizarea listei</string>
@@ -696,7 +714,7 @@ Language: ro
     <string name="quick_start_dialog_upload_icon_message">Vizitatorii îți vor vedea iconul în navigatoarele lor. Adaugă un icon personalizat pentru un aspect rafinat și profesionist.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Atinge %1$s Plan %2$s pentru a vedea planul actual și alte planuri disponibile</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Atinge %1$s Adaugă pagină %2$s pentru a crea o pagină nouă.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Atinge %1$s Pagini sit %2$s pentru a continua.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Atinge %1$s Pagini %2$s pentru a continua.</string>
     <string name="quick_start_dialog_check_stats_message_short">Atinge %1$s Statistici %2$s pentru a vedea rezultatele obținute de situl tău.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Atinge %1$s Icon sit %2$s pentru a încărca unul nou</string>
     <string name="quick_start_dialog_publish_post_message">Redactează și publică primul tău articol.</string>
@@ -1657,7 +1675,6 @@ Language: ro
     <string name="pending_draft_one_week_1">Ciorna ta \'%1$s\' te așteaptă - asigură-te că o publici!</string>
     <string name="pending_draft_one_day_2">Știi că \'%1$s\' este încă o ciornă? Public-o!</string>
     <string name="pending_draft_one_day_1">Ai făcut ciorna \'%1$s\' ieri. Nu uita s-o publici!</string>
-    <string name="reader_photo_by">Fotografie de %s</string>
     <string name="reader_label_visit">Vizitează situl</string>
     <string name="swipe_for_more">Trage cu degetul pentru mai mult</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Nu ești autorizat să vezi acest articol. Încearcă mai întâi să te autentifici în WordPress.com sau folosește butonul de acțiune de sus pentru a deschide un navigator ca o alternativă.</string>
@@ -2149,7 +2166,6 @@ Language: ro
     <string name="reader_hint_add_tag_or_url">Introdu un URL sau o etichetă pentru urmărire</string>
     <string name="reader_page_followed_blogs">Situri urmărite</string>
     <string name="reader_page_followed_tags">Etichete urmărite</string>
-    <string name="reader_title_tag_preview">Etichetă cititor</string>
     <string name="reader_title_blog_preview">Sit Cititor</string>
     <string name="ssl_certificate_ask_trust">Dacă în mod uzual te conectezi fără probleme la acest sit, această eroare poate să însemne că cineva încearcă să se substituie sitului și n-ar trebui să mai continui. Preferi să te încrezi în certificat oricum?</string>
     <string name="ssl_certificate_error">Certificat SSL invalid</string>

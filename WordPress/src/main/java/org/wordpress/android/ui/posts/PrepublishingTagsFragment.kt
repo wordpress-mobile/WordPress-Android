@@ -49,19 +49,17 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
 
     companion object {
         const val TAG = "prepublishing_tags_fragment_tag"
-        @JvmStatic fun newInstance(site: SiteModel): PrepublishingTagsFragment {
+        const val NEEDS_REQUEST_LAYOUT = "prepublishing_tags_fragment_needs_request_layout"
+        @JvmStatic fun newInstance(site: SiteModel, needsRequestLayout: Boolean): PrepublishingTagsFragment {
             val bundle = Bundle().apply {
                 putSerializable(WordPress.SITE, site)
+                putBoolean(NEEDS_REQUEST_LAYOUT, needsRequestLayout)
             }
             return PrepublishingTagsFragment().apply { arguments = bundle }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        close_button.setOnClickListener {
-            trackTagsChangedEvent()
-            viewModel.onCloseButtonClicked()
-        }
         back_button.setOnClickListener {
             trackTagsChangedEvent()
             viewModel.onBackButtonClicked()
@@ -76,15 +74,17 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         }
     }
 
+    override fun onResume() {
+        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
+        if (needsRequestLayout) {
+            requireActivity().getWindow().getDecorView().requestLayout()
+        }
+        super.onResume()
+    }
+
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
-
-        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onCloseClicked()
-            }
-        })
 
         viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {
@@ -102,7 +102,8 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
-        viewModel.start(getEditPostRepository())
+        val needsRequestLayout = requireArguments().getBoolean(NEEDS_REQUEST_LAYOUT)
+        viewModel.start(getEditPostRepository(), !needsRequestLayout)
     }
 
     private fun getEditPostRepository(): EditPostRepository {

@@ -20,6 +20,14 @@ public class ReaderEvents {
     }
 
     public static class FollowedTagsChanged {
+        private final boolean mDidSucceed;
+
+        public FollowedTagsChanged(boolean didSucceed) {
+            mDidSucceed = didSucceed;
+        }
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
     }
 
     public static class RecommendedTagsChanged {
@@ -43,15 +51,21 @@ public class ReaderEvents {
     public static class RecommendedBlogsChanged {
     }
 
-    public static class InterestTagsFetched {
+    public static class InterestTagsFetchEnded {
         private final ReaderTagList mInterestTags;
+        private final boolean mDidSucceed;
 
-        public InterestTagsFetched(ReaderTagList interestTags) {
+        public InterestTagsFetchEnded(ReaderTagList interestTags, boolean didSucceed) {
             mInterestTags = interestTags;
+            mDidSucceed = didSucceed;
         }
 
         public ReaderTagList getInterestTags() {
             return mInterestTags;
+        }
+
+        public boolean didSucceed() {
+            return mDidSucceed;
         }
     }
 
