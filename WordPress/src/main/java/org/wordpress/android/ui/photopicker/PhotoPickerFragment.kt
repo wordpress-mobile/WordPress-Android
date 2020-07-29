@@ -22,8 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-import kotlinx.android.synthetic.main.photo_picker_fragment.recycler
-import kotlinx.android.synthetic.main.photo_picker_fragment.wp_stories_take_picture
+import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -94,7 +93,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var mAdapter: PhotoPickerAdapter? = null
-    private var mMediaSourceBottomBar: View? = null
     private var mInsertEditBottomBar: View? = null
     private var mSoftAskView: ActionableEmptyView? = null
     private var mActionMode: ActionMode? = null
@@ -171,12 +169,11 @@ class PhotoPickerFragment : Fragment() {
                 }
             }
         })
-        mMediaSourceBottomBar = view.findViewById(R.id.container_media_source_bar)
         mInsertEditBottomBar = view.findViewById(R.id.container_insert_edit_bar)
         if (!canShowMediaSourceBottomBar()) {
-            mMediaSourceBottomBar?.visibility = View.GONE
+            container_media_source_bar.visibility = View.GONE
         } else {
-            val camera = mMediaSourceBottomBar?.findViewById<View>(R.id.icon_camera)
+            val camera = container_media_source_bar.findViewById<View>(R.id.icon_camera)
             if (mBrowserType!!.isGutenbergPicker || mBrowserType!!.isWPStoriesPicker) {
                 camera?.visibility = View.GONE
             } else {
@@ -196,7 +193,7 @@ class PhotoPickerFragment : Fragment() {
                     }
                 }
             }
-            mMediaSourceBottomBar?.findViewById<View>(R.id.icon_picker)
+            container_media_source_bar.findViewById<View>(R.id.icon_picker)
                     ?.setOnClickListener { v ->
                         if (mBrowserType == GRAVATAR_IMAGE_PICKER
                                 || mBrowserType == SITE_ICON_PICKER) {
@@ -207,7 +204,7 @@ class PhotoPickerFragment : Fragment() {
                     }
 
             // choosing from WP media requires a site and should be hidden in gutenberg picker
-            val wpMedia = mMediaSourceBottomBar?.findViewById<View>(R.id.icon_wpmedia)
+            val wpMedia = container_media_source_bar.findViewById<View>(R.id.icon_wpmedia)
             if (mSite == null || mBrowserType!!.isGutenbergPicker) {
                 wpMedia?.visibility = View.GONE
             } else {
@@ -515,7 +512,7 @@ class PhotoPickerFragment : Fragment() {
                 val inflater = actionMode.menuInflater
                 inflater.inflate(R.menu.photo_picker_action_mode, menu)
             }
-            hideBottomBar(mMediaSourceBottomBar)
+            hideBottomBar(container_media_source_bar)
             return true
         }
 
@@ -544,7 +541,7 @@ class PhotoPickerFragment : Fragment() {
         override fun onDestroyActionMode(mode: ActionMode) {
             mActionMode = null
             if (canShowMediaSourceBottomBar()) {
-                showBottomBar(mMediaSourceBottomBar)
+                showBottomBar(container_media_source_bar)
             }
             hideBottomBar(mInsertEditBottomBar)
             adapter.clearSelection()
@@ -661,11 +658,11 @@ class PhotoPickerFragment : Fragment() {
                 }
             }
             mSoftAskView!!.visibility = View.VISIBLE
-            hideBottomBar(mMediaSourceBottomBar)
+            hideBottomBar(container_media_source_bar)
         } else if (mSoftAskView!!.visibility == View.VISIBLE) {
             AniUtils.fadeOut(mSoftAskView, MEDIUM)
             if (canShowMediaSourceBottomBar()) {
-                showBottomBar(mMediaSourceBottomBar)
+                showBottomBar(container_media_source_bar)
             }
         }
     }
