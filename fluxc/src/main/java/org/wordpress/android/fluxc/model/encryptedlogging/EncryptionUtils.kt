@@ -13,6 +13,7 @@ class EncryptionUtils {
          *
          * The initialization is inexpensive, but verbose, so this is just syntactic sugar.
          */
+        @JvmStatic
         val sodium = LazySodiumAndroid(SodiumAndroid())
     }
 }
