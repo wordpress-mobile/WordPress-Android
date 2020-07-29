@@ -67,7 +67,7 @@ sealed class PostListDescriptor(
     class PostListDescriptorForRestSite(
         site: SiteModel,
         statusList: List<PostStatus> = DEFAULT_POST_STATUS_LIST,
-        val author: AuthorFilter = AuthorFilter.Everyone,
+        val author: AuthorFilter = Everyone,
         order: ListOrder = DESC,
         orderBy: PostListOrderBy = DATE,
         val searchQuery: String? = null,
