@@ -22,7 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-import kotlinx.android.synthetic.main.photo_picker_fragment.*
+import kotlinx.android.synthetic.main.photo_picker_fragment.recycler
+import kotlinx.android.synthetic.main.photo_picker_fragment.wp_stories_take_picture
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -51,7 +52,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.prefs.EmptyViewRecyclerView
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -93,7 +93,6 @@ class PhotoPickerFragment : Fragment() {
         fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean)
     }
 
-    private var mRecycler: EmptyViewRecyclerView? = null
     private var mAdapter: PhotoPickerAdapter? = null
     private var mMediaSourceBottomBar: View? = null
     private var mInsertEditBottomBar: View? = null
@@ -148,13 +147,12 @@ class PhotoPickerFragment : Fragment() {
         } else {
             wp_stories_take_picture.visibility = View.GONE
         }
-        mRecycler = view.findViewById(R.id.recycler)
-        mRecycler?.setEmptyView(view.findViewById(R.id.actionable_empty_view))
-        mRecycler?.setHasFixedSize(true)
+        recycler.setEmptyView(view.findViewById(R.id.actionable_empty_view))
+        recycler.setHasFixedSize(true)
 
         // disable thumbnail loading during a fling to conserve memory
         val minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(requireActivity())
-        mRecycler?.onFlingListener = object : OnFlingListener() {
+        recycler.onFlingListener = object : OnFlingListener() {
             override fun onFling(velocityX: Int, velocityY: Int): Boolean {
                 if (Math.abs(velocityY) > minDistance) {
                     adapter.setLoadThumbnails(false)
@@ -162,7 +160,7 @@ class PhotoPickerFragment : Fragment() {
                 return false
             }
         }
-        mRecycler?.addOnScrollListener(object : OnScrollListener() {
+        recycler.addOnScrollListener(object : OnScrollListener() {
             override fun onScrollStateChanged(
                 recyclerView: RecyclerView,
                 newState: Int
@@ -453,8 +451,8 @@ class PhotoPickerFragment : Fragment() {
                 activity,
                 NUM_COLUMNS
         )
-        mRecycler!!.layoutManager = mGridManager
-        mRecycler!!.adapter = adapter
+        recycler.layoutManager = mGridManager
+        recycler.adapter = adapter
         adapter.refresh(true)
     }
 
