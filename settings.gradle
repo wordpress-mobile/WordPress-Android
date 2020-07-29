@@ -1,4 +1,11 @@
 include ':WordPress'
+include ':libs:portkey-android:stories'
+project(':libs:portkey-android:stories').projectDir = new File(rootProject.projectDir, 'libs/portkey-android/stories')
+include ':mp4compose'
+project(':mp4compose').projectDir = new File(rootProject.projectDir, 'libs/portkey-android/mp4compose')
+include ':photoeditor'
+project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/portkey-android/photoeditor')
+
 include ':libs:image-editor:ImageEditor'
 include ':libs:utils:WordPressUtils'
 include ':libs:networking:WordPressNetworking'

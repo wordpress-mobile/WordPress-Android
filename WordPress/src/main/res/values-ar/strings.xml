@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 16:54:08+0000
+Translation-Revision-Date: 2020-07-24 08:47:28+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>
+    <string name="quick_start_list_update_site_title_title">تعيين عنوان موقعك</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
+    <string name="gutenberg_native_s_block_options">%s خيارات المكوِّن</string>
+    <string name="gutenberg_native_remove_block">إزالة المكوِّن</string>
+    <string name="gutenberg_native_paste_block">لصق المكوِّن</string>
+    <string name="gutenberg_native_duplicate_block">تكرار المكوِّن</string>
+    <string name="gutenberg_native_copy_block">نسخ المكوِّن</string>
+    <string name="gutenberg_native_copied_block">المكوِّن الذي تم نسخه</string>
+    <string name="gutenberg_native_block_settings">إعدادات المكوِّن</string>
+    <string name="gutenberg_native_block_pasted">المكوِّن الذي تم لصقه</string>
+    <string name="gutenberg_native_block_duplicated">المكوِّن الذي تم تكراره</string>
+    <string name="gutenberg_native_block_cut">المكوِّن الذي تم قصه</string>
+    <string name="gutenberg_native_block_copied">المكوِّن الذي تم نسخه</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">يمكن للمستخدم فقط تغيير عنوان الموقع باستخدام دور المسؤول.</string>
+    <string name="my_site_title_changer_dialog_hint">يُعرض عنوان الموقع في شريط العناوين في متصفح الويب ويُعرض في رأس الصفحة في معظم القوالب.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">موضوع</string>
+    <string name="error_update_site_title_network">تعذر تحديث عنوان الموقع. تحقَّق من اتصال شبكتك وحاول مجددًا.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">تغييرات غير محفوظة</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">التنقل إلى ورقة المحتوى السابقة</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">التنقل لتخصيص التدرج</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">التنقل إلى منتقي اللون المخصص</string>
@@ -40,12 +60,7 @@ Language: ar
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="update_now">قم بالتحديث الآن</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">إزالة %s</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
-    <string name="gutenberg_native_move_s_up">نقل %s إلى الأعلى</string>
-    <string name="gutenberg_native_move_s_right">نقل %s إلى اليمين</string>
-    <string name="gutenberg_native_move_s_left">نقل %s إلى اليسار</string>
-    <string name="gutenberg_native_move_s_down">نقل %s إلى الأسفل</string>
     <string name="gutenberg_native_try_a_starter_layout">تجربة تخطيط بدء العمل</string>
     <string name="gutenberg_native_insert_mention">إدراج إشارة</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
@@ -104,7 +119,9 @@ Language: ar
     <string name="copy_text">نسخ</string>
     <string name="gutenberg_native_number_of_columns">عدد الأعمدة</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليمين من الموضع %1$s إلى الموضع %2$s</string>
+    <string name="gutenberg_native_move_block_right">نقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">نقل المكوِّن إلى اليسار من الموضع %1$s إلى الموضع %2$s</string>
+    <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">الضغط المزدوج لنقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_columns_settings">إعدادات الأعمدة</string>
@@ -187,7 +204,6 @@ Language: ar
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
     <string name="gutenberg_native_link_to">رابط لـ</string>
-    <string name="gutenberg_native_s_settings">إعدادات %s</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">دعونا نبني شيئًا معًا!</string>
     <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا!</string>
@@ -334,6 +350,7 @@ Language: ar
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">لم يتم دعم \'%s\' بعد على ووردبريس لـ Android</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">مكوِّن %s. يحتوي هذا المكوِّن على محتوى غير صالح</string>
     <string name="gutenberg_native_s_block_empty">مكوِّن %s. فارغ</string>
+    <string name="gutenberg_native_cut_block">قص المكوِّن</string>
     <string name="gutenberg_native_reset_block">إعادة تعيين المكوِّن</string>
     <string name="gutenberg_native_remove_annotations">إزالة التعليقات التوضيحية</string>
     <string name="gutenberg_native_problem_opening_the_video">ثمَّة مشكلة أثناء فتح مقطع الفيديو</string>
@@ -350,7 +367,9 @@ Language: ar
     <string name="gutenberg_native_my_post_publish_panel">لوحة النشر اللاحق الخاصة بي</string>
     <string name="gutenberg_native_my_document_setting_panel">لوحة تعيين مستنداتي</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أعلى من الصف %1$s إلى الصف %2$s</string>
+    <string name="gutenberg_native_move_block_up">تحريك المكوّن لأعلى</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">نقل المكوِّن إلى أسفل من الصف %1$s إلى الصف %2$s</string>
+    <string name="gutenberg_native_move_block_down">تحريك المكوّن لأسفل</string>
     <string name="gutenberg_native_link_text">نص الرابط</string>
     <string name="gutenberg_native_link_inserted">تمّ إدراج الرابط</string>
     <string name="gutenberg_native_image_caption_s">تسمية توضيحية للصورة. %s</string>
@@ -386,7 +405,7 @@ Language: ar
     <string name="gutenberg_native_add_a_description">إضافة وصف</string>
     <string name="reader_empty_saved_posts_content_description">أنقر فوق الزرّ \"حفظ المقالات\" لحفظ مقالةٍ في قائمتك.</string>
     <string name="reader_acessibility_list_loaded">\"تم تحميل القائمة بعناصر %1$d.\"</string>
-    <string name="notifications_tab_dialog_switch_desc">التنبيهات</string>
+    <string name="notifications_tab_dialog_switch_desc">الإشعارات</string>
     <string name="master_switch_default_title_off">إيقاف التشغيل</string>
     <string name="master_switch_default_title_on">تشغيل</string>
     <string name="notifications_tab_dialog_master_off_message">يؤدي إيقاف تشغيل تنبيهات هذا الموقع إلى تعطيل التنبيهات المعروضة في علامة تبويب \"التنبيهات\" في هذا الموقع. يمكنك ضبط نوع التنبيه الذي تراه بعد تشغيل التنبيهات لهذا الموقع.</string>
@@ -419,14 +438,14 @@ Language: ar
     <string name="preview_unavailable_self_hosted_sites">المعاينة غير متوفرة</string>
     <string name="remote_preview_operation_error">حدث خطأ في أثناء محاولة حفظ المقالة قبل المعاينة</string>
     <string name="post_preview_remote_auto_saving_post">تجهيز المعاينة…</string>
-    <string name="post_preview_saving_draft">جارٍ الحفظ…</string>
+    <string name="post_preview_saving_draft">جاري الحفظ…</string>
     <string name="local_post_autosave_revision_available">لقد أجريت تغييرات غير محفوظة على هذه المقالة</string>
     <string name="dialog_confirm_autosave_dont_restore_button">الإصدار من هذا التطبيق</string>
     <string name="dialog_confirm_autosave_restore_button">الإصدار من جهاز آخر</string>
     <string name="dialog_confirm_autosave_body_second_part">من هذا التطبيق\nتم الحفظ بتاريخ %s\n\nمن جهاز آخر\nتم الحفظ بتاريخ %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">لقد أجريت مؤخرًا تغييرات على هذه المقالة ولكن لم نحفظها. اختيار إصدار لتحميله:\n\n</string>
     <string name="dialog_confirm_autosave_title">ما الإصدار الذي ترغب في تحريره؟</string>
-    <string name="button_delete_permanently">حذف نهائيًا</string>
+    <string name="button_delete_permanently">حذف بشكل دائم</string>
     <string name="post_waiting_for_connection_draft_cancel">لن نحفظ أحدث التغييرات في مسودتك.</string>
     <string name="post_waiting_for_connection_scheduled_cancel">لن نقم بجدولة هذه التغييرات.</string>
     <string name="post_waiting_for_connection_pending_cancel">لن نرسل هذه التغييرات للمعاينة. </string>
@@ -605,7 +624,7 @@ Language: ar
     <string name="post_restoring">تجري استعادة المقالة</string>
     <string name="post_restored">تمت استعادة المقالة</string>
     <string name="post_trashing">يجري نقل المقالة إلى سلة المهملات</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية، ‏‏هل تريد الاستمرار بالتأكيد؟</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات غير المحفوظة كذلك، هل ترغب بالتأكيد في المتابعة؟</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">التغييرات المحلية</string>
     <string name="button_move_to_draft">نقل إلى المسودة</string>
     <string name="post_list_toggle_item_layout_list_view">تبديل إلى عرض القائمة</string>
@@ -681,7 +700,7 @@ Language: ar
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">أنقر على %1$s إضافة صفحة %2$s لإنشاء صفحة جديدة.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">أنقر على %1$s صفحات الموقع %2$s للمتابعة.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">انقر على ⁦%1$s⁩ الصفحات ⁦%2$s⁩ للمتابعة.</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_publish_post_message">قم بنشر مسودّة مقالتك الأولى.</string>
@@ -847,7 +866,7 @@ Language: ar
     <string name="pages_empty_published">لم تنشر أي صفحات حتى الآن</string>
     <string name="pages_search_suggestion">بحث في الصفحات</string>
     <string name="pages_empty_search_result">لا تتطابق أي صفحات مع بحثك</string>
-    <string name="pages_delete_permanently">حذف نهائيًّا</string>
+    <string name="pages_delete_permanently">حذف بشكل دائم</string>
     <string name="pages_move_to_trash">نقل إلى سلة المهملات</string>
     <string name="pages_move_to_draft">نقل إلى المسودة</string>
     <string name="pages_set_parent">تعيين الأصل</string>
@@ -1041,7 +1060,7 @@ Language: ar
     <string name="plugin_install_first_plugin_confirmation_dialog_install_btn">تثبيت</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_message">يمكن أن يستغرق تثبيت الإضافة الأولى على موقعك حتى دقيقة واحدة. لن تتمكن من إجراء تغييرات على موقعك خلال هذه الفترة.</string>
     <string name="plugin_install_first_plugin_confirmation_dialog_title">تثبيت الإضافة</string>
-    <string name="notification_settings_followed_dialog_title">التنبيهات</string>
+    <string name="notification_settings_followed_dialog_title">الإشعارات</string>
     <string name="notification_settings_followed_dialog_email_comments">إرسال التعليقات الجديدة عبر البريد الإلكتروني</string>
     <string name="notification_settings_followed_dialog_email_posts_weekly">أسبوعيًّا</string>
     <string name="notification_settings_followed_dialog_email_posts_instantly">فورًا</string>
@@ -1069,7 +1088,7 @@ Language: ar
     <string name="add_count">إضافة %d</string>
     <string name="fab_add_tag_desc">إنشاء وسم</string>
     <string name="navigate_up_desc">الانتقال إلى أعلى</string>
-    <string name="notification_settings_switch_desc">التنبيهات</string>
+    <string name="notification_settings_switch_desc">الإشعارات</string>
     <string name="open_external_link_desc">فتح الرابط الخارجي</string>
     <string name="show_more_desc">إظهار المزيد</string>
     <string name="reader_photo_view_desc">صورة</string>
@@ -1130,7 +1149,7 @@ Language: ar
     <string name="person_detail_screen_title">تفاصيل الشخص</string>
     <string name="media_settings_screen_title">تفاصيل الملف</string>
     <string name="publicize_buttons_screen_title">أزرار المشاركة</string>
-    <string name="notifications_screen_title">التنبيهات</string>
+    <string name="notifications_screen_title">الإشعارات</string>
     <string name="reader_screen_title">القارئ</string>
     <string name="me_section_screen_title">أنا</string>
     <string name="my_site_section_screen_title">موقعي</string>
@@ -1642,7 +1661,6 @@ Language: ar
     <string name="pending_draft_one_week_1">مسودتك \"%1$s\" بانتظارك - تأكد من أن تنشرها!</string>
     <string name="pending_draft_one_day_2">هل تعرف أنّ \"%1$s\" لا تزال مسودة؟ انشر!</string>
     <string name="pending_draft_one_day_1">قمت بصياغة \"%1$s\" في صورة مسودة أمس. لا تنس أن تنشرها!</string>
-    <string name="reader_photo_by">صورة بواسطة %s</string>
     <string name="reader_label_visit">زيارة الموقع</string>
     <string name="swipe_for_more">التمرير سريعًا للاطلاع على المزيد</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">لست مخولاً لعرض هذه المقالة. جرِّب تسجيل الدخول إلى موقع WordPress.com أولاً أو استخدم زر \"الإجراء\" في الجزء العلوي لفتح متصفح ما بدلاً من ذلك.</string>
@@ -2062,7 +2080,7 @@ Language: ar
     <string name="pages_fetching">جاري جلب الصفحات…</string>
     <string name="comments_fetching">جاري جلب التعليقات…</string>
     <string name="stats_view_search_terms">مصطلحات البحث</string>
-    <string name="stats_view_authors">المدونون</string>
+    <string name="stats_view_authors">الكُتّاب</string>
     <string name="stats_search_terms_unknown_search_terms">مصطلحات بحث غير معروفة</string>
     <string name="error_notification_open">تعذر فتح التنبيه</string>
     <string name="publisher">الناشر:</string>
@@ -2134,7 +2152,6 @@ Language: ar
     <string name="reader_hint_add_tag_or_url">أدخل عنوان URL أو اضغط للمتابعة</string>
     <string name="reader_page_followed_blogs">المواقع المتابَعة</string>
     <string name="reader_page_followed_tags">وسوم تمت متابعتها</string>
-    <string name="reader_title_tag_preview">وسم القارئ</string>
     <string name="reader_title_blog_preview">موقع القارئ</string>
     <string name="ssl_certificate_ask_trust">إذا كنت عادة تتصل بهذا الموقع بدون أي مشاكل، فربما يعني هذا الخطأ أن شخصًا ما يحاول سرقة هذا الموقع, وينبغي ألا تقوم بالاستمرار. هل ترغب في الوثوق بالشهادة على أي حال؟</string>
     <string name="ssl_certificate_error">شهادة SSL غير صالحة</string>
@@ -2157,7 +2174,7 @@ Language: ar
     <string name="cat_name_required">حقل اسم التصنيف مطلوب</string>
     <string name="adding_cat_success">تم إضافة التصنيف بنجاح</string>
     <string name="adding_cat_failed">إضافة التصنيف فشلت</string>
-    <string name="mnu_comment_unspam">ليس بريدًا مزعجًا</string>
+    <string name="mnu_comment_unspam">غير مزعج</string>
     <string name="theme_fetch_failed">فشل في إحضار القوالب</string>
     <string name="blog_not_found">حدث خطأ أثناء دخول هذه المدونة </string>
     <string name="gallery_error">لا يمكن استعادة عنصر الوسائط المتعددة</string>
@@ -2215,7 +2232,7 @@ Language: ar
     <string name="learn_more">تعلم المزيد</string>
     <string name="post_not_found">حدث خطأ أثناء تحميل المقال . قم بتحديث مقالاتك ثم أعد المحاولة.</string>
     <string name="plugin_not_found">حدث خطأ أثناء الوصول إلى هذا المكون الإضافي</string>
-    <string name="cancel_edit">الغاء التحرير</string>
+    <string name="cancel_edit">إلغاء التحرير</string>
     <string name="connection_error">خطأ في الاتصال</string>
     <string name="select_categories">تحديد التصنيفات</string>
     <string name="share_link">مشاركة الرابط</string>

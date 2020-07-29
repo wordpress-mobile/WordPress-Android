@@ -5,6 +5,8 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_SHORTCUT("post-from-shortcut"),
     // post created from the posts list fab
     POST_FROM_POSTS_LIST("post-from-posts-list"),
+    // story created from the posts list fab
+    STORY_FROM_POSTS_LIST("story-from-posts-list"),
     // page created from the pages list fab
     PAGE_FROM_PAGES_LIST("page-from-pages-list"),
     // post created from the navigation bar (until we will remove it)
@@ -13,6 +15,8 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_MY_SITE("post-from-my-site"),
     // page created from bottom sheet in my site screen
     PAGE_FROM_MY_SITE("page-from-my-site"),
+    // story created from bottom sheet in my site screen
+    STORY_FROM_MY_SITE("story-from-my-site"),
     // post created from stats empty view when no stats/post available yet
     POST_FROM_STATS("post-from-stats"),
     // post created from notifications unread page when empty
