@@ -65,7 +65,8 @@ import org.wordpress.android.editor.EditorMediaUploadListener;
 import org.wordpress.android.editor.EditorMediaUtils;
 import org.wordpress.android.editor.EditorThemeUpdateListener;
 import org.wordpress.android.editor.ExceptionLogger;
-import org.wordpress.android.editor.GutenbergEditorFragment;
+import org.wordpress.android.editor.gutenberg.GutenbergEditorFragment;
+import org.wordpress.android.editor.gutenberg.GutenbergPropsBuilder;
 import org.wordpress.android.editor.ImageSettingsDialogFragment;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.AccountAction;
@@ -109,7 +110,6 @@ import org.wordpress.android.imageeditor.preview.PreviewImageFragment.Companion.
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
-import org.wordpress.android.ui.PagePostCreationSourcesDetail;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
@@ -143,8 +143,8 @@ import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.ActivityFinishState;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel.UpdateFromEditor.PostFields;
+import org.wordpress.android.ui.posts.editor.media.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMedia;
-import org.wordpress.android.ui.posts.editor.media.EditorMedia.AddExistingMediaSource;
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener;
 import org.wordpress.android.ui.posts.prepublishing.home.usecases.PublishPostImmediatelyUseCase;
@@ -216,7 +216,6 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
-import static org.wordpress.android.ui.PagePostCreationSourcesDetail.CREATED_POST_SOURCE_DETAIL_KEY;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
 
 import kotlin.Unit;
@@ -254,7 +253,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_RESTART_EDITOR = "isSwitchingEditors";
     public static final String EXTRA_INSERT_MEDIA = "insertMedia";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
-    public static final String EXTRA_CREATION_SOURCE_DETAIL = "creationSourceDetail";
     public static final String EXTRA_REBLOG_POST_TITLE = "reblogPostTitle";
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
@@ -581,7 +579,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // Bump post created analytics only once, first time the editor is opened
         if (mIsNewPost && savedInstanceState == null && !isRestarting) {
-            trackEditorCreatedPost(action, getIntent());
+            AnalyticsUtils.trackEditorCreatedPost(
+                    action,
+                    getIntent(),
+                    mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
+                    mEditPostRepository.getPost()
+            );
         }
 
         if (!mIsNewPost) {
@@ -1537,50 +1540,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         finish();
     }
 
-    private void trackEditorCreatedPost(String action, Intent intent) {
-        Map<String, Object> properties = new HashMap<>();
-        // Post created from the post list (new post button).
-        String normalizedSourceName = "post-list";
-
-        if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
-            // Post created with share with WordPress
-            normalizedSourceName = "shared-from-external-app";
-        }
-        if (EditPostActivity.NEW_MEDIA_POST.equals(
-                action)) {
-            // Post created from the media library
-            normalizedSourceName = "media-library";
-        }
-        if (intent != null && intent.hasExtra(EXTRA_IS_QUICKPRESS)) {
-            // Quick press
-            normalizedSourceName = "quick-press";
-        }
-        PostUtils.addPostTypeToAnalyticsProperties(mEditPostRepository.getPost(), properties);
-        properties.put("created_post_source", normalizedSourceName);
-
-        if (intent != null
-            && intent.hasExtra(EXTRA_CREATION_SOURCE_DETAIL)
-            && normalizedSourceName == "post-list") {
-            PagePostCreationSourcesDetail source =
-                    (PagePostCreationSourcesDetail) intent.getSerializableExtra(EXTRA_CREATION_SOURCE_DETAIL);
-            properties.put(
-                    CREATED_POST_SOURCE_DETAIL_KEY,
-                    source != null ? source.getLabel() : PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
-            );
-        } else {
-            properties.put(
-                    CREATED_POST_SOURCE_DETAIL_KEY,
-                    PagePostCreationSourcesDetail.NO_DETAIL.getLabel()
-            );
-        }
-
-        AnalyticsUtils.trackWithSiteDetails(
-                AnalyticsTracker.Stat.EDITOR_CREATED_POST,
-                mSiteStore.getSiteByLocalId(mEditPostRepository.getLocalSiteId()),
-                properties
-        );
-    }
-
     private void updateAndSavePostAsync() {
         if (mEditorFragment == null) {
             AppLog.e(AppLog.T.POSTS, "Fragment not initialized");
@@ -1821,7 +1780,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     PrepublishingBottomSheetFragment.TAG);
             if (fragment == null) {
                 PrepublishingBottomSheetFragment prepublishingFragment =
-                        PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage);
+                        PrepublishingBottomSheetFragment.newInstance(getSite(), mIsPage, false);
                 prepublishingFragment.show(getSupportFragmentManager(), PrepublishingBottomSheetFragment.TAG);
             }
         };
@@ -2013,7 +1972,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
                         String wpcomLocaleSlug = languageString.replace("_", "-").toLowerCase(Locale.ENGLISH);
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
-                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
 
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -2026,12 +1984,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // which are required for us to be able to fetch the site's authentication cookie.
                         boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
 
+                        boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
+                        boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+                        GutenbergPropsBuilder gutenbergPropsBuilder = new GutenbergPropsBuilder(
+                                enableMentions,
+                                isUnsupportedBlockEditorEnabled,
+                                wpcomLocaleSlug,
+                                postType,
+                                themeBundle
+                        );
+
                         return GutenbergEditorFragment.newInstance(
                                 "",
                                 "",
-                                postType,
                                 mIsNewPost,
-                                wpcomLocaleSlug,
                                 mSite.getUrl(),
                                 !isWpCom,
                                 isWpCom ? mAccountStore.getAccount().getUserId() : mSite.getSelfHostedSiteId(),
@@ -2039,11 +2005,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 isWpCom ? "" : mSite.getPassword(),
                                 mAccountStore.getAccessToken(),
                                 isSiteUsingWpComRestApi,
-                                themeBundle,
                                 WordPress.getUserAgent(),
                                 mTenorFeatureConfig.isEnabled(),
-                                isUnsupportedBlockEditorEnabled,
-                                mGutenbergMentionsFeatureConfig.isEnabled()
+                                gutenbergPropsBuilder
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

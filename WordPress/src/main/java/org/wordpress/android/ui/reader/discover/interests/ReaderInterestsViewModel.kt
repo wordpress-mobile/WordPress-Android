@@ -153,7 +153,6 @@ class ReaderInterestsViewModel @Inject constructor(
                             doneButtonUiState = DoneButtonEnabledUiState(titleRes = R.string.reader_btn_done)
                         )
                     )
-                } else -> { // Do Nothing
                 }
             }
         }

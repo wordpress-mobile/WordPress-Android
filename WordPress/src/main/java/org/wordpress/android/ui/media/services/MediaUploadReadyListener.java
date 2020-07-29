@@ -12,5 +12,6 @@ import org.wordpress.android.util.helpers.MediaFile;
 public interface MediaUploadReadyListener {
     PostModel replaceMediaFileWithUrlInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile,
                                             String siteUrl);
+    PostModel replaceMediaLocalIdWithRemoteMediaIdInPost(@Nullable PostModel post, MediaFile mediaFile);
     PostModel markMediaUploadFailedInPost(@Nullable PostModel post, String localMediaId, MediaFile mediaFile);
 }

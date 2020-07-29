@@ -59,4 +59,7 @@ public class RequestCodes {
 
     // Other
     public static final int SELECTED_USER_MENTION = 7000;
+
+    // Story creator
+    public static final int CREATE_STORY = 8000;
 }
