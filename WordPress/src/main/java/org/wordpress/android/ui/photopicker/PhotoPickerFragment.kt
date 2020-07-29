@@ -35,7 +35,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_W
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
@@ -93,7 +92,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var mAdapter: PhotoPickerAdapter? = null
-    private var mSoftAskView: ActionableEmptyView? = null
     private var mActionMode: ActionMode? = null
     private var mGridManager: GridLayoutManager? = null
     private var mRestoreState: Parcelable? = null
@@ -221,7 +219,6 @@ class PhotoPickerFragment : Fragment() {
             container_insert_edit_bar.text_insert
                     .setOnClickListener { performInsertAction() }
         }
-        mSoftAskView = view.findViewById(R.id.soft_ask_view)
     }
 
     private fun canShowMediaSourceBottomBar(): Boolean {
@@ -638,24 +635,24 @@ class PhotoPickerFragment : Fragment() {
                         appName
                 )
             }
-            mSoftAskView!!.title.text = Html.fromHtml(label)
+            soft_ask_view.title.text = Html.fromHtml(label)
 
             // when the user taps Allow, request the required permissions unless the user already
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
             val allowId = if (isAlwaysDenied) string.button_edit_permissions else string.photo_picker_soft_ask_allow
-            mSoftAskView!!.button.setText(allowId)
-            mSoftAskView!!.button.setOnClickListener {
+            soft_ask_view.button.setText(allowId)
+            soft_ask_view.button.setOnClickListener {
                 if (isStoragePermissionAlwaysDenied) {
                     WPPermissionUtils.showAppSettings(requireActivity())
                 } else {
                     requestStoragePermission()
                 }
             }
-            mSoftAskView!!.visibility = View.VISIBLE
+            soft_ask_view.visibility = View.VISIBLE
             hideBottomBar(container_media_source_bar)
-        } else if (mSoftAskView!!.visibility == View.VISIBLE) {
-            AniUtils.fadeOut(mSoftAskView, MEDIUM)
+        } else if (soft_ask_view.visibility == View.VISIBLE) {
+            AniUtils.fadeOut(soft_ask_view, MEDIUM)
             if (canShowMediaSourceBottomBar()) {
                 showBottomBar(container_media_source_bar)
             }
