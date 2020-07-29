@@ -1,11 +1,9 @@
 package org.wordpress.android.ui.photopicker;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +18,12 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.BuildDeviceMediaListTask.BuildDeviceMediaListListener;
+import org.wordpress.android.ui.photopicker.BuildDeviceMediaListTask.BuildDeviceMediaListListener;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
-import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -34,8 +31,6 @@ import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -472,102 +467,5 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                 AnalyticsTracker.track(AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED, properties);
             }
         }).start();
-    }
-
-    /*
-     * builds the list of media items from the device
-     */
-    private static class BuildDeviceMediaListTask extends AsyncTask<Void, Void, Boolean> {
-        private final ArrayList<PhotoPickerItem> mTmpList = new ArrayList<>();
-        private final boolean mReload;
-        private final MediaBrowserType mBrowserType;
-        private final Context mContext;
-        private final BuildDeviceMediaListListener mListener;
-        private static final String ID_COL = MediaStore.Images.Media._ID;
-
-        BuildDeviceMediaListTask(boolean mustReload, MediaBrowserType browserType, Context context,
-                                 BuildDeviceMediaListListener listener) {
-            super();
-            mReload = mustReload;
-            mBrowserType = browserType;
-            mContext = context;
-            mListener = listener;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            // images
-            if (mBrowserType.isImagePicker()) {
-                addMedia(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false);
-            }
-
-            // videos
-            if (mBrowserType.isVideoPicker()) {
-                addMedia(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, true);
-            }
-
-            // sort by id in reverse (newest first)
-            Collections.sort(mTmpList, new Comparator<PhotoPickerItem>() {
-                @Override
-                public int compare(PhotoPickerItem o1, PhotoPickerItem o2) {
-                    return Long.compare(o2.getId(), o1.getId());
-                }
-            });
-
-            // if we're reloading then return true so the adapter is updated, otherwise only
-            // return true if changes are detected
-            return mReload;
-        }
-
-        private void addMedia(Uri baseUri, boolean isVideo) {
-            String[] projection = {ID_COL};
-            Cursor cursor = null;
-            try {
-                cursor = mContext.getContentResolver().query(
-                        baseUri,
-                        projection,
-                        null,
-                        null,
-                        null);
-            } catch (SecurityException e) {
-                AppLog.e(AppLog.T.MEDIA, e);
-            }
-
-            if (cursor == null) {
-                return;
-            }
-
-            try {
-                int idIndex = cursor.getColumnIndexOrThrow(ID_COL);
-                while (cursor.moveToNext()) {
-                    long id = cursor.getLong(idIndex);
-                    PhotoPickerItem item = new PhotoPickerItem(id, Uri.withAppendedPath(baseUri, "" + id), isVideo);
-                    mTmpList.add(item);
-                }
-            } finally {
-                SqlUtils.closeCursor(cursor);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            mListener.onCancelled();
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            mListener.onSuccess(mTmpList);
-        }
-
-        interface BuildDeviceMediaListListener {
-            void onCancelled();
-            void onSuccess(List<PhotoPickerItem> result);
-        }
     }
 }
