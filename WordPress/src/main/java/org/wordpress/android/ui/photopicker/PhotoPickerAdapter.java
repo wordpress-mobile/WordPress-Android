@@ -129,7 +129,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             @Override
             public void onSuccess(List<PhotoPickerItem> result) {
                 mIsListTaskRunning = false;
-                if (isSameMediaList(result)) {
+                if (!isSameMediaList(result)) {
                     mMediaList.clear();
                     mMediaList.addAll(result);
                     notifyDataSetChanged();
