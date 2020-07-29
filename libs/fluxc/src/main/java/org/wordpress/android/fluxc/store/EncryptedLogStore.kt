@@ -1,11 +1,14 @@
 package org.wordpress.android.fluxc.store
 
+import android.util.Base64
+import com.goterl.lazycode.lazysodium.utils.Key
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.EncryptedLogAction
+import org.wordpress.android.fluxc.action.EncryptedLogAction.RESET_UPLOAD_STATES
 import org.wordpress.android.fluxc.action.EncryptedLogAction.UPLOAD_LOG
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
@@ -30,14 +33,19 @@ import javax.inject.Singleton
 
 private const val MAX_RETRY_COUNT = 3
 
+data class EncryptedLoggingKey(val value: String)
+
 @Singleton
 class EncryptedLogStore @Inject constructor(
     private val encryptedLogRestClient: EncryptedLogRestClient,
     private val encryptedLogSqlUtils: EncryptedLogSqlUtils,
     private val coroutineEngine: CoroutineEngine,
-    dispatcher: Dispatcher
+    dispatcher: Dispatcher,
+    encryptedLoggingKey: EncryptedLoggingKey
 ) : Store(dispatcher) {
-    private val keyPair = EncryptionUtils.sodium.cryptoBoxKeypair()
+    private val publicKey by lazy {
+        createPublicKey(encryptedLoggingKey.value)
+    }
 
     override fun onRegister() {
         AppLog.d(API, this.javaClass.name + ": onRegister")
@@ -50,6 +58,11 @@ class EncryptedLogStore @Inject constructor(
             UPLOAD_LOG -> {
                 coroutineEngine.launch(API, this, "EncryptedLogStore: On UPLOAD_LOG") {
                     queueLogForUpload(action.payload as UploadEncryptedLogPayload)
+                }
+            }
+            RESET_UPLOAD_STATES -> {
+                coroutineEngine.launch(API, this, "EncryptedLogStore: On RESET_UPLOAD_STATES") {
+                    resetUploadStates()
                 }
             }
         }
@@ -75,7 +88,16 @@ class EncryptedLogStore @Inject constructor(
                 file = payload.file
         )
         encryptedLogSqlUtils.insertOrUpdateEncryptedLog(encryptedLog)
-        uploadNext()
+
+        if (payload.shouldStartUploadImmediately) {
+            uploadNext()
+        }
+    }
+
+    private fun resetUploadStates() {
+        encryptedLogSqlUtils.insertOrUpdateEncryptedLogs(encryptedLogSqlUtils.getUploadingEncryptedLogs().map {
+            it.copy(uploadState = FAILED)
+        })
     }
 
     private suspend fun uploadNextWithBackOffTiming() {
@@ -107,7 +129,7 @@ class EncryptedLogStore @Inject constructor(
         val contents = LogEncrypter(
                 sourceFile = encryptedLog.file,
                 uuid = encryptedLog.uuid,
-                publicKey = keyPair.publicKey
+                publicKey = publicKey
         ).encrypt()
         when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
@@ -168,9 +190,26 @@ class EncryptedLogStore @Inject constructor(
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
     }
 
+    private fun createPublicKey(publicKeyAsString: String): Key {
+        return if (publicKeyAsString.isNotBlank()) {
+            Key.fromBytes(Base64.decode(publicKeyAsString.toByteArray(), Base64.DEFAULT))
+        } else {
+            EncryptionUtils.sodium.cryptoBoxKeypair().publicKey
+        }
+    }
+
+    /**
+     * Payload to be used to queue a file to be encrypted and uploaded.
+     *
+     * [shouldStartUploadImmediately] property will be used by [EncryptedLogStore] to decide whether the encryption and
+     * upload should be initiated immediately. Since the main use case to queue a log file to be uploaded is a crash,
+     * the default value is `false`. If we try to upload the log file during a crash, there won't be enough time to
+     * encrypt and upload it, which means it'll just fail.
+     */
     class UploadEncryptedLogPayload(
         val uuid: String,
-        val file: File
+        val file: File,
+        val shouldStartUploadImmediately: Boolean = false
     ) : Payload<BaseNetworkError>()
 
     class OnEncryptedLogUploaded(

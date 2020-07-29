@@ -14,20 +14,24 @@ import javax.inject.Singleton
 @Singleton
 class EncryptedLogSqlUtils @Inject constructor() {
     fun insertOrUpdateEncryptedLog(encryptedLog: EncryptedLog) {
+        insertOrUpdateEncryptedLogs(listOf(encryptedLog))
+    }
+
+    fun insertOrUpdateEncryptedLogs(encryptedLogs: List<EncryptedLog>) {
+        val encryptedLogModels = encryptedLogs.map { EncryptedLogModel.fromEncryptedLog(it) }
         // Since we have a unique constraint for uuid with 'on conflict replace', if there is an existing log,
         // it'll be replaced with the new one. No need to check if the log already exists.
-        WellSql.insert(EncryptedLogModel.fromEncryptedLog(encryptedLog)).execute()
+        WellSql.insert(encryptedLogModels).execute()
     }
 
     fun getEncryptedLog(uuid: String): EncryptedLog? {
         return getEncryptedLogModel(uuid)?.let { EncryptedLog.fromEncryptedLogModel(it) }
     }
 
-    fun getNumberOfUploadingEncryptedLogs(): Long = WellSql.select(EncryptedLogModel::class.java)
-            .where()
-            .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, UPLOADING.value)
-            .endWhere()
-            .count()
+    fun getUploadingEncryptedLogs(): List<EncryptedLog> =
+            getUploadingEncryptedLogsQuery().asModel.map { EncryptedLog.fromEncryptedLogModel(it) }
+
+    fun getNumberOfUploadingEncryptedLogs(): Long = getUploadingEncryptedLogsQuery().count()
 
     fun deleteEncryptedLogs(encryptedLogList: List<EncryptedLog>) {
         if (encryptedLogList.isEmpty()) {
@@ -63,5 +67,12 @@ class EncryptedLogSqlUtils @Inject constructor() {
                 .endWhere()
                 .asModel
                 .firstOrNull()
+    }
+
+    private fun getUploadingEncryptedLogsQuery(): SelectQuery<EncryptedLogModel> {
+        return WellSql.select(EncryptedLogModel::class.java)
+            .where()
+            .equals(EncryptedLogModelTable.UPLOAD_STATE_DB_VALUE, UPLOADING.value)
+            .endWhere()
     }
 }
