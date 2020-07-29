@@ -92,7 +92,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var mActionMode: ActionMode? = null
-    private var mGridManager: GridLayoutManager? = null
     private var mRestoreState: Parcelable? = null
     private var mListener: PhotoPickerListener? = null
     private var mLastTappedIcon: PhotoPickerIcon? = null
@@ -398,7 +397,7 @@ class PhotoPickerFragment : Fragment() {
             }
             // restore previous state
             if (mRestoreState != null) {
-                mGridManager!!.onRestoreInstanceState(mRestoreState)
+                (recycler.layoutManager as GridLayoutManager).onRestoreInstanceState(mRestoreState)
                 mRestoreState = null
             }
         }
@@ -432,14 +431,13 @@ class PhotoPickerFragment : Fragment() {
         }
 
         // save the current state so we can restore it after loading
-        if (mGridManager != null) {
-            mRestoreState = mGridManager!!.onSaveInstanceState()
+        if (recycler.layoutManager != null) {
+            mRestoreState = (recycler.layoutManager as GridLayoutManager).onSaveInstanceState()
         }
-        mGridManager = GridLayoutManager(
+        recycler.layoutManager = GridLayoutManager(
                 activity,
                 NUM_COLUMNS
         )
-        recycler.layoutManager = mGridManager
         recycler.adapter = adapter
         adapter.refresh(true)
     }
@@ -458,7 +456,7 @@ class PhotoPickerFragment : Fragment() {
         if (!hasStoragePermission()) {
             return
         }
-        if (mGridManager == null || recycler.adapter == null) {
+        if (recycler.layoutManager == null || recycler.adapter == null) {
             reload()
         } else {
             adapter.refresh(false)
