@@ -69,7 +69,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchPost(final PostModel post, final SiteModel site, final PostAction origin) {
-        List<Object> params = createfetchPostParams(post, site);
+        List<Object> params = createFetchPostParams(post, site);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POST, params,
                 new Listener<Object>() {
@@ -107,7 +107,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPostStatus(final PostModel post, final SiteModel site) {
         final String postStatusField = "post_status";
-        List<Object> params = createfetchPostParams(post, site);
+        List<Object> params = createFetchPostParams(post, site);
         // If we only request the status, we get an empty response
         params.add(Arrays.asList("post_id", postStatusField));
 
@@ -625,7 +625,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         return params;
     }
 
-    private List<Object> createfetchPostParams(final PostModel post, final SiteModel site) {
+    private List<Object> createFetchPostParams(final PostModel post, final SiteModel site) {
         List<Object> params = new ArrayList<>(4);
         params.add(site.getSelfHostedSiteId());
         params.add(site.getUsername());
