@@ -2,3 +2,7 @@
 	path = libs/gutenberg-mobile
 	url = ../../wordpress-mobile/gutenberg-mobile.git
 	shallow = true
+[submodule "libs/portkey-android"]
+	path = libs/portkey-android
+	url = ../../Automattic/portkey-android.git
+	shallow = true

@@ -18,6 +18,13 @@ sealed class PrepublishingHomeItemUiState {
         val onActionClicked: ((actionType: ActionType) -> Unit)?
     ) : PrepublishingHomeItemUiState()
 
+    data class StoryTitleUiState(
+        val storyThumbnailUrl: String,
+        val storyTitle: UiStringText? = null,
+        val onStoryTitleChanged: (String) -> Unit
+    ) :
+            PrepublishingHomeItemUiState()
+
     data class HeaderUiState(val siteName: UiStringText, val siteIconUrl: String) :
             PrepublishingHomeItemUiState()
 
