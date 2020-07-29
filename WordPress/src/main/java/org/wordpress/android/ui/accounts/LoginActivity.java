@@ -501,6 +501,22 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void gotWpcomEmail(String email, boolean verifyEmail, boolean isPasswordlessAccount) {
+        initSmartLockIfNotFinished(false);
+        if (getLoginMode() != LoginMode.WPCOM_LOGIN_DEEPLINK && getLoginMode() != LoginMode.SHARE_INTENT
+            && isPasswordlessAccount) {
+            LoginMagicLinkRequestFragment loginMagicLinkRequestFragment = LoginMagicLinkRequestFragment.newInstance(
+                    email, AuthEmailPayloadScheme.WORDPRESS, mIsJetpackConnect,
+                    mJetpackConnectSource != null ? mJetpackConnectSource.toString() : null, verifyEmail);
+            slideInFragment(loginMagicLinkRequestFragment, true, LoginMagicLinkRequestFragment.TAG);
+        } else {
+            LoginEmailPasswordFragment loginEmailPasswordFragment =
+                    LoginEmailPasswordFragment.newInstance(email, null, null, null, false);
+            slideInFragment(loginEmailPasswordFragment, true, LoginEmailPasswordFragment.TAG);
+        }
+    }
+
+    @Override
     public void gotUnregisteredEmail(String email) {
         SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
         slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
