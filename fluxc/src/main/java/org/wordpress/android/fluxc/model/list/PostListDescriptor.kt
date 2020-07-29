@@ -41,9 +41,7 @@ sealed class PostListDescriptor(
         }
     }
 
-    override val typeIdentifier: ListDescriptorTypeIdentifier by lazy {
-        calculateTypeIdentifier(site.id)
-    }
+    override val typeIdentifier: ListDescriptorTypeIdentifier by lazy { calculateTypeIdentifier(site.id) }
 
     override fun hashCode(): Int {
         return uniqueIdentifier.value
