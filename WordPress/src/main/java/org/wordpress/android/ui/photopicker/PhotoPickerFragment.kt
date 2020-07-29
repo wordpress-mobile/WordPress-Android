@@ -62,9 +62,9 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
-import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
+import kotlin.math.abs
 
 class PhotoPickerFragment : Fragment() {
     enum class PhotoPickerIcon(private val mRequiresUploadPermission: Boolean) {
@@ -87,34 +87,32 @@ class PhotoPickerFragment : Fragment() {
      * parent activity must implement this listener
      */
     interface PhotoPickerListener {
-        fun onPhotoPickerMediaChosen(uriList: List<Uri?>)
+        fun onPhotoPickerMediaChosen(uriList: List<Uri>)
         fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean)
     }
 
-    private var mActionMode: ActionMode? = null
-    private var mRestoreState: Parcelable? = null
-    private var mListener: PhotoPickerListener? = null
-    private var mLastTappedIcon: PhotoPickerIcon? = null
-    private var mBrowserType: MediaBrowserType? = null
-    private var mSite: SiteModel? = null
-    private var mSelectedPositions: ArrayList<Int>? = null
+    private var actionMode: ActionMode? = null
+    private var restoreState: Parcelable? = null
+    private var listener: PhotoPickerListener? = null
+    private var lastTappedIcon: PhotoPickerIcon? = null
+    private var selectedPositions: List<Int>? = null
+    private var site: SiteModel? = null
+    private lateinit var browserType: MediaBrowserType
 
-    @Inject private lateinit var mTenorFeatureConfig: TenorFeatureConfig
+    @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
 
-    @Inject private lateinit var mDeviceMediaListBuilder: DeviceMediaListBuilder
+    @Inject lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        mBrowserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        mSite = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+        site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
-            mLastTappedIcon = if (savedLastTappedIconName == null) null else PhotoPickerIcon.valueOf(
-                    savedLastTappedIconName
-            )
+            lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
             if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
-                mSelectedPositions = savedInstanceState.getIntegerArrayList(KEY_SELECTED_POSITIONS)
+                selectedPositions = savedInstanceState.getIntegerArrayList(KEY_SELECTED_POSITIONS)
             }
         }
     }
@@ -134,7 +132,7 @@ class PhotoPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (mBrowserType!!.isWPStoriesPicker) {
+        if (browserType.isWPStoriesPicker) {
             wp_stories_take_picture.visibility = View.VISIBLE
             wp_stories_take_picture.setOnClickListener { doIconClicked(WP_STORIES_CAPTURE) }
         } else {
@@ -147,7 +145,7 @@ class PhotoPickerFragment : Fragment() {
         val minDistance = WPMediaUtils.getFlingDistanceToDisableThumbLoading(requireActivity())
         recycler.onFlingListener = object : OnFlingListener() {
             override fun onFling(velocityX: Int, velocityY: Int): Boolean {
-                if (Math.abs(velocityY) > minDistance) {
+                if (abs(velocityY) > minDistance) {
                     adapter.setLoadThumbnails(false)
                 }
                 return false
@@ -167,16 +165,15 @@ class PhotoPickerFragment : Fragment() {
         if (!canShowMediaSourceBottomBar()) {
             container_media_source_bar.visibility = View.GONE
         } else {
-            val camera = container_media_source_bar.icon_camera
-            if (mBrowserType!!.isGutenbergPicker || mBrowserType!!.isWPStoriesPicker) {
-                camera?.visibility = View.GONE
+            if (browserType.isGutenbergPicker || browserType.isWPStoriesPicker) {
+                container_media_source_bar.icon_camera.visibility = View.GONE
             } else {
-                camera?.setOnClickListener { v ->
-                    if (mBrowserType!!.isImagePicker && mBrowserType!!.isVideoPicker) {
+                container_media_source_bar.icon_camera.setOnClickListener { v ->
+                    if (browserType.isImagePicker && browserType.isVideoPicker) {
                         showCameraPopupMenu(v)
-                    } else if (mBrowserType!!.isImagePicker) {
+                    } else if (browserType.isImagePicker) {
                         doIconClicked(ANDROID_CAPTURE_PHOTO)
-                    } else if (mBrowserType!!.isVideoPicker) {
+                    } else if (browserType.isVideoPicker) {
                         doIconClicked(ANDROID_CAPTURE_VIDEO)
                     } else {
                         AppLog.e(
@@ -189,8 +186,8 @@ class PhotoPickerFragment : Fragment() {
             }
             container_media_source_bar.icon_picker
                     ?.setOnClickListener { v ->
-                        if (mBrowserType == GRAVATAR_IMAGE_PICKER
-                                || mBrowserType == SITE_ICON_PICKER) {
+                        if (browserType == GRAVATAR_IMAGE_PICKER
+                                || browserType == SITE_ICON_PICKER) {
                             doIconClicked(ANDROID_CHOOSE_PHOTO)
                         } else {
                             performActionOrShowPopup(v)
@@ -198,11 +195,10 @@ class PhotoPickerFragment : Fragment() {
                     }
 
             // choosing from WP media requires a site and should be hidden in gutenberg picker
-            val wpMedia = container_media_source_bar.icon_wpmedia
-            if (mSite == null || mBrowserType!!.isGutenbergPicker) {
-                wpMedia?.visibility = View.GONE
+            if (site == null || browserType.isGutenbergPicker) {
+                container_media_source_bar.icon_wpmedia.visibility = View.GONE
             } else {
-                wpMedia?.setOnClickListener { doIconClicked(WP_MEDIA) }
+                container_media_source_bar.icon_wpmedia.setOnClickListener { doIconClicked(WP_MEDIA) }
             }
         }
         if (canShowInsertEditBottomBar()) {
@@ -220,25 +216,25 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private fun canShowMediaSourceBottomBar(): Boolean {
-        if (mBrowserType == AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(
+        if (browserType == AZTEC_EDITOR_PICKER && DisplayUtils.isLandscape(
                         activity
                 )) {
             return true
-        } else if (mBrowserType == AZTEC_EDITOR_PICKER) {
+        } else if (browserType == AZTEC_EDITOR_PICKER) {
             return false
         }
         return true
     }
 
     private fun canShowInsertEditBottomBar(): Boolean {
-        return mBrowserType!!.isGutenbergPicker
+        return browserType.isGutenbergPicker
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(
                 KEY_LAST_TAPPED_ICON,
-                if (mLastTappedIcon == null) null else mLastTappedIcon!!.name
+                lastTappedIcon?.name
         )
         if (hasAdapter() && adapter.numSelected > 0) {
             val selectedItems = adapter.selectedPositions
@@ -252,7 +248,7 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun doIconClicked(icon: PhotoPickerIcon) {
-        mLastTappedIcon = icon
+        lastTappedIcon = icon
         if (icon == ANDROID_CAPTURE_PHOTO || icon == ANDROID_CAPTURE_VIDEO || icon == WP_STORIES_CAPTURE) {
             if (ContextCompat.checkSelfPermission(
                             requireActivity(), permission.CAMERA
@@ -285,14 +281,12 @@ class PhotoPickerFragment : Fragment() {
             }
             WP_STORIES_CAPTURE -> AnalyticsTracker.track(MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE)
         }
-        if (mListener != null) {
-            mListener!!.onPhotoPickerIconClicked(icon, mBrowserType!!.canMultiselect())
-        }
+        listener?.onPhotoPickerIconClicked(icon, browserType.canMultiselect())
     }
 
     fun performActionOrShowPopup(view: View) {
         val popup = PopupMenu(activity, view)
-        if (mBrowserType!!.isImagePicker) {
+        if (browserType.isImagePicker) {
             val itemPhoto = popup.menu
                     .add(string.photo_picker_choose_photo)
             itemPhoto.setOnMenuItemClickListener {
@@ -300,7 +294,7 @@ class PhotoPickerFragment : Fragment() {
                 true
             }
         }
-        if (mBrowserType!!.isVideoPicker) {
+        if (browserType.isVideoPicker) {
             val itemVideo = popup.menu
                     .add(string.photo_picker_choose_video)
             itemVideo.setOnMenuItemClickListener {
@@ -308,7 +302,7 @@ class PhotoPickerFragment : Fragment() {
                 true
             }
         }
-        if (mSite != null && !mBrowserType!!.isGutenbergPicker) {
+        if (site != null && !browserType.isGutenbergPicker) {
             val itemStock = popup.menu
                     .add(string.photo_picker_stock_media)
             itemStock.setOnMenuItemClickListener {
@@ -317,7 +311,7 @@ class PhotoPickerFragment : Fragment() {
             }
 
             // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (mTenorFeatureConfig!!.isEnabled() && !mBrowserType!!.isWPStoriesPicker) {
+            if (tenorFeatureConfig.isEnabled() && !browserType.isWPStoriesPicker) {
                 val itemGif = popup.menu
                         .add(string.photo_picker_gif)
                 itemGif.setOnMenuItemClickListener { item: MenuItem? ->
@@ -353,23 +347,23 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun setPhotoPickerListener(listener: PhotoPickerListener?) {
-        mListener = listener
+        this.listener = listener
     }
 
-    private fun showBottomBar(bottomBar: View?) {
+    private fun showBottomBar(bottomBar: View) {
         if (!isBottomBarShowing(bottomBar)) {
             AniUtils.animateBottomBar(bottomBar, true)
         }
     }
 
-    private fun hideBottomBar(bottomBar: View?) {
+    private fun hideBottomBar(bottomBar: View) {
         if (isBottomBarShowing(bottomBar)) {
             AniUtils.animateBottomBar(bottomBar, false)
         }
     }
 
-    private fun isBottomBarShowing(bottomBar: View?): Boolean {
-        return bottomBar!!.visibility == View.VISIBLE
+    private fun isBottomBarShowing(bottomBar: View): Boolean {
+        return bottomBar.visibility == View.VISIBLE
     }
 
     private val mAdapterListener: PhotoPickerAdapterListener = object : PhotoPickerAdapterListener {
@@ -382,7 +376,7 @@ class PhotoPickerFragment : Fragment() {
                     val isVideoFileSelected = adapter.isVideoFileSelected
                     container_insert_edit_bar.text_edit.visibility = if (isVideoFileSelected) View.GONE else View.VISIBLE
                 }
-                if (mActionMode == null) {
+                if (actionMode == null) {
                     (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
                 }
                 updateActionModeTitle()
@@ -391,14 +385,14 @@ class PhotoPickerFragment : Fragment() {
 
         override fun onAdapterLoaded(isEmpty: Boolean) {
             // restore previous selection
-            if (mSelectedPositions != null) {
-                adapter.selectedPositions = mSelectedPositions!!
-                mSelectedPositions = null
+            if (selectedPositions != null) {
+                adapter.setSelectedPositions(selectedPositions!!)
+                selectedPositions = null
             }
             // restore previous state
-            if (mRestoreState != null) {
-                (recycler.layoutManager as GridLayoutManager).onRestoreInstanceState(mRestoreState)
-                mRestoreState = null
+            if (restoreState != null) {
+                (recycler.layoutManager as GridLayoutManager).onRestoreInstanceState(restoreState)
+                restoreState = null
             }
         }
     }
@@ -408,9 +402,9 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private val adapter: PhotoPickerAdapter
-        private get() {
+        get() {
             if (recycler.adapter == null) {
-                recycler.adapter = PhotoPickerAdapter(activity, mBrowserType, mAdapterListener, mDeviceMediaListBuilder)
+                recycler.adapter = PhotoPickerAdapter(activity, browserType, mAdapterListener, deviceMediaListBuilder)
             }
             return recycler.adapter as PhotoPickerAdapter
         }
@@ -432,7 +426,7 @@ class PhotoPickerFragment : Fragment() {
 
         // save the current state so we can restore it after loading
         if (recycler.layoutManager != null) {
-            mRestoreState = (recycler.layoutManager as GridLayoutManager).onSaveInstanceState()
+            restoreState = (recycler.layoutManager as GridLayoutManager).onSaveInstanceState()
         }
         recycler.layoutManager = GridLayoutManager(
                 activity,
@@ -464,27 +458,24 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun finishActionMode() {
-        if (mActionMode != null) {
-            mActionMode!!.finish()
-        }
+        actionMode?.finish()
     }
 
     private fun updateActionModeTitle() {
-        if (mActionMode == null) {
-            return
-        }
-        val title: String
-        if (mBrowserType!!.canMultiselect()) {
-            val numSelected = adapter.numSelected
-            title = String.format(getString(string.cab_selected), numSelected)
-            mActionMode!!.title = title
-        } else {
-            if (mBrowserType!!.isImagePicker && mBrowserType!!.isVideoPicker) {
-                mActionMode!!.setTitle(string.photo_picker_use_media)
-            } else if (mBrowserType!!.isVideoPicker) {
-                mActionMode!!.setTitle(string.photo_picker_use_video)
+        actionMode?.let { actionMode ->
+            val title: String
+            if (browserType.canMultiselect()) {
+                val numSelected = adapter.numSelected
+                title = String.format(getString(string.cab_selected), numSelected)
+                actionMode.title = title
             } else {
-                mActionMode!!.setTitle(string.photo_picker_use_photo)
+                if (browserType.isImagePicker && browserType.isVideoPicker) {
+                    actionMode.setTitle(string.photo_picker_use_media)
+                } else if (browserType.isVideoPicker) {
+                    actionMode.setTitle(string.photo_picker_use_video)
+                } else {
+                    actionMode.setTitle(string.photo_picker_use_photo)
+                }
             }
         }
     }
@@ -494,7 +485,7 @@ class PhotoPickerFragment : Fragment() {
             actionMode: ActionMode,
             menu: Menu
         ): Boolean {
-            mActionMode = actionMode
+            this@PhotoPickerFragment.actionMode = actionMode
             if (canShowInsertEditBottomBar()) {
                 showBottomBar(container_insert_edit_bar)
             } else {
@@ -520,7 +511,7 @@ class PhotoPickerFragment : Fragment() {
             mode: ActionMode,
             item: MenuItem
         ): Boolean {
-            if (item.itemId == R.id.mnu_confirm_selection && mListener != null) {
+            if (item.itemId == R.id.mnu_confirm_selection && listener != null) {
                 performInsertAction()
                 return true
             }
@@ -528,7 +519,7 @@ class PhotoPickerFragment : Fragment() {
         }
 
         override fun onDestroyActionMode(mode: ActionMode) {
-            mActionMode = null
+            actionMode = null
             if (canShowMediaSourceBottomBar()) {
                 showBottomBar(container_media_source_bar)
             }
@@ -539,7 +530,7 @@ class PhotoPickerFragment : Fragment() {
 
     private fun performInsertAction() {
         val uriList = adapter.selectedURIs
-        mListener!!.onPhotoPickerMediaChosen(uriList)
+        listener!!.onPhotoPickerMediaChosen(uriList)
         trackAddRecentMediaEvent(uriList)
     }
 
@@ -550,7 +541,7 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private val isStoragePermissionAlwaysDenied: Boolean
-        private get() = WPPermissionUtils.isPermissionAlwaysDenied(
+        get() = WPPermissionUtils.isPermissionAlwaysDenied(
                 requireActivity(), permission.WRITE_EXTERNAL_STORAGE
         )
 
@@ -599,7 +590,7 @@ class PhotoPickerFragment : Fragment() {
         when (requestCode) {
             WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
-                doIconClicked(mLastTappedIcon!!)
+                doIconClicked(lastTappedIcon!!)
             }
         }
     }

@@ -339,7 +339,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         return mSelectedPositions;
     }
 
-    void setSelectedPositions(@NonNull ArrayList<Integer> selectedPositions) {
+    void setSelectedPositions(@NonNull List<Integer> selectedPositions) {
         mSelectedPositions.clear();
         mSelectedPositions.addAll(selectedPositions);
         notifyDataSetChanged();

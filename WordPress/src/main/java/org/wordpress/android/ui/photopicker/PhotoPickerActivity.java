@@ -273,7 +273,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         finish();
     }
 
-    private void doMediaUrisSelected(@NonNull List<Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
+    private void doMediaUrisSelected(@NonNull List<? extends Uri> mediaUris, @NonNull PhotoPickerMediaSource source) {
         // if user chose a featured image, we need to upload it and return the uploaded media object
         if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
             Uri mediaUri = mediaUris.get(0);
@@ -355,7 +355,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
     }
 
     @Override
-    public void onPhotoPickerMediaChosen(@NonNull List<Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NonNull List<? extends Uri> uriList) {
         if (uriList.size() > 0) {
             doMediaUrisSelected(uriList, PhotoPickerMediaSource.APP_PICKER);
         }
@@ -388,7 +388,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         }
     }
 
-    private String[] convertUrisListToStringArray(List<Uri> uris) {
+    private String[] convertUrisListToStringArray(List<? extends Uri> uris) {
         String[] stringUris = new String[uris.size()];
         for (int i = 0; i < uris.size(); i++) {
             stringUris[i] = uris.get(i).toString();
