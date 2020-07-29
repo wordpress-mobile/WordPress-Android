@@ -19,6 +19,10 @@ abstract class ViewPagerFragment : Fragment {
      * It is expected that onResume will be called when the fragment in ViewPager becomes active.
      * This is default behavior of FragmentStateAdapter and FragmentStatePagerAdapter with
      * BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT flag.
+     *
+     * onResume() is called after fragment view is created, so it's safe to change it's ID as long as you got a
+     * reference to it beforehand, or in all cases when View Binding using Kotlin Extensions, since the first time you
+     * access a view by original ID it's stored in cache for future access.
      */
     override fun onResume() {
         super.onResume()
