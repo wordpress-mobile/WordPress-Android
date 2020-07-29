@@ -751,11 +751,8 @@ public class EditPostSettingsFragment extends Fragment {
         Boolean isNewPasswordBlank = newPassword.isEmpty();
         Boolean isPreviousPasswordBlank = previousPassword.isEmpty() || previousPassword.trim().isEmpty();
 
-        if (isNewPasswordBlank && isPreviousPasswordBlank) {
-            // TODO: 29/07/2020 Show toast and return. Nothing to save
-            ToastUtils.showToast(getContext(), R.string.post_not_found);
-            return;
-        }
+        // Nothing to save
+        if (isNewPasswordBlank && isPreviousPasswordBlank) return;
 
         editPostRepository.updateAsync(postModel -> {
             postModel.setPassword(newPassword);
