@@ -134,11 +134,16 @@ class PhotoPickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(
+        return inflater.inflate(
                 layout.photo_picker_fragment,
                 container,
                 false
         )
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         mWPStoriesTakePicture = view.findViewById(R.id.wp_stories_take_picture)
         if (mBrowserType!!.isWPStoriesPicker) {
             mWPStoriesTakePicture?.visibility = View.VISIBLE
@@ -227,7 +232,6 @@ class PhotoPickerFragment : Fragment() {
                     ?.setOnClickListener { performInsertAction() }
         }
         mSoftAskView = view.findViewById(R.id.soft_ask_view)
-        return view
     }
 
     private fun canShowMediaSourceBottomBar(): Boolean {
