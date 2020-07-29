@@ -1264,7 +1264,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
                 114 -> migrate(version) {
-                    db.execSQL("ALTER TABLE WCProductModel ADD GROUPED_PRODUCT_IDS TEXT NOT NULL")
+                    db.execSQL("ALTER TABLE WCProductModel ADD GROUPED_PRODUCT_IDS TEXT")
                 }
             }
         }
