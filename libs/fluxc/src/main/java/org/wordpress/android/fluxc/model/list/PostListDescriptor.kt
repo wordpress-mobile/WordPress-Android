@@ -42,7 +42,7 @@ sealed class PostListDescriptor(
     }
 
     override val typeIdentifier: ListDescriptorTypeIdentifier by lazy {
-        PostListDescriptor.calculateTypeIdentifier(site.id)
+        calculateTypeIdentifier(site.id)
     }
 
     override fun hashCode(): Int {
