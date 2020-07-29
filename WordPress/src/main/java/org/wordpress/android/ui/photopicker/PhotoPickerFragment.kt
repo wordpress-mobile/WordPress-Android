@@ -142,7 +142,7 @@ class PhotoPickerFragment : Fragment() {
         } else {
             wp_stories_take_picture.visibility = View.GONE
         }
-        recycler.setEmptyView(view.findViewById(R.id.actionable_empty_view))
+        recycler.setEmptyView(actionable_empty_view)
         recycler.setHasFixedSize(true)
 
         // disable thumbnail loading during a fling to conserve memory
@@ -169,7 +169,7 @@ class PhotoPickerFragment : Fragment() {
         if (!canShowMediaSourceBottomBar()) {
             container_media_source_bar.visibility = View.GONE
         } else {
-            val camera = container_media_source_bar.findViewById<View>(R.id.icon_camera)
+            val camera = container_media_source_bar.icon_camera
             if (mBrowserType!!.isGutenbergPicker || mBrowserType!!.isWPStoriesPicker) {
                 camera?.visibility = View.GONE
             } else {
@@ -189,7 +189,7 @@ class PhotoPickerFragment : Fragment() {
                     }
                 }
             }
-            container_media_source_bar.findViewById<View>(R.id.icon_picker)
+            container_media_source_bar.icon_picker
                     ?.setOnClickListener { v ->
                         if (mBrowserType == GRAVATAR_IMAGE_PICKER
                                 || mBrowserType == SITE_ICON_PICKER) {
@@ -200,7 +200,7 @@ class PhotoPickerFragment : Fragment() {
                     }
 
             // choosing from WP media requires a site and should be hidden in gutenberg picker
-            val wpMedia = container_media_source_bar.findViewById<View>(R.id.icon_wpmedia)
+            val wpMedia = container_media_source_bar.icon_wpmedia
             if (mSite == null || mBrowserType!!.isGutenbergPicker) {
                 wpMedia?.visibility = View.GONE
             } else {
