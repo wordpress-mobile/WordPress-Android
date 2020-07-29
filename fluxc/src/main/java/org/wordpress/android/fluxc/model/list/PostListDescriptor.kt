@@ -29,13 +29,24 @@ sealed class PostListDescriptor(
                 }
 
                 ListDescriptorUniqueIdentifier(
-                        ("rest-site-post-list-${site.id}-st$statusStr-a$authorFilter-o${order.value}" +
-                                "-ob${orderBy.value}-sq$searchQuery").hashCode()
+                        ("rest-site" +
+                                "-post-list" +
+                                "-${site.id}" +
+                                "-st$statusStr" +
+                                "-a$authorFilter" +
+                                "-o${order.value}" +
+                                "-ob${orderBy.value}" +
+                                "-sq$searchQuery").hashCode()
                 )
             }
             is PostListDescriptorForXmlRpcSite -> {
                 ListDescriptorUniqueIdentifier(
-                        "xml-rpc-site-post-list-${site.id}-st$statusStr-o${order.value}-ob${orderBy.value}".hashCode()
+                        ("xml-rpc-site" +
+                                "-post-list" +
+                                "-${site.id}" +
+                                "-st$statusStr" +
+                                "-o${order.value}" +
+                                "-ob${orderBy.value}").hashCode()
                 )
             }
         }
