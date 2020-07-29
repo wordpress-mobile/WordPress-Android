@@ -15,6 +15,13 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
+import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
+import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
+import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -26,6 +33,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
@@ -53,6 +61,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REQUEST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_POSITIVE_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DIALOG_VIEWED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
@@ -111,6 +120,9 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.getPromptDetailsForTask
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isTargetingBottomNavBar
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
+import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler.Companion.handleMediaPickerResultForStories
+import org.wordpress.android.ui.stories.StoriesTrackerHelper
+import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserActivity
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
@@ -176,6 +188,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
+    @Inject lateinit var storiesTrackerHelper: StoriesTrackerHelper
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -723,39 +736,42 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
-                    val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
-                    showSiteIconProgressBar(true)
-                    updateSiteIconMediaId(mediaId)
-                } else {
-                    val mediaUriStringsArray = data.getStringArrayExtra(
-                            PhotoPickerActivity.EXTRA_MEDIA_URIS
-                    )
-                    if (mediaUriStringsArray.isNullOrEmpty()) {
-                        AppLog.e(
-                                UTILS,
-                                "Can't resolve picked or captured image"
+                if (!handleMediaPickerResultForStories(data, activity, selectedSite)) {
+                    if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_ID)) {
+                        val mediaId = data.getLongExtra(PhotoPickerActivity.EXTRA_MEDIA_ID, 0).toInt()
+                        showSiteIconProgressBar(true)
+                        updateSiteIconMediaId(mediaId)
+                    } else {
+                        val mediaUriStringsArray = data.getStringArrayExtra(
+                                PhotoPickerActivity.EXTRA_MEDIA_URIS
                         )
-                        return
-                    }
-                    val source = PhotoPickerMediaSource.fromString(
-                            data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
-                    )
-                    val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
-                    AnalyticsTracker.track(stat)
-                    val imageUri = Uri.parse(mediaUriStringsArray[0])
-                    if (imageUri != null) {
-                        val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
-                                activity, imageUri
-                        ) { uri: Uri ->
-                            showSiteIconProgressBar(true)
-                            startCropActivity(uri)
-                        }
-                        if (!didGoWell) {
+                        if (mediaUriStringsArray.isNullOrEmpty()) {
                             AppLog.e(
                                     UTILS,
-                                    "Can't download picked or captured image"
+                                    "Can't resolve picked or captured image"
                             )
+                            return
+                        }
+
+                        val source = PhotoPickerMediaSource.fromString(
+                                data.getStringExtra(PhotoPickerActivity.EXTRA_MEDIA_SOURCE)
+                        )
+                        val stat = if (source == ANDROID_CAMERA) MY_SITE_ICON_SHOT_NEW else MY_SITE_ICON_GALLERY_PICKED
+                        AnalyticsTracker.track(stat)
+                        val imageUri = Uri.parse(mediaUriStringsArray[0])
+                        if (imageUri != null) {
+                            val didGoWell = WPMediaUtils.fetchMediaAndDoNext(
+                                    activity, imageUri
+                            ) { uri: Uri ->
+                                showSiteIconProgressBar(true)
+                                startCropActivity(uri)
+                            }
+                            if (!didGoWell) {
+                                AppLog.e(
+                                        UTILS,
+                                        "Can't download picked or captured image"
+                                )
+                            }
                         }
                     }
                 }
@@ -1098,6 +1114,69 @@ class MySiteFragment : Fragment(),
         }
     }
 
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: StorySaveResult) {
+        EventBus.getDefault().removeStickyEvent(event)
+        if (!event.isSuccess()) {
+            // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
+            val errorText = String.format(
+                    getString(string.story_saving_snackbar_finished_with_error),
+                    getStoryAtIndex(event.storyIndex).title
+            )
+            val snackbarMessage = buildSnackbarErrorMessage(
+                    requireActivity(),
+                    allErrorsInResult(event.frameSaveResult).size,
+                    errorText
+            )
+            uploadUtilsWrapper.showSnackbarError(
+                    requireActivity().findViewById<View>(R.id.coordinator),
+                    snackbarMessage,
+                    string.story_saving_failed_quick_action_manage,
+                    View.OnClickListener { view: View? ->
+                        val intent = Intent(
+                                requireActivity(),
+                                StoryComposerActivity::class.java
+                        )
+                        intent.putExtra(KEY_STORY_SAVE_RESULT, event)
+                        intent.putExtra(WordPress.SITE, selectedSite)
+
+                        // we need to have a way to cancel the related error notification when the user comes
+                        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
+                        // errored story but the error notification will remain existing in the system dashboard)
+                        intent.action = getNotificationIdForError(
+                                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                                event.storyIndex).toString() + ""
+
+                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                        // is meant to be used for tracking purposes. Use it!
+                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+
+                        storiesTrackerHelper.trackStorySaveResultEvent(
+                                event,
+                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+
+                        )
+                        startActivity(intent)
+                    }
+            )
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onStorySaveStart(event: StorySaveProcessStart) {
+        EventBus.getDefault().removeStickyEvent(event)
+        val snackbarMessage = String.format(
+                getString(string.story_saving_snackbar_started),
+                getStoryAtIndex(event.storyIndex).title
+        )
+        uploadUtilsWrapper.showSnackbar(
+                requireActivity().findViewById<View>(R.id.coordinator),
+                snackbarMessage
+        )
+    }
+
     override fun onPositiveClicked(instanceTag: String) {
         when (instanceTag) {
             TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> ActivityLauncher.showPhotoPickerForResult(
@@ -1357,12 +1436,15 @@ class MySiteFragment : Fragment(),
         quickStartSnackBarHandler.removeCallbacksAndMessages(null)
     }
 
-    fun requestNextStepOfActiveQuickStartTask() {
+    @JvmOverloads
+    fun requestNextStepOfActiveQuickStartTask(fireQuickStartEvent: Boolean = true) {
         if (!hasActiveQuickStartTask()) {
             return
         }
         removeQuickStartFocusPoint()
-        EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
+        if (fireQuickStartEvent) {
+            EventBus.getDefault().postSticky(QuickStartEvent(activeTutorialPrompt!!.task))
+        }
         clearActiveQuickStartTask()
     }
 

@@ -21,6 +21,10 @@ import org.wordpress.android.push.NotificationType.POST_UPLOAD_ERROR
 import org.wordpress.android.push.NotificationType.POST_UPLOAD_SUCCESS
 import org.wordpress.android.push.NotificationType.QUICK_START_REMINDER
 import org.wordpress.android.push.NotificationType.REBLOG
+import org.wordpress.android.push.NotificationType.STORY_FRAME_SAVE_ERROR
+import org.wordpress.android.push.NotificationType.STORY_FRAME_SAVE_SUCCESS
+import org.wordpress.android.push.NotificationType.STORY_SAVE_ERROR
+import org.wordpress.android.push.NotificationType.STORY_SAVE_SUCCESS
 import org.wordpress.android.push.NotificationType.TEST_NOTE
 import org.wordpress.android.push.NotificationType.UNKNOWN_NOTE
 import org.wordpress.android.push.NotificationType.ZENDESK
@@ -98,6 +102,10 @@ class SystemNotificationsTracker
             MEDIA_UPLOAD_SUCCESS -> MEDIA_UPLOAD_SUCCESS_TYPE_VALUE
             MEDIA_UPLOAD_ERROR -> MEDIA_UPLOAD_ERROR_TYPE_VALUE
             POST_PUBLISHED -> POST_PUBLISHED_TYPE_VALUE
+            STORY_SAVE_SUCCESS -> STORY_SAVE_SUCCESS_TYPE_VALUE
+            STORY_SAVE_ERROR -> STORY_SAVE_ERROR_TYPE_VALUE
+            STORY_FRAME_SAVE_SUCCESS -> STORY_FRAME_SAVE_SUCCESS_TYPE_VALUE
+            STORY_FRAME_SAVE_ERROR -> STORY_FRAME_SAVE_ERROR_TYPE_VALUE
             PENDING_DRAFTS -> PENDING_DRAFT_TYPE_VALUE
             ZENDESK -> ZENDESK_MESSAGE_TYPE_VALUE
         }
@@ -126,6 +134,10 @@ class SystemNotificationsTracker
         private const val MEDIA_UPLOAD_SUCCESS_TYPE_VALUE = "media_upload_success"
         private const val MEDIA_UPLOAD_ERROR_TYPE_VALUE = "media_upload_error"
         private const val POST_PUBLISHED_TYPE_VALUE = "post_published"
+        private const val STORY_SAVE_SUCCESS_TYPE_VALUE = "story_save_success"
+        private const val STORY_SAVE_ERROR_TYPE_VALUE = "story_save_error"
+        private const val STORY_FRAME_SAVE_SUCCESS_TYPE_VALUE = "story_frame_save_success"
+        private const val STORY_FRAME_SAVE_ERROR_TYPE_VALUE = "story_frame_save_error"
         private const val PENDING_DRAFT_TYPE_VALUE = "pending_draft"
         private const val ZENDESK_MESSAGE_TYPE_VALUE = "zendesk_message"
     }

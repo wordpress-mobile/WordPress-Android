@@ -233,6 +233,9 @@ public class AppPrefs {
 
         // feature flag for Reader Improvements Phase 2
         FF_READER_IMPROVEMENTS_PHASE_2,
+
+        // used to indicate that we do not need to show the Post List FAB tooltip
+        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
     }
 
     private static SharedPreferences prefs() {
@@ -981,6 +984,15 @@ public class AppPrefs {
     public static boolean isMainFabTooltipDisabled() {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
+
+    public static void setPostListFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isPostListFabTooltipDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+    }
+
 
     public static void setQuickStartMigrationDialogShown(Boolean shown) {
         setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);

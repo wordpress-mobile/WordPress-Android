@@ -7,11 +7,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode.BACKGROUND
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.discover.ReaderDiscoverCards
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
@@ -19,20 +21,24 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
 class ReaderDiscoverRepository constructor(
-    private val bgDispatcher: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
+    private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
@@ -43,9 +49,10 @@ class ReaderDiscoverRepository constructor(
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher + job
+        get() = ioDispatcher + job
 
     private var isStarted = false
+    private val isDirty = AtomicBoolean()
 
     private val _discoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>(
             onActive = { onActiveDiscoverFeed() }, onInactive = { onInactiveDiscoverFeed() })
@@ -58,6 +65,7 @@ class ReaderDiscoverRepository constructor(
         if (isStarted) return
 
         isStarted = true
+        eventBusWrapper.register(this)
         readerUpdatePostsEndedHandler.start(readerTag,
                 ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
                         this::onNewPosts,
@@ -66,20 +74,21 @@ class ReaderDiscoverRepository constructor(
     }
 
     fun stop() {
+        eventBusWrapper.unregister(this)
         job.cancel()
     }
 
     fun getTag(): ReaderTag = readerTag
 
     suspend fun refreshPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
             if (response != Success) _communicationChannel.postValue(Event(response))
         }
     }
 
     suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
                 is PostLikeSuccess -> {
                     reloadPosts()
@@ -95,9 +104,9 @@ class ReaderDiscoverRepository constructor(
 
     // Internal functionality
     private suspend fun loadPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
             if (!existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
@@ -110,7 +119,7 @@ class ReaderDiscoverRepository constructor(
     }
 
     private suspend fun reloadPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val result = getDiscoverCardsUseCase.get()
             _discoverFeed.postValue(result)
         }
@@ -147,9 +156,23 @@ class ReaderDiscoverRepository constructor(
     private fun onInactiveDiscoverFeed() {
     }
 
+    @Subscribe(threadMode = BACKGROUND)
+    @SuppressWarnings("unused")
+    fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
+        if (_discoverFeed.hasObservers()) {
+            isDirty.compareAndSet(true, false)
+            launch {
+                reloadPosts()
+            }
+        } else {
+            isDirty.compareAndSet(false, true)
+        }
+    }
+
     class Factory
     @Inject constructor(
-        @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+        private val eventBusWrapper: EventBusWrapper,
         private val readerUtilsWrapper: ReaderUtilsWrapper,
         private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
@@ -162,7 +185,8 @@ class ReaderDiscoverRepository constructor(
                     ?: readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_DISCOVER, DEFAULT)
 
             return ReaderDiscoverRepository(
-                    bgDispatcher,
+                    ioDispatcher,
+                    eventBusWrapper,
                     tag,
                     getDiscoverCardsUseCase,
                     shouldAutoUpdateTagUseCase,

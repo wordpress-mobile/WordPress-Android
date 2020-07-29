@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    android:id="@+id/action_row_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/MainBottomSheetRowLayout">
@@ -11,9 +12,11 @@
         android:contentDescription="@null"
         style="@style/MainBottomSheetRowIcon"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:gravity="start"
+        android:layout_toEndOf="@+id/action_icon"
         android:id="@+id/action_title"
         style="@style/MainBottomSheetRowTextView"
         tools:text="@string/my_site_bottom_sheet_add_post" />
 
-</LinearLayout>
+</RelativeLayout>
