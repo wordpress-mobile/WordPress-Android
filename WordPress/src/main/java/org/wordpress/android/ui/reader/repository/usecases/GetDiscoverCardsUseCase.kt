@@ -48,7 +48,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
                                 if (post != null) {
                                     cards.add(ReaderPostCard(post))
                                 } else {
-                                    appLogWrapper.d(READER, "Post from /cards json not found in local db")
+                                    appLogWrapper.d(READER, "Post from /cards json not found in ReaderDatabase")
                                     continue@forLoop
                                 }
                             }

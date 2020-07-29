@@ -29,8 +29,8 @@ class GetDiscoverCardsUseCaseTest {
     private val readerDiscoverCardsTableWrapper: ReaderDiscoverCardsTableWrapper = mock()
     private val parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase = mock()
     private val mockedJsonArray: JSONArray = mock()
-    private val mockedJsonObject1: JSONObject = mock()
-    private val mockedJsonObject2: JSONObject = mock()
+    private val mockedPostCardJson: JSONObject = mock()
+    private val mockedInterestsCardJson: JSONObject = mock()
     private val readerPostTableWrapper: ReaderPostTableWrapper = mock()
     private val appLogWrapper: AppLogWrapper = mock()
 
@@ -46,22 +46,22 @@ class GetDiscoverCardsUseCaseTest {
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
                 .thenReturn(mockedJsonArray)
         whenever(mockedJsonArray.length()).thenReturn(2)
-        whenever(mockedJsonArray.getJSONObject(0)).thenReturn(mockedJsonObject1)
-        whenever(mockedJsonArray.getJSONObject(1)).thenReturn(mockedJsonObject2)
+        whenever(mockedJsonArray.getJSONObject(0)).thenReturn(mockedPostCardJson)
+        whenever(mockedJsonArray.getJSONObject(1)).thenReturn(mockedInterestsCardJson)
         whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(listOf(""))
         whenever(parseDiscoverCardsJsonUseCase.parseInterestCard(anyOrNull())).thenReturn(mock())
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedPostCard(anyOrNull())).thenReturn(Pair(101, 102))
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(mock())
-        whenever(mockedJsonObject1.getString(ReaderConstants.JSON_CARD_TYPE))
+        whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_POST)
-        whenever(mockedJsonObject2.getString(ReaderConstants.JSON_CARD_TYPE))
+        whenever(mockedInterestsCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
     }
 
     @Test
-    fun `interest you might like card is transformed into InterestsYouMayLikeCard object`() = test {
+    fun `interest you might like card json is transformed into InterestsYouMayLikeCard object`() = test {
         // Arrange
-        whenever(mockedJsonObject1.getString(ReaderConstants.JSON_CARD_TYPE))
+        whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
         // Act
         val result = useCase.get()
@@ -70,9 +70,9 @@ class GetDiscoverCardsUseCaseTest {
     }
 
     @Test
-    fun `post card is transformed into ReaderPostCard object`() = test {
+    fun `post card json is transformed into ReaderPostCard object`() = test {
         // Arrange
-        whenever(mockedJsonObject1.getString(ReaderConstants.JSON_CARD_TYPE))
+        whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_POST)
         // Act
         val result = useCase.get()
@@ -98,5 +98,16 @@ class GetDiscoverCardsUseCaseTest {
         val result = useCase.get()
         // Assert
         assertThat(result.cards.size).isEqualTo(2)
+    }
+
+    @Test
+    fun `when cards json is empty an empty ReaderDiscoverCards is returned`() = test {
+        // Arrange
+        val emptyList = listOf<String>()
+        whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(emptyList)
+        // Act
+        val result = useCase.get()
+        // Assert
+        assertThat(result.cards).isEmpty()
     }
 }
