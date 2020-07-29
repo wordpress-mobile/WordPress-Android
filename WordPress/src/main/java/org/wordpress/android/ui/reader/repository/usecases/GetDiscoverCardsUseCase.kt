@@ -12,6 +12,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 import org.wordpress.android.util.AppLog.T.READER
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +23,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val readerDiscoverCardsTableWrapper: ReaderDiscoverCardsTableWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val appLogWrapper: AppLogWrapper,
+    private val readerTagRepository: ReaderTagRepository,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
     suspend fun get(): ReaderDiscoverCards =
@@ -38,7 +40,9 @@ class GetDiscoverCardsUseCase @Inject constructor(
                         val cardJson = jsonObjects.getJSONObject(i)
                         when (cardJson.getString(ReaderConstants.JSON_CARD_TYPE)) {
                             ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                                val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
+                                // val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
+                                // TODO remove the line below and uncomment the one above when live data is ready.
+                                val interests = readerTagRepository.getUserTags(false)
                                 cards.add(InterestsYouMayLikeCard(interests))
                             }
                             ReaderConstants.JSON_CARD_POST -> {
