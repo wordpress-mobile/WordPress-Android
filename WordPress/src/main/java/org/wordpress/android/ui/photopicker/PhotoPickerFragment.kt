@@ -91,7 +91,6 @@ class PhotoPickerFragment : Fragment() {
         fun onPhotoPickerIconClicked(icon: PhotoPickerIcon, allowMultipleSelection: Boolean)
     }
 
-    private var mAdapter: PhotoPickerAdapter? = null
     private var mActionMode: ActionMode? = null
     private var mGridManager: GridLayoutManager? = null
     private var mRestoreState: Parcelable? = null
@@ -406,15 +405,15 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private fun hasAdapter(): Boolean {
-        return mAdapter != null
+        return recycler.adapter != null
     }
 
     private val adapter: PhotoPickerAdapter
         private get() {
-            if (mAdapter == null) {
-                mAdapter = PhotoPickerAdapter(activity, mBrowserType, mAdapterListener, mDeviceMediaListBuilder)
+            if (recycler.adapter == null) {
+                recycler.adapter = PhotoPickerAdapter(activity, mBrowserType, mAdapterListener, mDeviceMediaListBuilder)
             }
-            return mAdapter!!
+            return recycler.adapter as PhotoPickerAdapter
         }
 
     /*
@@ -459,7 +458,7 @@ class PhotoPickerFragment : Fragment() {
         if (!hasStoragePermission()) {
             return
         }
-        if (mGridManager == null || mAdapter == null) {
+        if (mGridManager == null || recycler.adapter == null) {
             reload()
         } else {
             adapter.refresh(false)
