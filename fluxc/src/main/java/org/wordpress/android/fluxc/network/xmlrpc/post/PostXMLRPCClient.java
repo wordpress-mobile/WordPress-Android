@@ -197,12 +197,10 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         FetchPostsResponsePayload payload = new FetchPostsResponsePayload(posts, site, getPages,
                                 offset > 0, canLoadMore);
 
-                        if (posts != null) {
-                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
-                        } else {
+                        if (posts == null) {
                             payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
-                            mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                         }
+                        mDispatcher.dispatch(PostActionBuilder.newFetchedPostsAction(payload));
                     }
                 },
                 new BaseErrorListener() {
