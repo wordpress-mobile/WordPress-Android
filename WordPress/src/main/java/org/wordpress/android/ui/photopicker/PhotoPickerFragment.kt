@@ -17,6 +17,8 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.view.ActionMode.Callback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
@@ -100,12 +102,14 @@ class PhotoPickerFragment : Fragment() {
     private lateinit var browserType: MediaBrowserType
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
-
     @Inject lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    private lateinit var viewModel: PhotoPickerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
         browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
         site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         if (savedInstanceState != null) {
