@@ -200,7 +200,8 @@ class EncryptedLogStore @Inject constructor(
      * [shouldStartUploadImmediately] property will be used by [EncryptedLogStore] to decide whether the encryption and
      * upload should be initiated immediately. Since the main use case to queue a log file to be uploaded is a crash,
      * the default value is `false`. If we try to upload the log file during a crash, there won't be enough time to
-     * encrypt and upload it, which means it'll just fail.
+     * encrypt and upload it, which means it'll just fail. On the other hand, for developer initiated crash monitoring
+     * events, it'd be good, but not essential, to set it to `true` so we can upload it as soon as possible.
      */
     class UploadEncryptedLogPayload(
         val uuid: String,
