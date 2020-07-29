@@ -11,7 +11,6 @@ import com.google.gson.reflect.TypeToken
 import org.wordpress.android.fluxc.persistence.EditorThemeElementType
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeBuilder
 import org.wordpress.android.fluxc.persistence.EditorThemeSqlUtils.EditorThemeElementBuilder
-import java.lang.IllegalStateException
 import java.lang.reflect.Type
 
 const val MAP_KEY_ELEMENT_DISPLAY_NAME: String = "name"
@@ -109,7 +108,7 @@ class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElemen
             var result: List<EditorThemeElement>?
             try {
                 result = context.deserialize(json, editorThemeElementListType)
-            } catch(e: JsonSyntaxException) {
+            } catch (e: JsonSyntaxException) {
                 result = null
             }
             return result
