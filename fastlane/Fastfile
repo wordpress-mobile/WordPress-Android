@@ -400,7 +400,8 @@ ENV["HAS_ALPHA_VERSION"]="true"
   update_strings_path = "./fastlane/resources/values/"
   libraries_strings_path = [
     {library: "Login Library", strings_path: "./libs/login/WordPressLoginFlow/src/main/res/values/strings.xml", exclusions: ["default_web_client_id"]},
-    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []}
+    {library: "Image Editor", strings_path: "./libs/image-editor/ImageEditor/src/main/res/values/strings.xml", exclusions: []},
+    {library: "Stories Creator", strings_path: "./libs/portkey-android/stories/src/main/res/values/strings.xml", exclusions: []}
   ]
 
   private_lane :send_strings_for_translation do | options |

@@ -4,6 +4,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/root_view_main"
+                android:clipChildren="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -69,20 +70,28 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/margin_medium"
         android:importantForAccessibility="noHideDescendants"
-        android:layout_above="@+id/fab_button"/>
+        android:layout_above="@+id/fab_container"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_button"
+    <RelativeLayout
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:id="@+id/fab_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_container"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:contentDescription="@string/create_post_page_fab_tooltip"
-        android:src="@drawable/ic_create_white_24dp"
-        app:borderWidth="0dp"/>
+        android:layout_marginEnd="@dimen/fab_margin">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/create_post_page_fab_tooltip"
+            android:src="@drawable/ic_create_white_24dp"
+            android:visibility="gone"
+            app:borderWidth="0dp"
+            tools:visibility="visible" />
+    </RelativeLayout>
 
 </RelativeLayout>

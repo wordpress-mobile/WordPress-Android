@@ -91,6 +91,7 @@ import org.wordpress.android.ui.posts.EditPostPublishSettingsFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.HistoryListFragment;
 import org.wordpress.android.ui.posts.PostDatePickerDialogFragment;
+import org.wordpress.android.ui.posts.PostListCreateMenuFragment;
 import org.wordpress.android.ui.posts.PostListFragment;
 import org.wordpress.android.ui.posts.PostNotificationScheduleTimeDialogFragment;
 import org.wordpress.android.ui.posts.PostSettingsTagsFragment;
@@ -165,6 +166,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.today.TodayWidgetList
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.StatsViewsWidget;
 import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetListProvider;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -527,6 +529,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(FeatureAnnouncementListAdapter object);
 
+    void inject(StoryComposerActivity object);
+
     void inject(ReaderFragment object);
 
     void inject(ReaderDiscoverFragment object);
@@ -544,6 +548,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PhotoPickerFragment object);
 
     void inject(LoginPrologueFragment object);
+
+    void inject(PostListCreateMenuFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

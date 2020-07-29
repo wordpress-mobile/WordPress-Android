@@ -7,18 +7,22 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.reader_interests_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.LocaleManager
 import org.wordpress.android.util.WPActivityUtils
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layout) {
@@ -61,7 +65,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun startObserving() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             when (uiState) {
-                is LoadingUiState -> {
+                is InitialLoadingUiState -> {
                 }
                 is ContentUiState -> {
                     updateInterests(uiState.interestsUiState)
@@ -79,7 +83,13 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.start(parentViewModel)
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                showSnackbar()
+            }
+        })
+
+        viewModel.start(parentViewModel, LocaleManager.getLanguage(WordPress.getContext()))
     }
 
     private fun updateDoneButton(doneButtonUiState: DoneButtonUiState) {
@@ -92,8 +102,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun updateInterests(interestsUiState: List<InterestUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
-            val chip = interests_chip_group.findViewWithTag(interestTagUiState.title)
-                ?: createChipView(interestTagUiState.title, index)
+            val chip = interests_chip_group.findViewWithTag(interestTagUiState.slug)
+                ?: createChipView(interestTagUiState.slug, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
@@ -109,14 +119,25 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun createChipView(titleTag: String, index: Int): Chip {
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(bottom_bar, getString(this.messageRes), Snackbar.LENGTH_LONG)
+        if (this.buttonTitleRes != null) {
+            snackbar.setAction(getString(this.buttonTitleRes)) {
+                this.buttonAction.invoke()
+            }
+        }
+        snackbar.setAnchorView(bottom_bar)
+        snackbar.show()
+    }
+
+    private fun createChipView(slug: String, index: Int): Chip {
         val chip = layoutInflater.inflate(
             R.layout.reader_interest_filter_chip,
             interests_chip_group,
             false
         ) as Chip
         with(chip) {
-            tag = titleTag
+            tag = slug
             setOnCheckedChangeListener { compoundButton, isChecked ->
                 if (compoundButton.isPressed) {
                     viewModel.onInterestAtIndexToggled(index, isChecked)

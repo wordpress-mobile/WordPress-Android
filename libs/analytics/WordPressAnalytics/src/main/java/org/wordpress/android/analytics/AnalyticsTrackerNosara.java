@@ -1522,6 +1522,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_picker_device_library_opened";
             case MEDIA_PICKER_OPEN_WP_MEDIA:
                 return "media_picker_wordpress_library_opened";
+            case MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE:
+                return "media_picker_stories_capture_opened";
+            case MEDIA_PICKER_OPEN_FOR_STORIES:
+                return "media_picker_open_for_stories";
             case MEDIA_PICKER_RECENT_MEDIA_SELECTED:
                 return "media_picker_recent_media_selected";
             case MEDIA_PICKER_PREVIEW_OPENED:
@@ -1774,6 +1778,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "media_editor_shown";
             case MEDIA_EDITOR_USED:
                 return "media_editor_used";
+            case STORY_SAVE_SUCCESSFUL:
+                return "story_save_successful";
+            case STORY_SAVE_ERROR:
+                return "story_save_error";
+            case STORY_POST_SAVE_LOCALLY:
+                return "story_post_save_locally";
+            case STORY_POST_SAVE_REMOTELY:
+                return "story_post_save_remotely";
+            case STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED:
+                return "story_post_error_snackbar_manage_tapped";
+            case STORY_POST_PUBLISH_TAPPED:
+                return "story_post_publish_tapped";
             case FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE:
             case FEATURE_ANNOUNCEMENT_SHOWN_FROM_APP_SETTINGS:
                 return "feature_announcement_shown";
@@ -1788,6 +1804,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "gutenberg_unsupported_block_webview_shown";
             case EDITOR_GUTENBERG_UNSUPPORTED_BLOCK_WEBVIEW_CLOSED:
                 return "gutenberg_unsupported_block_webview_closed";
+            case PREPUBLISHING_BOTTOM_SHEET_OPENED:
+                return "prepublishing_bottom_sheet_opened";
+            case PREPUBLISHING_BOTTOM_SHEET_DISMISSED:
+                return "prepublishing_bottom_sheet_dismissed";
         }
         return null;
     }
