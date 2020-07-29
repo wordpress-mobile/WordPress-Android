@@ -19,6 +19,7 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.NestedScrollableContainerInitializedListener
 import org.wordpress.android.ui.WPWebViewActivity
 import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
@@ -35,7 +36,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import java.util.EnumSet
 import javax.inject.Inject
 
-class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
+class ReaderFragment : Fragment(R.layout.reader_fragment_layout), NestedScrollableContainerInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: ReaderViewModel
@@ -214,5 +215,9 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout) {
                 .remove(readerInterestsFragment)
                 .commitNow()
         }
+    }
+
+    override fun onScrollableContainerInitialized(containerId: Int) {
+        app_bar.liftOnScrollTargetViewId = containerId
     }
 }
