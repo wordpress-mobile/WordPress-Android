@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -23,7 +22,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -107,7 +106,6 @@ class PhotoPickerFragment : Fragment() {
     private var mBrowserType: MediaBrowserType? = null
     private var mSite: SiteModel? = null
     private var mSelectedPositions: ArrayList<Int>? = null
-    private var mWPStoriesTakePicture: FloatingActionButton? = null
 
     @Inject private lateinit var mTenorFeatureConfig: TenorFeatureConfig
 
@@ -144,12 +142,11 @@ class PhotoPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mWPStoriesTakePicture = view.findViewById(R.id.wp_stories_take_picture)
         if (mBrowserType!!.isWPStoriesPicker) {
-            mWPStoriesTakePicture?.visibility = View.VISIBLE
-            mWPStoriesTakePicture?.setOnClickListener(OnClickListener { doIconClicked(WP_STORIES_CAPTURE) })
+            wp_stories_take_picture.visibility = View.VISIBLE
+            wp_stories_take_picture.setOnClickListener { doIconClicked(WP_STORIES_CAPTURE) }
         } else {
-            mWPStoriesTakePicture?.visibility = View.GONE
+            wp_stories_take_picture.visibility = View.GONE
         }
         mRecycler = view.findViewById(R.id.recycler)
         mRecycler?.setEmptyView(view.findViewById(R.id.actionable_empty_view))
