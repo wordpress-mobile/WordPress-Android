@@ -88,7 +88,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `search is not available for xmlrpc sites`() {
+    fun `search is available for xmlrpc and self-hosted sites`() {
         site.origin = SiteModel.ORIGIN_XMLRPC
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
 
@@ -97,7 +97,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
             isSearchAvailable = it
         }
 
-        assertThat(isSearchAvailable).isFalse()
+        assertThat(isSearchAvailable).isTrue()
     }
 
     @Test
