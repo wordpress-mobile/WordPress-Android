@@ -26,7 +26,7 @@ import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUse
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
@@ -82,7 +82,7 @@ class ReaderDiscoverRepository constructor(
 
     suspend fun refreshPosts() {
         withContext(ioDispatcher) {
-            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
+            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
             if (response != Success) _communicationChannel.postValue(Event(response))
         }
     }
@@ -112,7 +112,7 @@ class ReaderDiscoverRepository constructor(
                 _discoverFeed.postValue(result)
             }
             if (refresh) {
-                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
                 if (response != Success) _communicationChannel.postValue(Event(response))
             }
         }

@@ -175,6 +175,9 @@ public class ReaderUpdateLogic {
                         )
                 );
 
+                // manually insert DISCOVER_POST_CARDS tag which is used to store posts for the discover tab
+                serverTopics.add(ReaderTag.createDiscoverPostCardsTag());
+
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());

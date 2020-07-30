@@ -11,6 +11,7 @@ import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -97,10 +98,7 @@ class ReaderDiscoverLogic constructor(
         }
 
         val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
-            if (taskType == REQUEST_FIRST_PAGE) {
-                // TODO malinjir clear cache
-            }
-            handleRequestDiscoverDataResponse(jsonObject, resultListener)
+            handleRequestDiscoverDataResponse(taskType, jsonObject, resultListener)
         }
         val errorListener = ErrorListener { volleyError ->
             AppLog.e(READER, volleyError)
@@ -110,11 +108,18 @@ class ReaderDiscoverLogic constructor(
         WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
     }
 
-    private fun handleRequestDiscoverDataResponse(json: JSONObject?, resultListener: UpdateResultListener) {
+    private fun handleRequestDiscoverDataResponse(
+        taskType: DiscoverTasks,
+        json: JSONObject?,
+        resultListener: UpdateResultListener
+    ) {
         // TODO malinjir move to bg thread
         if (json == null) {
             resultListener.onUpdateResult(FAILED)
             return
+        }
+        if (taskType == REQUEST_FIRST_PAGE) {
+            clearCache()
         }
         val fullCardsJson = json.optJSONArray(JSON_CARDS)
 
@@ -199,5 +204,10 @@ class ReaderDiscoverLogic constructor(
 
     private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray) {
         ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString())
+    }
+
+    private fun clearCache() {
+        ReaderDiscoverCardsTable.reset()
+        ReaderPostTable.deletePostsWithTag(ReaderTag.createDiscoverPostCardsTag())
     }
 }
