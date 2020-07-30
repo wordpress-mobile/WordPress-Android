@@ -46,7 +46,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadStarter
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -137,9 +136,6 @@ class PostListMainViewModel @Inject constructor(
 
     private val _isSearchExpanded = MutableLiveData<Boolean>()
     val isSearchExpanded: LiveData<Boolean> = _isSearchExpanded
-
-    private val _isSearchAvailable = MutableLiveData<Boolean>()
-    val isSearchAvailable: LiveData<Boolean> = _isSearchAvailable
 
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
@@ -257,7 +253,6 @@ class PostListMainViewModel @Inject constructor(
                 hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
-        _isSearchAvailable.value = isSearchAvailable(site)
         _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
@@ -284,9 +279,6 @@ class PostListMainViewModel @Inject constructor(
             })
         }
     }
-
-    private fun isSearchAvailable(site: SiteModel) =
-            SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViaXmlRpc(site)
 
     override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
