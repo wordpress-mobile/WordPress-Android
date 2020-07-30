@@ -101,6 +101,19 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `search is not available for unknown sites`() {
+        site.origin = SiteModel.ORIGIN_UNKNOWN
+        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
+
+        var isSearchAvailable = true
+        viewModel.isSearchAvailable.observeForever {
+            isSearchAvailable = it
+        }
+
+        assertThat(isSearchAvailable).isFalse()
+    }
+
+    @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
