@@ -182,16 +182,15 @@ class PhotoPickerFragment : Fragment() {
                     } else {
                         AppLog.e(
                                 MEDIA,
-                                "This code should be unreachable. If you see this message one of "
-                                        + "the MediaBrowserTypes isn't setup correctly."
+                                "This code should be unreachable. If you see this message one of " +
+                                        "the MediaBrowserTypes isn't setup correctly."
                         )
                     }
                 }
             }
             container_media_source_bar.icon_picker
                     ?.setOnClickListener { v ->
-                        if (browserType == GRAVATAR_IMAGE_PICKER
-                                || browserType == SITE_ICON_PICKER) {
+                        if (browserType == GRAVATAR_IMAGE_PICKER || browserType == SITE_ICON_PICKER) {
                             doIconClicked(ANDROID_CHOOSE_PHOTO)
                         } else {
                             performActionOrShowPopup(v)
@@ -378,7 +377,8 @@ class PhotoPickerFragment : Fragment() {
                 val activity = activity ?: return
                 if (canShowInsertEditBottomBar()) {
                     val isVideoFileSelected = adapter.isVideoFileSelected
-                    container_insert_edit_bar.text_edit.visibility = if (isVideoFileSelected) View.GONE else View.VISIBLE
+                    val editTextVisible = if (isVideoFileSelected) View.GONE else View.VISIBLE
+                    container_insert_edit_bar.text_edit.visibility = editTextVisible
                 }
                 if (actionMode == null) {
                     (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
@@ -584,7 +584,8 @@ class PhotoPickerFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
+        requestCode: Int,
+        permissions: Array<String>,
         grantResults: IntArray
     ) {
         val checkForAlwaysDenied = requestCode == WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE
@@ -608,15 +609,13 @@ class PhotoPickerFragment : Fragment() {
         }
         val isAlwaysDenied = isStoragePermissionAlwaysDenied
         if (show) {
-            val appName = "<strong>" + getString(string.app_name) + "</strong>"
+            val appName = "<strong>${getString(string.app_name)}</strong>"
             val label: String
             label = if (isAlwaysDenied) {
-                val permissionName = ("<strong>"
-                        + WPPermissionUtils.getPermissionName(
+                val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
                         requireActivity(),
                         permission.WRITE_EXTERNAL_STORAGE
-                )
-                        + "</strong>")
+                )}</strong>")
                 String.format(
                         getString(string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName
