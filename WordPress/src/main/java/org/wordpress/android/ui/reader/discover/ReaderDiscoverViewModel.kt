@@ -81,7 +81,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             _uiState.value = ContentUiState(
                     posts.cards.map {
                         when (it) {
-                            is ReaderPostCard -> postUiStateBuilder.mapPostToReaderPostUiState(
+                            is ReaderPostCard -> postUiStateBuilder.mapPostToUiState(
                                     post = it.post,
                                     photonWidth = photonWidth,
                                     photonHeight = photonHeight,
