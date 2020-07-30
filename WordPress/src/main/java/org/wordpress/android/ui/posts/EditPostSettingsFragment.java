@@ -749,7 +749,7 @@ public class EditPostSettingsFragment extends Fragment {
         String trimmedPassword = password.trim();
         Boolean isNewPasswordBlank = trimmedPassword.isEmpty();
         String previousPassword = editPostRepository.getPassword();
-        Boolean isPreviousPasswordBlank = previousPassword.isEmpty() || previousPassword.trim().isEmpty();
+        Boolean isPreviousPasswordBlank = previousPassword.trim().isEmpty();
 
         // Nothing to save
         if (isNewPasswordBlank && isPreviousPasswordBlank) return;
