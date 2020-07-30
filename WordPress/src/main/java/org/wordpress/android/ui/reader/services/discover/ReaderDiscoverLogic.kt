@@ -158,7 +158,7 @@ class ReaderDiscoverLogic constructor(
     private fun insertPostsIntoDb(posts: List<ReaderPost>) {
         val postList = ReaderPostList()
         postList.addAll(posts)
-        ReaderPostTable.addOrUpdatePosts(null, postList)
+        ReaderPostTable.addOrUpdatePosts(ReaderTag.createDiscoverPostCardsTag(), postList)
     }
 
     /**
