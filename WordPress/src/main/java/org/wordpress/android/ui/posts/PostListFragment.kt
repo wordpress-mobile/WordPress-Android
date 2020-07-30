@@ -66,9 +66,12 @@ class PostListFragment : Fragment() {
         PostListAdapter(
                 context = nonNullActivity,
                 imageManager = imageManager,
-                uiHelpers = uiHelpers
+                uiHelpers = uiHelpers,
+                postListFragment = this
         )
     }
+
+    public var canStartEditPostActivity= true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +140,12 @@ class PostListFragment : Fragment() {
         )
 
         initObservers()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        canStartEditPostActivity = true
     }
 
     private fun initObservers() {

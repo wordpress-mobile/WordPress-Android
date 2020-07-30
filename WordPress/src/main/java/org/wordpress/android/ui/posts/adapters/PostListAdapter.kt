@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.ui.posts.PostListFragment
 import org.wordpress.android.ui.posts.PostListItemViewHolder
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
@@ -31,6 +32,7 @@ private const val VIEW_TYPE_LOADING_COMPACT = 4
 
 class PostListAdapter(
     context: Context,
+    private val postListFragment: PostListFragment,
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
 ) : PagedListAdapter<PostListItemType, ViewHolder>(PostListDiffItemCallback) {
@@ -70,7 +72,7 @@ class PostListAdapter(
                 LoadingViewHolder(view)
             }
             VIEW_TYPE_POST -> {
-                PostListItemViewHolder.Standard(parent, imageManager, uiHelpers)
+                PostListItemViewHolder.Standard(parent, imageManager, uiHelpers, postListFragment)
             }
             VIEW_TYPE_POST_COMPACT -> {
                 PostListItemViewHolder.Compact(parent, imageManager, uiHelpers)

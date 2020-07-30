@@ -61,7 +61,8 @@ sealed class PostListItemViewHolder(
     class Standard(
         parent: ViewGroup,
         imageManager: ImageManager,
-        private val uiHelpers: UiHelpers
+        private val uiHelpers: UiHelpers,
+        private val postListFragment: PostListFragment
     ) : PostListItemViewHolder(R.layout.post_list_item, parent, imageManager, uiHelpers) {
         private val excerptTextView: WPTextView = itemView.findViewById(R.id.excerpt)
         private val actionButtons: List<PostListButton> = listOf(
@@ -74,7 +75,12 @@ sealed class PostListItemViewHolder(
             setBasicValues(item.data)
 
             uiHelpers.setTextOrHide(excerptTextView, item.data.excerpt)
-            itemView.setOnClickListener { item.onSelected.invoke() }
+            itemView.setOnClickListener { view ->
+                if (postListFragment.canStartEditPostActivity) {
+                    postListFragment.canStartEditPostActivity = false
+                    item.onSelected.invoke()
+                }
+            }
 
             actionButtons.forEachIndexed { index, button ->
                 updateMenuItem(button, item.actions.getOrNull(index))
@@ -87,7 +93,12 @@ sealed class PostListItemViewHolder(
                 when (action) {
                     is SingleItem -> {
                         postListButton.updateButtonType(action.buttonType)
-                        postListButton.setOnClickListener { action.onButtonClicked.invoke(action.buttonType) }
+                        postListButton.setOnClickListener { view ->
+                            if (postListFragment.canStartEditPostActivity) {
+                                postListFragment.canStartEditPostActivity = false
+                                action.onButtonClicked.invoke(action.buttonType)
+                            }
+                        }
                     }
                     is MoreItem -> {
                         postListButton.updateButtonType(action.buttonType)
