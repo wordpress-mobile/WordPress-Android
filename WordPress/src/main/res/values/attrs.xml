@@ -4,8 +4,6 @@
     <attr name="longClickHint" format="string" />
 
     <!-- Semantic colors -->
-    <attr name="wpColorText" format="reference|color" />
-    <attr name="wpColorTextSubtle" format="reference|color" />
     <attr name="wpColorError" format="reference|color" />
     <attr name="wpColorSuccess" format="reference|color" />
     <attr name="wpColorAppBar" format="reference|color" />
