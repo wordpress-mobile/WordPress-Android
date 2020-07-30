@@ -1,6 +1,9 @@
 package org.wordpress.android.modules;
 
 import android.content.Context;
+import android.util.Base64;
+
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
@@ -25,6 +28,6 @@ public class AppConfigModule {
 
     @Provides
     public EncryptedLoggingKey provideEncryptedLoggingKey() {
-        return new EncryptedLoggingKey(BuildConfig.ENCRYPTED_LOGGING_KEY);
+        return new EncryptedLoggingKey(Key.fromBytes(Base64.decode(BuildConfig.ENCRYPTED_LOGGING_KEY, Base64.DEFAULT)));
     }
 }
