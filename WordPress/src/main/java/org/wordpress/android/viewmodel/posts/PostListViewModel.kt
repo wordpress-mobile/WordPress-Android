@@ -222,7 +222,8 @@ class PostListViewModel @Inject constructor(
         } else {
             PostListDescriptorForXmlRpcSite(
                     site = connector.site,
-                    statusList = connector.postListType.postStatuses
+                    statusList = connector.postListType.postStatuses,
+                    searchQuery = searchQuery
             )
         }
     }
