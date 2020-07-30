@@ -175,7 +175,7 @@ androidExtensions {
 }
 
 dependencies {
-    implementation project(path:':libs:portkey-android:stories')
+    implementation project(path:':libs:stories-android:stories')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
