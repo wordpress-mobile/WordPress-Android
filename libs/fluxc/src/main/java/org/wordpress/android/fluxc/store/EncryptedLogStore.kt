@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import android.util.Base64
 import com.goterl.lazycode.lazysodium.utils.Key
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
@@ -14,7 +13,6 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLog
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.FAILED
 import org.wordpress.android.fluxc.model.encryptedlogging.EncryptedLogUploadState.UPLOADING
-import org.wordpress.android.fluxc.model.encryptedlogging.EncryptionUtils
 import org.wordpress.android.fluxc.model.encryptedlogging.LogEncrypter
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient
@@ -184,14 +182,6 @@ class EncryptedLogStore @Inject constructor(
 
     private fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
-    }
-
-    private fun createPublicKey(publicKeyAsString: String): Key {
-        return if (publicKeyAsString.isNotBlank()) {
-            Key.fromBytes(Base64.decode(publicKeyAsString.toByteArray(), Base64.DEFAULT))
-        } else {
-            EncryptionUtils.sodium.cryptoBoxKeypair().publicKey
-        }
     }
 
     /**
