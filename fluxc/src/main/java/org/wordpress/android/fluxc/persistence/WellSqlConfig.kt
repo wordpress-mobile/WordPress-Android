@@ -1266,7 +1266,8 @@ open class WellSqlConfig : DefaultWellConfig {
                 114 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS WCTopPerformerProductModel")
                     db.execSQL("CREATE TABLE WCTopPerformerProductModel (" +
-                            "ID INTEGER, " +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            "LOCAL_SITE_ID INTEGER," +
                             "PRODUCT_INFO TEXT, " +
                             "CURRENCY TEXT, " +
                             "QUANTITY INTEGER, " +
