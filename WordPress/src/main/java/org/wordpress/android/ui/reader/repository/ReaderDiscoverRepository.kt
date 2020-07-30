@@ -114,7 +114,7 @@ class ReaderDiscoverRepository constructor(
             val refresh =
                     shouldAutoUpdateTagUseCase.get(readerTag)
 
-            if (forceReload || !existsInMemory ) {
+            if (forceReload || !existsInMemory) {
                 reloadPosts()
             }
 
