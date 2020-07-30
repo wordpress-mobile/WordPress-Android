@@ -15,6 +15,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -91,7 +92,6 @@ public class ReaderTagActions {
     public static boolean addTags(@NotNull final List<ReaderTag> tags,
                                   final ReaderActions.ActionListener actionListener,
                                   final boolean isLoggedIn) {
-        ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
 
         ReaderTagList newTags = new ReaderTagList();
         for (ReaderTag tag : tags) {
@@ -107,56 +107,67 @@ public class ReaderTagActions {
             newTags.add(newTag);
         }
         if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
-            ReaderTagTable.addOrUpdateTags(newTags);
-            EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+            saveTagsLocallyOnly(newTags);
         } else {
-            com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {
-                AppLog.i(T.READER, "add tag succeeded");
-                // the response will contain the list of the user's followed tags
-                ReaderTagList followedTags = parseFollowedTags(jsonObject);
-                ReaderTagTable.replaceFollowedTags(followedTags);
+            saveTagsLocallyAndRemotely(actionListener, newTags);
+        }
+
+        return true;
+    }
+
+    private static void saveTagsLocallyOnly(ReaderTagList newTags) {
+        ReaderTagTable.addOrUpdateTags(newTags);
+        EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+    }
+
+    private static void saveTagsLocallyAndRemotely(ActionListener actionListener,
+                                                   ReaderTagList newTags) {
+        ReaderTagList existingFollowedTags = ReaderTagTable.getFollowedTags();
+
+        RestRequest.Listener listener = jsonObject -> {
+            AppLog.i(T.READER, "add tag succeeded");
+            // the response will contain the list of the user's followed tags
+            ReaderTagList followedTags = parseFollowedTags(jsonObject);
+            ReaderTagTable.replaceFollowedTags(followedTags);
+            if (actionListener != null) {
+                ReaderActions.callActionListener(actionListener, true);
+            }
+            EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
+        };
+
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            // treat is as a success if we're adding a tag and the error says the user is
+            // already following it
+            String error = VolleyUtils.errStringFromVolleyError(volleyError);
+            if (error.equals("already_subscribed")) {
+                AppLog.w(T.READER, "add tag succeeded with error " + error);
                 if (actionListener != null) {
                     ReaderActions.callActionListener(actionListener, true);
                 }
                 EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
-            };
+                return;
+            }
 
-            RestRequest.ErrorListener errorListener = volleyError -> {
-                // treat is as a success if we're adding a tag and the error says the user is
-                // already following it
-                String error = VolleyUtils.errStringFromVolleyError(volleyError);
-                if (error.equals("already_subscribed")) {
-                    AppLog.w(T.READER, "add tag succeeded with error " + error);
-                    if (actionListener != null) {
-                        ReaderActions.callActionListener(actionListener, true);
-                    }
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
-                    return;
-                }
+            AppLog.w(T.READER, "add tag failed");
+            AppLog.e(T.READER, volleyError);
 
-                AppLog.w(T.READER, "add tag failed");
-                AppLog.e(T.READER, volleyError);
+            // revert on failure
+            ReaderTagTable.replaceFollowedTags(existingFollowedTags);
+            if (actionListener != null) {
+                ReaderActions.callActionListener(actionListener, false);
+            }
+            EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(false));
+        };
 
-                // revert on failure
-                ReaderTagTable.replaceFollowedTags(existingFollowedTags);
-                if (actionListener != null) {
-                    ReaderActions.callActionListener(actionListener, false);
-                }
-                EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(false));
-            };
+        ReaderTagTable.addOrUpdateTags(newTags);
 
-            ReaderTagTable.addOrUpdateTags(newTags);
+        final String path = "read/tags/mine/new";
 
-            final String path = "read/tags/mine/new";
+        Map<String, String> params = new HashMap<>();
+        String newTagSlugs = getCommaSeparatedSlugs(newTags);
+        params.put("tags", newTagSlugs);
 
-            Map<String, String> params = new HashMap<>();
-            String newTagSlugs = getCommaSeparatedSlugs(newTags);
-            params.put("tags", newTagSlugs);
-
-            WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
-        }
-
-        return true;
+        WordPress.getRestClientUtilsV1_2().post(path, params, null, listener, errorListener);
     }
 
     /*
