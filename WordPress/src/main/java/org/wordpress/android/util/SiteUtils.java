@@ -239,7 +239,7 @@ public class SiteUtils {
         return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 
-    public static boolean isAccessedViewXmlRpc(SiteModel site) {
+    public static boolean isAccessedViaXmlRpc(SiteModel site) {
         return site.getOrigin() == SiteModel.ORIGIN_XMLRPC;
     }
 

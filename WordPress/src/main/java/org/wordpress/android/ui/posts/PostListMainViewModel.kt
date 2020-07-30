@@ -286,7 +286,7 @@ class PostListMainViewModel @Inject constructor(
     }
 
     private fun isSearchAvailable(site: SiteModel) =
-            SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViewXmlRpc(site)
+            SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViaXmlRpc(site)
 
     override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)

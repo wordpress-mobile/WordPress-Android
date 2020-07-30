@@ -136,22 +136,22 @@ class SiteUtilsTest {
     }
 
     @Test
-    fun `isAccessedViewXmlRpc return false when origin is not xml rpc`() {
+    fun `isAccessedViaXmlRpc return false when origin is not xml rpc`() {
         val site = SiteModel()
         site.origin = SiteModel.ORIGIN_WPCOM_REST
 
-        val isAccessedViewXmlRpc = SiteUtils.isAccessedViewXmlRpc(site)
+        val isAccessedViaXmlRpc = SiteUtils.isAccessedViaXmlRpc(site)
 
-        assertThat(isAccessedViewXmlRpc).isFalse()
+        assertThat(isAccessedViaXmlRpc).isFalse()
     }
 
     @Test
-    fun `isAccessedViewXmlRpc return true when origin is xml rpc`() {
+    fun `isAccessedViaXmlRpc return true when origin is xml rpc`() {
         val site = SiteModel()
         site.origin = SiteModel.ORIGIN_XMLRPC
 
-        val isAccessedViewXmlRpc = SiteUtils.isAccessedViewXmlRpc(site)
+        val isAccessedViaXmlRpc = SiteUtils.isAccessedViaXmlRpc(site)
 
-        assertThat(isAccessedViewXmlRpc).isTrue()
+        assertThat(isAccessedViaXmlRpc).isTrue()
     }
 }
