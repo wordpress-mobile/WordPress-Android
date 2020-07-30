@@ -106,15 +106,18 @@ class ReaderDiscoverRepository constructor(
     // Internal functionality
     private suspend fun loadPosts() {
         withContext(ioDispatcher) {
+            val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.let {
                 !it.isEmpty()
             } ?: false
+
             val refresh =
-                    shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
-            if (!existsInMemory) {
-                val result = getPostsForTagUseCase.get(readerTag)
-                _discoverFeed.postValue(result)
+                    shouldAutoUpdateTagUseCase.get(readerTag)
+
+            if (forceReload || !existsInMemory ) {
+                reloadPosts()
             }
+
             if (refresh) {
                 val response = fetchPostsForTagUseCase.fetch(readerTag)
                 if (response != Success) _communicationChannel.postValue(Event(response))
