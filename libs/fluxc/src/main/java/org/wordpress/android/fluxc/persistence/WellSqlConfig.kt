@@ -1260,7 +1260,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "LOCALIZED INTEGER,RESPONSE_LOCALE TEXT NOT NULL,DETAILS_URL TEXT)"
                     )
                 }
-                113 -> migrate(version) {
+                113 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
             }
