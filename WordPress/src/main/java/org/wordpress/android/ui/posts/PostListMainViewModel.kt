@@ -257,7 +257,7 @@ class PostListMainViewModel @Inject constructor(
                 hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
-        _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViewXmlRpc(site)
+        _isSearchAvailable.value = isSearchAvailable(site)
         _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
@@ -284,6 +284,9 @@ class PostListMainViewModel @Inject constructor(
             })
         }
     }
+
+    private fun isSearchAvailable(site: SiteModel) =
+            SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViewXmlRpc(site)
 
     override fun onCleared() {
         lifecycleRegistry.markState(Lifecycle.State.DESTROYED)
