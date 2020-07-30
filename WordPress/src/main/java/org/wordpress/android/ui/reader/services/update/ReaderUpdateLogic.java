@@ -196,17 +196,6 @@ public class ReaderUpdateLogic {
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
-
-                // save changes to recommended topics
-                if (mAccountStore.hasAccessToken()) {
-                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
-                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                        ReaderTagTable.setRecommendedTags(serverRecommended);
-                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
-                    }
-                }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
                 taskCompleted(UpdateTask.TAGS);
