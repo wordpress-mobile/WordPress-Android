@@ -21,7 +21,6 @@ import org.wordpress.android.ui.photopicker.BuildDeviceMediaListTask.BuildDevice
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.ViewUtils;
 import org.wordpress.android.util.ViewUtilsKt;
@@ -35,7 +34,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
-import static org.wordpress.android.ui.photopicker.PhotoPickerFragment.NUM_COLUMNS;
 
 public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.ThumbnailViewHolder> {
     private static final float SCALE_NORMAL = 1.0f;
@@ -55,8 +53,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
     private final Context mContext;
     private RecyclerView mRecycler;
-    private int mThumbWidth;
-    private int mThumbHeight;
 
     private boolean mIsListTaskRunning;
     private boolean mLoadThumbnails = true;
@@ -103,22 +99,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             return;
         }
 
-        int displayWidth = DisplayUtils.getDisplayPixelWidth(mContext);
-        int thumbWidth = displayWidth / NUM_COLUMNS;
-        int thumbHeight = (int) (thumbWidth * 0.75f);
-        boolean sizeChanged = thumbWidth != mThumbWidth || thumbHeight != mThumbHeight;
-
-        // if thumb sizes have changed (due to device rotation, or never being set), we must
-        // reload from scratch - otherwise we can do a refresh so the adapter is only loaded
-        // if there are changes
-        boolean mustReload;
-        if (sizeChanged) {
-            mThumbWidth = thumbWidth;
-            mThumbHeight = thumbHeight;
-            mustReload = true;
-        } else {
-            mustReload = forceReload;
-        }
         mIsListTaskRunning = true;
         mDeviceMediaListBuilder.buildDeviceMedia(mBrowserType, new BuildDeviceMediaListListener() {
             @Override
@@ -129,7 +109,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             @Override
             public void onSuccess(List<PhotoPickerItem> result) {
                 mIsListTaskRunning = false;
-                if (mustReload || !isSameMediaList(result)) {
+                if (forceReload || !isSameMediaList(result)) {
                     mMediaList.clear();
                     mMediaList.addAll(result);
                     notifyDataSetChanged();
@@ -185,8 +165,8 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
     }
 
-    @Override
-    public ThumbnailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull @Override
+    public ThumbnailViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.photo_picker_thumbnail, parent, false);
         return new ThumbnailViewHolder(view);
     }
@@ -203,7 +183,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ThumbnailViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ThumbnailViewHolder holder, int position) {
         PhotoPickerItem item = getItemAtPosition(position);
         if (item == null) {
             return;
@@ -274,9 +254,11 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
 
         ThumbnailViewHolder holder = getViewHolderAtPosition(position);
+        long delayMs = 0;
         if (holder != null) {
             holder.mTxtSelectionCount.setSelected(isSelected);
             updateSelectionCountForPosition(position, isSelected, holder.mTxtSelectionCount);
+            delayMs = ANI_DURATION.toMillis(holder.mImgThumbnail.getContext());
 
             if (isSelected) {
                 AniUtils.scale(holder.mImgThumbnail, SCALE_NORMAL, SCALE_SELECTED, ANI_DURATION);
@@ -296,13 +278,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         if (updateAfter) {
             notifySelectionCountChanged();
             // redraw the grid after the scale animation completes
-            long delayMs = ANI_DURATION.toMillis(mContext);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    notifyDataSetChanged();
-                }
-            }, delayMs);
+            new Handler().postDelayed(this::notifyDataSetChanged, delayMs);
         }
     }
 
@@ -381,9 +357,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mImgThumbnail = view.findViewById(R.id.image_thumbnail);
             mTxtSelectionCount = view.findViewById(R.id.text_selection_count);
             mVideoOverlay = view.findViewById(R.id.image_video_overlay);
-
-            mImgThumbnail.getLayoutParams().width = mThumbWidth;
-            mImgThumbnail.getLayoutParams().height = mThumbHeight;
 
             if (!canMultiselect()) {
                 mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
