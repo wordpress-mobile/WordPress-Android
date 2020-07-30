@@ -88,6 +88,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="WordPress.Stories.Immersive" parent="WordPress.NoActionBar">
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:immersive">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+
     <style name="WordPress.Editor.NoActionBar" parent="WordPress.NoActionBar">
         <item name="actionMenuTextColor">?attr/colorOnPrimarySurface</item>
     </style>
@@ -127,10 +134,6 @@
         <item name="cornerSizeTopLeft">@dimen/bottom_sheet_handle_container_radius</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
-    </style>
-
-    <style name="WordPress.PrepublishingNudges.BottomSheetDialogTheme" parent="WordPress.BottomSheetDialogTheme">
-        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <!-- http://android-developers.blogspot.com/2014/10/appcompat-v21-material-design-for-pre.html -->
@@ -969,10 +972,15 @@
 
     <style name="MainBottomSheetRowIcon" parent="MySiteListRowIcon">
         <item name="android:layout_height">@dimen/main_bottom_sheet_list_row_icon_size</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentStart">true</item>
     </style>
 
     <style name="MainBottomSheetRowTextView" parent="MySiteListRowTextView">
         <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_width">match_parent</item>
     </style>
 
     <!-- Reader styles -->

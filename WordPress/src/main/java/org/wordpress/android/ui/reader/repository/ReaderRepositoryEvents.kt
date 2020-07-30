@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.repository
 
 sealed class ReaderRepositoryEvent {
+    object ReaderPostTableActionEnded : ReaderRepositoryEvent()
     sealed class PostLikeEnded(
         val postId: Long,
         val blogId: Long,
@@ -18,6 +19,7 @@ sealed class ReaderRepositoryEvent {
 
 sealed class ReaderRepositoryCommunication {
     object Success : ReaderRepositoryCommunication()
+    data class SuccessWithData<out T>(val data: T) : ReaderRepositoryCommunication()
     class Failure(val event: ReaderRepositoryEvent) : ReaderRepositoryCommunication()
     sealed class Error : ReaderRepositoryCommunication() {
         object NetworkUnavailable : Error()

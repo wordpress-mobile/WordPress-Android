@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,24 +18,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.login.widgets.WPBottomSheetDialogFragment
 import org.wordpress.android.ui.posts.PrepublishingHomeItemUiState.ActionType
 import org.wordpress.android.ui.posts.PrepublishingScreen.HOME
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingBottomSheetListener
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment
+import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.KeyboardResizeViewUtil
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import javax.inject.Inject
 
 class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         PrepublishingScreenClosedListener, PrepublishingActionClickedListener {
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject internal lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     private lateinit var viewModel: PrepublishingViewModel
+    private lateinit var keyboardResizeViewUtil: KeyboardResizeViewUtil
 
     private var prepublishingBottomSheetListener: PrepublishingBottomSheetListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.WordPress_PrepublishingNudges_BottomSheetDialogTheme)
         (requireNotNull(activity).application as WordPress).component().inject(this)
     }
 
@@ -58,7 +63,10 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        val view = inflater.inflate(R.layout.post_prepublishing_bottom_sheet, container)
+        keyboardResizeViewUtil = KeyboardResizeViewUtil(requireActivity(), view)
+        keyboardResizeViewUtil.enable()
+        return view
     }
 
     override fun onResume() {
@@ -99,6 +107,11 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         setupMinimumHeightForFragmentContainer()
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        analyticsTrackerWrapper.track(Stat.PREPUBLISHING_BOTTOM_SHEET_DISMISSED)
+        super.onDismiss(dialog)
+    }
+
     private fun setupMinimumHeightForFragmentContainer() {
         val isPage = checkNotNull(arguments?.getBoolean(IS_PAGE)) {
             "arguments can't be null."
@@ -133,6 +146,12 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
             }
         })
 
+        viewModel.dismissKeyboard.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                ActivityUtils.hideKeyboardForced(view)
+            }
+        })
+
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(KEY_SCREEN_STATE)
         val site = arguments?.getSerializable(SITE) as SiteModel
 
@@ -141,17 +160,28 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
     private fun navigateToScreen(navigationTarget: PrepublishingNavigationTarget) {
         val (fragment, tag) = when (navigationTarget.targetScreen) {
-            HOME -> Pair(
-                    PrepublishingHomeFragment.newInstance(),
-                    PrepublishingHomeFragment.TAG
-            )
+            HOME -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                        PrepublishingHomeFragment.newInstance(isStoryPost),
+                        PrepublishingHomeFragment.TAG
+                )
+            }
             PrepublishingScreen.PUBLISH -> Pair(
                     PrepublishingPublishSettingsFragment.newInstance(),
                     PrepublishingPublishSettingsFragment.TAG
             )
-            PrepublishingScreen.TAGS -> Pair(
-                    PrepublishingTagsFragment.newInstance(navigationTarget.site), PrepublishingTagsFragment.TAG
-            )
+            PrepublishingScreen.TAGS -> {
+                val isStoryPost = checkNotNull(arguments?.getBoolean(IS_STORY_POST)) {
+                    "arguments can't be null."
+                }
+                Pair(
+                    PrepublishingTagsFragment.newInstance(navigationTarget.site, isStoryPost),
+                        PrepublishingTagsFragment.TAG
+                )
+            }
         }
 
         fadeInFragment(fragment, tag)
@@ -176,10 +206,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         viewModel.writeToBundle(outState)
     }
 
-    override fun onCloseClicked() {
-        viewModel.onCloseClicked()
-    }
-
     override fun onBackClicked() {
         viewModel.onBackClicked()
     }
@@ -196,13 +222,15 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
         const val TAG = "prepublishing_bottom_sheet_fragment_tag"
         const val SITE = "prepublishing_bottom_sheet_site_model"
         const val IS_PAGE = "prepublishing_bottom_sheet_is_page"
+        const val IS_STORY_POST = "prepublishing_bottom_sheet_is_story_post"
 
         @JvmStatic
-        fun newInstance(@NonNull site: SiteModel, isPage: Boolean) =
+        fun newInstance(@NonNull site: SiteModel, isPage: Boolean, isStoryPost: Boolean) =
                 PrepublishingBottomSheetFragment().apply {
                     arguments = Bundle().apply {
                         putSerializable(SITE, site)
                         putBoolean(IS_PAGE, isPage)
+                        putBoolean(IS_STORY_POST, isStoryPost)
                     }
                 }
     }

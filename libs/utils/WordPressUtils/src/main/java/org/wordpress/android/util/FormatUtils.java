@@ -55,8 +55,25 @@ public class FormatUtils {
      * returns the passed double percentage (0 to 1) formatted as an human readable percentage. Ex: 0.25 returns 25%
      */
     public static final String formatPercentage(double value) {
+        return formatPercentageLimit100(value, false);
+    }
+
+    /*
+     * returns the passed double percentage (0 to 1) formatted as an human readable percentage. Ex: 0.251 returns 25.1%
+     * if limit100 is true, it limits the percentage to 100%
+     */
+    public static final String formatPercentageLimit100(double value, boolean limit100) {
+        double limit = 1.0001;
+
         NumberFormat percentFormat = NumberFormat.getPercentInstance();
         percentFormat.setMaximumFractionDigits(1);
-        return percentFormat.format(value);
+
+        if (limit100 && value > limit) {
+            value = limit;
+        }
+
+        String percentage = percentFormat.format(value);
+
+        return percentage;
     }
 }

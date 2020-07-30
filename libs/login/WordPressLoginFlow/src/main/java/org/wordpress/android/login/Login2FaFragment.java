@@ -283,6 +283,8 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         if (TextUtils.isEmpty(m2FaInput.getEditText().getText())) {
             m2FaInput.setText(getAuthCodeFromClipboard());
         }
+
+        updateContinueButtonEnabledStatus();
     }
 
     protected void next() {
@@ -327,7 +329,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(CLIPBOARD_SERVICE);
 
         if (clipboard.getPrimaryClip() != null && clipboard.getPrimaryClip().getItemAt(0) != null
-                && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
+            && clipboard.getPrimaryClip().getItemAt(0).getText() != null) {
             String code = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
 
             final Matcher twoStepAuthCodeMatcher = TWO_STEP_AUTH_CODE.matcher("");
@@ -374,11 +376,17 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         show2FaError(null);
+        updateContinueButtonEnabledStatus();
     }
 
     private void show2FaError(String message) {
         mAnalyticsListener.trackFailure(message);
         m2FaInput.setError(message);
+    }
+
+    private void updateContinueButtonEnabledStatus() {
+        String currentVerificationCode = m2FaInput.getEditText().getText().toString();
+        getPrimaryButton().setEnabled(!currentVerificationCode.trim().isEmpty());
     }
 
     @Override
@@ -496,7 +504,7 @@ public class Login2FaFragment extends LoginBaseFormFragment<LoginListener> imple
                 mAnalyticsListener.trackSocialConnectFailure();
                 doFinishLogin();
             }
-        // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
+            // Two-factor authentication code was sent via SMS to account phone number; replace SMS nonce with response.
         } else if (!TextUtils.isEmpty(event.phoneNumber) && !TextUtils.isEmpty(event.nonce)) {
             endProgress();
             mPhoneNumber = event.phoneNumber;
