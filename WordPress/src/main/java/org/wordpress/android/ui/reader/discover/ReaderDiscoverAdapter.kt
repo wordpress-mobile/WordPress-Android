@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
 private const val postViewType: Int = 1
+private const val interestViewType: Int = 2
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -43,6 +45,7 @@ class ReaderDiscoverAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is ReaderPostUiState -> postViewType
+            is ReaderInterestUiState -> interestViewType
         }
     }
 
@@ -59,6 +62,10 @@ class ReaderDiscoverAdapter(
             return when (oldItem) {
                 is ReaderPostUiState -> {
                     oldItem.postId == (newItem as ReaderPostUiState).postId && oldItem.blogId == newItem.blogId
+                }
+
+                is ReaderInterestUiState -> {
+                    oldItem == newItem
                 }
             }
         }
