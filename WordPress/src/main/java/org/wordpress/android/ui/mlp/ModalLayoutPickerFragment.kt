@@ -50,7 +50,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = ModalLayoutPickerAdapter(requireActivity())
+        recyclerView.adapter = ModalLayoutPickerAdapter()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**

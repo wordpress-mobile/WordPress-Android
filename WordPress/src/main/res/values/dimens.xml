@@ -537,12 +537,19 @@
 
     <!-- Modal Layout Picker Styles -->
     <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
-    <dimen name="mlp_layouts_row_height">150dp</dimen>
-    <dimen name="mlp_layouts_title_start_margin">15dp</dimen>
+    <dimen name="mlp_layouts_row_height">281dp</dimen>
     <dimen name="mlp_bottom_shadow_height">5dp</dimen>
     <dimen name="mlp_bottom_shadow_height_overlap">-5dp</dimen>
     <dimen name="mlp_bottom_button_vertical_margin">16dp</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">20dp</dimen>
     <dimen name="mlp_categories_row_height">52dp</dimen>
-
+    <dimen name="mlp_layout_card_height">204dp</dimen>
+    <dimen name="mlp_layout_card_width">136dp</dimen>
+    <dimen name="mlp_layout_card_margin_start">20dp</dimen>
+    <dimen name="mlp_layout_card_margin_end">8dp</dimen>
+    <dimen name="mlp_layout_card_margin_bottom">29dp</dimen>
+    <dimen name="mlp_layout_card_margin_top">16dp</dimen>
+    <dimen name="mlp_layout_card_elevation">4dp</dimen>
+    <dimen name="mlp_layout_card_radius">4dp</dimen>
+    <dimen name="mlp_layouts_line_separator_height">1dp</dimen>
 </resources>

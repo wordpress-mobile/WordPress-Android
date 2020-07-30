@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
+import org.wordpress.android.ui.mlp.LayoutListItem
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -54,11 +56,23 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
         listItems.add(ModalLayoutPickerListItem.Categories())
 
-        repeat(10) { // Demo Code: TO BE REMOVED
-            listItems.add(ModalLayoutPickerListItem.Layouts(" "))
-        }
+        loadLayouts(listItems)
 
         _listItems.postValue(listItems)
+    }
+
+    /**
+     * Loads DEMO layout data
+     */
+    private fun loadLayouts(listItems: ArrayList<ModalLayoutPickerListItem>) {
+        val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+
+        demoLayouts.categories.forEach { c ->
+            val layouts = demoLayouts.layouts(c.slug).map { l ->
+                LayoutListItem(l.slug, l.title, l.preview, selected = false)
+            }
+            listItems.add(ModalLayoutPickerListItem.LayoutCategory(c.title, c.description, layouts))
+        }
     }
 
     /**

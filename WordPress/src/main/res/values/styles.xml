@@ -1188,15 +1188,21 @@
         <item name="android:layout_gravity">top</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">1</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_marginStart">@dimen/mlp_layouts_title_start_margin</item>
+        <item name="android:textSize">@dimen/text_sz_large</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
     </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">
         <item name="android:background">@color/gray_5</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">@dimen/mlp_layouts_line_separator_height</item>
+        <item name="android:layout_marginBottom">@dimen/mlp_layout_card_margin_top</item>
         <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="LayoutCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/mlp_layout_card_elevation</item>
+        <item name="cardCornerRadius">@dimen/mlp_layout_card_radius</item>
     </style>
 
 </resources>
