@@ -1264,8 +1264,8 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
                 114 -> migrate(version) {
-                    db.execSQL("DROP TABLE IF EXISTS WCProductLeaderboardsModel")
-                    db.execSQL("CREATE TABLE WCProductLeaderboardsModel (" +
+                    db.execSQL("DROP TABLE IF EXISTS WCTopPerformerProductModel")
+                    db.execSQL("CREATE TABLE WCTopPerformerProductModel (" +
                             "ID INTEGER, " +
                             "PRODUCT_INFO TEXT, " +
                             "CURRENCY TEXT, " +
