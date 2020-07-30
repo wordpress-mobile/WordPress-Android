@@ -5,13 +5,21 @@
     style="@style/LayoutCardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_medium"
-    android:layout_marginEnd="@dimen/margin_extra_large">
+    android:layout_marginEnd="@dimen/margin_extra_large"
+    android:layout_marginTop="@dimen/margin_medium">
 
     <ImageView
         android:id="@+id/preview"
         android:layout_width="@dimen/mlp_layout_card_width"
         android:layout_height="@dimen/mlp_layout_card_height"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/selected_overlay"
+        android:layout_width="@dimen/mlp_layout_card_width"
+        android:layout_height="@dimen/mlp_layout_card_height"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_layout_selection_overlay"
         tools:ignore="ContentDescription" />
 
 </com.google.android.material.card.MaterialCardView>

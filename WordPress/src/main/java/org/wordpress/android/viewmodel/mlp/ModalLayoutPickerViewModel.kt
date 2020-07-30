@@ -33,6 +33,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
 
     /**
+     * Tracks the selected layout slug
+     */
+    private val _selectedLayoutSlug = MutableLiveData<Event<String?>>()
+    val selectedLayoutSlug: LiveData<Event<String?>> = _selectedLayoutSlug
+
+    /**
      * Tracks the Modal Layout Picker list items
      */
     private val _listItems = MutableLiveData<List<ModalLayoutPickerListItem>>()
@@ -48,9 +54,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         loadListItems()
     }
 
-    private fun loadListItems(titleVisibility: Boolean = true) {
+    private fun loadListItems() {
         val listItems = ArrayList<ModalLayoutPickerListItem>()
 
+        val titleVisibility = _isHeaderVisible.value?.peekContent() ?: false
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 
@@ -67,11 +74,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun loadLayouts(listItems: ArrayList<ModalLayoutPickerListItem>) {
         val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
 
-        demoLayouts.categories.forEach { c ->
-            val layouts = demoLayouts.layouts(c.slug).map { l ->
-                LayoutListItem(l.slug, l.title, l.preview, selected = false)
+        demoLayouts.categories.forEach { category ->
+            val layouts = demoLayouts.layouts(category.slug).map { layout ->
+                val selected = _selectedLayoutSlug.value?.peekContent()
+                LayoutListItem(layout.slug, layout.title, layout.preview, layout.slug == selected)
             }
-            listItems.add(ModalLayoutPickerListItem.LayoutCategory(c.title, c.description, layouts))
+            listItems.add(ModalLayoutPickerListItem.LayoutCategory(category.title, category.description, layouts))
         }
     }
 
@@ -96,7 +104,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
         if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
         _isHeaderVisible.postValue(Event(headerShouldBeVisible))
-        loadListItems(!headerShouldBeVisible)
+        loadListItems()
+    }
+
+    /**
+     * Layout tapped
+     */
+    fun layoutTapped(layout: LayoutListItem) {
+        if (layout.selected) { // deselect
+            _selectedLayoutSlug.postValue(Event(null))
+        } else {
+            _selectedLayoutSlug.postValue(Event(layout.slug))
+        }
+        loadListItems()
     }
 
     /**

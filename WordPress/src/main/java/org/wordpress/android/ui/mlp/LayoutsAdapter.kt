@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType
+import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
 /**
@@ -19,7 +20,8 @@ import javax.inject.Inject
  */
 class LayoutsAdapter(
     private val context: Context,
-    private val layouts: List<LayoutListItem>
+    private val layouts: List<LayoutListItem>,
+    private val selection: LayoutSelection
 ) : RecyclerView.Adapter<LayoutsAdapter.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
@@ -46,10 +48,19 @@ class LayoutsAdapter(
     ) {
         val layout = layouts[position]
         imageManager.load(holder.preview, ImageType.THEME, layout.preview, FIT_CENTER)
-        holder.preview.contentDescription = layout.title
+        holder.selected.setVisible(!layout.selected)
+        holder.preview.contentDescription = if (layout.selected) context.getString(
+                R.string.mlp_layout_selected,
+                layout.title
+        ) else layout.title
+        holder.container.setOnClickListener {
+            selection.layoutTapped(layout)
+        }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val container: View = itemView.layout_container
         val preview: ImageView = itemView.preview
+        val selected: ImageView = itemView.selected_overlay
     }
 }

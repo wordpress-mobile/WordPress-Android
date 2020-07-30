@@ -29,7 +29,7 @@ import javax.inject.Inject
 /**
  * Implements the Modal Layout Picker UI based on the [BottomSheetDialogFragment] to inherit the container behavior
  */
-class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
+class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelection {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
 
@@ -50,7 +50,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = ModalLayoutPickerAdapter()
+        recyclerView.adapter = ModalLayoutPickerAdapter(this)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
@@ -83,6 +83,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun layoutTapped(layout: LayoutListItem) {
+        viewModel.layoutTapped(layout)
     }
 
     private fun setupViewModel() {

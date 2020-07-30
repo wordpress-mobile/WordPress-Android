@@ -64,10 +64,11 @@ class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 /**
  * Modal Layout Picker layouts view holder
  */
-class LayoutsItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
-        parent,
-        R.layout.modal_layout_picker_layouts_row
-) {
+class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelection: LayoutSelection) :
+        ModalLayoutPickerViewHolder(
+                parent,
+                R.layout.modal_layout_picker_layouts_row
+        ) {
     private val title: TextView = itemView.findViewById(R.id.title)
     private val recycler: RecyclerView = itemView.findViewById(R.id.layouts_recycler_view)
 
@@ -80,7 +81,7 @@ class LayoutsItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 
         recycler.apply {
             layoutManager = childLayoutManager
-            adapter = LayoutsAdapter(recycler.context, item.layouts)
+            adapter = LayoutsAdapter(recycler.context, item.layouts, layoutSelection)
             setRecycledViewPool(viewPool)
         }
     }

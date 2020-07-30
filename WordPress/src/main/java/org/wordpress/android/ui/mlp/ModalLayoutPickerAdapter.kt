@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mlp
 
-import android.content.Context
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,7 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 /**
  * Renders the rows of the Modal Layout Picker
  */
-class ModalLayoutPickerAdapter : Adapter<ModalLayoutPickerViewHolder>() {
+class ModalLayoutPickerAdapter(private val layoutSelection: LayoutSelection) : Adapter<ModalLayoutPickerViewHolder>() {
     private var items: List<ModalLayoutPickerListItem> = listOf()
 
     fun update(newItems: List<ModalLayoutPickerListItem>) {
@@ -43,7 +42,7 @@ class ModalLayoutPickerAdapter : Adapter<ModalLayoutPickerViewHolder>() {
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
         ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent)
-        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent)
+        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, layoutSelection)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 
