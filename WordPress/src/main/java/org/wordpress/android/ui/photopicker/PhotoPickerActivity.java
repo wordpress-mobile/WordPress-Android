@@ -328,23 +328,25 @@ public class PhotoPickerActivity extends LocaleAwareActivity
 
     private void doMediaIdsSelected(ArrayList<Long> mediaIds, @NonNull PhotoPickerMediaSource source) {
         if (mediaIds != null && mediaIds.size() > 0) {
-            if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
-                // if user chose a featured image, track image picked event
-                mFeaturedImageHelper.trackFeaturedImageEvent(
-                        FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
-                        mLocalPostId
-                );
-
+            if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
+                // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
                 Intent data = new Intent()
-                        .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
+                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
+                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
                         .putExtra(EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
             } else {
-                // TODO WPSTORIES add TRACKS (see how it's tracked above? maybe do along the same lines)
+                // if user chose a featured image, track image picked event
+                if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {
+                    mFeaturedImageHelper.trackFeaturedImageEvent(
+                            FeaturedImageHelper.TrackableEvent.IMAGE_PICKED,
+                            mLocalPostId
+                    );
+                }
+
                 Intent data = new Intent()
-                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
-                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
+                        .putExtra(EXTRA_MEDIA_ID, mediaIds.get(0))
                         .putExtra(EXTRA_MEDIA_SOURCE, source.name());
                 setResult(RESULT_OK, data);
                 finish();
