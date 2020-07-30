@@ -143,18 +143,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         SiteModel site = listDescriptor.getSite();
         List<String> fields = Arrays.asList("post_id", "post_modified_gmt", "post_status");
         final int pageSize = listDescriptor.getConfig().getNetworkPageSize();
-        List<Object> params = createFetchPostListParameters(
-                site.getSelfHostedSiteId(),
-                site.getUsername(),
-                site.getPassword(),
-                false,
-                offset,
-                pageSize,
-                listDescriptor.getStatusList(),
-                fields,
-                listDescriptor.getOrderBy().getValue(),
-                listDescriptor.getOrder().getValue(),
-                listDescriptor.getSearchQuery());
+        List<Object> params =
+                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(), false,
+                        offset, pageSize, listDescriptor.getStatusList(), fields,
+                        listDescriptor.getOrderBy().getValue(), listDescriptor.getOrder().getValue(),
+                        listDescriptor.getSearchQuery());
         final boolean loadedMore = offset > 0;
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
@@ -187,18 +180,9 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
 
     public void fetchPosts(final SiteModel site, final boolean getPages, List<PostStatus> statusList,
                            final int offset) {
-        List<Object> params = createFetchPostListParameters(
-                site.getSelfHostedSiteId(),
-                site.getUsername(),
-                site.getPassword(),
-                getPages,
-                offset,
-                PostStore.NUM_POSTS_PER_FETCH,
-                statusList,
-                null,
-                null,
-                null,
-                null);
+        List<Object> params =
+                createFetchPostListParameters(site.getSelfHostedSiteId(), site.getUsername(), site.getPassword(),
+                        getPages, offset, PostStore.NUM_POSTS_PER_FETCH, statusList, null, null, null, null);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POSTS, params,
                 new Listener<Object[]>() {
