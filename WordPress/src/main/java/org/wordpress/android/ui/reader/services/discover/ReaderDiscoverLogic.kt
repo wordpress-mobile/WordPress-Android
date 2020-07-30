@@ -61,20 +61,10 @@ class ReaderDiscoverLogic constructor(
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
 
-        when (task) {
-            REQUEST_MORE -> {
-                requestDataForDiscover(REQUEST_MORE, UpdateResultListener {
-                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
-                    completionListener.onCompleted(listenerCompanion)
-                })
-            }
-            REQUEST_FIRST_PAGE -> {
-                requestDataForDiscover(REQUEST_FIRST_PAGE, UpdateResultListener {
-                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
-                    completionListener.onCompleted(listenerCompanion)
-                })
-            }
-        }
+        requestDataForDiscover(task, UpdateResultListener {
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
+            completionListener.onCompleted(listenerCompanion)
+        })
     }
 
     private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
