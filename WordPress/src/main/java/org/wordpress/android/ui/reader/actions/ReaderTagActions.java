@@ -92,7 +92,6 @@ public class ReaderTagActions {
     public static boolean addTags(@NotNull final List<ReaderTag> tags,
                                   final ReaderActions.ActionListener actionListener,
                                   final boolean isLoggedIn) {
-
         ReaderTagList newTags = new ReaderTagList();
         for (ReaderTag tag : tags) {
             final String tagNameForApi = ReaderUtils.sanitizeWithDashes(tag.getTagSlug());
