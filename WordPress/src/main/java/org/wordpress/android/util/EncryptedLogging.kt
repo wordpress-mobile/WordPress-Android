@@ -1,6 +1,5 @@
 package org.wordpress.android.util
 
-import androidx.lifecycle.LiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -13,9 +12,6 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploade
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
-import org.wordpress.android.viewmodel.helpers.ConnectionStatus.UNAVAILABLE
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
@@ -26,28 +22,14 @@ import javax.inject.Singleton
 class EncryptedLogging @Inject constructor(
     private val dispatcher: Dispatcher,
     private val encryptedLogStore: EncryptedLogStore,
-    private val connectionStatusLiveData: LiveData<ConnectionStatus>,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
-    private var lastConnectionStatus = AVAILABLE
 
     fun start() {
         dispatcher.dispatch(EncryptedLogActionBuilder.newResetUploadStatesAction())
-        uploadQueuedEncryptedLogsInBgThread()
-
-        connectionStatusLiveData.observeForever { newStatus ->
-            val connectionBecameAvailable = newStatus == AVAILABLE && lastConnectionStatus == UNAVAILABLE
-            lastConnectionStatus = newStatus
-            if (connectionBecameAvailable) {
-                uploadQueuedEncryptedLogsInBgThread()
-            }
-        }
-    }
-
-    private fun uploadQueuedEncryptedLogsInBgThread() {
         coroutineScope.launch {
-            dispatcher.dispatch(EncryptedLogActionBuilder.newResetUploadStatesAction())
             encryptedLogStore.uploadQueuedEncryptedLogs()
         }
     }
@@ -61,14 +43,14 @@ class EncryptedLogging @Inject constructor(
      * the unnecessary upload failure.
      */
     fun encryptAndUploadLogFile(logFile: File, shouldStartUploadImmediately: Boolean): String? {
-        // TODO: Check how long log files are kept for and increase the duration if necessary
         if (logFile.exists()) {
             val uuid = UUID.randomUUID().toString()
             val payload = UploadEncryptedLogPayload(
                     uuid = uuid,
                     file = logFile,
                     // If the connection is not available, we shouldn't try to upload immediately
-                    shouldStartUploadImmediately = shouldStartUploadImmediately && lastConnectionStatus == AVAILABLE
+                    shouldStartUploadImmediately = shouldStartUploadImmediately &&
+                            networkUtilsWrapper.isNetworkAvailable()
             )
             dispatcher.dispatch(EncryptedLogActionBuilder.newUploadLogAction(payload))
             return uuid
