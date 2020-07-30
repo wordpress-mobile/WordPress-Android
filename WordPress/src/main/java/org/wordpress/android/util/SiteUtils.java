@@ -240,7 +240,7 @@ public class SiteUtils {
     }
 
     public static boolean isAccessedViewXmlRpc(SiteModel site) {
-        return false;
+        return site.getOrigin() == SiteModel.ORIGIN_XMLRPC;
     }
 
     public static String getSiteIconUrl(SiteModel site, int size) {
