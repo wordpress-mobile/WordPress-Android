@@ -30,9 +30,6 @@ public class ReaderEvents {
         }
     }
 
-    public static class RecommendedTagsChanged {
-    }
-
     public static class TagAdded {
         private final String mTagName;
 
