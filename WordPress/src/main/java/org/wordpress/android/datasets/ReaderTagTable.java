@@ -21,7 +21,6 @@ import java.util.Date;
 
 /**
  * tbl_tags stores the list of tags the user subscribed to or has by default
- * tbl_tags_recommended stores the list of recommended tags returned by the api
  */
 public class ReaderTagTable {
     protected static void createTables(SQLiteDatabase db) {
@@ -34,20 +33,10 @@ public class ReaderTagTable {
                    + " date_updated TEXT,"
                    + " PRIMARY KEY (tag_slug, tag_type)"
                    + ")");
-
-        db.execSQL("CREATE TABLE tbl_tags_recommended ("
-                   + " tag_slug TEXT COLLATE NOCASE,"
-                   + " tag_display_name TEXT COLLATE NOCASE,"
-                   + " tag_title TEXT COLLATE NOCASE,"
-                   + " tag_type INTEGER DEFAULT 0,"
-                   + " endpoint TEXT,"
-                   + " PRIMARY KEY (tag_slug, tag_type)"
-                   + ")");
     }
 
     protected static void dropTables(SQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS tbl_tags");
-        db.execSQL("DROP TABLE IF EXISTS tbl_tags_recommended");
     }
 
     /*
