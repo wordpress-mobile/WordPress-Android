@@ -223,8 +223,8 @@ class EncryptedLogStore @Inject constructor(
         val shouldStartUploadImmediately: Boolean = false
     ) : Payload<BaseNetworkError>()
 
-    sealed class OnEncryptedLogUploaded(val uuid: String, val file: File): Store.OnChanged<UploadEncryptedLogError>() {
-        class EncryptedLogUploadedSuccessfully(uuid: String, file: File): OnEncryptedLogUploaded(uuid, file)
+    sealed class OnEncryptedLogUploaded(val uuid: String, val file: File) : Store.OnChanged<UploadEncryptedLogError>() {
+        class EncryptedLogUploadedSuccessfully(uuid: String, file: File) : OnEncryptedLogUploaded(uuid, file)
         class EncryptedLogFailedToUpload(
             uuid: String,
             file: File,
