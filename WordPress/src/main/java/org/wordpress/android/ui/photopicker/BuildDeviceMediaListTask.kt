@@ -80,7 +80,7 @@ class BuildDeviceMediaListTask(
 
     interface BuildDeviceMediaListListener {
         fun onCancelled()
-        fun onSuccess(result: List<PhotoPickerItem>?)
+        fun onSuccess(result: List<PhotoPickerItem>)
     }
 
     companion object {

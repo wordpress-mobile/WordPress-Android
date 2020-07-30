@@ -17,6 +17,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.view.ActionMode.Callback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView.OnFlingListener
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
+import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -64,6 +66,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
+import org.wordpress.android.util.image.ImageManager
 import java.util.HashMap
 import javax.inject.Inject
 import kotlin.math.abs
@@ -103,6 +106,7 @@ class PhotoPickerFragment : Fragment() {
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PhotoPickerViewModel
 
@@ -216,6 +220,43 @@ class PhotoPickerFragment : Fragment() {
             container_insert_edit_bar.text_insert
                     .setOnClickListener { performInsertAction() }
         }
+
+        val layoutManager = GridLayoutManager(
+                activity,
+                NUM_COLUMNS
+        )
+
+        savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
+            layoutManager.onRestoreInstanceState(it)
+        }
+
+        recycler.layoutManager = layoutManager
+
+        viewModel.data.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                if (recycler.adapter == null) {
+                    recycler.adapter = PhotoPickerAdapter(
+                            activity,
+                            browserType,
+                            mAdapterListener,
+                            deviceMediaListBuilder,
+                            imageManager
+                    )
+                }
+                val adapter = recycler.adapter as PhotoPickerAdapter
+                val layoutManager = recyclerView?.layoutManager
+                val recyclerViewState = layoutManager?.onSaveInstanceState()
+                adapter.loadData(it)
+                layoutManager?.onRestoreInstanceState(recyclerViewState)
+                if (listener != null) {
+                    // restore previous selection
+                    if (selectedPositions != null) {
+                        adapter.setSelectedPositions(selectedPositions!!)
+                        selectedPositions = null
+                    }
+                }
+            }
+        })
     }
 
     private fun canShowMediaSourceBottomBar(): Boolean {
@@ -242,6 +283,9 @@ class PhotoPickerFragment : Fragment() {
         if (hasAdapter() && adapter.numSelected > 0) {
             val selectedItems = adapter.selectedPositions
             outState.putIntegerArrayList(KEY_SELECTED_POSITIONS, selectedItems)
+        }
+        recycler.layoutManager?.let {
+            outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
     }
 
@@ -386,19 +430,6 @@ class PhotoPickerFragment : Fragment() {
                 updateActionModeTitle()
             }
         }
-
-        override fun onAdapterLoaded(isEmpty: Boolean) {
-            // restore previous selection
-            if (selectedPositions != null) {
-                adapter.setSelectedPositions(selectedPositions!!)
-                selectedPositions = null
-            }
-            // restore previous state
-            if (restoreState != null) {
-                (recycler.layoutManager as GridLayoutManager).onRestoreInstanceState(restoreState)
-                restoreState = null
-            }
-        }
     }
 
     private fun hasAdapter(): Boolean {
@@ -408,37 +439,16 @@ class PhotoPickerFragment : Fragment() {
     private val adapter: PhotoPickerAdapter
         get() {
             if (recycler.adapter == null) {
-                recycler.adapter = PhotoPickerAdapter(activity, browserType, mAdapterListener, deviceMediaListBuilder)
+                recycler.adapter = PhotoPickerAdapter(
+                        activity,
+                        browserType,
+                        mAdapterListener,
+                        deviceMediaListBuilder,
+                        imageManager
+                )
             }
             return recycler.adapter as PhotoPickerAdapter
         }
-
-    /*
-     * populates the adapter with media stored on the device
-     */
-    fun reload() {
-        if (!isAdded) {
-            AppLog.w(
-                    POSTS,
-                    "Photo picker > can't reload when not added"
-            )
-            return
-        }
-        if (!hasStoragePermission()) {
-            return
-        }
-
-        // save the current state so we can restore it after loading
-        if (recycler.layoutManager != null) {
-            restoreState = (recycler.layoutManager as GridLayoutManager).onSaveInstanceState()
-        }
-        recycler.layoutManager = GridLayoutManager(
-                activity,
-                NUM_COLUMNS
-        )
-        recycler.adapter = adapter
-        adapter.refresh(true)
-    }
 
     /*
      * similar to the above but only repopulates if changes are detected
@@ -454,11 +464,7 @@ class PhotoPickerFragment : Fragment() {
         if (!hasStoragePermission()) {
             return
         }
-        if (recycler.layoutManager == null || recycler.adapter == null) {
-            reload()
-        } else {
-            adapter.refresh(false)
-        }
+        viewModel.refreshData(browserType, false)
     }
 
     fun finishActionMode() {
@@ -560,7 +566,7 @@ class PhotoPickerFragment : Fragment() {
         if (hasStoragePermission()) {
             showSoftAskView(false)
             if (!hasAdapter()) {
-                reload()
+                refresh()
             }
         } else {
             showSoftAskView(true)
@@ -686,6 +692,7 @@ class PhotoPickerFragment : Fragment() {
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
         private const val KEY_SELECTED_POSITIONS = "selected_positions"
+        private const val KEY_LIST_STATE = "list_state"
         const val NUM_COLUMNS = 3
         @JvmStatic fun newInstance(
             listener: PhotoPickerListener,

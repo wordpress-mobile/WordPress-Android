@@ -11,13 +11,15 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.DiffUtil.Callback;
+import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.photopicker.BuildDeviceMediaListTask.BuildDeviceMediaListListener;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -44,8 +46,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
      */
     interface PhotoPickerAdapterListener {
         void onSelectedCountChanged(int count);
-
-        void onAdapterLoaded(boolean isEmpty);
     }
 
     private final ArrayList<Integer> mSelectedPositions = new ArrayList<>();
@@ -69,14 +69,15 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     PhotoPickerAdapter(Context context,
                        MediaBrowserType browserType,
                        PhotoPickerAdapterListener listener,
-                       DeviceMediaListBuilder deviceMediaListBuilder) {
+                       DeviceMediaListBuilder deviceMediaListBuilder,
+                       ImageManager imageManager) {
         super();
         mContext = context;
         mListener = listener;
         mInflater = LayoutInflater.from(context);
         mBrowserType = browserType;
         mDeviceMediaListBuilder = deviceMediaListBuilder;
-        mImageManager = ImageManager.getInstance();
+        mImageManager = imageManager;
 
         setHasStableIds(true);
     }
@@ -93,48 +94,27 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         mRecycler = null;
     }
 
-    void refresh(boolean forceReload) {
-        if (mIsListTaskRunning) {
-            AppLog.w(AppLog.T.MEDIA, "photo picker > build list task already running");
-            return;
-        }
-
-        mIsListTaskRunning = true;
-        mDeviceMediaListBuilder.buildDeviceMedia(mBrowserType, new BuildDeviceMediaListListener() {
-            @Override
-            public void onCancelled() {
-                mIsListTaskRunning = false;
+    void loadData(List<PhotoPickerItem> result) {
+        DiffResult diffResult = DiffUtil.calculateDiff(new Callback() {
+            @Override public int getOldListSize() {
+                return mMediaList.size();
             }
 
-            @Override
-            public void onSuccess(List<PhotoPickerItem> result) {
-                mIsListTaskRunning = false;
-                if (forceReload || !isSameMediaList(result)) {
-                    mMediaList.clear();
-                    mMediaList.addAll(result);
-                    notifyDataSetChanged();
-                }
-                if (mListener != null) {
-                    mListener.onAdapterLoaded(isEmpty());
-                }
+            @Override public int getNewListSize() {
+                return result.size();
+            }
+
+            @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return mMediaList.get(oldItemPosition).getId() == result.get(newItemPosition).getId();
+            }
+
+            @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return mMediaList.get(oldItemPosition) == result.get(newItemPosition);
             }
         });
-    }
-
-    // returns true if the media list built here is the same as the existing one
-    private boolean isSameMediaList(List<PhotoPickerItem> tmpList) {
-        if (tmpList.size() != mMediaList.size()) {
-            return false;
-        }
-        for (int i = 0; i < tmpList.size(); i++) {
-            if (!isValidPosition(i)) {
-                return false;
-            }
-            if (tmpList.get(i).getId() != mMediaList.get(i).getId()) {
-                return false;
-            }
-        }
-        return true;
+        mMediaList.clear();
+        mMediaList.addAll(result);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -149,10 +129,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         } else {
             return NO_POSITION;
         }
-    }
-
-    private boolean isEmpty() {
-        return mMediaList.size() == 0;
     }
 
     void setLoadThumbnails(boolean loadThumbnails) {
