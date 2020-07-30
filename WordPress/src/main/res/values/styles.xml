@@ -35,8 +35,6 @@
 
         <item name="followButtonStyle">@style/Reader.Follow.Button</item>
 
-        <item name="wpColorText">@color/neutral_70</item>
-        <item name="wpColorTextSubtle">@color/neutral</item>
         <item name="wpColorError">@color/error</item>
         <item name="wpColorSuccess">@color/green_50</item>
         <item name="wpColorWarningDark">@color/warning_50</item>
@@ -178,9 +176,7 @@
         </item>
     </style>
 
-    <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText">
-        <item name="android:textColor">?attr/wpColorText</item>
-    </style>
+    <style name="TabTextStyle.WordPress" parent="android:Widget.Material.ActionBar.TabText" />
 
     <style name="DropDownNav.WordPress" parent="android:Widget.Material.Light.Spinner">
         <item name="android:background">@drawable/spinner_background_ab_wordpress</item>
@@ -901,19 +897,19 @@
     <style name="DomainRegistrationFormTitle">
         <item name="android:textSize">@dimen/text_sz_medium</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
     </style>
 
     <style name="DomainRegistrationFormSubTitle">
         <item name="android:textSize">@dimen/text_sz_small</item>
-        <item name="android:textColor">?attr/wpColorText</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:gravity">start</item>
     </style>
 
