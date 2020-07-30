@@ -257,7 +257,7 @@ class PostListMainViewModel @Inject constructor(
                 hasRemoteAutoSavePreviewError = this::hasRemoteAutoSavePreviewError
         )
 
-        _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site)
+        _isSearchAvailable.value = SiteUtils.isAccessedViaWPComRest(site) || SiteUtils.isAccessedViewXmlRpc(site)
         _authorSelectionUpdated.value = authorFilterSelection
         _viewState.value = PostListMainViewState(
                 isFabVisible = FAB_VISIBLE_POST_LIST_PAGES.contains(POST_LIST_PAGES.first()) &&
