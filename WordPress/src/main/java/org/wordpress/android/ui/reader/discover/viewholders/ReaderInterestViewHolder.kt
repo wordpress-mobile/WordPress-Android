@@ -2,7 +2,7 @@ package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.content.Context
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.reader_cardview_post.*
+import kotlinx.android.synthetic.main.reader_interest_post.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestUiState
@@ -14,7 +14,7 @@ class ReaderInterestViewHolder(
     private val imageManager: ImageManager,
     parentView: ViewGroup
 ) : ReaderViewHolder(parentView, R.layout.reader_interest_post) {
-    val viewContext: Context = post_container.context
+    val viewContext: Context = interest_container.context
     override fun onBind(uiState: ReaderCardUiState) {
         uiState as ReaderInterestUiState
     }
