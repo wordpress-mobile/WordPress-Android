@@ -3,6 +3,7 @@ package org.wordpress.android.ui
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import org.wordpress.android.R
 
 abstract class ViewPagerFragment : Fragment {
     constructor() : super()
@@ -30,17 +31,47 @@ abstract class ViewPagerFragment : Fragment {
         // set unique ID to scrollable view and notify parent fragment/activity
         val scrollableContainer = getScrollableViewForUniqueIdProvision()
         scrollableContainer?.let {
-            if (parentFragment is ViewPagerScrollableViewInitializedListener) {
-                scrollableContainer.id = View.generateViewId()
-                (parentFragment as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
-                        scrollableContainer.id
-                )
-            } else if (activity is ViewPagerScrollableViewInitializedListener) {
-                scrollableContainer.id = View.generateViewId()
-                (activity as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
-                        scrollableContainer.id
+            val host = when {
+                parentFragment is ViewPagerScrollableViewInitializedListener -> {
+                    parentFragment
+                }
+                activity is ViewPagerScrollableViewInitializedListener -> {
+                    activity
+                }
+                else -> {
+                    null
+                }
+            }
+            host?.let {
+                (host as ViewPagerScrollableViewInitializedListener).onScrollableViewInitialized(
+                        setUniqueIdToView(scrollableContainer)
                 )
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val scrollableContainer = getScrollableViewForUniqueIdProvision()
+        scrollableContainer?.let {
+            // restore original view ID, so it's state could be restored correctly
+            restoreOriginalViewId(scrollableContainer)
+        }
+    }
+
+    fun restoreOriginalViewId(view: View) {
+        val originalId = view.getTag(R.id.original_view_pager_fragment_id_tag_key)
+        if (originalId != null) {
+            view.id = originalId as Int
+        }
+    }
+
+    private fun setUniqueIdToView(view: View): Int {
+        val newId = View.generateViewId()
+        if (view.getTag(R.id.original_view_pager_fragment_id_tag_key) == null) {
+            view.setTag(R.id.original_view_pager_fragment_id_tag_key, view.id)
+        }
+        view.id = newId
+        return newId
     }
 }
