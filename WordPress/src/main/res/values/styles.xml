@@ -1155,7 +1155,7 @@
         <item name="android:maxLines">1</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline4</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="ModalLayoutPickerSubtitle">
@@ -1167,7 +1167,7 @@
         <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:alpha">0.6</item>
     </style>
 
