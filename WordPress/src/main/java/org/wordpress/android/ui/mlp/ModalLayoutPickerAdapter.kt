@@ -13,7 +13,7 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 /**
  * Renders the rows of the Modal Layout Picker
  */
-class ModalLayoutPickerAdapter(private val layoutSelection: LayoutSelection) : Adapter<ModalLayoutPickerViewHolder>() {
+class ModalLayoutPickerAdapter(private val layoutSelectionListener: LayoutSelectionListener) : Adapter<ModalLayoutPickerViewHolder>() {
     private var items: List<ModalLayoutPickerListItem> = listOf()
 
     fun update(newItems: List<ModalLayoutPickerListItem>) {
@@ -42,7 +42,7 @@ class ModalLayoutPickerAdapter(private val layoutSelection: LayoutSelection) : A
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
         ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent)
-        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, layoutSelection)
+        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, layoutSelectionListener)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 

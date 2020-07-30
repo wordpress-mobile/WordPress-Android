@@ -10,6 +10,7 @@
 
     <ImageView
         android:id="@+id/preview"
+        android:background="@color/white"
         android:layout_width="@dimen/mlp_layout_card_width"
         android:layout_height="@dimen/mlp_layout_card_height"
         tools:ignore="ContentDescription" />

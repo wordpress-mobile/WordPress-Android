@@ -29,7 +29,7 @@ import javax.inject.Inject
 /**
  * Implements the Modal Layout Picker UI based on the [BottomSheetDialogFragment] to inherit the container behavior
  */
-class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelection {
+class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
 

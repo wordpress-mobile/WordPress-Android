@@ -21,7 +21,7 @@ import javax.inject.Inject
 class LayoutsAdapter(
     private val context: Context,
     private val layouts: List<LayoutListItem>,
-    private val selection: LayoutSelection
+    private val selectionListener: LayoutSelectionListener
 ) : RecyclerView.Adapter<LayoutsAdapter.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
@@ -48,13 +48,13 @@ class LayoutsAdapter(
     ) {
         val layout = layouts[position]
         imageManager.load(holder.preview, ImageType.THEME, layout.preview, FIT_CENTER)
-        holder.selected.setVisible(!layout.selected)
+        holder.selected.setVisible(layout.selected)
         holder.preview.contentDescription = if (layout.selected) context.getString(
                 R.string.mlp_layout_selected,
                 layout.title
         ) else layout.title
         holder.container.setOnClickListener {
-            selection.layoutTapped(layout)
+            selectionListener.layoutTapped(layout)
         }
     }
 

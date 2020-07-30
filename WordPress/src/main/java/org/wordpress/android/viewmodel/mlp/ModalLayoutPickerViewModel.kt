@@ -57,7 +57,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private fun loadListItems() {
         val listItems = ArrayList<ModalLayoutPickerListItem>()
 
-        val titleVisibility = _isHeaderVisible.value?.peekContent() ?: false
+        val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 

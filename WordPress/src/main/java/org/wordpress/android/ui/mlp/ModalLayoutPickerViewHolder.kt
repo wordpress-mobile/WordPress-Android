@@ -64,7 +64,7 @@ class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 /**
  * Modal Layout Picker layouts view holder
  */
-class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelection: LayoutSelection) :
+class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelectionListener: LayoutSelectionListener) :
         ModalLayoutPickerViewHolder(
                 parent,
                 R.layout.modal_layout_picker_layouts_row
@@ -81,7 +81,7 @@ class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelection: Layo
 
         recycler.apply {
             layoutManager = childLayoutManager
-            adapter = LayoutsAdapter(recycler.context, item.layouts, layoutSelection)
+            adapter = LayoutsAdapter(recycler.context, item.layouts, layoutSelectionListener)
             setRecycledViewPool(viewPool)
         }
     }
