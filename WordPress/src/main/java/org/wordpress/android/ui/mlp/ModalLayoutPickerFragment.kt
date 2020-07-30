@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mlp
 
 import android.content.Context
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             }
         })
 
-        backButton.setOnClickListener { viewModel.dismiss() }
+        backButton.setOnClickListener {
+            WPActivityUtils.setLightStatusBar(activity?.window, false)
+            viewModel.dismiss()
+        }
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
 
@@ -73,6 +77,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
         setStatusBarColor(this)
+        handleBackButton(this)
     }
 
     override fun onAttach(context: Context) {
@@ -95,6 +100,16 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                     }
                 }
         )
+    }
+
+    private fun handleBackButton(dialog: BottomSheetDialog) = dialog.setOnKeyListener { _, keyCode, event ->
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+            WPActivityUtils.setLightStatusBar(activity?.window, false)
+            viewModel.dismiss()
+            true
+        } else {
+            false
+        }
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
