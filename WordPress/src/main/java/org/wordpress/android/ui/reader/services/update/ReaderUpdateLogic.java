@@ -190,6 +190,12 @@ public class ReaderUpdateLogic {
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
                     if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                            // Delete any previously saved recommended followed tags
+                            ReaderTagTable.setRecommendedTags(new ReaderTagList());
+                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
+                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+                        }
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {

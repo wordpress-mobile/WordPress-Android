@@ -107,14 +107,7 @@ public class ReaderTagActions {
             newTags.add(newTag);
         }
         if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
-            if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                // Delete any previously saved recommended followed tags
-                ReaderTagTable.setRecommendedTags(new ReaderTagList());
-                ReaderTagTable.replaceFollowedTags(newTags);
-                AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
-            } else {
-                ReaderTagTable.addOrUpdateTags(newTags);
-            }
+            ReaderTagTable.addOrUpdateTags(newTags);
             EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
         } else {
             com.wordpress.rest.RestRequest.Listener listener = jsonObject -> {

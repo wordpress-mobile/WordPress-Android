@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
@@ -32,7 +31,6 @@ import javax.inject.Named
 class ReaderTagRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private val accountStore: AccountStore,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val fetchInterestTagUseCase: FetchInterestTagsUseCase,
     private val followInterestTagsUseCase: FollowInterestTagsUseCase,
@@ -54,7 +52,7 @@ class ReaderTagRepository @Inject constructor(
         return withContext(ioDispatcher) {
             val refresh = shouldAutoUpdateTagUseCase.get(followingReaderTag)
             var result: ReaderRepositoryCommunication = Success
-            if (refresh && accountStore.hasAccessToken()) {
+            if (refresh) {
                 result = fetchFollowedTagUseCase.fetch()
             }
             if (result is Success) {
