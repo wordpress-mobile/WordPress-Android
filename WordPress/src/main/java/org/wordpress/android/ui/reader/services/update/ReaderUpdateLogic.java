@@ -190,9 +190,9 @@ public class ReaderUpdateLogic {
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
                     if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Delete recommended tags which got saved as followed tags for logged out user
+                        // before we allowed following tags using interests picker
                         if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                            // Delete any previously saved recommended followed tags
-                            ReaderTagTable.setRecommendedTags(new ReaderTagList());
                             deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
                             AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
                         }
@@ -207,17 +207,6 @@ public class ReaderUpdateLogic {
                     }
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
-                }
-
-                // save changes to recommended topics
-                if (mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
-                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
-                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                        ReaderTagTable.setRecommendedTags(serverRecommended);
-                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
-                    }
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
