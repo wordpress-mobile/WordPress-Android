@@ -239,10 +239,6 @@ public class SiteUtils {
         return site.getOrigin() == SiteModel.ORIGIN_WPCOM_REST;
     }
 
-    public static boolean isAccessedViaXmlRpc(SiteModel site) {
-        return site.getOrigin() == SiteModel.ORIGIN_XMLRPC;
-    }
-
     public static String getSiteIconUrl(SiteModel site, int size) {
         return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
                 site.isPrivateWPComAtomic());
