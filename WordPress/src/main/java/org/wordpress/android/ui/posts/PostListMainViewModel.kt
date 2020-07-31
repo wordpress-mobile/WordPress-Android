@@ -49,6 +49,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.DialogHolder
@@ -80,6 +81,7 @@ class PostListMainViewModel @Inject constructor(
     private val previewStateHelper: PreviewStateHelper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val savePostToDbUseCase: SavePostToDbUseCase,
+    private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val uploadStarter: UploadStarter
@@ -139,6 +141,15 @@ class PostListMainViewModel @Inject constructor(
 
     private val _searchQuery = MutableLiveData<String>()
     val searchQuery: LiveData<String> = _searchQuery
+
+    private val _onFabClicked = MutableLiveData<Event<Unit>>()
+    val onFabClicked: LiveData<Event<Unit>> = _onFabClicked
+
+    private val _onFabLongPressedForCreateMenu = MutableLiveData<Event<Unit>>()
+    val onFabLongPressedForCreateMenu: LiveData<Event<Unit>> = _onFabLongPressedForCreateMenu
+
+    private val _onFabLongPressedForPostList = MutableLiveData<Event<Unit>>()
+    val onFabLongPressedForPostList: LiveData<Event<Unit>> = _onFabLongPressedForPostList
 
     private val uploadStatusTracker = PostModelUploadStatusTracker(
             uploadStore = uploadStore,
@@ -338,6 +349,14 @@ class PostListMainViewModel @Inject constructor(
 
     private fun clearSearch() {
         _searchQuery.value = null
+    }
+
+    fun fabClicked() {
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            _onFabClicked.postValue(Event(Unit))
+        } else {
+            newPost()
+        }
     }
 
     fun newPost() {
@@ -558,6 +577,14 @@ class PostListMainViewModel @Inject constructor(
     fun onBottomSheetPublishButtonClicked() {
         editPostRepository.getEditablePost()?.let {
             postActionHandler.publishPost(it)
+        }
+    }
+
+    fun onFabLongPressed() {
+        if (wpStoriesFeatureConfig.isEnabled()) {
+            _onFabLongPressedForCreateMenu.postValue(Event(Unit))
+        } else {
+            _onFabLongPressedForPostList.postValue(Event(Unit))
         }
     }
 }
