@@ -240,11 +240,11 @@ class EncryptedLogStore @Inject constructor(
         }
     }
 
-    sealed class UploadEncryptedLogError(val statusCode: Int?, val message: String?) : OnChangedError {
-        class Unknown(statusCode: Int? = null, message: String? = null) : UploadEncryptedLogError(statusCode, message)
-        class InvalidRequest(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
-        class TooManyRequests(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
-        object NoConnection : UploadEncryptedLogError(null, null)
+    sealed class UploadEncryptedLogError : OnChangedError {
+        class Unknown(val statusCode: Int? = null, val message: String? = null) : UploadEncryptedLogError()
+        object InvalidRequest : UploadEncryptedLogError()
+        object TooManyRequests : UploadEncryptedLogError()
+        object NoConnection : UploadEncryptedLogError()
     }
 
     /**
