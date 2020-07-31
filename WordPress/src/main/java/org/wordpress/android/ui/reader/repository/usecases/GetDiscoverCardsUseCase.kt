@@ -31,6 +31,10 @@ class GetDiscoverCardsUseCase @Inject constructor(
                 val cardJsonList = readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()
                 val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
 
+                // TODO jd-alexander remove mocked interests when the real implementation below is working.
+                val mockedInterests = readerTagRepository.getUserTags(false)
+                cards.add(InterestsYouMayLikeCard(mockedInterests))
+
                 if (cardJsonList.isNotEmpty()) {
                     val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(
                             cardJsonList
@@ -40,9 +44,7 @@ class GetDiscoverCardsUseCase @Inject constructor(
                         val cardJson = jsonObjects.getJSONObject(i)
                         when (cardJson.getString(ReaderConstants.JSON_CARD_TYPE)) {
                             ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE -> {
-                                // val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
-                                // TODO remove the line below and uncomment the one above when live data is ready.
-                                val interests = readerTagRepository.getUserTags(false)
+                                val interests = parseDiscoverCardsJsonUseCase.parseInterestCard(cardJson)
                                 cards.add(InterestsYouMayLikeCard(interests))
                             }
                             ReaderConstants.JSON_CARD_POST -> {
