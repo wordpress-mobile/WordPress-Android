@@ -45,7 +45,6 @@ import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
 import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerAdapter.PhotoPickerAdapterListener
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO
@@ -99,12 +98,10 @@ class PhotoPickerFragment : Fragment() {
     private var actionMode: ActionMode? = null
     private var listener: PhotoPickerListener? = null
     private var lastTappedIcon: PhotoPickerIcon? = null
-    private var selectedPositions: List<Int>? = null
     private var site: SiteModel? = null
     private lateinit var browserType: MediaBrowserType
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
-    @Inject lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PhotoPickerViewModel
@@ -113,15 +110,6 @@ class PhotoPickerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
-        browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
-        if (savedInstanceState != null) {
-            val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
-            lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
-            if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
-                selectedPositions = savedInstanceState.getIntegerArrayList(KEY_SELECTED_POSITIONS)
-            }
-        }
     }
 
     override fun onCreateView(
@@ -138,6 +126,17 @@ class PhotoPickerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+        site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        var selectedIds: List<Long>? = null
+        if (savedInstanceState != null) {
+            val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
+            lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
+            if (savedInstanceState.containsKey(KEY_SELECTED_POSITIONS)) {
+                selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_POSITIONS)?.toList()
+            }
+        }
 
         if (browserType.isWPStoriesPicker) {
             wp_stories_take_picture.visibility = View.VISIBLE
@@ -212,7 +211,7 @@ class PhotoPickerFragment : Fragment() {
                     .setOnClickListener {
                         val inputData = WPMediaUtils.createListOfEditImageInputData(
                                 requireContext(),
-                                adapter.selectedURIs
+                                viewModel.selectedURIs()
                         )
                         ActivityLauncher.openImageEditor(activity, inputData)
                     }
@@ -236,26 +235,31 @@ class PhotoPickerFragment : Fragment() {
                 if (recycler.adapter == null) {
                     recycler.adapter = PhotoPickerAdapter(
                             activity,
-                            browserType,
-                            mAdapterListener,
-                            deviceMediaListBuilder,
                             imageManager
                     )
                 }
                 val adapter = recycler.adapter as PhotoPickerAdapter
-                val layoutManager = recyclerView?.layoutManager
-                val recyclerViewState = layoutManager?.onSaveInstanceState()
-                adapter.loadData(it)
-                layoutManager?.onRestoreInstanceState(recyclerViewState)
-                if (listener != null) {
-                    // restore previous selection
-                    if (selectedPositions != null) {
-                        adapter.setSelectedPositions(selectedPositions!!)
-                        selectedPositions = null
+                val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+                adapter.loadData(it.items)
+                recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                if (it.count == 0) {
+                    finishActionMode()
+                } else {
+                    val activity = activity ?: return@Observer
+                    if (canShowInsertEditBottomBar()) {
+                        val isVideoFileSelected = it.isVideoSelected
+                        val editTextVisible = if (isVideoFileSelected) View.GONE else View.VISIBLE
+                        container_insert_edit_bar.text_edit.visibility = editTextVisible
                     }
+                    if (actionMode == null) {
+                        (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
+                    }
+                    updateActionModeTitle()
                 }
             }
         })
+
+        viewModel.start(selectedIds, browserType)
     }
 
     private fun canShowMediaSourceBottomBar(): Boolean {
@@ -279,9 +283,9 @@ class PhotoPickerFragment : Fragment() {
                 KEY_LAST_TAPPED_ICON,
                 lastTappedIcon?.name
         )
-        if (hasAdapter() && adapter.numSelected > 0) {
-            val selectedItems = adapter.selectedPositions
-            outState.putIntegerArrayList(KEY_SELECTED_POSITIONS, selectedItems)
+        val selectedIds = viewModel.selectedIds.value
+        if (selectedIds != null && selectedIds.isNotEmpty()) {
+            outState.putLongArray(KEY_SELECTED_POSITIONS, selectedIds.toLongArray())
         }
         recycler.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
@@ -412,25 +416,6 @@ class PhotoPickerFragment : Fragment() {
         return bottomBar.visibility == View.VISIBLE
     }
 
-    private val mAdapterListener: PhotoPickerAdapterListener = object : PhotoPickerAdapterListener {
-        override fun onSelectedCountChanged(count: Int) {
-            if (count == 0) {
-                finishActionMode()
-            } else {
-                val activity = activity ?: return
-                if (canShowInsertEditBottomBar()) {
-                    val isVideoFileSelected = adapter.isVideoFileSelected
-                    val editTextVisible = if (isVideoFileSelected) View.GONE else View.VISIBLE
-                    container_insert_edit_bar.text_edit.visibility = editTextVisible
-                }
-                if (actionMode == null) {
-                    (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback())
-                }
-                updateActionModeTitle()
-            }
-        }
-    }
-
     private fun hasAdapter(): Boolean {
         return recycler.adapter != null
     }
@@ -440,9 +425,6 @@ class PhotoPickerFragment : Fragment() {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
                         activity,
-                        browserType,
-                        mAdapterListener,
-                        deviceMediaListBuilder,
                         imageManager
                 )
             }
@@ -474,7 +456,7 @@ class PhotoPickerFragment : Fragment() {
         actionMode?.let { actionMode ->
             val title: String
             if (browserType.canMultiselect()) {
-                val numSelected = adapter.numSelected
+                val numSelected = viewModel.numSelected()
                 title = String.format(getString(string.cab_selected), numSelected)
                 actionMode.title = title
             } else {
@@ -533,12 +515,12 @@ class PhotoPickerFragment : Fragment() {
                 showBottomBar(container_media_source_bar)
             }
             hideBottomBar(container_insert_edit_bar)
-            adapter.clearSelection()
+            viewModel.clearSelection()
         }
     }
 
     private fun performInsertAction() {
-        val uriList = adapter.selectedURIs
+        val uriList = viewModel.selectedURIs()
         listener!!.onPhotoPickerMediaChosen(uriList)
         trackAddRecentMediaEvent(uriList)
     }
