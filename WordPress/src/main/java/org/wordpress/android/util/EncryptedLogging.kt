@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.EncryptedLogActionBuilder
 import org.wordpress.android.fluxc.store.EncryptedLogStore
 import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded
+import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogFailedToUpload
+import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogUploadedSuccessfully
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.util.AppLog.T
@@ -27,10 +29,16 @@ class EncryptedLogging @Inject constructor(
 ) {
     private val coroutineScope = CoroutineScope(bgDispatcher)
 
+    init {
+        dispatcher.register(this)
+    }
+
     fun start() {
         dispatcher.dispatch(EncryptedLogActionBuilder.newResetUploadStatesAction())
-        coroutineScope.launch {
-            encryptedLogStore.uploadQueuedEncryptedLogs()
+        if (networkUtilsWrapper.isNetworkAvailable()) {
+            coroutineScope.launch {
+                encryptedLogStore.uploadQueuedEncryptedLogs()
+            }
         }
     }
 
@@ -39,8 +47,8 @@ class EncryptedLogging @Inject constructor(
      *
      * @param logFile Log file to be uploaded
      * @param shouldStartUploadImmediately This parameter will decide whether we should try to upload the log file
-     * immediately. We are unlikely to have enough time to complete the upload, so we can use this parameter to avoid
-     * the unnecessary upload failure.
+     * immediately. After a crash, we are unlikely to have enough time to complete the upload, so we can use this
+     * parameter to avoid the unnecessary upload failure.
      */
     fun encryptAndUploadLogFile(logFile: File, shouldStartUploadImmediately: Boolean): String? {
         if (logFile.exists()) {
@@ -61,10 +69,13 @@ class EncryptedLogging @Inject constructor(
     @Suppress("unused")
     @Subscribe(threadMode = ASYNC)
     fun onEncryptedLogUploaded(event: OnEncryptedLogUploaded) {
-        if (event.isError) {
-            AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} failed to upload with error: ${event.error}")
-        } else {
-            AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} uploaded successfully!")
+        when (event) {
+            is EncryptedLogUploadedSuccessfully -> {
+                AppLog.i(T.MAIN, "Encrypted log with uuid: ${event.uuid} uploaded successfully!")
+            }
+            is EncryptedLogFailedToUpload -> {
+                AppLog.e(T.MAIN, "Encrypted log with uuid: ${event.uuid} failed to upload with error: ${event.error}")
+            }
         }
     }
 }
