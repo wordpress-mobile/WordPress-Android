@@ -242,8 +242,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     }
 
     private void formatQuotaDiskSpace() {
-        String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
-
         final String[] units = new String[] {
                 getString(R.string.file_size_in_bytes),
                 getString(R.string.file_size_in_kilobytes),
@@ -258,6 +256,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             String space = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
             quota = String.format(getString(R.string.site_settings_quota_space_unlimited), space);
         } else {
+            String percentage = FormatUtils.formatPercentageLimit100(mSite.getSpacePercentUsed() / 100, true);
+
             String space = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
             quota = String.format(getString(R.string.site_settings_quota_space_value), percentage, space);
         }
@@ -1124,9 +1124,17 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
-                    findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, mSite, event.errorMessage);
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.tab_layout),
+                    true,
+                    !TextUtils.isEmpty(event.errorMessage)
+                    && event.errorMessage.contains(getString(R.string.error_media_quota_exceeded))
+                        ? null
+                        : event.mediaModelList,
+                    mSite,
+                    event.errorMessage
+            );
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

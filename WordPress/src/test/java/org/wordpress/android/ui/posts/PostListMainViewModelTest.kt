@@ -75,32 +75,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `search is available for wpcom and jetpack sites`() {
-        site.origin = SiteModel.ORIGIN_WPCOM_REST
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-
-        var isSearchAvailable = false
-        viewModel.isSearchAvailable.observeForever {
-            isSearchAvailable = it
-        }
-
-        assertThat(isSearchAvailable).isTrue()
-    }
-
-    @Test
-    fun `search is not available for xmlrpc sites`() {
-        site.origin = SiteModel.ORIGIN_XMLRPC
-        viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
-
-        var isSearchAvailable = true
-        viewModel.isSearchAvailable.observeForever {
-            isSearchAvailable = it
-        }
-
-        assertThat(isSearchAvailable).isFalse()
-    }
-
-    @Test
     fun `calling onSearch() updates search query`() {
         val testSearch = "keyword"
         viewModel.start(site, PostListRemotePreviewState.NONE, currentBottomSheetPostId, editPostRepository, mock())
