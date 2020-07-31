@@ -35,6 +35,7 @@ import org.wordpress.android.fluxc.store.MediaStore.MediaErrorType;
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload;
 import org.wordpress.android.fluxc.store.MediaStore.ProgressPayload;
 import org.wordpress.android.fluxc.utils.MediaUtils;
+import org.wordpress.android.fluxc.utils.MimeType;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;
@@ -248,15 +249,15 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
     /**
      * ref: https://codex.wordpress.org/XML-RPC_WordPress_API/Media#wp.getMediaLibrary
      */
-    public void fetchMediaList(final SiteModel site, final int number, final int offset, final String mimeType) {
+    public void fetchMediaList(final SiteModel site, final int number, final int offset, final MimeType.Type mimeType) {
         List<Object> params = getBasicParams(site, null);
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("number", number);
         if (offset > 0) {
             queryParams.put("offset", offset);
         }
-        if (!TextUtils.isEmpty(mimeType)) {
-            queryParams.put("mime_type", mimeType);
+        if (mimeType != null) {
+            queryParams.put("mime_type", mimeType.getValue());
         }
         params.add(queryParams);
 
@@ -442,13 +443,13 @@ public class MediaXMLRPCClient extends BaseXMLRPCClient implements ProgressListe
                                         @NonNull List<MediaModel> media,
                                         boolean loadedMore,
                                         boolean canLoadMore,
-                                        String mimeType) {
+                                        MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, media,
                 loadedMore, canLoadMore, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
 
-    private void notifyMediaListFetched(SiteModel site, MediaError error, String mimeType) {
+    private void notifyMediaListFetched(SiteModel site, MediaError error, MimeType.Type mimeType) {
         FetchMediaListResponsePayload payload = new FetchMediaListResponsePayload(site, error, mimeType);
         mDispatcher.dispatch(MediaActionBuilder.newFetchedMediaListAction(payload));
     }
