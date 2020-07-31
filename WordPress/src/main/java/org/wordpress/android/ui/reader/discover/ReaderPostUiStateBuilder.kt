@@ -16,7 +16,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
@@ -101,7 +102,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     }
 
     fun mapTagListToReaderInterestUiState(interests: ReaderTagList) =
-            ReaderInterestUiState(interests.map { interest -> interest.tagTitle })
+            ReaderInterestCardUiState(interests.map { interest -> ReaderInterestUiState(interest.tagTitle) }.take(5))
 
     private fun buildOnPostHeaderViewClicked(
         onPostHeaderViewClicked: (Long, Long) -> Unit,
