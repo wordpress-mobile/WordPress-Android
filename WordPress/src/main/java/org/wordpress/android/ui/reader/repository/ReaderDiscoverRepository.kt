@@ -36,6 +36,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+// todo annmarie rename repository to Provider
 class ReaderDiscoverRepository constructor(
     private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
@@ -105,12 +106,14 @@ class ReaderDiscoverRepository constructor(
     // Internal functionality
     private suspend fun loadPosts() {
         withContext(ioDispatcher) {
+            val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
-            if (!existsInMemory) {
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
+            if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
             }
+
             if (refresh) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FORCE)
                 if (response != Success) _communicationChannel.postValue(Event(response))
