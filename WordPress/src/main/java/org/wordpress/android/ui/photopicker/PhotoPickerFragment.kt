@@ -97,7 +97,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var actionMode: ActionMode? = null
-    private var restoreState: Parcelable? = null
     private var listener: PhotoPickerListener? = null
     private var lastTappedIcon: PhotoPickerIcon? = null
     private var selectedPositions: List<Int>? = null
