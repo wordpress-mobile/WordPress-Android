@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mlp
 
 //
-// TODO: THIS SHOULD BE MOVED IN RN BRIDGE?
+// TODO: Examine if those can/should be moved in RN bridge
 //
 
 data class GutenbergPageLayouts(
@@ -27,7 +27,7 @@ data class GutenbergLayoutCategory(
 )
 
 /**
- * Creates
+ * Static page layout data factory
  */
 object GutenbergPageLayoutFactory {
     /**
@@ -144,12 +144,64 @@ object GutenbergPageLayoutFactory {
      * Creates a a default set of Layout meta data to be used on for creating starter pages layouts.
      */
     private fun makeDefaultLayouts(): List<GutenbergLayout> = listOf(
-            // TODO: Remove duplicate lines added for UI testing
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout,
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout,
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout,
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout,
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout,
+            a1, a2, a3, a4, b1, b2, b3, b4, b5, // TODO: Remove dummy items added for UI testing
             aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout
+    )
+
+    // TODO: Remove dummy demo Layouts
+
+    private val a1 = GutenbergLayout(
+            slug = "about1",
+            title = "About",
+            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            categories = listOf(aboutCategory)
+    )
+    private val a2 = GutenbergLayout(
+            slug = "about2",
+            title = "About",
+            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            categories = listOf(aboutCategory)
+    )
+    private val a3 = GutenbergLayout(
+            slug = "about3",
+            title = "About",
+            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            categories = listOf(aboutCategory)
+    )
+    private val a4 = GutenbergLayout(
+            slug = "about4",
+            title = "About",
+            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+            categories = listOf(aboutCategory)
+    )
+    private val b1 = GutenbergLayout(
+            slug = "blog1",
+            title = "Blog",
+            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            categories = listOf(blogCategory)
+    )
+    private val b2 = GutenbergLayout(
+            slug = "blog2",
+            title = "Blog",
+            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            categories = listOf(blogCategory)
+    )
+    private val b3 = GutenbergLayout(
+            slug = "blog3",
+            title = "Blog",
+            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            categories = listOf(blogCategory)
+    )
+    private val b4 = GutenbergLayout(
+            slug = "blog4",
+            title = "Blog",
+            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            categories = listOf(blogCategory)
+    )
+    private val b5 = GutenbergLayout(
+            slug = "blog5",
+            title = "Blog",
+            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
+            categories = listOf(blogCategory)
     )
 }
