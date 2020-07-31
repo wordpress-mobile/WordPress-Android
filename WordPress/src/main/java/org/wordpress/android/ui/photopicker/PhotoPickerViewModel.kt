@@ -28,20 +28,18 @@ class PhotoPickerViewModel @Inject constructor(
             _selectedIds,
             _browserType
     ) { data, selectedIds, browserType ->
-        var counter = 0
         var isVideoSelected = false
         if (data != null && browserType != null) {
             PhotoPickerUiModel(data.map {
                 if (selectedIds != null && selectedIds.contains(it.id)) {
-                    counter += 1
                     isVideoSelected = isVideoSelected || it.isVideo
                     PhotoPickerUiItem(
                             id = it.id,
                             uri = it.uri,
                             isVideo = it.isVideo,
                             isSelected = true,
-                            selectedOrder = if (browserType.canMultiselect()) counter else null,
-                            showOrderCounter = true,
+                            selectedOrder = if (browserType.canMultiselect()) selectedIds.indexOf(it.id) + 1 else null,
+                            showOrderCounter = browserType.canMultiselect(),
                             toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
                     )
                 } else {
@@ -55,7 +53,7 @@ class PhotoPickerViewModel @Inject constructor(
                             toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
                     )
                 }
-            }, counter, isVideoSelected, browserType)
+            }, selectedIds?.size ?: 0, isVideoSelected, browserType)
         } else {
             null
         }

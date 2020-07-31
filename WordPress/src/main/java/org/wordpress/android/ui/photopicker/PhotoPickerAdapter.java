@@ -9,9 +9,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.DiffUtil.Callback;
 import androidx.recyclerview.widget.DiffUtil.DiffResult;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,7 +45,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
     private final LayoutInflater mInflater;
 
-    private final ArrayList<PhotoPickerUiItem> mMediaList = new ArrayList<>();
+    private List<PhotoPickerUiItem> mMediaList = new ArrayList<>();
 
     protected final ImageManager mImageManager;
 
@@ -62,33 +60,8 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
     }
 
     void loadData(List<PhotoPickerUiItem> result) {
-        DiffResult diffResult = DiffUtil.calculateDiff(new Callback() {
-            @Override public int getOldListSize() {
-                return mMediaList.size();
-            }
-
-            @Override public int getNewListSize() {
-                return result.size();
-            }
-
-            @Override public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return mMediaList.get(oldItemPosition).getId() == result.get(newItemPosition).getId();
-            }
-
-            @Override public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return mMediaList.get(oldItemPosition).equals(result.get(newItemPosition));
-            }
-
-            @Nullable @Override public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                PhotoPickerUiItem updatedItem = result.get(newItemPosition);
-                if (mMediaList.get(oldItemPosition).isSelected() != updatedItem.isSelected()) {
-                    return updatedItem.getId();
-                }
-                return super.getChangePayload(oldItemPosition, newItemPosition);
-            }
-        });
-        mMediaList.clear();
-        mMediaList.addAll(result);
+        DiffResult diffResult = DiffUtil.calculateDiff(new PhotoPickerAdapterDiffCallback(mMediaList, result));
+        mMediaList = result;
         diffResult.dispatchUpdatesTo(this);
     }
 
@@ -213,6 +186,10 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
 
             mVideoOverlay.setVisibility(item.isVideo() ? View.VISIBLE : View.GONE);
 
+            if (!item.getShowOrderCounter()) {
+                mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
+            }
+
             if (mLoadThumbnails) {
                 mImageManager.load(mImgThumbnail, ImageType.PHOTO, item.getUri().toString(), ScaleType.FIT_CENTER);
             } else {
@@ -258,7 +235,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
                     mImgThumbnail.setScaleX(scale);
                     mImgThumbnail.setScaleY(scale);
                 }
-                mTxtSelectionCount.setVisibility(item.getShowOrderCounter() ? View.VISIBLE : View.GONE);
+                mTxtSelectionCount.setVisibility(item.getShowOrderCounter() || isSelected ? View.VISIBLE : View.GONE);
             }
         }
     }
