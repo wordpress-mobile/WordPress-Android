@@ -47,9 +47,9 @@ constructor(
             val errorMessage = json.getString("message")
             json.getString("error").let { errorType ->
                 if (errorType == INVALID_REQUEST) {
-                    return UploadEncryptedLogError.InvalidRequest(statusCode, errorMessage)
+                    return UploadEncryptedLogError.InvalidRequest
                 } else if (errorType == TOO_MANY_REQUESTS) {
-                    return UploadEncryptedLogError.TooManyRequests(statusCode, errorMessage)
+                    return UploadEncryptedLogError.TooManyRequests
                 }
             }
             return UploadEncryptedLogError.Unknown(statusCode, errorMessage)
