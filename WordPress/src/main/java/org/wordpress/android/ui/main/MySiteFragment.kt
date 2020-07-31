@@ -19,6 +19,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
 import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
@@ -30,6 +31,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -538,7 +540,24 @@ class MySiteFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        collapsing_toolbar.setTitle(getString(R.string.my_site_section_screen_title))
+        collapsing_toolbar.title = getString(R.string.my_site_section_screen_title)
+
+        appbar_main.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val maxOffset = appBarLayout.totalScrollRange
+            val currentOffset = maxOffset + verticalOffset
+
+            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            avatar?.let {
+                val minSize = avatar.minimumHeight
+                val maxSize = avatar.maxHeight
+                val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
+                val modifierPercentage = modifierPx / minSize
+                val newScale = 1 + modifierPercentage
+
+                avatar.scaleX = newScale
+                avatar.scaleY = newScale
+            }
+        })
         (activity as AppCompatActivity).setSupportActionBar(toolbar_main)
         if (activeTutorialPrompt != null) {
             showQuickStartFocusPoint()
@@ -1154,7 +1173,8 @@ class MySiteFragment : Fragment(),
                         // errored story but the error notification will remain existing in the system dashboard)
                         intent.action = getNotificationIdForError(
                                 StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
-                                event.storyIndex).toString() + ""
+                                event.storyIndex
+                        ).toString() + ""
 
                         // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
                         // is meant to be used for tracking purposes. Use it!
