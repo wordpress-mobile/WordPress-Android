@@ -130,12 +130,11 @@ class EncryptedLogStore @Inject constructor(
         encryptedLog.copy(uploadState = UPLOADING).let {
             encryptedLogSqlUtils.insertOrUpdateEncryptedLog(it)
         }
-        val contents = LogEncrypter(
-                sourceFile = encryptedLog.file,
+        val encryptedText = LogEncrypter(
                 uuid = encryptedLog.uuid,
                 publicKey = encryptedLoggingKey.publicKey
-        ).encrypt()
-        when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, contents)) {
+        ).encrypt(encryptedLog.file.readText())
+        when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, encryptedText)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
             is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
         }

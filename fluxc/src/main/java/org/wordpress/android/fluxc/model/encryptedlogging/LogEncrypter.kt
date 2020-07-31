@@ -2,31 +2,23 @@ package org.wordpress.android.fluxc.model.encryptedlogging
 
 import android.util.Base64
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream
-import java.io.File
 import com.goterl.lazycode.lazysodium.utils.Key
 
 /**
- * [LogEncrypter] encrypts the logs for the given source file.
+ * [LogEncrypter] encrypts the logs for the given text.
  **
- * @param sourceFile A file object representing the log file source..
  * @param uuid Uuid for the encrypted log
- * @param publicKey The public key used to encrypt the log.
+ * @param publicKey The public key used to encrypt the log
  *
  */
-class LogEncrypter(private val sourceFile: File, private val uuid: String, private val publicKey: Key) {
+class LogEncrypter(private val uuid: String, private val publicKey: Key) {
     private val sodium = EncryptionUtils.sodium
     private val state = SecretStream.State.ByReference()
 
-    init {
-        check(sourceFile.exists()) {
-            "If the source log file doesn't exist we should never make it to this class"
-        }
-    }
-
-    fun encrypt(): String = buildString {
+    fun encrypt(text: String): String = buildString {
         append(buildHeader())
-        sourceFile.readLines().forEach { line ->
-            append(buildMessage(line))
+        text.lines().forEach { line ->
+            append("${buildMessage(line)}\n")
         }
         append(buildFooter())
     }
