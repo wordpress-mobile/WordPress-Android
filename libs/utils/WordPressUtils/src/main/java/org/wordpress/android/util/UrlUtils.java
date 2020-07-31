@@ -19,8 +19,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.wordpress.android.util.PhotonUtils.ATOMIC_MEDIA_PROXY_URL_PREFIX;
 import static org.wordpress.android.util.PhotonUtils.ATOMIC_MEDIA_PROXY_URL_SUFFIX;
