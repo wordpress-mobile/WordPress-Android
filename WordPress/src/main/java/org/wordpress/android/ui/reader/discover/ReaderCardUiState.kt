@@ -63,7 +63,9 @@ sealed class ReaderCardUiState {
         )
     }
 
-    data class ReaderInterestUiState(val interest: List<String>) : ReaderCardUiState()
+    data class ReaderInterestCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
+        data class ReaderInterestUiState(val interest: String)
+    }
 }
 
 sealed class ReaderPostCardAction {
