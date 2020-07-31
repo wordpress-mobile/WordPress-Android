@@ -211,7 +211,6 @@ public class WPMediaUtils {
                 } else {
                     return context.getString(R.string.error_generic_error);
                 }
-                return context.getString(R.string.error_generic_error);
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
                 return context.getString(R.string.error_media_quota_exceeded);
         }
