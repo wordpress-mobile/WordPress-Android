@@ -101,6 +101,7 @@
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:elevation">0dp</item>
         <item name="android:background">@drawable/tab_layout_background</item>
+        <item name="android:duplicateParentState">true</item>
     </style>
 
     <style name="WordPress.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">

@@ -249,6 +249,7 @@
     <style name="WordPress.TabLayout" parent="Widget.MaterialComponents.TabLayout.Colored">
         <item name="android:background">@drawable/tab_layout_background</item>
         <item name="android:elevation">0dp</item>
+        <item name="android:duplicateParentState">true</item>
         <item name="tabTextColor">?attr/wpColorOnSurfaceMedium</item>
         <item name="tabSelectedTextColor">?attr/colorOnSurface</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
