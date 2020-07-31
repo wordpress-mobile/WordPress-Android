@@ -78,6 +78,15 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="searchViewStyle">@style/WordPress.SearchViewStyle</item>
         <item name="homeAsUpIndicator">@drawable/ic_arrow_left_white_24dp</item>
+
+        <!-- Modal Layout Picker -->
+        <item name="categoriesButtonText">@color/black</item>
+        <item name="categoriesButtonBackground">@color/mlp_categories_button_background</item>
+        <item name="categoriesButtonTextSelected">@color/white</item>
+        <item name="categoriesButtonBackgroundSelected">@color/grey_900</item>
+        <item name="categoriesButtonCheckIconColor">@color/white</item>
+        <item name="mlpDividerColor">@color/grey_300</item>
+        <item name="categoriesBackground">@color/white</item>
     </style>
 
     <style name="WordPress" parent="Base.Wordpress">
@@ -1194,7 +1203,7 @@
     </style>
 
     <style name="ModalLayoutPickerLayoutsSeparatorLine">
-        <item name="android:background">@color/gray_5</item>
+        <item name="android:background">?attr/mlpDividerColor</item>
         <item name="android:layout_height">@dimen/mlp_layouts_line_separator_height</item>
         <item name="android:layout_marginBottom">@dimen/mlp_layout_card_margin_top</item>
         <item name="android:layout_width">match_parent</item>
@@ -1203,6 +1212,29 @@
     <style name="LayoutCardView" parent="Widget.MaterialComponents.CardView">
         <item name="cardElevation">@dimen/mlp_layout_card_elevation</item>
         <item name="cardCornerRadius">@dimen/mlp_layout_card_radius</item>
+    </style>
+
+    <style name="ModalLayoutPickerCategoryEmoji">
+        <item name="android:layout_width">@dimen/mlp_categories_emoji_size</item>
+        <item name="android:layout_height">@dimen/mlp_categories_emoji_size</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:layout_marginStart">@dimen/mlp_category_horizontal_margin</item>
+        <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_central_margin</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <style name="ModalLayoutPickerCategoryTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_margin</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
 </resources>

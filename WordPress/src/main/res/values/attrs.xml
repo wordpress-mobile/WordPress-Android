@@ -19,6 +19,15 @@
     <attr name="colorGutenbergDivider" format="reference|color" />
     <attr name="colorGutenbergBackground" format="reference|color" />
 
+    <!-- Modal layout picker colors-->
+    <attr name="categoriesBackground" format="reference|color" />
+    <attr name="categoriesButtonText" format="reference|color" />
+    <attr name="categoriesButtonTextSelected" format="reference|color" />
+    <attr name="categoriesButtonBackground" format="reference|color" />
+    <attr name="categoriesButtonBackgroundSelected" format="reference|color" />
+    <attr name="categoriesButtonCheckIconColor" format="reference|color" />
+    <attr name="mlpDividerColor" format="reference|color" />
+
     <!-- SummaryEditTextPreference attributes -->
     <declare-styleable name="SummaryEditTextPreference">
         <attr name="summaryLines" format="integer" />

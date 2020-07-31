@@ -53,11 +53,22 @@ class SubtitleItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 /**
  * Modal Layout Picker categories view holder
  */
-class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
-        parent,
-        R.layout.modal_layout_picker_categories_row
-) {
+class CategoriesItemViewHolder(parent: ViewGroup, private val layoutSelectionListener: LayoutSelectionListener) :
+        ModalLayoutPickerViewHolder(
+                parent,
+                R.layout.modal_layout_picker_categories_row
+        ) {
+    private val recycler: RecyclerView = itemView.findViewById(R.id.categories_recycler_view)
     fun bind(item: ModalLayoutPickerListItem.Categories) {
+        val childLayoutManager = LinearLayoutManager(recycler.context, RecyclerView.HORIZONTAL, false)
+        childLayoutManager.initialPrefetchItemCount = 4
+        val viewPool = RecyclerView.RecycledViewPool()
+
+        recycler.apply {
+            layoutManager = childLayoutManager
+            adapter = CategoriesAdapter(recycler.context, item.categories, layoutSelectionListener)
+            setRecycledViewPool(viewPool)
+        }
     }
 }
 

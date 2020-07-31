@@ -38,7 +38,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override val lifecycleOwner: LifecycleOwner
         get() = this
 
-    override val selectedItemData: LiveData<String?>
+    override val selectedCategoryData: LiveData<String?>
+        get() = viewModel.selectedCategorySlug
+
+    override val selectedLayoutData: LiveData<String?>
         get() = viewModel.selectedLayoutSlug
 
     companion object {
@@ -93,6 +96,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun categoryTapped(category: CategoryListItem) {
+        viewModel.categoryTapped(category)
     }
 
     override fun layoutTapped(layout: LayoutListItem) {

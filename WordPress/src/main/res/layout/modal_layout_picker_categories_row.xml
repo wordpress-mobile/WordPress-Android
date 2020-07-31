@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<View xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/categories_container"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/mlp_categories_row_height"
-    android:background="@color/gray_5" />
+    android:layout_height="@dimen/mlp_categories_bar_height"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/mlp_categories_row_height"
+        android:background="?attr/categoriesBackground"
+        android:clipToPadding="false"
+        android:descendantFocusability="beforeDescendants"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/mlp_layout_card_margin_end"
+        android:paddingStart="@dimen/mlp_layout_card_margin_start"
+        android:scrollbars="none" />
+
+    <View style="@style/ModalLayoutPickerLayoutsSeparatorLine" />
+</LinearLayout>
+

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mlp.CategoryListItem
 import org.wordpress.android.ui.mlp.GutenbergPageLayoutFactory
 import org.wordpress.android.ui.mlp.LayoutListItem
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem
@@ -31,6 +32,12 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private val _isHeaderVisible = MutableLiveData<Event<Boolean>>()
     val isHeaderVisible: LiveData<Event<Boolean>> = _isHeaderVisible
+
+    /**
+     * Tracks the selected category slug
+     */
+    private val _selectedCategorySlug = MutableLiveData<String?>()
+    val selectedCategorySlug: LiveData<String?> = _selectedCategorySlug
 
     /**
      * Tracks the selected layout slug
@@ -61,8 +68,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 
-        listItems.add(ModalLayoutPickerListItem.Categories())
-
         loadLayouts(listItems)
 
         _listItems.postValue(listItems)
@@ -73,6 +78,15 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private fun loadLayouts(listItems: ArrayList<ModalLayoutPickerListItem>) {
         val demoLayouts = GutenbergPageLayoutFactory.makeDefaultPageLayouts()
+
+        listItems.add(ModalLayoutPickerListItem.Categories(demoLayouts.categories.map {
+            CategoryListItem(
+                    it.slug,
+                    it.title,
+                    it.emoji,
+                    false
+            )
+        }))
 
         demoLayouts.categories.forEach { category ->
             val layouts = demoLayouts.layouts(category.slug).map { layout ->
@@ -105,6 +119,17 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
         _isHeaderVisible.postValue(Event(headerShouldBeVisible))
         loadListItems()
+    }
+
+    /**
+     * Category tapped
+     */
+    fun categoryTapped(category: CategoryListItem) {
+        if (category.slug == _selectedCategorySlug.value) { // deselect
+            _selectedCategorySlug.value = null
+        } else {
+            _selectedCategorySlug. value = category.slug
+        }
     }
 
     /**

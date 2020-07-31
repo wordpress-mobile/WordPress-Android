@@ -57,7 +57,7 @@ class LayoutsAdapter(
         holder.container.setOnClickListener {
             selectionListener.layoutTapped(layout)
         }
-        selectionListener.selectedItemData.observe(selectionListener.lifecycleOwner, Observer {
+        selectionListener.selectedLayoutData.observe(selectionListener.lifecycleOwner, Observer {
             holder.selected.setVisible(it == layout.slug)
         })
     }

@@ -32,8 +32,9 @@ sealed class ModalLayoutPickerListItem(val type: ViewType) {
 
     /**
      * The categories row list item
+     * @param categories the categories list
      */
-    class Categories : ModalLayoutPickerListItem(CATEGORIES)
+    data class Categories(val categories: List<CategoryListItem>) : ModalLayoutPickerListItem(CATEGORIES)
 
     /**
      * The layout category row list item
