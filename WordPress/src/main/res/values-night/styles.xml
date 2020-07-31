@@ -10,7 +10,7 @@
         <item name="colorSurface">@color/background_dark</item>
         <item name="colorError">@color/red_30</item>
         <item name="colorOnPrimary">@android:color/black</item>
-        <item name="colorOnSecondary">@android:color/black</item>
+        <item name="colorOnSecondary">@android:color/white</item>
         <item name="colorOnBackground">@android:color/white</item>
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>

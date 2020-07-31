@@ -293,7 +293,6 @@ Language: hr
     <string name="schedule_verb">Zakazati</string>
     <string name="reader_page_followed_tags">Praćene oznake</string>
     <string name="reader_hint_add_tag_or_url">Unesite URL ili oznaku za praćenje</string>
-    <string name="reader_title_tag_preview">Oznaka u Čitaču</string>
     <string name="reader_page_followed_blogs">Praćene web-stranice</string>
     <string name="reader_toast_err_get_blog_info">Nije moguće prikazati web-stranicu</string>
     <string name="reader_toast_err_already_follow_blog">Već pratite ovu web-stranicu</string>

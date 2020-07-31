@@ -3,15 +3,15 @@ package org.wordpress.android.ui.reader.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.IO_THREAD
+import org.wordpress.android.ui.reader.repository.usecases.tags.FetchInterestTagsUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.FollowInterestTagsUseCase
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
@@ -23,16 +23,18 @@ import javax.inject.Named
  */
 class ReaderTagRepository @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val fetchInterestTagUseCase: FetchInterestTagsUseCase,
+    private val followInterestTagsUseCase: FollowInterestTagsUseCase
 ) {
     private val mutableRecommendedInterests = MutableLiveData<ReaderTagList>()
     private val recommendedInterests: LiveData<ReaderTagList> = mutableRecommendedInterests
 
-    suspend fun getInterests(): ReaderTagList =
-            withContext(ioDispatcher) {
-                delay(SECONDS.toMillis(5))
-                getMockInterests()
-            }
+    suspend fun getInterests(): ReaderRepositoryCommunication {
+        return withContext(ioDispatcher) {
+            fetchInterestTagUseCase.fetch()
+        }
+    }
 
     suspend fun getUserTags(isEmpty: Boolean = true): ReaderTagList =
             withContext(ioDispatcher) {
@@ -40,10 +42,9 @@ class ReaderTagRepository @Inject constructor(
                 getMockUserTags(isEmpty)
             }
 
-    // todo: full implementation needed
-    suspend fun saveInterests(tags: List<ReaderTag>) {
-        CoroutineScope(ioDispatcher).launch {
-            delay(TimeUnit.SECONDS.toMillis(5))
+    suspend fun saveInterests(tags: List<ReaderTag>): ReaderRepositoryCommunication {
+        return withContext(ioDispatcher) {
+            followInterestTagsUseCase.followInterestTags(tags)
         }
     }
 

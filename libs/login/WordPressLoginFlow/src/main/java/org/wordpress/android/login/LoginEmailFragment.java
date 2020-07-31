@@ -456,7 +456,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
     public void onResume() {
         super.onResume();
         mAnalyticsListener.emailFormScreenResumed();
-        updateContinueButtonEnabledStatus();
+        if (mShouldUseNewLayout) {
+            updateContinueButtonEnabledStatus();
+        }
     }
 
     @Override
@@ -547,7 +549,9 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
         mEmailInput.setError(null);
         mIsSocialLogin = false;
         clearEmailError();
-        updateContinueButtonEnabledStatus();
+        if (mShouldUseNewLayout) {
+            updateContinueButtonEnabledStatus();
+        }
     }
 
     private void showEmailError(int messageId) {

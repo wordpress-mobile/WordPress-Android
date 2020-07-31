@@ -33,8 +33,8 @@ public class LoginAnalyticsTracker implements LoginAnalyticsListener {
     }
 
     @Override
-    public void trackCreatedAccount(String username, String email) {
-        AnalyticsUtils.trackAnalyticsAccountCreated(username, email);
+    public void trackCreatedAccount(String username, String email, CreatedAccountSource source) {
+        AnalyticsUtils.trackAnalyticsAccountCreated(username, email, source.asPropertyMap());
     }
 
     @Override

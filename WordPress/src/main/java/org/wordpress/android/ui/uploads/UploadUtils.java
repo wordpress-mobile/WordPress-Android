@@ -272,7 +272,7 @@ public class UploadUtils {
         }
     }
 
-    private static void showSnackbarError(View view, String message, int buttonTitleRes,
+    public static void showSnackbarError(View view, String message, int buttonTitleRes,
                                           OnClickListener onClickListener, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(
@@ -386,12 +386,12 @@ public class UploadUtils {
         );
     }
 
-    public static void showSnackbar(View view, String messageRes, SnackbarSequencer sequencer) {
+    public static void showSnackbar(View view, String messageText, SnackbarSequencer sequencer) {
         sequencer.enqueue(
                 new SnackbarItem(
                         new Info(
                                 view,
-                                new UiStringText(messageRes),
+                                new UiStringText(messageText),
                                 Snackbar.LENGTH_LONG
                         ),
                         null,

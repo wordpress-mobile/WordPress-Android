@@ -10,10 +10,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import org.wordpress.android.login.R
-import org.wordpress.android.login.util.AvatarHelper.FakeGravatarUtils.DefaultImage.STATUS_404
-import org.wordpress.android.util.PhotonUtils
-import org.wordpress.android.util.StringUtils
-import org.wordpress.android.util.UrlUtils
+import org.wordpress.android.util.GravatarUtils
+import org.wordpress.android.util.GravatarUtils.DefaultImage.STATUS_404
 
 object AvatarHelper {
     @JvmStatic fun loadAvatarFromEmail(
@@ -23,7 +21,7 @@ object AvatarHelper {
         listener: AvatarRequestListener
     ) {
         val avatarSize = fragment.resources.getDimensionPixelSize(R.dimen.avatar_sz_login)
-        val avatarUrl = FakeGravatarUtils.gravatarFromEmail(email, avatarSize, STATUS_404)
+        val avatarUrl = GravatarUtils.gravatarFromEmail(email, avatarSize, STATUS_404)
         loadAvatarFromUrl(fragment, avatarUrl, avatarView, listener)
     }
 
@@ -65,35 +63,5 @@ object AvatarHelper {
 
     interface AvatarRequestListener {
         fun onRequestFinished()
-    }
-
-    // This should be replaced by the GravatarUtils from the WordPress-Utils library, once it allows us to use a
-    // different DefaultImage (right now it's private)
-    object FakeGravatarUtils {
-        @JvmStatic fun gravatarFromEmail(email: String?, size: Int, defaultImage: DefaultImage) =
-                "http://gravatar.com/avatar/${StringUtils.getMd5Hash(email.orEmpty())}?d=$defaultImage&size=$size"
-
-        @JvmStatic fun fixGravatarUrl(imageUrl: String, size: Int, defaultImage: DefaultImage): String? =
-                if (imageUrl.isEmpty()) {
-                    ""
-                } else if (!imageUrl.contains("gravatar.com")) {
-                    // if this isn't a gravatar image, return as resized photon image url
-                    PhotonUtils.getPhotonImageUrl(imageUrl, size, size)
-                } else {
-                    // remove all other params, then add query string for size and default image
-                    UrlUtils.removeQuery(imageUrl) + "?d=$defaultImage&size=$size"
-                }
-
-        enum class DefaultImage(private val parameterName: String) {
-            MYSTERY_MAN("mm"),
-            STATUS_404("404"),
-            IDENTICON("identicon"),
-            MONSTER("monsterid"),
-            WAVATAR("wavatar"),
-            RETRO("retro"),
-            BLANK("blank");
-
-            override fun toString() = parameterName
-        }
     }
 }
