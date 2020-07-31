@@ -482,15 +482,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
-            viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
-                if (isAvailable) {
-                    initSearchFragment()
-                    initSearchView()
-                    searchActionButton.isVisible = true
-                } else {
-                    searchActionButton.isVisible = false
-                }
-            })
+            initSearchFragment()
+            initSearchView()
         }
         return true
     }

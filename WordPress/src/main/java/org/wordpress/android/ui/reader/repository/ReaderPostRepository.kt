@@ -107,13 +107,15 @@ class ReaderPostRepository(
     // Internal functionality
     private suspend fun loadPosts() {
         withContext(ioDispatcher) {
+            val forceReload = isDirty.getAndSet(false)
             val existsInMemory = posts.value?.let {
                 !it.isEmpty()
             } ?: false
-            val refresh =
-                    shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
 
-            if (!existsInMemory) {
+            val refresh =
+                    shouldAutoUpdateTagUseCase.get(readerTag)
+
+            if (forceReload || !existsInMemory) {
                 reloadPosts()
             }
 
