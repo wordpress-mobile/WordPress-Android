@@ -15,6 +15,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.AppComponent
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARDS
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_DATA
 import org.wordpress.android.ui.reader.ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE
@@ -24,14 +25,14 @@ import org.wordpress.android.ui.reader.ReaderConstants.POST_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_PSEUDO_ID
 import org.wordpress.android.ui.reader.ReaderConstants.POST_SITE_ID
 import org.wordpress.android.ui.reader.ReaderEvents.FetchDiscoverCardsEnded
-import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST
-import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FORCE
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import java.util.HashMap
@@ -49,9 +50,10 @@ class ReaderDiscoverLogic constructor(
     }
 
     @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
 
     enum class DiscoverTasks {
-        REQUEST, REQUEST_FORCE
+        REQUEST_MORE, REQUEST_FIRST_PAGE
     }
 
     private var listenerCompanion: JobParameters? = null
@@ -59,34 +61,33 @@ class ReaderDiscoverLogic constructor(
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
 
-        when (task) {
-            REQUEST -> {
-                requestDataForDiscover(false, UpdateResultListener {
-                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
-                    completionListener.onCompleted(listenerCompanion)
-                })
-            }
-            REQUEST_FORCE -> {
-                requestDataForDiscover(true, UpdateResultListener {
-                    EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
-                    completionListener.onCompleted(listenerCompanion)
-                })
-            }
-        }
+        requestDataForDiscover(task, UpdateResultListener {
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
+            completionListener.onCompleted(listenerCompanion)
+        })
     }
 
-    private fun requestDataForDiscover(forceRefresh: Boolean, resultListener: ReaderActions.UpdateResultListener) {
+    private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
         val params = HashMap<String, String>()
         // TODO malinjir pass interests the user is following
         params["tags"] = "android"
 
-        if (!forceRefresh) {
-            params["page_handle"] = ""
-            // TODO malinjir load page handle
+        when (taskType) {
+            REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
+            REQUEST_MORE -> {
+                val pageHandle = appPrefsWrapper.readerCardsPageHandle
+                if (pageHandle?.isNotEmpty() == true) {
+                    params["page_handle"] = pageHandle
+                } else {
+                    // there are no more pages to load
+                    resultListener.onUpdateResult(UNCHANGED)
+                    return
+                }
+            }
         }
 
         val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
-            if (forceRefresh) {
+            if (taskType == REQUEST_FIRST_PAGE) {
                 // TODO malinjir clear cache
             }
             handleRequestDiscoverDataResponse(jsonObject, resultListener)
@@ -116,7 +117,7 @@ class ReaderDiscoverLogic constructor(
         insertCardsJsonIntoDb(simplifiedCardsJson)
 
         val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
-        // TODO malinjir save next page handle into shared preferences
+        appPrefsWrapper.readerCardsPageHandle = nextPageHandle
 
         resultListener.onUpdateResult(HAS_NEW)
     }
