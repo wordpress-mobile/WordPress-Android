@@ -53,12 +53,28 @@ class CrashLogging @Inject constructor(
                         }
                     }
                 }
-                LogFileProvider.fromContext(context).getLogFiles().lastOrNull()?.let { logFile ->
-                    if (logFile.exists()) {
-                        encryptedLogging.encryptAndUploadLogFile(logFile, event.level != SentryLevel.FATAL)
-                                ?.let { uuid ->
-                                    event.setExtra(EXTRA_UUID, uuid)
-                                }
+                /**
+                 * If Sentry is unable to upload the event in its first attempt, it'll call the `setBeforeSend` callback
+                 * before trying to send it again. This can be easily reproduced by turning off network connectivity
+                 * and re-launching the app over and over again which will hit this callback each time.
+                 *
+                 * The problem with that is it'll keep queuing more and more logs to be uploaded to MC and more
+                 * importantly, it'll set the `uuid` of the Sentry event to the log file at the time of the successful
+                 * Sentry request. Since we are interested in the logs for when the crash happened, this would not be
+                 * correct for us.
+                 *
+                 * We can simply fix this issue by checking if the [EXTRA_UUID] field is already set.
+                 */
+                if (event.getExtra(EXTRA_UUID) == null) {
+                    LogFileProvider.fromContext(context).getLogFiles().lastOrNull()?.let { logFile ->
+                        if (logFile.exists()) {
+                            encryptedLogging.encryptAndUploadLogFile(
+                                    logFile = logFile,
+                                    shouldStartUploadImmediately = event.level != SentryLevel.FATAL
+                            )?.let { uuid ->
+                                event.setExtra(EXTRA_UUID, uuid)
+                            }
+                        }
                     }
                 }
                 event
