@@ -21,6 +21,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.webkit.ValueCallback
 import android.webkit.WebView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -1501,6 +1502,19 @@ class ReaderPostDetailFragment : Fragment(),
             val openUrlType = if (shouldOpenExternal(url)) OpenUrlType.EXTERNAL else OpenUrlType.INTERNAL
             ReaderActivityLauncher.openUrl(activity, url, openUrlType)
         }
+        return true
+    }
+
+    override fun onPageJumpClick(pageJump: String?): Boolean {
+        val jsWasEnabled = readerWebView.settings.javaScriptEnabled
+
+        readerWebView.settings.javaScriptEnabled = true
+
+        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") {
+            val yOffset = (readerWebView.scale * it.toFloat()).toInt()
+            scrollView.smoothScrollTo(0, yOffset)
+        }
+        readerWebView.settings.javaScriptEnabled = jsWasEnabled
         return true
     }
 
