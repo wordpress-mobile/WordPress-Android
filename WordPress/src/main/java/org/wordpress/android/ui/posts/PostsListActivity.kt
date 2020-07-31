@@ -231,11 +231,7 @@ class PostsListActivity : LocaleAwareActivity(),
         pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
         fab.setOnClickListener {
-            if (wpStoriesFeatureConfig.isEnabled()) {
-                postListCreateMenuViewModel.onFabClicked()
-            } else {
-                viewModel.newPost()
-            }
+            viewModel.fabClicked()
         }
 
         fab.setOnLongClickListener {
@@ -391,6 +387,12 @@ class PostsListActivity : LocaleAwareActivity(),
                     )
                     prepublishingFragment.show(supportFragmentManager, PrepublishingBottomSheetFragment.TAG)
                 }
+            }
+        })
+
+        viewModel.onFabClicked.observe(this, Observer { event->
+            event.applyIfNotHandled {
+                postListCreateMenuViewModel.onFabClicked()
             }
         })
     }
