@@ -20,11 +20,12 @@ import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncrypt
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.UploadEncryptedLogResult.LogUploaded
 import org.wordpress.android.fluxc.persistence.EncryptedLogSqlUtils
 import org.wordpress.android.fluxc.store.EncryptedLogStore.EncryptedLogUploadFailureType.CLIENT_FAILURE
+import org.wordpress.android.fluxc.store.EncryptedLogStore.EncryptedLogUploadFailureType.CONNECTION_FAILURE
 import org.wordpress.android.fluxc.store.EncryptedLogStore.EncryptedLogUploadFailureType.IRRECOVERABLE_FAILURE
-import org.wordpress.android.fluxc.store.EncryptedLogStore.EncryptedLogUploadFailureType.SERVER_FAILURE
 import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogFailedToUpload
 import org.wordpress.android.fluxc.store.EncryptedLogStore.OnEncryptedLogUploaded.EncryptedLogUploadedSuccessfully
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.InvalidRequest
+import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.NoConnection
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
 import org.wordpress.android.fluxc.tools.CoroutineEngine
@@ -153,7 +154,7 @@ class EncryptedLogStore @Inject constructor(
             IRRECOVERABLE_FAILURE -> {
                 Pair(true, encryptedLog.failedCount + 1)
             }
-            SERVER_FAILURE -> {
+            CONNECTION_FAILURE -> {
                 Pair(false, encryptedLog.failedCount)
             }
             CLIENT_FAILURE -> {
@@ -185,8 +186,11 @@ class EncryptedLogStore @Inject constructor(
 
     private fun mapUploadEncryptedLogError(error: UploadEncryptedLogError): EncryptedLogUploadFailureType {
         return when (error) {
+            is NoConnection -> {
+                CONNECTION_FAILURE
+            }
             is TooManyRequests -> {
-                SERVER_FAILURE
+                CONNECTION_FAILURE
             }
             is InvalidRequest -> {
                 IRRECOVERABLE_FAILURE
@@ -194,7 +198,7 @@ class EncryptedLogStore @Inject constructor(
             is Unknown -> {
                 when {
                     (500..599).contains(error.statusCode) -> {
-                        SERVER_FAILURE
+                        CONNECTION_FAILURE
                     }
                     else -> {
                         CLIENT_FAILURE
@@ -241,12 +245,13 @@ class EncryptedLogStore @Inject constructor(
         class Unknown(statusCode: Int? = null, message: String? = null) : UploadEncryptedLogError(statusCode, message)
         class InvalidRequest(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
         class TooManyRequests(statusCode: Int?, message: String?) : UploadEncryptedLogError(statusCode, message)
+        object NoConnection : UploadEncryptedLogError(null, null)
     }
 
     /**
      * These are internal failure types to make it easier to deal with encrypted log upload errors.
      */
     private enum class EncryptedLogUploadFailureType {
-        IRRECOVERABLE_FAILURE, SERVER_FAILURE, CLIENT_FAILURE
+        IRRECOVERABLE_FAILURE, CONNECTION_FAILURE, CLIENT_FAILURE
     }
 }
