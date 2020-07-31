@@ -1,21 +1,25 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
-import android.content.Context
+import android.view.LayoutInflater
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.reader_interest_post.*
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.image.ImageManager
 
 class ReaderInterestViewHolder(
     private val uiHelpers: UiHelpers,
-    private val imageManager: ImageManager,
-    parentView: ViewGroup
-) : ReaderViewHolder(parentView, R.layout.reader_interest_post) {
-    val viewContext: Context = interest_container.context
-    override fun onBind(uiState: ReaderCardUiState) {
-        uiState as ReaderInterestUiState
+    internal val parent: ViewGroup
+) : RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+                R.layout.reader_interest_item,
+                parent,
+                false
+        )
+) {
+    fun onBind(uiState: ReaderInterestUiState) {
+        val interestTextView = this.itemView.findViewById<TextView>(R.id.interest)
+        uiHelpers.setTextOrHide(interestTextView, uiState.interest)
     }
 }
