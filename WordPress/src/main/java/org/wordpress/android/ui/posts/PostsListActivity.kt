@@ -382,7 +382,7 @@ class PostsListActivity : LocaleAwareActivity(),
             }
         })
 
-        viewModel.onFabClicked.observe(this, Observer { event->
+        viewModel.onFabClicked.observe(this, Observer { event ->
             event.applyIfNotHandled {
                 postListCreateMenuViewModel.onFabClicked()
             }
