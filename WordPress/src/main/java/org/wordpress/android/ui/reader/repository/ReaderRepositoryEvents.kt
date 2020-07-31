@@ -18,6 +18,7 @@ sealed class ReaderRepositoryEvent {
 }
 
 sealed class ReaderRepositoryCommunication {
+    object Started : ReaderRepositoryCommunication()
     object Success : ReaderRepositoryCommunication()
     data class SuccessWithData<out T>(val data: T) : ReaderRepositoryCommunication()
     class Failure(val event: ReaderRepositoryEvent) : ReaderRepositoryCommunication()
