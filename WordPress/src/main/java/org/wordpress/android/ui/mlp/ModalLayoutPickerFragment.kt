@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -32,6 +34,12 @@ import javax.inject.Inject
 class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
+
+    override val lifecycleOwner: LifecycleOwner
+        get() = this
+
+    override val selectedItemData: LiveData<String?>
+        get() = viewModel.selectedLayoutSlug
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
@@ -70,6 +78,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         }
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
+        createPageButton.setOnClickListener { viewModel.createPage() /* TODO */ }
+        previewButton.setOnClickListener { /* TODO */ }
 
         setupViewModel()
     }
@@ -102,6 +112,15 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                     event.applyIfNotHandled {
                         title.setVisible(this)
                     }
+                }
+        )
+
+        viewModel.selectedLayoutSlug.observe(this,
+                Observer {
+                    val selection = it != null
+                    createBlankPageButton.setVisible(!selection)
+                    createPageButton.setVisible(selection)
+                    previewButton.setVisible(selection)
                 }
         )
     }

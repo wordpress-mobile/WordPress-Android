@@ -35,8 +35,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
     /**
      * Tracks the selected layout slug
      */
-    private val _selectedLayoutSlug = MutableLiveData<Event<String?>>()
-    val selectedLayoutSlug: LiveData<Event<String?>> = _selectedLayoutSlug
+    private val _selectedLayoutSlug = MutableLiveData<String?>()
+    val selectedLayoutSlug: LiveData<String?> = _selectedLayoutSlug
 
     /**
      * Tracks the Modal Layout Picker list items
@@ -76,8 +76,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
         demoLayouts.categories.forEach { category ->
             val layouts = demoLayouts.layouts(category.slug).map { layout ->
-                val selected = _selectedLayoutSlug.value?.peekContent()
-                LayoutListItem(layout.slug, layout.title, layout.preview, layout.slug == selected)
+                val selected = layout.slug == _selectedLayoutSlug.value
+                LayoutListItem(layout.slug, layout.title, layout.preview, selected)
             }
             listItems.add(ModalLayoutPickerListItem.LayoutCategory(category.title, category.description, layouts))
         }
@@ -111,12 +111,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Layout tapped
      */
     fun layoutTapped(layout: LayoutListItem) {
-        if (layout.selected) { // deselect
-            _selectedLayoutSlug.postValue(Event(null))
+        if (layout.slug == _selectedLayoutSlug.value) { // deselect
+            _selectedLayoutSlug.value = null
         } else {
-            _selectedLayoutSlug.postValue(Event(layout.slug))
+            _selectedLayoutSlug. value = layout.slug
         }
-        loadListItems()
     }
 
     /**

@@ -13,7 +13,9 @@ import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType
 /**
  * Renders the rows of the Modal Layout Picker
  */
-class ModalLayoutPickerAdapter(private val layoutSelectionListener: LayoutSelectionListener) : Adapter<ModalLayoutPickerViewHolder>() {
+class ModalLayoutPickerAdapter(
+    private val layoutSelectionListener: LayoutSelectionListener
+) : Adapter<ModalLayoutPickerViewHolder>() {
     private var items: List<ModalLayoutPickerListItem> = listOf()
 
     fun update(newItems: List<ModalLayoutPickerListItem>) {

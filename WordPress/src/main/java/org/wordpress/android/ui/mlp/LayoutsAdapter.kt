@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
@@ -56,6 +57,9 @@ class LayoutsAdapter(
         holder.container.setOnClickListener {
             selectionListener.layoutTapped(layout)
         }
+        selectionListener.selectedItemData.observe(selectionListener.lifecycleOwner, Observer {
+            holder.selected.setVisible(it == layout.slug)
+        })
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
