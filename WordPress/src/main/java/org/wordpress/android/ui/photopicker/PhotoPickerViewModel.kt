@@ -41,7 +41,6 @@ class PhotoPickerViewModel @Inject constructor(
                             isVideo = it.isVideo,
                             isSelected = true,
                             selectedOrder = if (browserType.canMultiselect()) counter else null,
-                            showOrderMarker = !browserType.canMultiselect(),
                             showOrderCounter = true,
                             toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
                     )
@@ -53,7 +52,6 @@ class PhotoPickerViewModel @Inject constructor(
                             isSelected = false,
                             selectedOrder = null,
                             showOrderCounter = browserType.canMultiselect(),
-                            showOrderMarker = !browserType.canMultiselect(),
                             toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
                     )
                 }

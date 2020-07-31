@@ -8,7 +8,6 @@ data class PhotoPickerUiItem(
     val isVideo: Boolean = false,
     val isSelected: Boolean = false,
     val selectedOrder: Int? = null,
-    val showOrderMarker: Boolean = false,
     val showOrderCounter: Boolean = false,
     val toggleAction: ToggleAction
 ) {

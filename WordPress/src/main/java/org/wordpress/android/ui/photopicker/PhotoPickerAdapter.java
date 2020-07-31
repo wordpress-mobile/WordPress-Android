@@ -211,10 +211,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             mTxtSelectionCount.setSelected(isSelected);
             updateSelectionCountForPosition(item, mTxtSelectionCount);
 
-            if (item.getShowOrderMarker()) {
-                mTxtSelectionCount.setBackgroundResource(R.drawable.photo_picker_circle_pressed);
-            }
-
             mVideoOverlay.setVisibility(item.isVideo() ? View.VISIBLE : View.GONE);
 
             if (mLoadThumbnails) {
