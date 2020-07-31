@@ -21,7 +21,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
-import android.webkit.ValueCallback
 import android.webkit.WebView
 import android.widget.ProgressBar
 import android.widget.TextView
