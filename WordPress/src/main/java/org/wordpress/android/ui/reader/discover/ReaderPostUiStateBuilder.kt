@@ -104,11 +104,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    fun mapTagListToReaderInterestUiState(interests: ReaderTagList) =
+    fun mapTagListToReaderInterestUiState(interests: ReaderTagList, onClicked: ((String) -> Unit)) =
             ReaderInterestCardUiState(interests.take(READER_INTERESTS_LIST_SIZE).map { interest ->
                 ReaderInterestUiState(
                         interest.tagTitle,
                         interests.indexOf(interest) != READER_INTERESTS_LAST_INDEX
+                        , onClicked
                 )
             })
 

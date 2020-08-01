@@ -96,7 +96,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     postListType = TAG_FOLLOWED
                             )
                             is InterestsYouMayLikeCard -> {
-                                postUiStateBuilder.mapTagListToReaderInterestUiState(it.interests)
+                                postUiStateBuilder.mapTagListToReaderInterestUiState(it.interests, {})
                             }
                         }
                     }
