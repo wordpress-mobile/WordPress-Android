@@ -4,8 +4,7 @@
     android:id="@+id/interest_container"
     style="@style/ReaderCardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/reader_card_content_padding">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_layout"
@@ -14,9 +13,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/interests_list"
+            android:layout_marginTop="@dimen/margin_large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_large"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -26,9 +25,11 @@
             android:id="@+id/interests_you_may_like_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:layout_margin="@dimen/margin_extra_large"
             android:text="@string/reader_discover_interests_header"
             android:textAppearance="?attr/textAppearanceHeadline6"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
+            android:textColor="?attr/colorOnSurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"

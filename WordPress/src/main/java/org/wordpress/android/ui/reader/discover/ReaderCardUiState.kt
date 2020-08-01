@@ -64,7 +64,7 @@ sealed class ReaderCardUiState {
     }
 
     data class ReaderInterestCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
-        data class ReaderInterestUiState(val interest: String)
+        data class ReaderInterestUiState(val interest: String, val isDividerVisible: Boolean)
     }
 }
 

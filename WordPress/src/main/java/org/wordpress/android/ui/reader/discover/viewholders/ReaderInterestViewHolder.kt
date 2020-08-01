@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,8 @@ class ReaderInterestViewHolder(
 ) {
     fun onBind(uiState: ReaderInterestUiState) {
         val interestTextView = this.itemView.findViewById<TextView>(R.id.interest)
+        val dividerView = this.itemView.findViewById<View>(R.id.divider)
         uiHelpers.setTextOrHide(interestTextView, uiState.interest)
+        uiHelpers.updateVisibility(dividerView, uiState.isDividerVisible)
     }
 }
