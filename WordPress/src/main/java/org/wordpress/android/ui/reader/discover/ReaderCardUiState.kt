@@ -64,7 +64,11 @@ sealed class ReaderCardUiState {
     }
 
     data class ReaderInterestCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
-        data class ReaderInterestUiState(val interest: String, val isDividerVisible: Boolean)
+        data class ReaderInterestUiState(
+            val interest: String,
+            val isDividerVisible: Boolean,
+            val onClicked: ((String) -> Unit)
+        )
     }
 }
 

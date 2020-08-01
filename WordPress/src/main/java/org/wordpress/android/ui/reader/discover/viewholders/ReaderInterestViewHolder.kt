@@ -22,7 +22,9 @@ class ReaderInterestViewHolder(
     fun onBind(uiState: ReaderInterestUiState) {
         val interestTextView = this.itemView.findViewById<TextView>(R.id.interest)
         val dividerView = this.itemView.findViewById<View>(R.id.divider)
+        val interestContainer = this.itemView.findViewById<View>(R.id.reader_interest_container)
         uiHelpers.setTextOrHide(interestTextView, uiState.interest)
         uiHelpers.updateVisibility(dividerView, uiState.isDividerVisible)
+        interestContainer.setOnClickListener { uiState.onClicked.invoke(uiState.interest) }
     }
 }
