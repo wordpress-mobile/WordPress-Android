@@ -1,3 +1,5 @@
-Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.
-
-Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.
+* [***] The login and signup flows were unified and have a new design.
+* [***] Block Editor: Media editing support in Media & Text block.
+* [***] Block Editor: New block: Social Icons
+* [*] Block Editor: Cover block placeholder is updated to allow users to start the block with a background color
+ 

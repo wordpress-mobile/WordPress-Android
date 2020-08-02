@@ -1,4 +1,0 @@
-15,2:
-Blok düzenleyicisi eklemeleri: Kapak ve Düğme bloklarında tema tanımlı renkler ve gradyanlar için düzenleyici desteği eklendi. Kapak bloğu video yüklemeleri, düzenleyici kapatıldıktan sonra tamamlanır. Blok, sözcük ve karakter sayısı ile ilgili ölçüm bilgileri görüntülenir.
-
-Düzeltmeler: Okuyucu gönderim ayrıntısı oluşturma sorunları ve bir WordPress API yanıt kilitlenmesi düzeltildi.

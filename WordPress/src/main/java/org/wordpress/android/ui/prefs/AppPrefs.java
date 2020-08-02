@@ -5,12 +5,14 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.PostModel;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -128,6 +130,7 @@ public class AppPrefs {
         GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
+        LAST_SKIPPED_QUICK_START_TASK,
 
         POST_LIST_AUTHOR_FILTER,
         POST_LIST_VIEW_LAYOUT_TYPE,
@@ -142,7 +145,9 @@ public class AppPrefs {
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
         // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP
+        READER_CSS_UPDATED_TIMESTAMP,
+        // Identifier of the next page for the discover /cards endpoint
+        READER_CARDS_ENDPOINT_PAGE_HANDLE
     }
 
     /**
@@ -230,6 +235,9 @@ public class AppPrefs {
 
         // feature flag for Reader Improvements Phase 2
         FF_READER_IMPROVEMENTS_PHASE_2,
+
+        // used to indicate that we do not need to show the Post List FAB tooltip
+        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
     }
 
     private static SharedPreferences prefs() {
@@ -979,6 +987,15 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
+    public static void setPostListFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isPostListFabTooltipDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+    }
+
+
     public static void setQuickStartMigrationDialogShown(Boolean shown) {
         setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
     }
@@ -1145,6 +1162,30 @@ public class AppPrefs {
 
     public static void setReaderCssUpdatedTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
+    }
+
+    public static String getReaderCardsPageHandle() {
+        return getString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderCardsPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
+    }
+
+     public static QuickStartTask getLastSkippedQuickStartTask() {
+         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
+         if (TextUtils.isEmpty(taskName)) {
+             return null;
+         }
+         return QuickStartTask.Companion.fromString(taskName);
+    }
+
+    public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {
+        if (task == null) {
+            remove(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
+            return;
+        }
+        setString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK, task.toString());
     }
 
     /*

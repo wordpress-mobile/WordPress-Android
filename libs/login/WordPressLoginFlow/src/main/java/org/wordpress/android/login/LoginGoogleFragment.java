@@ -2,6 +2,7 @@ package org.wordpress.android.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,21 +19,35 @@ import org.wordpress.android.fluxc.store.AccountStore.PushSocialPayload;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
-import dagger.android.support.AndroidSupportInjection;
-
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
+import dagger.android.support.AndroidSupportInjection;
+
 public class LoginGoogleFragment extends GoogleFragment {
+    private static final String ARG_SIGNUP_FROM_LOGIN_ENABLED = "ARG_SIGNUP_FROM_LOGIN_ENABLED";
     private static final int REQUEST_LOGIN = 1001;
     private boolean mLoginRequested = false;
+    private boolean mIsSignupFromLoginEnabled;
 
     public static final String TAG = "login_google_fragment_tag";
+
+    public static LoginGoogleFragment newInstance(boolean isSignupFromLoginEnabled) {
+        LoginGoogleFragment fragment = new LoginGoogleFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, isSignupFromLoginEnabled);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
         AndroidSupportInjection.inject(this);
         super.onAttach(context);
+        Bundle args = getArguments();
+        if (args != null) {
+            mIsSignupFromLoginEnabled = args.getBoolean(ARG_SIGNUP_FROM_LOGIN_ENABLED, false);
+        }
     }
 
     @Override
@@ -41,6 +56,7 @@ public class LoginGoogleFragment extends GoogleFragment {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: startFlow");
             mLoginRequested = true;
             Intent loginIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            mAnalyticsListener.trackSocialButtonStart();
             startActivityForResult(loginIntent, REQUEST_LOGIN);
         } else {
             AppLog.d(T.MAIN, "GOOGLE LOGIN: startFlow called, but is already in progress");
@@ -64,9 +80,12 @@ public class LoginGoogleFragment extends GoogleFragment {
                             GoogleSignInAccount account = loginResult.getSignInAccount();
 
                             if (account != null) {
+                                mDisplayName = account.getDisplayName() != null ? account.getDisplayName() : "";
                                 mGoogleEmail = account.getEmail() != null ? account.getEmail() : "";
                                 mGoogleListener.onGoogleEmailSelected(mGoogleEmail);
                                 mIdToken = account.getIdToken() != null ? account.getIdToken() : "";
+                                mPhotoUrl = removeScaleFromGooglePhotoUrl(
+                                        account.getPhotoUrl() != null ? account.getPhotoUrl().toString() : "");
                             }
 
                             AppLog.d(T.MAIN,
@@ -187,9 +206,14 @@ public class LoginGoogleFragment extends GoogleFragment {
                     break;
                 // WordPress account does not exist with input email address.
                 case UNKNOWN_USER:
-                    AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress acount doesn't exist");
-                    mAnalyticsListener.trackSocialErrorUnknownUser();
-                    showError(getString(R.string.login_error_email_not_found_v2));
+                    AppLog.d(T.MAIN, "GOOGLE LOGIN: onSocialChanged - wordpress account doesn't exist");
+                    if (mIsSignupFromLoginEnabled) {
+                        mLoginListener.gotUnregisteredSocialAccount(mGoogleEmail, mDisplayName, mIdToken, mPhotoUrl,
+                                SERVICE_TYPE_GOOGLE);
+                    } else {
+                        mAnalyticsListener.trackSocialErrorUnknownUser();
+                        showError(getString(R.string.login_error_email_not_found_v2));
+                    }
                     break;
                 // Too many attempts on sending SMS verification code. The user has to wait before they try again
                 case SMS_CODE_THROTTLED:

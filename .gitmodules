@@ -2,3 +2,7 @@
 	path = libs/gutenberg-mobile
 	url = ../../wordpress-mobile/gutenberg-mobile.git
 	shallow = true
+[submodule "libs/stories-android"]
+	path = libs/stories-android
+	url = ../../Automattic/stories-android.git
+	shallow = true

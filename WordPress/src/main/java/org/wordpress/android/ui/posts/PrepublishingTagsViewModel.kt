@@ -23,14 +23,12 @@ class PrepublishingTagsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
+    private var closeKeyboard = true
     private lateinit var editPostRepository: EditPostRepository
     private var updateTagsJob: Job? = null
 
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
-
-    private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
-    val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
 
     private val _dismissKeyboard = MutableLiveData<Event<Unit>>()
     val dismissKeyboard: LiveData<Event<Unit>> = _dismissKeyboard
@@ -38,8 +36,9 @@ class PrepublishingTagsViewModel @Inject constructor(
     private val _toolbarTitleUiState = MutableLiveData<UiString>()
     val toolbarTitleUiState: LiveData<UiString> = _toolbarTitleUiState
 
-    fun start(editPostRepository: EditPostRepository) {
+    fun start(editPostRepository: EditPostRepository, closeKeyboard: Boolean = false) {
         this.editPostRepository = editPostRepository
+        this.closeKeyboard = closeKeyboard
 
         if (isStarted) return
         isStarted = true
@@ -59,10 +58,10 @@ class PrepublishingTagsViewModel @Inject constructor(
         }
     }
 
-    fun onCloseButtonClicked() = _dismissBottomSheet.postValue(Event(Unit))
-
     fun onBackButtonClicked() {
-        _dismissKeyboard.postValue(Event(Unit))
+        if (closeKeyboard) {
+            _dismissKeyboard.postValue(Event(Unit))
+        }
         _navigateToHomeScreen.postValue(Event(Unit))
     }
 

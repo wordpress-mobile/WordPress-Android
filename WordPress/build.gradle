@@ -55,9 +55,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-233"
+            versionName "alpha-235"
         }
-        versionCode 892
+        versionCode 898
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -72,6 +72,9 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
+        buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
+        buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
+        buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -88,14 +91,16 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "15.3-rc-1"
+                versionName "15.4-rc-1"
             }
-            versionCode 891
+            versionCode 897
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "false"
+            buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
+            buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
         }
 
         zalpha { // alpha version - enable experimental features
@@ -172,6 +177,7 @@ androidExtensions {
 }
 
 dependencies {
+    implementation project(path:':libs:stories-android:stories')
     implementation project(path:':libs:image-editor::ImageEditor')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
@@ -179,7 +185,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
     implementation 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
 
-    implementation 'androidx.core:core:1.2.0'
+    implementation "androidx.core:core:$coreVersion"
     implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
     implementation 'androidx.fragment:fragment:1.2.4'
 
@@ -216,7 +222,7 @@ dependencies {
     implementation 'com.android.installreferrer:installreferrer:1.0'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation ('com.automattic:rest:1.0.7') {
+    implementation ('com.automattic:rest:1.0.8') {
         exclude group: 'com.mcxiaoke.volley'
     }
     implementation 'org.wordpress:graphview:3.4.0'
@@ -337,6 +343,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
 
     implementation "org.jsoup:jsoup:1.10.3"
+    implementation 'androidx.emoji:emoji:1.0.0'
 }
 
 configurations.all {

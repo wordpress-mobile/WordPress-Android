@@ -56,4 +56,6 @@ class WrappingLinearLayoutManager(
     }
 
     override fun isAutoMeasureEnabled(): Boolean = enableAutoMeasure
+
+    override fun supportsPredictiveItemAnimations(): Boolean = false
 }

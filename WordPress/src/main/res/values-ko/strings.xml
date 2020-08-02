@@ -1,18 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-06-25 08:54:10+0000
+Translation-Revision-Date: 2020-07-22 08:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">개성과 주제를 반영할 사이트 이름을 주세요. 첫 인상이 중요합니다!</string>
+    <string name="quick_start_list_update_site_title_title">사이트 제목을 설정하세요</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경사항도 취소될 것입니다. 계속하기 원하시는게 맞나요?</string>
+    <string name="gutenberg_native_s_block_options">%s 블록 옵션</string>
+    <string name="gutenberg_native_remove_block">블록 제거하기</string>
+    <string name="gutenberg_native_paste_block">블록 붙여넣기</string>
+    <string name="gutenberg_native_duplicate_block">블록 복제하기</string>
+    <string name="gutenberg_native_copy_block">블록 복사하기</string>
+    <string name="gutenberg_native_copied_block">복사된 블록</string>
+    <string name="gutenberg_native_block_settings">블록 설정</string>
+    <string name="gutenberg_native_block_pasted">블록을 붙여넣었습니다</string>
+    <string name="gutenberg_native_block_duplicated">블록을 복제하였습니다</string>
+    <string name="gutenberg_native_block_cut">블록을 잘라내었습니다</string>
+    <string name="gutenberg_native_block_copied">블록을 복사하였습니다</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">사이트 제목은 사용자가 관리자 역할일 때만 바꿀 수 있습니다.</string>
+    <string name="my_site_title_changer_dialog_hint">사이트 제목은 웹브라우저의 제목표시줄에 보이고 대부분의 테마에서 헤더에 보입니다.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">주제</string>
+    <string name="error_update_site_title_network">사이트 제목을 업데이트할 수 없습니다. 네트워크 연결을 확인하고 다시 시도하세요.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">저장하지 않은 변경사항</string>
+    <string name="gutenberg_native_open_link_in_a_browser">브라우저에서 링크 열기</string>
+    <string name="gutenberg_native_navigates_to_the_previous_content_sheet">이전 내용 시트로 탐색하기</string>
+    <string name="gutenberg_native_navigates_to_customize_the_gradient">사용자 정의 그라디언트로 탐색하기</string>
+    <string name="gutenberg_native_navigates_to_custom_color_picker">사용자 정의 색상 선택기로 탐색하기</string>
+    <string name="gutenberg_native_gradient_type">그라디언트 유형</string>
+    <string name="gutenberg_native_go_back">뒤로 가기</string>
+    <string name="gutenberg_native_double_tap_to_select_the_option">옵션을 선택하려면 두 번 탭하기</string>
+    <string name="gutenberg_native_customize_gradient">그라디언트 사용자 정의하기</string>
+    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_list_author">페이지 작성자</string>
+    <string name="photo_picker_use_gif">이 GIF 사용하기</string>
+    <string name="error_media_thumbnail_not_loaded">미디어 썸네일을 불러 올 수 없습니다</string>
+    <string name="menu_content_info">콘텐츠 구조</string>
+    <string name="everyone">모두</string>
+    <string name="me">나</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">당사는 각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그동안 기기의 웹 브라우저를 사용하여 이 블록을 편집할 수도 있습니다.</string>
+    <string name="gutenberg_native_edit_block_in_web_browser">웹 브라우저에서 블록 편집하기</string>
+    <string name="gutenberg_native_dismiss">해제</string>
+    <string name="prepublishing_nudges_home_tags_not_set">설정하지 않음</string>
+    <string name="prepublishing_tags_description">태그는 독자들에게 이 글이 무엇에 관한 글인지 말하도록 돕습니다.</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">발행</string>
+    <string name="prepublishing_nudges_toolbar_title_tags">태그 추가하기</string>
+    <string name="prepublishing_nudges_back_button">뒤로</string>
+    <string name="prepublishing_nudges_home_save_button">지금 저장하기</string>
+    <string name="prepublishing_nudges_home_submit_button">지금 제출하기</string>
+    <string name="prepublishing_nudges_home_schedule_button">지금 예약하기</string>
+    <string name="prepublishing_nudges_home_header_publishing_to">다음으로 발행</string>
+    <string name="prepublishing_nudges_tags_action">태그</string>
+    <string name="prepublishing_nudges_publish_action">발행일</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_negative">취소</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">초안으로 이동</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_message">휴지통에 있는 글은 편집할 수 없습니다. 이 글의 상태를 “초안”으로 변경하여 작업할 수 있기를 원하십니까?</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_title">글을 초안으로 옮깁니까?</string>
+    <string name="reader_label_choose_your_interests">관심 항목을 고르세요</string>
+    <string name="reader_label_discover_follow_tags">좋아하는 태그를 발견하고 따르기</string>
+    <string name="reader_choose_interests_content_description">관심사항 고르기</string>
+    <string name="reader_btn_done">완료</string>
+    <string name="reader_btn_select_few_interests">계속하기 위해 몇 가지 더 선택하기</string>
+    <string name="post_status_post_published">발행됨</string>
+    <string name="post_status_post_trashed">버려짐</string>
+    <string name="post_status_post_scheduled">예약됨</string>
+    <string name="publish_date">발행일</string>
+    <string name="ccpa_privacy_notice_read">CCPA 개인정보보호 고지 읽기</string>
+    <string name="ccpa_privacy_notice_caption">캘리포니아 소비자 개인정보 보호법(“CCPA”)이 수집하고 공유하는 개인 정보의 범주에 대한 개인 정보를 어떤 것을 얻고,  어떻게 왜 쓰는 지에 대한 일부 추가 정보를 캘리포니아 거주자에게 제공할 것을 요구합니다.</string>
+    <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
+    <string name="status_and_visibility">상태 &amp; 가시성</string>
+    <string name="update_now">지금 업데이트하기</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">%s 제거</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
-    <string name="gutenberg_native_move_s_up">%s(을)를 위로 이동</string>
-    <string name="gutenberg_native_move_s_right">%s(을)를 오른쪽으로 이동</string>
-    <string name="gutenberg_native_move_s_left">%s(을)를 왼쪽으로 이동</string>
-    <string name="gutenberg_native_move_s_down">%s(을)를 아래로 이동</string>
     <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
     <string name="gutenberg_native_insert_mention">언급 넣기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
@@ -71,7 +133,9 @@ Language: ko_KR
     <string name="copy_text">복사</string>
     <string name="gutenberg_native_number_of_columns">단의 수</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">블록을 %1$s 위치에서 %2$s(으)로 이동</string>
+    <string name="gutenberg_native_move_block_right">블록 오른쪽으로 움직이기</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">블록을 %1$s 위치에서 %2$s (으)로 이동</string>
+    <string name="gutenberg_native_move_block_left">블록 왼쪽으로 움직이기</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">블록을 오른쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">블록을 왼쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_columns_settings">다단 설정</string>
@@ -154,7 +218,6 @@ Language: ko_KR
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
     <string name="gutenberg_native_link_to">링크</string>
-    <string name="gutenberg_native_s_settings">%s 설정</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">함께 만들어 보세요!</string>
     <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요!</string>
@@ -284,6 +347,7 @@ Language: ko_KR
     <string name="reader_my_likes_display_name">좋아요</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m_68559180">각 릴리스에 더 많은 블록을 추가하기 위해 노력하고 있습니다. 그 사이에 웹에서 이 글을 편집할 수도 있습니다.</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
     <string name="gutenberg_native_translate">번역</string>
     <string name="gutenberg_native_title">제목:</string>
@@ -300,6 +364,7 @@ Language: ko_KR
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\'%s\'은(는) Android용 워드프레스에서 아직 지원되지 않습니다.</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>
     <string name="gutenberg_native_s_block_empty">%s 블록. 비어 있음</string>
+    <string name="gutenberg_native_cut_block">블록 잘라내기</string>
     <string name="gutenberg_native_reset_block">블록 리셋</string>
     <string name="gutenberg_native_remove_annotations">주석 제거</string>
     <string name="gutenberg_native_problem_opening_the_video">비디오 열기 문제</string>
@@ -316,7 +381,9 @@ Language: ko_KR
     <string name="gutenberg_native_my_post_publish_panel">내 글 발행 패널</string>
     <string name="gutenberg_native_my_document_setting_panel">내 문서 설정 패널</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">블록을 위로(%1$s 행에서 %2$s 행으로) 이동</string>
+    <string name="gutenberg_native_move_block_up">블록을 위로 이동</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">블록을 아래로(%1$s 행에서 %2$s 행으로) 이동</string>
+    <string name="gutenberg_native_move_block_down">블록을 아래로 이동</string>
     <string name="gutenberg_native_link_text">링크 텍스트</string>
     <string name="gutenberg_native_link_inserted">링크 삽입됨</string>
     <string name="gutenberg_native_image_caption_s">이미지 캡션. %s</string>
@@ -571,7 +638,7 @@ Language: ko_KR
     <string name="post_restoring">글이 복원되는 중</string>
     <string name="post_restored">글이 복원됨</string>
     <string name="post_trashing">글이 휴지통으로 이동 중</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">이 글을 휴지통에 버리면 로컬 변경 사항이 취소됩니다. 계속하시겠습니까?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">이 글을 휴지통에 버리면 로컬 변경 사항이 취소됩니다. 계속하시겠습니까?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">로컬 변경</string>
     <string name="button_move_to_draft">임시글로 이동</string>
     <string name="post_list_toggle_item_layout_list_view">목록 보기로 전환</string>
@@ -1424,11 +1491,6 @@ Language: ko_KR
     <string name="open_mail">메일 열기</string>
     <string name="next">다음</string>
     <string name="enter_email_wordpress_com">이메일 주소를 입력하여 워드프레스닷컴에 로그인하고 회원님의 모든 WordPress 사이트를 관리하세요.</string>
-    <string name="login_promo_text_jetpack">이동 중에 젯팩 지원 사이트를 관리하세요. 어디에 가든지 워드프레스가 함께합니다.</string>
-    <string name="login_promo_text_notifications">어디에서든 알림을 받을 수 있습니다. 댓글 및 좋아요가 표시되면 즉시 확인하세요.</string>
-    <string name="login_promo_text_anytime">언제, 어디서든지 즐겨 찾는 사이트의 최신 소식을 확인하고 대화에 참여하세요.</string>
-    <string name="login_promo_text_realtime">전 세계 독자들이 회원님의 사이트의 글을 읽고 상호 작용하는 것을 실시간으로 지켜보세요.</string>
-    <string name="login_promo_text_onthego">공원에서 글을 발행하세요. 버스에서 블로그를 방문하세요. 카페에서 댓글을 다세요. 워드프레스는 어디에서든 사용할 수 있습니다.</string>
     <string name="image_optimization_promo_desc">이미지 최적화는 빠른 업로드를 위해 이미지를 줄입니다.\n\n사이트 설정에서 언제든지 변경할 수 있습니다.</string>
     <string name="image_optimization_promo_title">이미지 최적화를 켜시겠어요?</string>
     <string name="leave_off">중단</string>
@@ -1613,7 +1675,6 @@ Language: ko_KR
     <string name="pending_draft_one_week_1">임시글 \'%1$s\'이(가) 대기 중입니다. 잊지 말고 발행하세요!</string>
     <string name="pending_draft_one_day_2">\'%1$s\'이(가) 아직 임시글입니다. 어서 발행하세요!</string>
     <string name="pending_draft_one_day_1">어제 \'%1$s\'의 초안을 작성했습니다. 잊지 말고 발행하세요!</string>
-    <string name="reader_photo_by">%s 촬영</string>
     <string name="reader_label_visit">사이트 방문</string>
     <string name="swipe_for_more">더 많은 내용을 보려면 살짝 밀기</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">이 글을 볼 권한이 없습니다. 워드프레스닷컴에 먼저 로그인하거나, 상단 조치 버튼을 사용하여 브라우저를 대신 엽니다.</string>
@@ -2105,7 +2166,6 @@ Language: ko_KR
     <string name="reader_hint_add_tag_or_url">팔로우할 태그나 URL 입력</string>
     <string name="reader_page_followed_blogs">팔로우된 블로그</string>
     <string name="reader_page_followed_tags">팔로우된 태그</string>
-    <string name="reader_title_tag_preview">리더 태그</string>
     <string name="reader_title_blog_preview">리더 블로그</string>
     <string name="ssl_certificate_ask_trust">일반적으로 문제없이 이 사이트에 연결하는 경우, 이 오류는 누군가가 사이트를 사칭하는 것을 의미 할 수 있습니다, 그렇다면 연결하면 안됩니다.  그래도 인증서를 신뢰 하시겠습니까?</string>
     <string name="ssl_certificate_error">잘못된 SSL 인증서</string>
