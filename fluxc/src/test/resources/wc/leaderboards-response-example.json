@@ -218,34 +218,6 @@
           "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>110.000,00<\/span>",
           "value": 110000
         }
-      ],
-      [
-        {
-          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=20'>Long Sleeve Tee<\/a>",
-          "value": "Long Sleeve Tee"
-        },
-        {
-          "display": "1.000",
-          "value": 1000
-        },
-        {
-          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>25.000,00<\/span>",
-          "value": 25000
-        }
-      ],
-      [
-        {
-          "display": "<a href='https:\/\/mystagingwebsite.com\/wp-admin\/admin.php?page=wc-admin&path=\/analytics\/products&filter=single_product&products=13'>T-Shirt<\/a>",
-          "value": "T-Shirt"
-        },
-        {
-          "display": "500",
-          "value": 500
-        },
-        {
-          "display": "<span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>9.000,00<\/span>",
-          "value": 9000
-        }
       ]
     ]
   }
