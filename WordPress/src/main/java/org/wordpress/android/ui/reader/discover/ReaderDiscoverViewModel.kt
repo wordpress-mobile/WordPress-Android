@@ -58,7 +58,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
-    private lateinit var mReaderDiscoverDataProvider: ReaderDiscoverDataProvider
+    private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
 
     fun start() {
         if (isStarted) return
@@ -72,11 +72,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.value = LoadingUiState
 
         // Get the correct repository
-        mReaderDiscoverDataProvider = readerDiscoverDataProviderFactory.create()
-        mReaderDiscoverDataProvider.start()
+        readerDiscoverDataProvider = readerDiscoverDataProviderFactory.create()
+        readerDiscoverDataProvider.start()
 
         // Listen to changes to the discover feed
-        _uiState.addSource(mReaderDiscoverDataProvider.discoverFeed) { posts ->
+        _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
                     // TODO malinjir we currently ignore all other types but ReaderPostCards
                     posts.cards.filterIsInstance<ReaderPostCard>().map {
@@ -98,7 +98,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
 
-        mReaderDiscoverDataProvider.communicationChannel.observeForever { data ->
+        readerDiscoverDataProvider.communicationChannel.observeForever { data ->
             data?.let {
                 // TODO listen for communications from the reeaderPostRepository, but not 4ever!
             }
@@ -169,7 +169,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        mReaderDiscoverDataProvider.stop()
+        readerDiscoverDataProvider.stop()
     }
 
     sealed class DiscoverUiState(
