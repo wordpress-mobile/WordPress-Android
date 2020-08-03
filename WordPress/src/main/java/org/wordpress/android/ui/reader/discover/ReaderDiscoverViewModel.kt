@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.ReaderTagType.INTERESTS
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
@@ -16,10 +17,12 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.viewmodel.Event
@@ -32,6 +35,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
+    private val readerUtilsWrapper: ReaderUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -96,7 +100,10 @@ class ReaderDiscoverViewModel @Inject constructor(
                                     postListType = TAG_FOLLOWED
                             )
                             is InterestsYouMayLikeCard -> {
-                                postUiStateBuilder.mapTagListToReaderInterestUiState(it.interests, {})
+                                postUiStateBuilder.mapTagListToReaderInterestUiState(
+                                        it.interests,
+                                        this::onReaderTagClicked
+                                )
                             }
                         }
                     }
@@ -124,6 +131,11 @@ class ReaderDiscoverViewModel @Inject constructor(
         _preloadPostEvents.addSource(readerPostCardActionsHandler.preloadPostEvents) { event ->
             _preloadPostEvents.value = event
         }
+    }
+
+    private fun onReaderTagClicked(tag: String) {
+        val readerTag = readerUtilsWrapper.getTagFromTagName(tag, INTERESTS)
+        _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
     }
 
     private fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
