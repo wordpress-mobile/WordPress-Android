@@ -104,7 +104,7 @@ public class SitePickerActivity extends LocaleAwareActivity
     private Debouncer mDebouncer = new Debouncer();
     private SitePickerViewModel mViewModel;
 
-    private HashSet<Integer> mHashSelectedPositions = new HashSet<>();
+    private HashSet<Integer> mSelectedPositions = new HashSet<>();
     private boolean mIsInEditMode;
 
     private boolean mShowMenuEnabled = false;
@@ -385,7 +385,7 @@ public class SitePickerActivity extends LocaleAwareActivity
             lastSearch = savedInstanceState.getString(KEY_LAST_SEARCH);
             mSitePickerMode = (SitePickerMode) savedInstanceState.getSerializable(KEY_SITE_PICKER_MODE);
 
-            mHashSelectedPositions = (HashSet<Integer>) savedInstanceState.getSerializable(KEY_SELECTED_POSITIONS);
+            mSelectedPositions = (HashSet<Integer>) savedInstanceState.getSerializable(KEY_SELECTED_POSITIONS);
             mIsInEditMode = savedInstanceState.getBoolean(KEY_IS_IN_EDIT_MODE);
             mShowMenuEnabled = savedInstanceState.getBoolean(KEY_IS_SHOW_MENU_ENABLED);
             mHideMenuEnabled = savedInstanceState.getBoolean(KEY_IS_HIDE_MENU_ENABLED);
@@ -744,10 +744,10 @@ public class SitePickerActivity extends LocaleAwareActivity
             if (mHasChanges) {
                 saveSitesVisibility(mChangeSet);
             }
-            getAdapter().setEnableEditMode(false, mHashSelectedPositions);
+            getAdapter().setEnableEditMode(false, mSelectedPositions);
             mActionMode = null;
             mIsInEditMode = false;
-            mHashSelectedPositions.clear();
+            mSelectedPositions.clear();
         }
     }
 
@@ -793,7 +793,7 @@ public class SitePickerActivity extends LocaleAwareActivity
 
     private void startEditingVisibility() {
         mRecycleView.setItemAnimator(new DefaultItemAnimator());
-        getAdapter().setEnableEditMode(true, mHashSelectedPositions);
+        getAdapter().setEnableEditMode(true, mSelectedPositions);
         startSupportActionMode(new ActionModeCallback());
         mIsInEditMode = true;
     }

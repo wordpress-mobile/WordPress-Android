@@ -437,7 +437,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         mIsMultiSelectEnabled = enable;
 
-        // If some selectedPositions exist and are passed from the activity, use it.
+        // If the selectedPositions value that is passed from the activity isn't empty,
+        // then we add that to the Adapter's mSelectedPositions.
         // Otherwise, reset the selected positions.
         if (!selectedPositions.isEmpty()) {
             mSelectedPositions.addAll(selectedPositions);
