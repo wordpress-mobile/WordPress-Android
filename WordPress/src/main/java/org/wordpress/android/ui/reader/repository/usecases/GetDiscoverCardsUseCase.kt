@@ -33,7 +33,9 @@ class GetDiscoverCardsUseCase @Inject constructor(
 
                 // TODO jd-alexander remove mocked interests when the real implementation below is working.
                 val mockedInterests = readerTagRepository.getUserTags(false)
-                cards.add(InterestsYouMayLikeCard(mockedInterests))
+                if (mockedInterests != null) {
+                    cards.add(InterestsYouMayLikeCard(mockedInterests))
+                }
 
                 if (cardJsonList.isNotEmpty()) {
                     val jsonObjects = parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(

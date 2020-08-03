@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,6 +22,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayL
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.repository.ReaderTagRepository
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -33,6 +35,7 @@ class GetDiscoverCardsUseCaseTest {
     private val mockedInterestsCardJson: JSONObject = mock()
     private val readerPostTableWrapper: ReaderPostTableWrapper = mock()
     private val appLogWrapper: AppLogWrapper = mock()
+    private val readerTagRepository: ReaderTagRepository = mock()
 
     @Before
     fun setUp() {
@@ -41,6 +44,7 @@ class GetDiscoverCardsUseCaseTest {
                 readerDiscoverCardsTableWrapper,
                 readerPostTableWrapper,
                 appLogWrapper,
+                readerTagRepository,
                 TEST_DISPATCHER
         )
         whenever(parseDiscoverCardsJsonUseCase.convertListOfJsonArraysIntoSingleJsonArray(anyOrNull()))
@@ -56,6 +60,11 @@ class GetDiscoverCardsUseCaseTest {
                 .thenReturn(ReaderConstants.JSON_CARD_POST)
         whenever(mockedInterestsCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
+
+        // TODO jd_alexander remove the associated mocks and tested behavior of the readerTagRepository
+        runBlocking {
+            whenever(readerTagRepository.getUserTags(anyBoolean())).thenReturn(null)
+        }
     }
 
     @Test
