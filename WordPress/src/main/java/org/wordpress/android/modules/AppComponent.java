@@ -136,6 +136,7 @@ import org.wordpress.android.ui.reader.ReaderPostListActivity;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity;
 import org.wordpress.android.ui.reader.ReaderSearchActivity;
+import org.wordpress.android.ui.reader.ReaderSubsActivity;
 import org.wordpress.android.ui.reader.SubfilterBottomSheetFragment;
 import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
@@ -143,6 +144,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
+import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic;
 import org.wordpress.android.ui.reader.views.ReaderLikingUsersView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
@@ -373,6 +375,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderCommentListActivity object);
 
+    void inject(ReaderSubsActivity object);
+
     void inject(ReaderUpdateLogic object);
 
     void inject(ReaderPostDetailFragment object);
@@ -548,6 +552,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PhotoPickerFragment object);
 
     void inject(LoginPrologueFragment object);
+
+    void inject(ReaderDiscoverLogic object);
 
     void inject(PostListCreateMenuFragment object);
 
