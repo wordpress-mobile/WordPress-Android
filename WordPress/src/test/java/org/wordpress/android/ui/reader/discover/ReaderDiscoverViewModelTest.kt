@@ -35,8 +35,8 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var mReaderDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory
-    @Mock private lateinit var mReaderDiscoverDataProvider: ReaderDiscoverDataProvider
+    @Mock private lateinit var readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory
+    @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
@@ -48,23 +48,23 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-        whenever(mReaderDiscoverDataProviderFactory.create()).thenReturn(mReaderDiscoverDataProvider)
+        whenever(readerDiscoverDataProviderFactory.create()).thenReturn(readerDiscoverDataProvider)
         viewModel = ReaderDiscoverViewModel(
-                mReaderDiscoverDataProviderFactory,
+                readerDiscoverDataProviderFactory,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
-        whenever(mReaderDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
+        whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
-        whenever(mReaderDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
+        whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
     }
 
     @Test

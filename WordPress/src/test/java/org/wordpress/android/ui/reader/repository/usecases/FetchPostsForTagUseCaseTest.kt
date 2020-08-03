@@ -35,7 +35,6 @@ class FetchPostsForTagUseCaseTest {
                 readerPostServiceStarterWrapper
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-
     }
 
     @Test
