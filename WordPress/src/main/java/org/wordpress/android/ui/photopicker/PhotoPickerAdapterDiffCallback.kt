@@ -1,7 +1,8 @@
 package org.wordpress.android.ui.photopicker
 
-import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 
 class PhotoPickerAdapterDiffCallback(
     private val oldItems: List<PhotoPickerUiItem>,
@@ -20,24 +21,23 @@ class PhotoPickerAdapterDiffCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        val areContentsTheSame = oldItems[oldItemPosition] == updatedItems[newItemPosition]
-        if (!areContentsTheSame) {
-            Log.d("vojta", "Contents are different")
-            Log.d("vojta", "Item 1 selected: " + oldItems[oldItemPosition].isSelected)
-            Log.d("vojta", "Item 2 selected: " + updatedItems[newItemPosition].isSelected)
-        }
-        return areContentsTheSame
+        return oldItems[oldItemPosition] == updatedItems[newItemPosition]
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        val (_, _, _, isSelected) = oldItems[oldItemPosition]
-        val (id, _, _, isSelected1) = updatedItems[newItemPosition]
-        Log.d("vojta", "Item 1 selected: $isSelected")
-        Log.d("vojta", "Item 2 selected: $isSelected1")
-        if (isSelected != isSelected1) {
-            Log.d("vojta", "Sending payload")
-            return id
+        val oldItem = oldItems[oldItemPosition]
+        val updatedItem = updatedItems[newItemPosition]
+        if (oldItem.isSelected != updatedItem.isSelected) {
+            return SELECTION_CHANGE
+        }
+        if (oldItem.showOrderCounter == updatedItem.showOrderCounter &&
+                oldItem.selectedOrder != updatedItem.selectedOrder) {
+            return COUNT_CHANGE
         }
         return super.getChangePayload(oldItemPosition, newItemPosition)
+    }
+
+    enum class Payload {
+        SELECTION_CHANGE, COUNT_CHANGE
     }
 }

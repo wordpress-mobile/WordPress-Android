@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
+import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -110,12 +111,16 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             return;
         }
         boolean animateSelection = false;
+        boolean updateCount = false;
         for (Object payload : payloads) {
-            if (payload instanceof Long && payload.equals(item.getId())) {
+            if (payload == Payload.SELECTION_CHANGE) {
                 animateSelection = true;
             }
+            if (payload == Payload.COUNT_CHANGE) {
+                updateCount = true;
+            }
         }
-        holder.bind(item, animateSelection);
+        holder.bind(item, animateSelection, updateCount);
     }
 
     @Override
@@ -124,7 +129,7 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         if (item == null) {
             return;
         }
-        holder.bind(item, false);
+        holder.bind(item, false, false);
     }
 
     private PhotoPickerUiItem getItemAtPosition(int position) {
@@ -179,7 +184,13 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
             });
         }
 
-        public void bind(PhotoPickerUiItem item, boolean animateSelection) {
+        public void bind(PhotoPickerUiItem item, boolean animateSelection, boolean updateCount) {
+            // Only count is updated so do not redraw the whole item
+            if (updateCount) {
+                updateSelectionCountForPosition(item, mTxtSelectionCount);
+                AniUtils.startAnimation(mTxtSelectionCount, R.anim.pop);
+                return;
+            }
             boolean isSelected = item.isSelected();
             mTxtSelectionCount.setSelected(isSelected);
             updateSelectionCountForPosition(item, mTxtSelectionCount);
