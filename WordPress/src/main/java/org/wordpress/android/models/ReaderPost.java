@@ -83,13 +83,13 @@ public class ReaderPost {
 
         ReaderPost post = new ReaderPost();
 
-        post.postId = json.optLong("ID");
-        post.blogId = json.optLong("site_ID");
+        post.postId = json.optLong(ReaderConstants.POST_ID);
+        post.blogId = json.optLong(ReaderConstants.POST_SITE_ID);
         post.feedId = json.optLong("feed_ID");
         post.feedItemId = json.optLong("feed_item_ID");
 
-        if (json.has("pseudo_ID")) {
-            post.mPseudoId = JSONUtils.getString(json, "pseudo_ID"); // read/ endpoint
+        if (json.has(ReaderConstants.POST_PSEUDO_ID)) {
+            post.mPseudoId = JSONUtils.getString(json, ReaderConstants.POST_PSEUDO_ID); // read/ endpoint
         } else {
             post.mPseudoId = JSONUtils.getString(json, "global_ID"); // sites/ endpoint
         }

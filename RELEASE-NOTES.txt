@@ -1,6 +1,7 @@
 15.5
 -----
- 
+* [***] Enables search on post list for self-hosted sites.
+
 15.4
 -----
 * [***] The login and signup flows were unified and have a new design.

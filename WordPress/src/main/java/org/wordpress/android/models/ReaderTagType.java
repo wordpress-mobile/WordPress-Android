@@ -10,10 +10,11 @@ public enum ReaderTagType {
 
     private static final int INT_DEFAULT = 0;
     private static final int INT_FOLLOWED = 1;
-    private static final int INT_CUSTOM_LIST = 2;
-    private static final int INT_SEARCH = 3;
-    private static final int INT_BOOKMARKED = 4;
-    private static final int INT_INTERESTS = 5;
+    // 2 - don't use it. It was used for recommended tags which are not used anymore
+    private static final int INT_CUSTOM_LIST = 3;
+    private static final int INT_SEARCH = 4;
+    private static final int INT_BOOKMARKED = 5;
+    private static final int INT_INTERESTS = 6;
 
 
     public static ReaderTagType fromInt(int value) {
