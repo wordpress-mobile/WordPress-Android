@@ -147,9 +147,9 @@ public class AppPrefs {
         // timestamp of the last update of the reader css styles
         READER_CSS_UPDATED_TIMESTAMP,
         // Identifier of the next page for the discover /cards endpoint
-        READER_CARDS_ENDPOINT_PAGE_HANDLE
+        READER_CARDS_ENDPOINT_PAGE_HANDLE,
 
-        // Used to delete recommended tags saved as followed tagas in tbl_tags
+        // Used to delete recommended tags saved as followed tags in tbl_tags
         // Need to be done just once for a logged out user
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
     }

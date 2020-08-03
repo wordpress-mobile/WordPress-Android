@@ -109,8 +109,6 @@ public class ReaderTagActions {
         if (!isLoggedIn && AppPrefs.isReaderImprovementsPhase2Enabled()) {
             // TODO: Revisit logic when ReaderTagRepository's getUserTags is implemented
             if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
-                // Delete any previously saved recommended followed tags
-                ReaderTagTable.setRecommendedTags(new ReaderTagList());
                 ReaderTagTable.replaceFollowedTags(newTags);
                 AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
             } else {
