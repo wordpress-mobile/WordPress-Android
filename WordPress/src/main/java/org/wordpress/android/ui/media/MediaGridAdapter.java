@@ -309,14 +309,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             // make the progress bar white
             mProgressUpload.getIndeterminateDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
 
-            // set size of image and container views
-            mImageView.getLayoutParams().width = mThumbWidth;
-            mImageView.getLayoutParams().height = mThumbHeight;
-            mStateContainer.getLayoutParams().width = mThumbWidth;
-            mStateContainer.getLayoutParams().height = mThumbHeight;
-            mFileContainer.getLayoutParams().width = mThumbWidth;
-            mFileContainer.getLayoutParams().height = mThumbHeight;
-
             mRetryDeleteContainer = view.findViewById(R.id.container_retry_delete);
             mImgRetry = view.findViewById(R.id.image_retry);
             mImgTrash = view.findViewById(R.id.image_trash);

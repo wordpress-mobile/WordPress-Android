@@ -63,7 +63,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.RtlUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.viewmodel.posts.PostListCreateMenuViewModel
@@ -91,7 +90,6 @@ class PostsListActivity : LocaleAwareActivity(),
     @Inject internal lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     @Inject internal lateinit var systemNotificationTracker: SystemNotificationsTracker
     @Inject internal lateinit var editPostRepository: EditPostRepository
-    @Inject internal lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
 
     private lateinit var site: SiteModel
 
@@ -231,24 +229,14 @@ class PostsListActivity : LocaleAwareActivity(),
         pager.addOnPageChangeListener(onPageChangeListener)
         fab = findViewById(R.id.fab_button)
         fab.setOnClickListener {
-            if (wpStoriesFeatureConfig.isEnabled()) {
-                postListCreateMenuViewModel.onFabClicked()
-            } else {
-                viewModel.newPost()
-            }
+            viewModel.fabClicked()
         }
 
         fab.setOnLongClickListener {
-            if (wpStoriesFeatureConfig.isEnabled()) {
-                postListCreateMenuViewModel.onFabLongPressed()
-            } else {
-                if (fab.isHapticFeedbackEnabled) {
-                    fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-                }
-                Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
-            }
+            viewModel.onFabLongPressed()
             return@setOnLongClickListener true
         }
+
         fab.redirectContextClickToLongPressListener()
 
         fab_tooltip.setOnClickListener {
@@ -393,6 +381,25 @@ class PostsListActivity : LocaleAwareActivity(),
                 }
             }
         })
+
+        viewModel.onFabClicked.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                postListCreateMenuViewModel.onFabClicked()
+            }
+        })
+
+        viewModel.onFabLongPressedForCreateMenu.observe(this, Observer { event ->
+            event.applyIfNotHandled {
+                postListCreateMenuViewModel.onFabLongPressed()
+            }
+        })
+
+        viewModel.onFabLongPressedForPostList.observe(this, Observer {
+            if (fab.isHapticFeedbackEnabled) {
+                fab.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            }
+            Toast.makeText(fab.context, R.string.posts_empty_list_button, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun showSnackBar(holder: SnackbarMessageHolder) {
@@ -482,15 +489,8 @@ class PostsListActivity : LocaleAwareActivity(),
 
             searchActionButton = it.findItem(R.id.toggle_post_search)
 
-            viewModel.isSearchAvailable.observe(this, Observer { isAvailable ->
-                if (isAvailable) {
-                    initSearchFragment()
-                    initSearchView()
-                    searchActionButton.isVisible = true
-                } else {
-                    searchActionButton.isVisible = false
-                }
-            })
+            initSearchFragment()
+            initSearchView()
         }
         return true
     }

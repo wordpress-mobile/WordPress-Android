@@ -145,7 +145,9 @@ public class AppPrefs {
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
         // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP
+        READER_CSS_UPDATED_TIMESTAMP,
+        // Identifier of the next page for the discover /cards endpoint
+        READER_CARDS_ENDPOINT_PAGE_HANDLE
     }
 
     /**
@@ -1160,6 +1162,14 @@ public class AppPrefs {
 
     public static void setReaderCssUpdatedTimestamp(long timestamp) {
         setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
+    }
+
+    public static String getReaderCardsPageHandle() {
+        return getString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderCardsPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
     }
 
      public static QuickStartTask getLastSkippedQuickStartTask() {
