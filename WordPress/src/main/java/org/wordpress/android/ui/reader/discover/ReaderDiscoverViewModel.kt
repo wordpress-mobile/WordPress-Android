@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -16,7 +17,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -26,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory,
+    private val readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
@@ -57,7 +58,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
-    private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
+    private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
 
     fun start() {
         if (isStarted) return
@@ -71,15 +72,16 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.value = LoadingUiState
 
         // Get the correct repository
-        readerDiscoverRepository = readerDiscoverRepositoryFactory.create()
-        readerDiscoverRepository.start()
+        readerDiscoverDataProvider = readerDiscoverDataProviderFactory.create()
+        readerDiscoverDataProvider.start()
 
         // Listen to changes to the discover feed
-        _uiState.addSource(readerDiscoverRepository.discoverFeed) { posts ->
+        _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    posts.map {
+                    // TODO malinjir we currently ignore all other types but ReaderPostCards
+                    posts.cards.filterIsInstance<ReaderPostCard>().map {
                         postUiStateBuilder.mapPostToUiState(
-                                post = it,
+                                post = it.post,
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
@@ -96,7 +98,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             )
         }
 
-        readerDiscoverRepository.communicationChannel.observeForever { data ->
+        readerDiscoverDataProvider.communicationChannel.observeForever { data ->
             data?.let {
                 // TODO listen for communications from the reeaderPostRepository, but not 4ever!
             }
@@ -167,7 +169,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        readerDiscoverRepository.stop()
+        readerDiscoverDataProvider.stop()
     }
 
     sealed class DiscoverUiState(
