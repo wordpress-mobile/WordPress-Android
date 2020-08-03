@@ -8,7 +8,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 
-class ReaderInterestAdapter (
+class ReaderInterestAdapter(
     private val uiHelpers: UiHelpers
 ) : Adapter<ReaderInterestViewHolder>() {
     private val items = mutableListOf<ReaderInterestUiState>()

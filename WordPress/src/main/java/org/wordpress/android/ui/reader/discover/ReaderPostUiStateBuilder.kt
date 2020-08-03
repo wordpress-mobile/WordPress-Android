@@ -108,8 +108,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
             ReaderInterestCardUiState(interests.take(READER_INTERESTS_LIST_SIZE).map { interest ->
                 ReaderInterestUiState(
                         interest.tagTitle,
-                        interests.indexOf(interest) != READER_INTERESTS_LAST_INDEX
-                        , onClicked
+                        interests.indexOf(interest) != READER_INTERESTS_LAST_INDEX, onClicked
                 )
             })
 
