@@ -17,7 +17,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.ui.media.MediaBrowserType;
 import org.wordpress.android.ui.media.MediaPreviewActivity;
-import org.wordpress.android.ui.photopicker.BuildDeviceMediaListTask.BuildDeviceMediaListListener;
+import org.wordpress.android.ui.photopicker.DeviceMediaListBuilder.BuildDeviceMediaListListener;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
@@ -121,11 +121,6 @@ public class PhotoPickerAdapter extends RecyclerView.Adapter<PhotoPickerAdapter.
         }
         mIsListTaskRunning = true;
         mDeviceMediaListBuilder.buildDeviceMedia(mBrowserType, new BuildDeviceMediaListListener() {
-            @Override
-            public void onCancelled() {
-                mIsListTaskRunning = false;
-            }
-
             @Override
             public void onSuccess(List<PhotoPickerItem> result) {
                 mIsListTaskRunning = false;
