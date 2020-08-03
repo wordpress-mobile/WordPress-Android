@@ -1491,11 +1491,6 @@ Language: tr
     <string name="open_mail">E-postayı aç</string>
     <string name="next">Sonraki</string>
     <string name="enter_email_wordpress_com">Tüm WordPress sitelerinizi yönetmek için bir e-posta adresi kullanarak WordPress.com\'a oturum açın.</string>
-    <string name="login_promo_text_jetpack">Jetpack ile güçlendirilmiş sitenizi iş başında yönetin. Cebinizde WordPress var.</string>
-    <string name="login_promo_text_notifications">Bildirimleriniz sizinle dolaşır. Yorumları ve beğenileri anında görün.</string>
-    <string name="login_promo_text_anytime">Beğendiğiniz sitelerden geri kalmayın ve her hangi bir zamanda, yerde sohbete katılın.</string>
-    <string name="login_promo_text_realtime">Tüm dünyadan sitenizi okuyan ve etkileşime geçen okuyucuları izleyin - gerçek zamanlı olarak.</string>
-    <string name="login_promo_text_onthego">Parktan yayınlayın. Otobüsten blog tutun. Kafeden yorum yapın. Siz nereye giderseniz WordPress de gider.</string>
     <string name="image_optimization_promo_desc">Görsel optimizasyonu daha hızlı yükleme için görselleri küçültür\n\nSite ayarlarından bu ayarı istediğiniz zaman değiştirebilirsiniz.</string>
     <string name="image_optimization_promo_title">Görsel optimizasyonu etkinleştirilsin mi?</string>
     <string name="leave_off">Kapalı bırak</string>

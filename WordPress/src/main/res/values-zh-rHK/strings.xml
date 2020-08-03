@@ -1473,11 +1473,6 @@ Language: zh_TW
     <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
     <string name="enter_email_wordpress_com">使用電子郵件地址登入 WordPress.com，即可管理你的所有 WordPress 網站。</string>
-    <string name="login_promo_text_jetpack">隨時隨地管理以 Jetpack 建置的網站，就像把 WordPress 裝在口袋隨身帶著走。</string>
-    <string name="login_promo_text_notifications">你走到哪，通知就到哪，第一時間查看留言和讚。</string>
-    <string name="login_promo_text_anytime">隨時隨地掌握最愛網站的最新動態並加入討論。</string>
-    <string name="login_promo_text_realtime">第一時間看到來自世界各地的讀者閱讀你的網站，並與你的網站互動。</string>
-    <string name="login_promo_text_onthego">在公園發表文章，在公車上寫網誌，或在咖啡館留言，你走到哪，WordPress 跟你到哪。</string>
     <string name="image_optimization_promo_desc">圖片最佳化會壓縮圖片，以加快上傳速度。\n\n你可以隨時在網站設定變更此設定。</string>
     <string name="image_optimization_promo_title">開啟圖片最佳化？</string>
     <string name="leave_off">保持關閉</string>

@@ -1491,11 +1491,6 @@ Language: de
     <string name="open_mail">E-Mail öffnen</string>
     <string name="next">Weiter</string>
     <string name="enter_email_wordpress_com">Melde dich auf WordPress.com mit einer E-Mail-Adresse an, um alle deine WordPress-Websites zu verwalten.</string>
-    <string name="login_promo_text_jetpack">Verwalte deine mit Jetpack betriebene Website unterwegs – du hast WordPress immer dabei.</string>
-    <string name="login_promo_text_notifications">Deine Benachrichtigungen hast du immer dabei – zeige Kommentare und Likes in Echtzeit an.</string>
-    <string name="login_promo_text_anytime">Du kannst überall und jederzeit deine bevorzugten Websites verfolgen und an der Unterhaltung teilnehmen.</string>
-    <string name="login_promo_text_realtime">Schau zu, wie Leser aus der ganzen Welt deine Website lesen und damit interagieren – in Echtzeit.</string>
-    <string name="login_promo_text_onthego">Veröffentliche deine Beiträge im Park. Blogge im Bus. Kommentiere im Café. WordPress ist immer und überall für dich verfügbar.</string>
     <string name="image_optimization_promo_desc">Bildoptimierung schrumpft Bilder für schnelleres Hochladen.\n\nDies kannst du in den Website-Einstellungen jederzeit ändern.</string>
     <string name="image_optimization_promo_title">Bildoptimierung einschalten?</string>
     <string name="leave_off">Weiterhin ausschalten</string>

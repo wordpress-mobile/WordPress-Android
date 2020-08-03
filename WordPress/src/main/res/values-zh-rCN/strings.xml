@@ -1489,11 +1489,6 @@ Language: zh_CN
     <string name="open_mail">打开邮箱</string>
     <string name="next">下一步</string>
     <string name="enter_email_wordpress_com">使用电子邮件地址登录 WordPress.com 以便管理您的所有 WordPress 站点。</string>
-    <string name="login_promo_text_jetpack">随时随地管理由 Jetpack 提供支持的站点——WordPress 就在您的口袋里。</string>
-    <string name="login_promo_text_notifications">无论您走到哪里都能收到通知——实时看到他人的评论和点赞。</string>
-    <string name="login_promo_text_anytime">密切关注您喜爱的站点，并随时随地加入讨论。</string>
-    <string name="login_promo_text_realtime">实时看到世界各地的读者来阅读您的站点以及互动情况。</string>
-    <string name="login_promo_text_onthego">在公园里发布文章，在公共汽车上写博客，在咖啡馆中发表评论，WordPress 随时随地陪着您。</string>
     <string name="image_optimization_promo_desc">图片优化可缩小图片以便更快地上传。\n\n您可以随时在站点设置中更改此选项。</string>
     <string name="image_optimization_promo_title">打开图片优化？</string>
     <string name="leave_off">停止</string>

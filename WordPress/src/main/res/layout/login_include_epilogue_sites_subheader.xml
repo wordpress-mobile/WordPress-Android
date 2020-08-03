@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_epilogue_header_sites_subheader"
+    style="@style/Widget.LoginFlow.TextView.List.Subheader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/margin_extra_large"
+    tools:text="@string/login_epilogue_mysites_other" />

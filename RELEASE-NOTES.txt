@@ -1,5 +1,12 @@
+15.5
+-----
+ 
 15.4
 -----
+* [***] The login and signup flows were unified and have a new design.
+* [***] Block Editor: Media editing support in Media & Text block.
+* [***] Block Editor: New block: Social Icons
+* [*] Block Editor: Cover block placeholder is updated to allow users to start the block with a background color
  
 15.3
 -----

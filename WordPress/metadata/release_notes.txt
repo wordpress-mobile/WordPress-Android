@@ -1,3 +1,3 @@
-Block editor updates: All blocks now have Copy, Cut, Paste, and Duplicate functionality. Unsupported blocks can be individually edited. (Note: Unsupported block editing is not available for self-hosted sites or sites that default to the classic editor.)
+<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.
 
-UI updates: Clarified wording and added confirmation dialogs when trashing posts.
+<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color. 

@@ -37,6 +37,10 @@
     <color name="stats_map_activity_high">@color/pink_30</color>
     <color name="stats_map_activity_empty">@color/gray_80</color>
 
+    <!-- Login -->
+    <color name="promo_indicator_color_default">@color/white_translucent_20</color>
+    <color name="login_promo_footer_background_color">#11ffffff</color>
+
     <!-- Post History -->
 
     <color name="post_history_underlying_background">@color/gray_100</color>
