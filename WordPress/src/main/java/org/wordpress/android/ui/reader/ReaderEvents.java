@@ -66,6 +66,18 @@ public class ReaderEvents {
         }
     }
 
+    public static class FetchDiscoverCardsEnded {
+        private final boolean mDidSucceed;
+
+        public FetchDiscoverCardsEnded(boolean didSucceed) {
+            mDidSucceed = didSucceed;
+        }
+
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
+    }
+
     public static class SinglePostDownloaded {
     }
 

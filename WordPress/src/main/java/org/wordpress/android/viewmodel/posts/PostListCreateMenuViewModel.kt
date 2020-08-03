@@ -2,11 +2,10 @@ package org.wordpress.android.viewmodel.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
+import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -16,15 +15,12 @@ import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.viewmodel.Event
-import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
-import javax.inject.Named
 
 class PostListCreateMenuViewModel @Inject constructor(
-    private val appPrefsWrapper: AppPrefsWrapper,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) {
+    private val appPrefsWrapper: AppPrefsWrapper
+) : ViewModel() {
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
