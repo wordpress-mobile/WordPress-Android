@@ -88,7 +88,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
             )
         }))
 
-        demoLayouts.categories.forEach { category ->
+        val selectedCategories = if (_selectedCategorySlug.value != null)
+            demoLayouts.categories.filter { it.slug == _selectedCategorySlug.value }
+        else demoLayouts.categories
+
+        selectedCategories.forEach { category ->
             val layouts = demoLayouts.layouts(category.slug).map { layout ->
                 val selected = layout.slug == _selectedLayoutSlug.value
                 LayoutListItem(layout.slug, layout.title, layout.preview, selected)
@@ -130,6 +134,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         } else {
             _selectedCategorySlug. value = category.slug
         }
+        loadListItems()
     }
 
     /**
