@@ -230,6 +230,12 @@
 
     <style name="ReaderExpandableTagsViewChip" parent="@style/ReaderChip">
         <item name="android:checkable">false</item>
+        <item name="chipMinHeight">@dimen/margin_extra_medium_large</item>
+        <item name="chipStartPadding">@dimen/margin_medium</item>
+        <item name="chipEndPadding">@dimen/margin_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="ensureMinTouchTargetSize">false</item>
     </style>
 
 </resources>

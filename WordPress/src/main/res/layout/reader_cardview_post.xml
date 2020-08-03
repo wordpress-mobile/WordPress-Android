@@ -34,6 +34,19 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="@dimen/reader_card_content_padding" />
 
+        <org.wordpress.android.ui.reader.views.ReaderExpandableTagsView
+            android:id="@+id/expandable_tags_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layoutDirection="locale"
+            android:visibility="gone"
+            android:paddingBottom="@dimen/margin_extra_large"
+            app:chipSpacingHorizontal="@dimen/margin_small"
+            app:chipSpacingVertical="@dimen/margin_small"
+            app:layout_constraintStart_toStartOf="@+id/guideline_beginning"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end"
+            app:layout_constraintTop_toTopOf="@id/guideline_top"/>
+
         <!-- post header start -->
         <ImageView
             android:id="@+id/image_avatar_or_blavatar"
@@ -44,7 +57,7 @@
             android:layout_marginEnd="@dimen/margin_medium"
             app:layout_constraintStart_toStartOf="@+id/guideline_beginning"
             app:layout_constraintEnd_toStartOf="@id/text_author_and_blog_name"
-            app:layout_constraintTop_toTopOf="@id/guideline_top"
+            app:layout_constraintTop_toBottomOf="@id/expandable_tags_view"
             tools:ignore="RtlSymmetry" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -57,7 +70,7 @@
             android:includeFontPadding="false"
             app:layout_constraintStart_toEndOf="@id/image_avatar_or_blavatar"
             app:layout_constraintEnd_toStartOf="@+id/image_more"
-            app:layout_constraintTop_toTopOf="@id/guideline_top"
+            app:layout_constraintTop_toBottomOf="@id/expandable_tags_view"
             tools:text="text_blog_nametext_blog_name text_blog_name" />
 
         <org.wordpress.android.widgets.WPTextView
@@ -122,7 +135,7 @@
             android:paddingBottom="@dimen/margin_medium"
             android:layout_marginEnd="@dimen/margin_medium_large"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline_top"
+            app:layout_constraintTop_toBottomOf="@id/expandable_tags_view"
             app:tint="?attr/wpColorOnSurfaceMedium" />
 
         <View
@@ -134,7 +147,7 @@
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@id/guideline_beginning"
             app:layout_constraintEnd_toStartOf="@id/image_more"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+            app:layout_constraintTop_toBottomOf="@id/expandable_tags_view" />
         <!-- post header end -->
 
         <!-- image section start -->
