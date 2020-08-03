@@ -190,6 +190,12 @@ public class ReaderUpdateLogic {
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
 
                     if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Delete recommended tags which got saved as followed tags for logged out user
+                        // before we allowed following tags using interests picker
+                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
+                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+                        }
                         // Do not delete locally saved tags for logged out user
                         ReaderTagTable.addOrUpdateTags(serverTopics);
                     } else {
