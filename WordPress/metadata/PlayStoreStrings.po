@@ -11,6 +11,14 @@ msgstr ""
 "Project-Id-Version: Release Notes & Play Store Descriptions\n"
 
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
+msgctxt "release_note_154"
+msgid ""
+"15.4:\n"
+"<b>Login/ Sign up Unified:</b> No longer need to choose between login or sign up, and the login process begins automatically if continuing with WordPress. Cleaner design with the primary action in each screen more prominent.\n"
+"\n"
+"<b>Block editor improvements:</b> New Social Links block added so you can link your social media accounts. Media & Text block has more editing options. The Cover block placeholder now allows users to start with a background color.\n"
+msgstr ""
+
 msgctxt "release_note_153"
 msgid ""
 "15.3:\n"
@@ -19,23 +27,7 @@ msgid ""
 "UI updates: Clarified wording and added confirmation dialogs when trashing posts.\n"
 msgstr ""
 
-msgctxt "release_note_152"
-msgid ""
-"15.2:\n"
-"Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads now completes after the editor has closed. Block, word, and character count metric information are now displayed.\n"
-"\n"
-"Fixes: Fixed Reader post detail rendering issues, the handling of upload completion in the Block editor, and a crash that would occur when the WordPress API response has an empty body.\n"
-msgstr ""
-
 #. translators: A shorter version of the Release notes to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
-msgctxt "release_note_short_152"
-msgid ""
-"15.2:\n"
-"Block editor additions: Editor support added for theme defined colors and gradients on Cover and Button blocks. Cover block video uploads completes after the editor has closed. Block, word, and character count metric information are displayed.\n"
-"\n"
-"Fixes: Fixed Reader post detail rendering issues and a WordPress API response crash.\n"
-msgstr ""
-
 #. translators: Release notes for this version to be displayed in the Play Store. Limit to 500 characters including spaces and commas!
 msgctxt "sample_post_content"
 msgid "The best moment of any trip, for me, is when I first step foot off the plane. The whole of the trip is in front me, ripe with possibility."
