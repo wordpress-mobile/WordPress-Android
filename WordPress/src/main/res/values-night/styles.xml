@@ -25,7 +25,7 @@
         <item name="wpColorWarningLight">@color/yellow_20</item>
         <item name="wpColorAppBar">?attr/colorSurface</item>
         <item name="wpColorOnSurfaceMedium">@color/material_on_surface_emphasis_medium</item>
-        <item name="wpColorActionModeIcon">?attr/colorPrimary</item>
+        <item name="wpColorActionModeIcon">?attr/colorOnSurface</item>
         <item name="wpColorSurfaceSecondary">@color/background_dark_elevated</item>
 
         <item name="toolbarIconNormalColor">@color/material_on_surface_emphasis_medium</item>
@@ -78,20 +78,8 @@
         <item name="theme">@style/WordPress.ActionMode.Theme</item>
     </style>
 
-    <style name="WordPress.ActionMode.TitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Title">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="WordPress.ActionMode.SubtitleTextStyle" parent="@android:style/TextAppearance.Material.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">?attr/colorPrimary</item>
-    </style>
-
-    <style name="WordPress.ActionMode.CloseButton" parent="Widget.AppCompat.Light.ActionButton.CloseMode">
-        <item name="tint">?attr/colorPrimary</item>
-    </style>
-
     <style name="WordPress.ActionMode.Theme" parent="ThemeOverlay.AppCompat.Dark">
-        <item name="android:textColorSecondary">?attr/colorPrimary</item>
+        <item name="android:textColorSecondary">?attr/colorOnSurface</item>
         <item name="colorControlActivated">@android:color/transparent</item>
     </style>
 
