@@ -157,7 +157,7 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                if (!mAccountStore.hasAccessToken()) {
+                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
@@ -188,11 +188,17 @@ public class ReaderUpdateLogic {
                 ) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
-                    // if any local topics have been removed from the server, make sure to delete
-                    // them locally (including their posts)
-                    deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
-                    // now replace local topics with the server topics
-                    ReaderTagTable.replaceTags(serverTopics);
+
+                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Do not delete locally saved tags for logged out user
+                        ReaderTagTable.addOrUpdateTags(serverTopics);
+                    } else {
+                        // if any local topics have been removed from the server, make sure to delete
+                        // them locally (including their posts)
+                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // now replace local topics with the server topics
+                        ReaderTagTable.replaceTags(serverTopics);
+                    }
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
@@ -266,7 +272,7 @@ public class ReaderUpdateLogic {
         return interestTags;
     }
 
-    public static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
+    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
