@@ -3,7 +3,7 @@ package org.wordpress.android.ui.reader.repository.usecases
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_NEWER
@@ -26,6 +26,6 @@ class FetchPostsForTagUseCase @Inject constructor(
             updateAction
         )
 
-        return Success
+        return Started
     }
 }
