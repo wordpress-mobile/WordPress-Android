@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,6 +51,8 @@ import org.wordpress.android.ui.prefs.EmptyViewRecyclerView;
 import org.wordpress.android.util.AccessibilityUtils;
 import org.wordpress.android.util.ActivityUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.ColorUtils;
+import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SiteUtils;
@@ -373,7 +376,13 @@ public class SitePickerActivity extends LocaleAwareActivity
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cross_white_24dp);
+            Drawable closeButton = ColorUtils.applyTintToDrawable(
+                    toolbar.getContext(),
+                    R.drawable.ic_cross_white_24dp,
+                    ContextExtensionsKt.getColorResIdFromAttribute(toolbar.getContext(), R.attr.colorOnSurface)
+            );
+
+            actionBar.setHomeAsUpIndicator(closeButton);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.site_picker_title);

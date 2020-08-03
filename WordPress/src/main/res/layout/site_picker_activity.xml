@@ -5,52 +5,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:liftOnScrollTargetViewId="@+id/recycler_view">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:theme="@style/WordPress.ActionBar" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevTitle="@string/site_picker_remove_site_empty"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:visibility="visible" />
+
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/margin_medium"
+            android:scrollbars="vertical" />
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <include layout="@layout/toolbar_main" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <org.wordpress.android.ui.ActionableEmptyView
-                android:id="@+id/actionable_empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                app:aevTitle="@string/site_picker_remove_site_empty"
-                tools:visibility="visible" />
-
-            <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
-                android:id="@+id/ptr_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingTop="@dimen/margin_medium"
-                    android:scrollbars="vertical" />
-
-            </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
-
-            <ProgressBar
-                android:id="@+id/progress"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </RelativeLayout>
-
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
