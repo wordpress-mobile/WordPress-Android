@@ -326,4 +326,10 @@
     <!--Reader Post Card -->
     <color name="reader_post_list_background">@color/neutral_0</color>
 
+    <!-- Modal Layout Picker -->
+    <color name="mlp_categories_button_background">#ffededed</color>
+    <color name="mlp_categories_button_background_dark">#ff464646</color>
+    <color name="mlp_categories_button_background_selected_dark">#ffdcdcdc</color>
+    <color name="mlp_divider_dark">#ff303030</color>
+    <color name="mlp_categories_background_dark">#ff2d2d2d</color>
 </resources>
