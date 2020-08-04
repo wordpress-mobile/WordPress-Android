@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mlp
 
+import android.util.SparseIntArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ class ModalLayoutPickerAdapter(
     private val layoutSelectionListener: LayoutSelectionListener
 ) : Adapter<ModalLayoutPickerViewHolder>() {
     private var items: List<ModalLayoutPickerListItem> = listOf()
+    private val scrollStates = SparseIntArray()
 
     fun update(newItems: List<ModalLayoutPickerListItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -44,7 +46,7 @@ class ModalLayoutPickerAdapter(
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
         ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent, layoutSelectionListener)
-        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, layoutSelectionListener)
+        ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, scrollStates, layoutSelectionListener)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }
 

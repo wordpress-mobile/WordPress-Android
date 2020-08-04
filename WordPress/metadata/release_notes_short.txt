@@ -1,0 +1,3 @@
+<b>Login:</b> Cleaner design with no need to choose between login or signup. 
+
+<b>Block editor improvements:</b> New Social Links block added for directing to social media accounts. Media & Text block has more editing options. The Cover block now has background colors. 

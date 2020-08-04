@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.mlp
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_header.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.Event
@@ -46,6 +47,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        private const val HEADER_VISIBILITY_SCROLL_THRESHOLD = 20
     }
 
     override fun onCreateView(
@@ -65,13 +67,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
-             * We track the first row visibility to show/hide the header title accordingly
+             * We track the vertical scroll to show/hide the header title accordingly
              */
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstItem = layoutManager.findFirstCompletelyVisibleItemPosition()
-                viewModel.setHeaderTitleVisibility(firstItem > 0)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
+                val offset = recyclerView.computeVerticalScrollOffset()
+                viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
             }
         })
 
@@ -79,6 +81,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
             WPActivityUtils.setLightStatusBar(activity?.window, false)
             viewModel.dismiss()
         }
+
+        title.setVisible(DisplayUtils.isLandscape(context))
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
         createPageButton.setOnClickListener { viewModel.createPage() /* TODO */ }
@@ -90,7 +94,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
         setStatusBarColor(this)
-        handleBackButton(this)
     }
 
     override fun onAttach(context: Context) {
@@ -100,6 +103,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
     override fun categoryTapped(category: CategoryListItem) {
         viewModel.categoryTapped(category)
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        WPActivityUtils.setLightStatusBar(activity?.window, false)
+        viewModel.dismiss()
     }
 
     override fun layoutTapped(layout: LayoutListItem) {
@@ -130,16 +139,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                     previewButton.setVisible(selection)
                 }
         )
-    }
-
-    private fun handleBackButton(dialog: BottomSheetDialog) = dialog.setOnKeyListener { _, keyCode, event ->
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-            WPActivityUtils.setLightStatusBar(activity?.window, false)
-            viewModel.dismiss()
-            true
-        } else {
-            false
-        }
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
