@@ -5,11 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.media.MediaBrowserType
+import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
+import org.wordpress.android.util.UriWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.merge
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,11 +23,15 @@ import javax.inject.Named
 class PhotoPickerViewModel @Inject constructor(
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    private val deviceMediaListBuilder: DeviceMediaListBuilder
+    private val deviceMediaListBuilder: DeviceMediaListBuilder,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _data = MutableLiveData<List<PhotoPickerItem>>()
     private val _selectedIds = MutableLiveData<List<Long>>()
     private val _browserType = MutableLiveData<MediaBrowserType>()
+    private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
+    val navigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val selectedIds: LiveData<List<Long>> = _selectedIds
     val data: LiveData<PhotoPickerUiModel> = merge(
             _data,
@@ -40,7 +50,8 @@ class PhotoPickerViewModel @Inject constructor(
                             isSelected = true,
                             selectedOrder = if (browserType.canMultiselect()) selectedIds.indexOf(it.id) + 1 else null,
                             showOrderCounter = browserType.canMultiselect(),
-                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
+                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem),
+                            clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
                     )
                 } else {
                     PhotoPickerUiItem(
@@ -50,7 +61,8 @@ class PhotoPickerViewModel @Inject constructor(
                             isSelected = false,
                             selectedOrder = null,
                             showOrderCounter = browserType.canMultiselect(),
-                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem)
+                            toggleAction = ToggleAction(it.id, browserType.canMultiselect(), this::toggleItem),
+                            clickAction = ClickAction(it.id, it.uri, it.isVideo, this::clickItem)
                     )
                 }
             }, selectedIds?.size ?: 0, isVideoSelected, browserType)
@@ -86,7 +98,7 @@ class PhotoPickerViewModel @Inject constructor(
         return _selectedIds.value?.size ?: 0
     }
 
-    fun selectedURIs(): List<Uri> {
+    fun selectedURIs(): List<UriWrapper> {
         return data.value?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
     }
 
@@ -98,6 +110,25 @@ class PhotoPickerViewModel @Inject constructor(
             updatedIds.add(id)
         }
         _selectedIds.postValue(updatedIds)
+    }
+
+    private fun clickItem(id: Long, uri: UriWrapper?, isVideo: Boolean) {
+        trackOpenPreviewScreenEvent(id, uri, isVideo)
+        uri?.let {
+            _navigateToPreview.postValue(Event(it))
+        }
+    }
+
+    private fun trackOpenPreviewScreenEvent(id: Long, uri: UriWrapper?, isVideo: Boolean) {
+        launch(bgDispatcher) {
+            val properties = analyticsUtilsWrapper.getMediaProperties(
+                    isVideo,
+                    uri,
+                    null
+            )
+            properties["is_video"] = isVideo
+            analyticsTrackerWrapper.track(MEDIA_PICKER_PREVIEW_OPENED, properties)
+        }
     }
 
     data class PhotoPickerUiModel(
