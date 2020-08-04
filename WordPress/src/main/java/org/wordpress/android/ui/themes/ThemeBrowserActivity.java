@@ -362,7 +362,7 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
     private void addBrowserFragment() {
         mThemeBrowserFragment = ThemeBrowserFragment.newInstance(mSite);
         getSupportFragmentManager().beginTransaction()
-                                   .add(R.id.theme_browser_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
+                                   .add(R.id.fragment_container, mThemeBrowserFragment, ThemeBrowserFragment.TAG)
                                    .commit();
     }
 
