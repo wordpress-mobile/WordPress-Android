@@ -111,6 +111,7 @@ public class PhotoPickerFragment extends Fragment {
     private FloatingActionButton mWPStoriesTakePicture;
 
     @Inject TenorFeatureConfig mTenorFeatureConfig;
+    @Inject DeviceMediaListBuilder mDeviceMediaListBuilder;
 
     public static PhotoPickerFragment newInstance(@NonNull PhotoPickerListener listener,
                                                   @NonNull MediaBrowserType browserType,
@@ -468,7 +469,7 @@ public class PhotoPickerFragment extends Fragment {
 
     private PhotoPickerAdapter getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new PhotoPickerAdapter(getActivity(), mBrowserType, mAdapterListener);
+            mAdapter = new PhotoPickerAdapter(getActivity(), mBrowserType, mAdapterListener, mDeviceMediaListBuilder);
         }
         return mAdapter;
     }
