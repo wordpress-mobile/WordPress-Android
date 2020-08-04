@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import org.wordpress.android.R;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
@@ -49,9 +51,11 @@ public class FullScreenDialogFragment extends DialogFragment {
     private String mSubtitle;
     private String mTitle;
     private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
     private boolean mHideActivityBar;
     private int mToolbarTheme;
     private int mToolbarColor;
+    private int mLiftOnScrollViewId;
 
     private static final String ARG_ACTION = "ARG_ACTION";
     private static final String ARG_HIDE_ACTIVITY_BAR = "ARG_HIDE_ACTIVITY_BAR";
@@ -59,6 +63,7 @@ public class FullScreenDialogFragment extends DialogFragment {
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ARG_TOOLBAR_THEME = "ARG_TOOLBAR_THEME";
     private static final String ARG_TOOLBAR_COLOR = "ARG_TOOLBAR_COLOR";
+    private static final String ARG_LIFT_ON_SCROLL_VIEW_ID = "ARG_LIFT_ON_SCROLL_VIEW_ID";
     private static final int ID_ACTION = 1;
 
     public static final String TAG = FullScreenDialogFragment.class.getSimpleName();
@@ -105,6 +110,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         bundle.putInt(ARG_TOOLBAR_THEME, builder.mToolbarTheme);
         bundle.putInt(ARG_TOOLBAR_COLOR, builder.mToolbarColor);
         bundle.putBoolean(ARG_HIDE_ACTIVITY_BAR, builder.mHideActivityBar);
+        bundle.putInt(ARG_LIFT_ON_SCROLL_VIEW_ID, builder.mLiftOnScrollViewId);
         return bundle;
     }
 
@@ -259,6 +265,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         mToolbarTheme = bundle.getInt(ARG_TOOLBAR_THEME);
         mToolbarColor = bundle.getInt(ARG_TOOLBAR_COLOR);
         mHideActivityBar = bundle.getBoolean(ARG_HIDE_ACTIVITY_BAR);
+        mLiftOnScrollViewId = bundle.getInt(ARG_LIFT_ON_SCROLL_VIEW_ID);
     }
 
     /**
@@ -284,6 +291,11 @@ public class FullScreenDialogFragment extends DialogFragment {
 
         if (mToolbarColor > 0) {
             mToolbar.setBackgroundColor(getResources().getColor(mToolbarColor));
+        }
+
+        mAppBarLayout = view.findViewById(R.id.appbar_main);
+        if (mLiftOnScrollViewId > 0) {
+            mAppBarLayout.setLiftOnScrollTargetViewId(mLiftOnScrollViewId);
         }
 
         if (!mAction.isEmpty()) {
@@ -431,6 +443,7 @@ public class FullScreenDialogFragment extends DialogFragment {
         boolean mHideActivityBar = false;
         int mToolbarTheme = 0;
         int mToolbarColor = 0;
+        int mLiftOnScrollViewId = 0;
 
         /**
          * Builder to construct {@link FullScreenDialogFragment}.
@@ -580,6 +593,17 @@ public class FullScreenDialogFragment extends DialogFragment {
          */
         public Builder setOnDismissListener(@Nullable OnDismissListener listener) {
             this.mOnDismissListener = listener;
+            return this;
+        }
+
+        /**
+         * Set id of a scrollable container that will be used for lif-on-scroll.
+         *
+         * @param viewId view ID of a scrollable container
+         * @return {@link Builder} object to allow for chaining of calls to set methods
+         */
+        public Builder setLiftOnScrollViewId(int viewId) {
+            this.mLiftOnScrollViewId = viewId;
             return this;
         }
     }
