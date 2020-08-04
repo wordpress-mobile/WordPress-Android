@@ -63,7 +63,7 @@ class ReaderDiscoverLogic constructor(
         listenerCompanion = companion
 
         requestDataForDiscover(task, UpdateResultListener {
-            EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
             completionListener.onCompleted(listenerCompanion)
         })
     }
