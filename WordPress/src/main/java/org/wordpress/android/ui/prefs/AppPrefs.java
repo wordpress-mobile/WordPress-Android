@@ -145,7 +145,13 @@ public class AppPrefs {
         AZTEC_EDITOR_DISABLE_HW_ACC_KEYS,
 
         // timestamp of the last update of the reader css styles
-        READER_CSS_UPDATED_TIMESTAMP
+        READER_CSS_UPDATED_TIMESTAMP,
+        // Identifier of the next page for the discover /cards endpoint
+        READER_CARDS_ENDPOINT_PAGE_HANDLE,
+
+        // Used to delete recommended tags saved as followed tags in tbl_tags
+        // Need to be done just once for a logged out user
+        READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER
     }
 
     /**
@@ -233,6 +239,9 @@ public class AppPrefs {
 
         // feature flag for Reader Improvements Phase 2
         FF_READER_IMPROVEMENTS_PHASE_2,
+
+        // used to indicate that we do not need to show the Post List FAB tooltip
+        IS_POST_LIST_FAB_TOOLTIP_DISABLED,
     }
 
     private static SharedPreferences prefs() {
@@ -982,6 +991,15 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
     }
 
+    public static void setPostListFabTooltipDisabled(Boolean disable) {
+        setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
+    }
+
+    public static boolean isPostListFabTooltipDisabled() {
+        return getBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, false);
+    }
+
+
     public static void setQuickStartMigrationDialogShown(Boolean shown) {
         setBoolean(UndeletablePrefKey.HAS_QUICK_START_MIGRATION_SHOWN, shown);
     }
@@ -1150,12 +1168,28 @@ public class AppPrefs {
         setLong(DeletablePrefKey.READER_CSS_UPDATED_TIMESTAMP, timestamp);
     }
 
-     public static QuickStartTask getLastSkippedQuickStartTask() {
-         String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
-         if (TextUtils.isEmpty(taskName)) {
-             return null;
-         }
-         return QuickStartTask.Companion.fromString(taskName);
+    public static String getReaderCardsPageHandle() {
+        return getString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, null);
+    }
+
+    public static void setReaderCardsPageHandle(String pageHandle) {
+        setString(DeletablePrefKey.READER_CARDS_ENDPOINT_PAGE_HANDLE, pageHandle);
+    }
+
+    public static boolean getReaderRecommendedTagsDeletedForLoggedOutUser() {
+        return getBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, false);
+    }
+
+    public static void setReaderRecommendedTagsDeletedForLoggedOutUser(boolean deleted) {
+        setBoolean(DeletablePrefKey.READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER, deleted);
+    }
+
+    public static QuickStartTask getLastSkippedQuickStartTask() {
+        String taskName = getString(DeletablePrefKey.LAST_SKIPPED_QUICK_START_TASK);
+        if (TextUtils.isEmpty(taskName)) {
+            return null;
+        }
+        return QuickStartTask.Companion.fromString(taskName);
     }
 
     public static void setLastSkippedQuickStartTask(@Nullable QuickStartTask task) {

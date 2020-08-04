@@ -58,7 +58,6 @@ Language: vi_VN
     <string name="site_settings_optimize_images">Tối ưu ảnh</string>
     <string name="retry">Thử lại</string>
     <string name="confirm">Xác nhận</string>
-    <string name="reader_photo_by">Ảnh chụp bởi %s</string>
     <string name="reader_toast_err_already_liked">Bạn đã thích bình luận đó rồi</string>
     <string name="reader_title_post_detail_wpcom">Bài viết trên WordPress.com</string>
     <string name="notifications_label_new_notifications_subtitle">Chạm để hiện chúng</string>
@@ -498,7 +497,6 @@ Language: vi_VN
     <string name="reader_hint_add_tag_or_url">Nhập một URL hoặc thẻ để theo dõi</string>
     <string name="reader_page_followed_blogs">Site được theo dõi</string>
     <string name="reader_page_followed_tags">Thẻ được theo dõi</string>
-    <string name="reader_title_tag_preview">Thẻ người đọc</string>
     <string name="ssl_certificate_ask_trust">Nếu bạn thường kết nối với trang web này mà không có vấn đề nào, lỗi này có thể có nghĩa rằng ai đó đang cố gắng mạo danh trang web, và bạn không nên tiếp tục. Bạn có muốn tin tưởng chứng chỉ không?</string>
     <string name="ssl_certificate_error">Chứng nhận SSL không hợp lệ</string>
     <string name="forgot_password">Quên mật khẩu?</string>

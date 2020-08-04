@@ -49,6 +49,7 @@
     <dimen name="media_settings_margin_tablet_large">96dp</dimen>
     <dimen name="media_settings_margin">@dimen/media_settings_margin_normal</dimen>
     <dimen name="media_selection_dot">24dp</dimen>
+    <item name="media_grid_item_ratio" type="string" format="string">4:3</item>
 
     <dimen name="default_dialog_button_height">36dp</dimen>
     <dimen name="default_dialog_width">280dp</dimen>
@@ -530,5 +531,9 @@
     <dimen name="prepublishing_site_blavatar_corner_radius">4dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height">350dp</dimen>
     <dimen name="prepublishing_fragment_container_min_height_for_page">250dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_height">96dp</dimen>
+    <dimen name="prepublishing_story_title_thumbnail_width">64dp</dimen>
+    <dimen name="story_thumbnail_margin">6dp</dimen>
+    <dimen name="thumbnail_background_margin">10dp</dimen>
 
 </resources>

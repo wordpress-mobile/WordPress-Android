@@ -24,7 +24,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
-import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetched;
+import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
@@ -157,7 +157,7 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                if (!mAccountStore.hasAccessToken()) {
+                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
@@ -188,24 +188,25 @@ public class ReaderUpdateLogic {
                 ) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
-                    // if any local topics have been removed from the server, make sure to delete
-                    // them locally (including their posts)
-                    deleteTags(localTopics.getDeletions(serverTopics));
-                    // now replace local topics with the server topics
-                    ReaderTagTable.replaceTags(serverTopics);
-                    // broadcast the fact that there are changes
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged());
-                }
 
-                // save changes to recommended topics
-                if (mAccountStore.hasAccessToken()) {
-                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
-                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                        ReaderTagTable.setRecommendedTags(serverRecommended);
-                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
+                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Delete recommended tags which got saved as followed tags for logged out user
+                        // before we allowed following tags using interests picker
+                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
+                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+                        }
+                        // Do not delete locally saved tags for logged out user
+                        ReaderTagTable.addOrUpdateTags(serverTopics);
+                    } else {
+                        // if any local topics have been removed from the server, make sure to delete
+                        // them locally (including their posts)
+                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // now replace local topics with the server topics
+                        ReaderTagTable.replaceTags(serverTopics);
                     }
+                    // broadcast the fact that there are changes
+                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
@@ -277,16 +278,16 @@ public class ReaderUpdateLogic {
         return interestTags;
     }
 
-    private static void deleteTags(ReaderTagList tagList) {
+    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
+        ReaderTagTable.deleteTags(tagList);
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
             for (ReaderTag tag : tagList) {
-                ReaderTagTable.deleteTag(tag);
                 ReaderPostTable.deletePostsWithTag(tag);
             }
             db.setTransactionSuccessful();
@@ -299,6 +300,7 @@ public class ReaderUpdateLogic {
         RestRequest.Listener listener = this::handleInterestTagsResponse;
         RestRequest.ErrorListener errorListener = volleyError -> {
             AppLog.e(AppLog.T.READER, volleyError);
+            EventBus.getDefault().post(new InterestTagsFetchEnded(new ReaderTagList(), false));
             taskCompleted(UpdateTask.INTEREST_TAGS);
         };
 
@@ -316,7 +318,7 @@ public class ReaderUpdateLogic {
             public void run() {
                 ReaderTagList interestTags = new ReaderTagList();
                 interestTags.addAll(parseInterestTags(jsonObject));
-                EventBus.getDefault().post(new InterestTagsFetched(interestTags));
+                EventBus.getDefault().post(new InterestTagsFetchEnded(interestTags, true));
                 taskCompleted(UpdateTask.INTEREST_TAGS);
             }
         }.start();
