@@ -35,7 +35,6 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory
     @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
@@ -48,11 +47,10 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-        whenever(readerDiscoverDataProviderFactory.create()).thenReturn(readerDiscoverDataProvider)
         viewModel = ReaderDiscoverViewModel(
-                readerDiscoverDataProviderFactory,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
+                readerDiscoverDataProvider,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
