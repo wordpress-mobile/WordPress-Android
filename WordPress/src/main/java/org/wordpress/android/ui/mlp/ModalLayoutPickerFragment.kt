@@ -35,6 +35,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        private const val HEADER_VISIBILITY_SCROLL_THRESHOLD = 20
     }
 
     override fun onCreateView(
@@ -54,13 +55,12 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
-             * We track the first row visibility to show/hide the header title accordingly
+             * We track the vertical scroll to show/hide the header title accordingly
              */
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstItem = layoutManager.findFirstCompletelyVisibleItemPosition()
-                viewModel.setHeaderTitleVisibility(firstItem > 0)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val offset = recyclerView.computeVerticalScrollOffset()
+                viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
             }
         })
 

@@ -25,7 +25,7 @@ class CategoriesItemDecoration : RecyclerView.ItemDecoration() {
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         super.onDrawOver(canvas, parent, state)
-        if (scrollingView.y > 0 || !::scrollingView.isInitialized) return
+        if (!::scrollingView.isInitialized || scrollingView.y > 0) return
         if (!::stickyView.isInitialized) {
             stickyView = LayoutInflater.from(parent.context)
                     .inflate(R.layout.modal_layout_picker_categories_row, parent, false)

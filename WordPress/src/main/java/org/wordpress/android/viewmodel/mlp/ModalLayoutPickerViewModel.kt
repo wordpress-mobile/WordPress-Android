@@ -46,9 +46,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
         loadListItems()
     }
 
-    private fun loadListItems(titleVisibility: Boolean = true) {
+    private fun loadListItems() {
         val listItems = ArrayList<ModalLayoutPickerListItem>()
 
+        val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
         listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
         listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
 
@@ -73,6 +74,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
+        _isHeaderVisible.postValue(Event(true))
     }
 
     /**
@@ -82,7 +84,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun setHeaderTitleVisibility(headerShouldBeVisible: Boolean) {
         if (_isHeaderVisible.value?.peekContent() == headerShouldBeVisible) return
         _isHeaderVisible.postValue(Event(headerShouldBeVisible))
-        loadListItems(!headerShouldBeVisible)
+        loadListItems()
     }
 
     /**
