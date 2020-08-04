@@ -1,6 +1,7 @@
 15.5
 -----
 * [***] Enables search on post list for self-hosted sites.
+* [***] Enable upload of audio files and documents in the media library
 
 15.4
 -----
