@@ -24,7 +24,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderDiscoverRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -35,8 +35,8 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var readerDiscoverRepositoryFactory: ReaderDiscoverRepository.Factory
-    @Mock private lateinit var readerDiscoverRepository: ReaderDiscoverRepository
+    @Mock private lateinit var readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory
+    @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
@@ -48,23 +48,23 @@ class ReaderDiscoverViewModelTest {
 
     @Before
     fun setUp() = test {
-        whenever(readerDiscoverRepositoryFactory.create()).thenReturn(readerDiscoverRepository)
+        whenever(readerDiscoverDataProviderFactory.create()).thenReturn(readerDiscoverDataProvider)
         viewModel = ReaderDiscoverViewModel(
-                readerDiscoverRepositoryFactory,
+                readerDiscoverDataProviderFactory,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
-        whenever(readerDiscoverRepository.discoverFeed).thenReturn(fakeDiscoverFeed)
+        whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
-        whenever(readerDiscoverRepository.communicationChannel).thenReturn(communicationChannel)
+        whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
     }
 
     @Test

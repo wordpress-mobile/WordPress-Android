@@ -335,7 +335,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         boolean success;
         if (isAskingToFollow) {
-            success = ReaderTagActions.addTag(mCurrentTag, listener);
+            success = ReaderTagActions.addTag(mCurrentTag, listener, mAccountStore.hasAccessToken());
         } else {
             success = ReaderTagActions.deleteTag(mCurrentTag, listener);
         }

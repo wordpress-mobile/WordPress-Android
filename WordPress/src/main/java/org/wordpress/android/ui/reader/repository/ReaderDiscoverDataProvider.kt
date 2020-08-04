@@ -9,22 +9,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
-import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.DEFAULT
 import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
-import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
@@ -36,15 +30,14 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-class ReaderDiscoverRepository constructor(
+class ReaderDiscoverDataProvider constructor(
     private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag,
     private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
     private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-    private val postLikeActionUseCase: PostLikeActionUseCase
+    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
 ) : CoroutineScope {
     private var job: Job = Job()
 
@@ -83,37 +76,26 @@ class ReaderDiscoverRepository constructor(
     suspend fun refreshPosts() {
         withContext(ioDispatcher) {
             val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
-            if (response != Success) _communicationChannel.postValue(Event(response))
-        }
-    }
-
-    suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        withContext(ioDispatcher) {
-            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
-                is PostLikeSuccess -> {
-                    reloadPosts()
-                }
-                is PostLikeFailure -> {
-                    _communicationChannel.postValue(Event(Failure(event)))
-                    reloadPosts()
-                }
-                is PostLikeUnChanged -> { }
-            }
+            // todo annmarie do we want to post all responses on the communication channel
+            if (response != Started) _communicationChannel.postValue(Event(response))
         }
     }
 
     // Internal functionality
     private suspend fun loadPosts() {
         withContext(ioDispatcher) {
+            val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
-            if (!existsInMemory) {
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
+            if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
             }
+
             if (refresh) {
                 val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
-                if (response != Success) _communicationChannel.postValue(Event(response))
+                // todo annmarie do we want to post all responses on the communication channel
+                if (response != Started) _communicationChannel.postValue(Event(response))
             }
         }
     }
@@ -177,22 +159,20 @@ class ReaderDiscoverRepository constructor(
         private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
         private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-        private val postLikeActionUseCase: PostLikeActionUseCase
+        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
     ) {
-        fun create(readerTag: ReaderTag? = null): ReaderDiscoverRepository {
+        fun create(readerTag: ReaderTag? = null): ReaderDiscoverDataProvider {
             val tag = readerTag
                     ?: readerUtilsWrapper.getTagFromTagName(ReaderConstants.KEY_DISCOVER, DEFAULT)
 
-            return ReaderDiscoverRepository(
+            return ReaderDiscoverDataProvider(
                     ioDispatcher,
                     eventBusWrapper,
                     tag,
                     getDiscoverCardsUseCase,
                     shouldAutoUpdateTagUseCase,
                     fetchDiscoverCardsUseCase,
-                    readerUpdatePostsEndedHandler,
-                    postLikeActionUseCase
+                    readerUpdatePostsEndedHandler
             )
         }
     }
