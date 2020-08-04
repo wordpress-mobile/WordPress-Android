@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_header.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.Event
@@ -43,6 +44,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
+        private const val HEADER_VISIBILITY_SCROLL_THRESHOLD = 20
     }
 
     override fun onCreateView(
@@ -62,13 +64,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
-             * We track the first row visibility to show/hide the header title accordingly
+             * We track the vertical scroll to show/hide the header title accordingly
              */
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val firstItem = layoutManager.findFirstCompletelyVisibleItemPosition()
-                viewModel.setHeaderTitleVisibility(firstItem > 0)
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
+                val offset = recyclerView.computeVerticalScrollOffset()
+                viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
             }
         })
 
@@ -76,6 +78,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
             WPActivityUtils.setLightStatusBar(activity?.window, false)
             viewModel.dismiss()
         }
+
+        title.setVisible(DisplayUtils.isLandscape(context))
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
         createPageButton.setOnClickListener { viewModel.createPage() /* TODO */ }

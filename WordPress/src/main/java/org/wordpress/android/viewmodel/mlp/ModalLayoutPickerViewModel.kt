@@ -50,16 +50,21 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<Unit>()
     val onCreateNewPageRequested: LiveData<Unit> = _onCreateNewPageRequested
 
-    fun init() {
+    private var landscapeMode: Boolean = false
+
+    fun init(landscape: Boolean) {
+        landscapeMode = landscape
         loadListItems()
     }
 
     private fun loadListItems() {
         val listItems = ArrayList<ModalLayoutPickerListItem>()
 
-        val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
-        listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
-        listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
+        if (!landscapeMode) {
+            val titleVisibility = _isHeaderVisible.value?.peekContent() ?: true
+            listItems.add(ModalLayoutPickerListItem.Title(R.string.mlp_choose_layout_title, titleVisibility))
+            listItems.add(ModalLayoutPickerListItem.Subtitle(R.string.mlp_choose_layout_subtitle))
+        }
 
         listItems.add(ModalLayoutPickerListItem.Categories())
 
@@ -95,6 +100,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
+        _isHeaderVisible.postValue(Event(true))
     }
 
     /**

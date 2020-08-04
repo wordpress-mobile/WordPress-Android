@@ -30,9 +30,6 @@ public class ReaderEvents {
         }
     }
 
-    public static class RecommendedTagsChanged {
-    }
-
     public static class TagAdded {
         private final String mTagName;
 
@@ -62,6 +59,18 @@ public class ReaderEvents {
 
         public ReaderTagList getInterestTags() {
             return mInterestTags;
+        }
+
+        public boolean didSucceed() {
+            return mDidSucceed;
+        }
+    }
+
+    public static class FetchDiscoverCardsEnded {
+        private final boolean mDidSucceed;
+
+        public FetchDiscoverCardsEnded(boolean didSucceed) {
+            mDidSucceed = didSucceed;
         }
 
         public boolean didSucceed() {
