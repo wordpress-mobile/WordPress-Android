@@ -101,6 +101,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
     fun dismiss() {
         _isModalLayoutPickerShowing.postValue(Event(false))
         _isHeaderVisible.postValue(Event(true))
+        _selectedLayoutSlug.value = null
     }
 
     /**
