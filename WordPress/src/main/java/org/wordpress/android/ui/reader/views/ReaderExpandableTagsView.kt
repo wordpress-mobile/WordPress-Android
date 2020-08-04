@@ -49,6 +49,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
+        layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
     fun loadTags(tags: ReaderTagList) {

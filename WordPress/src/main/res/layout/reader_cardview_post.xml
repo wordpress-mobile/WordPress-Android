@@ -38,7 +38,6 @@
             android:id="@+id/expandable_tags_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layoutDirection="locale"
             android:visibility="gone"
             android:paddingBottom="@dimen/margin_extra_large"
             app:chipSpacingHorizontal="@dimen/margin_small"
