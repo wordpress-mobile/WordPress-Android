@@ -36,7 +36,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         get() = getChildAt(lastVisibleTagChipIndex)
 
     private val hiddenTagChipsCount
-        get() = childCount - (lastVisibleTagChipIndex + 1)
+        get() = tagChips.size - (lastVisibleTagChipIndex + 1)
 
     private val isOverflowIndicatorChipOutsideBounds
         get() = !isChipWithinBounds(overflowIndicatorChip)
@@ -101,10 +101,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
 
                 hideTagChipsOutsideBounds()
-                updateOverflowIndicatorChipTitle()
-                lastVisibleTagChip?.let {
-                    uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
-                }
+                updateLastVisibleTagChip()
+                updateOverflowIndicatorChip()
             }
         })
     }
@@ -112,7 +110,7 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private fun showAllTagChips() { tagChips.forEach { uiHelpers.updateVisibility(it, true) } }
 
     private fun hideTagChipsOutsideBounds() {
-        tagChips.filter { !isChipWithinBounds(it) }.map { uiHelpers.updateVisibility(it, false) }
+        tagChips.forEach { uiHelpers.updateVisibility(it, isChipWithinBounds(it)) }
     }
 
     private fun isChipWithinBounds(chip: Chip): Boolean {
@@ -133,16 +131,21 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         }
     }
 
-    private fun updateOverflowIndicatorChipTitle() {
-        overflowIndicatorChip.text =
-                if (isSingleLine) {
-                    String.format(
-                            resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                            hiddenTagChipsCount
-                    )
-                } else {
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
-                }
+    private fun updateLastVisibleTagChip() {
+        lastVisibleTagChip?.let {
+            uiHelpers.updateVisibility(it, !isOverflowIndicatorChipOutsideBounds)
+        }
+    }
+
+    private fun updateOverflowIndicatorChip() {
+        overflowIndicatorChip.text = if (isSingleLine) {
+                String.format(
+                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
+                    hiddenTagChipsCount
+                )
+            } else {
+                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
+            }
     }
 
     companion object {
