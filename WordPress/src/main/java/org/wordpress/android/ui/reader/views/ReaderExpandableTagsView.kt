@@ -133,14 +133,17 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     }
 
     private fun updateOverflowIndicatorChip() {
+        val showOverflowIndicatorChip = hiddenTagChipsCount > 0 || !isSingleLine
+        uiHelpers.updateVisibility(overflowIndicatorChip, showOverflowIndicatorChip)
+
         overflowIndicatorChip.text = if (isSingleLine) {
-                String.format(
-                    resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
-                    hiddenTagChipsCount
-                )
-            } else {
-                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
-            }
+            String.format(
+                resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_expand_title),
+                hiddenTagChipsCount
+            )
+        } else {
+            resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
+        }
     }
 
     private fun View.preLayout(what: () -> Unit) {
