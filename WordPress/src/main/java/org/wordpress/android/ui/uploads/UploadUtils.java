@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.model.post.PostStatus;
 import org.wordpress.android.fluxc.store.MediaStore.MediaError;
 import org.wordpress.android.fluxc.store.PostStore.PostError;
 import org.wordpress.android.fluxc.store.UploadStore.UploadError;
+import org.wordpress.android.fluxc.utils.MimeTypes;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PostUtils;
@@ -50,6 +51,7 @@ import java.util.List;
 
 public class UploadUtils {
     private static final int K_SNACKBAR_WAIT_TIME_MS = 5000;
+    private static final MimeTypes MIME_TYPES = new MimeTypes();
 
     /**
      * Returns a post-type specific error message string.
@@ -546,25 +548,34 @@ public class UploadUtils {
             if (mediaList == null || mediaList.isEmpty()) {
                 return;
             }
+            boolean showPostAction = false;
+            for (MediaModel mediaModel : mediaList) {
+                showPostAction |= MIME_TYPES.isImageType(mediaModel.getMimeType()) || MIME_TYPES
+                        .isVideoType(mediaModel.getMimeType());
+            }
+            if (showPostAction) {
+                // show success snackbar for media only items and offer the WRITE POST functionality)
+                UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
+                        R.string.media_files_uploaded_write_post, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // WRITE POST functionality: show pre-populated Post
+                                ArrayList<MediaModel> mediaListToInsertInPost = new ArrayList<>();
+                                mediaListToInsertInPost.addAll(mediaList);
 
-            // show success snackbar for media only items and offer the WRITE POST functionality)
-            UploadUtils.showSnackbarSuccessAction(snackbarAttachView, messageForUser,
-                                                  R.string.media_files_uploaded_write_post, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // WRITE POST functionality: show pre-populated Post
-                            ArrayList<MediaModel> mediaListToInsertInPost = new ArrayList<>();
-                            mediaListToInsertInPost.addAll(mediaList);
-
-                            Intent writePostIntent = new Intent(activity, EditPostActivity.class);
-                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            writePostIntent.putExtra(WordPress.SITE, site);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
-                            writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
-                            activity.startActivity(writePostIntent);
-                        }
-                    }, sequencer);
+                                Intent writePostIntent = new Intent(activity, EditPostActivity.class);
+                                writePostIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                writePostIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                writePostIntent.putExtra(WordPress.SITE, site);
+                                writePostIntent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
+                                writePostIntent.putExtra(EditPostActivity.EXTRA_INSERT_MEDIA, mediaListToInsertInPost);
+                                activity.startActivity(writePostIntent);
+                            }
+                        }, sequencer);
+            } else {
+                // Do not show action for audio/document files until there is a block handling them in GB
+                UploadUtils.showSnackbar(snackbarAttachView, messageForUser, sequencer);
+            }
         }
     }
 
