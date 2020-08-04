@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mlp
 
 import android.os.Bundle
+import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +65,11 @@ class CategoriesItemViewHolder(parent: ViewGroup) : ModalLayoutPickerViewHolder(
 /**
  * Modal Layout Picker layouts view holder
  */
-class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelectionListener: LayoutSelectionListener) :
+class LayoutsItemViewHolder(
+    parent: ViewGroup,
+    private val scrollStates: SparseIntArray,
+    private val layoutSelectionListener: LayoutSelectionListener
+) :
         ModalLayoutPickerViewHolder(
                 parent,
                 R.layout.modal_layout_picker_layouts_row
@@ -80,11 +85,22 @@ class LayoutsItemViewHolder(parent: ViewGroup, private val layoutSelectionListen
             ).apply { initialPrefetchItemCount = 4 }
             adapter = LayoutsAdapter(context, layoutSelectionListener)
             setRecycledViewPool(RecyclerView.RecycledViewPool())
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val firstVisibleItem = (layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                    scrollStates.put(adapterPosition, firstVisibleItem)
+                }
+            })
         }
     }
 
     fun bind(item: ModalLayoutPickerListItem.LayoutCategory) {
         title.text = item.description
         (recycler.adapter as LayoutsAdapter).setData(item.layouts)
+        val lastSeenFirstPosition = scrollStates.get(layoutPosition, 0)
+        if (lastSeenFirstPosition >= 0) {
+            recycler.scrollToPosition(lastSeenFirstPosition)
+        }
     }
 }
