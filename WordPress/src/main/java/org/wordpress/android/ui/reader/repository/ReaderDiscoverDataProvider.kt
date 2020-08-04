@@ -67,9 +67,7 @@ class ReaderDiscoverDataProvider constructor(
         job.cancel()
     }
 
-    fun getTag(): ReaderTag = readerTag
-
-    suspend fun refreshPosts() {
+    suspend fun refreshCards() {
         withContext(ioDispatcher) {
             val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
             // todo annmarie do we want to post all responses on the communication channel
@@ -90,7 +88,7 @@ class ReaderDiscoverDataProvider constructor(
         withContext(ioDispatcher) {
             val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
-            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
+            val refresh = shouldAutoUpdateTagUseCase.get(ReaderTag.createDiscoverPostCardsTag())
             if (forceReload || !existsInMemory) {
                 val result = getDiscoverCardsUseCase.get()
                 _discoverFeed.postValue(result)
