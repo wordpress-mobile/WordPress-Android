@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.views
 
 import android.content.Context
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -108,22 +107,14 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         tagChips.forEach { uiHelpers.updateVisibility(it, isChipWithinBounds(it)) }
     }
 
-    private fun isChipWithinBounds(chip: Chip): Boolean {
-        val chipGroupLocationOnScreen = IntArray(2)
-        getLocationOnScreen(chipGroupLocationOnScreen)
-
-        val childChipRect = Rect(0, 0, chip.width, chip.height)
-        getChildVisibleRect(chip, childChipRect, null)
-
-        return if (isSingleLine) {
-            if (layoutDirection == View.LAYOUT_DIRECTION_LTR) {
-                childChipRect.right < (chipGroupLocationOnScreen[0] + width)
-            } else {
-                childChipRect.left > chipGroupLocationOnScreen[0]
-            }
+    private fun isChipWithinBounds(chip: Chip) = if (isSingleLine) {
+        if (layoutDirection == View.LAYOUT_DIRECTION_LTR) {
+            chip.right <= right - (paddingEnd + chipSpacingHorizontal)
         } else {
-            childChipRect.bottom <= (chipGroupLocationOnScreen[1] + height)
+            chip.left >= left + (paddingStart + chipSpacingHorizontal)
         }
+    } else {
+        chip.bottom <= bottom - (paddingBottom + chipSpacingVertical)
     }
 
     private fun updateLastVisibleTagChip() {
