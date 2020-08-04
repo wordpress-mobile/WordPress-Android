@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mlp
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,7 +91,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
         fillTheScreen(this)
         setStatusBarColor(this)
-        handleBackButton(this)
     }
 
     override fun onAttach(context: Context) {
@@ -100,8 +98,9 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
     }
 
@@ -133,16 +132,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                     previewButton.setVisible(selection)
                 }
         )
-    }
-
-    private fun handleBackButton(dialog: BottomSheetDialog) = dialog.setOnKeyListener { _, keyCode, event ->
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-            WPActivityUtils.setLightStatusBar(activity?.window, false)
-            viewModel.dismiss()
-            true
-        } else {
-            false
-        }
     }
 
     private fun fillTheScreen(dialog: BottomSheetDialog) {
