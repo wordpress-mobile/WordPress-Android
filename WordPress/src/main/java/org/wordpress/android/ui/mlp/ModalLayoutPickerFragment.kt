@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mlp
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -97,6 +98,11 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().applicationContext as WordPress).component().inject(this)
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        viewModel.dismiss()
     }
 
     override fun layoutTapped(layout: LayoutListItem) {
