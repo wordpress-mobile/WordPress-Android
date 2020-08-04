@@ -21,13 +21,19 @@ import javax.inject.Inject
  */
 class LayoutsAdapter(
     private val context: Context,
-    private val layouts: List<LayoutListItem>,
     private val selectionListener: LayoutSelectionListener
 ) : RecyclerView.Adapter<LayoutsAdapter.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
+    private val layouts: ArrayList<LayoutListItem> = arrayListOf()
+
     init {
         (context.applicationContext as WordPress).component().inject(this)
+    }
+
+    fun setData(data: List<LayoutListItem>) {
+        layouts.clear()
+        layouts.addAll(data)
     }
 
     override fun onCreateViewHolder(
