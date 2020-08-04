@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_header.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.WPActivityUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.Event
@@ -59,6 +60,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
              */
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
                 val offset = recyclerView.computeVerticalScrollOffset()
                 viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
             }
@@ -68,6 +70,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
             WPActivityUtils.setLightStatusBar(activity?.window, false)
             viewModel.dismiss()
         }
+
+        title.setVisible(DisplayUtils.isLandscape(context))
 
         createBlankPageButton.setOnClickListener { viewModel.createPage() }
 

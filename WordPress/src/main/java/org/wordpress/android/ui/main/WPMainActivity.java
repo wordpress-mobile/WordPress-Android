@@ -114,6 +114,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.FluxCUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ProfilingUtils;
@@ -562,7 +563,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 hasFullAccessToContent()
         );
 
-        mMLPViewModel.init();
+        mMLPViewModel.init(DisplayUtils.isLandscape(this));
     }
 
     private @Nullable String getAuthToken() {
