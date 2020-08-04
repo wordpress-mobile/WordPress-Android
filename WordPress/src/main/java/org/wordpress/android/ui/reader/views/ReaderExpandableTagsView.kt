@@ -5,7 +5,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver.OnPreDrawListener
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
@@ -94,17 +94,12 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private fun expandLayout(isChecked: Boolean) {
         isSingleLine = !isChecked
         showAllTagChips()
+        preLayout {
+            hideTagChipsOutsideBounds()
+            updateLastVisibleTagChip()
+            updateOverflowIndicatorChip()
+        }
         requestLayout()
-
-        viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                viewTreeObserver.removeOnGlobalLayoutListener(this)
-
-                hideTagChipsOutsideBounds()
-                updateLastVisibleTagChip()
-                updateOverflowIndicatorChip()
-            }
-        })
     }
 
     private fun showAllTagChips() { tagChips.forEach { uiHelpers.updateVisibility(it, true) } }
@@ -146,6 +141,16 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
             } else {
                 resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
             }
+    }
+
+    private fun View.preLayout(what: () -> Unit) {
+        viewTreeObserver.addOnPreDrawListener(object : OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                viewTreeObserver.removeOnPreDrawListener(this)
+                what.invoke()
+                return true
+            }
+        })
     }
 
     companion object {
