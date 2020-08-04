@@ -158,6 +158,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
     public static final String ARG_SHOW_LOGIN_EPILOGUE = "show_login_epilogue";
     public static final String ARG_SHOW_SIGNUP_EPILOGUE = "show_signup_epilogue";
+    public static final String ARG_SHOW_SITE_CREATION = "show_site_creation";
     public static final String ARG_OPEN_PAGE = "open_page";
     public static final String ARG_MY_SITE = "show_my_site";
     public static final String ARG_NOTIFICATIONS = "show_notifications";
@@ -342,6 +343,9 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_EMAIL_ADDRESS),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_PHOTO_URL),
                     getIntent().getStringExtra(SignupEpilogueActivity.EXTRA_SIGNUP_USERNAME), false);
+        } else if (getIntent().getBooleanExtra(ARG_SHOW_SITE_CREATION, false) && savedInstanceState == null) {
+            canShowAppRatingPrompt = false;
+            ActivityLauncher.newBlogForResult(this);
         }
 
         if (isGooglePlayServicesAvailable(this)) {
