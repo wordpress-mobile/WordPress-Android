@@ -13,6 +13,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -71,11 +72,13 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
+                tags = buildTags(post),
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
                 featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
                 thumbnailStripSection = buildThumbnailStripUrls(post),
+                expandableTagsViewVisibility = buildExpandedTagsViewVisibility(post),
                 videoOverlayVisibility = buildVideoOverlayVisibility(post),
                 featuredImageVisibility = buildFeaturedImageVisibility(post),
                 moreMenuVisibility = accountStore.hasAccessToken() && postListType == ReaderPostListType.TAG_FOLLOWED,
@@ -121,6 +124,10 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildFullVideoUrl(post: ReaderPost) =
             post.takeIf { post.cardType == VIDEO }
                     ?.let { post.featuredVideo }
+
+    private fun buildExpandedTagsViewVisibility(post: ReaderPost) = post.isDiscoverPost
+
+    private fun buildTags(post: ReaderPost) = ReaderTagList() // TODO: ashiagr - get tags from post
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO

@@ -41,6 +41,10 @@ class ReaderPostViewHolder(
         val state = uiState as ReaderPostUiState
         // TODO malinjir animate like button on click
 
+        // Expandable tags section
+        uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
+        expandable_tags_view.loadTags(state.tags)
+
         // Header section
         updateAvatarOrBlavatar(state)
         uiHelpers.setTextOrHide(text_author_and_blog_name, state.blogName)
