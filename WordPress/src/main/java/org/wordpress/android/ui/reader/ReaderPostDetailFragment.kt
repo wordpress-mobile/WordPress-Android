@@ -111,6 +111,7 @@ import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
@@ -1505,15 +1506,22 @@ class ReaderPostDetailFragment : Fragment(),
     }
 
     override fun onPageJumpClick(pageJump: String?): Boolean {
-        val jsWasEnabled = readerWebView.settings.javaScriptEnabled
+        val wasJsEnabled = readerWebView.settings.javaScriptEnabled
 
         readerWebView.settings.javaScriptEnabled = true
 
-        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") {
-            val yOffset = (readerWebView.scale * it.toFloat()).toInt()
-            scrollView.smoothScrollTo(0, yOffset)
+        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") {result ->
+            // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
+            val offsetTop = StringUtils.stringToInt(result, -1)
+            if (offsetTop >= 0) {
+                val yOffset = (resources.displayMetrics.density * offsetTop).toInt()
+                scrollView.smoothScrollTo(0, yOffset)
+            } else {
+                ToastUtils.showToast(activity, R.string.reader_toast_err_page_jump_not_found)
+            }
         }
-        readerWebView.settings.javaScriptEnabled = jsWasEnabled
+
+        readerWebView.settings.javaScriptEnabled = wasJsEnabled
         return true
     }
 
