@@ -15,6 +15,7 @@
         <item name="colorOnSurface">@android:color/white</item>
         <item name="colorOnError">@android:color/black</item>
         <item name="colorControlActivated">?attr/colorPrimary</item>
+        <item name="colorControlHighlight">?attr/colorOnSurface</item>
         <item name="colorAccent">?attr/colorPrimary</item>
 
         <item name="wpColorText">@android:color/white</item>
@@ -70,6 +71,9 @@
         <item name="actionModeStyle">@style/WordPress.ActionMode</item>
         <item name="actionModeCloseButtonStyle">@style/WordPress.ActionMode.CloseButton</item>
         <item name="actionMenuTextColor">@color/primary_disabled_selector</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/WordPress.ActionBar.Navigation
+        </item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">

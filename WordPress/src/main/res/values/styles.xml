@@ -85,6 +85,9 @@
         <item name="actionOverflowButtonStyle">
             @style/WordPress.ActionMode.OverflowButtonStyle
         </item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/WordPress.ActionBar.Navigation
+        </item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -270,11 +273,11 @@
     <style name="WordPress.ActionBar.LightDark" parent="Theme.AppCompat.Light">
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="toolbarNavigationButtonStyle">
-            @style/WordPress.ActionBar.Navigation.Inverted
+            @style/WordPress.ActionBar.Navigation
         </item>
     </style>
 
-    <style name="WordPress.ActionBar.Navigation.Inverted" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+    <style name="WordPress.ActionBar.Navigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 

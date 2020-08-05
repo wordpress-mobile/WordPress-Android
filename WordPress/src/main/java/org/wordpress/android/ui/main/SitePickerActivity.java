@@ -376,13 +376,6 @@ public class SitePickerActivity extends LocaleAwareActivity
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            Drawable closeButton = ColorUtils.applyTintToDrawable(
-                    toolbar.getContext(),
-                    R.drawable.ic_cross_white_24dp,
-                    ContextExtensionsKt.getColorResIdFromAttribute(toolbar.getContext(), R.attr.colorOnSurface)
-            );
-
-            actionBar.setHomeAsUpIndicator(closeButton);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(R.string.site_picker_title);
