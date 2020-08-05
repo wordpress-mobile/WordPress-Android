@@ -1263,7 +1263,7 @@ open class WellSqlConfig : DefaultWellConfig {
                 113 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD DATE_CREATED TEXT")
                 }
-                114 -> migrate(version) {
+                114 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCTopPerformerProductModel")
                     db.execSQL("CREATE TABLE WCTopPerformerProductModel (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
