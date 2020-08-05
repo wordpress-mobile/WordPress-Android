@@ -2014,7 +2014,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // We disable in Jetpack site because we don't have the self-hosted site's credentials
                         // which are required for us to be able to fetch the site's authentication cookie.
                         boolean isJetpackSSOEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
-                        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled) && "gutenberg".equals(mSite.getWebEditor());
+                        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled)
+                                && "gutenberg".equals(mSite.getWebEditor());
 
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
                         boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
