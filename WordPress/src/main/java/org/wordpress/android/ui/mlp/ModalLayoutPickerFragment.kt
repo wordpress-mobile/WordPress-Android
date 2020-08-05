@@ -47,7 +47,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
-        private const val HEADER_VISIBILITY_SCROLL_THRESHOLD = 20
     }
 
     override fun onCreateView(
@@ -65,6 +64,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = ModalLayoutPickerAdapter(this)
 
+        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
              * We track the vertical scroll to show/hide the header title accordingly
@@ -73,19 +74,21 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                 super.onScrolled(recyclerView, dx, dy)
                 if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
                 val offset = recyclerView.computeVerticalScrollOffset()
-                viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
+                viewModel.setHeaderTitleVisibility(offset > scrollThreshold)
             }
         })
 
         backButton.setOnClickListener {
-            WPActivityUtils.setLightStatusBar(activity?.window, false)
-            viewModel.dismiss()
+            closeModal()
         }
 
         title.setVisible(DisplayUtils.isLandscape(context))
 
-        createBlankPageButton.setOnClickListener { viewModel.createPage() }
-        createPageButton.setOnClickListener { viewModel.createPage() /* TODO */ }
+        createBlankPageButton.setOnClickListener {
+            closeModal()
+            viewModel.createPage()
+        }
+        createPageButton.setOnClickListener { /* TODO */ }
         previewButton.setOnClickListener { /* TODO */ }
 
         setupViewModel()
@@ -107,6 +110,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+        closeModal()
+    }
+
+    private fun closeModal() {
         WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
     }
