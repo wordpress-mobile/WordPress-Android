@@ -10,7 +10,7 @@ import org.wordpress.mobile.WPAndroidGlue.GutenbergProps
 data class GutenbergPropsBuilder(
     private val enableMentions: Boolean,
     private val enableUnsupportedBlockEditor: Boolean,
-    private val enableModalLayoutPickerEnabled: Boolean,
+    private val enableModalLayoutPicker: Boolean,
     private val localeSlug: String,
     private val postType: String,
     private val editorTheme: Bundle?
@@ -24,6 +24,6 @@ data class GutenbergPropsBuilder(
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
             htmlModeEnabled = isHtmlModeEnabled,
-            isModalLayoutPickerEnabled = enableModalLayoutPickerEnabled
+            isModalLayoutPickerEnabled = enableModalLayoutPicker
     )
 }
