@@ -126,7 +126,6 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ViewPagerScrol
                         updateTabs(it)
                     }
                 }
-                app_bar.setExpanded(uiState.appBarExpanded)
                 uiHelpers.updateVisibility(tab_layout, uiState.tabLayoutVisible)
                 searchMenuItem?.isVisible = uiState.searchIconVisible
             }
