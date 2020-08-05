@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/publicize_list_nested_scroll_view">
 
     <!-- used to host quick start focus view - must be RelativeLayout or FrameLayout -->
     <RelativeLayout
@@ -114,4 +115,4 @@
 
         </LinearLayout>
     </RelativeLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
