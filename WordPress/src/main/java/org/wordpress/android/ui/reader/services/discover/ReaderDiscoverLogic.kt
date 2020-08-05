@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
@@ -43,8 +46,9 @@ import javax.inject.Inject
 /**
  * This class contains logic related to fetching data for the discover tab in the Reader.
  */
-class ReaderDiscoverLogic constructor(
+class ReaderDiscoverLogic(
     private val completionListener: ServiceCompletionListener,
+    private val coroutineScope: CoroutineScope,
     appComponent: AppComponent
 ) {
     init {
@@ -54,6 +58,7 @@ class ReaderDiscoverLogic constructor(
     @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
     @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
+    @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -63,7 +68,6 @@ class ReaderDiscoverLogic constructor(
 
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
-
         requestDataForDiscover(task, UpdateResultListener {
             EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
             completionListener.onCompleted(listenerCompanion)
@@ -71,33 +75,35 @@ class ReaderDiscoverLogic constructor(
     }
 
     private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
-        val params = HashMap<String, String>()
-        // TODO malinjir pass interests the user is following
-        params["tags"] = "android"
+        coroutineScope.launch {
+            val params = HashMap<String, String>()
+            params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
 
-        when (taskType) {
-            REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
-            REQUEST_MORE -> {
-                val pageHandle = appPrefsWrapper.readerCardsPageHandle
-                if (pageHandle?.isNotEmpty() == true) {
-                    params["page_handle"] = pageHandle
-                } else {
-                    // there are no more pages to load
-                    resultListener.onUpdateResult(UNCHANGED)
-                    return
+            when (taskType) {
+                REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
+                REQUEST_MORE -> {
+                    val pageHandle = appPrefsWrapper.readerCardsPageHandle
+                    if (pageHandle?.isNotEmpty() == true) {
+                        params["page_handle"] = pageHandle
+                    } else {
+                        // there are no more pages to load
+                        resultListener.onUpdateResult(UNCHANGED)
+                        return@launch
+                    }
                 }
             }
-        }
 
-        val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
-            handleRequestDiscoverDataResponse(taskType, jsonObject, resultListener)
+            val listener = Listener { jsonObject ->
+                coroutineScope.launch {
+                    handleRequestDiscoverDataResponse(taskType, jsonObject, resultListener)
+                }
+            }
+            val errorListener = ErrorListener { volleyError ->
+                AppLog.e(READER, volleyError)
+                resultListener.onUpdateResult(FAILED)
+            }
+            WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
         }
-        val errorListener = ErrorListener { volleyError ->
-            AppLog.e(READER, volleyError)
-            resultListener.onUpdateResult(FAILED)
-        }
-
-        WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
     }
 
     private fun handleRequestDiscoverDataResponse(
@@ -105,7 +111,6 @@ class ReaderDiscoverLogic constructor(
         json: JSONObject?,
         resultListener: UpdateResultListener
     ) {
-        // TODO malinjir move to bg thread
         if (json == null) {
             resultListener.onUpdateResult(FAILED)
             return
