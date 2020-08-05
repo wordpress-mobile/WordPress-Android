@@ -94,7 +94,8 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 onPostHeaderViewClicked = this::onPostHeaderClicked,
                                 postListType = TAG_FOLLOWED
                         )
-                    }
+                    },
+                    swipeToRefreshIsRefreshing = false
             )
         }
 
@@ -185,11 +186,25 @@ class ReaderDiscoverViewModel @Inject constructor(
         readerDiscoverDataProvider.stop()
     }
 
+    fun swipeToRefresh() {
+        launch {
+            (uiState.value as ContentUiState).copy(swipeToRefreshIsRefreshing = true)
+            readerDiscoverDataProvider.refreshCards()
+        }
+    }
+
     sealed class DiscoverUiState(
         val contentVisiblity: Boolean = false,
-        val progressVisibility: Boolean = false
+        val progressVisibility: Boolean = false,
+        val swipeToRefreshEnabled: Boolean = false
     ) {
-        data class ContentUiState(val cards: List<ReaderCardUiState>) : DiscoverUiState(contentVisiblity = true)
+        open val swipeToRefreshIsRefreshing: Boolean = false
+
+        data class ContentUiState(
+            val cards: List<ReaderCardUiState>,
+            override val swipeToRefreshIsRefreshing: Boolean
+        ) : DiscoverUiState(contentVisiblity = true, swipeToRefreshEnabled = true)
+
         object LoadingUiState : DiscoverUiState(progressVisibility = true)
         object ErrorUiState : DiscoverUiState()
     }
