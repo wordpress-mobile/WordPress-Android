@@ -2,7 +2,6 @@ package org.wordpress.android.util.analytics
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.SiteModel
