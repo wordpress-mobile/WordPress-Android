@@ -27,9 +27,9 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerDiscoverDataProviderFactory: ReaderDiscoverDataProvider.Factory,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -58,8 +58,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val photonWidth: Int = 500
     private val photonHeight: Int = 500
 
-    private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
-
     fun start() {
         if (isStarted) return
         isStarted = true
@@ -72,7 +70,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         _uiState.value = LoadingUiState
 
         // Get the correct repository
-        readerDiscoverDataProvider = readerDiscoverDataProviderFactory.create()
         readerDiscoverDataProvider.start()
 
         // Listen to changes to the discover feed

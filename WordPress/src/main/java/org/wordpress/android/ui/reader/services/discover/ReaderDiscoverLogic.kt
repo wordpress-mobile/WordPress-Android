@@ -9,6 +9,7 @@ import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
@@ -52,6 +53,7 @@ class ReaderDiscoverLogic constructor(
 
     @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -63,7 +65,7 @@ class ReaderDiscoverLogic constructor(
         listenerCompanion = companion
 
         requestDataForDiscover(task, UpdateResultListener {
-            EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
             completionListener.onCompleted(listenerCompanion)
         })
     }
@@ -123,6 +125,8 @@ class ReaderDiscoverLogic constructor(
 
         val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
         appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+
+        readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
 
         resultListener.onUpdateResult(HAS_NEW)
     }
