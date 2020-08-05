@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
 import org.wordpress.android.models.ReaderPost
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -16,7 +17,7 @@ import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.Discover
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -26,9 +27,9 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ReaderDiscoverViewModel @Inject constructor(
-    private val readerPostRepository: ReaderPostRepository,
     private val postUiStateBuilder: ReaderPostUiStateBuilder,
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
+    private val readerDiscoverDataProvider: ReaderDiscoverDataProvider,
     private val reblogUseCase: ReblogUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -62,19 +63,22 @@ class ReaderDiscoverViewModel @Inject constructor(
         isStarted = true
 
         init()
-        loadPosts()
     }
 
     private fun init() {
         // Start with loading state
         _uiState.value = LoadingUiState
 
+        // Get the correct repository
+        readerDiscoverDataProvider.start()
+
         // Listen to changes to the discover feed
-        _uiState.addSource(readerPostRepository.discoveryFeed) { posts ->
+        _uiState.addSource(readerDiscoverDataProvider.discoverFeed) { posts ->
             _uiState.value = ContentUiState(
-                    posts.map {
+                    // TODO malinjir we currently ignore all other types but ReaderPostCards
+                    posts.cards.filterIsInstance<ReaderPostCard>().map {
                         postUiStateBuilder.mapPostToUiState(
-                                post = it,
+                                post = it.post,
                                 photonWidth = photonWidth,
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
@@ -90,6 +94,13 @@ class ReaderDiscoverViewModel @Inject constructor(
                     }
             )
         }
+
+        readerDiscoverDataProvider.communicationChannel.observeForever { data ->
+            data?.let {
+                // TODO listen for communications from the reeaderPostRepository, but not 4ever!
+            }
+        }
+
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {
@@ -140,13 +151,6 @@ class ReaderDiscoverViewModel @Inject constructor(
         AppLog.d(T.READER, "OnMoreButtonClicked")
     }
 
-    private fun loadPosts() {
-        // TODO malinjir we'll remove this method when the repositories start managing the requests automatically
-        launch(bgDispatcher) {
-            readerPostRepository.getDiscoveryFeed()
-        }
-    }
-
     fun onReblogSiteSelected(siteLocalId: Int) {
         // TODO malinjir almost identical to ReaderPostCardActionsHandler.handleReblogClicked.
         //  Consider refactoring when ReaderPostCardActionType is transformed into a sealed class.
@@ -158,6 +162,11 @@ class ReaderDiscoverViewModel @Inject constructor(
             _snackbarEvents.postValue(Event(SnackbarMessageHolder(R.string.reader_reblog_error)))
         }
         pendingReblogPost = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        readerDiscoverDataProvider.stop()
     }
 
     sealed class DiscoverUiState(

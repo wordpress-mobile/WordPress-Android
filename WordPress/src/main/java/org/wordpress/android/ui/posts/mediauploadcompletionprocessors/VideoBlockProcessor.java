@@ -30,7 +30,7 @@ public class VideoBlockProcessor extends BlockProcessor {
 
     @Override boolean processBlockJsonAttributes(JsonObject jsonAttributes) {
         JsonElement id = jsonAttributes.get("id");
-        if (id != null && id.getAsString().equals(mLocalId)) {
+        if (id != null && !id.isJsonNull() && id.getAsString().equals(mLocalId)) {
             jsonAttributes.addProperty("id", Integer.parseInt(mRemoteId));
             return true;
         }

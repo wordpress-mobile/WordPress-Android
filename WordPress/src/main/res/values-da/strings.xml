@@ -158,7 +158,6 @@ Language: da_DK
     <string name="schedule_verb">Planlæg</string>
     <string name="update_verb">Opdater</string>
     <string name="reader_page_followed_tags">Fulgte tags</string>
-    <string name="reader_title_tag_preview">Forhåndsvis tag</string>
     <string name="reader_page_followed_blogs">Fulgte websteder</string>
     <string name="reader_hint_add_tag_or_url">Indtast en URL eller et tag for at følge</string>
     <string name="ssl_certificate_ask_trust">Hvis du plejer at tilgå dit websted på denne måde uden problemer, kan denne fejl betyde at nogen forsøger udgive sig for at være dit websted, og du burde ikke fortsætte. Vælger du at stole på certifikatet alligevel?</string>

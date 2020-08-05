@@ -17,13 +17,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.models.ReaderPostList
+import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
+import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
-import org.wordpress.android.ui.reader.repository.ReaderPostRepository
+import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication
+import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -31,32 +35,34 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var readerPostRepository: ReaderPostRepository
+    @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var readerPostCardActionsHandler: ReaderPostCardActionsHandler
     @Mock private lateinit var reblogUseCase: ReblogUseCase
 
-    private val fakeDiscoverFeed = MutableLiveData<ReaderPostList>()
+    private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
+    private val communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
 
     @Before
     fun setUp() = test {
         viewModel = ReaderDiscoverViewModel(
-                readerPostRepository,
                 uiStateBuilder,
                 readerPostCardActionsHandler,
+                readerDiscoverDataProvider,
                 reblogUseCase,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
-        whenever(readerPostRepository.discoveryFeed).thenReturn(fakeDiscoverFeed)
+        whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyInt(), anyInt(), anyOrNull(), anyBoolean(), anyOrNull(),
                         anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()
                 )
         ).thenReturn(mock())
+        whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
     }
 
     @Test
@@ -84,15 +90,15 @@ class ReaderDiscoverViewModelTest {
         viewModel.start()
 
         // Act
-        fakeDiscoverFeed.value = createDummyReaderPostList() // mock finished loading
+        fakeDiscoverFeed.value = createDummyReaderCardsList() // mock finished loading
 
         // Assert
         assertThat(uiStates.size).isEqualTo(2)
         assertThat(uiStates[1]).isInstanceOf(ContentUiState::class.java)
     }
 
-    private fun createDummyReaderPostList(): ReaderPostList = ReaderPostList().apply {
-        this.add(createDummyReaderPost())
+    private fun createDummyReaderCardsList(): ReaderDiscoverCards {
+        return ReaderDiscoverCards(listOf(ReaderPostCard(createDummyReaderPost())))
     }
 
     private fun createDummyReaderPost(): ReaderPost = ReaderPost().apply {

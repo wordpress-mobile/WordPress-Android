@@ -73,7 +73,6 @@ Language: hi_IN
     <string name="wp_media_title">वर्डप्रेस मीडिया </string>
     <string name="error_unknown_post_type">अज्ञात पोस्ट प्रारूप</string>
     <string name="confirm">पुष्टि करें</string>
-    <string name="reader_photo_by">Photo by %s</string>
     <string name="swipe_for_more">अधिक के लिए स्वाइप करें</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें या एक ब्राउज़र को खोलने के लिए शीर्ष कार्रवाई बटन का उपयोग करें।</string>
     <string name="reader_err_get_post_not_authorized_signin">आप इस पोस्ट को देखने के लिए अधिकृत नहीं  हैं। पहले WordPress.com में जाकर लॉग इन करें</string>
@@ -207,7 +206,6 @@ Language: hi_IN
     <string name="contact_us">हमसे संपर्क करें</string>
     <string name="update_verb">अपडेट करे</string>
     <string name="schedule_verb">निर्धारित करे</string>
-    <string name="reader_title_tag_preview">टैग पूर्वावलोकन</string>
     <string name="reader_hint_add_tag_or_url">अनुसरण के लिए एक टैग या यूआरएल दर्ज करें</string>
     <string name="reader_page_followed_blogs">अनुसरण किये गए ब्लॉग </string>
     <string name="reader_page_followed_tags">अनुसरण किये गए टैग्स </string>

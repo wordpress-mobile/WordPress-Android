@@ -60,6 +60,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaListFetched;
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaUploaded;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.LocaleAwareActivity;
@@ -68,6 +69,7 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaFilter;
 import org.wordpress.android.ui.media.MediaGridFragment.MediaGridListener;
 import org.wordpress.android.ui.media.services.MediaDeleteService;
+import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
 import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper;
@@ -84,6 +86,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMediaUtils;
 import org.wordpress.android.util.WPPermissionUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.AnyFileUploadFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.widgets.AppRatingDialog;
 
@@ -95,6 +98,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_UPLOADING_MEDIA;
+import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 
 /**
  * The main activity in which the user can browse their media.
@@ -114,7 +118,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     @Inject MediaStore mMediaStore;
     @Inject SiteStore mSiteStore;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject SystemNotificationsTracker mSystemNotificationsTracker;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
+    @Inject AnyFileUploadFeatureConfig mAnyFileUploadFeatureConfig;
 
     private SiteModel mSite;
 
@@ -141,6 +147,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         ITEM_CAPTURE_VIDEO,
         ITEM_CHOOSE_PHOTO,
         ITEM_CHOOSE_VIDEO,
+        ITEM_CHOOSE_FILE,
         ITEM_CHOOSE_STOCK_MEDIA,
         ITEM_CHOOSE_GIF
     }
@@ -225,9 +232,19 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         showQuota(true);
     }
 
-    private void formatQuotaDiskSpace() {
-        String percentage = FormatUtils.formatPercentage(mSite.getSpacePercentUsed() / 100);
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
 
+        if (intent.hasExtra(ARG_NOTIFICATION_TYPE)) {
+            NotificationType notificationType =
+                    (NotificationType) intent.getSerializableExtra(ARG_NOTIFICATION_TYPE);
+            if (notificationType != null) {
+                mSystemNotificationsTracker.trackTappedNotification(notificationType);
+            }
+        }
+    }
+
+    private void formatQuotaDiskSpace() {
         final String[] units = new String[] {
                 getString(R.string.file_size_in_bytes),
                 getString(R.string.file_size_in_kilobytes),
@@ -242,6 +259,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             String space = FormatUtils.formatFileSize(mSite.getSpaceUsed(), units);
             quota = String.format(getString(R.string.site_settings_quota_space_unlimited), space);
         } else {
+            String percentage = FormatUtils.formatPercentageLimit100(mSite.getSpacePercentUsed() / 100, true);
+
             String space = FormatUtils.formatFileSize(mSite.getSpaceAllowed(), units);
             quota = String.format(getString(R.string.site_settings_quota_space_value), percentage, space);
         }
@@ -450,6 +469,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         switch (requestCode) {
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
+            case RequestCodes.FILE_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     ClipData clipData = data.getClipData();
                     if (clipData != null) {
@@ -895,16 +915,24 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                     });
         }
 
-        popup.getMenu().add(R.string.photo_picker_choose_photo).setOnMenuItemClickListener(
-                item -> {
-                    doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_PHOTO);
-                    return true;
-                });
-
-        if (!mBrowserType.isSingleImagePicker()) {
-            popup.getMenu().add(R.string.photo_picker_choose_video).setOnMenuItemClickListener(
+        if (!mAnyFileUploadFeatureConfig.isEnabled()) {
+            popup.getMenu().add(R.string.photo_picker_choose_photo).setOnMenuItemClickListener(
                     item -> {
-                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_VIDEO);
+                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_PHOTO);
+                        return true;
+                    });
+
+            if (!mBrowserType.isSingleImagePicker()) {
+                popup.getMenu().add(R.string.photo_picker_choose_video).setOnMenuItemClickListener(
+                        item -> {
+                            doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_VIDEO);
+                            return true;
+                        });
+            }
+        } else {
+            popup.getMenu().add(R.string.photo_picker_choose_file).setOnMenuItemClickListener(
+                    item -> {
+                        doAddMediaItemClicked(AddMenuItem.ITEM_CHOOSE_FILE);
                         return true;
                     });
         }
@@ -957,6 +985,9 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
                 break;
             case ITEM_CHOOSE_VIDEO:
                 WPMediaUtils.launchVideoLibrary(this, true);
+                break;
+            case ITEM_CHOOSE_FILE:
+                WPMediaUtils.launchFileLibrary(this, true);
                 break;
             case ITEM_CHOOSE_STOCK_MEDIA:
                 ActivityLauncher.showStockMediaPickerForResult(this,
@@ -1108,9 +1139,17 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
     public void onEventMainThread(UploadService.UploadErrorEvent event) {
         EventBus.getDefault().removeStickyEvent(event);
         if (event.mediaModelList != null && !event.mediaModelList.isEmpty()) {
-            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(this,
-                    findViewById(R.id.tab_layout), true,
-                    event.mediaModelList, mSite, event.errorMessage);
+            mUploadUtilsWrapper.onMediaUploadedSnackbarHandler(
+                    this,
+                    findViewById(R.id.tab_layout),
+                    true,
+                    !TextUtils.isEmpty(event.errorMessage)
+                    && event.errorMessage.contains(getString(R.string.error_media_quota_exceeded))
+                        ? null
+                        : event.mediaModelList,
+                    mSite,
+                    event.errorMessage
+            );
             updateMediaGridForTheseMedia(event.mediaModelList);
         }
     }

@@ -7,6 +7,7 @@ import com.android.volley.VolleyError;
 import com.wordpress.rest.RestRequest;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -23,6 +24,7 @@ import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.ReaderEvents;
+import org.wordpress.android.ui.reader.ReaderEvents.InterestTagsFetchEnded;
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.JSONUtils;
@@ -45,10 +47,11 @@ public class ReaderUpdateLogic {
 
     public enum UpdateTask {
         TAGS,
+        INTEREST_TAGS,
         FOLLOWED_BLOGS,
         RECOMMENDED_BLOGS
     }
-
+    private static final String INTERESTS = "interests";
     private EnumSet<UpdateTask> mCurrentTasks;
     private ServiceCompletionListener mCompletionListener;
     private Object mListenerCompanion;
@@ -73,6 +76,9 @@ public class ReaderUpdateLogic {
         // the Reader can't show anything
         if (tasks.contains(UpdateTask.TAGS)) {
             updateTags();
+        }
+        if (tasks.contains(UpdateTask.INTEREST_TAGS)) {
+            fetchInterestTags();
         }
         if (tasks.contains(UpdateTask.FOLLOWED_BLOGS)) {
             updateFollowedBlogs();
@@ -151,7 +157,7 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                if (!mAccountStore.hasAccessToken()) {
+                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
@@ -169,6 +175,9 @@ public class ReaderUpdateLogic {
                         )
                 );
 
+                // manually insert DISCOVER_POST_CARDS tag which is used to store posts for the discover tab
+                serverTopics.add(ReaderTag.createDiscoverPostCardsTag());
+
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
@@ -182,24 +191,25 @@ public class ReaderUpdateLogic {
                 ) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
-                    // if any local topics have been removed from the server, make sure to delete
-                    // them locally (including their posts)
-                    deleteTags(localTopics.getDeletions(serverTopics));
-                    // now replace local topics with the server topics
-                    ReaderTagTable.replaceTags(serverTopics);
-                    // broadcast the fact that there are changes
-                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged());
-                }
 
-                // save changes to recommended topics
-                if (mAccountStore.hasAccessToken()) {
-                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
-                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                        ReaderTagTable.setRecommendedTags(serverRecommended);
-                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
+                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Delete recommended tags which got saved as followed tags for logged out user
+                        // before we allowed following tags using interests picker
+                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
+                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+                        }
+                        // Do not delete locally saved tags for logged out user
+                        ReaderTagTable.addOrUpdateTags(serverTopics);
+                    } else {
+                        // if any local topics have been removed from the server, make sure to delete
+                        // them locally (including their posts)
+                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // now replace local topics with the server topics
+                        ReaderTagTable.replaceTags(serverTopics);
                     }
+                    // broadcast the fact that there are changes
+                    EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
@@ -246,16 +256,41 @@ public class ReaderUpdateLogic {
         return topics;
     }
 
-    private static void deleteTags(ReaderTagList tagList) {
+    private static ReaderTagList parseInterestTags(JSONObject jsonObject) {
+        ReaderTagList interestTags = new ReaderTagList();
+
+        if (jsonObject == null) {
+            return interestTags;
+        }
+
+        JSONArray jsonInterests = jsonObject.optJSONArray(INTERESTS);
+
+        if (jsonInterests == null) {
+            return interestTags;
+        }
+
+        for (int i = 0; i < jsonInterests.length(); i++) {
+            JSONObject jsonInterest = jsonInterests.optJSONObject(i);
+            if (jsonInterest != null) {
+                String tagTitle = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_TITLE);
+                String tagSlug = JSONUtils.getStringDecoded(jsonInterest, ReaderConstants.JSON_TAG_SLUG);
+                interestTags.add(new ReaderTag(tagSlug, tagTitle, tagTitle, "", ReaderTagType.INTERESTS));
+            }
+        }
+
+        return interestTags;
+    }
+
+    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }
+        ReaderTagTable.deleteTags(tagList);
 
         SQLiteDatabase db = ReaderDatabase.getWritableDb();
         db.beginTransaction();
         try {
             for (ReaderTag tag : tagList) {
-                ReaderTagTable.deleteTag(tag);
                 ReaderPostTable.deletePostsWithTag(tag);
             }
             db.setTransactionSuccessful();
@@ -264,6 +299,33 @@ public class ReaderUpdateLogic {
         }
     }
 
+    private void fetchInterestTags() {
+        RestRequest.Listener listener = this::handleInterestTagsResponse;
+        RestRequest.ErrorListener errorListener = volleyError -> {
+            AppLog.e(AppLog.T.READER, volleyError);
+            EventBus.getDefault().post(new InterestTagsFetchEnded(new ReaderTagList(), false));
+            taskCompleted(UpdateTask.INTEREST_TAGS);
+        };
+
+        AppLog.d(AppLog.T.READER, "reader service > fetching interest tags");
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("_locale", mLanguage);
+        mClientUtilsProvider.getRestClientForInterestTags()
+                            .get("read/interests", params, null, listener, errorListener);
+    }
+
+    private void handleInterestTagsResponse(final JSONObject jsonObject) {
+        new Thread() {
+            @Override
+            public void run() {
+                ReaderTagList interestTags = new ReaderTagList();
+                interestTags.addAll(parseInterestTags(jsonObject));
+                EventBus.getDefault().post(new InterestTagsFetchEnded(interestTags, true));
+                taskCompleted(UpdateTask.INTEREST_TAGS);
+            }
+        }.start();
+    }
 
     /***
      * request the list of blogs the current user is following
