@@ -216,12 +216,12 @@
         <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
 
-    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.PrimarySurface">
+    <style name="WordPress.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Surface">
         <item name="android:background">?attr/colorSurface</item>
         <item name="liftOnScroll">true</item>
     </style>
 
-    <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.Dark">
+    <style name="WordPress.ActionBar" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="android:textColorSecondary">?attr/colorOnSurface</item>
         <item name="iconTint">?attr/colorOnSurface</item>
         <item name="colorControlNormal">?attr/colorOnSurface</item>
