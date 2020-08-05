@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
-import org.wordpress.android.R.layout
+import org.wordpress.android.R
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 import org.wordpress.android.util.image.ImageManager
@@ -34,7 +34,7 @@ class PhotoPickerAdapter internal constructor(private val imageManager: ImageMan
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
         val view = LayoutInflater.from(parent.context)
-                .inflate(layout.photo_picker_thumbnail, parent, false)
+                .inflate(R.layout.photo_picker_thumbnail, parent, false)
         return ThumbnailViewHolder(view, imageManager)
     }
 
