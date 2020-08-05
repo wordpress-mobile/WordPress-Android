@@ -120,6 +120,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         _isModalLayoutPickerShowing.postValue(Event(false))
         _isHeaderVisible.postValue(Event(true))
         _selectedLayoutSlug.value = null
+        _selectedCategorySlug.value = null
     }
 
     /**
@@ -139,7 +140,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (category.slug == _selectedCategorySlug.value) { // deselect
             _selectedCategorySlug.value = null
         } else {
-            _selectedCategorySlug. value = category.slug
+            _selectedCategorySlug.value = category.slug
         }
         loadListItems()
     }
@@ -151,7 +152,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
         if (layout.slug == _selectedLayoutSlug.value) { // deselect
             _selectedLayoutSlug.value = null
         } else {
-            _selectedLayoutSlug. value = layout.slug
+            _selectedLayoutSlug.value = layout.slug
         }
     }
 

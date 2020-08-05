@@ -45,7 +45,7 @@ class ModalLayoutPickerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ModalLayoutPickerViewHolder = when (viewType) {
         ViewType.TITLE.id -> TitleItemViewHolder(parent)
         ViewType.SUBTITLE.id -> SubtitleItemViewHolder(parent)
-        ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent, layoutSelectionListener)
+        ViewType.CATEGORIES.id -> CategoriesItemViewHolder(parent, scrollStates, layoutSelectionListener)
         ViewType.LAYOUTS.id -> LayoutsItemViewHolder(parent, scrollStates, layoutSelectionListener)
         else -> throw IllegalArgumentException("Unexpected view type in ModalLayoutPickerAdapter")
     }

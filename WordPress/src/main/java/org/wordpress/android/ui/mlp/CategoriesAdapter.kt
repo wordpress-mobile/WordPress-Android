@@ -20,9 +20,15 @@ import org.wordpress.android.util.setVisible
  */
 class CategoriesAdapter(
     private val context: Context,
-    private val categories: List<CategoryListItem>,
     private val selectionListener: LayoutSelectionListener
 ) : RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
+    private val categories: ArrayList<CategoryListItem> = arrayListOf()
+
+    fun setData(data: List<CategoryListItem>) {
+        categories.clear()
+        categories.addAll(data)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
