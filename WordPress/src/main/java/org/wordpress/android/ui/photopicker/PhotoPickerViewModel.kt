@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.photopicker
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher

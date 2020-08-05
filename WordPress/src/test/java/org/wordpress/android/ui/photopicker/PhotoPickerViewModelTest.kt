@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.photopicker
 
-import android.net.Uri
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
