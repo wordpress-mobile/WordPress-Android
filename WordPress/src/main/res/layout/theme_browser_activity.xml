@@ -10,7 +10,6 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         app:liftOnScrollTargetViewId="@+id/theme_listview">
 
         <com.google.android.material.appbar.MaterialToolbar
