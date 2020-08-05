@@ -152,6 +152,7 @@ import org.wordpress.android.ui.posts.reactnative.ReactNativeRequestHandler;
 import org.wordpress.android.ui.posts.services.AztecImageLoader;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AppPrefs;
+import org.wordpress.android.ui.prefs.SiteSettingsInterface;
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.uploads.PostEvents;
@@ -238,7 +239,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
         EditPostSettingsCallback,
         PrepublishingBottomSheetListener,
         PrivateAtCookieProgressDialogOnDismissListener,
-        ExceptionLogger {
+        ExceptionLogger,
+        SiteSettingsInterface.SiteSettingsListener {
     public static final String ACTION_REBLOG = "reblogAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
@@ -371,6 +373,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private StorePostViewModel mViewModel;
 
     private SiteModel mSite;
+    private SiteSettingsInterface mSiteSettings;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -433,6 +436,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (refreshedSite != null) {
                 mSite.setMobileEditor(refreshedSite.getMobileEditor());
             }
+
+            mSiteSettings = SiteSettingsInterface.getInterface(this, mSite, this);
         }
 
         // Check whether to show the visual editor
@@ -631,6 +636,33 @@ public class EditPostActivity extends LocaleAwareActivity implements
         WPSnackbar.make(findViewById(R.id.editor_activity), R.string.media_accessing_failed, Snackbar.LENGTH_LONG)
                   .show();
         setupViewPager();
+    }
+
+    // SiteSettingsListener
+
+    @Override
+    public void onSaveError(Exception error) {
+
+    }
+
+    @Override
+    public void onFetchError(Exception error) {
+
+    }
+
+    @Override
+    public void onSettingsUpdated() {
+
+    }
+
+    @Override
+    public void onSettingsSaved() {
+
+    }
+
+    @Override
+    public void onCredentialsValidated(Exception error) {
+
     }
 
     private void setupViewPager() {
@@ -1976,13 +2008,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
                         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
 
-                        // The Unsupported Block Editor is disabled for all self-hosted sites
-                        // even the one that are connected via Jetpack to a WP.com account.
+                        // The Unsupported Block Editor is disabled for all self-hosted non-jetpack sites
                         // The option is disabled on Self-hosted sites because they can have their web editor
                         // to be set to classic and then the fallback will not work.
                         // We disable in Jetpack site because we don't have the self-hosted site's credentials
                         // which are required for us to be able to fetch the site's authentication cookie.
-                        boolean isUnsupportedBlockEditorEnabled = isWpCom && "gutenberg".equals(mSite.getWebEditor());
+                        boolean isJetpackSSOEnabled = mSite.isJetpackConnected() && mSiteSettings.isJetpackSsoEnabled();
+                        boolean isUnsupportedBlockEditorEnabled = (isWpCom || isJetpackSSOEnabled) && "gutenberg".equals(mSite.getWebEditor());
 
                         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
                         boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
