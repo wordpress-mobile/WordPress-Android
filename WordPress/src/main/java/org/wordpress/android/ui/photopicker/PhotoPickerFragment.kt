@@ -133,13 +133,6 @@ class PhotoPickerFragment : Fragment() {
                 selectedIds = savedInstanceState.getLongArray(KEY_SELECTED_POSITIONS)?.toList()
             }
         }
-
-        if (browserType.isWPStoriesPicker) {
-            wp_stories_take_picture.visibility = View.VISIBLE
-            wp_stories_take_picture.setOnClickListener { doIconClicked(WP_STORIES_CAPTURE) }
-        } else {
-            wp_stories_take_picture.visibility = View.GONE
-        }
         recycler.setEmptyView(actionable_empty_view)
         recycler.setHasFixedSize(true)
 
@@ -154,8 +147,8 @@ class PhotoPickerFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
-        viewModel.data.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
+        viewModel.data.observe(viewLifecycleOwner, Observer { uiModel ->
+            if (uiModel != null) {
                 if (recycler.adapter == null) {
                     recycler.adapter = PhotoPickerAdapter(
                             imageManager
@@ -163,9 +156,16 @@ class PhotoPickerFragment : Fragment() {
                 }
                 val adapter = recycler.adapter as PhotoPickerAdapter
                 val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-                adapter.loadData(it.items)
+                adapter.loadData(uiModel.items)
                 recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                setupBottomBar(it.bottomBarUiModel)
+                setupBottomBar(uiModel.bottomBarUiModel)
+
+                if (uiModel.showStoriesTakePicture) {
+                    wp_stories_take_picture.visibility = View.VISIBLE
+                    wp_stories_take_picture.setOnClickListener { doIconClicked(WP_STORIES_CAPTURE) }
+                } else {
+                    wp_stories_take_picture.visibility = View.GONE
+                }
             }
         })
 

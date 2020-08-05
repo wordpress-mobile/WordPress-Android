@@ -146,7 +146,8 @@ class PhotoPickerViewModel @Inject constructor(
                     count,
                     isVideoSelected,
                     browserType,
-                    buildBottomBar(bottomBar, browserType, count, isVideoSelected)
+                    buildBottomBar(bottomBar, browserType, count, isVideoSelected),
+                    browserType.isWPStoriesPicker
             )
         } else {
             null
@@ -303,7 +304,8 @@ class PhotoPickerViewModel @Inject constructor(
         val count: Int = 0,
         val isVideoSelected: Boolean = false,
         val browserType: MediaBrowserType,
-        val bottomBarUiModel: BottomBarUiModel
+        val bottomBarUiModel: BottomBarUiModel,
+        val showStoriesTakePicture: Boolean
     ) {
         data class BottomBarUiModel(
             val type: BottomBar,
