@@ -87,7 +87,8 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
         )
         val suggestionAdapter = SuggestionUtils.setupSuggestions(
                 site, activity,
-                suggestionServiceConnectionManager
+                suggestionServiceConnectionManager,
+                false
         )
         if (suggestionAdapter != null) {
             this.reply.setAdapter(suggestionAdapter)

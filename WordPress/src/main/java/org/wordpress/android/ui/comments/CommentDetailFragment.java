@@ -434,7 +434,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
         }
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), mSite.getSiteId());
         mSuggestionAdapter = SuggestionUtils.setupSuggestions(mSite, getActivity(),
-                mSuggestionServiceConnectionManager);
+                mSuggestionServiceConnectionManager, false);
         if (mSuggestionAdapter != null) {
             mEditReply.setAdapter(mSuggestionAdapter);
         }

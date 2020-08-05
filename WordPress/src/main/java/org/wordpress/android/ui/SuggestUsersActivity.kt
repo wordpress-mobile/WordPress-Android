@@ -164,7 +164,7 @@ class SuggestUsersActivity : LocaleAwareActivity() {
     private fun initializeSuggestionAdapter(site: SiteModel) {
         if (SiteUtils.isAccessedViaWPComRest(site)) {
             val connectionManager = SuggestionServiceConnectionManager(this, site.siteId)
-            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager)?.apply {
+            val adapter = SuggestionUtils.setupSuggestions(site, this, connectionManager, true)?.apply {
                 setBackgroundColorAttr(R.attr.colorGutenbergBackground)
 
                 registerDataSetObserver(object : DataSetObserver() {
