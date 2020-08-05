@@ -88,13 +88,6 @@ class ModalLayoutPickerViewModelTest {
     }
 
     @Test
-    fun `when the create page is triggered the modal layout picker is dismissed`() {
-        viewModel.init(false)
-        viewModel.createPage()
-        assertThat(viewModel.isModalLayoutPickerShowing.value!!.peekContent()).isEqualTo(false)
-    }
-
-    @Test
     fun `when the create page is triggered the page creation flow starts`() {
         viewModel.init(false)
         viewModel.createPage()
