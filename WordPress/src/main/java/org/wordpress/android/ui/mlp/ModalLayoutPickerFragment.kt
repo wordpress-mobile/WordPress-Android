@@ -36,7 +36,6 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
-        private const val HEADER_VISIBILITY_SCROLL_THRESHOLD = 20
     }
 
     override fun onCreateView(
@@ -54,6 +53,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = ModalLayoutPickerAdapter(requireActivity())
 
+        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
              * We track the vertical scroll to show/hide the header title accordingly
@@ -62,18 +63,20 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
                 val offset = recyclerView.computeVerticalScrollOffset()
-                viewModel.setHeaderTitleVisibility(offset > HEADER_VISIBILITY_SCROLL_THRESHOLD)
+                viewModel.setHeaderTitleVisibility(offset > scrollThreshold)
             }
         })
 
         backButton.setOnClickListener {
-            WPActivityUtils.setLightStatusBar(activity?.window, false)
-            viewModel.dismiss()
+            closeModal()
         }
 
         title.setVisible(DisplayUtils.isLandscape(context))
 
-        createBlankPageButton.setOnClickListener { viewModel.createPage() }
+        createBlankPageButton.setOnClickListener {
+            closeModal()
+            viewModel.createPage()
+        }
 
         setupViewModel()
     }
@@ -90,6 +93,10 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+        closeModal()
+    }
+
+    private fun closeModal() {
         WPActivityUtils.setLightStatusBar(activity?.window, false)
         viewModel.dismiss()
     }

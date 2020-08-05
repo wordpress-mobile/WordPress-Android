@@ -61,7 +61,7 @@ class ModalLayoutPickerAdapter(context: Context) : Adapter<ModalLayoutPickerView
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position < 0) return ViewType.CATEGORIES.id
+        if (position < 0 || position >= items.size) return ViewType.TITLE.id
         return items[position].type.id
     }
 }
