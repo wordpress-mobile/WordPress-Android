@@ -129,7 +129,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
      * Triggers the creation of a new blank page
      */
     fun createPage() {
-        _isModalLayoutPickerShowing.postValue(Event(false))
         _onCreateNewPageRequested.call()
     }
 }

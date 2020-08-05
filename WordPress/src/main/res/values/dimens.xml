@@ -537,6 +537,7 @@
     <dimen name="thumbnail_background_margin">10dp</dimen>
 
     <!-- Modal Layout Picker Styles -->
+    <dimen name="mlp_header_scroll_snap_threshold">24dp</dimen>
     <dimen name="mlp_layouts_handle_margin_bottom">8dp</dimen>
     <dimen name="mlp_layouts_row_height">281dp</dimen>
     <dimen name="mlp_bottom_shadow_height">5dp</dimen>
