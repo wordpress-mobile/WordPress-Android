@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.store
 
-import com.goterl.lazycode.lazysodium.utils.Key
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -43,14 +42,12 @@ import javax.inject.Singleton
 private const val UPLOAD_DELAY = 30000L
 private const val MAX_RETRY_COUNT = 3
 
-data class EncryptedLoggingKey(val publicKey: Key)
-
 @Singleton
 class EncryptedLogStore @Inject constructor(
     private val encryptedLogRestClient: EncryptedLogRestClient,
     private val encryptedLogSqlUtils: EncryptedLogSqlUtils,
     private val coroutineEngine: CoroutineEngine,
-    private val encryptedLoggingKey: EncryptedLoggingKey,
+    private val logEncrypter: LogEncrypter,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     override fun onRegister() {
@@ -134,10 +131,7 @@ class EncryptedLogStore @Inject constructor(
         encryptedLog.copy(uploadState = UPLOADING).let {
             encryptedLogSqlUtils.insertOrUpdateEncryptedLog(it)
         }
-        val encryptedText = LogEncrypter(
-                uuid = encryptedLog.uuid,
-                publicKey = encryptedLoggingKey.publicKey
-        ).encrypt(encryptedLog.file.readText())
+        val encryptedText = logEncrypter.encrypt(text = encryptedLog.file.readText(), uuid = encryptedLog.uuid)
         when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, encryptedText)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
             is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
