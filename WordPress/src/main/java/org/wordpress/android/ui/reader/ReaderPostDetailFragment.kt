@@ -1510,7 +1510,7 @@ class ReaderPostDetailFragment : Fragment(),
 
         readerWebView.settings.javaScriptEnabled = true
 
-        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") {result ->
+        readerWebView.evaluateJavascript("document.getElementById('$pageJump').offsetTop") { result ->
             // Note that 'result' can be the string 'null' in case the page jump identifier is not found on page
             val offsetTop = StringUtils.stringToInt(result, -1)
             if (offsetTop >= 0) {
