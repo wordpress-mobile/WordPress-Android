@@ -16,6 +16,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType.MAIN_READER
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
@@ -39,7 +40,8 @@ class ReaderViewModel @Inject constructor(
     private val dateProvider: DateProvider,
     private val loadReaderTabsUseCase: LoadReaderTabsUseCase,
     private val readerTracker: ReaderTracker,
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val getFollowedTagsUseCase: GetFollowedTagsUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private var initialized: Boolean = false
     private var isReaderInterestsShown: Boolean = false
@@ -116,9 +118,24 @@ class ReaderViewModel @Inject constructor(
     fun onTagChanged(selectedTag: ReaderTag?) {
         // Store most recently selected tab so we can restore the selection after restart
         appPrefsWrapper.setReaderTag(selectedTag)
+
+        // Show interests picker if tag changed to discover and no followed tags found for user
+        if (selectedTag?.isDiscover == true &&
+                appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
+            launch {
+                val userTags = getFollowedTagsUseCase.get()
+                if (userTags.isEmpty()) {
+                    isReaderInterestsShown = true
+                    initialized = false
+                    _uiState.value = InitialUiState
+                    _showReaderInterests.value = Event(Unit)
+                }
+            }
+        }
     }
 
     fun onCloseReaderInterests() {
+        isReaderInterestsShown = false
         _closeReaderInterests.value = Event(Unit)
         if (tagsRequireUpdate()) _updateTags.value = Event(Unit)
         loadTabs()

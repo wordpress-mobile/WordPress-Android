@@ -9,22 +9,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.BACKGROUND
-import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Failure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeFailure
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeSuccess
-import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.PostLikeEnded.PostLikeUnChanged
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
-import org.wordpress.android.ui.reader.repository.usecases.PostLikeActionUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -33,20 +32,18 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
-class ReaderPostRepository(
-    private val bgDispatcher: CoroutineDispatcher,
+class ReaderPostDataProvider(
+    private val ioDispatcher: CoroutineDispatcher,
     private val eventBusWrapper: EventBusWrapper,
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-    private val postLikeActionUseCase: PostLikeActionUseCase
+    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
 ) : CoroutineScope {
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
-        get() = bgDispatcher + job
+        get() = ioDispatcher + job
 
     private var isStarted = false
     private val isDirty = AtomicBoolean()
@@ -58,18 +55,14 @@ class ReaderPostRepository(
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
 
+    // TODO malinjir/annmarie The UI might need to know if a request is in progress, wdyt?
+    // TODO malinjir/annmarie The UI might need to know if there are more data (next page) available
+
     fun start() {
         if (isStarted) return
 
         isStarted = true
         eventBusWrapper.register(this)
-        readerUpdatePostsEndedHandler.start(
-                readerTag,
-                ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
-                        this::onNewPosts,
-                        this::onChangedPosts, this::onUnchanged, this::onFailed
-                )
-        )
     }
 
     fun stop() {
@@ -80,53 +73,43 @@ class ReaderPostRepository(
     fun getTag(): ReaderTag = readerTag
 
     suspend fun refreshPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val response =
                     fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
-            if (response != Success) _communicationChannel.postValue(Event(response))
+            //  todo annmarie do we want to post all responses on the communicationChannel?
+            if (response != Started) _communicationChannel.postValue(Event(response))
         }
     }
 
-    suspend fun performLikeAction(post: ReaderPost, isAskingToLike: Boolean, wpComUserId: Long) {
-        withContext(bgDispatcher) {
-            when (val event = postLikeActionUseCase.perform(post, isAskingToLike, wpComUserId)) {
-                is PostLikeSuccess -> {
-                    reloadPosts()
-                }
-                is PostLikeFailure -> {
-                    _communicationChannel.postValue(Event(Failure(event)))
-                    reloadPosts()
-                }
-                is PostLikeUnChanged -> {
-                    // Unused
-                }
-            }
+    suspend fun loadMorePosts() {
+        withContext(ioDispatcher) {
+            val response = fetchPostsForTagUseCase.fetch(readerTag, REQUEST_OLDER)
+            // todo annmarie do we want to post all responses on the communication channel
+            if (response != Started) _communicationChannel.postValue(Event(response))
         }
     }
 
     // Internal functionality
     private suspend fun loadPosts() {
-        withContext(bgDispatcher) {
-            val existsInMemory = posts.value?.let {
-                !it.isEmpty()
-            } ?: false
-            val refresh =
-                    shouldAutoUpdateTagUseCase.get(readerTag) || isDirty.getAndSet(false)
-
-            if (!existsInMemory) {
-                reloadPosts()
+        withContext(ioDispatcher) {
+            val forceReload = isDirty.getAndSet(false)
+            val existsInMemory = posts.value?.isNotEmpty() ?: false
+            val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
+            if (forceReload || !existsInMemory) {
+                val result = getPostsForTagUseCase.get(readerTag)
+                _posts.postValue(result)
             }
 
             if (refresh) {
                 val response = fetchPostsForTagUseCase.fetch(readerTag)
-                if (response != Success) _communicationChannel.postValue(Event(response))
-                reloadPosts()
+                //  todo annmarie do we want to post all responses on the communicationChannel?
+                if (response != Started) _communicationChannel.postValue(Event(response))
             }
         }
     }
 
     private suspend fun reloadPosts() {
-        withContext(bgDispatcher) {
+        withContext(ioDispatcher) {
             val result = getPostsForTagUseCase.get(readerTag)
             _posts.postValue(result)
         }
@@ -137,31 +120,39 @@ class ReaderPostRepository(
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_posts.hasObservers()) {
             isDirty.compareAndSet(true, false)
-            launch {
-                reloadPosts()
-            }
+            onUpdated()
         } else {
             isDirty.compareAndSet(false, true)
         }
     }
 
+    @Subscribe(threadMode = BACKGROUND)
+    fun onEventMainThread(event: UpdatePostsEnded) {
+        if (event.readerTag != null && !ReaderTag.isSameTag(event.readerTag, readerTag)) {
+            // ignore events not related to this instance of Repository
+            return
+        }
+        // TODO malinjir do we need to pass the state to the vm so it can for example change inProgress state?
+        event.result?.let {
+            when (it) {
+                HAS_NEW, CHANGED -> onUpdated()
+                UNCHANGED -> onUnchanged()
+                FAILED -> onFailed()
+            }
+        }
+    }
+
     // Handlers for ReaderPostServices
-    private fun onNewPosts(event: UpdatePostsEnded) {
+    private fun onUpdated() {
         launch {
             reloadPosts()
         }
     }
 
-    private fun onChangedPosts(event: UpdatePostsEnded) {
-        launch {
-            reloadPosts()
-        }
+    private fun onUnchanged() {
     }
 
-    private fun onUnchanged(event: UpdatePostsEnded) {
-    }
-
-    private fun onFailed(event: UpdatePostsEnded) {
+    private fun onFailed() {
         _communicationChannel.postValue(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure)
         )
@@ -179,25 +170,20 @@ class ReaderPostRepository(
 
     class Factory
     @Inject constructor(
-        @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+        @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
         private val eventBusWrapper: EventBusWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler,
-        private val postLikeActionUseCase: PostLikeActionUseCase
+        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
     ) {
-        fun create(readerTag: ReaderTag): ReaderPostRepository {
-            return ReaderPostRepository(
-                    bgDispatcher,
+        fun create(readerTag: ReaderTag): ReaderPostDataProvider {
+            return ReaderPostDataProvider(
+                    ioDispatcher,
                     eventBusWrapper,
                     readerTag,
                     getPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    fetchPostsForTagUseCase,
-                    readerUpdatePostsEndedHandler,
-                    postLikeActionUseCase
-
+                    fetchPostsForTagUseCase
             )
         }
     }

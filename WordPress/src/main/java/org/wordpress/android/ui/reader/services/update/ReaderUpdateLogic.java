@@ -157,7 +157,7 @@ public class ReaderUpdateLogic {
 
                 boolean displayNameUpdateWasNeeded = displayNameUpdateWasNeeded(serverTopics);
 
-                if (!mAccountStore.hasAccessToken()) {
+                if (!mAccountStore.hasAccessToken() && !AppPrefs.isReaderImprovementsPhase2Enabled()) {
                     serverTopics.addAll(parseTags(jsonObject, "recommended", ReaderTagType.FOLLOWED));
                 } else {
                     serverTopics.addAll(parseTags(jsonObject, "subscribed", ReaderTagType.FOLLOWED));
@@ -175,6 +175,9 @@ public class ReaderUpdateLogic {
                         )
                 );
 
+                // manually insert DISCOVER_POST_CARDS tag which is used to store posts for the discover tab
+                serverTopics.add(ReaderTag.createDiscoverPostCardsTag());
+
                 // parse topics from the response, detect whether they're different from local
                 ReaderTagList localTopics = new ReaderTagList();
                 localTopics.addAll(ReaderTagTable.getDefaultTags());
@@ -188,24 +191,25 @@ public class ReaderUpdateLogic {
                 ) {
                     AppLog.d(AppLog.T.READER, "reader service > followed topics changed "
                                               + "updatedDisplayNames [" + displayNameUpdateWasNeeded + "]");
-                    // if any local topics have been removed from the server, make sure to delete
-                    // them locally (including their posts)
-                    deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
-                    // now replace local topics with the server topics
-                    ReaderTagTable.replaceTags(serverTopics);
+
+                    if (!mAccountStore.hasAccessToken() && AppPrefs.isReaderImprovementsPhase2Enabled()) {
+                        // Delete recommended tags which got saved as followed tags for logged out user
+                        // before we allowed following tags using interests picker
+                        if (!AppPrefs.getReaderRecommendedTagsDeletedForLoggedOutUser()) {
+                            deleteTagsAndPostsWithTags(ReaderTagTable.getFollowedTags());
+                            AppPrefs.setReaderRecommendedTagsDeletedForLoggedOutUser(true);
+                        }
+                        // Do not delete locally saved tags for logged out user
+                        ReaderTagTable.addOrUpdateTags(serverTopics);
+                    } else {
+                        // if any local topics have been removed from the server, make sure to delete
+                        // them locally (including their posts)
+                        deleteTagsAndPostsWithTags(localTopics.getDeletions(serverTopics));
+                        // now replace local topics with the server topics
+                        ReaderTagTable.replaceTags(serverTopics);
+                    }
                     // broadcast the fact that there are changes
                     EventBus.getDefault().post(new ReaderEvents.FollowedTagsChanged(true));
-                }
-
-                // save changes to recommended topics
-                if (mAccountStore.hasAccessToken()) {
-                    ReaderTagList serverRecommended = parseTags(jsonObject, "recommended", ReaderTagType.RECOMMENDED);
-                    ReaderTagList localRecommended = ReaderTagTable.getRecommendedTags(false);
-                    if (!serverRecommended.isSameList(localRecommended)) {
-                        AppLog.d(AppLog.T.READER, "reader service > recommended topics changed");
-                        ReaderTagTable.setRecommendedTags(serverRecommended);
-                        EventBus.getDefault().post(new ReaderEvents.RecommendedTagsChanged());
-                    }
                 }
                 AppPrefs.setReaderTagsUpdatedTimestamp(new Date().getTime());
 
@@ -277,7 +281,7 @@ public class ReaderUpdateLogic {
         return interestTags;
     }
 
-    public static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
+    private static void deleteTagsAndPostsWithTags(ReaderTagList tagList) {
         if (tagList == null || tagList.size() == 0) {
             return;
         }

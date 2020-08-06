@@ -25,6 +25,10 @@ import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.provider.FontRequest;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.EmojiCompat.InitCallback;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -38,11 +42,14 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.wordpress.rest.RestClient;
+import com.wordpress.stories.compose.NotificationTrackerProvider;
+import com.wordpress.stories.compose.frame.StoryNotificationType;
 import com.yarolegovich.wellsql.WellSql;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.Tracker;
@@ -73,6 +80,7 @@ import org.wordpress.android.networking.ConnectionChangeReceiver;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.push.GCMRegistrationIntentService;
+import org.wordpress.android.push.NotificationType;
 import org.wordpress.android.support.ZendeskHelper;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.notifications.SystemNotificationsTracker;
@@ -83,6 +91,7 @@ import org.wordpress.android.ui.posts.editor.ImageEditorTracker;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.tracker.ReaderTracker;
 import org.wordpress.android.ui.stats.refresh.lists.widget.WidgetUpdater.StatsWidgetUpdaters;
+import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadStarter;
 import org.wordpress.android.util.AppLog;
@@ -146,6 +155,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @SuppressLint("StaticFieldLeak") private static Context mContext;
     private static BitmapLruCache mBitmapCache;
     private static ApplicationLifecycleMonitor mApplicationLifecycleMonitor;
+    private static StoryNotificationTrackerProvider mStoryNotificationTrackerProvider;
 
     private static GoogleApiClient mCredentialsClient;
 
@@ -165,6 +175,7 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
     @Inject ImageManager mImageManager;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject ImageEditorTracker mImageEditorTracker;
+    @Inject StoryMediaSaveUploadBridge mStoryMediaSaveUploadBridge;
     @Inject CrashLogging mCrashLogging;
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
@@ -338,6 +349,11 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
 
         mSystemNotificationsTracker.checkSystemNotificationsState();
         ImageEditorInitializer.Companion.init(mImageManager, mImageEditorTracker);
+
+        initEmojiCompat();
+        mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
+        mStoryMediaSaveUploadBridge.init(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
     protected void initWorkManager() {
@@ -794,6 +810,39 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
         return "";
     }
 
+    private void initEmojiCompat() {
+        EmojiCompat.Config config;
+
+        // Use a downloadable font for EmojiCompat
+        FontRequest fontRequest = new FontRequest(
+                "com.google.android.gms.fonts",
+                "com.google.android.gms",
+                "Noto Color Emoji Compat",
+                R.array.com_google_android_gms_fonts_certs
+        );
+        config = new FontRequestEmojiCompatConfig(getApplicationContext(), fontRequest);
+        config.setReplaceAll(true);
+        config.setUseEmojiAsDefaultStyle(true);
+
+        config.registerInitCallback(new InitCallback() {
+            @Override public void onInitialized() {
+                super.onInitialized();
+                AppLog.d(T.MAIN, "EmojiCompat initialized");
+            }
+
+            @Override public void onFailed(@Nullable Throwable throwable) {
+                super.onFailed(throwable);
+                AppLog.d(T.MAIN, "EmojiCompat initialization failed: " + throwable.getMessage());
+            }
+        });
+
+        EmojiCompat.init(config);
+    }
+
+    public StoryNotificationTrackerProvider getStoryNotificationTrackerProvider() {
+        return mStoryNotificationTrackerProvider;
+    }
+
     @Override
     public AndroidInjector<Service> serviceInjector() {
         return mServiceDispatchingAndroidInjector;
@@ -972,6 +1021,34 @@ public class WordPress extends MultiDexApplication implements HasServiceInjector
             if (evictBitmaps && mBitmapCache != null) {
                 mBitmapCache.evictAll();
             }
+        }
+    }
+
+    private class StoryNotificationTrackerProvider implements NotificationTrackerProvider {
+        private NotificationType translateNotificationTypes(StoryNotificationType storyNotificationType) {
+            switch (storyNotificationType) {
+                case STORY_SAVE_SUCCESS:
+                    return NotificationType.STORY_SAVE_SUCCESS;
+                case STORY_SAVE_ERROR:
+                    return NotificationType.STORY_SAVE_ERROR;
+                case STORY_FRAME_SAVE_SUCCESS:
+                    return NotificationType.STORY_FRAME_SAVE_SUCCESS;
+                case STORY_FRAME_SAVE_ERROR:
+                    return NotificationType.STORY_FRAME_SAVE_ERROR;
+            }
+            return NotificationType.STORY_FRAME_SAVE_ERROR; // shouldn't reach this
+        }
+
+        @Override public void trackShownNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackShownNotification(translateNotificationTypes(storyNotificationType));
+        }
+
+        @Override public void trackTappedNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackTappedNotification(translateNotificationTypes(storyNotificationType));
+        }
+
+        @Override public void trackDismissedNotification(@NotNull StoryNotificationType storyNotificationType) {
+            mSystemNotificationsTracker.trackDismissedNotification(translateNotificationTypes(storyNotificationType));
         }
     }
 }

@@ -744,17 +744,28 @@ public class EditPostSettingsFragment extends Fragment {
 
     private void updatePassword(String password) {
         EditPostRepository editPostRepository = getEditPostRepository();
-        if (editPostRepository != null) {
-            editPostRepository.updateAsync(postModel -> {
-                postModel.setPassword(password);
-                return true;
-            }, (postModel, result) -> {
-                if (result == UpdatePostResult.Updated.INSTANCE) {
-                    mPasswordTextView.setText(password);
-                }
-                return null;
-            });
-        }
+        if (editPostRepository == null) return;
+
+        String trimmedPassword = password.trim();
+        Boolean isNewPasswordBlank = trimmedPassword.isEmpty();
+        String previousPassword = editPostRepository.getPassword();
+        Boolean isPreviousPasswordBlank = previousPassword.trim().isEmpty();
+
+        // Nothing to save
+        if (isNewPasswordBlank && isPreviousPasswordBlank) return;
+
+        // Save untrimmed password if not blank, else save empty string
+        String newPassword = isNewPasswordBlank ? trimmedPassword : password;
+
+        editPostRepository.updateAsync(postModel -> {
+            postModel.setPassword(newPassword);
+            return true;
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                mPasswordTextView.setText(newPassword);
+            }
+            return null;
+        });
     }
 
     private void updateCategories(List<Long> categoryList) {
