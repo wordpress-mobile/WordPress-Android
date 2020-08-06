@@ -43,6 +43,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.actions.ReaderTagActions;
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState;
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder;
@@ -73,6 +74,7 @@ import javax.inject.Inject;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.functions.Function3;
 
@@ -420,7 +422,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
             return Unit.INSTANCE;
         };
-        Function2<Long, Long, Unit> onItemRendered = (postId, blogId) -> {
+        Function1<ReaderCardUiState, Unit> onItemRendered = (item) -> {
             checkLoadMore(position);
 
             // if we haven't already rendered this post and it has a "railcar" attached to it, add it
