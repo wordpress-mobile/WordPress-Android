@@ -82,8 +82,16 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private suspend fun queueLogForUpload(payload: UploadEncryptedLogPayload) {
-        // If the log file doesn't exist, there is nothing we can do
-        if (!payload.file.exists()) {
+        // If the log file is not valid, there is nothing we can do
+        if (!isValidFile(payload.file)) {
+            emitChange(
+                    EncryptedLogFailedToUpload(
+                            uuid = payload.uuid,
+                            file = payload.file,
+                            error = MissingFile,
+                            willRetry = false
+                    )
+            )
             return
         }
         val encryptedLog = EncryptedLog(
@@ -121,17 +129,18 @@ class EncryptedLogStore @Inject constructor(
 
     private suspend fun uploadEncryptedLog(encryptedLog: EncryptedLog) {
         // If the log file doesn't exist, fail immediately and try the next log file
-        if (!encryptedLog.file.exists()) {
+        if (!isValidFile(encryptedLog.file)) {
             handleFailedUpload(encryptedLog, MissingFile)
             uploadNext()
             return
         }
+        val encryptedText = logEncrypter.encrypt(text = encryptedLog.file.readText(), uuid = encryptedLog.uuid)
 
         // Update the upload state of the log
         encryptedLog.copy(uploadState = UPLOADING).let {
             encryptedLogSqlUtils.insertOrUpdateEncryptedLog(it)
         }
-        val encryptedText = logEncrypter.encrypt(text = encryptedLog.file.readText(), uuid = encryptedLog.uuid)
+
         when (val result = encryptedLogRestClient.uploadLog(encryptedLog.uuid, encryptedText)) {
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
             is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
@@ -211,6 +220,8 @@ class EncryptedLogStore @Inject constructor(
     private fun deleteEncryptedLog(encryptedLog: EncryptedLog) {
         encryptedLogSqlUtils.deleteEncryptedLogs(listOf(encryptedLog))
     }
+
+    private fun isValidFile(file: File): Boolean = file.exists() && file.canRead()
 
     /**
      * Payload to be used to queue a file to be encrypted and uploaded.
