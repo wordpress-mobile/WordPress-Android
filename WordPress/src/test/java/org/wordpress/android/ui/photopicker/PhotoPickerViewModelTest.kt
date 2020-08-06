@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.photopicker
 
+import android.content.Context
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.isNull
@@ -13,13 +14,16 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
+import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
 
 class PhotoPickerViewModelTest : BaseUnitTest() {
@@ -27,11 +31,15 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var uriWrapper: UriWrapper
+    @Mock lateinit var permissionsHandler: PermissionsHandler
+    @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
+    @Mock lateinit var context: Context
     private lateinit var viewModel: PhotoPickerViewModel
-    private var uiModels = mutableListOf<PhotoPickerUiModel>()
+    private var uiStates = mutableListOf<PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
     private val singleSelectBrowserType = GUTENBERG_SINGLE_IMAGE_PICKER
     private val multiSelectBrowserType = MediaBrowserType.GUTENBERG_IMAGE_PICKER
+    private val site = SiteModel()
     private lateinit var firstItem: PhotoPickerItem
     private lateinit var secondItem: PhotoPickerItem
 
@@ -43,9 +51,12 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 deviceMediaListBuilder,
                 analyticsUtilsWrapper,
-                analyticsTrackerWrapper
+                analyticsTrackerWrapper,
+                permissionsHandler,
+                tenorFeatureConfig,
+                context
         )
-        uiModels.clear()
+        uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper, false)
         secondItem = PhotoPickerItem(2, uriWrapper, false)
     }
@@ -56,7 +67,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
         viewModel.refreshData(false)
 
-        assertThat(uiModels).hasSize(1)
+        assertThat(uiStates).hasSize(2)
         assertUiModel(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
     }
 
@@ -66,7 +77,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
         viewModel.refreshData(false)
 
-        assertThat(uiModels).hasSize(1)
+        assertThat(uiStates).hasSize(2)
         assertUiModel(
                 singleSelectBrowserType,
                 selectedItems = listOf(),
@@ -74,7 +85,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         )
         selectItem(0)
 
-        assertThat(uiModels).hasSize(2)
+        assertThat(uiStates).hasSize(3)
         assertUiModel(
                 singleSelectBrowserType,
                 selectedItems = listOf(firstItem),
@@ -91,7 +102,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         selectItem(0)
         viewModel.clearSelection()
 
-        assertThat(uiModels).hasSize(3)
+        assertThat(uiStates).hasSize(4)
 
         assertUiModel(
                 singleSelectBrowserType,
@@ -184,11 +195,11 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     }
 
     private fun selectItem(position: Int) {
-        uiModels.last().items[position].toggleAction.toggle()
+        uiStates.last().photoListUiModel!!.items[position].toggleAction.toggle()
     }
 
     private fun clickItem(position: Int) {
-        uiModels.last().items[position].clickAction.click()
+        uiStates.last().photoListUiModel!!.items[position].clickAction.click()
     }
 
     private fun assertUiModel(
@@ -196,20 +207,22 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         selectedItems: List<PhotoPickerItem>,
         domainItems: List<PhotoPickerItem>
     ) {
-        uiModels.last().apply {
-            assertThat(this.browserType).isEqualTo(browserType)
-            assertThat(this.count).isEqualTo(selectedItems.size)
-            assertThat(this.isVideoSelected).isFalse()
-            assertThat(this.items).hasSize(domainItems.size)
-            domainItems.forEachIndexed { index, photoPickerItem ->
-                val isSelected = selectedItems.any { it.id == photoPickerItem.id }
-                assertSelection(
-                        position = index,
-                        isSelected = isSelected,
-                        domainItem = photoPickerItem,
-                        selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
-                        isMultiSelection = browserType.canMultiselect()
-                )
+        uiStates.last().apply {
+            assertThat(this.photoListUiModel).isNotNull()
+            this.photoListUiModel!!.apply {
+                assertThat(this.count).isEqualTo(selectedItems.size)
+                assertThat(this.isVideoSelected).isFalse()
+                assertThat(this.items).hasSize(domainItems.size)
+                domainItems.forEachIndexed { index, photoPickerItem ->
+                    val isSelected = selectedItems.any { it.id == photoPickerItem.id }
+                    assertSelection(
+                            position = index,
+                            isSelected = isSelected,
+                            domainItem = photoPickerItem,
+                            selectedOrder = selectedItems.indexOfFirst { it.id == photoPickerItem.id },
+                            isMultiSelection = browserType.canMultiselect()
+                    )
+                }
             }
         }
         assertThat(viewModel.numSelected()).isEqualTo(selectedItems.size)
@@ -220,22 +233,23 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         domainModel: List<PhotoPickerItem>,
         browserType: MediaBrowserType
     ) {
+        whenever(permissionsHandler.hasStoragePermission()).thenReturn(true)
+        viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
-        viewModel.data.observeForever {
+        viewModel.uiState.observeForever {
             if (it != null) {
-                uiModels.add(it)
+                uiStates.add(it)
             }
         }
-        viewModel.navigateToPreview.observeForever {
+        viewModel.onNavigateToPreview.observeForever {
             if (it != null) {
                 navigateEvents.add(it)
             }
         }
-        viewModel.start(listOf(), browserType, lastTappedIcon, site)
-        assertThat(uiModels).isEmpty()
+        assertThat(uiStates).hasSize(1)
     }
 
-    private fun PhotoPickerUiModel.assertSelection(
+    private fun PhotoListUiModel.assertSelection(
         position: Int,
         isSelected: Boolean,
         isMultiSelection: Boolean = false,
