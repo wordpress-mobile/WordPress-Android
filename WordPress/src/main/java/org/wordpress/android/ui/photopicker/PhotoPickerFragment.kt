@@ -27,13 +27,15 @@ import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaPreviewActivity
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.FabUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Hide
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.util.AccessibilityUtils
@@ -127,35 +129,17 @@ class PhotoPickerFragment : Fragment() {
 
         recycler.layoutManager = layoutManager
 
-        viewModel.data.observe(viewLifecycleOwner, Observer { uiModel ->
-            if (uiModel != null) {
-                if (recycler.adapter == null) {
-                    recycler.adapter = PhotoPickerAdapter(
-                            imageManager
-                    )
-                }
-                val adapter = recycler.adapter as PhotoPickerAdapter
-                val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
-                adapter.loadData(uiModel.items)
-                recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
-
-                if (uiModel.showStoriesTakePicture) {
-                    wp_stories_take_picture.visibility = View.VISIBLE
-                    wp_stories_take_picture.setOnClickListener {
-                        viewModel.clickIcon(WP_STORIES_CAPTURE)
-                    }
-                } else {
-                    wp_stories_take_picture.visibility = View.GONE
-                }
+        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+            it?.let { uiState ->
+                uiState.photoListUiModel?.let(this::setupPhotoList)
+                uiState.bottomBarUiModel?.let(this::setupBottomBar)
+                uiState.softAskViewUiModel?.let(this::setupSoftAskView)
+                uiState.fabUiModel?.let(this::setupFab)
             }
         })
 
-        viewModel.bottomBarUiModel.observe(viewLifecycleOwner, Observer { uiModel ->
-                uiModel?.let { setupBottomBar(uiModel) }
-        })
-
-        viewModel.showActionMode.observe(viewLifecycleOwner, Observer {
-            if (it?.peekContent() == true) {
+        viewModel.onShowActionMode.observe(viewLifecycleOwner, Observer {
+            if (it?.peekContent() == true && !it.hasBeenHandled) {
                 it.getContentIfNotHandled()
 
                 (activity as AppCompatActivity).startSupportActionMode(
@@ -163,12 +147,11 @@ class PhotoPickerFragment : Fragment() {
                                 viewModel
                         )
                 )
-                hideBottomBar(container_media_source_bar)
             }
         }
         )
 
-        viewModel.navigateToPreview.observe(viewLifecycleOwner, Observer
+        viewModel.onNavigateToPreview.observe(viewLifecycleOwner, Observer
         {
             it.getContentIfNotHandled()?.let { uri ->
                 MediaPreviewActivity.showPreview(
@@ -193,7 +176,7 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.showPopupMenu.observe(viewLifecycleOwner, Observer {
+        viewModel.onShowPopupMenu.observe(viewLifecycleOwner, Observer {
             it?.getContentIfNotHandled()?.let { uiModel ->
                 val popup = PopupMenu(activity, uiModel.view.view)
                 for (popupMenuItem in uiModel.items) {
@@ -217,31 +200,52 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.softAskViewUiModel.observe(viewLifecycleOwner, Observer { uiModel ->
-            if (uiModel != null) {
-                when (uiModel) {
-                    is Show -> {
-                        soft_ask_view.title.text = Html.fromHtml(uiModel.label)
-                        soft_ask_view.button.setText(uiModel.allowId.stringRes)
-                        soft_ask_view.button.setOnClickListener {
-                            if (uiModel.isAlwaysDenied) {
-                                WPPermissionUtils.showAppSettings(requireActivity())
-                            } else {
-                                requestStoragePermission()
-                            }
-                        }
-                        soft_ask_view.visibility = View.VISIBLE
-                    }
-                    is Hide -> {
-                        if (soft_ask_view.visibility == View.VISIBLE) {
-                            AniUtils.fadeOut(soft_ask_view, MEDIUM)
-                        }
+        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+    }
+
+    private fun setupSoftAskView(uiModel: SoftAskViewUiModel?) {
+        when (uiModel) {
+            is Show -> {
+                soft_ask_view.title.text = Html.fromHtml(uiModel.label)
+                soft_ask_view.button.setText(uiModel.allowId.stringRes)
+                soft_ask_view.button.setOnClickListener {
+                    if (uiModel.isAlwaysDenied) {
+                        WPPermissionUtils.showAppSettings(requireActivity())
+                    } else {
+                        requestStoragePermission()
                     }
                 }
+                soft_ask_view.visibility = View.VISIBLE
             }
-        })
+            is Hide -> {
+                if (soft_ask_view.visibility == View.VISIBLE) {
+                    AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                }
+            }
+        }
+    }
 
-        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
+    private fun setupPhotoList(uiModel: PhotoListUiModel) {
+        if (recycler.adapter == null) {
+            recycler.adapter = PhotoPickerAdapter(
+                    imageManager
+            )
+        }
+        val adapter = recycler.adapter as PhotoPickerAdapter
+        val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
+        adapter.loadData(uiModel.items)
+        recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
+    }
+
+    private fun setupFab(fabUiModel: FabUiModel) {
+        if (fabUiModel.show) {
+            wp_stories_take_picture.visibility = View.VISIBLE
+            wp_stories_take_picture.setOnClickListener {
+                fabUiModel.action()
+            }
+        } else {
+            wp_stories_take_picture.visibility = View.GONE
+        }
     }
 
     private fun setupBottomBar(uiModel: BottomBarUiModel) {

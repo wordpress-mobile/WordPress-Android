@@ -36,8 +36,8 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
                 actionMode.setTitle(uiModel.actionModeTitle.stringRes)
             }
         })
-        viewModel.showActionMode.observe(this, Observer {
-            if (it?.peekContent() == false) {
+        viewModel.onShowActionMode.observe(this, Observer {
+            if (it?.peekContent() == false && !it.hasBeenHandled) {
                 it.getContentIfNotHandled()
                 actionMode.finish()
             }
@@ -61,7 +61,6 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
     }
 
     override fun onDestroyActionMode(mode: ActionMode) {
-        viewModel.showMediaSourceBottomBar()
         viewModel.clearSelection()
 
         lifecycleRegistry.handleLifecycleEvent(ON_STOP)

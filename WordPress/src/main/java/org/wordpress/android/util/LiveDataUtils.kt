@@ -295,6 +295,20 @@ fun <T> LiveData<T>.distinct(): MediatorLiveData<T> {
 }
 
 /**
+ * This method folds previous and updated value in a result
+ */
+fun <T> LiveData<T>.fold(action: (previous: T, current: T) -> T): MediatorLiveData<T> {
+    val mediatorLiveData: MediatorLiveData<T> = MediatorLiveData()
+    mediatorLiveData.addSource(this) {
+        if (it != null) {
+            val previous = mediatorLiveData.value
+            mediatorLiveData.value = if (previous != null) action(previous, it) else it
+        }
+    }
+    return mediatorLiveData
+}
+
+/**
  * Call this method if you want to throttle the LiveData emissions.
  * The default implementation takes only the last emitted result after 100ms.
  */

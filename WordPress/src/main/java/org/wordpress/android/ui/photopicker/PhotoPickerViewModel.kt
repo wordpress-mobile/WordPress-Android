@@ -34,11 +34,11 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ClickAction
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.ToggleAction
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -52,6 +52,8 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.distinct
+import org.wordpress.android.util.fold
+import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -73,61 +75,67 @@ class PhotoPickerViewModel @Inject constructor(
     private val _showActionMode = MutableLiveData<Event<Boolean>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
-    private val _browserType = MutableLiveData<MediaBrowserType>()
     private val _data = MutableLiveData<List<PhotoPickerItem>>()
     private val _selectedIds = MutableLiveData<List<Long>>()
-    private val _bottomBar = MutableLiveData<BottomBar>()
-    private val _onIconClicked = MutableLiveData<PhotoPickerIcon>()
+    private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
     private val _softAskViewModel = MutableLiveData<SoftAskViewUiModel>()
 
-    val navigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
+    val onNavigateToPreview: LiveData<Event<UriWrapper>> = _navigateToPreview
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
-    val onIconClicked: LiveData<Event<IconClickEvent>> = merge(_onIconClicked, _browserType) { icon, browserType ->
-        if (icon != null && browserType != null) {
-            Event(IconClickEvent(icon, browserType.canMultiselect()))
+    val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
+
+    val onShowActionMode: LiveData<Event<Boolean>> = _selectedIds.map { selectedIds ->
+        Event(!selectedIds.isNullOrEmpty())
+    }.fold { previous: Event<Boolean>, current: Event<Boolean> ->
+        if (previous.peekContent() != current.peekContent()) {
+            current
         } else {
-            null
+            previous
         }
     }
-
-    val showActionMode: LiveData<Event<Boolean>> = _showActionMode
-    val showPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
+    val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
 
-    val actionModeUiModel: LiveData<ActionModeUiModel> = merge(_browserType, _selectedIds) { browserType, selectedIds ->
-        buildActionModeUiModel(selectedIds, browserType)
+    val actionModeUiModel: LiveData<ActionModeUiModel> = _selectedIds.map { selectedIds ->
+        buildActionModeUiModel(selectedIds)
     }
 
     val selectedIds: LiveData<List<Long>> = _selectedIds
-    val data: LiveData<PhotoPickerUiModel> = merge(
+    private val data: LiveData<PhotoListUiModel> = merge(
             _data.distinct(),
-            _selectedIds.distinct(),
-            _browserType.distinct()
-    ) { data, selectedIds, browserType ->
-        buildPhotoPickerUiModel(data, browserType, selectedIds)
+            _selectedIds.distinct()
+    ) { data, selectedIds ->
+        buildPhotoPickerUiModel(data, selectedIds)
     }
 
-    val bottomBarUiModel: LiveData<BottomBarUiModel> = merge(
-            data.distinct(),
-            _browserType.distinct(),
-            _bottomBar.distinct()
-    ) { data, browserType, bottomBar ->
-        browserType?.let { buildBottomBar(bottomBar, browserType, data?.count ?: 0, data?.isVideoSelected ?: false) }
+    val uiState: LiveData<PhotoPickerUiState> = merge(
+            data,
+            _softAskViewModel
+    ) { photoListUiModel, softAskViewUiModel ->
+        PhotoPickerUiState(
+                photoListUiModel,
+                buildBottomBar(
+                        photoListUiModel?.count ?: 0,
+                        photoListUiModel?.isVideoSelected ?: false,
+                        softAskViewUiModel is Show
+                ),
+                softAskViewUiModel,
+                FabUiModel(browserType.isWPStoriesPicker) {
+                    clickIcon(WP_STORIES_CAPTURE)
+                })
     }
-
-    val softAskViewUiModel: LiveData<SoftAskViewUiModel> = _softAskViewModel
 
     var lastTappedIcon: PhotoPickerIcon? = null
+    private lateinit var browserType: MediaBrowserType
     private var site: SiteModel? = null
 
     private fun buildPhotoPickerUiModel(
         data: List<PhotoPickerItem>?,
-        browserType: MediaBrowserType?,
         selectedIds: List<Long>?
-    ): PhotoPickerUiModel? {
+    ): PhotoListUiModel? {
         var isVideoSelected = false
-        return if (data != null && browserType != null) {
+        return if (data != null) {
             val uiItems = data.map {
                 if (selectedIds != null && selectedIds.contains(it.id)) {
                     isVideoSelected = isVideoSelected || it.isVideo
@@ -155,39 +163,19 @@ class PhotoPickerViewModel @Inject constructor(
                 }
             }
             val count = selectedIds?.size ?: 0
-            if (count == 0 && _showActionMode.value?.peekContent() == true) {
-                _showActionMode.postValue(Event(false))
-            } else if (count > 0 && _showActionMode.value?.peekContent() != true) {
-                startActionMode(browserType)
-            }
-            PhotoPickerUiModel(
+            PhotoListUiModel(
                     uiItems,
                     count,
-                    isVideoSelected,
-                    browserType,
-                    browserType.isWPStoriesPicker
+                    isVideoSelected
             )
         } else {
             null
         }
     }
 
-    private fun startActionMode(browserType: MediaBrowserType) {
-        _showActionMode.postValue(Event(true))
-        if (browserType.isGutenbergPicker) {
-            showInsertEditBottomBar()
-        } else {
-            hideBottomBar()
-        }
-    }
-
     private fun buildActionModeUiModel(
-        selectedIds: List<Long>?,
-        browserType: MediaBrowserType?
+        selectedIds: List<Long>?
     ): ActionModeUiModel? {
-        if (browserType == null) {
-            return null
-        }
         val numSelected = selectedIds?.size ?: 0
         val title: UiString? = when {
             numSelected == 0 -> null
@@ -208,15 +196,21 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     private fun buildBottomBar(
-        bottomBar: BottomBar?,
-        browserType: MediaBrowserType,
         count: Int,
-        isVideoSelected: Boolean
+        isVideoSelected: Boolean,
+        showSoftAskViewModel: Boolean
     ): BottomBarUiModel {
+        val defaultBottomBar = when {
+            showSoftAskViewModel -> NONE
+            count <= 0 -> MEDIA_SOURCE
+            browserType.isGutenbergPicker -> INSERT_EDIT
+            else -> NONE
+        }
+
         val insertEditTextBarVisible = count != 0 && browserType.isGutenbergPicker && !isVideoSelected
         val showCamera = !browserType.isGutenbergPicker && !browserType.isWPStoriesPicker
         return BottomBarUiModel(
-                type = bottomBar ?: MEDIA_SOURCE,
+                type = defaultBottomBar,
                 insertEditTextBarVisible = insertEditTextBarVisible,
                 hideMediaBottomBarInPortrait = browserType == AZTEC_EDITOR_PICKER,
                 showCameraButton = showCamera,
@@ -236,7 +230,6 @@ class PhotoPickerViewModel @Inject constructor(
         if (!permissionsHandler.hasStoragePermission()) {
             return
         }
-        val browserType = _browserType.value ?: return
         launch(bgDispatcher) {
             val result = deviceMediaListBuilder.buildDeviceMedia(browserType)
             val currentItems = _data.value ?: listOf()
@@ -261,7 +254,7 @@ class PhotoPickerViewModel @Inject constructor(
         selectedIds?.let {
             _selectedIds.value = selectedIds
         }
-        _browserType.value = browserType
+        this.browserType = browserType
         this.lastTappedIcon = lastTappedIcon
         this.site = site
     }
@@ -272,18 +265,6 @@ class PhotoPickerViewModel @Inject constructor(
 
     fun selectedURIs(): List<UriWrapper> {
         return data.value?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
-    }
-
-    private fun showInsertEditBottomBar() {
-        _bottomBar.value = INSERT_EDIT
-    }
-
-    fun showMediaSourceBottomBar() {
-        _bottomBar.value = MEDIA_SOURCE
-    }
-
-    private fun hideBottomBar() {
-        _bottomBar.value = NONE
     }
 
     private fun toggleItem(id: Long, canMultiselect: Boolean) {
@@ -335,7 +316,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun finishActionMode() {
-        if (showActionMode.value?.peekContent() == true) {
+        if (onShowActionMode.value?.peekContent() == true) {
             _showActionMode.postValue(Event(false))
         }
     }
@@ -376,7 +357,7 @@ class PhotoPickerViewModel @Inject constructor(
             ANDROID_CHOOSE_PHOTO_OR_VIDEO -> {
             }
         }
-        _onIconClicked.postValue(icon)
+        _onIconClicked.postValue(Event(IconClickEvent(icon, browserType.canMultiselect())))
     }
 
     private fun trackSelectedOtherSourceEvents(stat: Stat, isVideo: Boolean) {
@@ -386,21 +367,18 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun onCameraClicked(viewWrapper: ViewWrapper) {
-        val browserType = _browserType.value
-        if (browserType != null) {
-            if (browserType.isImagePicker && browserType.isVideoPicker) {
-                showCameraPopupMenu(viewWrapper)
-            } else if (browserType.isImagePicker) {
-                clickIcon(ANDROID_CAPTURE_PHOTO)
-            } else if (browserType.isVideoPicker) {
-                clickIcon(ANDROID_CAPTURE_VIDEO)
-            } else {
-                AppLog.e(
-                        MEDIA,
-                        "This code should be unreachable. If you see this message one of " +
-                                "the MediaBrowserTypes isn't setup correctly."
-                )
-            }
+        if (browserType.isImagePicker && browserType.isVideoPicker) {
+            showCameraPopupMenu(viewWrapper)
+        } else if (browserType.isImagePicker) {
+            clickIcon(ANDROID_CAPTURE_PHOTO)
+        } else if (browserType.isVideoPicker) {
+            clickIcon(ANDROID_CAPTURE_VIDEO)
+        } else {
+            AppLog.e(
+                    MEDIA,
+                    "This code should be unreachable. If you see this message one of " +
+                            "the MediaBrowserTypes isn't setup correctly."
+            )
         }
     }
 
@@ -419,7 +397,6 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun performActionOrShowPopup(viewWrapper: ViewWrapper) {
-        val browserType = _browserType.value ?: return
         val items = mutableListOf<PopupMenuItem>()
         if (browserType.isImagePicker) {
             items.add(PopupMenuItem(UiStringRes(R.string.photo_picker_choose_photo)) {
@@ -486,20 +463,23 @@ class PhotoPickerViewModel @Inject constructor(
                 )
             }
             val allowId = if (isAlwaysDenied) R.string.button_edit_permissions else R.string.photo_picker_soft_ask_allow
-            _softAskViewModel.value = SoftAskViewUiModel.Show(label, UiStringRes(allowId), isAlwaysDenied)
-            _bottomBar.value = NONE
-        } else if (_softAskViewModel.value is SoftAskViewUiModel.Show) {
+            _softAskViewModel.value = Show(label, UiStringRes(allowId), isAlwaysDenied)
+        } else if (_softAskViewModel.value is Show) {
             _softAskViewModel.value = SoftAskViewUiModel.Hide
-            _bottomBar.value = MEDIA_SOURCE
         }
     }
 
-    data class PhotoPickerUiModel(
+    data class PhotoPickerUiState(
+        val photoListUiModel: PhotoListUiModel? = null,
+        val bottomBarUiModel: BottomBarUiModel? = null,
+        val softAskViewUiModel: SoftAskViewUiModel? = null,
+        val fabUiModel: FabUiModel? = null
+    )
+
+    data class PhotoListUiModel(
         val items: List<PhotoPickerUiItem>,
         val count: Int = 0,
-        val isVideoSelected: Boolean = false,
-        val browserType: MediaBrowserType,
-        val showStoriesTakePicture: Boolean
+        val isVideoSelected: Boolean = false
     )
 
     data class BottomBarUiModel(
@@ -516,6 +496,13 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
+    sealed class SoftAskViewUiModel {
+        data class Show(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean) : SoftAskViewUiModel()
+        object Hide : SoftAskViewUiModel()
+    }
+
+    data class FabUiModel(val show: Boolean, val action: () -> Unit)
+
     data class ActionModeUiModel(val actionModeTitle: UiString? = null, val showConfirmAction: Boolean = false)
 
     data class IconClickEvent(val icon: PhotoPickerIcon, val allowMultipleSelection: Boolean)
@@ -526,10 +513,5 @@ class PhotoPickerViewModel @Inject constructor(
 
     data class PopupMenuUiModel(val view: ViewWrapper, val items: List<PopupMenuItem>) {
         data class PopupMenuItem(val title: UiStringRes, val action: () -> Unit)
-    }
-
-    sealed class SoftAskViewUiModel {
-        data class Show(val label: String, val allowId: UiStringRes, val isAlwaysDenied: Boolean): SoftAskViewUiModel()
-        object Hide: SoftAskViewUiModel()
     }
 }
