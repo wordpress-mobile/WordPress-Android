@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_editor_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,26 +16,36 @@
         android:textSize="@dimen/text_sz_large"
         android:visibility="gone" />
 
-    <org.wordpress.android.widgets.WPTextView
-        android:id="@+id/list_editor_header_text"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?android:attr/actionBarSize"
-        android:padding="@dimen/margin_extra_large"
-        android:textAppearance="?attr/textAppearanceCaption" />
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_size"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_below="@+id/list_editor_header_text"
-        android:background="?android:attr/listDivider" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/list_editor_header_text" />
+            <org.wordpress.android.widgets.WPTextView
+                android:id="@+id/list_editor_header_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_extra_large"
+                android:textAppearance="?attr/textAppearanceCaption" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_size"
+                android:layout_alignWithParentIfMissing="true"
+                android:layout_below="@+id/list_editor_header_text"
+                android:background="?android:attr/listDivider" />
+
+            <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/list_editor_header_text" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <!-- CoordinatorLayout required: https://code.google.com/p/android/issues/detail?id=175330 -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
