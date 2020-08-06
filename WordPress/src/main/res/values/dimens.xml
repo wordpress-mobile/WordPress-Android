@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <dimen name="min_touch_target_sz">48dp</dimen>
 
@@ -332,7 +332,7 @@
 
     <!-- photo picker -->
     <dimen name="photo_picker_item_padding">2dp</dimen>
-    <dimen name="photo_picker_icon" tools:ignore="UnusedResources">48dp</dimen>
+    <dimen name="photo_picker_icon">48dp</dimen>
     <dimen name="photo_picker_preview_icon">28dp</dimen>
 
     <dimen name="smart_toast_offset_y">48dp</dimen>

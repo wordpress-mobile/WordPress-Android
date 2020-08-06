@@ -290,7 +290,7 @@
     <string name="button_sync">Sync</string>
     <string name="button_view">View</string>
     <string name="button_preview">Preview</string>
-    <string name="button_insert" tools:ignore="UnusedResources">Insert</string>
+    <string name="button_insert">Insert</string>
     <string name="button_stats">Stats</string>
     <string name="button_trash">Trash</string>
     <string name="button_delete_permanently">Delete Permanently</string>
@@ -2316,12 +2316,12 @@
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
     <string name="photo_picker_gif">Choose from Tenor</string>
-    <string name="photo_picker_soft_ask_label" tools:ignore="UnusedResources">%s needs permissions to access your photos</string>
+    <string name="photo_picker_soft_ask_label">%s needs permissions to access your photos</string>
     <string name="photo_picker_soft_ask_allow">Allow</string>
-    <string name="photo_picker_soft_ask_permissions_denied" tools:ignore="UnusedResources">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
+    <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
-    <string name="photo_picker_use_video" tools:ignore="UnusedResources">Use this video</string>
-    <string name="photo_picker_use_media" tools:ignore="UnusedResources">Use this media</string>
+    <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
     <string name="photo_picker_image_thumbnail_selected">Image selected</string>
