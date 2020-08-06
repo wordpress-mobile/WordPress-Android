@@ -639,31 +639,20 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     // SiteSettingsListener
+    @Override
+    public void onSaveError(Exception error) { }
 
     @Override
-    public void onSaveError(Exception error) {
-
-    }
+    public void onFetchError(Exception error) { }
 
     @Override
-    public void onFetchError(Exception error) {
-
-    }
+    public void onSettingsUpdated() { }
 
     @Override
-    public void onSettingsUpdated() {
-
-    }
+    public void onSettingsSaved() { }
 
     @Override
-    public void onSettingsSaved() {
-
-    }
-
-    @Override
-    public void onCredentialsValidated(Exception error) {
-
-    }
+    public void onCredentialsValidated(Exception error) { }
 
     private void setupViewPager() {
         // Set up the ViewPager with the sections adapter.
