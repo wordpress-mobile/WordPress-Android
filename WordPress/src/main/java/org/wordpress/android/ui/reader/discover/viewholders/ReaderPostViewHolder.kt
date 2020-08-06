@@ -86,7 +86,7 @@ class ReaderPostViewHolder(
         updateActionButton(uiState.postId, uiState.blogId, uiState.commentsAction, count_comments)
         updateActionButton(uiState.postId, uiState.blogId, uiState.bookmarkAction, bookmark)
 
-        state.onItemRendered.invoke(uiState.postId, uiState.blogId)
+        state.onItemRendered.invoke(uiState)
     }
 
     private fun updateFeaturedImage(state: ReaderPostUiState) {

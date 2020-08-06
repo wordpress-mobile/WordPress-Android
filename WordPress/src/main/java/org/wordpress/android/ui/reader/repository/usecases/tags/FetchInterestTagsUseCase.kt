@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.repository.usecases
+package org.wordpress.android.ui.reader.repository.usecases.tags
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -8,7 +8,7 @@ import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.SuccessWithData
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask.INTEREST_TAGS
-import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter
+import org.wordpress.android.ui.reader.services.update.wrapper.ReaderUpdateServiceStarterWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
@@ -21,7 +21,8 @@ import kotlin.coroutines.suspendCoroutine
 class FetchInterestTagsUseCase @Inject constructor(
     private val contextProvider: ContextProvider,
     private val eventBusWrapper: EventBusWrapper,
-    private val networkUtilsWrapper: NetworkUtilsWrapper
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val readerUpdateServiceStarterWrapper: ReaderUpdateServiceStarterWrapper
 ) {
     private var continuation: Continuation<ReaderRepositoryCommunication>? = null
 
@@ -36,7 +37,7 @@ class FetchInterestTagsUseCase @Inject constructor(
             continuation = cont
             eventBusWrapper.register(this)
 
-            ReaderUpdateServiceStarter.startService(
+            readerUpdateServiceStarterWrapper.startService(
                 contextProvider.getContext(),
                 EnumSet.of(INTEREST_TAGS)
             )

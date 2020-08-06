@@ -54,7 +54,6 @@ import org.wordpress.android.ui.pages.PageParentActivity;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity;
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment;
 import org.wordpress.android.ui.plans.PlansActivity;
 import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
@@ -81,6 +80,7 @@ import org.wordpress.android.ui.stats.refresh.lists.detail.StatsDetailActivity;
 import org.wordpress.android.ui.stats.refresh.lists.sections.granular.SelectedDateProvider.SelectedDate;
 import org.wordpress.android.ui.stats.refresh.lists.sections.insights.management.InsightsManagementActivity;
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
+import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -100,6 +100,7 @@ import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTIC
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_REBLOGGED;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.STATS_ACCESS_ERROR;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
+import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
@@ -186,7 +187,7 @@ public class ActivityLauncher {
                                                       @Nullable SiteModel site,
                                                       @Nullable Integer localPostId) {
         Intent intent = new Intent(context, PhotoPickerActivity.class);
-        intent.putExtra(PhotoPickerFragment.ARG_BROWSER_TYPE, browserType);
+        intent.putExtra(ARG_BROWSER_TYPE, browserType);
         if (site != null) {
             intent.putExtra(WordPress.SITE, site);
         }
@@ -492,7 +493,7 @@ public class ActivityLauncher {
     public static void viewCurrentBlogMedia(Context context, SiteModel site) {
         Intent intent = new Intent(context, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
+        intent.putExtra(ARG_BROWSER_TYPE, MediaBrowserType.BROWSER);
         context.startActivity(intent);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.OPENED_MEDIA_LIBRARY, site);
     }
@@ -659,8 +660,58 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, isPromo);
-        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
+    }
+
+    public static void addNewStoryForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(PhotoPickerActivity.EXTRA_LAUNCH_WPSTORIES_CAMERA_REQUESTED, true);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void addNewStoryWithMediaIdsForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
+            long[] mediaIds
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(MediaBrowserActivity.RESULT_IDS, mediaIds);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
+    }
+
+    public static void addNewStoryWithMediaUrisForResult(
+            Activity activity,
+            SiteModel site,
+            PagePostCreationSourcesDetail source,
+            String[] mediaUris
+    ) {
+        if (site == null) {
+            return;
+        }
+
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS, mediaUris);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
+        activity.startActivityForResult(intent, RequestCodes.CREATE_STORY);
     }
 
     public static void editPostOrPageForResult(Activity activity, SiteModel site, PostModel post) {
@@ -719,7 +770,7 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -731,7 +782,7 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_CREATION_SOURCE_DETAIL, source);
+        intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
@@ -895,6 +946,17 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
+    public static void showMainActivityAndSiteCreationActivity(Activity activity) {
+        // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
+        // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
+        // WPMainActivity, we must start it this way.
+        final Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        activity.startActivity(intent);
+    }
+
     public static void showSignInForResult(Activity activity) {
         showSignInForResult(activity, false);
     }
@@ -967,7 +1029,7 @@ public class ActivityLauncher {
                                                 @NonNull MediaBrowserType browserType) {
         Intent intent = new Intent(activity, MediaBrowserActivity.class);
         intent.putExtra(WordPress.SITE, site);
-        intent.putExtra(MediaBrowserActivity.ARG_BROWSER_TYPE, browserType);
+        intent.putExtra(ARG_BROWSER_TYPE, browserType);
         int requestCode;
         if (browserType.canMultiselect()) {
             requestCode = RequestCodes.MULTI_SELECT_MEDIA_PICKER;
