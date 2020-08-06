@@ -54,7 +54,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `loads data on refresh`() = test {
         setupViewModel(listOf(firstItem), singleSelectBrowserType)
 
-        viewModel.refreshData(singleSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         assertThat(uiModels).hasSize(1)
         assertUiModel(singleSelectBrowserType, selectedItems = listOf(), domainItems = listOf(firstItem))
@@ -64,7 +64,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `selects single item with single selection available`() = test {
         setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
 
-        viewModel.refreshData(singleSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         assertThat(uiModels).hasSize(1)
         assertUiModel(
@@ -86,7 +86,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `clears selection`() = test {
         setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
 
-        viewModel.refreshData(singleSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         selectItem(0)
         viewModel.clearSelection()
@@ -104,7 +104,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `unselects first item when second item selected with single selection available`() = test {
         setupViewModel(listOf(firstItem, secondItem), singleSelectBrowserType)
 
-        viewModel.refreshData(singleSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         assertUiModel(
                 singleSelectBrowserType,
@@ -131,7 +131,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     fun `selects two items with multi selection available`() = test {
         setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType)
 
-        viewModel.refreshData(multiSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         assertUiModel(
                 multiSelectBrowserType,
@@ -175,7 +175,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 mutableMapOf()
         )
 
-        viewModel.refreshData(singleSelectBrowserType, false)
+        viewModel.refreshData(false)
 
         assertThat(navigateEvents).isEmpty()
         clickItem(0)
@@ -231,7 +231,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 navigateEvents.add(it)
             }
         }
-        viewModel.start(listOf(), browserType, lastTappedIcon)
+        viewModel.start(listOf(), browserType, lastTappedIcon, site)
         assertThat(uiModels).isEmpty()
     }
 

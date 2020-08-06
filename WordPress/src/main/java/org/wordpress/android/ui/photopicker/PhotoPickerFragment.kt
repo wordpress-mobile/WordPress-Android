@@ -1,18 +1,15 @@
 package org.wordpress.android.ui.photopicker
 
 import android.Manifest.permission
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -28,29 +25,24 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.media.MediaBrowserActivity
 import org.wordpress.android.ui.media.MediaBrowserType
-import org.wordpress.android.ui.media.MediaBrowserType.AZTEC_EDITOR_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.GRAVATAR_IMAGE_PICKER
-import org.wordpress.android.ui.media.MediaBrowserType.SITE_ICON_PICKER
 import org.wordpress.android.ui.media.MediaPreviewActivity
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CAPTURE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_PHOTO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.ANDROID_CHOOSE_VIDEO
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.GIF
-import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.STOCK_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_MEDIA
 import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon.WP_STORIES_CAPTURE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.INSERT_EDIT
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
-import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.NONE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.CAMERA
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PermissionsRequested.STORAGE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.INSERT_EDIT
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Hide
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.AppLog.T.POSTS
 import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.ViewWrapper
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.config.TenorFeatureConfig
@@ -83,8 +75,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var listener: PhotoPickerListener? = null
-    private var site: SiteModel? = null
-    private lateinit var browserType: MediaBrowserType
 
     @Inject lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Inject lateinit var imageManager: ImageManager
@@ -112,8 +102,8 @@ class PhotoPickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
-        site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
+        val browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
+        val site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         var selectedIds: List<Long>? = null
         var lastTappedIcon: PhotoPickerIcon? = null
         if (savedInstanceState != null) {
@@ -148,15 +138,20 @@ class PhotoPickerFragment : Fragment() {
                 val recyclerViewState = recyclerView?.layoutManager?.onSaveInstanceState()
                 adapter.loadData(uiModel.items)
                 recyclerView?.layoutManager?.onRestoreInstanceState(recyclerViewState)
-                setupBottomBar(uiModel.bottomBarUiModel)
 
                 if (uiModel.showStoriesTakePicture) {
                     wp_stories_take_picture.visibility = View.VISIBLE
-                    wp_stories_take_picture.setOnClickListener { doIconClicked(WP_STORIES_CAPTURE) }
+                    wp_stories_take_picture.setOnClickListener {
+                        viewModel.clickIcon(WP_STORIES_CAPTURE)
+                    }
                 } else {
                     wp_stories_take_picture.visibility = View.GONE
                 }
             }
+        })
+
+        viewModel.bottomBarUiModel.observe(viewLifecycleOwner, Observer { uiModel ->
+                uiModel?.let { setupBottomBar(uiModel) }
         })
 
         viewModel.showActionMode.observe(viewLifecycleOwner, Observer {
@@ -198,49 +193,82 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedIds, browserType, lastTappedIcon)
+        viewModel.showPopupMenu.observe(viewLifecycleOwner, Observer {
+            it?.getContentIfNotHandled()?.let { uiModel ->
+                val popup = PopupMenu(activity, uiModel.view.view)
+                for (popupMenuItem in uiModel.items) {
+                    val item = popup.menu
+                            .add(popupMenuItem.title.stringRes)
+                    item.setOnMenuItemClickListener {
+                        popupMenuItem.action()
+                        true
+                    }
+                }
+                popup.show()
+            }
+        })
+
+        viewModel.onPermissionsRequested.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                when (this) {
+                    CAMERA -> requestCameraPermission()
+                    STORAGE -> requestStoragePermission()
+                }
+            }
+        })
+
+        viewModel.softAskViewUiModel.observe(viewLifecycleOwner, Observer { uiModel ->
+            if (uiModel != null) {
+                when (uiModel) {
+                    is Show -> {
+                        soft_ask_view.title.text = Html.fromHtml(uiModel.label)
+                        soft_ask_view.button.setText(uiModel.allowId.stringRes)
+                        soft_ask_view.button.setOnClickListener {
+                            if (uiModel.isAlwaysDenied) {
+                                WPPermissionUtils.showAppSettings(requireActivity())
+                            } else {
+                                requestStoragePermission()
+                            }
+                        }
+                        soft_ask_view.visibility = View.VISIBLE
+                    }
+                    is Hide -> {
+                        if (soft_ask_view.visibility == View.VISIBLE) {
+                            AniUtils.fadeOut(soft_ask_view, MEDIUM)
+                        }
+                    }
+                }
+            }
+        })
+
+        viewModel.start(selectedIds, browserType, lastTappedIcon, site)
     }
 
     private fun setupBottomBar(uiModel: BottomBarUiModel) {
         if (!canShowMediaSourceBottomBar(uiModel.hideMediaBottomBarInPortrait)) {
-            container_media_source_bar.visibility = View.GONE
+            hideBottomBar(container_media_source_bar)
         } else {
             if (!uiModel.showCameraButton) {
                 container_media_source_bar.icon_camera.visibility = View.GONE
             } else {
-                container_media_source_bar.icon_camera.setOnClickListener { v ->
-                    if (browserType.isImagePicker && browserType.isVideoPicker) {
-                        showCameraPopupMenu(v)
-                    } else if (browserType.isImagePicker) {
-                        doIconClicked(ANDROID_CAPTURE_PHOTO)
-                    } else if (browserType.isVideoPicker) {
-                        doIconClicked(ANDROID_CAPTURE_VIDEO)
-                    } else {
-                        AppLog.e(
-                                MEDIA,
-                                "This code should be unreachable. If you see this message one of " +
-                                        "the MediaBrowserTypes isn't setup correctly."
-                        )
-                    }
+                container_media_source_bar.icon_camera.setOnClickListener {
+                    viewModel.onCameraClicked(ViewWrapper(it))
                 }
             }
             container_media_source_bar.icon_picker
-                    ?.setOnClickListener { v ->
-                        if (browserType == GRAVATAR_IMAGE_PICKER || browserType == SITE_ICON_PICKER) {
-                            doIconClicked(ANDROID_CHOOSE_PHOTO)
-                        } else {
-                            performActionOrShowPopup(v)
-                        }
+                    ?.setOnClickListener {
+                        uiModel.onIconPickerClicked(ViewWrapper(it))
                     }
 
-            // choosing from WP media requires a site and should be hidden in gutenberg picker
-            if (site == null || browserType.isGutenbergPicker) {
-                container_media_source_bar.icon_wpmedia.visibility = View.GONE
+            if (uiModel.showWPMediaIcon) {
+                container_media_source_bar.icon_wpmedia.setOnClickListener {
+                    viewModel.clickIcon(WP_MEDIA)
+                }
             } else {
-                container_media_source_bar.icon_wpmedia.setOnClickListener { doIconClicked(WP_MEDIA) }
+                container_media_source_bar.icon_wpmedia.visibility = View.GONE
             }
         }
-        if (canShowInsertEditBottomBar()) {
+        if (uiModel.canShowInsertEditBottomBar) {
             container_insert_edit_bar.text_edit
                     .setOnClickListener {
                         val inputData = WPMediaUtils.createListOfEditImageInputData(
@@ -266,7 +294,10 @@ class PhotoPickerFragment : Fragment() {
                 }
                 hideBottomBar(container_insert_edit_bar)
             }
-            NONE -> TODO()
+            NONE -> {
+                hideBottomBar(container_insert_edit_bar)
+                hideBottomBar(container_media_source_bar)
+            }
         }
     }
 
@@ -274,10 +305,6 @@ class PhotoPickerFragment : Fragment() {
         hideMediaBottomBarInPortrait: Boolean
     ): Boolean {
         return !hideMediaBottomBarInPortrait || DisplayUtils.isLandscape(activity)
-    }
-
-    private fun canShowInsertEditBottomBar(): Boolean {
-        return browserType.isGutenbergPicker
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -300,79 +327,12 @@ class PhotoPickerFragment : Fragment() {
         checkStoragePermission()
     }
 
-    fun doIconClicked(icon: PhotoPickerIcon) {
-        if (icon == ANDROID_CAPTURE_PHOTO || icon == ANDROID_CAPTURE_VIDEO || icon == WP_STORIES_CAPTURE) {
-            if (ContextCompat.checkSelfPermission(
-                            requireActivity(), permission.CAMERA
-                    ) != PackageManager.PERMISSION_GRANTED || !hasStoragePermission()) {
-                requestCameraPermission()
-                viewModel.lastTappedIcon = icon
-                return
-            }
-        }
-        viewModel.clickIcon(icon)
-    }
-
     fun performActionOrShowPopup(view: View) {
-        val popup = PopupMenu(activity, view)
-        if (browserType.isImagePicker) {
-            val itemPhoto = popup.menu
-                    .add(string.photo_picker_choose_photo)
-            itemPhoto.setOnMenuItemClickListener {
-                doIconClicked(ANDROID_CHOOSE_PHOTO)
-                true
-            }
-        }
-        if (browserType.isVideoPicker) {
-            val itemVideo = popup.menu
-                    .add(string.photo_picker_choose_video)
-            itemVideo.setOnMenuItemClickListener {
-                doIconClicked(ANDROID_CHOOSE_VIDEO)
-                true
-            }
-        }
-        if (site != null && !browserType.isGutenbergPicker) {
-            val itemStock = popup.menu
-                    .add(string.photo_picker_stock_media)
-            itemStock.setOnMenuItemClickListener {
-                doIconClicked(STOCK_MEDIA)
-                true
-            }
-
-            // only show GIF picker from Tenor if this is NOT the WPStories picker
-            if (tenorFeatureConfig.isEnabled() && !browserType.isWPStoriesPicker) {
-                val itemGif = popup.menu
-                        .add(string.photo_picker_gif)
-                itemGif.setOnMenuItemClickListener { item: MenuItem? ->
-                    doIconClicked(GIF)
-                    true
-                }
-            }
-        }
-
-        // if the menu has a single item, perform the action right away
-        if (popup.menu.size() == 1) {
-            popup.menu.performIdentifierAction(popup.menu.getItem(0).itemId, 0)
-        } else {
-            popup.show()
-        }
+        viewModel.performActionOrShowPopup(ViewWrapper(view))
     }
 
     fun showCameraPopupMenu(view: View) {
-        val popup = PopupMenu(activity, view)
-        val itemPhoto = popup.menu
-                .add(string.photo_picker_capture_photo)
-        itemPhoto.setOnMenuItemClickListener {
-            doIconClicked(ANDROID_CAPTURE_PHOTO)
-            true
-        }
-        val itemVideo = popup.menu
-                .add(string.photo_picker_capture_video)
-        itemVideo.setOnMenuItemClickListener {
-            doIconClicked(ANDROID_CAPTURE_VIDEO)
-            true
-        }
-        popup.show()
+        viewModel.showCameraPopupMenu(ViewWrapper(view))
     }
 
     fun setPhotoPickerListener(listener: PhotoPickerListener?) {
@@ -410,16 +370,7 @@ class PhotoPickerFragment : Fragment() {
             )
             return
         }
-        if (!hasStoragePermission()) {
-            return
-        }
-        viewModel.refreshData(browserType, false)
-    }
-
-    private fun hasStoragePermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-                requireActivity(), permission.WRITE_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+        viewModel.refreshData(false)
     }
 
     private val isStoragePermissionAlwaysDenied: Boolean
@@ -435,14 +386,7 @@ class PhotoPickerFragment : Fragment() {
         if (!isAdded) {
             return
         }
-        if (hasStoragePermission()) {
-            showSoftAskView(false)
-            if (!hasAdapter()) {
-                refresh()
-            }
-        } else {
-            showSoftAskView(true)
-        }
+        viewModel.checkStoragePermission(isStoragePermissionAlwaysDenied)
     }
 
     private fun requestStoragePermission() {
@@ -473,63 +417,17 @@ class PhotoPickerFragment : Fragment() {
         when (requestCode) {
             WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
-                doIconClicked(viewModel.lastTappedIcon!!)
-            }
-        }
-    }
-
-    /*
-     * shows the "soft ask" view which should appear when storage permission hasn't been granted
-     */
-    private fun showSoftAskView(show: Boolean) {
-        if (!isAdded) {
-            return
-        }
-        val isAlwaysDenied = isStoragePermissionAlwaysDenied
-        if (show) {
-            val appName = "<strong>${getString(string.app_name)}</strong>"
-            val label: String
-            label = if (isAlwaysDenied) {
-                val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
-                        requireActivity(),
-                        permission.WRITE_EXTERNAL_STORAGE
-                )}</strong>")
-                String.format(
-                        getString(string.photo_picker_soft_ask_permissions_denied), appName,
-                        permissionName
-                )
-            } else {
-                String.format(
-                        getString(string.photo_picker_soft_ask_label),
-                        appName
-                )
-            }
-            soft_ask_view.title.text = Html.fromHtml(label)
-
-            // when the user taps Allow, request the required permissions unless the user already
-            // denied them permanently, in which case take them to the device settings for this
-            // app so the user can change permissions there
-            val allowId = if (isAlwaysDenied) string.button_edit_permissions else string.photo_picker_soft_ask_allow
-            soft_ask_view.button.setText(allowId)
-            soft_ask_view.button.setOnClickListener {
-                if (isStoragePermissionAlwaysDenied) {
-                    WPPermissionUtils.showAppSettings(requireActivity())
-                } else {
-                    requestStoragePermission()
-                }
-            }
-            soft_ask_view.visibility = View.VISIBLE
-            hideBottomBar(container_media_source_bar)
-        } else if (soft_ask_view.visibility == View.VISIBLE) {
-            AniUtils.fadeOut(soft_ask_view, MEDIUM)
-            if (canShowMediaSourceBottomBar(browserType == AZTEC_EDITOR_PICKER)) {
-                showBottomBar(container_media_source_bar)
+                viewModel.clickOnLastTappedIcon()
             }
         }
     }
 
     fun finishActionMode() {
         viewModel.finishActionMode()
+    }
+
+    fun doIconClicked(wpMedia: PhotoPickerIcon) {
+        viewModel.clickIcon(wpMedia)
     }
 
     companion object {

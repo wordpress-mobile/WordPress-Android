@@ -25,9 +25,7 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
         lifecycleRegistry = LifecycleRegistry(this)
         lifecycleRegistry.handleLifecycleEvent(ON_START)
         viewModel.actionModeUiModel.observe(this, Observer { uiModel ->
-            if (uiModel.showInsertEditBottomBar) {
-                viewModel.showInsertEditBottomBar()
-            } else if (menu.size() == 0) {
+            if (uiModel.showConfirmAction && menu.size() == 0) {
                 val inflater = actionMode.menuInflater
                 inflater.inflate(R.menu.photo_picker_action_mode, menu)
             }
