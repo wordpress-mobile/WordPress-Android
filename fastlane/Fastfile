@@ -290,7 +290,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -321,7 +321,7 @@ ENV["HAS_ALPHA_VERSION"]="true"
     end
 
     if (options[:create_release])
-      create_gh_release(version: version)
+      create_gh_release(version: version, prerelease: true)
     end
   end
 
@@ -598,12 +598,14 @@ ENV["HAS_ALPHA_VERSION"]="true"
   end
 
   private_lane :create_gh_release do | options |
+    set_prerelease_flag = options["prerelease"].nil? ? false : options["prerelease"]
     version = options[:version]
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)
     create_release(repository:GHHELPER_REPO, 
       version: version["name"], 
       release_notes_file_path:release_notes_path,
+      prerelease: set_prerelease_flag,
       release_assets:"#{apk_file_path},#{aab_file_path}"
     )
   end
