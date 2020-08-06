@@ -231,7 +231,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 navigateEvents.add(it)
             }
         }
-        viewModel.start(listOf(), browserType)
+        viewModel.start(listOf(), browserType, lastTappedIcon)
         assertThat(uiModels).isEmpty()
     }
 

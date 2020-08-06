@@ -78,26 +78,7 @@ class PhotoPickerViewModel @Inject constructor(
     val showActionMode: LiveData<Event<Boolean>> = _showActionMode
     private val _actionModeUiModel = MutableLiveData<ActionModeUiModel>()
     val actionModeUiModel: LiveData<ActionModeUiModel> = merge(_browserType, _selectedIds) { browserType, selectedIds ->
-        if (browserType == null) {
-            return@merge null
-        }
-        val numSelected = selectedIds?.size ?: 0
-        val title: UiString? = when {
-            numSelected == 0 -> null
-            browserType.canMultiselect() -> {
-                UiStringText(String.format(context.resources.getString(string.cab_selected), numSelected))
-            }
-            else -> {
-                if (browserType.isImagePicker && browserType.isVideoPicker) {
-                    UiStringRes(string.photo_picker_use_media)
-                } else if (browserType.isVideoPicker) {
-                    UiStringRes(string.photo_picker_use_video)
-                } else {
-                    UiStringRes(string.photo_picker_use_photo)
-                }
-            }
-        }
-        ActionModeUiModel(title, browserType.isGutenbergPicker)
+        buildActionModeUiModel(selectedIds, browserType)
     }
 
     val selectedIds: LiveData<List<Long>> = _selectedIds
@@ -107,8 +88,19 @@ class PhotoPickerViewModel @Inject constructor(
             _browserType,
             _bottomBar
     ) { data, selectedIds, browserType, bottomBar ->
+        buildPhotoPickerUiModel(data, browserType, selectedIds, bottomBar)
+    }
+
+    var lastTappedIcon: PhotoPickerIcon? = null
+
+    private fun buildPhotoPickerUiModel(
+        data: List<PhotoPickerItem>?,
+        browserType: MediaBrowserType?,
+        selectedIds: List<Long>?,
+        bottomBar: BottomBar?
+    ): PhotoPickerUiModel? {
         var isVideoSelected = false
-        if (data != null && browserType != null) {
+        return if (data != null && browserType != null) {
             val uiItems = data.map {
                 if (selectedIds != null && selectedIds.contains(it.id)) {
                     isVideoSelected = isVideoSelected || it.isVideo
@@ -154,6 +146,32 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
+    private fun buildActionModeUiModel(
+        selectedIds: List<Long>?,
+        browserType: MediaBrowserType?
+    ): ActionModeUiModel? {
+        if (browserType == null) {
+            return null
+        }
+        val numSelected = selectedIds?.size ?: 0
+        val title: UiString? = when {
+            numSelected == 0 -> null
+            browserType.canMultiselect() -> {
+                UiStringText(String.format(context.resources.getString(string.cab_selected), numSelected))
+            }
+            else -> {
+                if (browserType.isImagePicker && browserType.isVideoPicker) {
+                    UiStringRes(string.photo_picker_use_media)
+                } else if (browserType.isVideoPicker) {
+                    UiStringRes(string.photo_picker_use_video)
+                } else {
+                    UiStringRes(string.photo_picker_use_photo)
+                }
+            }
+        }
+        return ActionModeUiModel(title, browserType.isGutenbergPicker)
+    }
+
     private fun buildBottomBar(
         bottomBar: BottomBar?,
         browserType: MediaBrowserType,
@@ -186,11 +204,16 @@ class PhotoPickerViewModel @Inject constructor(
         }
     }
 
-    fun start(selectedIds: List<Long>?, browserType: MediaBrowserType) {
+    fun start(
+        selectedIds: List<Long>?,
+        browserType: MediaBrowserType,
+        lastTappedIcon: PhotoPickerIcon?
+    ) {
         selectedIds?.let {
             _selectedIds.value = selectedIds
         }
         _browserType.value = browserType
+        this.lastTappedIcon = lastTappedIcon
     }
 
     fun numSelected(): Int {

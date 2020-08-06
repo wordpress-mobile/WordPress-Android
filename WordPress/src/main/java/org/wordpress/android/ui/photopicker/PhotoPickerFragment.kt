@@ -7,21 +7,13 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.text.Html
 import android.view.LayoutInflater
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.ActionMode
-import androidx.appcompat.view.ActionMode.Callback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.Event.ON_START
-import androidx.lifecycle.Lifecycle.Event.ON_STOP
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -52,8 +44,6 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiMo
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.INSERT_EDIT
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.MEDIA_SOURCE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiModel.BottomBarUiModel.BottomBar.NONE
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AccessibilityUtils
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration.MEDIUM
@@ -93,7 +83,6 @@ class PhotoPickerFragment : Fragment() {
     }
 
     private var listener: PhotoPickerListener? = null
-    private var lastTappedIcon: PhotoPickerIcon? = null
     private var site: SiteModel? = null
     private lateinit var browserType: MediaBrowserType
 
@@ -126,6 +115,7 @@ class PhotoPickerFragment : Fragment() {
         browserType = requireArguments().getSerializable(MediaBrowserActivity.ARG_BROWSER_TYPE) as MediaBrowserType
         site = requireArguments().getSerializable(WordPress.SITE) as SiteModel
         var selectedIds: List<Long>? = null
+        var lastTappedIcon: PhotoPickerIcon? = null
         if (savedInstanceState != null) {
             val savedLastTappedIconName = savedInstanceState.getString(KEY_LAST_TAPPED_ICON)
             lastTappedIcon = savedLastTappedIconName?.let { PhotoPickerIcon.valueOf(it) }
@@ -173,7 +163,11 @@ class PhotoPickerFragment : Fragment() {
             if (it?.peekContent() == true) {
                 it.getContentIfNotHandled()
 
-                (activity as AppCompatActivity).startSupportActionMode(ActionModeCallback(viewModel))
+                (activity as AppCompatActivity).startSupportActionMode(
+                        PhotoPickerActionModeCallback(
+                                viewModel
+                        )
+                )
                 hideBottomBar(container_media_source_bar)
             }
         }
@@ -204,7 +198,7 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.start(selectedIds, browserType)
+        viewModel.start(selectedIds, browserType, lastTappedIcon)
     }
 
     private fun setupBottomBar(uiModel: BottomBarUiModel) {
@@ -290,7 +284,7 @@ class PhotoPickerFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putString(
                 KEY_LAST_TAPPED_ICON,
-                lastTappedIcon?.name
+                viewModel.lastTappedIcon?.name
         )
         val selectedIds = viewModel.selectedIds.value
         if (selectedIds != null && selectedIds.isNotEmpty()) {
@@ -312,6 +306,7 @@ class PhotoPickerFragment : Fragment() {
                             requireActivity(), permission.CAMERA
                     ) != PackageManager.PERMISSION_GRANTED || !hasStoragePermission()) {
                 requestCameraPermission()
+                viewModel.lastTappedIcon = icon
                 return
             }
         }
@@ -421,62 +416,6 @@ class PhotoPickerFragment : Fragment() {
         viewModel.refreshData(browserType, false)
     }
 
-    private class ActionModeCallback(private val viewModel: PhotoPickerViewModel) : Callback, LifecycleOwner {
-        private lateinit var lifecycleRegistry: LifecycleRegistry
-        override fun onCreateActionMode(
-            actionMode: ActionMode,
-            menu: Menu
-        ): Boolean {
-            lifecycleRegistry = LifecycleRegistry(this)
-            lifecycleRegistry.handleLifecycleEvent(ON_START)
-            viewModel.actionModeUiModel.observe(this, Observer { uiModel ->
-                if (uiModel.showInsertEditBottomBar) {
-                    viewModel.showInsertEditBottomBar()
-                } else if (menu.size() == 0) {
-                    val inflater = actionMode.menuInflater
-                    inflater.inflate(R.menu.photo_picker_action_mode, menu)
-                }
-
-                if (uiModel.actionModeTitle is UiStringText) {
-                    actionMode.title = uiModel.actionModeTitle.text
-                } else if (uiModel.actionModeTitle is UiStringRes) {
-                    actionMode.setTitle(uiModel.actionModeTitle.stringRes)
-                }
-            })
-            viewModel.showActionMode.observe(this, Observer {
-                if (it?.peekContent() == false) {
-                    it.getContentIfNotHandled()
-                    actionMode.finish()
-                }
-            })
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            return false
-        }
-
-        override fun onActionItemClicked(
-            mode: ActionMode,
-            item: MenuItem
-        ): Boolean {
-            if (item.itemId == R.id.mnu_confirm_selection) {
-                viewModel.performInsertAction()
-                return true
-            }
-            return false
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-            viewModel.showMediaSourceBottomBar()
-            viewModel.clearSelection()
-
-            lifecycleRegistry.handleLifecycleEvent(ON_STOP)
-        }
-
-        override fun getLifecycle(): Lifecycle = lifecycleRegistry
-    }
-
     private fun hasStoragePermission(): Boolean {
         return ContextCompat.checkSelfPermission(
                 requireActivity(), permission.WRITE_EXTERNAL_STORAGE
@@ -534,7 +473,7 @@ class PhotoPickerFragment : Fragment() {
         when (requestCode) {
             WPPermissionUtils.PHOTO_PICKER_STORAGE_PERMISSION_REQUEST_CODE -> checkStoragePermission()
             WPPermissionUtils.PHOTO_PICKER_CAMERA_PERMISSION_REQUEST_CODE -> if (allGranted) {
-                doIconClicked(lastTappedIcon!!)
+                doIconClicked(viewModel.lastTappedIcon!!)
             }
         }
     }
