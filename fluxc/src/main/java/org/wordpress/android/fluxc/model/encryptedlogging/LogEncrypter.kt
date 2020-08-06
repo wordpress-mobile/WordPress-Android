@@ -26,7 +26,15 @@ class LogEncrypter @Inject constructor(private val encryptedLoggingKey: Encrypte
     fun encrypt(text: String, uuid: String): String = buildString {
         val state = State.ByReference()
         append(buildHeader(uuid, state))
-        text.lines().forEach { line ->
+        val lines = text.lines()
+        lines.mapIndexed { index, line ->
+            if (index + 1 >= lines.size) {
+                // If it's the last element
+                line
+            } else {
+                "$line\n"
+            }
+        }.forEach { line ->
             append(buildMessage(line, state))
         }
         append(buildFooter(state))
