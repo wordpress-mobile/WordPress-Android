@@ -4,20 +4,28 @@ import android.util.Base64
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream.State
 import com.goterl.lazycode.lazysodium.utils.Key
+import dagger.Reusable
+import javax.inject.Inject
+
+data class EncryptedLoggingKey(val publicKey: Key)
 
 /**
  * [LogEncrypter] encrypts the logs for the given text.
  **
- * @param uuid Uuid for the encrypted log
- * @param publicKey The public key used to encrypt the log
+ * @param encryptedLoggingKey The public key used to encrypt the log
  *
  */
-class LogEncrypter(private val uuid: String, private val publicKey: Key) {
-    private val sodium = EncryptionUtils.sodium
-
-    fun encrypt(text: String): String = buildString {
+@Reusable
+class LogEncrypter @Inject constructor(private val encryptedLoggingKey: EncryptedLoggingKey) {
+    /**
+     * Encrypts the given [text]. It also adds the given [uuid] to its headers.
+     *
+     * @param text Text contents to be encrypted
+     * @param uuid Uuid for the encrypted log
+     */
+    fun encrypt(text: String, uuid: String): String = buildString {
         val state = State.ByReference()
-        append(buildHeader(state))
+        append(buildHeader(uuid, state))
         text.lines().forEach { line ->
             append(buildMessage(line, state))
         }
@@ -36,11 +44,11 @@ class LogEncrypter(private val uuid: String, private val publicKey: Key) {
     /**
      * An internal convenience function to extract the header building process.
      */
-    private fun buildHeader(state: State): String {
+    private fun buildHeader(uuid: String, state: State): String {
         val header = ByteArray(SecretStream.HEADERBYTES)
         val key = SecretStreamKey.generate().let {
-            check(sodium.cryptoSecretStreamInitPush(state, header, it.bytes))
-            it.encrypt(publicKey)
+            check(EncryptionUtils.sodium.cryptoSecretStreamInitPush(state, header, it.bytes))
+            it.encrypt(encryptedLoggingKey.publicKey)
         }
 
         require(SecretStream.Checker.headerCheck(header.size)) {
@@ -86,7 +94,15 @@ class LogEncrypter(private val uuid: String, private val publicKey: Key) {
         val plainBytes = string.toByteArray()
 
         val encryptedBytes = ByteArray(SecretStream.ABYTES + plainBytes.size) // Stores the encrypted bytes
-        check(sodium.cryptoSecretStreamPush(state, encryptedBytes, plainBytes, plainBytes.size.toLong(), tag)) {
+        check(
+                EncryptionUtils.sodium.cryptoSecretStreamPush(
+                        state,
+                        encryptedBytes,
+                        plainBytes,
+                        plainBytes.size.toLong(),
+                        tag
+                )
+        ) {
             "Unable to encrypt message: $string"
         }
 
