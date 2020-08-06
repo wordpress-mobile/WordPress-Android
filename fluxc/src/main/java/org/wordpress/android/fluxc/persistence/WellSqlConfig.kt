@@ -1271,6 +1271,7 @@ open class WellSqlConfig : DefaultWellConfig {
                             "PRODUCT_INFO TEXT, " +
                             "CURRENCY TEXT, " +
                             "QUANTITY INTEGER, " +
+                            "UNIT TEXT," +
                             "TOTAL REAL)")
                 }
             }
