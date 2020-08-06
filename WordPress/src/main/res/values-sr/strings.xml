@@ -127,7 +127,6 @@ Language: sr_RS
     <string name="update_verb">Ажурирај</string>
     <string name="schedule_verb">Заказати</string>
     <string name="reader_page_followed_tags">Ознаке које пратите</string>
-    <string name="reader_title_tag_preview">Ознака читача</string>
     <string name="reader_page_followed_blogs">Веб места која пратите</string>
     <string name="ssl_certificate_error">Неисправна SSL потврда</string>
     <string name="forgot_password">Изгубили сте лозинку?</string>

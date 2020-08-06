@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-09 12:54:09+0000
+Translation-Revision-Date: 2020-07-21 12:11:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="quick_start_list_update_site_title_subtitle">Sitenize kişiliğini ve konuyu yansıtan bir ad verin. İlk izlenim önemlidir.</string>
+    <string name="quick_start_list_update_site_title_title">Site başlığınızı ayarlayın</string>
+    <string name="dialog_confirm_trash_losing_local_changes_message">Bu yazının çöpe taşınması, yerel değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
+    <string name="gutenberg_native_s_block_options">%s blok seçenekleri</string>
+    <string name="gutenberg_native_remove_block">Bloğu kaldır</string>
+    <string name="gutenberg_native_paste_block">Bloğu yapıştır</string>
+    <string name="gutenberg_native_duplicate_block">Bloğu çoğalt</string>
+    <string name="gutenberg_native_copy_block">Bloğu kopyala</string>
+    <string name="gutenberg_native_copied_block">Kopyalanan blok</string>
+    <string name="gutenberg_native_block_settings">Blok ayarları</string>
+    <string name="gutenberg_native_block_pasted">Blok yapıştırıldı</string>
+    <string name="gutenberg_native_block_duplicated">Blok çoğaltıldı</string>
+    <string name="gutenberg_native_block_cut">Blok kesildi</string>
+    <string name="gutenberg_native_block_copied">Blok kopyalandı</string>
+    <string name="my_site_title_changer_dialog_not_allowed_hint">Site Başlığı yalnızca yönetici rolüne sahip bir kullanıcı tarafından değiştirilebilir.</string>
+    <string name="my_site_title_changer_dialog_hint">Site Başlığı, web tarayıcısının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide gösterilir.</string>
+    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
+    <string name="reader_title_tag_preview">Konu</string>
+    <string name="error_update_site_title_network">Site başlığı güncellenemedi. Ağ bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_title">Kaydedilmemiş değişiklikler</string>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
     <string name="gutenberg_native_navigates_to_the_previous_content_sheet">Önceki içerik sayfasına gider</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Gradyanı özelleştirme bölümüne gider</string>
@@ -24,7 +44,6 @@ Language: tr
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release_in_the_m">Her sürümde daha fazla blok eklemek için çok çalışıyoruz. Bu arada, bu bloğu cihazınızın web tarayıcısını kullanarak da düzenleyebilirsiniz.</string>
     <string name="gutenberg_native_edit_block_in_web_browser">Bloğu tarayıcıda düzenle</string>
     <string name="gutenberg_native_dismiss">Kapat</string>
-    <string name="prepublishing_nudges_visibility_password">Parola korumalı</string>
     <string name="prepublishing_nudges_home_tags_not_set">Belirlenmemiş</string>
     <string name="prepublishing_tags_description">Etiketler okuyuculara bir yazının ne hakkında olduğunu söylemeye yardımcı olur.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Yayınla</string>
@@ -55,12 +74,7 @@ Language: tr
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="update_now">Şimdi güncelle</string>
     <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_remove_s">%s ögesini kaldır</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
-    <string name="gutenberg_native_move_s_up">%s Blokunu Yukarı Taşı</string>
-    <string name="gutenberg_native_move_s_right">%s Blokunu Sağa Taşı</string>
-    <string name="gutenberg_native_move_s_left">%s Sola Taşı</string>
-    <string name="gutenberg_native_move_s_down">%s Blokunu Aşağı Taşı</string>
     <string name="gutenberg_native_try_a_starter_layout">Başlangıç düzenini deneyin</string>
     <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
@@ -119,7 +133,9 @@ Language: tr
     <string name="copy_text">Kopyala</string>
     <string name="gutenberg_native_number_of_columns">Sütun sayısı</string>
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Bloğu sağa, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_move_block_right">Bloğu sağa taşı</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Bloğu sola, %1$s konumundan %2$s konumuna taşıyın</string>
+    <string name="gutenberg_native_move_block_left">Bloğu sola taşı</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Bloğu sağa taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Bloğu sola taşımak için iki kez dokunun</string>
     <string name="gutenberg_native_columns_settings">Sütun Ayarları</string>
@@ -202,7 +218,6 @@ Language: tr
     <string name="gutenberg_native_only_show_excerpt">Sadece alıntı göster</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
-    <string name="gutenberg_native_s_settings">%s ayarları</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Hadi birlikte bir şeyler oluşturalım.</string>
     <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım!</string>
@@ -349,6 +364,7 @@ Language: tr
     <string name="gutenberg_native_s_isn_t_yet_supported_on_wordpress_for_android">\"%s\" henüz Android için WordPress\'te desteklenmiyor</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
     <string name="gutenberg_native_s_block_empty">%s bloğu. Boş</string>
+    <string name="gutenberg_native_cut_block">Bloğu kes</string>
     <string name="gutenberg_native_reset_block">Bloğu sıfırla</string>
     <string name="gutenberg_native_remove_annotations">Ek açıklamaları kaldır</string>
     <string name="gutenberg_native_problem_opening_the_video">Video açılırken bir sorun oluştu</string>
@@ -365,7 +381,9 @@ Language: tr
     <string name="gutenberg_native_my_post_publish_panel">Yayımlama sonrası panelim</string>
     <string name="gutenberg_native_my_document_setting_panel">Belge ayarları panelim</string>
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
+    <string name="gutenberg_native_move_block_up">Bloğu yukarı taşı</string>
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Bloğu %1$s. satırdan %2$s. satıra taşı</string>
+    <string name="gutenberg_native_move_block_down">Bloğu aşağı taşı</string>
     <string name="gutenberg_native_link_text">Metin bağlantısı ver</string>
     <string name="gutenberg_native_link_inserted">Bağlantı eklendi</string>
     <string name="gutenberg_native_image_caption_s">Görsel yazısı. %s</string>
@@ -620,7 +638,7 @@ Language: tr
     <string name="post_restoring">Gönderi geri yükleniyor</string>
     <string name="post_restored">Gönderi geri yüklendi</string>
     <string name="post_trashing">Gönderi siliniyor</string>
-    <string name="dialog_confirm_trash_losing_local_changes_message">Bu gönderinin silinmesi, yerel değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
+    <string name="dialog_confirm_trash_losing_unsaved_changes_message">Bu yazının çöpe taşınması, kaydedilmeyen değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">Yerel değişiklikler</string>
     <string name="button_move_to_draft">Taslaklara taşı</string>
     <string name="post_list_toggle_item_layout_list_view">Liste görünümüne geç</string>
@@ -696,7 +714,7 @@ Language: tr
     <string name="quick_start_dialog_upload_icon_message">Ziyaretçileriniz tarayıcılarında sizin simgenizi görecektir. Gösterişli ve profesyonel bir görünüm için özel bir simge ekleyin.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Mevcut paketi ve kullanılabilecek diğer paketleri görmek için %1$s Paket %2$s seçeneğine dokunun</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Yeni bir sayfa oluşturmak için %1$s Sayfa Ekle %2$s simgesine dokunun.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Devam etmek için %1$s Site Sayfaları %2$s simgesine dokunun.</string>
+    <string name="quick_start_dialog_create_new_page_message_short">Devam etmek için %1$s Sayfalar %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_check_stats_message_short">Sitenizin performansını görmek için %1$s İstatistikler %2$s simgesine dokunun.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Yeni bir tane yüklemek için %1$s Site Simgeniz %2$s’e dokunun</string>
     <string name="quick_start_dialog_publish_post_message">İlk gönderinizi taslak olarak yayınlayın.</string>
@@ -1657,7 +1675,6 @@ Language: tr
     <string name="pending_draft_one_week_1">\'%1$s\' taslağınız sizi bekliyor - yayınladığınızdan emin olun!</string>
     <string name="pending_draft_one_day_2">Biliyor musunuz \'%1$s\'  hala bir taslak? Yayınlayın gitsin!</string>
     <string name="pending_draft_one_day_1">\'%1$s\' taslağını dün kaydettiniz. Yayınlamayı unutmayın!</string>
-    <string name="reader_photo_by">%s tarafından çekilmiş fotoğraf</string>
     <string name="reader_label_visit">Siteyi ziyaret et</string>
     <string name="swipe_for_more">Daha fazlası için parmağınızı kaydırın</string>
     <string name="reader_err_get_post_not_authorized_signin_fallback">Bu yazıyı görmeye yetkili değilsiniz. Önce WordPress.com hesabınıza giriş yapmayı deneyin ya da üst eylem tuşu ile bir tarayıcı açmayı deneyin.</string>
@@ -2149,7 +2166,6 @@ Language: tr
     <string name="reader_hint_add_tag_or_url">Takip etmek için etiket veya adres girin</string>
     <string name="reader_page_followed_blogs">Takip edilen siteler</string>
     <string name="reader_page_followed_tags">Takip edilen etiketler</string>
-    <string name="reader_title_tag_preview">Okuyucu etiketi</string>
     <string name="reader_title_blog_preview">Okuyucu sitesi</string>
     <string name="ssl_certificate_ask_trust">Eğer bu siteye genelde sorunsuz şekilde bağlanabiliyorsanız bu hata birilerinin siteyi taklit ettiği anlamına gelebilir. Yine de sertifikaya güvenmek ister misiniz?</string>
     <string name="ssl_certificate_error">Geçersiz SSL setifikası</string>

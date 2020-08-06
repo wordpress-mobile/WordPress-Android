@@ -58,10 +58,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        close_button.setOnClickListener {
-            trackTagsChangedEvent()
-            viewModel.onCloseButtonClicked()
-        }
         back_button.setOnClickListener {
             trackTagsChangedEvent()
             viewModel.onBackButtonClicked()
@@ -79,12 +75,6 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
-
-        viewModel.dismissBottomSheet.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onCloseClicked()
-            }
-        })
 
         viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
             event?.applyIfNotHandled {

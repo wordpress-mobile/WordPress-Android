@@ -31,9 +31,6 @@ class PrepublishingPublishSettingsViewModel @Inject constructor(
     private val _navigateToHomeScreen = MutableLiveData<Event<Unit>>()
     val navigateToHomeScreen: LiveData<Event<Unit>> = _navigateToHomeScreen
 
-    private val _dismissBottomSheet = MutableLiveData<Event<Unit>>()
-    val dismissBottomSheet: LiveData<Event<Unit>> = _dismissBottomSheet
-
     private val _updateToolbarTitle = MutableLiveData<UiString>()
     val updateToolbarTitle: LiveData<UiString> = _updateToolbarTitle
 
@@ -45,8 +42,6 @@ class PrepublishingPublishSettingsViewModel @Inject constructor(
     private fun setToolbarTitle() {
         _updateToolbarTitle.postValue(UiStringRes(R.string.prepublishing_nudges_toolbar_title_publish))
     }
-
-    fun onCloseButtonClicked() = _dismissBottomSheet.postValue(Event(Unit))
 
     fun onBackButtonClicked() {
         _navigateToHomeScreen.postValue(Event(Unit))

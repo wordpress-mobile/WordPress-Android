@@ -547,11 +547,11 @@ public class AnalyticsUtils {
      * @param username
      * @param email
      */
-    public static void trackAnalyticsAccountCreated(String username, String email) {
+    public static void trackAnalyticsAccountCreated(String username, String email, Map<String, Object> properties) {
         AnalyticsUtils.refreshMetadataNewUser(username, email);
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
-        AnalyticsTracker.track(Stat.CREATED_ACCOUNT);
+        AnalyticsTracker.track(Stat.CREATED_ACCOUNT, properties);
     }
 
     public static void trackAnalyticsPostListToggleLayout(PostListViewLayoutType viewLayoutType) {
