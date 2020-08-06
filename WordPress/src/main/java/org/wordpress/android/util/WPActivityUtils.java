@@ -11,13 +11,16 @@ import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ListView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -43,7 +46,7 @@ public class WPActivityUtils {
 
         // just in case, try to find a container of our own custom dialog
         if (dialogContainerView == null) {
-            dialogContainerView = dialog.findViewById(R.id.list);
+            dialogContainerView = dialog.findViewById(R.id.list_editor_parent);
         }
 
         if (dialogContainerView == null) {
@@ -57,18 +60,39 @@ public class WPActivityUtils {
             return;
         }
 
-        AppBarLayout appbar = (AppBarLayout) LayoutInflater.from(context.getActivity())
-                                                           .inflate(R.layout.toolbar_main, root, false);
+        // remove view from the root
+        root.removeView(dialogContainerView);
 
+        // inflate our own layout with coordinator layout and appbar
+        ViewGroup dialogViewWrapper = (ViewGroup) LayoutInflater.from(
+                context.getActivity()).inflate(
+                R.layout.preference_screen_wrapper, root,
+                false);
+
+        // container that will host content of the dialog
+        ViewGroup listContainer = dialogViewWrapper.findViewById(R.id.list_container);
+
+        final ListView listOfPreferences = dialogContainerView.findViewById(android.R.id.list);
+        if (listOfPreferences != null) {
+            ViewCompat.setNestedScrollingEnabled(listOfPreferences, true);
+        }
+
+        // add dialog view into container
+        LayoutParams lp = dialogContainerView.getLayoutParams();
+        lp.height = LayoutParams.MATCH_PARENT;
+        lp.width = LayoutParams.MATCH_PARENT;
+        listContainer.addView(dialogContainerView, lp);
+
+        // add layout with container back to root view
+        root.addView(dialogViewWrapper);
+
+        AppBarLayout appbar = dialogViewWrapper.findViewById(R.id.appbar_main);
         MaterialToolbar toolbar = appbar.findViewById(R.id.toolbar_main);
 
-        root.addView(appbar, 0);
+        appbar.setLiftOnScrollTargetViewId(android.R.id.list);
 
         dialog.getWindow().setWindowAnimations(R.style.DialogAnimations);
-
-
         toolbar.setTitle(title);
-        toolbar.setNavigationIcon(org.wordpress.android.R.drawable.ic_arrow_left_white_24dp);
         toolbar.setNavigationOnClickListener(v -> dialog.dismiss());
         toolbar.setNavigationContentDescription(R.string.navigate_up_desc);
     }
@@ -121,7 +145,7 @@ public class WPActivityUtils {
             if (VERSION.SDK_INT >= VERSION_CODES.M) {
                 int systemVisibility = window.getDecorView().getSystemUiVisibility();
                 int newSystemVisibility = showInLightMode ? systemVisibility | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                        : systemVisibility ^ View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
                 window.getDecorView().setSystemUiVisibility(newSystemVisibility);
             }
         }
