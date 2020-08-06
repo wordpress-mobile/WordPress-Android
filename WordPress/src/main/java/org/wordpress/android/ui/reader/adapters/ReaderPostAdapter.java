@@ -277,7 +277,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             }
         } else if (holder instanceof TagHeaderViewHolder) {
             TagHeaderViewHolder tagHolder = (TagHeaderViewHolder) holder;
-            renderTagHeader(mCurrentTag, tagHolder, true, false);
+            renderTagHeader(mCurrentTag, tagHolder, true);
         } else if (holder instanceof GapMarkerViewHolder) {
             GapMarkerViewHolder gapHolder = (GapMarkerViewHolder) holder;
             gapHolder.mGapMarkerView.setCurrentTag(mCurrentTag);
@@ -289,8 +289,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private void renderTagHeader(
         ReaderTag currentTag,
         TagHeaderViewHolder tagHolder,
-        Boolean isFollowButtonEnabled,
-        Boolean shouldFollowButtonAnimate
+        Boolean isFollowButtonEnabled
     ) {
         if (currentTag == null) {
             return;
@@ -304,10 +303,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             currentTag.getLabel(),
             new FollowButtonUiState(
                 onFollowButtonClicked,
-                mAccountStore.hasAccessToken(),
                 ReaderTagTable.isFollowedTagName(currentTag.getTagSlug()),
-                isFollowButtonEnabled,
-                shouldFollowButtonAnimate
+                isFollowButtonEnabled
             )
         );
         tagHolder.onBind(uiState);
@@ -330,7 +327,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         : R.string.reader_toast_err_remove_tag;
                 ToastUtils.showToast(context, errResId);
             }
-            renderTagHeader(currentTag, tagHolder, true, false);
+            renderTagHeader(currentTag, tagHolder, true);
         };
 
         boolean success;
@@ -341,7 +338,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         }
 
         if (success) {
-            renderTagHeader(currentTag, tagHolder, false, false);
+            renderTagHeader(currentTag, tagHolder, false);
         }
     }
 
