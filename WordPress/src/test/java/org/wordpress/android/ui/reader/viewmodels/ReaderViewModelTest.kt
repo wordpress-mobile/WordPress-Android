@@ -24,6 +24,7 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.usecases.LoadReaderTabsUseCase
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -49,6 +50,7 @@ class ReaderViewModelTest {
     @Mock lateinit var loadReaderTabsUseCase: LoadReaderTabsUseCase
     @Mock lateinit var readerTracker: ReaderTracker
     @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     private val emptyReaderTagList = ReaderTagList()
     private val nonEmptyReaderTagList = ReaderTagList().apply {
@@ -67,7 +69,8 @@ class ReaderViewModelTest {
                 dateProvider,
                 loadReaderTabsUseCase,
                 readerTracker,
-                accountStore
+                accountStore,
+                getFollowedTagsUseCase
         )
 
         whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
@@ -357,6 +360,32 @@ class ReaderViewModelTest {
         assertThat(viewModel.closeReaderInterests.value).isNotNull
     }
 
+    @Test
+    fun `Choose interests screen shown if tag changed to discover and followed tags not found for user`() =
+            testWithEmptyUserTags {
+                // Arrange
+                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
+                val selectedTag: ReaderTag = mock()
+                whenever(selectedTag.isDiscover).thenReturn(true)
+                // Act
+                viewModel.onTagChanged(selectedTag)
+                // Assert
+                assertThat(viewModel.showReaderInterests.value).isNotNull
+            }
+
+    @Test
+    fun `Choose interests screen not shown if tag changed to discover and followed tags found for user`() =
+            testWithNonEmptyUserTags {
+                // Arrange
+                whenever(appPrefsWrapper.isReaderImprovementsPhase2Enabled()).thenReturn(true)
+                val selectedTag: ReaderTag = mock()
+                whenever(selectedTag.isDiscover).thenReturn(true)
+                // Act
+                viewModel.onTagChanged(selectedTag)
+                // Assert
+                assertThat(viewModel.showReaderInterests.value).isNull()
+            }
+
     private fun triggerReaderTabContentDisplay() {
         viewModel.start()
         if (appPrefsWrapper.isReaderImprovementsPhase2Enabled()) {
@@ -381,6 +410,24 @@ class ReaderViewModelTest {
     private fun <T> testWithNonMockedNonEmptyTags(block: suspend CoroutineScope.() -> T) {
         test {
             whenever(loadReaderTabsUseCase.loadTabs()).thenReturn(createNonMockedNonEmptyReaderTagList())
+            block()
+        }
+    }
+
+    private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            whenever(getFollowedTagsUseCase.get()).thenReturn(emptyReaderTagList)
+            block()
+        }
+    }
+
+    private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
+        test {
+            val nonEmptyUserTags = ReaderTagList().apply {
+                this.add(mock())
+                this.add(mock())
+            }
+            whenever(getFollowedTagsUseCase.get()).thenReturn(nonEmptyUserTags)
             block()
         }
     }
