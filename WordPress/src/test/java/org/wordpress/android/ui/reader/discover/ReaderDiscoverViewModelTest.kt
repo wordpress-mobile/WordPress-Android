@@ -71,7 +71,10 @@ class ReaderDiscoverViewModelTest {
         ).thenAnswer {
             val post = it.getArgument<ReaderPost>(POST_PARAM_POSITION)
             // propagate some of the arguments
-            createDummyReaderPostUiState(post, it.getArgument<(Long, Long) -> Unit>(ON_ITEM_RENDERED_PARAM_POSITION))
+            createDummyReaderPostUiState(
+                    post,
+                    it.getArgument<(ReaderCardUiState) -> Unit>(ON_ITEM_RENDERED_PARAM_POSITION)
+            )
         }
         whenever(readerDiscoverDataProvider.communicationChannel).thenReturn(communicationChannel)
     }
@@ -116,7 +119,7 @@ class ReaderDiscoverViewModelTest {
 
         // Act
         ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
-            it.onItemRendered.invoke(it.postId, it.blogId)
+            it.onItemRendered.invoke(it)
         }
         // Assert
         verify(readerDiscoverDataProvider).loadMoreCards()
@@ -131,7 +134,7 @@ class ReaderDiscoverViewModelTest {
         // Act
 
         ((viewModel.uiState.value as ContentUiState).cards[notCloseToEndIndex] as ReaderPostUiState).let {
-            it.onItemRendered.invoke(it.postId, it.blogId)
+            it.onItemRendered.invoke(it)
         }
         // Assert
         verify(readerDiscoverDataProvider, never()).loadMoreCards()
@@ -158,7 +161,7 @@ class ReaderDiscoverViewModelTest {
 
     private fun createDummyReaderPostUiState(
         post: ReaderPost,
-        onItemRendered: (Long, Long) -> Unit = mock()
+        onItemRendered: (ReaderCardUiState) -> Unit = mock()
     ): ReaderPostUiState {
         return ReaderPostUiState(
                 postId = post.postId,

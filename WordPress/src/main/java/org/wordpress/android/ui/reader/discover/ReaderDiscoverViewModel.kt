@@ -13,7 +13,6 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.LoadingUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -86,7 +85,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                                 photonHeight = photonHeight,
                                 isBookmarkList = false,
                                 onButtonClicked = this::onButtonClicked,
-                                onItemClicked = this::onItemClicked,
+                                onItemClicked = this::onPostItemClicked,
                                 onItemRendered = this::onItemRendered,
                                 onDiscoverSectionClicked = this::onDiscoverClicked,
                                 onMoreButtonClicked = this::onMoreButtonClicked,
@@ -137,21 +136,19 @@ class ReaderDiscoverViewModel @Inject constructor(
         // TODO malinjir implement action
     }
 
-    private fun onItemClicked(postId: Long, blogId: Long) {
+    private fun onPostItemClicked(postId: Long, blogId: Long) {
         AppLog.d(T.READER, "OnItemClicked")
     }
 
-    private fun onItemRendered(postId: Long, blogId: Long) {
-        initiateLoadMoreIfNecessary(postId, blogId)
+    private fun onItemRendered(itemUiState: ReaderCardUiState) {
+        initiateLoadMoreIfNecessary(itemUiState)
     }
 
-    private fun initiateLoadMoreIfNecessary(postId: Long, blogId: Long) {
+    private fun initiateLoadMoreIfNecessary(item: ReaderCardUiState) {
         (uiState.value as? ContentUiState)?.cards?.let {
             val closeToEndIndex = it.size - INITIATE_LOAD_MORE_OFFSET
             if (closeToEndIndex > 0) {
-                val isCardCloseToEnd: Boolean = (it.getOrNull(closeToEndIndex) as? ReaderPostUiState)?.let { card ->
-                    card.postId == postId && card.blogId == blogId
-                } == true
+                val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
                 // TODO malinjir we might want to show some kind of progress indicator when the request is in progress
                 if (isCardCloseToEnd) launch(bgDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
             }
