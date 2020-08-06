@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.model.encryptedlogging
 
 import android.util.Base64
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream
+import com.goterl.lazycode.lazysodium.interfaces.SecretStream.State
 import com.goterl.lazycode.lazysodium.utils.Key
 
 /**
@@ -13,29 +14,29 @@ import com.goterl.lazycode.lazysodium.utils.Key
  */
 class LogEncrypter(private val uuid: String, private val publicKey: Key) {
     private val sodium = EncryptionUtils.sodium
-    private val state = SecretStream.State.ByReference()
 
     fun encrypt(text: String): String = buildString {
-        append(buildHeader())
+        val state = State.ByReference()
+        append(buildHeader(state))
         text.lines().forEach { line ->
-            append("${buildMessage(line)}\n")
+            append(buildMessage(line, state))
         }
-        append(buildFooter())
+        append(buildFooter(state))
     }
 
     /**
      * Encrypt and write the provided string to the encrypted log file.
      * @param string: The string to be written to the file.
      */
-    private fun buildMessage(string: String): String {
-        val encryptedString = encryptMessage(string, SecretStream.TAG_MESSAGE)
+    private fun buildMessage(string: String, state: State): String {
+        val encryptedString = encryptMessage(string, SecretStream.TAG_MESSAGE, state)
         return "\t\t\"$encryptedString\",\n"
     }
 
     /**
      * An internal convenience function to extract the header building process.
      */
-    private fun buildHeader(): String {
+    private fun buildHeader(state: State): String {
         val header = ByteArray(SecretStream.HEADERBYTES)
         val key = SecretStreamKey.generate().let {
             check(sodium.cryptoSecretStreamInitPush(state, header, it.bytes))
@@ -69,8 +70,8 @@ class LogEncrypter(private val uuid: String, private val publicKey: Key) {
     /**
      * Add the closing file tag
      */
-    private fun buildFooter(): String {
-        val encryptedClosingTag = encryptMessage("", SecretStream.TAG_FINAL)
+    private fun buildFooter(state: State): String {
+        val encryptedClosingTag = encryptMessage("", SecretStream.TAG_FINAL, state)
         return buildString {
             append("\t\t\"$encryptedClosingTag\"\n")
             append("\t]\n")
@@ -81,11 +82,11 @@ class LogEncrypter(private val uuid: String, private val publicKey: Key) {
     /**
      * An internal convenience function to push more data into the sodium secret stream.
      */
-    private fun encryptMessage(string: String, tag: Byte): String {
+    private fun encryptMessage(string: String, tag: Byte, state: State): String {
         val plainBytes = string.toByteArray()
 
         val encryptedBytes = ByteArray(SecretStream.ABYTES + plainBytes.size) // Stores the encrypted bytes
-        check(sodium.cryptoSecretStreamPush(this.state, encryptedBytes, plainBytes, plainBytes.size.toLong(), tag)) {
+        check(sodium.cryptoSecretStreamPush(state, encryptedBytes, plainBytes, plainBytes.size.toLong(), tag)) {
             "Unable to encrypt message: $string"
         }
 
