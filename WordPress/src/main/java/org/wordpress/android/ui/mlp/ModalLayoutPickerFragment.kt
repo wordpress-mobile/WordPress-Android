@@ -60,11 +60,8 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = ModalLayoutPickerAdapter(this)
-
-        val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             /**
@@ -72,17 +69,13 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
              */
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (DisplayUtils.isLandscape(context)) return // no change in landscape mode
-                val offset = recyclerView.computeVerticalScrollOffset()
-                viewModel.setHeaderTitleVisibility(offset > scrollThreshold)
+                setHeaderVisibility()
             }
         })
 
         backButton.setOnClickListener {
             closeModal()
         }
-
-        title.setVisible(DisplayUtils.isLandscape(context))
 
         createBlankPageButton.setOnClickListener {
             closeModal()
@@ -92,6 +85,18 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
         previewButton.setOnClickListener { /* TODO */ }
 
         setupViewModel()
+
+        setHeaderVisibility()
+    }
+
+    private fun setHeaderVisibility() {
+        if (DisplayUtils.isLandscape(context)) {
+            title.setVisible(true)
+        } else {
+            val scrollThreshold = resources.getDimension(R.dimen.mlp_header_scroll_snap_threshold).toInt()
+            val offset = recyclerView.computeVerticalScrollOffset()
+            viewModel.setHeaderTitleVisibility(offset > scrollThreshold)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = BottomSheetDialog(requireContext(), getTheme()).apply {
@@ -127,7 +132,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
                 .get(ModalLayoutPickerViewModel::class.java)
 
         viewModel.listItems.observe(this, Observer {
-            (dialog?.content_recycler_view?.adapter as? ModalLayoutPickerAdapter)?.update(it ?: listOf())
+            (recyclerView?.adapter as? ModalLayoutPickerAdapter)?.update(it ?: listOf())
         })
 
         viewModel.isHeaderVisible.observe(this,
