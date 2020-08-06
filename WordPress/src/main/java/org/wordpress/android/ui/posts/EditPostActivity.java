@@ -966,7 +966,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
      * called by PhotoPickerFragment when media is selected - may be a single item or a list of items
      */
     @Override
-    public void onPhotoPickerMediaChosen(@NotNull List<? extends Uri> uriList) {
+    public void onPhotoPickerMediaChosen(@NotNull final List<? extends Uri> uriList) {
         mEditorPhotoPicker.hidePhotoPicker();
         mEditorMedia.onPhotoPickerMediaChosen(uriList);
     }
