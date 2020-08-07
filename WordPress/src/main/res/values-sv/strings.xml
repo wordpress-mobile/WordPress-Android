@@ -51,7 +51,7 @@ Language: sv_SE
     <string name="create_account">Skapa konto</string>
     <string name="send_link_by_email">Skicka länk via e-post</string>
     <string name="login_promo_text_unlock_the_power">Ta vara på kraften hos den mest flexibla webbplatsskaparen.</string>
-    <string name="login_promo_title_37_percent">37&amp;nbsp;% av webben är byggd på WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% av webben är byggd på WordPress.</string>
     <string name="reset_your_password">Återställ ditt lösenord</string>
     <string name="reader_error_generic_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>

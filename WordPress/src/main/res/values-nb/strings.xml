@@ -46,7 +46,7 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="login_promo_text_unlock_the_power">Lås opp kraften til en mest fleksible nettstedsbyggeren.</string>
-    <string name="login_promo_title_37_percent">37% av alle nettsteder er bygget på WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% av alle nettsteder er bygget på WordPress.</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
     <string name="quick_start_list_update_site_title_subtitle">Gi ditt nettsted et navn som reflekterer des personlighet og emne Førsteinntrykket teller!</string>
     <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>

@@ -51,7 +51,7 @@ Language: sq_AL
     <string name="create_account">Krijo llogari</string>
     <string name="send_link_by_email">Dërgoje lidhjen me email</string>
     <string name="login_promo_text_unlock_the_power">Çlironi fuqinë e krijuesit më të zhdërvjellët të sajteve.</string>
-    <string name="login_promo_title_37_percent">37% e web-it ngrihet mbi WordPress.</string>
+    <string name="login_promo_title_37_percent">37\% e web-it ngrihet mbi WordPress.</string>
     <string name="reset_your_password">Ricaktoni fjalëkalimi tuaj</string>
     <string name="reader_error_generic_title">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni.</string>
     <string name="quick_start_list_update_site_title_subtitle">Jepini sajtit tuaj një emër që pasqyron personalitetin dhe subjektin e tij. Përshtypja e parë ka vlerë!</string>

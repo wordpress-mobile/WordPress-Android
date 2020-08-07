@@ -51,7 +51,7 @@ Language: ar
     <string name="create_account">إنشاء حساب</string>
     <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
     <string name="login_promo_text_unlock_the_power">أطلق العنان لقدرات منشئ المواقع الأكثر مرونة.</string>
-    <string name="login_promo_title_37_percent">37% من مواقع الويب مبنية على ووردبريس.</string>
+    <string name="login_promo_title_37_percent">37\% من مواقع الويب مبنية على ووردبريس.</string>
     <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
     <string name="reader_error_generic_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>

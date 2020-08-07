@@ -51,7 +51,7 @@ Language: zh_CN
     <string name="create_account">创建帐户</string>
     <string name="send_link_by_email">通过电子邮件发送链接</string>
     <string name="login_promo_text_unlock_the_power">发挥最灵活的网站生成器的强大功能。</string>
-    <string name="login_promo_title_37_percent">网上有 37% 的内容是在 WordPress 上构建的。</string>
+    <string name="login_promo_title_37_percent">网上有 37\% 的内容是在 WordPress 上构建的。</string>
     <string name="reset_your_password">重置密码</string>
     <string name="reader_error_generic_title">处理请求时出现问题。 请稍后重试。</string>
     <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
