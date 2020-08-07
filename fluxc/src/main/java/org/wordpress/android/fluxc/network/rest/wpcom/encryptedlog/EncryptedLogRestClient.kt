@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog
 
+import com.android.volley.NoConnectionError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.VolleyError
@@ -37,15 +38,18 @@ constructor(
     // {"error":"too_many_requests","message":"You're sending too many messages. Please slow down."}
     // {"error":"invalid-request","message":"Invalid UUID: uuids must only contain letters, numbers, dashes, and curly brackets"}
     private fun mapError(error: VolleyError): UploadEncryptedLogError {
+        if (error is NoConnectionError) {
+            return UploadEncryptedLogError.NoConnection
+        }
         error.networkResponse?.let { networkResponse ->
             val statusCode = networkResponse.statusCode
             val json = JSONObject(String(networkResponse.data))
             val errorMessage = json.getString("message")
-            json.getString("error")?.let { errorType ->
+            json.getString("error").let { errorType ->
                 if (errorType == INVALID_REQUEST) {
-                    return UploadEncryptedLogError.InvalidRequest(statusCode, errorMessage)
+                    return UploadEncryptedLogError.InvalidRequest
                 } else if (errorType == TOO_MANY_REQUESTS) {
-                    return UploadEncryptedLogError.TooManyRequests(statusCode, errorMessage)
+                    return UploadEncryptedLogError.TooManyRequests
                 }
             }
             return UploadEncryptedLogError.Unknown(statusCode, errorMessage)
