@@ -85,6 +85,10 @@ public class FilteredRecyclerView extends RelativeLayout {
         init(context, attrs);
     }
 
+    public RecyclerView getInternalRecyclerView() {
+        return mRecyclerView;
+    }
+
     public void setRefreshing(boolean refreshing) {
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }

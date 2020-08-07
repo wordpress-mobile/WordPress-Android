@@ -10,8 +10,11 @@
     <dimen name="tab_height">48dp</dimen>
     <dimen name="me_menu_width">64dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="prominent_toolbar_height">112dp</dimen>
+    <dimen name="prominent_toolbar_with_tabs_height">168dp</dimen>
     <dimen name="toolbar_content_offset">72dp</dimen>
     <dimen name="toolbar_content_offset_end">0dp</dimen>
+    <dimen name="collapsible_toolbar_expanded_bottom_margin">28dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>

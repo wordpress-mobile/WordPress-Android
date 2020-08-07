@@ -26,7 +26,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -78,6 +77,7 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.FilteredRecyclerView;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
@@ -148,7 +148,7 @@ import static org.wordpress.android.fluxc.generated.AccountActionBuilder.newUpda
 
 import kotlin.Unit;
 
-public class ReaderPostListFragment extends Fragment
+public class ReaderPostListFragment extends ViewPagerFragment
         implements ReaderInterfaces.OnPostSelectedListener,
         ReaderInterfaces.OnFollowListener,
         ReaderInterfaces.OnPostListItemButtonListener,
@@ -2155,6 +2155,11 @@ public class ReaderPostListFragment extends Fragment
         hideNewPostsBar();
         showLoadingProgress(false);
         updateCurrentTagIfTime();
+    }
+
+    @Override
+    public View getScrollableViewForUniqueIdProvision() {
+        return mRecyclerView.getInternalRecyclerView();
     }
 
     /*

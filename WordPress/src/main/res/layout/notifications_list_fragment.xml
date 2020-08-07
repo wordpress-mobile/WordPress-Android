@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,26 +10,36 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_height="@dimen/prominent_toolbar_with_tabs_height"
+        app:liftOnScroll="false">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_main"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            style="@style/WordPress.CollapsedToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:layout_height="@dimen/prominent_toolbar_height">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar_main"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                app:layout_collapseMode="pin"
+                app:theme="@style/WordPress.ActionBar" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tab_height"
-            android:layout_gravity="start"
+            android:layout_height="?attr/actionBarSize"
+            android:visibility="visible"
+            app:layout_collapseMode="pin"
+            app:layout_scrollFlags="noScroll"
             app:tabGravity="fill"
             app:tabMode="scrollable" />
 

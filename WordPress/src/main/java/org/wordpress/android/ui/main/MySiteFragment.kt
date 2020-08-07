@@ -8,13 +8,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
 import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
@@ -28,7 +33,6 @@ import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
-import kotlinx.android.synthetic.main.toolbar_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -196,6 +200,7 @@ class MySiteFragment : Fragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         (requireActivity().application as WordPress).component().inject(this)
         if (savedInstanceState != null) {
             activeTutorialPrompt = savedInstanceState
@@ -216,25 +221,12 @@ class MySiteFragment : Fragment(),
         super.onDestroy()
     }
 
-    private fun refreshMeGravatar() {
-        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
-        meGravatarLoader.load(
-                false,
-                avatarUrl,
-                null,
-                avatar,
-                USER,
-                null
-        )
-    }
-
     override fun onResume() {
         super.onResume()
         updateSiteSettingsIfNecessary()
 
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
-        refreshMeGravatar()
         selectedSite?.let { site ->
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -548,8 +540,33 @@ class MySiteFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupClickListeners()
-        toolbar_main.setTitle(R.string.my_site_section_screen_title)
-        toolbar_main.inflateMenu(R.menu.my_site_menu)
+        collapsing_toolbar.title = getString(R.string.my_site_section_screen_title)
+
+        appbar_main.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            val maxOffset = appBarLayout.totalScrollRange
+            val currentOffset = maxOffset + verticalOffset
+
+            val percentage = ((currentOffset.toFloat() / maxOffset.toFloat()) * 100).toInt()
+            avatar?.let {
+                val minSize = avatar.minimumHeight
+                val maxSize = avatar.maxHeight
+                val modifierPx = (minSize.toFloat() - maxSize.toFloat()) * (percentage.toFloat() / 100) * -1
+                val modifierPercentage = modifierPx / minSize
+                val newScale = 1 + modifierPercentage
+
+                avatar.scaleX = newScale
+                avatar.scaleY = newScale
+            }
+        })
+        (activity as AppCompatActivity).setSupportActionBar(toolbar_main)
+        if (activeTutorialPrompt != null) {
+            showQuickStartFocusPoint()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.my_site_menu, menu)
         val meMenu = toolbar_main.menu.findItem(R.id.me_item)
         val actionView = meMenu.actionView
         actionView.setOnClickListener {
@@ -560,9 +577,20 @@ class MySiteFragment : Fragment(),
         actionView.let {
             TooltipCompat.setTooltipText(it, meMenu.title)
         }
-        if (activeTutorialPrompt != null) {
-            showQuickStartFocusPoint()
-        }
+
+        refreshMeGravatar(actionView.findViewById(R.id.avatar))
+    }
+
+    private fun refreshMeGravatar(gravatarImageView: ImageView) {
+        val avatarUrl = meGravatarLoader.constructGravatarUrl(accountStore.account.avatarUrl)
+        meGravatarLoader.load(
+                false,
+                avatarUrl,
+                null,
+                gravatarImageView,
+                USER,
+                null
+        )
     }
 
     private fun updateQuickStartContainer() {
@@ -1145,7 +1173,8 @@ class MySiteFragment : Fragment(),
                         // errored story but the error notification will remain existing in the system dashboard)
                         intent.action = getNotificationIdForError(
                                 StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
-                                event.storyIndex).toString() + ""
+                                event.storyIndex
+                        ).toString() + ""
 
                         // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
                         // is meant to be used for tracking purposes. Use it!
