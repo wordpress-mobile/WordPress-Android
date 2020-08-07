@@ -12,19 +12,24 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.media.MediaBrowserType
 import org.wordpress.android.ui.media.MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiModel
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
+import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel.Show
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
@@ -34,6 +39,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var permissionsHandler: PermissionsHandler
     @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
+    @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiStates = mutableListOf<PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -54,7 +60,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 permissionsHandler,
                 tenorFeatureConfig,
-                context
+                context,
+                resourceProvider
         )
         uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper, false)
@@ -83,6 +90,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertSingleIconMediaBottomBarVisible()
         selectItem(0)
 
         assertThat(uiStates).hasSize(3)
@@ -91,6 +99,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertInsertEditBottomBarVisible()
     }
 
     @Test
@@ -100,6 +109,9 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         viewModel.refreshData(false)
 
         selectItem(0)
+
+        assertInsertEditBottomBarVisible()
+
         viewModel.clearSelection()
 
         assertThat(uiStates).hasSize(4)
@@ -109,6 +121,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertSingleIconMediaBottomBarVisible()
     }
 
     @Test
@@ -140,7 +153,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `selects two items with multi selection available`() = test {
-        setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType)
+        setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType, true)
 
         viewModel.refreshData(false)
 
@@ -149,6 +162,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertSingleIconMediaBottomBarVisible()
         selectItem(1)
 
         assertUiModel(
@@ -156,6 +170,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(secondItem),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertInsertEditBottomBarVisible()
         selectItem(0)
 
         assertUiModel(
@@ -163,6 +178,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(secondItem, firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertInsertEditBottomBarVisible()
 
         selectItem(1)
 
@@ -171,6 +187,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 selectedItems = listOf(firstItem),
                 domainItems = listOf(firstItem, secondItem)
         )
+        assertInsertEditBottomBarVisible()
     }
 
     @Test
@@ -192,6 +209,20 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         clickItem(0)
         assertThat(navigateEvents).isNotEmpty
         verify(analyticsTrackerWrapper).track(eq(MEDIA_PICKER_PREVIEW_OPENED), any<MutableMap<String, Any>>())
+    }
+
+    @Test
+    fun `shows soft ask screen when storage permissions are turned off`() = test {
+        setupViewModel(listOf(), singleSelectBrowserType, hasStoragePermissions = false)
+        whenever(resourceProvider.getString(R.string.app_name)).thenReturn("WordPress")
+        whenever(resourceProvider.getString(R.string.photo_picker_soft_ask_label)).thenReturn("Soft ask label")
+
+        viewModel.checkStoragePermission(isAlwaysDenied = false)
+
+        assertThat(uiStates).hasSize(2)
+
+        assertSoftAskUiModelVisible()
+        assertBottomBarHidden()
     }
 
     private fun selectItem(position: Int) {
@@ -229,11 +260,24 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(viewModel.selectedURIs()).containsAll(selectedItems.map { it.uri })
     }
 
+    private fun assertSoftAskUiModelVisible() {
+        uiStates.last().apply {
+            assertThat(this.softAskViewUiModel).isNotNull()
+            assertThat(this.softAskViewUiModel is Show).isTrue()
+            (this.softAskViewUiModel as Show).apply {
+                assertThat(allowId).isEqualTo(UiStringRes(R.string.photo_picker_soft_ask_allow))
+                assertThat(isAlwaysDenied).isEqualTo(false)
+                assertThat(label).isEqualTo("Soft ask label")
+            }
+        }
+    }
+
     private suspend fun setupViewModel(
         domainModel: List<PhotoPickerItem>,
-        browserType: MediaBrowserType
+        browserType: MediaBrowserType,
+        hasStoragePermissions: Boolean = true
     ) {
-        whenever(permissionsHandler.hasStoragePermission()).thenReturn(true)
+        whenever(permissionsHandler.hasStoragePermission()).thenReturn(hasStoragePermissions)
         viewModel.start(listOf(), browserType, null, site)
         whenever(deviceMediaListBuilder.buildDeviceMedia(browserType)).thenReturn(domainModel)
         viewModel.uiState.observeForever {
@@ -272,5 +316,34 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
         assertThat(this.id).isEqualTo(domainItem.id)
         assertThat(this.isVideo).isEqualTo(domainItem.isVideo)
         assertThat(this.uri).isEqualTo(domainItem.uri)
+    }
+
+    private fun assertBottomBarHidden() {
+        uiStates.last().apply {
+            assertThat(bottomBarUiModel).isNotNull()
+            assertThat(bottomBarUiModel!!.type).isEqualTo(BottomBar.NONE)
+        }
+    }
+
+    private fun assertSingleIconMediaBottomBarVisible() {
+        uiStates.last().apply {
+            assertThat(bottomBarUiModel).isNotNull()
+            assertThat(bottomBarUiModel!!.type).isEqualTo(BottomBar.MEDIA_SOURCE)
+            assertThat(bottomBarUiModel!!.canShowInsertEditBottomBar).isTrue()
+            assertThat(bottomBarUiModel!!.hideMediaBottomBarInPortrait).isFalse()
+            assertThat(bottomBarUiModel!!.showCameraButton).isFalse()
+            assertThat(bottomBarUiModel!!.showWPMediaIcon).isFalse()
+        }
+    }
+
+    private fun assertInsertEditBottomBarVisible() {
+        uiStates.last().apply {
+            assertThat(bottomBarUiModel).isNotNull()
+            assertThat(bottomBarUiModel!!.type).isEqualTo(BottomBar.INSERT_EDIT)
+            assertThat(bottomBarUiModel!!.canShowInsertEditBottomBar).isTrue()
+            assertThat(bottomBarUiModel!!.hideMediaBottomBarInPortrait).isFalse()
+            assertThat(bottomBarUiModel!!.showCameraButton).isFalse()
+            assertThat(bottomBarUiModel!!.showWPMediaIcon).isFalse()
+        }
     }
 }

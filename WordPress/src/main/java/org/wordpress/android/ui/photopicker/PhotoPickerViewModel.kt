@@ -55,6 +55,7 @@ import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.HashMap
 import javax.inject.Inject
@@ -68,7 +69,8 @@ class PhotoPickerViewModel @Inject constructor(
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val permissionsHandler: PermissionsHandler,
     private val tenorFeatureConfig: TenorFeatureConfig,
-    private val context: Context
+    private val context: Context,
+    private val resourceProvider: ResourceProvider
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
@@ -167,7 +169,7 @@ class PhotoPickerViewModel @Inject constructor(
         val title: UiString? = when {
             numSelected == 0 -> null
             browserType.canMultiselect() -> {
-                UiStringText(String.format(context.resources.getString(R.string.cab_selected), numSelected))
+                UiStringText(String.format(resourceProvider.getString(R.string.cab_selected), numSelected))
             }
             else -> {
                 if (browserType.isImagePicker && browserType.isVideoPicker) {
@@ -431,20 +433,19 @@ class PhotoPickerViewModel @Inject constructor(
 
     private fun showSoftAskView(show: Boolean, isAlwaysDenied: Boolean) {
         if (show) {
-            val resources = context.resources
-            val appName = "<strong>${resources.getString(R.string.app_name)}</strong>"
+            val appName = "<strong>${resourceProvider.getString(R.string.app_name)}</strong>"
             val label = if (isAlwaysDenied) {
                 val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
                         context,
                         permission.WRITE_EXTERNAL_STORAGE
                 )}</strong>")
                 String.format(
-                        resources.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
+                        resourceProvider.getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName
                 )
             } else {
                 String.format(
-                        resources.getString(R.string.photo_picker_soft_ask_label),
+                        resourceProvider.getString(R.string.photo_picker_soft_ask_label),
                         appName
                 )
             }
