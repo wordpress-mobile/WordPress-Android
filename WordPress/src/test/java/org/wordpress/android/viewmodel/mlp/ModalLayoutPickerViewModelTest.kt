@@ -93,4 +93,39 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPage()
         verify(onCreateNewPageRequestedObserver).onChanged(anyOrNull())
     }
+
+    @Test
+    fun `when modal layout picker starts the layouts are loaded`() {
+        viewModel.init(false)
+        assertThat(viewModel.listItems.value?.size).isGreaterThan(0)
+    }
+
+    @Test
+    fun `when modal layout picker starts no layout is selected`() {
+        viewModel.init(false)
+        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
+
+    @Test
+    fun `when the user taps on a layout the layout is selected`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        assertThat(viewModel.selectedLayoutSlug.value).isEqualTo("about-1")
+    }
+
+    @Test
+    fun `when the user taps on a selected layout the layout is deselected`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        viewModel.layoutTapped("about-1")
+        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
+
+    @Test
+    fun `when the modal layout picker is dismissed the layout is deselected`() {
+        viewModel.init(false)
+        viewModel.layoutTapped("about-1")
+        viewModel.dismiss()
+        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
 }

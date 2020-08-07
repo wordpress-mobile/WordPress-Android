@@ -147,12 +147,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     /**
      * Layout tapped
+     * @param layoutSlug the slug of the tapped layout
      */
-    fun layoutTapped(layout: LayoutListItem) {
-        if (layout.slug == _selectedLayoutSlug.value) { // deselect
+    fun layoutTapped(layoutSlug: String) {
+        if (layoutSlug == _selectedLayoutSlug.value) { // deselect
             _selectedLayoutSlug.value = null
         } else {
-            _selectedLayoutSlug.value = layout.slug
+            _selectedLayoutSlug.value = layoutSlug
         }
     }
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
@@ -25,15 +26,21 @@ class LayoutsAdapter(
 ) : RecyclerView.Adapter<LayoutsAdapter.ViewHolder>() {
     @Inject lateinit var imageManager: ImageManager
 
-    private val layouts: ArrayList<LayoutListItem> = arrayListOf()
+    private var layouts: List<LayoutListItem> = listOf()
 
     init {
         (context.applicationContext as WordPress).component().inject(this)
     }
 
     fun setData(data: List<LayoutListItem>) {
-        layouts.clear()
-        layouts.addAll(data)
+        val diffResult = DiffUtil.calculateDiff(
+                LayoutsDiffCallback(
+                        layouts,
+                        data
+                )
+        )
+        layouts = data
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(

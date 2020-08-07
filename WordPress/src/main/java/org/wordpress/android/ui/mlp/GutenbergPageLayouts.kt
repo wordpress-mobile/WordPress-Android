@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.mlp
 
-//
-// TODO: Examine if those can/should be moved in RN bridge
-//
-
 data class GutenbergPageLayouts(
     val layouts: List<GutenbergLayout>,
     val categories: List<GutenbergLayoutCategory>
@@ -28,6 +24,8 @@ data class GutenbergLayoutCategory(
 
 /**
  * Static page layout data factory
+ * NOTE: This implementation will be deprecated and the layouts for self hosted sites will be provided by a new
+ * public API endpoint (/common-block-layouts)
  */
 object GutenbergPageLayoutFactory {
     /**
@@ -141,67 +139,26 @@ object GutenbergPageLayoutFactory {
     )
 
     /**
+     * DEMO Code: TO BE REMOVED
+     */
+    private const val demoModes = true
+    private const val times = 30
+
+    private fun GutenbergLayout.repeat(times: Int): List<GutenbergLayout> = ArrayList<GutenbergLayout>().apply {
+        for (i in 1..times) {
+            add(GutenbergLayout("$slug-$i", title, preview, categories))
+        }
+    }
+
+    /**
      * Creates a a default set of Layout meta data to be used on for creating starter pages layouts.
      */
-    private fun makeDefaultLayouts(): List<GutenbergLayout> = listOf(
-            a1, a2, a3, a4, b1, b2, b3, b4, b5, // TODO: Remove dummy items added for UI testing
-            aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout
-    )
-
-    // TODO: Remove dummy demo Layouts
-
-    private val a1 = GutenbergLayout(
-            slug = "about1",
-            title = "About",
-            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-            categories = listOf(aboutCategory)
-    )
-    private val a2 = GutenbergLayout(
-            slug = "about2",
-            title = "About",
-            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-            categories = listOf(aboutCategory)
-    )
-    private val a3 = GutenbergLayout(
-            slug = "about3",
-            title = "About",
-            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-            categories = listOf(aboutCategory)
-    )
-    private val a4 = GutenbergLayout(
-            slug = "about4",
-            title = "About",
-            preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
-            categories = listOf(aboutCategory)
-    )
-    private val b1 = GutenbergLayout(
-            slug = "blog1",
-            title = "Blog",
-            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
-            categories = listOf(blogCategory)
-    )
-    private val b2 = GutenbergLayout(
-            slug = "blog2",
-            title = "Blog",
-            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
-            categories = listOf(blogCategory)
-    )
-    private val b3 = GutenbergLayout(
-            slug = "blog3",
-            title = "Blog",
-            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
-            categories = listOf(blogCategory)
-    )
-    private val b4 = GutenbergLayout(
-            slug = "blog4",
-            title = "Blog",
-            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
-            categories = listOf(blogCategory)
-    )
-    private val b5 = GutenbergLayout(
-            slug = "blog5",
-            title = "Blog",
-            preview = "https://headstartdata.files.wordpress.com/2019/06/blog-4.png",
-            categories = listOf(blogCategory)
-    )
+    private fun makeDefaultLayouts(): List<GutenbergLayout> = if (demoModes) ArrayList<GutenbergLayout>().apply {
+        addAll(aboutLayout.repeat(times))
+        addAll(blogLayout.repeat(times))
+        addAll(contactLayout.repeat(times))
+        addAll(portfolioLayout.repeat(times))
+        addAll(servicesLayout.repeat(times))
+        addAll(teamLayout.repeat(times))
+    } else listOf(aboutLayout, blogLayout, contactLayout, portfolioLayout, servicesLayout, teamLayout)
 }
