@@ -9,7 +9,7 @@ import org.wordpress.android.test
 
 class LiveDataUtilsTest : BaseUnitTest() {
     @Test
-    fun `merge merges sources`() {
+    fun `mergeNotNull merges 2 sources`() {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<Int>()
 
@@ -26,7 +26,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
     }
 
     @Test
-    fun `merge merges sources with function`() = test {
+    fun `mergeAsyncNotNull merges 2 sources with function`() = test {
         val sourceA = MutableLiveData<Int>()
         val sourceB = MutableLiveData<String>()
 
@@ -42,6 +42,75 @@ class LiveDataUtilsTest : BaseUnitTest() {
         assertThat(mergedSources.value).isNull()
         sourceB.value = secondValue
         assertThat(mergedSources.value).isEqualTo("value: 1")
+    }
+
+    @Test
+    fun `merge merges 2 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+
+        val mergedSources = merge(sourceA, sourceB) { i, s ->
+            "$s: $i"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value).isNull()
+        val firstValue = 1
+        val secondValue = "value"
+        sourceA.value = firstValue
+        assertThat(mergedSources.value).isNull()
+        sourceB.value = secondValue
+        assertThat(mergedSources.value).isEqualTo("value: 1")
+    }
+
+    @Test
+    fun `merge merges 3 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+        val sourceC = MutableLiveData<Boolean>()
+
+        val mergedSources = merge(sourceA, sourceB, sourceC) { i, s, b ->
+            "$s: $i: $b"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value).isEqualTo("null: null: null")
+        val firstValue = 1
+        val secondValue = "value"
+        val thirdValue = true
+        sourceA.value = firstValue
+        assertThat(mergedSources.value).isEqualTo("null: $firstValue: null")
+        sourceB.value = secondValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: null")
+        sourceC.value = thirdValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue")
+    }
+
+    @Test
+    fun `merge merges 4 sources with function`() = test {
+        val sourceA = MutableLiveData<Int>()
+        val sourceB = MutableLiveData<String>()
+        val sourceC = MutableLiveData<Boolean>()
+        val sourceD = MutableLiveData<Double>()
+
+        val mergedSources = merge(sourceA, sourceB, sourceC, sourceD) { i, s, b, d ->
+            "$s: $i: $b: $d"
+        }
+        mergedSources.observeForever { }
+
+        assertThat(mergedSources.value).isEqualTo("null: null: null: null")
+        val firstValue = 1
+        val secondValue = "value"
+        val thirdValue = true
+        val fourthValue = 2.4
+        sourceA.value = firstValue
+        assertThat(mergedSources.value).isEqualTo("null: $firstValue: null: null")
+        sourceB.value = secondValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: null: null")
+        sourceC.value = thirdValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: null")
+        sourceD.value = fourthValue
+        assertThat(mergedSources.value).isEqualTo("$secondValue: $firstValue: $thirdValue: $fourthValue")
     }
 
     @Test
@@ -148,5 +217,26 @@ class LiveDataUtilsTest : BaseUnitTest() {
         assertThat(emitCount).isEqualTo(5)
         assertThat(emittedValues).isEqualTo(listOf("Delta", "Echo", "Foxtrot", "Golf", "Hotel"))
         assertThat(skip.value).isEqualTo("Hotel")
+    }
+
+    @Test
+    fun `folds emitted item with previous if not null`() {
+        // Given
+        val source = MutableLiveData<String>()
+        val fold = source.fold { previous, current -> "$previous $current" }
+        val emittedValues = mutableListOf<String>()
+        var emitCount = 0
+        fold.observeForever { value ->
+            emitCount += 1
+
+            value?.let { emittedValues.add(it) }
+        }
+
+        // When
+        listOf("Alpha", "Bravo", "Charlie").forEach(source::postValue)
+
+        // Then
+        assertThat(emitCount).isEqualTo(3)
+        assertThat(emittedValues).isEqualTo(listOf("Alpha", "Alpha Bravo", "Alpha Bravo Charlie"))
     }
 }
