@@ -43,7 +43,7 @@ class ReaderPostViewHolder(
 
         // Expandable tags section
         uiHelpers.updateVisibility(expandable_tags_view, state.expandableTagsViewVisibility)
-        expandable_tags_view.loadTags(state.tags)
+        expandable_tags_view.updateTagsUi(state.tagItems)
 
         // Header section
         updateAvatarOrBlavatar(state)

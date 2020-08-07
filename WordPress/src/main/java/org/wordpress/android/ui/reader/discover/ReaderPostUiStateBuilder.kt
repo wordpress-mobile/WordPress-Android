@@ -45,6 +45,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
+    private val readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder,
     private val appPrefsWrapper: AppPrefsWrapper
 ) {
     // TODO malinjir move this to a bg thread
@@ -73,7 +74,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 blogName = buildBlogName(post),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
-                tags = buildTags(post),
+                tagItems = buildTagItems(post),
                 photoFrameVisibility = buildPhotoFrameVisibility(post),
                 photoTitle = buildPhotoTitle(post),
                 featuredImageUrl = buildFeaturedImageUrl(post, photonWidth, photonHeight),
@@ -130,7 +131,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private fun buildExpandedTagsViewVisibility(post: ReaderPost) =
             appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty()
 
-    private fun buildTags(post: ReaderPost) = post.tags
+    private fun buildTagItems(post: ReaderPost) = readerPostTagsUiStateBuilder.mapPostTagsToTagUiStates(post)
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO

@@ -60,6 +60,7 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    @Mock lateinit var readerPostTagsUiStateBuilder: ReaderPostTagsUiStateBuilder
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
@@ -72,6 +73,7 @@ class ReaderPostUiStateBuilderTest {
                 readerImageScannerProvider,
                 readerUtilsWrapper,
                 readerPostMoreButtonUiStateBuilder,
+                readerPostTagsUiStateBuilder,
                 appPrefsWrapper
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")

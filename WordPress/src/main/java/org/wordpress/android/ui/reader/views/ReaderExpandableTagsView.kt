@@ -9,10 +9,8 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
 import javax.inject.Inject
 
 class ReaderExpandableTagsView @JvmOverloads constructor(
@@ -40,19 +38,12 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
     private val isOverflowIndicatorChipOutsideBounds
         get() = !isChipWithinBounds(overflowIndicatorChip)
 
-    private val maxWidthForChip: Int
-        get() {
-            val width = DisplayUtils.getDisplayPixelWidth(context) -
-                    resources.getDimensionPixelSize(R.dimen.reader_card_margin) * 2
-            return (width * MAX_WIDTH_FACTOR).toInt()
-        }
-
     init {
         (context.applicationContext as WordPress).component().inject(this)
         layoutDirection = View.LAYOUT_DIRECTION_LOCALE
     }
 
-    fun loadTags(tags: ReaderTagList) {
+    fun updateTagsUi(tags: List<TagUiState>) {
         removeAllViews()
         addOverflowIndicatorChip()
         addTagChips(tags)
@@ -66,17 +57,13 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
         addView(chip)
     }
 
-    private fun addTagChips(tags: List<ReaderTag>) {
+    private fun addTagChips(tags: List<TagUiState>) {
         tags.forEachIndexed { index, tag ->
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val chip = inflater.inflate(
-                    R.layout.reader_expandable_tags_view_chip,
-                    this,
-                    false
-            ) as Chip
-            chip.tag = tag.tagSlug
-            chip.text = tag.tagTitle
-            chip.maxWidth = maxWidthForChip
+            val chip = inflater.inflate(R.layout.reader_expandable_tags_view_chip, this, false) as Chip
+            chip.tag = tag.slug
+            chip.text = tag.title
+            chip.maxWidth = tag.maxWidth
             chip.setOnClickListener { // TODO - set click listener
             }
             addView(chip, index)
@@ -138,9 +125,5 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
                 return true
             }
         })
-    }
-
-    companion object {
-        private const val MAX_WIDTH_FACTOR = 0.75
     }
 }

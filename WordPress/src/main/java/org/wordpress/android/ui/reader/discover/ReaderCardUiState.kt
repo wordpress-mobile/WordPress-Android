@@ -4,9 +4,9 @@ import android.text.Spanned
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
-import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -21,7 +21,7 @@ sealed class ReaderCardUiState {
         val blogName: String?,
         val excerpt: String?, // mTxtText
         val blogUrl: String?,
-        val tags: ReaderTagList,
+        val tagItems: List<TagUiState>,
         val photoTitle: String?,
         val featuredImageUrl: String?,
         val featuredImageCornerRadius: UiDimen,
