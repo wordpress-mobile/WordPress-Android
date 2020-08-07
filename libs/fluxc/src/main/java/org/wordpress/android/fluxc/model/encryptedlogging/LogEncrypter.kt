@@ -2,52 +2,61 @@ package org.wordpress.android.fluxc.model.encryptedlogging
 
 import android.util.Base64
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream
-import java.io.File
+import com.goterl.lazycode.lazysodium.interfaces.SecretStream.State
 import com.goterl.lazycode.lazysodium.utils.Key
+import dagger.Reusable
+import javax.inject.Inject
+
+data class EncryptedLoggingKey(val publicKey: Key)
 
 /**
- * [LogEncrypter] encrypts the logs for the given source file.
+ * [LogEncrypter] encrypts the logs for the given text.
  **
- * @param sourceFile A file object representing the log file source..
- * @param uuid Uuid for the encrypted log
- * @param publicKey The public key used to encrypt the log.
+ * @param encryptedLoggingKey The public key used to encrypt the log
  *
  */
-class LogEncrypter(private val sourceFile: File, private val uuid: String, private val publicKey: Key) {
-    private val sodium = EncryptionUtils.sodium
-    private val state = SecretStream.State.ByReference()
-
-    init {
-        check(sourceFile.exists()) {
-            "If the source log file doesn't exist we should never make it to this class"
+@Reusable
+class LogEncrypter @Inject constructor(private val encryptedLoggingKey: EncryptedLoggingKey) {
+    /**
+     * Encrypts the given [text]. It also adds the given [uuid] to its headers.
+     *
+     * @param text Text contents to be encrypted
+     * @param uuid Uuid for the encrypted log
+     */
+    fun encrypt(text: String, uuid: String): String = buildString {
+        val state = State.ByReference()
+        append(buildHeader(uuid, state))
+        val lines = text.lines()
+        lines.asSequence().mapIndexed { index, line ->
+            if (index + 1 >= lines.size) {
+                // If it's the last element
+                line
+            } else {
+                "$line\n"
+            }
+        }.forEach { line ->
+            append(buildMessage(line, state))
         }
-    }
-
-    fun encrypt(): String = buildString {
-        append(buildHeader())
-        sourceFile.readLines().forEach { line ->
-            append(buildMessage(line))
-        }
-        append(buildFooter())
+        append(buildFooter(state))
     }
 
     /**
      * Encrypt and write the provided string to the encrypted log file.
      * @param string: The string to be written to the file.
      */
-    private fun buildMessage(string: String): String {
-        val encryptedString = encryptMessage(string, SecretStream.TAG_MESSAGE)
+    private fun buildMessage(string: String, state: State): String {
+        val encryptedString = encryptMessage(string, SecretStream.TAG_MESSAGE, state)
         return "\t\t\"$encryptedString\",\n"
     }
 
     /**
      * An internal convenience function to extract the header building process.
      */
-    private fun buildHeader(): String {
+    private fun buildHeader(uuid: String, state: State): String {
         val header = ByteArray(SecretStream.HEADERBYTES)
         val key = SecretStreamKey.generate().let {
-            check(sodium.cryptoSecretStreamInitPush(state, header, it.bytes))
-            it.encrypt(publicKey)
+            check(EncryptionUtils.sodium.cryptoSecretStreamInitPush(state, header, it.bytes))
+            it.encrypt(encryptedLoggingKey.publicKey)
         }
 
         require(SecretStream.Checker.headerCheck(header.size)) {
@@ -77,8 +86,8 @@ class LogEncrypter(private val sourceFile: File, private val uuid: String, priva
     /**
      * Add the closing file tag
      */
-    private fun buildFooter(): String {
-        val encryptedClosingTag = encryptMessage("", SecretStream.TAG_FINAL)
+    private fun buildFooter(state: State): String {
+        val encryptedClosingTag = encryptMessage("", SecretStream.TAG_FINAL, state)
         return buildString {
             append("\t\t\"$encryptedClosingTag\"\n")
             append("\t]\n")
@@ -89,11 +98,19 @@ class LogEncrypter(private val sourceFile: File, private val uuid: String, priva
     /**
      * An internal convenience function to push more data into the sodium secret stream.
      */
-    private fun encryptMessage(string: String, tag: Byte): String {
+    private fun encryptMessage(string: String, tag: Byte, state: State): String {
         val plainBytes = string.toByteArray()
 
         val encryptedBytes = ByteArray(SecretStream.ABYTES + plainBytes.size) // Stores the encrypted bytes
-        check(sodium.cryptoSecretStreamPush(this.state, encryptedBytes, plainBytes, plainBytes.size.toLong(), tag)) {
+        check(
+                EncryptionUtils.sodium.cryptoSecretStreamPush(
+                        state,
+                        encryptedBytes,
+                        plainBytes,
+                        plainBytes.size.toLong(),
+                        tag
+                )
+        ) {
             "Unable to encrypt message: $string"
         }
 
