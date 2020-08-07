@@ -149,7 +149,8 @@ public class UploadUtils {
 
         if (errorMessage == null) {
             // In case of a generic or uncaught error, return the message from the API response or the error type
-            errorMessage = TextUtils.isEmpty(error.message) ? error.type.toString() : error.message;
+            String msg = error.getApiUserMessageIfAvailable();
+            errorMessage = TextUtils.isEmpty(msg) ? error.type.toString() : msg;
         }
 
         return errorMessage;
