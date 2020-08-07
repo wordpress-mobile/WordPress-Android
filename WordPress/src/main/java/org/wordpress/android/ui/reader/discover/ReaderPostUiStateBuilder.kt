@@ -13,7 +13,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
-import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -44,7 +44,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val readerImageScannerProvider: ReaderImageScannerProvider,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
-    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) {
     // TODO malinjir move this to a bg thread
     fun mapPostToUiState(
@@ -125,9 +126,11 @@ class ReaderPostUiStateBuilder @Inject constructor(
             post.takeIf { post.cardType == VIDEO }
                     ?.let { post.featuredVideo }
 
-    private fun buildExpandedTagsViewVisibility(post: ReaderPost) = post.isDiscoverPost
+    // TODO: ashiagr - update condition for discover tab post
+    private fun buildExpandedTagsViewVisibility(post: ReaderPost) =
+            appPrefsWrapper.isReaderImprovementsPhase2Enabled() && post.tags.isNotEmpty()
 
-    private fun buildTags(post: ReaderPost) = ReaderTagList() // TODO: ashiagr - get tags from post
+    private fun buildTags(post: ReaderPost) = post.tags
 
     // TODO malinjir show overlay when buildFullVideoUrl != null
     private fun buildVideoOverlayVisibility(post: ReaderPost) = post.cardType == VIDEO

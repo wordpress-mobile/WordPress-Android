@@ -27,6 +27,7 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.EDITOR_PICK
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.OTHER
 import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PICK
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -59,6 +60,7 @@ class ReaderPostUiStateBuilderTest {
     @Mock lateinit var readerImageScannerProvider: ReaderImageScannerProvider
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     @Mock lateinit var readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
 
     @Before
     fun setUp() {
@@ -69,7 +71,8 @@ class ReaderPostUiStateBuilderTest {
                 dateTimeUtilsWrapper,
                 readerImageScannerProvider,
                 readerUtilsWrapper,
-                readerPostMoreButtonUiStateBuilder
+                readerPostMoreButtonUiStateBuilder,
+                appPrefsWrapper
         )
         whenever(dateTimeUtilsWrapper.javaDateToTimeSpan(anyOrNull())).thenReturn("")
         whenever(gravatarUtilsWrapper.fixGravatarUrlWithResource(anyOrNull(), anyInt())).thenReturn("")
