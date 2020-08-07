@@ -73,7 +73,7 @@ class PhotoPickerViewModel @Inject constructor(
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
-    private val _data = MutableLiveData<List<PhotoPickerItem>>()
+    private val _photoPickerItems = MutableLiveData<List<PhotoPickerItem>>()
     private val _selectedIds = MutableLiveData<List<Long>>()
     private val _onIconClicked = MutableLiveData<Event<IconClickEvent>>()
     private val _onPermissionsRequested = MutableLiveData<Event<PermissionsRequested>>()
@@ -94,22 +94,17 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     val selectedIds: LiveData<List<Long>> = _selectedIds
-    private val data: LiveData<PhotoListUiModel> = merge(
-            _data.distinct(),
-            _selectedIds.distinct()
-    ) { data, selectedIds ->
-        buildPhotoPickerUiModel(data, selectedIds)
-    }
 
     val uiState: LiveData<PhotoPickerUiState> = merge(
-            data,
+            _photoPickerItems.distinct(),
+            _selectedIds.distinct(),
             _softAskViewModel
-    ) { photoListUiModel, softAskViewUiModel ->
+    ) { photoPickerItems, selectedIds, softAskViewUiModel ->
         PhotoPickerUiState(
-                photoListUiModel,
+                buildPhotoPickerUiModel(photoPickerItems, selectedIds),
                 buildBottomBar(
-                        photoListUiModel?.count ?: 0,
-                        photoListUiModel?.isVideoSelected ?: false,
+                        photoPickerItems,
+                        selectedIds,
                         softAskViewUiModel is Show
                 ),
                 softAskViewUiModel,
@@ -188,10 +183,12 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     private fun buildBottomBar(
-        count: Int,
-        isVideoSelected: Boolean,
+        photoPickerItems: List<PhotoPickerItem>?,
+        selectedIds: List<Long>?,
         showSoftAskViewModel: Boolean
     ): BottomBarUiModel {
+        val count = selectedIds?.size ?: 0
+        val isVideoSelected = photoPickerItems?.any { it.isVideo && selectedIds?.contains(it.id) == true } ?: false
         val defaultBottomBar = when {
             showSoftAskViewModel -> NONE
             count <= 0 -> MEDIA_SOURCE
@@ -224,9 +221,9 @@ class PhotoPickerViewModel @Inject constructor(
         }
         launch(bgDispatcher) {
             val result = deviceMediaListBuilder.buildDeviceMedia(browserType)
-            val currentItems = _data.value ?: listOf()
+            val currentItems = _photoPickerItems.value ?: listOf()
             if (forceReload || currentItems != result) {
-                _data.postValue(result)
+                _photoPickerItems.postValue(result)
             }
         }
     }
@@ -256,7 +253,7 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun selectedURIs(): List<UriWrapper> {
-        return data.value?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
+        return uiState.value?.photoListUiModel?.items?.mapNotNull { if (it.isSelected) it.uri else null } ?: listOf()
     }
 
     private fun toggleItem(id: Long, canMultiselect: Boolean) {
@@ -426,7 +423,7 @@ class PhotoPickerViewModel @Inject constructor(
     fun checkStoragePermission(isAlwaysDenied: Boolean) {
         if (permissionsHandler.hasStoragePermission()) {
             showSoftAskView(show = false, isAlwaysDenied = isAlwaysDenied)
-            if (_data.value.isNullOrEmpty()) {
+            if (_photoPickerItems.value.isNullOrEmpty()) {
                 refreshData(false)
             }
         } else showSoftAskView(show = true, isAlwaysDenied = isAlwaysDenied)
