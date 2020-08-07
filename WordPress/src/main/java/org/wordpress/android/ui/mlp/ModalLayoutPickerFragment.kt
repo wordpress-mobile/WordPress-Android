@@ -117,7 +117,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     }
 
     override fun layoutTapped(layout: LayoutListItem) {
-        viewModel.layoutTapped(layout)
+        viewModel.layoutTapped(layout.slug)
     }
 
     private fun setupViewModel() {
