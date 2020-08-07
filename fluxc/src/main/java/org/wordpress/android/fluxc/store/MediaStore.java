@@ -248,6 +248,24 @@ public class MediaStore extends Store {
 
             return mediaError;
         }
+
+        public String getApiUserMessageIfAvailable() {
+            if (TextUtils.isEmpty(message)) {
+                return "";
+            }
+
+            if (type == MediaErrorType.BAD_REQUEST) {
+                String[] splitMsg = message.split("\\|", 2);
+
+                if (null != splitMsg && splitMsg.length > 1) {
+                    return splitMsg[1];
+                } else {
+                    return message;
+                }
+            } else {
+                return message;
+            }
+        }
     }
 
     public static class UploadStockMediaError implements OnChangedError {
@@ -346,6 +364,7 @@ public class MediaStore extends Store {
         REQUEST_TOO_LARGE,
         SERVER_ERROR, // this is also returned when PHP max_execution_time or memory_limit is reached
         TIMEOUT,
+        BAD_REQUEST,
 
         // logic constraints errors
         INVALID_ID,
@@ -374,6 +393,8 @@ public class MediaStore extends Store {
 
         public static MediaErrorType fromHttpStatusCode(int code) {
             switch (code) {
+                case 400:
+                    return MediaErrorType.BAD_REQUEST;
                 case 404:
                     return MediaErrorType.NOT_FOUND;
                 case 403:
