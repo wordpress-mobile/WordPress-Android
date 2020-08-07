@@ -137,10 +137,10 @@ class PhotoPickerFragment : Fragment() {
             }
         })
 
-        viewModel.onShowActionMode.observe(viewLifecycleOwner, Observer {
-            if (it?.peekContent() == true && !it.hasBeenHandled) {
-                it.getContentIfNotHandled()
-
+        var isShowingActionMode = false
+        viewModel.onShowActionMode.observe(viewLifecycleOwner, Observer { showActionMode ->
+            if (showActionMode && !isShowingActionMode) {
+                isShowingActionMode = true
                 (activity as AppCompatActivity).startSupportActionMode(
                         PhotoPickerActionModeCallback(
                                 viewModel
@@ -426,7 +426,7 @@ class PhotoPickerFragment : Fragment() {
     }
 
     fun finishActionMode() {
-        viewModel.finishActionMode()
+        viewModel.clearSelection()
     }
 
     fun doIconClicked(wpMedia: PhotoPickerIcon) {

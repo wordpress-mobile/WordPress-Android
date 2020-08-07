@@ -37,8 +37,7 @@ class PhotoPickerActionModeCallback(private val viewModel: PhotoPickerViewModel)
             }
         })
         viewModel.onShowActionMode.observe(this, Observer {
-            if (it?.peekContent() == false && !it.hasBeenHandled) {
-                it.getContentIfNotHandled()
+            if (it == false) {
                 actionMode.finish()
             }
         })

@@ -52,7 +52,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.util.distinct
-import org.wordpress.android.util.fold
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -72,7 +71,6 @@ class PhotoPickerViewModel @Inject constructor(
     private val context: Context
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
-    private val _showActionMode = MutableLiveData<Event<Boolean>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
     private val _showPopupMenu = MutableLiveData<Event<PopupMenuUiModel>>()
     private val _data = MutableLiveData<List<PhotoPickerItem>>()
@@ -85,14 +83,8 @@ class PhotoPickerViewModel @Inject constructor(
     val onInsert: LiveData<Event<List<UriWrapper>>> = _onInsert
     val onIconClicked: LiveData<Event<IconClickEvent>> = _onIconClicked
 
-    val onShowActionMode: LiveData<Event<Boolean>> = _selectedIds.map { selectedIds ->
-        Event(!selectedIds.isNullOrEmpty())
-    }.fold { previous: Event<Boolean>, current: Event<Boolean> ->
-        if (previous.peekContent() != current.peekContent()) {
-            current
-        } else {
-            previous
-        }
+    val onShowActionMode: LiveData<Boolean> = _selectedIds.map { selectedIds ->
+        !selectedIds.isNullOrEmpty()
     }
     val onShowPopupMenu: LiveData<Event<PopupMenuUiModel>> = _showPopupMenu
     val onPermissionsRequested: LiveData<Event<PermissionsRequested>> = _onPermissionsRequested
@@ -315,12 +307,6 @@ class PhotoPickerViewModel @Inject constructor(
                 properties["number_of_media_selected"] = uriList.size
             }
             analyticsTrackerWrapper.track(MEDIA_PICKER_RECENT_MEDIA_SELECTED, properties)
-        }
-    }
-
-    fun finishActionMode() {
-        if (onShowActionMode.value?.peekContent() == true) {
-            _showActionMode.postValue(Event(false))
         }
     }
 
