@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-15 09:36:46+0000
+Translation-Revision-Date: 2020-07-29 07:57:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Skapa en logga för webbplatsen genom att ladda upp en bild eller välja en i mediakatalogen</string>
+    <string name="gutenberg_native_site_tagline">Webbplatsslogan</string>
+    <string name="gutenberg_native_site_logo_settings">Inställningar för webbplatslogga</string>
+    <string name="gutenberg_native_site_logo">Webbplatslogga</string>
+    <string name="gutenberg_native_site_icon">Ikon för webbplats</string>
+    <string name="gutenberg_native_show_a_site_logo">Visa en webbplatslogga</string>
+    <string name="gutenberg_native_replace_video">Byt video</string>
+    <string name="gutenberg_native_replace_image_or_video">Ersätt en bild eller ett videoklipp</string>
+    <string name="gutenberg_native_open_the_block_list_view">Öppna vyn med blocklista.</string>
+    <string name="gutenberg_native_media_preview">Förhandsvisning av media</string>
+    <string name="gutenberg_native_image_width">Bildbredd</string>
+    <string name="gutenberg_native_description">beskrivning</string>
+    <string name="gutenberg_native_delete_site_logo">Ta bort webbplatslogga</string>
+    <string name="gutenberg_native_coordinated_universal_time">Koordinerad universell tid</string>
+    <string name="gutenberg_native_convert_to_blocks">Konvertera till block</string>
+    <string name="gutenberg_native_choose_video">Välj video</string>
+    <string name="gutenberg_native_choose_image_or_video">Välj bild eller video</string>
+    <string name="gutenberg_native_choose_image">Välj bild</string>
+    <string name="gutenberg_native_child_blocks">Underordnade block</string>
+    <string name="gutenberg_native_block_removed">Blocket har tagits bort</string>
+    <string name="gutenberg_native_base">Bas</string>
+    <string name="content_description_logo">WordPress-logga</string>
+    <string name="enter_your_site_address">Ange din webbplatsadress</string>
+    <string name="continue_with_wpcom">Fortsätt med WordPress.com</string>
+    <string name="signup_confirmation_title">Bekräftelse av registrering</string>
+    <string name="continue_with_google_terms_of_service_text">Om du fortsätter med Google och inte redan har ett WordPress.com-konto, skapar du ett konto och samtycker till våra %1$sanvändarvillkor%2$s.</string>
+    <string name="continue_terms_of_service_text">Genom att gå vidare accepterar du våra %1$sanvändarvillkor%2$s.</string>
+    <string name="signup_confirmation_magic_link_message">Vi kommer att skicka e-post med en magisk länk som låter dig skapa ett nytt WordPress.com-konto.</string>
+    <string name="signup_confirmation_message">Vi kommer att använda den här e-postadressen för att skapa ditt nya WordPress.com-konto.</string>
+    <string name="signup_magic_link_message">Vi har skickat en magisk länk som låter dig skapa ditt nya konto hos WordPress.com. Öppna e-posten på din enhet och tryck på länken i meddelandet du fått från WordPress.com.</string>
+    <string name="enter_account_info_for_site">Ange din kontoinformation för %1$s.</string>
+    <string name="login_or">eller</string>
+    <string name="continue_google_button_suffix">Fortsätt med Google</string>
+    <string name="login_find_your_site_adress">Hitta din webbplatsadress</string>
+    <string name="login_done">Klart</string>
+    <string name="magic_link_not_seeing_email_message">Hittar du inte meddelandet? Kolla i mappen för skräppost eller reklam.</string>
+    <string name="login_magic_links_sent_label">Öppna e-posten på din enhet och tryck på länken i meddelandet du fått från WordPress.com.</string>
+    <string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord.</string>
+    <string name="check_email">Kolla din e-post</string>
+    <string name="get_started">Kom igång</string>
+    <string name="enter_email_to_continue_wordpress_com">Ange din e-postadress för att logga in eller skapa ett WordPress.com-konto.</string>
+    <string name="or_type_your_password">Eller skriv ditt lösenord</string>
+    <string name="create_account">Skapa konto</string>
+    <string name="send_link_by_email">Skicka länk via e-post</string>
+    <string name="login_promo_text_unlock_the_power">Ta vara på kraften hos den mest flexibla webbplatsskaparen.</string>
+    <string name="login_promo_title_37_percent">37&amp;nbsp;% av webben är byggd på WordPress.</string>
+    <string name="reset_your_password">Återställ ditt lösenord</string>
+    <string name="reader_error_generic_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
     <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>
     <string name="quick_start_list_update_site_title_title">Ange webbplatsens rubrik</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b>%1$s&lt;/b> för att ange en ny rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
     <string name="gutenberg_native_s_block_options">Inställningar för blocket %s</string>
     <string name="gutenberg_native_remove_block">Ta bort block</string>
@@ -22,7 +71,6 @@ Language: sv_SE
     <string name="gutenberg_native_block_copied">Blocket kopierat</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Webbplatsrubriken kan bara ändras av en användare med rollen administratör.</string>
     <string name="my_site_title_changer_dialog_hint">Webbplatsrubriken syns webbläsarens titelrad och de flesta teman visar den också i sidhuvudet.</string>
-    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">Ämne</string>
     <string name="error_update_site_title_network">Det gick inte att uppdatera webbplatsens rubrik. Kontrollera din nätverksanslutning och försök igen.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Ej sparade ändringar</string>
@@ -46,7 +94,7 @@ Language: sv_SE
     <string name="gutenberg_native_dismiss">Avfärda</string>
     <string name="prepublishing_nudges_home_tags_not_set">Inte inställd</string>
     <string name="prepublishing_tags_description">Etiketter hjälper till att berätta för läsarna vad ett inlägg handlar om.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publicera</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Publiceringsdatum</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Lägg till etiketter</string>
     <string name="prepublishing_nudges_back_button">Tillbaka</string>
     <string name="prepublishing_nudges_home_save_button">Spara nu</string>
@@ -280,7 +328,6 @@ Language: sv_SE
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>
     <string name="gutenberg_native_edit_video">Redigera video</string>
-    <string name="gutenberg_native_edit_media">Redigera media</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Dubbeltryck för att välja layout</string>
     <string name="gutenberg_native_add_a_shortcode">Lägg till kortkod …</string>
     <string name="post_list_author">Inläggsförfattare</string>
@@ -328,7 +375,7 @@ Language: sv_SE
     <string name="login_discovery_error_http_auth">Vi kunde inte nå din webbplats eftersom den kräver &lt;b>HTTP-autentisering&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_discovery_error_xmlrpc">Vi kunde inte nå filen &lt;b>XMLRPC&lt;/b> på din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_site_credentials_magic_link_label">Nästan klart! Vi behöver bara bekräfta den e-postadress du har registrerad hos Jetpack &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Logga in med dina inloggningsuppgifter</string>
+    <string name="enter_site_credentials_instead">Logga in med dina inloggningsuppgifter.</string>
     <string name="enter_credentials_for_site">Logga in med dina inloggningsuppgifter för webbplatsen %1$s</string>
     <string name="send_verification_email">Skicka verifieringsmeddelande via e-post</string>
     <string name="my_site_bottom_sheet_add_page">Webbplatssida</string>
@@ -402,7 +449,6 @@ Language: sv_SE
     <string name="gutenberg_native_double_tap_to_edit_this_value">Dubbeltryck för att redigera värdet</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Dubbeltryck för att ändra värdet via skjutreglage.</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Dubbeltryck för att lägga till block</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Dubbeltryck och håll kvar för att redigera</string>
     <string name="gutenberg_native_current_value_is_s">Nuvarande värde är %s</string>
     <string name="gutenberg_native_content">Innehåll…</string>
     <string name="gutenberg_native_choose_from_device">Välj från enheten</string>
@@ -521,7 +567,7 @@ Language: sv_SE
     <string name="post_notification_off">Av</string>
     <string name="post_settings_add_to_calendar">Lägg till i kalender</string>
     <string name="post_settings_notification">Avisering</string>
-    <string name="post_settings_time_and_date">Tid och datum</string>
+    <string name="post_settings_time_and_date">Datum och tid</string>
     <string name="login_need_help_finding_connected_email">Behöver du hjälp att hitta e-postadressen du använde för att ansluta dig?</string>
     <string name="enter_wordpress_site">Webbplatsen på den angivna adressen använder inte WordPress. För att vi ska kunna ansluta till webbplatsen måste WordPress vara installerat.</string>
     <string name="login_invalid_site_url">Skriv in den fullständiga adressen till en webbplats, såsom example.com.</string>
@@ -1234,7 +1280,6 @@ Language: sv_SE
     <string name="signup_updating_account">Uppdaterar kontot…</string>
     <string name="signup_terms_of_service_text">Genom att registrera dig accepterar du våra %1$sAnvändarvillkor%2$s.</string>
     <string name="signup_magic_link_progress">Skickar e-post</string>
-    <string name="signup_magic_link_message">Vi har skickat dig en magisk länk för registrering! Kolla din e-post på denna telefon och knacka på länken i e-posten för att bekräfta registreringen.</string>
     <string name="signup_magic_link_error_button_positive">Försök igen</string>
     <string name="signup_magic_link_error_button_negative">Stäng</string>
     <string name="signup_magic_link_error">Det gick inte att sända e-postmeddelandet. Du kan försöka igen nu eller stänga och göra ett nytt försök senare.</string>
@@ -1242,7 +1287,6 @@ Language: sv_SE
     <string name="signup_epilogue_hint_password_detail">Du kan alltid logga in med en magisk länk som den du just använde, men om du hellre vill det, kan du också spara ett lösenord.</string>
     <string name="signup_epilogue_hint_password">Lösenord (valfritt)</string>
     <string name="signup_epilogue_hint_display">Visningsnamn</string>
-    <string name="signup_epilogue_heading">Nytt konto</string>
     <string name="signup_epilogue_error_button_positive">Försök igen</string>
     <string name="signup_epilogue_error_button_negative">Backa</string>
     <string name="signup_epilogue_error_generic">Det gick inte att uppdatera ditt konto. Du kan försöka en gång till eller backa dina ändringar för att fortsätta.</string>
@@ -1351,7 +1395,7 @@ Language: sv_SE
     <string name="notification_login_title_success">Inloggad!</string>
     <string name="login_error_generic_start">Google login kunde inte startas.</string>
     <string name="login_empty_password">Skriv in ett lösenord</string>
-    <string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället.</string>
+    <string name="login_text_otp_another">Skicka ett nytt SMS med en kod till mig istället</string>
     <string name="enter_verification_code_sms">Vi har skickat ett SMS till telefonnumret som slutar på %s. Skriv in bekräftelsekoden from SMS;et.</string>
     <string name="image_size">Storlek</string>
     <string name="uploading_subtitle_media_only_one">1 fil återstår</string>
@@ -1419,7 +1463,7 @@ Language: sv_SE
     <string name="media_edit_filename_caption">Filnamn</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Alt-text</string>
-    <string name="connect_site">Anslut webbplats</string>
+    <string name="connect_site">Anslut en webbplats</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Blinksignal</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrationssignal</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Välj ljud</string>
@@ -1463,7 +1507,6 @@ Language: sv_SE
     <string name="connection_to_server_lost">Förbindelsen med servern bröts</string>
     <string name="login_epilogue_mysites_other">Mina webbplatser</string>
     <string name="login_epilogue_mysites_one">Min webbplats</string>
-    <string name="login_logged_in_as">Inloggad som</string>
     <string name="login_email_client_not_found">Lyckas inte hitta ditt e-postprogram</string>
     <string name="login_empty_2fa">Skriv in en verifieringskod</string>
     <string name="login_empty_username">Skriv in ett användarnamn</string>
@@ -1476,17 +1519,14 @@ Language: sv_SE
     <string name="login_site_address_help">Behöver du hjälp att hitta din webbplatsadress?</string>
     <string name="login_site_address">Webbplatsadress</string>
     <string name="enter_site_address">Skriv in adressen för den WordPress-webbplats du vill ansluta.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Redan inloggad på WordPress.com</string>
     <string name="login_continue">Fortsätt</string>
-    <string name="connect_more">Anslut ytterligare webbplats</string>
+    <string name="connect_more">Anslut ytterligare en webbplats</string>
     <string name="enter_wpcom_password">Skriv in ditt lösenord för WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Begär e-postadress för inloggning</string>
-    <string name="login_magic_links_sent_label">Din magiska länk är på väg! Kolla e-posten på din enhet och knacka på länken i e-postmeddelandet du just fick från WordPress.com</string>
-    <string name="login_magic_links_label">Vi skickar en magisk länk som låter dig logga in direkt, utan något lösenord. Slut på pekfingervalsandet!</string>
     <string name="password_incorrect">Det verkar som om ditt lösenord inte stämmer. Dubbelkolla dina uppgifer och försök igen.</string>
     <string name="requesting_otp">Begär en verifieringskod via SMS.</string>
-    <string name="login_text_otp">Skicka mig en kod via SMS istället.</string>
+    <string name="login_text_otp">Skicka mig en kod via SMS istället</string>
     <string name="enter_verification_code">Nästan klart! Skriv in verifieringskoden från din Authenticator-app.</string>
     <string name="open_mail">Öppna e-posten</string>
     <string name="next">Nästa</string>
@@ -2260,6 +2300,7 @@ Language: sv_SE
     <string name="pick_video">Välj video</string>
     <string name="pick_photo">Välj bild</string>
     <string name="reader_likes_you_and_one">Du och en annan gillar detta</string>
+    <string name="sign_up_label">Registrera</string>
     <string name="reader_toast_err_url_intent">Kunde inte öppna %s</string>
     <string name="reader_toast_err_view_image">Kunde inte visa bild</string>
     <string name="reader_toast_err_share_intent">Kunde inte dela</string>

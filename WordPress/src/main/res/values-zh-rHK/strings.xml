@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-23 08:54:09+0000
+Translation-Revision-Date: 2020-08-06 18:54:12+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">上傳或從媒體庫選擇圖片設為你的網站標誌</string>
+    <string name="gutenberg_native_site_tagline">網站描述</string>
+    <string name="gutenberg_native_site_logo_settings">網站標誌設定</string>
+    <string name="gutenberg_native_site_logo">網站標誌</string>
+    <string name="gutenberg_native_site_icon">網站圖示</string>
+    <string name="gutenberg_native_show_a_site_logo">顯示網站標誌</string>
+    <string name="gutenberg_native_replace_video">替換視訊</string>
+    <string name="gutenberg_native_replace_image_or_video">替換圖片或視訊</string>
+    <string name="gutenberg_native_open_the_block_list_view">開啟區塊清單檢視。</string>
+    <string name="gutenberg_native_media_preview">媒體預覽</string>
+    <string name="gutenberg_native_image_width">圖片寬度</string>
+    <string name="gutenberg_native_description">說明</string>
+    <string name="gutenberg_native_delete_site_logo">刪除網站標誌</string>
+    <string name="gutenberg_native_coordinated_universal_time">世界協調時間</string>
+    <string name="gutenberg_native_convert_to_blocks">轉換為區塊</string>
+    <string name="gutenberg_native_choose_video">選擇視訊</string>
+    <string name="gutenberg_native_choose_image_or_video">選擇圖片或視訊</string>
+    <string name="gutenberg_native_choose_image">選擇圖片</string>
+    <string name="gutenberg_native_child_blocks">子區塊</string>
+    <string name="gutenberg_native_block_removed">已移除區塊</string>
+    <string name="gutenberg_native_base">基底</string>
+    <string name="content_description_logo">WordPress 標誌</string>
+    <string name="enter_your_site_address">請輸入你的網站位址</string>
+    <string name="continue_with_wpcom">繼續使用 WordPress.com</string>
+    <string name="signup_confirmation_title">註冊確認</string>
+    <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
+    <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
+    <string name="signup_confirmation_magic_link_message">我們會以電子郵件傳送連結給你，使用此連結即可建立新的 WordPress.com 帳號。</string>
+    <string name="signup_confirmation_message">我們會使用這個電子郵件地址，為你建立全新的 WordPress.com 帳號。</string>
+    <string name="signup_magic_link_message">我們已透過電子郵件傳送連結給你，使用此連結即可建立新的 WordPress.com 帳號。 請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="enter_account_info_for_site">輸入你的 %1$s 帳號資訊。</string>
+    <string name="login_or">或</string>
+    <string name="continue_google_button_suffix">繼續使用 Google</string>
+    <string name="login_find_your_site_adress">尋找你的網站位址</string>
+    <string name="login_done">完成</string>
+    <string name="magic_link_not_seeing_email_message">沒看到電子郵件？ 請檢查你的「垃圾郵件」資料夾。</string>
+    <string name="login_magic_links_sent_label">請使用此裝置查看電子郵件，並點選 WordPress.com 所傳送電子郵件中的連結。</string>
+    <string name="login_magic_links_label">我們會以電子郵件傳送一個連結給你，讓你馬上就能登入，無須輸入密碼。</string>
+    <string name="check_email">檢查電子郵件</string>
+    <string name="get_started">開始使用</string>
+    <string name="enter_email_to_continue_wordpress_com">請輸入你的電子郵件地址以登入或建立 WordPress.com 帳號。</string>
+    <string name="or_type_your_password">或輸入你的密碼</string>
+    <string name="create_account">建立帳號</string>
+    <string name="send_link_by_email">以電子郵件傳送連結</string>
+    <string name="login_promo_text_unlock_the_power">最具彈性、功能最強大的網站建置系統，釋放無限可能。</string>
+    <string name="login_promo_title_37_percent">37% 的網站皆選用 WordPress 建置。</string>
+    <string name="reset_your_password">重設密碼</string>
+    <string name="reader_error_generic_title">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">設定你的網站標題</string>
+    <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b>%1$s&lt;/b> 以設定新標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>
     <string name="gutenberg_native_s_block_options">%s 區塊選項</string>
     <string name="gutenberg_native_remove_block">移除區塊</string>
@@ -22,7 +71,6 @@ Language: zh_TW
     <string name="gutenberg_native_block_copied">已複製區塊</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">只有具有管理員角色的使用者才能變更網站標題。</string>
     <string name="my_site_title_changer_dialog_hint">網站標題會顯示在網頁瀏覽器的標題列中，且會顯示在大部分佈景主題的頁首中。</string>
-    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">主旨</string>
     <string name="error_update_site_title_network">無法更新網站標題。 請檢查你的網路連線並再試一次。</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">未儲存的變更</string>
@@ -46,7 +94,7 @@ Language: zh_TW
     <string name="gutenberg_native_dismiss">關閉</string>
     <string name="prepublishing_nudges_home_tags_not_set">未設定</string>
     <string name="prepublishing_tags_description">標籤可協助讀者瞭解文章內容。</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">發表</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">發表日期</string>
     <string name="prepublishing_nudges_toolbar_title_tags">新增標籤</string>
     <string name="prepublishing_nudges_back_button">返回</string>
     <string name="prepublishing_nudges_home_save_button">立即儲存</string>
@@ -280,7 +328,6 @@ Language: zh_TW
     <string name="reader_filter_cta">篩選</string>
     <string name="gutenberg_native_video_caption_s">視訊標題。%s</string>
     <string name="gutenberg_native_edit_video">編輯視訊</string>
-    <string name="gutenberg_native_edit_media">編輯媒體</string>
     <string name="gutenberg_native_double_tap_to_select_layout">按兩下以選擇版面形式</string>
     <string name="gutenberg_native_add_a_shortcode">新增短代碼…</string>
     <string name="post_list_author">文章作者</string>
@@ -328,7 +375,7 @@ Language: zh_TW
     <string name="login_discovery_error_http_auth">由於你的網站須進行 &lt;b>HTTP 驗證&lt;/b>，我們無法存取你的網站。你必須聯絡主機商以解決此問題。</string>
     <string name="login_discovery_error_xmlrpc">無法存取你網站上的 &lt;b>XMLRPC 檔案&lt;/b>。你必須聯絡主機商以解決此問題。</string>
     <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">請使用網站憑證登入</string>
+    <string name="enter_site_credentials_instead">請使用網站憑證登入。</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
     <string name="send_verification_email">傳送驗證電子郵件</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
@@ -401,7 +448,6 @@ Language: zh_TW
     <string name="gutenberg_native_double_tap_to_edit_this_value">按兩下以編輯此數值</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">按兩下以使用滑桿變更數值</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">按兩下以新增區塊</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">點兩下並按住不放即可編輯</string>
     <string name="gutenberg_native_current_value_is_s">目前的值是 %s</string>
     <string name="gutenberg_native_content">內容…</string>
     <string name="gutenberg_native_choose_from_device">從裝置中選擇</string>
@@ -518,7 +564,7 @@ Language: zh_TW
     <string name="post_notification_off">關閉</string>
     <string name="post_settings_add_to_calendar">新增到行事曆</string>
     <string name="post_settings_notification">通知</string>
-    <string name="post_settings_time_and_date">時間和日期</string>
+    <string name="post_settings_time_and_date">日期和時間</string>
     <string name="login_need_help_finding_connected_email">需要協助找出你連結的電子郵件嗎？</string>
     <string name="enter_wordpress_site">此地址的網站不是 WordPress 網站。為協助我們連結網站，網站必須安裝 WordPress。</string>
     <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
@@ -1217,7 +1263,6 @@ Language: zh_TW
     <string name="signup_updating_account">正在更新帳號……</string>
     <string name="signup_terms_of_service_text">註冊即代表你同意我們的%1$s服務條款%2$s。</string>
     <string name="signup_magic_link_progress">正在傳送電子郵件</string>
-    <string name="signup_magic_link_message">我們已將神奇註冊連結寄給你！用此裝置查看電子郵件，點選電子郵件中的連結就能完成註冊。</string>
     <string name="signup_magic_link_error_button_positive">重試</string>
     <string name="signup_magic_link_error_button_negative">關閉</string>
     <string name="signup_magic_link_error">傳送電子郵件時發生錯誤。你可以現在重試，或先關閉並稍後再試。</string>
@@ -1225,7 +1270,6 @@ Language: zh_TW
     <string name="signup_epilogue_hint_password_detail">你可以像剛剛一樣隨時使用神奇連結來登入，不過也可以依你的需要設定密碼。</string>
     <string name="signup_epilogue_hint_password">密碼 (非必要)</string>
     <string name="signup_epilogue_hint_display">顯示名稱</string>
-    <string name="signup_epilogue_heading">新增帳號</string>
     <string name="signup_epilogue_error_button_positive">重試</string>
     <string name="signup_epilogue_error_button_negative">還原</string>
     <string name="signup_epilogue_error_generic">更新你的帳號時發生錯誤。你可以重試或還原變更並繼續。</string>
@@ -1334,7 +1378,7 @@ Language: zh_TW
     <string name="notification_login_title_success">已登入！</string>
     <string name="login_error_generic_start">無法啟動 Google 登入程序。</string>
     <string name="login_empty_password">請輸入密碼。</string>
-    <string name="login_text_otp_another">請使用簡訊傳送另一個驗證碼給我。</string>
+    <string name="login_text_otp_another">請改用簡訊傳送另一個驗證碼給我</string>
     <string name="enter_verification_code_sms">我們已將簡訊傳送至結尾為 %s 的電話號碼。請輸入簡訊中的驗證碼。</string>
     <string name="image_size">大小</string>
     <string name="uploading_subtitle_media_only_one">剩下 1 個檔案</string>
@@ -1402,7 +1446,6 @@ Language: zh_TW
     <string name="media_edit_filename_caption">檔案名稱</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">替代文字</string>
-    <string name="connect_site">連結網站</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">閃爍燈</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">震動裝置</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">選擇音效</string>
@@ -1446,7 +1489,6 @@ Language: zh_TW
     <string name="connection_to_server_lost">與伺服器的連線中斷</string>
     <string name="login_epilogue_mysites_other">我的網站</string>
     <string name="login_epilogue_mysites_one">我的網站</string>
-    <string name="login_logged_in_as">已登入為</string>
     <string name="login_email_client_not_found">無法偵測電子郵件用戶端應用程式</string>
     <string name="login_empty_2fa">請輸入驗證碼</string>
     <string name="login_empty_username">請輸入使用者名稱</string>
@@ -1458,17 +1500,13 @@ Language: zh_TW
     <string name="login_site_address_help_title">我的網站位址是？</string>
     <string name="login_site_address_help">需要幫你找網站位址嗎？</string>
     <string name="login_site_address">網站位址</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">已登入 WordPress.com</string>
     <string name="login_continue">繼續</string>
-    <string name="connect_more">連結其他網站</string>
     <string name="enter_wpcom_password">輸入你的 WordPress.com 密碼。</string>
     <string name="login_magic_link_email_requesting">要求登入的電子郵件</string>
-    <string name="login_magic_links_sent_label">神奇連結已傳送！用此裝置查看電子郵件，點選你從 WordPress.com 收到的電子郵件中的連結。</string>
-    <string name="login_magic_links_label">我們會寄給你一個神奇的連結，讓你馬上就能登入，無須輸入密碼。不用再敲著兩隻手指打字了！</string>
     <string name="password_incorrect">看來你輸入的密碼不正確。請重新確認你的資訊，然後再試一次。</string>
     <string name="requesting_otp">透過 SMS 要求驗證碼。</string>
-    <string name="login_text_otp">請改用簡訊傳送驗證碼給我。</string>
+    <string name="login_text_otp">請改用簡訊傳送驗證碼給我</string>
     <string name="enter_verification_code">快完成了！請輸入驗證器應用程式上的驗證碼。</string>
     <string name="open_mail">開啟郵件</string>
     <string name="next">下一篇</string>
@@ -2234,6 +2272,7 @@ Language: zh_TW
     <string name="pick_video">選取影片</string>
     <string name="pick_photo">選取照片</string>
     <string name="reader_likes_you_and_one">你和其他 1 人都說這個讚</string>
+    <string name="sign_up_label">註冊</string>
     <string name="reader_toast_err_url_intent">無法開啟 %s</string>
     <string name="reader_toast_err_view_image">無法檢視圖片</string>
     <string name="reader_toast_err_share_intent">無法分享</string>

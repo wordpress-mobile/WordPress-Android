@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-16 21:36:54+0000
+Translation-Revision-Date: 2020-07-28 12:27:43+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_upload_an_image_or_pick_one_from_your_media_library_to_be_your_si">Envie uma imagem ou escolha uma da sua biblioteca de mídia para ser o logo do site</string>
+    <string name="gutenberg_native_site_tagline">Descrição do site</string>
+    <string name="gutenberg_native_site_logo_settings">Configurações do logo do site</string>
+    <string name="gutenberg_native_site_logo">Logo do site</string>
+    <string name="gutenberg_native_site_icon">Ícone do site</string>
+    <string name="gutenberg_native_show_a_site_logo">Mostrar um logo do site</string>
+    <string name="gutenberg_native_replace_video">Substituir vídeo</string>
+    <string name="gutenberg_native_replace_image_or_video">Substituir imagem ou vídeo</string>
+    <string name="gutenberg_native_open_the_block_list_view">Abrir a visualização de lista de blocos.</string>
+    <string name="gutenberg_native_media_preview">Visualizar mídia</string>
+    <string name="gutenberg_native_image_width">Largura da imagem</string>
+    <string name="gutenberg_native_description">descrição</string>
+    <string name="gutenberg_native_delete_site_logo">Excluir logo do site</string>
+    <string name="gutenberg_native_coordinated_universal_time">Horário Universal Coordenado</string>
+    <string name="gutenberg_native_convert_to_blocks">Converter para blocos</string>
+    <string name="gutenberg_native_choose_video">Escolher vídeo</string>
+    <string name="gutenberg_native_choose_image_or_video">Escolher imagem ou vídeo</string>
+    <string name="gutenberg_native_choose_image">Escolher imagem</string>
+    <string name="gutenberg_native_child_blocks">Blocos descendentes</string>
+    <string name="gutenberg_native_block_removed">Bloco removido</string>
+    <string name="gutenberg_native_base">Base</string>
+    <string name="content_description_logo">Logo do WordPress</string>
+    <string name="enter_your_site_address">Digite o endereço de seu site</string>
+    <string name="continue_with_wpcom">Continuar com WordPress.com</string>
+    <string name="signup_confirmation_title">Confirmação de inscrição</string>
+    <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
+    <string name="continue_terms_of_service_text">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
+    <string name="signup_confirmation_magic_link_message">Enviaremos um link mágico por e-mail para criar sua nova conta no WordPress.com.</string>
+    <string name="signup_confirmation_message">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
+    <string name="signup_magic_link_message">Nós enviamos um link mágico por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
+    <string name="enter_account_info_for_site">Digite as informações da conta de %1$s.</string>
+    <string name="login_or">ou</string>
+    <string name="continue_google_button_suffix">Continuar com Google</string>
+    <string name="login_find_your_site_adress">Encontrar um endereço para seu site</string>
+    <string name="login_done">Concluído</string>
+    <string name="magic_link_not_seeing_email_message">Não encontrou o e-mail? Verifique a caixa de spam ou lixeira.</string>
+    <string name="login_magic_links_sent_label">Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
+    <string name="login_magic_links_label">Enviaremos um e-mail pra você com um link mágico que fará você se conectar instantaneamente, sem precisar de senha.</string>
+    <string name="check_email">Verificar e-mail</string>
+    <string name="get_started">Iniciar</string>
+    <string name="enter_email_to_continue_wordpress_com">Digite seu endereço de e-mail para acessar ou criar uma conta no WordPress.com.</string>
+    <string name="or_type_your_password">Ou digite sua senha</string>
+    <string name="create_account">Criar conta</string>
+    <string name="send_link_by_email">Enviar link por e-mail</string>
+    <string name="login_promo_text_unlock_the_power">Descubra o poder do criador de sites mais flexível.</string>
+    <string name="login_promo_title_37_percent">37% da internet é construída com o WordPress.</string>
+    <string name="reset_your_password">Redefinir sua senha</string>
+    <string name="reader_error_generic_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
     <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e tópico. As primeiras impressões contam!</string>
     <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
+    <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
     <string name="gutenberg_native_s_block_options">Opções do bloco %s</string>
     <string name="gutenberg_native_remove_block">Remover bloco</string>
@@ -22,7 +71,6 @@ Language: pt_BR
     <string name="gutenberg_native_block_copied">Bloco copiado</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">O título do site pode ser editado somente por contas com função de administrador.</string>
     <string name="my_site_title_changer_dialog_hint">O título do site é exibido na barra de título do navegador e também no cabeçalho da maioria dos temas.</string>
-    <string name="my_site_title_changer_dialog_title">\@string/site_settings_title_title</string>
     <string name="reader_title_tag_preview">Tópico</string>
     <string name="error_update_site_title_network">Não foi possível atualizar o título do site. Verifique sua conexão de rede e tente novamente.</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Alterações não salvas</string>
@@ -46,7 +94,7 @@ Language: pt_BR
     <string name="gutenberg_native_dismiss">Dispensar</string>
     <string name="prepublishing_nudges_home_tags_not_set">Não definido</string>
     <string name="prepublishing_tags_description">Tags: ajude os leitores a saberem o assunto do post.</string>
-    <string name="prepublishing_nudges_toolbar_title_publish">Publicar</string>
+    <string name="prepublishing_nudges_toolbar_title_publish">Data de publicação</string>
     <string name="prepublishing_nudges_toolbar_title_tags">Adicionar tags</string>
     <string name="prepublishing_nudges_back_button">Voltar</string>
     <string name="prepublishing_nudges_home_save_button">Salvar agora</string>
@@ -280,7 +328,6 @@ Language: pt_BR
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Legenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar vídeo</string>
-    <string name="gutenberg_native_edit_media">Editar mídia</string>
     <string name="gutenberg_native_double_tap_to_select_layout">Toque duas vezes para selecionar um modelo</string>
     <string name="gutenberg_native_add_a_shortcode">Adicionar um shortcode…</string>
     <string name="post_list_author">Autor do post</string>
@@ -328,7 +375,7 @@ Language: pt_BR
     <string name="login_discovery_error_http_auth">Não foi possível acessar seu site porque ele requer &lt;b>autenticação HTTP&lt;/b>. Entre em contato com sua hospedagem para resolver isso.</string>
     <string name="login_discovery_error_xmlrpc">Não foi possível acessar o &lt;b>arquivo XMLRPC&lt;/b> de seu site. Entre em contato com sua hospedagem para resolver isso.</string>
     <string name="login_site_credentials_magic_link_label">Quase pronto! Só precisamos verificar seu endereço de e-mail conectado ao Jetpack: &lt;b>%1$s&lt;/b></string>
-    <string name="enter_site_credentials_instead">Acessar com as credenciais do site</string>
+    <string name="enter_site_credentials_instead">Acessar com as credenciais do site.</string>
     <string name="enter_credentials_for_site">Acessar com as credenciais do site %1$s</string>
     <string name="send_verification_email">Enviar um e-mail de verificação</string>
     <string name="my_site_bottom_sheet_add_page">Página do site</string>
@@ -402,7 +449,6 @@ Language: pt_BR
     <string name="gutenberg_native_double_tap_to_edit_this_value">Toque duas vezes para editar esse valor</string>
     <string name="gutenberg_native_double_tap_to_change_the_value_using_slider">Toque duas vezes para alterar o valor usando um slider</string>
     <string name="gutenberg_native_double_tap_to_add_a_block">Toque duas vezes para adicionar um bloco</string>
-    <string name="gutenberg_native_double_tap_and_hold_to_edit">Toque duas vezes e segure para editar</string>
     <string name="gutenberg_native_current_value_is_s">O valor atual é %s</string>
     <string name="gutenberg_native_content">Conteúdo…</string>
     <string name="gutenberg_native_choose_from_device">Escolher no dispositivo</string>
@@ -521,7 +567,7 @@ Language: pt_BR
     <string name="post_notification_off">Desativado</string>
     <string name="post_settings_add_to_calendar">Adicionar ao calendário</string>
     <string name="post_settings_notification">Notificação</string>
-    <string name="post_settings_time_and_date">Horário e data</string>
+    <string name="post_settings_time_and_date">Data e hora</string>
     <string name="login_need_help_finding_connected_email">Precisa de ajuda para encontrar o e-mail com que se conectou?</string>
     <string name="enter_wordpress_site">O site neste endereço não é um site do WordPress. Para que possamos nos conectar a ele, o site precisa ter o WordPress instalado.</string>
     <string name="login_invalid_site_url">Digite o endereço completo do site, tal como exemplo.com.</string>
@@ -547,7 +593,7 @@ Language: pt_BR
     <string name="link_dialog_button_remove_link">Remover link</string>
     <string name="link_dialog_title">Inserir link</string>
     <string name="post_settings_retry_featured_image">Tentar enviar novamente</string>
-    <string name="post_settings_featured_image_uploading_tap_for_options">Enviando mídia.\nClique para ver as opções.</string>
+    <string name="post_settings_featured_image_uploading_tap_for_options">Enviando mídia.\nToque para ver as opções.</string>
     <string name="link_open_new_window">Abrir link em uma nova janela/aba</string>
     <string name="stats_widget_error_no_access_token">Para ver suas estatísticas, acesse sua conta do WordPress.com.</string>
     <string name="post_list_search_nothing_found">Nenhum post corresponde à sua pesquisa</string>
@@ -615,7 +661,7 @@ Language: pt_BR
     <string name="stats_management_news_card_message">Escolha as estatísticas que você deseja ver e foque nos dados mais importantes para você. Toque em %1$s na parte inferior da tela para personalizar suas estatísticas.</string>
     <string name="stats_manage_your_stats">Gerenciar suas estatísticas</string>
     <string name="history_fetching_revisions">Coletando revisões…</string>
-    <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nClique para ver tentar novamente.</string>
+    <string name="editor_failed_to_insert_media_tap_to_retry">Falha ao inserir a mídia.\nToque para tentar novamente.</string>
     <string name="editor_uploading_draft">Seu rascunho está sendo enviado para o site</string>
     <string name="post_uploading_draft">Enviando rascunho</string>
     <string name="post_list_tab_drafts">Rascunhos</string>
@@ -906,7 +952,7 @@ Language: pt_BR
     <string name="page_delete_error">Houve um problema ao excluir a página</string>
     <string name="set_parent">Configurar ascendente</string>
     <string name="dismiss">dispensar</string>
-    <string name="quick_start_focus_point_description">clique aqui</string>
+    <string name="quick_start_focus_point_description">toque aqui</string>
     <string name="quick_start_list_create_site_title">Crie seu site</string>
     <string name="quick_start_list_create_site_subtitle">Coloque seu site no ar.</string>
     <string name="quick_start_dialog_view_site_title">Ver seu site</string>
@@ -1234,7 +1280,6 @@ Language: pt_BR
     <string name="signup_updating_account">Atualizando conta…</string>
     <string name="signup_terms_of_service_text">Ao cadastrar-se, você concorda com os nossos %1$sTermos de serviço%2$s.</string>
     <string name="signup_magic_link_progress">Enviando e-mail</string>
-    <string name="signup_magic_link_message">Enviamos para você um endereço mágico para cadastro! Confira seu e-mail neste dispositivo e toque no endereço no e-mail para finalizar seu cadastro.</string>
     <string name="signup_magic_link_error_button_positive">Tentar novamente</string>
     <string name="signup_magic_link_error_button_negative">Fechar</string>
     <string name="signup_magic_link_error">Houve um problema ao enviar o e-mail. Você pode tentar novamente agora ou fechar e tentar de novo mais tarde.</string>
@@ -1242,7 +1287,6 @@ Language: pt_BR
     <string name="signup_epilogue_hint_password_detail">Você sempre pode acessar com um endereço mágico como o que acabou de usar, mas também é possível definir uma senha se preferir.</string>
     <string name="signup_epilogue_hint_password">Senha (opcional)</string>
     <string name="signup_epilogue_hint_display">Nome de exibição</string>
-    <string name="signup_epilogue_heading">Nova conta</string>
     <string name="signup_epilogue_error_button_positive">Tentar novamente</string>
     <string name="signup_epilogue_error_button_negative">Reverter</string>
     <string name="signup_epilogue_error_generic">Houve um problema ao atualizar sua conta. Você pode tentar novamente ou reverter suas alterações para continuar.</string>
@@ -1419,7 +1463,7 @@ Language: pt_BR
     <string name="media_edit_filename_caption">Nome do arquivo</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Texto alternativo</string>
-    <string name="connect_site">Conectar site</string>
+    <string name="connect_site">Conectar um site</string>
     <string name="notification_settings_item_sights_and_sounds_blink_light">Sinal luminoso</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Vibrar dispositivo</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Escolher som</string>
@@ -1463,7 +1507,6 @@ Language: pt_BR
     <string name="connection_to_server_lost">Conexão com o servidor perdida</string>
     <string name="login_epilogue_mysites_other">Meus sites</string>
     <string name="login_epilogue_mysites_one">Meu site</string>
-    <string name="login_logged_in_as">Logado como</string>
     <string name="login_email_client_not_found">Não é possível detectar seu aplicativo cliente de e-mail</string>
     <string name="login_empty_2fa">Digite um código de verificação</string>
     <string name="login_empty_username">Digite um nome de usuário</string>
@@ -1476,14 +1519,11 @@ Language: pt_BR
     <string name="login_site_address_help">Precisa de ajuda para encontrar o endereço do seu site?</string>
     <string name="login_site_address">Endereço do site</string>
     <string name="enter_site_address">Digite o endereço do site WordPress que você deseja conectar.</string>
-    <string name="login_username_at">\@%s</string>
     <string name="login_already_logged_in_wpcom">Já conectado no WordPress.com</string>
     <string name="login_continue">Continuar</string>
     <string name="connect_more">Conectar outro site</string>
     <string name="enter_wpcom_password">Digite sua senha do WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Solicitando o e-mail de login</string>
-    <string name="login_magic_links_sent_label">Seu link mágico está a caminho! Verifique seu e-mail neste dispositivo e toque no link que você recebeu do WordPress.com.</string>
-    <string name="login_magic_links_label">Enviaremos um e-mail pra você com um link mágico que fará você se conectar instantaneamente, sem precisar de senha. Chega de catar milho no teclado!</string>
     <string name="password_incorrect">Parece que esta senha está errada. Verifique seus dados e tente novamente.</string>
     <string name="requesting_otp">Solicitando um código de verificação via SMS.</string>
     <string name="login_text_otp">Envie-me uma mensagem de texto com o código em vez disso.</string>
@@ -1616,8 +1656,8 @@ Language: pt_BR
     <string name="media_gallery_column_count_multi">%d colunas</string>
     <string name="media_gallery_column_count_single">1 coluna</string>
     <string name="editor_confirm_email_prompt_negative">Reenviar e-mail</string>
-    <string name="editor_confirm_email_prompt_message_with_email">Enviamos um e-mail para %s quando você se cadastrou. Abra a mensagem e clique no botão azul para permitir publicações.</string>
-    <string name="editor_confirm_email_prompt_message">Enviamos um e-mail quando você se cadastrou. Abra a mensagem e clique no botão azul para permitir publicações.</string>
+    <string name="editor_confirm_email_prompt_message_with_email">Enviamos um e-mail para %s quando você se cadastrou. Abra a mensagem e toque no botão azul para permitir publicações.</string>
+    <string name="editor_confirm_email_prompt_message">Enviamos um e-mail quando você se cadastrou. Abra a mensagem e toque no botão azul para permitir publicações.</string>
     <string name="editor_confirm_email_prompt_title">Confirme seu endereço de e-mail</string>
     <string name="toast_verification_email_send_error">Ocorreu um erro ao enviar o e-mail de verificação. Você já foi verificado?</string>
     <string name="toast_verification_email_sent">E-mail de verificação enviado, verifique sua caixa de entrada</string>
@@ -1857,7 +1897,7 @@ Language: pt_BR
     <string name="days_quantity_one">1 dia</string>
     <string name="web_address">Endereço da web</string>
     <string name="primary_site">Site principal</string>
-    <string name="pending_email_change_snackbar">Clique no link de verificação no e-mail enviado para %1$s para confirmar seu novo endereço</string>
+    <string name="pending_email_change_snackbar">Toque no link de verificação no e-mail enviado para %1$s para confirmar seu novo endereço</string>
     <string name="editor_toast_uploading_please_wait">Você está fazendo upload de mídia no momento. Aguarde até que o processo seja concluído.</string>
     <string name="error_refresh_comments_showing_older">Não foi possível atualizar os comentários no momento. Comentários mais antigos estão sendo exibidos</string>
     <string name="post_settings_set_featured_image">Configurar imagem destacada</string>
@@ -2260,6 +2300,7 @@ Language: pt_BR
     <string name="pick_video">Selecionar vídeo</string>
     <string name="pick_photo">Selecione a foto</string>
     <string name="reader_likes_you_and_one">Você e mais um gostaram disso</string>
+    <string name="sign_up_label">Inscrever-se</string>
     <string name="reader_toast_err_url_intent">Não é possível abrir %s</string>
     <string name="reader_toast_err_view_image">Não é possível visualizar a imagem </string>
     <string name="reader_toast_err_share_intent">Não é possível compartilhar </string>
