@@ -158,7 +158,7 @@ class PhotoPickerFragment : Fragment() {
                         null,
                         uri.toString()
                 )
-                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(string.cancel))
+                AccessibilityUtils.setActionModeDoneButtonContentDescription(activity, getString(R.string.cancel))
             }
         })
 
