@@ -61,16 +61,8 @@ class ReaderExpandableTagsView @JvmOverloads constructor(
 
     private fun addOverflowIndicatorChip() {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val chip = inflater.inflate(
-                R.layout.reader_expandable_tags_view_chip,
-                this,
-                false
-        ) as Chip
-        chip.text = resources.getString(R.string.reader_expandable_tags_view_overflow_indicator_collapse_title)
-        chip.isCheckable = true
-        chip.setOnCheckedChangeListener { _, isChecked ->
-            expandLayout(isChecked)
-        }
+        val chip = inflater.inflate(R.layout.reader_expandable_tags_view_overflow_chip, this, false) as Chip
+        chip.setOnCheckedChangeListener { _, isChecked -> expandLayout(isChecked) }
         addView(chip)
     }
 
