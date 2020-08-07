@@ -128,6 +128,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerFragment.PhotoPickerIcon;
 import org.wordpress.android.ui.posts.EditPostRepository.UpdatePostResult;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostSettingsCallback;
 import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
+import org.wordpress.android.ui.posts.InsertMediaDialog.InsertType;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
@@ -288,6 +289,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private boolean mShowAztecEditor;
     private boolean mShowGutenbergEditor;
+    private boolean mRequiresGutenbergGalleryDialog;
 
     private List<String> mPendingVideoPressInfoRequests;
 
@@ -2277,6 +2279,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.TAKE_VIDEO:
                 case RequestCodes.STOCK_MEDIA_PICKER_MULTI_SELECT:
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
+                    mRequiresGutenbergGalleryDialog = false;
                     mEditorFragment.mediaSelectionCancelled();
                     return;
                 default:
@@ -2307,7 +2310,22 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     } else if (data.hasExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS)) {
                         List<Uri> uris = convertStringArrayIntoUrisList(
                                 data.getStringArrayExtra(PhotoPickerActivity.EXTRA_MEDIA_URIS));
-                        mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+
+                        // if the user selected multiple items and they're all images, show the insert media
+                        // dialog so the user can choose whether to insert them individually or as a gallery
+                        if (1 < uris.size() && mShowGutenbergEditor && mRequiresGutenbergGalleryDialog) {
+                            showInsertMediaDialog(dialog -> {
+                                if (dialog.getInsertType() == InsertType.GALLERY) {
+                                    mEditorFragment.setShouldReplaceImageWithGallery(true);
+                                }
+
+                                mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                            });
+                        } else {
+                            mEditorMedia.addNewMediaItemsToEditorAsync(uris, false);
+                        }
+
+                        mRequiresGutenbergGalleryDialog = false;
                     }
                     break;
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
@@ -2427,8 +2445,26 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // if the user selected multiple items and they're all images, show the insert media
         // dialog so the user can choose whether to insert them individually or as a gallery
-        if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
-            showInsertMediaDialog(ids);
+        if (ids.size() > 1 && allAreImages && (!mShowGutenbergEditor || mRequiresGutenbergGalleryDialog)) {
+            showInsertMediaDialog(dialog -> {
+                switch (dialog.getInsertType()) {
+                    case GALLERY:
+                        if (mShowGutenbergEditor) {
+                            mEditorFragment.setShouldReplaceImageWithGallery(true);
+                            mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
+                        } else {
+                            MediaGallery gallery = new MediaGallery();
+                            gallery.setType(dialog.getGalleryType().toString());
+                            gallery.setNumColumns(dialog.getNumColumns());
+                            gallery.setIds(ids);
+                            mEditorFragment.appendGallery(gallery);
+                        }
+                        break;
+                    case INDIVIDUALLY:
+                        mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
+                        break;
+                }
+            });
         } else {
             // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
             mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
@@ -2436,26 +2472,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorPhotoPicker.setAllowMultipleSelection(false);
             }
         }
+        mRequiresGutenbergGalleryDialog = false;
     }
 
     /*
      * called after user selects multiple photos from WP media library
      */
-    private void showInsertMediaDialog(final ArrayList<Long> mediaIds) {
-        InsertMediaCallback callback = dialog -> {
-            switch (dialog.getInsertType()) {
-                case GALLERY:
-                    MediaGallery gallery = new MediaGallery();
-                    gallery.setType(dialog.getGalleryType().toString());
-                    gallery.setNumColumns(dialog.getNumColumns());
-                    gallery.setIds(mediaIds);
-                    mEditorFragment.appendGallery(gallery);
-                    break;
-                case INDIVIDUALLY:
-                    mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, mediaIds);
-                    break;
-            }
-        };
+    private void showInsertMediaDialog(InsertMediaCallback callback) {
         InsertMediaDialog dialog = InsertMediaDialog.newInstance(callback, mSite);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(dialog, "insert_media");
@@ -2543,6 +2566,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddMediaImageClicked(boolean allowMultipleSelection) {
         mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+        mRequiresGutenbergGalleryDialog = true;
         ActivityLauncher.viewMediaPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_IMAGE_PICKER);
     }
 
@@ -2568,7 +2592,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         } else {
-            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_SINGLE_IMAGE_PICKER, mSite,
+            mRequiresGutenbergGalleryDialog = true;
+            ActivityLauncher.showPhotoPickerForResult(this, MediaBrowserType.GUTENBERG_IMAGE_PICKER, mSite,
                     mEditPostRepository.getId());
         }
     }
