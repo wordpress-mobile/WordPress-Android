@@ -5,6 +5,8 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.AuthenticationActionBuilder;
 import org.wordpress.android.fluxc.network.BaseRequest;
@@ -18,6 +20,8 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken;
 import org.wordpress.android.fluxc.store.AccountStore.AuthenticateErrorPayload;
 import org.wordpress.android.fluxc.utils.ErrorUtils.OnUnexpectedError;
 import org.wordpress.android.util.LanguageUtils;
+
+import okhttp3.HttpUrl;
 
 public abstract class BaseWPComRestClient {
     private static final String WPCOM_V2_PREFIX = "/wpcom/v2";
@@ -125,9 +129,23 @@ public abstract class BaseWPComRestClient {
         // Sanity check
         if (url != null) {
             // WPCOM V2 endpoints use a different locale parameter than other endpoints
-            String localeParamName =
-                    url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
+            String localeParamName = getLocaleParamName(url);
             request.addQueryParameter(localeParamName, LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         }
+    }
+
+    private @NotNull String getLocaleParamName(@NotNull String url) {
+        return url.contains(WPCOM_V2_PREFIX) ? LOCALE_PARAM_NAME_FOR_V2 : LOCALE_PARAM_NAME_FOR_V1;
+    }
+
+    protected @Nullable HttpUrl getHttpUrlWithLocale(@NotNull String url) {
+        HttpUrl httpUrl = HttpUrl.parse(url);
+
+        if (null != httpUrl) {
+            httpUrl = httpUrl.newBuilder().addQueryParameter(getLocaleParamName(url),
+                    LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext)).build();
+        }
+
+        return httpUrl;
     }
 }
