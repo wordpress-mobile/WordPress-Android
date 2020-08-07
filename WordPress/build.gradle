@@ -72,6 +72,7 @@ android {
         buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "10"
         buildConfigField "boolean", "FEATURE_ANNOUNCEMENT_AVAILABLE", "false"
         buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
+        buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
         buildConfigField "boolean", "UNIFIED_LOGIN_AVAILABLE", "true"
         buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
@@ -99,6 +100,7 @@ android {
             buildConfigField "boolean", "READER_IMPROVEMENTS_PHASE_2", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
             buildConfigField "boolean", "GUTENBERG_MENTIONS", "true"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "false"
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "false"
             buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
         }
@@ -113,11 +115,13 @@ android {
         wasabi { // "hot" version, can be installed along release, alpha or beta versions
             applicationId "org.wordpress.android.beta"
             dimension "buildType"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
             applicationId "org.wordpress.android.prealpha"
             dimension "buildType"
+            buildConfigField "boolean", "MODAL_LAYOUT_PICKER", "true"
         }
     }
 
