@@ -78,6 +78,7 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
     private GalleryType mGalleryType;
     private InsertType mInsertType;
     private int mNumColumns;
+    private boolean mIsGutenbergEditor;
 
 
     public static InsertMediaDialog newInstance(@NonNull InsertMediaCallback callback, @NonNull SiteModel site) {
@@ -98,6 +99,10 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
+            // TODO: this may not be the most reliable way to be sure that we are in the Gutenberg editor for this post
+            if (mSite != null) {
+                mIsGutenbergEditor = mSite.getMobileEditor().equals("gutenberg");
+            }
         }
     }
 
@@ -123,37 +128,43 @@ public class InsertMediaDialog extends AppCompatDialogFragment {
             }
         });
 
-        // self-hosted sites don't support gallery types
-        boolean enableGalleryType = mSite != null && mSite.isUsingWpComRestApi();
-        if (enableGalleryType) {
-            mGalleryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
-                    GalleryType galleryType;
-                    switch (checkedId) {
-                        case R.id.radio_circles:
-                            galleryType = GalleryType.CIRCLES;
-                            break;
-                        case R.id.radio_slideshow:
-                            galleryType = GalleryType.SLIDESHOW;
-                            break;
-                        case R.id.radio_squares:
-                            galleryType = GalleryType.SQUARES;
-                            break;
-                        case R.id.radio_tiled:
-                            galleryType = GalleryType.TILED;
-                            break;
-                        default:
-                            galleryType = GalleryType.DEFAULT;
-                            break;
-                    }
-                    setGalleryType(galleryType);
-                }
-            });
-        } else {
+        if (mIsGutenbergEditor) {
             mGalleryRadioGroup.setVisibility(View.GONE);
-            mNumColumnsContainer.setVisibility(View.VISIBLE);
+            mNumColumnsContainer.setVisibility(View.GONE);
             mGalleryType = GalleryType.DEFAULT;
+        } else {
+            // self-hosted sites don't support gallery types
+            boolean enableGalleryType = mSite != null && mSite.isUsingWpComRestApi();
+            if (enableGalleryType) {
+                mGalleryRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                        GalleryType galleryType;
+                        switch (checkedId) {
+                            case R.id.radio_circles:
+                                galleryType = GalleryType.CIRCLES;
+                                break;
+                            case R.id.radio_slideshow:
+                                galleryType = GalleryType.SLIDESHOW;
+                                break;
+                            case R.id.radio_squares:
+                                galleryType = GalleryType.SQUARES;
+                                break;
+                            case R.id.radio_tiled:
+                                galleryType = GalleryType.TILED;
+                                break;
+                            default:
+                                galleryType = GalleryType.DEFAULT;
+                                break;
+                        }
+                        setGalleryType(galleryType);
+                    }
+                });
+            } else {
+                mGalleryRadioGroup.setVisibility(View.GONE);
+                mNumColumnsContainer.setVisibility(View.VISIBLE);
+                mGalleryType = GalleryType.DEFAULT;
+            }
         }
 
         mNumColumnsSeekBar.setMax(MAX_COLUMN_COUNT - 1);
