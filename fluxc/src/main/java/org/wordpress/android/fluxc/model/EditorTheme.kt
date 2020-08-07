@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonSyntaxException
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
@@ -104,7 +105,13 @@ class EditorThemeElementListSerializer : JsonDeserializer<List<EditorThemeElemen
     ): List<EditorThemeElement>? {
         if (context != null && json != null && json.isJsonArray()) {
             val editorThemeElementListType = object : TypeToken<List<EditorThemeElement>>() { }.getType()
-            return context.deserialize(json, editorThemeElementListType)
+            var result: List<EditorThemeElement>?
+            try {
+                result = context.deserialize(json, editorThemeElementListType)
+            } catch (e: JsonSyntaxException) {
+                result = null
+            }
+            return result
         } else {
             return null
         }
