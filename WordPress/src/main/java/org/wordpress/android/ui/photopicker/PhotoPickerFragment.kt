@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -322,7 +321,7 @@ class PhotoPickerFragment : Fragment() {
         val popup = PopupMenu(activity, view)
         if (browserType.isImagePicker) {
             val itemPhoto = popup.menu
-                    .add(string.photo_picker_choose_photo)
+                    .add(R.string.photo_picker_choose_photo)
             itemPhoto.setOnMenuItemClickListener {
                 doIconClicked(ANDROID_CHOOSE_PHOTO)
                 true
@@ -330,7 +329,7 @@ class PhotoPickerFragment : Fragment() {
         }
         if (browserType.isVideoPicker) {
             val itemVideo = popup.menu
-                    .add(string.photo_picker_choose_video)
+                    .add(R.string.photo_picker_choose_video)
             itemVideo.setOnMenuItemClickListener {
                 doIconClicked(ANDROID_CHOOSE_VIDEO)
                 true
@@ -338,7 +337,7 @@ class PhotoPickerFragment : Fragment() {
         }
         if (site != null && !browserType.isGutenbergPicker) {
             val itemStock = popup.menu
-                    .add(string.photo_picker_stock_media)
+                    .add(R.string.photo_picker_stock_media)
             itemStock.setOnMenuItemClickListener {
                 doIconClicked(STOCK_MEDIA)
                 true
@@ -347,7 +346,7 @@ class PhotoPickerFragment : Fragment() {
             // only show GIF picker from Tenor if this is NOT the WPStories picker
             if (tenorFeatureConfig.isEnabled() && !browserType.isWPStoriesPicker) {
                 val itemGif = popup.menu
-                        .add(string.photo_picker_gif)
+                        .add(R.string.photo_picker_gif)
                 itemGif.setOnMenuItemClickListener { item: MenuItem? ->
                     doIconClicked(GIF)
                     true
@@ -366,13 +365,13 @@ class PhotoPickerFragment : Fragment() {
     fun showCameraPopupMenu(view: View) {
         val popup = PopupMenu(activity, view)
         val itemPhoto = popup.menu
-                .add(string.photo_picker_capture_photo)
+                .add(R.string.photo_picker_capture_photo)
         itemPhoto.setOnMenuItemClickListener {
             doIconClicked(ANDROID_CAPTURE_PHOTO)
             true
         }
         val itemVideo = popup.menu
-                .add(string.photo_picker_capture_video)
+                .add(R.string.photo_picker_capture_video)
         itemVideo.setOnMenuItemClickListener {
             doIconClicked(ANDROID_CAPTURE_VIDEO)
             true
@@ -440,15 +439,15 @@ class PhotoPickerFragment : Fragment() {
             val title: String
             if (browserType.canMultiselect()) {
                 val numSelected = viewModel.numSelected()
-                title = String.format(getString(string.cab_selected), numSelected)
+                title = String.format(getString(R.string.cab_selected), numSelected)
                 actionMode.title = title
             } else {
                 if (browserType.isImagePicker && browserType.isVideoPicker) {
-                    actionMode.setTitle(string.photo_picker_use_media)
+                    actionMode.setTitle(R.string.photo_picker_use_media)
                 } else if (browserType.isVideoPicker) {
-                    actionMode.setTitle(string.photo_picker_use_video)
+                    actionMode.setTitle(R.string.photo_picker_use_video)
                 } else {
-                    actionMode.setTitle(string.photo_picker_use_photo)
+                    actionMode.setTitle(R.string.photo_picker_use_photo)
                 }
             }
         }
@@ -476,7 +475,7 @@ class PhotoPickerFragment : Fragment() {
         ): Boolean {
             AccessibilityUtils.setActionModeDoneButtonContentDescription(
                     activity,
-                    getString(string.cancel)
+                    getString(R.string.cancel)
             )
             return false
         }
@@ -579,7 +578,7 @@ class PhotoPickerFragment : Fragment() {
         }
         val isAlwaysDenied = isStoragePermissionAlwaysDenied
         if (show) {
-            val appName = "<strong>${getString(string.app_name)}</strong>"
+            val appName = "<strong>${getString(R.string.app_name)}</strong>"
             val label: String
             label = if (isAlwaysDenied) {
                 val permissionName = ("<strong>${WPPermissionUtils.getPermissionName(
@@ -587,12 +586,12 @@ class PhotoPickerFragment : Fragment() {
                         permission.WRITE_EXTERNAL_STORAGE
                 )}</strong>")
                 String.format(
-                        getString(string.photo_picker_soft_ask_permissions_denied), appName,
+                        getString(R.string.photo_picker_soft_ask_permissions_denied), appName,
                         permissionName
                 )
             } else {
                 String.format(
-                        getString(string.photo_picker_soft_ask_label),
+                        getString(R.string.photo_picker_soft_ask_label),
                         appName
                 )
             }
@@ -601,7 +600,7 @@ class PhotoPickerFragment : Fragment() {
             // when the user taps Allow, request the required permissions unless the user already
             // denied them permanently, in which case take them to the device settings for this
             // app so the user can change permissions there
-            val allowId = if (isAlwaysDenied) string.button_edit_permissions else string.photo_picker_soft_ask_allow
+            val allowId = if (isAlwaysDenied) R.string.button_edit_permissions else R.string.photo_picker_soft_ask_allow
             soft_ask_view.button.setText(allowId)
             soft_ask_view.button.setOnClickListener {
                 if (isStoragePermissionAlwaysDenied) {

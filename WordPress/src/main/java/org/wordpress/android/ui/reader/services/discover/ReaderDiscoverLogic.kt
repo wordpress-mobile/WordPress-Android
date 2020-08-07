@@ -3,14 +3,18 @@ package org.wordpress.android.ui.reader.services.discover
 import android.app.job.JobParameters
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wordpress.android.WordPress
 import org.wordpress.android.datasets.ReaderDiscoverCardsTable
 import org.wordpress.android.datasets.ReaderPostTable
+import org.wordpress.android.datasets.wrappers.ReaderTagTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostList
+import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.discover.ReaderDiscoverCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
 import org.wordpress.android.models.discover.ReaderDiscoverCard.ReaderPostCard
@@ -30,6 +34,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
+import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
@@ -41,8 +46,9 @@ import javax.inject.Inject
 /**
  * This class contains logic related to fetching data for the discover tab in the Reader.
  */
-class ReaderDiscoverLogic constructor(
+class ReaderDiscoverLogic(
     private val completionListener: ServiceCompletionListener,
+    private val coroutineScope: CoroutineScope,
     appComponent: AppComponent
 ) {
     init {
@@ -51,6 +57,8 @@ class ReaderDiscoverLogic constructor(
 
     @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
     @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
+    @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -60,51 +68,55 @@ class ReaderDiscoverLogic constructor(
 
     fun performTasks(task: DiscoverTasks, companion: JobParameters?) {
         listenerCompanion = companion
-
         requestDataForDiscover(task, UpdateResultListener {
-            EventBus.getDefault().post(FetchDiscoverCardsEnded(it != FAILED))
+            EventBus.getDefault().post(FetchDiscoverCardsEnded(it))
             completionListener.onCompleted(listenerCompanion)
         })
     }
 
     private fun requestDataForDiscover(taskType: DiscoverTasks, resultListener: UpdateResultListener) {
-        val params = HashMap<String, String>()
-        // TODO malinjir pass interests the user is following
-        params["tags"] = "android"
+        coroutineScope.launch {
+            val params = HashMap<String, String>()
+            params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
 
-        when (taskType) {
-            REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
-            REQUEST_MORE -> {
-                val pageHandle = appPrefsWrapper.readerCardsPageHandle
-                if (pageHandle?.isNotEmpty() == true) {
-                    params["page_handle"] = pageHandle
-                } else {
-                    // there are no more pages to load
-                    resultListener.onUpdateResult(UNCHANGED)
-                    return
+            when (taskType) {
+                REQUEST_FIRST_PAGE -> appPrefsWrapper.readerCardsPageHandle = null
+                REQUEST_MORE -> {
+                    val pageHandle = appPrefsWrapper.readerCardsPageHandle
+                    if (pageHandle?.isNotEmpty() == true) {
+                        params["page_handle"] = pageHandle
+                    } else {
+                        // there are no more pages to load
+                        resultListener.onUpdateResult(UNCHANGED)
+                        return@launch
+                    }
                 }
             }
-        }
 
-        val listener = Listener { jsonObject -> // remember when this tag was updated if newer posts were requested
-            if (taskType == REQUEST_FIRST_PAGE) {
-                // TODO malinjir clear cache
+            val listener = Listener { jsonObject ->
+                coroutineScope.launch {
+                    handleRequestDiscoverDataResponse(taskType, jsonObject, resultListener)
+                }
             }
-            handleRequestDiscoverDataResponse(jsonObject, resultListener)
+            val errorListener = ErrorListener { volleyError ->
+                AppLog.e(READER, volleyError)
+                resultListener.onUpdateResult(FAILED)
+            }
+            WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
         }
-        val errorListener = ErrorListener { volleyError ->
-            AppLog.e(READER, volleyError)
-            resultListener.onUpdateResult(FAILED)
-        }
-
-        WordPress.getRestClientUtilsV2()["read/tags/cards", params, null, listener, errorListener]
     }
 
-    private fun handleRequestDiscoverDataResponse(json: JSONObject?, resultListener: UpdateResultListener) {
-        // TODO malinjir move to bg thread
+    private fun handleRequestDiscoverDataResponse(
+        taskType: DiscoverTasks,
+        json: JSONObject?,
+        resultListener: UpdateResultListener
+    ) {
         if (json == null) {
             resultListener.onUpdateResult(FAILED)
             return
+        }
+        if (taskType == REQUEST_FIRST_PAGE) {
+            clearCache()
         }
         val fullCardsJson = json.optJSONArray(JSON_CARDS)
 
@@ -118,6 +130,8 @@ class ReaderDiscoverLogic constructor(
 
         val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
         appPrefsWrapper.readerCardsPageHandle = nextPageHandle
+
+        readerTagTableWrapper.setTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
 
         resultListener.onUpdateResult(HAS_NEW)
     }
@@ -143,7 +157,7 @@ class ReaderDiscoverLogic constructor(
     private fun insertPostsIntoDb(posts: List<ReaderPost>) {
         val postList = ReaderPostList()
         postList.addAll(posts)
-        ReaderPostTable.addOrUpdatePosts(null, postList)
+        ReaderPostTable.addOrUpdatePosts(ReaderTag.createDiscoverPostCardsTag(), postList)
     }
 
     /**
@@ -189,5 +203,10 @@ class ReaderDiscoverLogic constructor(
 
     private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray) {
         ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString())
+    }
+
+    private fun clearCache() {
+        ReaderDiscoverCardsTable.reset()
+        ReaderPostTable.deletePostsWithTag(ReaderTag.createDiscoverPostCardsTag())
     }
 }

@@ -13,12 +13,17 @@ import org.wordpress.android.models.ReaderPostList
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.reader.ReaderEvents.UpdatePostsEnded
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
+import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded
 import org.wordpress.android.ui.reader.repository.usecases.FetchPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.GetPostsForTagUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ShouldAutoUpdateTagUseCase
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction
+import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction.REQUEST_OLDER
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -33,8 +38,7 @@ class ReaderPostDataProvider(
     private val readerTag: ReaderTag,
     private val getPostsForTagUseCase: GetPostsForTagUseCase,
     private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-    private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+    private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
 ) : CoroutineScope {
     private var job: Job = Job()
 
@@ -51,18 +55,14 @@ class ReaderPostDataProvider(
     private val _communicationChannel = MutableLiveData<Event<ReaderRepositoryCommunication>>()
     val communicationChannel: LiveData<Event<ReaderRepositoryCommunication>> = _communicationChannel
 
+    // TODO malinjir/annmarie The UI might need to know if a request is in progress, wdyt?
+    // TODO malinjir/annmarie The UI might need to know if there are more data (next page) available
+
     fun start() {
         if (isStarted) return
 
         isStarted = true
         eventBusWrapper.register(this)
-        readerUpdatePostsEndedHandler.start(
-                readerTag,
-                ReaderUpdatePostsEndedHandler.setUpdatePostsEndedListeners(
-                        this::onNewPosts,
-                        this::onChangedPosts, this::onUnchanged, this::onFailed
-                )
-        )
     }
 
     fun stop() {
@@ -77,6 +77,14 @@ class ReaderPostDataProvider(
             val response =
                     fetchPostsForTagUseCase.fetch(readerTag, UpdateAction.REQUEST_REFRESH)
             //  todo annmarie do we want to post all responses on the communicationChannel?
+            if (response != Started) _communicationChannel.postValue(Event(response))
+        }
+    }
+
+    suspend fun loadMorePosts() {
+        withContext(ioDispatcher) {
+            val response = fetchPostsForTagUseCase.fetch(readerTag, REQUEST_OLDER)
+            // todo annmarie do we want to post all responses on the communication channel
             if (response != Started) _communicationChannel.postValue(Event(response))
         }
     }
@@ -112,31 +120,39 @@ class ReaderPostDataProvider(
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_posts.hasObservers()) {
             isDirty.compareAndSet(true, false)
-            launch {
-                reloadPosts()
-            }
+            onUpdated()
         } else {
             isDirty.compareAndSet(false, true)
         }
     }
 
+    @Subscribe(threadMode = BACKGROUND)
+    fun onEventMainThread(event: UpdatePostsEnded) {
+        if (event.readerTag != null && !ReaderTag.isSameTag(event.readerTag, readerTag)) {
+            // ignore events not related to this instance of Repository
+            return
+        }
+        // TODO malinjir do we need to pass the state to the vm so it can for example change inProgress state?
+        event.result?.let {
+            when (it) {
+                HAS_NEW, CHANGED -> onUpdated()
+                UNCHANGED -> onUnchanged()
+                FAILED -> onFailed()
+            }
+        }
+    }
+
     // Handlers for ReaderPostServices
-    private fun onNewPosts(event: UpdatePostsEnded) {
+    private fun onUpdated() {
         launch {
             reloadPosts()
         }
     }
 
-    private fun onChangedPosts(event: UpdatePostsEnded) {
-        launch {
-            reloadPosts()
-        }
+    private fun onUnchanged() {
     }
 
-    private fun onUnchanged(event: UpdatePostsEnded) {
-    }
-
-    private fun onFailed(event: UpdatePostsEnded) {
+    private fun onFailed() {
         _communicationChannel.postValue(
                 Event(ReaderRepositoryCommunication.Error.RemoteRequestFailure)
         )
@@ -158,8 +174,7 @@ class ReaderPostDataProvider(
         private val eventBusWrapper: EventBusWrapper,
         private val getPostsForTagUseCase: GetPostsForTagUseCase,
         private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase,
-        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase,
-        private val readerUpdatePostsEndedHandler: ReaderUpdatePostsEndedHandler
+        private val fetchPostsForTagUseCase: FetchPostsForTagUseCase
     ) {
         fun create(readerTag: ReaderTag): ReaderPostDataProvider {
             return ReaderPostDataProvider(
@@ -168,8 +183,7 @@ class ReaderPostDataProvider(
                     readerTag,
                     getPostsForTagUseCase,
                     shouldAutoUpdateTagUseCase,
-                    fetchPostsForTagUseCase,
-                    readerUpdatePostsEndedHandler
+                    fetchPostsForTagUseCase
             )
         }
     }
