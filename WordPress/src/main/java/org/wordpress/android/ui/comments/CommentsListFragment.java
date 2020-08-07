@@ -151,8 +151,7 @@ public class CommentsListFragment extends Fragment {
                 if (!isEmpty) {
                     // Hide the empty view if there are already some displayed comments
                     mFilteredCommentsView.hideEmptyView();
-                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                     mActionableEmptyView.setVisibility(View.GONE);
                 } else if (!mIsUpdatingComments) {
                     // Change LOADING to NO_CONTENT message
@@ -359,8 +358,7 @@ public class CommentsListFragment extends Fragment {
                     }
 
                     mActionableEmptyView.setVisibility(View.GONE);
-                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                                                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                     return getString(stringId);
                 }
             }
