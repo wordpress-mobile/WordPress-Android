@@ -47,6 +47,8 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerAdapter;
+import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter;
@@ -511,9 +513,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(MainBottomSheetFragment object);
 
+    void inject(ModalLayoutPickerFragment object);
+
     void inject(SubfilterBottomSheetFragment object);
 
     void inject(AddContentAdapter object);
+
+    void inject(ModalLayoutPickerAdapter object);
 
     void inject(PageParentSearchFragment object);
 
