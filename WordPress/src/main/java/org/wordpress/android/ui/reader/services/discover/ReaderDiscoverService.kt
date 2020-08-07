@@ -4,6 +4,9 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
@@ -11,12 +14,22 @@ import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverServiceSt
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
 import org.wordpress.android.util.LocaleManager
+import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Service which updates data for discover tab in Reader, relies on EventBus to notify of changes.
  */
-class ReaderDiscoverService : Service(), ServiceCompletionListener {
+class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
+    @Inject @field:Named("IO_THREAD") lateinit var ioDispatcher: CoroutineDispatcher
     private lateinit var readerDiscoverLogic: ReaderDiscoverLogic
+
+    private var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = ioDispatcher + job
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -27,12 +40,15 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener {
 
     override fun onCreate() {
         super.onCreate()
-        readerDiscoverLogic = ReaderDiscoverLogic(this, (application as WordPress).component())
+        val component = (application as WordPress).component()
+        component.inject(this)
+        readerDiscoverLogic = ReaderDiscoverLogic(this, this, component)
         AppLog.i(READER, "reader discover service > created")
     }
 
     override fun onDestroy() {
         AppLog.i(READER, "reader discover service > destroyed")
+        job.cancel()
         super.onDestroy()
     }
 

@@ -34,6 +34,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.usecases.PreLoadPostContent
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -59,6 +60,9 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
     private fun setupViews() {
         recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+        WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
+            viewModel.swipeToRefresh()
+        }
     }
 
     private fun initViewModel() {
@@ -72,6 +76,8 @@ class ReaderDiscoverFragment : Fragment(R.layout.reader_discover_fragment_layout
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
             uiHelpers.updateVisibility(progress_bar, it.progressVisibility)
             uiHelpers.updateVisibility(progress_text, it.progressVisibility)
+            ptr_layout.isEnabled = it.swipeToRefreshEnabled
+            ptr_layout.isRefreshing = it.swipeToRefreshIsRefreshing
         })
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {

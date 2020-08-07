@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.photo_picker_fragment.*
 import kotlinx.android.synthetic.main.photo_picker_fragment.view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher

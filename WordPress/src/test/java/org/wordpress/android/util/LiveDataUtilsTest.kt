@@ -58,7 +58,7 @@ class LiveDataUtilsTest : BaseUnitTest() {
         val firstValue = 1
         val secondValue = "value"
         sourceA.value = firstValue
-        assertThat(mergedSources.value).isNull()
+        assertThat(mergedSources.value).isEqualTo("null: 1")
         sourceB.value = secondValue
         assertThat(mergedSources.value).isEqualTo("value: 1")
     }
