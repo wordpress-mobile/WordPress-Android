@@ -946,6 +946,17 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.CREATE_SITE);
     }
 
+    public static void showMainActivityAndSiteCreationActivity(Activity activity) {
+        // If we just wanted to have WPMainActivity in the back stack after starting SiteCreationActivity, we could have
+        // used a TaskStackBuilder to do so. However, since we want to handle the SiteCreationActivity result in
+        // WPMainActivity, we must start it this way.
+        final Intent intent = new Intent(activity, WPMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.putExtra(WPMainActivity.ARG_SHOW_SITE_CREATION, true);
+        activity.startActivity(intent);
+    }
+
     public static void showSignInForResult(Activity activity) {
         showSignInForResult(activity, false);
     }

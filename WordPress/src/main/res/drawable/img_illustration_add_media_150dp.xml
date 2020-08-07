@@ -5,8 +5,7 @@
     android:height="120dp"
     android:width="150dp"
     android:viewportHeight="280"
-    android:viewportWidth="349.1"
-    tools:ignore="UnusedResources">
+    android:viewportWidth="349.1">
 
     <path
         android:fillColor="@color/blue_10"
