@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,6 +26,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.config.TenorFeatureConfig
 import org.wordpress.android.viewmodel.Event
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var deviceMediaListBuilder: DeviceMediaListBuilder
@@ -34,6 +36,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var permissionsHandler: PermissionsHandler
     @Mock lateinit var tenorFeatureConfig: TenorFeatureConfig
     @Mock lateinit var context: Context
+    @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiStates = mutableListOf<PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -54,7 +57,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 permissionsHandler,
                 tenorFeatureConfig,
-                context
+                context,
+                resourceProvider
         )
         uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper, false)
@@ -140,6 +144,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
 
     @Test
     fun `selects two items with multi selection available`() = test {
+        whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem, secondItem), multiSelectBrowserType)
 
         viewModel.refreshData(false)
