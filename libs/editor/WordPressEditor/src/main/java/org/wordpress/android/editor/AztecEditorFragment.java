@@ -1171,6 +1171,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         mContent.getText().insert(mContent.getSelectionEnd(), shortcode);
     }
 
+    @Override public void setShouldReplaceImageWithGallery(boolean shouldReplaceImageWithGallery) {
+        // noop for Gutenberg-only method
+    }
+
     @Override
     public void setUrlForVideoPressId(final String videoId, final String videoUrl, final String posterUrl) {
         VideoPressExtensionsKt.updateVideoPressThumb(mContent, posterUrl, videoUrl, videoId);

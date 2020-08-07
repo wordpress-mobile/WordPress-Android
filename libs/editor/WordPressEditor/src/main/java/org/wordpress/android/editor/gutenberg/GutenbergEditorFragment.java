@@ -120,6 +120,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private boolean mEditorDidMount;
 
+    private boolean mShouldReplaceImageWithGallery;
+
     private ProgressDialog mSavingContentProgressDialog;
 
     public static GutenbergEditorFragment newInstance(String title,
@@ -894,6 +896,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void appendGallery(MediaGallery mediaGallery) {
+
+    @Override public void setShouldReplaceImageWithGallery(boolean shouldReplaceImageWithGallery) {
+        mShouldReplaceImageWithGallery = shouldReplaceImageWithGallery;
     }
 
     @Override

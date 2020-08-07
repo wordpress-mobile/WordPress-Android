@@ -35,6 +35,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
     public abstract void appendMediaFile(MediaFile mediaFile, String imageUrl, ImageLoader imageLoader);
     public abstract void appendMediaFiles(Map<String, MediaFile> mediaList);
     public abstract void appendGallery(MediaGallery mediaGallery);
+    public abstract void setShouldReplaceImageWithGallery(boolean shouldReplaceImageWithGallery);
     public abstract void setUrlForVideoPressId(String videoPressId, String url, String posterUrl);
     public abstract boolean isUploadingMedia();
     public abstract boolean isActionInProgress();
