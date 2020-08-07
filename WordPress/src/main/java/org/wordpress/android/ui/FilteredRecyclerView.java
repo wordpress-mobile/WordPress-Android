@@ -26,12 +26,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.elevation.ElevationOverlayProvider;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
@@ -175,22 +173,11 @@ public class FilteredRecyclerView extends RelativeLayout {
 
         mToolbar = findViewById(R.id.toolbar_with_spinner);
         mAppBarLayout = findViewById(R.id.app_bar_layout);
-
-        ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(getContext());
-        float cardElevation = getResources().getDimension(R.dimen.card_elevation);
-        int appBarColor =
-                elevationOverlayProvider
-                        .compositeOverlay(ContextExtensionsKt.getColorFromAttribute(getContext(), R.attr.wpColorAppBar),
-                                cardElevation);
-
-        mToolbar.setBackgroundColor(appBarColor);
-
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
         if (mToolbarDisableScrollGestures) {
             params.setScrollFlags(0);
         } else {
-            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                                  | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+            params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
         }
 
         mSearchSuggestionsRecyclerView = findViewById(R.id.suggestions_recycler_view);

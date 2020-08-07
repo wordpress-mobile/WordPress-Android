@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.wordpress.android.widgets.NestedCoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator"
@@ -16,19 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="scroll"
+             android:background="@drawable/tab_bottom_divider"
             app:theme="@style/WordPress.ActionBar">
 
             <Spinner
                 android:id="@+id/filter_spinner"
                 style="@style/FilteredRecyclerViewSpinner.WordPress"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/min_touch_target_sz"
                 android:overlapAnchor="false"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+
                 tools:ignore="UnusedAttribute" />
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -83,4 +83,4 @@
             android:layout_marginBottom="@dimen/margin_medium" />
     </RelativeLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</org.wordpress.android.widgets.NestedCoordinatorLayout>
