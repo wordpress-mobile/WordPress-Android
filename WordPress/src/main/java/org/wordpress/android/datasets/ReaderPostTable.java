@@ -22,6 +22,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostIdList;
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryEvent.ReaderPostTableActionEnded;
+import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.SqlUtils;
 
@@ -885,7 +886,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(45, SqlUtils.boolToSql(post.useExcerpt));
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
-                stmtPosts.bindString(48, post.getTags());
+                stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
                 stmtPosts.execute();
             }
 
@@ -1113,6 +1114,11 @@ public class ReaderPostTable {
         post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
 
         post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
+
+        String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
+        if (commaSeparatedTags != null) {
+            post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
+        }
 
         return post;
     }
