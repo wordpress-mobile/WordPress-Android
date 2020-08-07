@@ -33,7 +33,7 @@ class VerticalStore @Inject constructor(
     }
 
     override fun onRegister() {
-        AppLog.d(AppLog.T.API, ListStore::class.java.simpleName + " onRegister")
+        AppLog.d(AppLog.T.API, VerticalStore::class.java.simpleName + " onRegister")
     }
 
     private suspend fun fetchSegments(): OnSegmentsFetched {
