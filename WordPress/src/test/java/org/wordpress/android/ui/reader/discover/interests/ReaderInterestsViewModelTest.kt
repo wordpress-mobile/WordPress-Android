@@ -27,11 +27,9 @@ import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewMod
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.InterestUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.ConnectionErrorUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.ErrorUiState.RequestFailedErrorUiState
-import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.UiState.InitialLoadingUiState
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderRepositoryCommunication.Success
@@ -325,22 +323,37 @@ class ReaderInterestsViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun `interests data loading triggered on retry`() =
+    fun `get interests triggered on retry`() =
         testWithEmptyUserTags {
-            // Given
-            val uiStates = mutableListOf<UiState>()
-            viewModel.uiState.observeForever {
-                uiStates.add(it)
-            }
-            val mockInterests = getMockInterests()
-            whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
-
             // When
             viewModel.onRetryButtonClick()
 
             // Then
-            assertThat(uiStates.size).isEqualTo(2)
-            assertThat(uiStates[0]).isInstanceOf(InitialLoadingUiState::class.java)
+            verify(readerTagRepository, times(1)).getInterests()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `get user tags re-triggered on retry if user tags request had failed earlier`() =
+        testWithFailedUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
+
+            // Then
+            verify(readerTagRepository, times(2)).getUserTags()
+        }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `get user tags not re-triggered on retry if user tags request had not failed earlier`() =
+        testWithEmptyUserTags {
+            // When
+            initViewModel()
+            viewModel.onRetryButtonClick()
+
+            // Then
+            verify(readerTagRepository, times(1)).getUserTags()
         }
 
     @ExperimentalCoroutinesApi
@@ -468,7 +481,15 @@ class ReaderInterestsViewModelTest {
     @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
-            whenever(readerTagRepository.getUserTags()).thenReturn(ReaderTagList())
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
+            block()
+        }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
+        coroutineScope.runBlockingTest {
+            whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
             block()
         }
     }
@@ -480,7 +501,7 @@ class ReaderInterestsViewModelTest {
                 this.add(mock())
                 this.add(mock())
             }
-            whenever(readerTagRepository.getUserTags()).thenReturn(nonEmptyUserTags)
+            whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(nonEmptyUserTags))
             block()
         }
     }

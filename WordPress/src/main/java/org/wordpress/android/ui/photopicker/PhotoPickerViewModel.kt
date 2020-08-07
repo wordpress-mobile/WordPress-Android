@@ -102,10 +102,13 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     private fun toggleItem(id: Long, canMultiselect: Boolean) {
-        val updatedIds = if (canMultiselect) _selectedIds.value?.toMutableList() ?: mutableListOf() else mutableListOf()
+        val updatedIds = _selectedIds.value?.toMutableList() ?: mutableListOf()
         if (updatedIds.contains(id)) {
             updatedIds.remove(id)
         } else {
+            if (updatedIds.isNotEmpty() && !canMultiselect) {
+                updatedIds.clear()
+            }
             updatedIds.add(id)
         }
         _selectedIds.postValue(updatedIds)

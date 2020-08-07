@@ -51,7 +51,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
     }
 
     private fun startSiteCreationFlow() {
-        ActivityLauncher.newBlogForResult(this)
+        ActivityLauncher.showMainActivityAndSiteCreationActivity(this)
         finish()
     }
 
