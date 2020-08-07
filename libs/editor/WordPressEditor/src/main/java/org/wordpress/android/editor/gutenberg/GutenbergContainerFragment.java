@@ -178,6 +178,10 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.appendMediaFiles(mediaList);
     }
 
+    public void appendGalleryBlock(ArrayList<Media> mediaList) {
+        mWPAndroidGlueCode.appendNewGalleryBlock(mediaList);
+    }
+
     public void mediaFileUploadProgress(final int mediaId, final float progress) {
         mWPAndroidGlueCode.mediaFileUploadProgress(mediaId, progress);
     }

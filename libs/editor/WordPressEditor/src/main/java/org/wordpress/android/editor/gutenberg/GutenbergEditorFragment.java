@@ -891,7 +891,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     mediaEntry.getValue().getCaption()));
         }
 
-        getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+        if (mShouldReplaceImageWithGallery) {
+            getGutenbergContainerFragment().appendGalleryBlock(rnMediaList);
+            mShouldReplaceImageWithGallery = false;
+        } else {
+            getGutenbergContainerFragment().appendMediaFiles(rnMediaList);
+        }
     }
 
     @Override
