@@ -29,17 +29,23 @@ import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogErr
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.TooManyRequests
 import org.wordpress.android.fluxc.store.EncryptedLogStore.UploadEncryptedLogError.Unknown
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.PreferenceUtils.PreferenceUtilsWrapper
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.API
 import java.io.File
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Delay to be used in between uploads whether they are successful or failure. This should help us avoid
- * `TOO_MANY_REQUESTS` error in typical situations.
+ * Depending on the error type, we'll keep a record of the earliest date we can try another encrypted log upload.
+ *
+ * The most important example of this is `TOO_MANY_REQUESTS` error which results in server refusing any uploads for
+ * an hour.
  */
-private const val UPLOAD_DELAY = 30000L
+private const val ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE = "ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE_PREF_KEY"
+private const val TOO_MANY_REQUESTS_ERROR_DELAY = 60 * 60 * 1000L // 1 hour
+private const val REGULAR_UPLOAD_FAILURE_DELAY = 60 * 1000L // 1 minute
 private const val MAX_RETRY_COUNT = 3
 
 @Singleton
@@ -48,6 +54,7 @@ class EncryptedLogStore @Inject constructor(
     private val encryptedLogSqlUtils: EncryptedLogSqlUtils,
     private val coroutineEngine: CoroutineEngine,
     private val logEncrypter: LogEncrypter,
+    private val preferenceUtils: PreferenceUtilsWrapper,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     override fun onRegister() {
@@ -111,14 +118,14 @@ class EncryptedLogStore @Inject constructor(
         })
     }
 
-    private suspend fun uploadNextWithDelay() {
-        delay(UPLOAD_DELAY)
+    private suspend fun uploadNextWithDelay(delay: Long) {
+        addUploadDelay(delay)
+        delay(delay + 3000) // Add a 3 second buffer to avoid possible millisecond comparison issues
         uploadNext()
     }
 
     private suspend fun uploadNext() {
-        if (encryptedLogSqlUtils.getNumberOfUploadingEncryptedLogs() > 0) {
-            // We are already uploading another log file
+        if (!isUploadAvailable()) {
             return
         }
         // We want to upload a single file at a time
@@ -145,15 +152,15 @@ class EncryptedLogStore @Inject constructor(
             is LogUploaded -> handleSuccessfulUpload(encryptedLog)
             is LogUploadFailed -> handleFailedUpload(encryptedLog, result.error)
         }
-        uploadNextWithDelay()
     }
 
-    private fun handleSuccessfulUpload(encryptedLog: EncryptedLog) {
+    private suspend fun handleSuccessfulUpload(encryptedLog: EncryptedLog) {
         deleteEncryptedLog(encryptedLog)
         emitChange(EncryptedLogUploadedSuccessfully(uuid = encryptedLog.uuid, file = encryptedLog.file))
+        uploadNext()
     }
 
-    private fun handleFailedUpload(encryptedLog: EncryptedLog, error: UploadEncryptedLogError) {
+    private suspend fun handleFailedUpload(encryptedLog: EncryptedLog, error: UploadEncryptedLogError) {
         val failureType = mapUploadEncryptedLogError(error)
 
         val (isFinalFailure, finalFailureCount) = when (failureType) {
@@ -188,6 +195,17 @@ class EncryptedLogStore @Inject constructor(
                         willRetry = !isFinalFailure
                 )
         )
+        // If a log failed to upload for the final time, we don't need to add any delay since the log is the problem.
+        // Otherwise, the only special case that requires an extra long delay is `TOO_MANY_REQUESTS` upload error.
+        if (isFinalFailure) {
+            uploadNext()
+        } else {
+            if (error is TooManyRequests) {
+                uploadNextWithDelay(TOO_MANY_REQUESTS_ERROR_DELAY)
+            } else {
+                uploadNextWithDelay(REGULAR_UPLOAD_FAILURE_DELAY)
+            }
+        }
     }
 
     private fun mapUploadEncryptedLogError(error: UploadEncryptedLogError): EncryptedLogUploadFailureType {
@@ -222,6 +240,27 @@ class EncryptedLogStore @Inject constructor(
     }
 
     private fun isValidFile(file: File): Boolean = file.exists() && file.canRead()
+
+    /**
+     * Checks if encrypted logs can be uploaded at this time.
+     *
+     * If we are already uploading another encrypted log or if we are manually delaying the uploads due to server errors
+     * encrypted log uploads will not be available.
+     */
+    private fun isUploadAvailable(): Boolean {
+        if (encryptedLogSqlUtils.getNumberOfUploadingEncryptedLogs() > 0) {
+            // We are already uploading another log file
+            return false
+        }
+        preferenceUtils.getFluxCPreferences().getLong(ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE, -1L).let {
+            return it <= Date().time
+        }
+    }
+
+    private fun addUploadDelay(delayDuration: Long) {
+        val date = Date().time + delayDuration
+        preferenceUtils.getFluxCPreferences().edit().putLong(ENCRYPTED_LOG_UPLOAD_UNAVAILABLE_UNTIL_DATE, date).apply()
+    }
 
     /**
      * Payload to be used to queue a file to be encrypted and uploaded.
