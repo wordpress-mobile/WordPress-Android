@@ -57,6 +57,7 @@ import javax.inject.Singleton;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -189,6 +190,17 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                 .post(body)
                 .build();
 
+        // Try to add locale query param
+        HttpUrl httpUrl = getHttpUrlWithLocale(url);
+
+        if (null != httpUrl) {
+            request = request.newBuilder()
+                             .url(httpUrl)
+                             .build();
+        } else {
+            AppLog.d(T.MEDIA, "Could not add locale query param for url '" + url + "'.");
+        }
+
         Call call = mOkHttpClient.newCall(request);
         mCurrentUploadCalls.put(media.getId(), call);
 
@@ -226,7 +238,14 @@ public class MediaRestClient extends BaseWPComRestClient implements ProgressList
                     }
                 } else {
                     AppLog.e(T.MEDIA, "error uploading media: " + response.message());
-                    notifyMediaUploaded(media, parseUploadError(response, site));
+
+                    MediaError error = parseUploadError(response, site);
+
+                    if (null != error && error.type == MediaErrorType.BAD_REQUEST) {
+                        AppLog.e(T.MEDIA, "media upload error message: " + error.message);
+                    }
+
+                    notifyMediaUploaded(media, error);
                 }
             }
 
