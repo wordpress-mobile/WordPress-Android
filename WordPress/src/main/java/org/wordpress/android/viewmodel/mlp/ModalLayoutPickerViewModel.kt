@@ -102,7 +102,14 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 val selected = layout.slug == _selectedLayoutSlug.value
                 LayoutListItem(layout.slug, layout.title, layout.preview, selected)
             }
-            listItems.add(ModalLayoutPickerListItem.LayoutCategory(category.title, category.description, layouts))
+            listItems.add(
+                    ModalLayoutPickerListItem.LayoutCategory(
+                            category.slug,
+                            category.title,
+                            category.description,
+                            layouts
+                    )
+            )
         }
     }
 
@@ -135,12 +142,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
 
     /**
      * Category tapped
+     * @param categorySlug the slug of the tapped category
      */
-    fun categoryTapped(category: CategoryListItem) {
-        if (category.slug == _selectedCategorySlug.value) { // deselect
+    fun categoryTapped(categorySlug: String) {
+        if (categorySlug == _selectedCategorySlug.value) { // deselect
             _selectedCategorySlug.value = null
         } else {
-            _selectedCategorySlug.value = category.slug
+            _selectedCategorySlug.value = categorySlug
         }
         loadListItems()
     }

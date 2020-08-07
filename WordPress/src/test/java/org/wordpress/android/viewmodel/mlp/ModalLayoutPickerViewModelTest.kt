@@ -11,7 +11,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.Categories
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.LayoutCategory
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.CATEGORIES
+import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.LAYOUTS
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.SUBTITLE
 import org.wordpress.android.ui.mlp.ModalLayoutPickerListItem.ViewType.TITLE
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
@@ -97,7 +100,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts the layouts are loaded`() {
         viewModel.init(false)
-        assertThat(viewModel.listItems.value?.size).isGreaterThan(0)
+        assertThat(viewModel.listItems.value?.filter { it.type == LAYOUTS }?.size).isGreaterThan(0)
     }
 
     @Test
@@ -127,5 +130,63 @@ class ModalLayoutPickerViewModelTest {
         viewModel.layoutTapped("about-1")
         viewModel.dismiss()
         assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
+
+    @Test
+    fun `when modal layout picker starts the categories are loaded`() {
+        viewModel.init(false)
+        assertThat(viewModel.listItems.value?.filter { it.type == CATEGORIES }?.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `when modal layout picker starts the a non empty categories list is loaded`() {
+        viewModel.init(false)
+        val categories = viewModel.listItems.value?.first { it.type == CATEGORIES } as? Categories
+        assertThat(categories?.categories?.size).isGreaterThan(0)
+    }
+
+    @Test
+    fun `when modal layout picker starts no category is selected`() {
+        viewModel.init(false)
+        assertThat(viewModel.selectedCategorySlug.value).isNull()
+    }
+
+    @Test
+    fun `when the user taps on a category the category is selected`() {
+        viewModel.init(false)
+        viewModel.categoryTapped("about")
+        assertThat(viewModel.selectedCategorySlug.value).isEqualTo("about")
+    }
+
+    @Test
+    fun `when the user taps on a selected category the category is deselected`() {
+        viewModel.init(false)
+        viewModel.categoryTapped("about")
+        viewModel.categoryTapped("about")
+        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
+
+    @Test
+    fun `when the modal layout picker is dismissed the category is deselected`() {
+        viewModel.init(false)
+        viewModel.categoryTapped("about")
+        viewModel.dismiss()
+        assertThat(viewModel.selectedLayoutSlug.value).isNull()
+    }
+
+    @Test
+    fun `when the user taps on a category only one layout category is shown`() {
+        viewModel.init(false)
+        viewModel.categoryTapped("about")
+        val layoutCategories = viewModel.listItems.value?.filter { it.type == LAYOUTS }
+        assertThat(layoutCategories?.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `when the user taps on a category only this layout category is shown`() {
+        viewModel.init(false)
+        viewModel.categoryTapped("about")
+        val layoutCategory = viewModel.listItems.value?.first { it.type == LAYOUTS } as? LayoutCategory
+        assertThat(layoutCategory?.slug).isEqualTo("about")
     }
 }

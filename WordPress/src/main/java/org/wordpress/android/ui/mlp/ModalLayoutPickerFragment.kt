@@ -110,7 +110,7 @@ class ModalLayoutPickerFragment : BottomSheetDialogFragment(), LayoutSelectionLi
     }
 
     override fun categoryTapped(category: CategoryListItem) {
-        viewModel.categoryTapped(category)
+        viewModel.categoryTapped(category.slug)
     }
 
     override fun onCancel(dialog: DialogInterface) {
