@@ -1797,6 +1797,7 @@
     <string name="reader_toast_err_comment_not_found">Comment not found!</string>
     <string name="reader_toast_err_already_liked">You have already liked that comment</string>
     <string name="reader_toast_err_url_intent">Unable to open %s</string>
+    <string name="reader_toast_err_page_jump_not_found">Unable to find the linked page jump</string>
 
     <!-- snackbar messages -->
     <string name="reader_snackbar_err_cannot_like_post_logged_out">Can\'t like while logged out of WordPress.com</string>
